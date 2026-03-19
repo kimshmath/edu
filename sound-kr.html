@@ -2545,7 +2545,7 @@ function instPlay(tuning) {
   const btn = document.getElementById(`inst-${tuning}-btn`);
   if(instActiveNodes[id]) {
     instStopSynth(id);
-    btn.innerHTML = `▶ &nbsp;${tuning==='just'?'순정률':'평균율'}로 듣기``;
+    btn.innerHTML = `▶ &nbsp;${tuning==='just'?'순정률':'평균율'}로 듣기`;
     btn.classList.remove('playing');
     return;
   }
@@ -2553,7 +2553,7 @@ function instPlay(tuning) {
   btn.innerHTML = '⏸ &nbsp;Playing…';
   btn.classList.add('playing');
   setTimeout(() => {
-    btn.innerHTML = `▶ &nbsp;${tuning==='just'?'순정률':'평균율'}로 듣기``;
+    btn.innerHTML = `▶ &nbsp;${tuning==='just'?'순정률':'평균율'}로 듣기`;
     btn.classList.remove('playing');
   }, 4000);
 }
