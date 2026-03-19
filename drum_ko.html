@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Hear the Drum">
+<meta name="apple-mobile-web-app-title" content="드럼의 모양">
 <meta name="theme-color" content="#05060c">
 <meta name="description" content="Can You Hear the Shape of a Drum? An interactive spectral geometry experience.">
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' fill='%2305060c'/><circle cx='90' cy='90' r='72' fill='none' stroke='%23c9a748' stroke-width='3'/><circle cx='90' cy='90' r='48' fill='none' stroke='%2322b5aa' stroke-width='2'/><circle cx='90' cy='90' r='24' fill='none' stroke='%23c9a748' stroke-width='1.5'/><text x='90' y='96' font-family='serif' font-size='24' fill='%23f0e8d8' text-anchor='middle'>🥁</text></svg>">
 <link rel="manifest" id="pwa-manifest">
-<title>Can You Hear the Shape of a Drum?</title>
+<title>드럼의 모양을 들을 수 있을까?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet">
 <style>
@@ -342,14 +342,14 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 
 <!-- FLOATING SECTION NAV -->
 <nav id="sec-nav">
-  <div class="sn-dot" data-target="hero">        <span class="sn-dot-label">Top</span>              <span class="sn-dot-pip"></span></div>
-  <div class="sn-dot" data-target="sec-strike">  <span class="sn-dot-label">§01 Voice of a Drum</span><span class="sn-dot-pip"></span></div>
-  <div class="sn-dot" data-target="sec-phasor">  <span class="sn-dot-label">§02 Phasors</span>       <span class="sn-dot-pip"></span></div>
-  <div class="sn-dot" data-target="sec-modes">   <span class="sn-dot-label">§03 Eigenmodes</span>    <span class="sn-dot-pip"></span></div>
-  <div class="sn-dot" data-target="sec-beat">    <span class="sn-dot-label">§04 Beating</span>       <span class="sn-dot-pip"></span></div>
-  <div class="sn-dot" data-target="sec-weyl">    <span class="sn-dot-label">§05 Weyl's Law</span>    <span class="sn-dot-pip"></span></div>
-  <div class="sn-dot" data-target="sec-iso">     <span class="sn-dot-label">§06 GWW Drums</span>     <span class="sn-dot-pip"></span></div>
-  <div class="sn-dot" data-target="sec-nodal">   <span class="sn-dot-label">§07 Nodal Domains</span> <span class="sn-dot-pip"></span></div>
+  <div class="sn-dot" data-target="hero">        <span class="sn-dot-label">맨 위</span>              <span class="sn-dot-pip"></span></div>
+  <div class="sn-dot" data-target="sec-strike">  <span class="sn-dot-label">§01 드럼의 목소리</span><span class="sn-dot-pip"></span></div>
+  <div class="sn-dot" data-target="sec-phasor">  <span class="sn-dot-label">§02 페이저</span>       <span class="sn-dot-pip"></span></div>
+  <div class="sn-dot" data-target="sec-modes">   <span class="sn-dot-label">§03 고유모드</span>    <span class="sn-dot-pip"></span></div>
+  <div class="sn-dot" data-target="sec-beat">    <span class="sn-dot-label">§04 맥놀이</span>       <span class="sn-dot-pip"></span></div>
+  <div class="sn-dot" data-target="sec-weyl">    <span class="sn-dot-label">§05 바일 법칙</span>    <span class="sn-dot-pip"></span></div>
+  <div class="sn-dot" data-target="sec-iso">     <span class="sn-dot-label">§06 GWW 드럼</span>     <span class="sn-dot-pip"></span></div>
+  <div class="sn-dot" data-target="sec-nodal">   <span class="sn-dot-label">§07 마디 영역</span> <span class="sn-dot-pip"></span></div>
 </nav>
 
 <!-- BRAND CORNER -->
@@ -358,34 +358,34 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 <!-- AUDIO START OVERLAY -->
 <div id="audio-overlay">
   <div class="ao-drum">🥁</div>
-  <div class="ao-title">Can You Hear the Shape of a Drum?</div>
+  <div class="ao-title">드럼의 모양을 들을 수 있을까?</div>
   <div class="ao-sub">kimsh.kr &nbsp;·&nbsp; Interactive spectral geometry</div>
 
   <!-- Silent switch warning — most common iOS audio issue -->
   <div style="margin:1rem auto 1.5rem;max-width:320px;background:rgba(192,69,96,.12);border:1px solid rgba(192,69,96,.4);border-radius:8px;padding:.7rem 1.1rem;font-family:Space Mono,monospace;font-size:.6rem;letter-spacing:.05em;color:#e08090;text-align:center;line-height:1.8">
-    📵 iPhone: check the <strong style="color:#f0a0b0">Ring/Silent switch</strong> on the left side.<br>
-    Web Audio is muted when Silent mode is on.
+    📵 iPhone: 왼쪽 옆면의 <strong style="color:#f0a0b0">무음/벨 스위치</strong>를 확인하세요.<br>
+    무음 모드에서는 Web Audio가 차단됩니다.
   </div>
 
   <button class="ao-btn" id="ao-btn-main"
     ontouchend="iosUnlock(event)"
     onclick="iosUnlock(event)"
     style="touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none">
-    Tap to begin
+    탭하여 시작
   </button>
 
 
   <div style="margin-top:.8rem;font-family:Space Mono,monospace;font-size:.52rem;color:#3a3f55;text-align:center">
-    Also check: Settings → Chrome → allow audio
+    설정 → Chrome → 오디오 허용도 확인하세요
   </div>
 </div>
 <div id="hud">
   <div id="pitch-wrap">
-    <span id="pitch-label">DRUM SIZE</span>
+    <span id="pitch-label">드럼 크기</span>
     <input id="pitch-slider" type="range" min="40" max="200" value="100" step="1">
     <span id="pitch-val">1×</span>
   </div>
-  <button id="mute-btn">♪ Sound ON</button>
+  <button id="mute-btn">♪ 소리 켜짐</button>
   <a href="https://kimsh.kr" target="_blank" rel="noopener" class="hud-brand">kimsh.kr</a>
 </div>
 
@@ -394,15 +394,15 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
   <canvas id="hero-canvas"></canvas>
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <div class="hero-kicker">Spectral Geometry · Fourier Analysis · Mathematical Physics &nbsp;·&nbsp; <a href="https://kimsh.kr" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;letter-spacing:.38em">kimsh.kr</a></div>
+    <div class="hero-kicker">스펙트럼 기하학 · 푸리에 해석 · 수리물리학 &nbsp;·&nbsp; <a href="https://kimsh.kr" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;letter-spacing:.38em">kimsh.kr</a></div>
     <h1 class="hero-title">
-      <span class="title-line"><span class="title-word tl1">Can You</span></span>
-      <span class="title-line"><span class="title-word tl2 hero-italic">Hear</span>&ensp;<span class="title-word tl3">the Shape</span></span>
-      <span class="title-line"><span class="title-word tl4">of a Drum?</span></span>
+      <span class="title-line"><span class="title-word tl1">드럼의</span></span>
+      <span class="title-line"><span class="title-word tl2 hero-italic">모양을</span>&ensp;<span class="title-word tl3">들을 수</span></span>
+      <span class="title-line"><span class="title-word tl4">있을까?</span></span>
     </h1>
-    <div class="hero-sub">posed by <em>Mark Kac</em>, 1966 &mdash; answered by <em>Gordon, Webb &amp; Wolpert</em>, 1992</div>
+    <div class="hero-sub"><em>Mark Kac</em>이 1966년에 제기하고 — <em>Gordon, Webb &amp; Wolpert</em>가 1992년에 답한 문제</div>
   </div>
-  <div class="hero-click-hint">↑ click the membrane to strike it</div>
+  <div class="hero-click-hint">↑ 막을 클릭해서 쳐보세요</div>
   <div class="hero-hint">scroll</div>
 </section>
 
@@ -410,23 +410,23 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 
 <!-- §01 STRIKE -->
 <div class="wrap fi" id="sec-strike">
-  <div class="s-num">§ 01 — The Voice of a Drum <a href="https://kimsh.kr" target="_blank" class="s-brand">kimsh.kr</a></div>
-  <h2 class="s-title">Strike, Listen,<br>Decompose</h2>
+  <div class="s-num">§ 01 — 드럼의 목소리 <a href="https://kimsh.kr" target="_blank" class="s-brand">kimsh.kr</a></div>
+  <h2 class="s-title">두드리고, 듣고,<br>분해하라</h2>
   <div class="strike-layout">
     <div>
       <div class="prose">
-        <p>Strike the drum below — anywhere. The displacement resolves into a superposition of <em>normal modes</em> whose frequencies are the zeros of Bessel functions — inharmonic, which is why drums sound like drums and not like bells:</p>
+        <p>아래 드럼을 어디든 클릭해보세요. 막의 변위는 즉시 <em>정규 모드</em>의 중첩으로 분해됩니다. 각 모드의 진동수는 베셀 함수의 영점이며 — 비화음적이기 때문에 드럼 소리가 벨이 아닌 드럼처럼 들립니다:</p>
       </div>
       <div class="eq">u(x,y,t)  =  Σₙ  aₙ · φₙ(x,y) · cos(ωₙ t)
 ωₙ  =  jₘₙ · c / R   (inharmonic spectrum)</div>
       <div class="prose">
         <p>Strike near the center to excite only radial modes <span class="math">m=0</span>. Strike off-center to wake asymmetric modes <span class="math">m≥1</span>. You can hear the difference — the timbre shifts as the excited eigenfunctions change.</p>
-        <p>The <em>drum size slider</em> (top-right) scales R, shifting all frequencies simultaneously as <span class="math">ω ∝ 1/R</span>.</p>
+        <p>오른쪽 위 <em>드럼 크기 슬라이더</em>는 R을 조정하여 <span class="math">ω ∝ 1/R</span>에 따라 모든 진동수를 동시에 이동시킵니다.</p>
       </div>
     </div>
     <div>
       <div class="panel">
-        <h3>Click to strike &amp; hear</h3>
+        <h3>클릭해서 두드려보세요</h3>
         <canvas id="strike-canvas" width="380" height="380"></canvas>
         <div class="bar-list" id="bar-list"></div>
       </div>
@@ -438,8 +438,8 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 
 <!-- §02 PHASORS -->
 <div class="wrap fi" id="sec-phasor">
-  <div class="s-num">§ 02 — Fourier as Rotating Vectors <a href="https://kimsh.kr" target="_blank" class="s-brand">kimsh.kr</a></div>
-  <h2 class="s-title">The Phasor<br>Constellation</h2>
+  <div class="s-num">§ 02 — 회전 벡터로서의 푸리에 <a href="https://kimsh.kr" target="_blank" class="s-brand">kimsh.kr</a></div>
+  <h2 class="s-title">페이저<br>성좌</h2>
   <div class="phasor-layout">
     <div>
       <div class="panel" style="padding:0;overflow:hidden">
@@ -451,13 +451,13 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
     </div>
     <div>
       <div class="prose">
-        <p>Each eigenfrequency <span class="math">ωₙ = jₙ c/R</span> is a rotating phasor. Toggle modes to add or remove their rotation — and hear the resulting tone shift in real time. The tones are the exact physical frequencies of the drum.</p>
-        <p>With all four modes active, the waveform is not a pure sine — it is the <em>inharmonic</em> superposition that gives drums their characteristic sound.</p>
+        <p>각 고유진동수 <span class="math">ωₙ = jₙ c/R</span>는 하나의 회전 페이저입니다. 모드를 켜고 끄면서 — 실시간으로 소리의 변화를 들어보세요. 이 음들은 드럼의 정확한 물리적 진동수입니다.</p>
+        <p>네 모드가 모두 활성화되면 파형은 순수한 사인파가 아닙니다 — 드럼 특유의 음색을 만드는 <em>비화음적</em> 중첩입니다.</p>
       </div>
       <div class="phasor-controls" id="phasor-controls"></div>
-      <p class="tone-hint">↑ each toggle starts / stops its sine tone</p>
+      <p class="tone-hint">↑ 각 버튼을 누르면 해당 사인파가 재생/정지됩니다</p>
       <div class="callout" style="margin-top:1.5rem">
-        The spectrum of a drum is exactly the set of frequencies whose phasors appear here. Two drums with identical spectra produce the same superposition — they are acoustically indistinguishable.
+        드럼의 스펙트럼은 이 페이저들의 진동수 집합 그 자체입니다. 동일한 스펙트럼을 가진 두 드럼은 같은 소리를 냅니다 — 음향적으로 구별 불가능합니다.
       </div>
     </div>
   </div>
@@ -467,10 +467,10 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 
 <!-- §03 MODE GALLERY -->
 <div class="wrap fi" id="sec-modes">
-  <div class="s-num">§ 03 — Eigenmodes of the Circular Drum <a href="https://kimsh.kr" target="_blank" class="s-brand">kimsh.kr</a></div>
-  <h2 class="s-title">The Shapes of<br>Pure Sound</h2>
+  <div class="s-num">§ 03 — 원형 드럼의 고유모드 <a href="https://kimsh.kr" target="_blank" class="s-brand">kimsh.kr</a></div>
+  <h2 class="s-title">순수한 소리의<br>형태들</h2>
   <div class="prose">
-    <p>Each card is a single eigenmode <span class="math">φₘₙ = Jₘ(jₘₙ r/R)cos(mθ)</span> oscillating at its pure frequency. Click any card to hear and see that tone alone. Higher modes have higher, shorter-lived frequencies — the drum's voice decays from high to low as modes ring out.</p>
+    <p>각 카드는 순수한 진동수로 진동하는 단일 고유모드 <span class="math">φₘₙ = Jₘ(jₘₙ r/R)cos(mθ)</span>입니다. 카드를 클릭하면 그 음만 듣고 볼 수 있습니다. 고차 모드는 더 높고 빠르게 감쇠합니다 — 드럼 소리는 높은 음에서 낮은 음으로 사그라집니다.</p>
   </div>
   <div class="eq">φₘₙ(r,θ) = Jₘ(jₘₙ · r/R) · cos(mθ)     λₘₙ = (jₘₙ/R)²</div>
   <div class="modes-grid" id="modes-grid"></div>
@@ -480,21 +480,21 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 
 <!-- §04 BEATING -->
 <div class="wrap fi" id="sec-beat">
-  <div class="s-num">§ 04 — Interference &amp; Beating <a href="https://kimsh.kr" target="_blank" class="s-brand">kimsh.kr</a></div>
-  <h2 class="s-title">When Two Modes<br>Collide</h2>
+  <div class="s-num">§ 04 — 간섭과 맥놀이 <a href="https://kimsh.kr" target="_blank" class="s-brand">kimsh.kr</a></div>
+  <h2 class="s-title">두 모드가<br>충돌할 때</h2>
   <div class="prose" style="margin-bottom:2rem">
-    <p>When two modes have nearby eigenvalues, their superposition <em>beats</em> — the amplitude oscillates slowly at rate <span class="math">|ω₁−ω₂|/2</span>. You can hear this clearly: select a pair and press Play.</p>
+    <p>두 모드의 고유값이 가까우면 중첩이 <em>맥놀이</em>를 일으킵니다 — 진폭이 <span class="math">|ω₁−ω₂|/2</span>의 속도로 천천히 진동합니다. 쌍을 선택하고 재생 버튼을 눌러 직접 들어보세요.</p>
   </div>
   <div class="beat-picker" id="beat-picker"></div>
-  <button class="beat-play-btn" id="beat-play-btn">▶ Play both tones and hear the beating</button>
+  <button class="beat-play-btn" id="beat-play-btn">▶ 두 음을 재생하여 맥놀이를 들어보세요</button>
   <div class="beat-layout">
     <div class="panel">
-      <h3>Mode A</h3>
+      <h3>모드 A</h3>
       <canvas id="beat-canvas" width="320" height="320"></canvas>
       <div class="beat-info" id="beat-info-a"></div>
     </div>
     <div class="panel">
-      <h3>A + B (superposition)</h3>
+      <h3>A + B (중첩)</h3>
       <canvas id="beat-canvas2" width="320" height="320"></canvas>
       <div class="beat-info" id="beat-info-b"></div>
     </div>
@@ -505,7 +505,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 
 <!-- §04b THREE MODES -->
 <div class="wrap fi" id="sec-three">
-  <div class="s-num">§ 04b — Three-Mode Interference</div>
+  <div class="s-num">§ 04b — 세 모드 간섭</div>
   <h2 class="s-title">When Three Modes<br>Meet</h2>
   <div class="prose" style="margin-bottom:1.5rem">
     <p>With three modes the superposition <span class="math">φ_A cos(ω_A t) + φ_B cos(ω_B t) + φ_C cos(ω_C t)</span> generates richer interference. When no two frequency differences are commensurate, the pattern is <em>quasi-periodic</em> — never repeating exactly, yet bounded. The beating structure becomes a tangle of three rhythms at once.</p>
@@ -554,25 +554,25 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 
 <!-- §05 WEYL -->
 <div class="wrap fi" id="sec-weyl">
-  <div class="s-num">§ 05 — The Spectrum Encodes Area <a href="https://kimsh.kr" target="_blank" class="s-brand">kimsh.kr</a></div>
-  <h2 class="s-title">Weyl's Law:<br>You Can Hear the Area</h2>
+  <div class="s-num">§ 05 — 스펙트럼에 담긴 넓이 <a href="https://kimsh.kr" target="_blank" class="s-brand">kimsh.kr</a></div>
+  <h2 class="s-title">바일 법칙:<br>넓이를 들을 수 있다</h2>
   <div class="weyl-layout">
     <div>
       <div class="prose">
-        <p>Weyl proved in 1911 that the density of eigenvalues recovers the area. Let <span class="math">N(λ)</span> count eigenvalues below <span class="math">λ</span>:</p>
+        <p>바일(Weyl)은 1911년 고유값의 밀도로부터 넓이를 복원할 수 있음을 증명했습니다. <span class="math">N(λ)</span>를 <span class="math">λ</span> 이하의 고유값 개수라 하면:</p>
       </div>
       <div class="eq">N(λ)  ∼  Area(Ω) · λ / (4π)    as λ → ∞</div>
       <div class="prose">
-        <p>For the unit disk (Area = π), this gives <span class="math">N(λ) ∼ λ/4</span>. Each step of the staircase is a new eigenfrequency clicking into place — as the Weyl animation runs, you hear each new mode added as a brief pure tone.</p>
+        <p>단위 원판(넓이 = π)에서는 <span class="math">N(λ) ∼ λ/4</span>입니다. 계단의 각 단은 새로운 고유진동수입니다 — 바일 애니메이션이 진행되면서 각 모드가 짧은 순음으로 들립니다.</p>
       </div>
       <div class="callout">
-        "From the asymptotic growth of a sequence of numbers, Weyl extracted a continuous geometric quantity. The finite encodes the infinite."
+        "수열의 점근적 성장으로부터 바일은 연속적인 기하학적 양을 추출해냈습니다. 유한이 무한을 담고 있습니다."
         <cite>— Spectral geometry tradition</cite>
       </div>
-      <button class="action-btn" id="weyl-replay">↺ Replay with sound</button>
+      <button class="action-btn" id="weyl-replay">↺ 소리와 함께 다시 재생</button>
     </div>
     <div class="panel">
-      <h3>Spectral counting function N(λ)</h3>
+      <h3>스펙트럼 계수 함수 N(λ)</h3>
       <canvas id="weyl-canvas" width="500" height="420"></canvas>
     </div>
   </div>
@@ -583,10 +583,10 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 <!-- §06 ISOSPECTRAL GWW -->
 <div class="wrap fi" id="sec-iso">
   <div class="s-num">§ 06 — Gordon, Webb &amp; Wolpert (1992) <a href="https://kimsh.kr" target="_blank" class="s-brand">kimsh.kr</a></div>
-  <h2 class="s-title">You Cannot Always<br>Hear the Shape</h2>
+  <h2 class="s-title">모양을 항상<br>들을 수는 없다</h2>
 
   <div class="prose">
-    <p>In 1992, Carolyn Gordon, David Webb, and Scott Wolpert gave the definitive answer to Kac's question: <em>No.</em> They exhibited two planar domains — each assembled from seven right triangles — that share every eigenvalue of <span class="math">−Δ</span> with Dirichlet boundary conditions, yet are not congruent. The drums below are identical to the ear. Click either to hear the shared voice.</p>
+    <p>1992년 Carolyn Gordon, David Webb, Scott Wolpert은 Kac의 질문에 결정적인 답을 내렸습니다: <em>아니오.</em> 그들은 각각 일곱 개의 직각삼각형으로 구성된 두 평면 영역을 제시했습니다 — 디리클레 경계 조건에서 <span class="math">−Δ</span>의 모든 고유값을 공유하지만 합동이 아닙니다. 아래 두 드럼은 귀로는 구별할 수 없습니다. 클릭해서 같은 소리를 들어보세요.</p>
   </div>
 
   <div class="iso-grid">
@@ -604,123 +604,123 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 
   <!-- TIMELINE -->
   <div class="gww-construction">
-    <div class="s-num" style="margin-top:1rem">Historical Road to the Answer</div>
+    <div class="s-num" style="margin-top:1rem">답을 향한 역사적 여정</div>
     <div class="timeline">
       <div class="tl-item">
         <div class="tl-year">1966 — MARK KAC</div>
-        <div class="tl-body">Kac popularized the problem in a landmark <em>Amer. Math. Monthly</em> paper. He knew Weyl's law gave area, and conjectured that the full spectrum might determine the domain. He was wrong — but spectacularly productively wrong.</div>
+        <div class="tl-body">Kac는 이 문제를 <em>Amer. Math. Monthly</em>의 기념비적 논문으로 대중화했습니다. 바일 법칙이 넓이를 주고, 전체 스펙트럼이 영역을 결정할 것이라 추측했습니다. 틀렸지만 — 극적으로 생산적으로 틀렸습니다.</div>
       </div>
       <div class="tl-item">
-        <div class="tl-year">1964 — MILNOR (predecessor)</div>
-        <div class="tl-body">Milnor had already shown that two non-isometric flat 16-dimensional tori can have the same Laplace spectrum — but these are not planar domains. The question for 2D planar regions remained wide open for nearly three decades.</div>
+        <div class="tl-year">1964 — MILNOR (선구자)</div>
+        <div class="tl-body">밀너는 등거리가 아닌 두 16차원 평탄 원환면이 같은 라플라시안 스펙트럼을 가질 수 있음을 이미 보였습니다 — 하지만 이것은 평면 영역이 아닙니다. 2D 평면 영역에 대한 질문은 거의 30년 동안 열린 문제로 남아 있었습니다.</div>
       </div>
       <div class="tl-item">
-        <div class="tl-year">1985 — SUNADA'S THEOREM</div>
-        <div class="tl-body">Toshikazu Sunada proved an abstract group-theoretic criterion sufficient for isospectrality. His theorem gave a systematic machine for manufacturing isospectral manifolds — but all known examples were either higher-dimensional or had boundary. Finding planar examples required additional geometric ingenuity.</div>
+        <div class="tl-year">1985 — 수나다 정리</div>
+        <div class="tl-body">수나다 도시카즈(Toshikazu Sunada)는 등스펙트럼의 충분 조건을 추상적인 군론적 기준으로 증명했습니다. 그의 정리는 등스펙트럼 다양체를 체계적으로 생성하는 기계를 제공했습니다 — 하지만 당시 알려진 예들은 고차원이거나 경계가 있었습니다. 평면 예를 찾으려면 추가적인 기하학적 창의성이 필요했습니다.</div>
       </div>
       <div class="tl-item">
         <div class="tl-year">1992 — GORDON, WEBB, WOLPERT</div>
-        <div class="tl-body">Gordon, Webb, and Wolpert combined Sunada's machinery with an explicit geometric construction in the plane, producing the first pair of isospectral planar domains with piecewise-linear boundary. The paper is four pages long. <span class="label-tag tag-settled">Kac's question: resolved</span></div>
+        <div class="tl-body">Gordon, Webb, Wolpert은 수나다의 기계를 평면에서의 명시적인 기하학적 구성과 결합하여, 조각적으로 선형인 경계를 가진 최초의 등스펙트럼 평면 영역 쌍을 만들었습니다. 논문은 네 페이지입니다. <span class="label-tag tag-settled">Kac의 질문: 해결됨</span></div>
       </div>
       <div class="tl-item">
-        <div class="tl-year">1994 — BUSER ET AL.</div>
-        <div class="tl-body">Buser, Conway, Doyle, and Semmler gave an elementary direct proof ("drums") and produced further isospectral pairs using a "transplantation by coloring" method, making the core idea accessible without heavy group theory.</div>
+        <div class="tl-year">1994 — BUSER 외</div>
+        <div class="tl-body">Buser, Conway, Doyle, Semmler은 초등적인 직접 증명("드럼")을 제시하고 "색칠 이식" 방법으로 추가적인 등스펙트럼 쌍을 만들어, 핵심 아이디어를 군론 없이 접근 가능하게 했습니다.</div>
       </div>
       <div class="tl-item">
         <div class="tl-year">2000 — ZELDITCH</div>
-        <div class="tl-body">Zelditch proved that among analytic domains with a bilateral symmetry (mirror symmetry), the Dirichlet spectrum <em>does</em> determine the domain up to isometry. So the counterexamples must break symmetry in an essential way. <span class="label-tag tag-open">Generic smooth domain: open</span></div>
+        <div class="tl-body">Zelditch는 양측 대칭(거울 대칭)을 가진 해석 영역들 사이에서 디리클레 스펙트럼이 영역을 등거리 동형까지 <em>결정한다</em>는 것을 증명했습니다. 따라서 반례들은 본질적인 방식으로 대칭을 깨야 합니다. <span class="label-tag tag-open">일반적 매끄러운 영역: 미해결</span></div>
       </div>
     </div>
   </div>
 
   <!-- SUNADA'S THEOREM -->
   <div class="sunada-box">
-    <h4>Sunada's Theorem (1985)</h4>
-    <p>Let <span class="math">M</span> be a compact Riemannian manifold and <span class="math">G</span> a finite group acting on <span class="math">M</span> by isometries. Let <span class="math">H₁, H₂ ≤ G</span> be subgroups that are <em>almost conjugate</em> — meaning: for every conjugacy class <span class="math">[g] ⊂ G</span>, we have <span class="math">|H₁ ∩ [g]| = |H₂ ∩ [g]|</span>. Then the quotient manifolds <span class="math">H₁\M</span> and <span class="math">H₂\M</span> are isospectral.</p>
-    <p>The almost-conjugacy condition ensures that the <em>representation multiplicities</em> of <span class="math">G</span> on <span class="math">L²(H₁\M)</span> and <span class="math">L²(H₂\M)</span> agree, forcing equal spectra. Note: almost-conjugate does <em>not</em> mean conjugate — that would force <span class="math">H₁\M ≅ H₂\M</span> isometrically. The gap between almost-conjugacy and conjugacy is exactly the room where isospectral non-congruent pairs live.</p>
+    <h4>수나다 정리 (1985)</h4>
+    <p><span class="math">M</span>을 컴팩트 리만 다양체, <span class="math">G</span>를 <span class="math">M</span>에 등거리변환으로 작용하는 유한군이라 하자. <span class="math">H₁, H₂ ≤ G</span>가 <em>준켤레</em> 부분군이면 — 즉 모든 켤레류 <span class="math">[g] ⊂ G</span>에 대해 <span class="math">|H₁ ∩ [g]| = |H₂ ∩ [g]|</span>이면 — 몫 다양체 <span class="math">H₁\M</span>과 <span class="math">H₂\M</span>은 등스펙트럼이다.</p>
+    <p>준켤레 조건은 <span class="math">G</span>의 <span class="math">L²(H₁\M)</span>과 <span class="math">L²(H₂\M)</span>에 대한 <em>표현 중복도</em>가 같음을 보장하여 동일한 스펙트럼을 강제합니다. 준켤레는 켤레를 의미하지 <em>않습니다</em> — 켤레이면 <span class="math">H₁\M ≅ H₂\M</span>이 등거리 동형이 됩니다. 바로 이 준켤레와 켤레 사이의 틈이 등스펙트럼 비합동 쌍이 존재하는 공간입니다.</p>
   </div>
 
   <!-- THE CONSTRUCTION -->
-  <div class="s-num" style="margin-top:3rem">The GWW Construction</div>
+  <div class="s-num" style="margin-top:3rem">GWW 구성법</div>
 
   <div class="gww-grid">
     <div>
       <div class="gww-step">
-        <div class="gww-step-num">Step 1 — The building block</div>
-        <h4>A Right Triangle T</h4>
-        <p>Fix a right triangle <span class="math">T</span> with legs of length 1 and 2 (the specific shape matters for the geometry, not for the spectral argument). Seven congruent copies of <span class="math">T</span> will tile each domain, assembled by gluing along their hypotenuses and legs.</p>
-        <p>The isosceles right triangle with equal legs also works; Gordon–Webb–Wolpert used a right triangle whose smaller angle is arctan(1/2). What matters is that reflections across every edge of <span class="math">T</span> generate a finite group action on a larger base surface.</p>
+        <div class="gww-step-num">1단계 — 기본 블록</div>
+        <h4>직각삼각형 T</h4>
+        <p>변의 길이가 1과 2인 직각삼각형 <span class="math">T</span>를 고정합니다 (구체적인 모양은 스펙트럼 논증이 아니라 기하학에 중요합니다). 각 영역은 <span class="math">T</span>의 합동인 일곱 복사본을 빗변과 변을 따라 붙여서 구성합니다.</p>
+        <p>등변 직각삼각형도 사용 가능합니다. Gordon–Webb–Wolpert는 작은 각이 arctan(1/2)인 직각삼각형을 사용했습니다. 핵심은 <span class="math">T</span>의 각 변에 대한 반사가 더 큰 기저 곡면에 유한군 작용을 생성한다는 점입니다.</p>
       </div>
       <div class="gww-step">
-        <div class="gww-step-num">Step 2 — The group</div>
+        <div class="gww-step-num">2단계 — 군</div>
         <h4>G = GL(3, 𝔽₂)</h4>
-        <p>The ambient group is <span class="math">G = GL(3, 𝔽₂)</span>, the group of invertible 3×3 matrices over the two-element field — a group of order 168, isomorphic to <span class="math">PSL(2, 7)</span>. Gordon and Webb found two subgroups <span class="math">H₁, H₂ ≤ G</span> of order 24 that are almost conjugate but not conjugate in <span class="math">G</span>.</p>
-        <p>Almost-conjugacy was verified by computing, for each of the 6 conjugacy classes of <span class="math">G</span>, that <span class="math">|H₁ ∩ [g]| = |H₂ ∩ [g]|</span> — a finite check. The two subgroups are not conjugate, so the quotient domains they produce are genuinely non-isometric.</p>
+        <p>작용하는 군은 <span class="math">G = GL(3, 𝔽₂)</span>, 즉 2원소 체 위의 가역 3×3 행렬군으로 위수 168이며 <span class="math">PSL(2, 7)</span>과 동형입니다. Gordon과 Webb은 <span class="math">G</span>에서 준켤레이지만 켤레가 아닌 위수 24의 두 부분군 <span class="math">H₁, H₂</span>를 발견했습니다.</p>
+        <p>준켤레성은 <span class="math">G</span>의 6개 켤레류 각각에 대해 <span class="math">|H₁ ∩ [g]| = |H₂ ∩ [g]|</span>를 계산함으로써 확인됩니다 — 유한한 검증입니다. 두 부분군은 켤레가 아니므로 생성되는 몫 영역은 진정으로 비등거리입니다.</p>
       </div>
     </div>
     <div>
       <div class="gww-step">
-        <div class="gww-step-num">Step 3 — The base surface M</div>
-        <h4>Unfolding to a Planar Domain</h4>
-        <p>Construct a base surface <span class="math">M</span> by reflecting the triangle <span class="math">T</span> across its sides repeatedly, tracking the group element applied at each step, until 168 copies tile a larger polygon (a fundamental domain for <span class="math">G</span> acting on the plane by reflections).</p>
-        <p>The orbit of each copy under <span class="math">G</span> is labeled by elements of <span class="math">G</span>. The quotient <span class="math">H_i\M</span> is then a union of exactly <span class="math">|G|/|H_i| = 168/24 = 7</span> triangles — which is why both domains consist of exactly 7 copies of <span class="math">T</span>.</p>
+        <div class="gww-step-num">3단계 — 기저 곡면 M</div>
+        <h4>평면 영역으로 펼치기</h4>
+        <p>Construct a base surface <span class="math">M</span>: 삼각형 <span class="math">T</span>를 각 변에 대해 반복적으로 반사하고 각 단계에서 적용된 군 원소를 추적하여, 168개의 복사본이 더 큰 다각형을 덮을 때까지 진행합니다.</p>
+        <p><span class="math">G</span> 아래 각 복사본의 궤도는 <span class="math">G</span>의 원소로 표시됩니다. 몫 <span class="math">H_i\M</span>은 정확히 <span class="math">|G|/|H_i| = 168/24 = 7</span>개의 삼각형의 합집합이 됩니다 — 두 영역이 정확히 7개의 <span class="math">T</span>로 구성되는 이유가 여기에 있습니다.</p>
       </div>
       <div class="gww-step">
-        <div class="gww-step-num">Step 4 — Equal invariants</div>
-        <h4>Weyl Constraints Are Satisfied</h4>
-        <p>Both domains <span class="math">Ω₁, Ω₂</span> automatically inherit the same Weyl invariants. They have equal <strong>area</strong> (7 copies of <span class="math">T</span> each), equal <strong>perimeter</strong> (the boundary lengths agree because the gluing patterns are balanced), and the same number of corners with the same angles. Weyl's law and its boundary corrections are therefore consistent — the spectra could in principle be equal, and by Sunada's theorem they are.</p>
+        <div class="gww-step-num">4단계 — 동일한 불변량</div>
+        <h4>바일 조건의 충족</h4>
+        <p>두 영역 <span class="math">Ω₁, Ω₂</span>는 자동으로 같은 바일 불변량을 가집니다. 같은 <strong>넓이</strong> (각각 <span class="math">T</span> 7개), 같은 <strong>둘레</strong> (붙이기 패턴이 균형을 이루기 때문), 같은 수의 꼭짓점과 같은 각도. 따라서 바일 법칙과 경계 보정항이 일치하며 — 수나다 정리에 의해 스펙트럼이 실제로 같습니다.</p>
       </div>
     </div>
   </div>
 
   <!-- TRANSPLANTATION OPERATOR -->
   <div class="transplant-diagram">
-    <h4>The Transplantation Isomorphism</h4>
+    <h4>이식 동형사상</h4>
     <p style="font-size:.98rem;color:var(--text);line-height:1.7;margin-bottom:1.2rem">
       The core of the proof is an explicit linear map <span class="math">T: L²(Ω₁) → L²(Ω₂)</span> that intertwines the Laplacians. Label the 7 triangles in <span class="math">Ω₁</span> as <span class="math">A₁…A₇</span> and in <span class="math">Ω₂</span> as <span class="math">B₁…B₇</span>. Given an eigenfunction <span class="math">φ</span> of <span class="math">−Δ</span> on <span class="math">Ω₁</span> with eigenvalue <span class="math">λ</span>, the transplant is:
     </p>
     <div class="eq" style="margin:0 0 1rem">     Tφ|_{Bⱼ}  =  Σᵢ  cᵢⱼ · (φ|_{Aᵢ} reflected to Bⱼ)</div>
     <p style="font-size:.98rem;color:var(--text);line-height:1.7;margin-bottom:1.2rem">
-      where the matrix <span class="math">(cᵢⱼ) ∈ {−1, 0, 1}^{7×7}</span> encodes the almost-conjugacy relation between <span class="math">H₁</span> and <span class="math">H₂</span> in <span class="math">G</span>. Three properties must be verified:
+      여기서 행렬 <span class="math">(cᵢⱼ) ∈ {−1, 0, 1}^{7×7}</span>은 <span class="math">G</span>에서 <span class="math">H₁</span>과 <span class="math">H₂</span>의 준켤레 관계를 인코딩합니다. 세 가지 성질을 확인해야 합니다:
     </p>
     <div class="trow">
-      <div class="trow-cell">Tφ is smooth<br>across all interior<br>edges of Ω₂</div>
+      <div class="trow-cell">Tφ가 Ω₂의<br>모든 내부 변에서<br>매끄럽다</div>
       <div class="trow-arrow">⟹</div>
-      <div class="trow-cell">Tφ ∈ Dom(−Δ<sub>Ω₂</sub>)<br>with Dirichlet<br>boundary conditions</div>
+      <div class="trow-cell">Tφ ∈ Dom(−Δ<sub>Ω₂</sub>)<br>디리클레<br>경계 조건 만족</div>
     </div>
     <div class="trow">
-      <div class="trow-cell">−Δ(Tφ) = λ·Tφ<br>holds on each<br>triangle Bⱼ</div>
+      <div class="trow-cell">각 삼각형 Bⱼ에서<br>−Δ(Tφ) = λ·Tφ<br>성립</div>
       <div class="trow-arrow">⟹</div>
-      <div class="trow-cell">λ is an eigenvalue<br>of −Δ<sub>Ω₂</sub> with<br>eigenfunction Tφ</div>
+      <div class="trow-cell">λ는 −Δ<sub>Ω₂</sub>의<br>고유값 (고유함수 Tφ)</div>
     </div>
     <div class="trow">
-      <div class="trow-cell">T is an<br>L² isometry<br>(‖Tφ‖ = ‖φ‖)</div>
+      <div class="trow-cell">T는<br>L² 등거리 사상<br>(‖Tφ‖ = ‖φ‖)</div>
       <div class="trow-arrow">⟹</div>
-      <div class="trow-cell">Multiplicities match:<br>dim ker(−Δ₁−λ)<br>= dim ker(−Δ₂−λ)</div>
+      <div class="trow-cell">중복도 일치:<br>dim ker(−Δ₁−λ)<br>= dim ker(−Δ₂−λ)</div>
     </div>
     <p style="font-size:.95rem;color:var(--muted);margin-top:1rem;line-height:1.7">
-      All three properties follow from the almost-conjugacy condition on <span class="math">H₁, H₂</span>. Smoothness across interior edges uses the fact that reflections across each edge correspond to elements of <span class="math">G</span>, and the matrix <span class="math">(cᵢⱼ)</span> is precisely calibrated to cancel discontinuities. The argument is purely algebraic — no analysis of the actual eigenvalues is needed.
+      세 성질 모두 <span class="math">H₁, H₂</span>의 준켤레 조건에서 따릅니다. 내부 변에서의 매끄러움은 각 변에 대한 반사가 <span class="math">G</span>의 원소에 대응하고 행렬 <span class="math">(cᵢⱼ)</span>가 불연속성을 상쇄하도록 정밀하게 설계되었기 때문입니다. 논증은 순수하게 대수적 — 실제 고유값의 해석이 필요하지 않습니다.
     </p>
   </div>
 
   <!-- WHAT REMAINS OPEN -->
   <div style="margin-top:3rem">
-    <div class="s-num">What Remains Open</div>
+    <div class="s-num">미해결 문제들</div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2rem;margin-top:1.5rem">
       <div class="gww-step">
-        <div class="gww-step-num">Smooth domains</div>
-        <h4>Generic Shape?</h4>
-        <p>All known planar isospectral counterexamples have corners. Whether a generic smooth planar domain is spectrally rigid — determined by its spectrum among smooth domains — is unknown.</p>
+        <div class="gww-step-num">매끄러운 영역</div>
+        <h4>일반적인 모양?</h4>
+        <p>알려진 모든 평면 등스펙트럼 반례에는 꼭짓점이 있습니다. 일반적인 매끄러운 평면 영역이 스펙트럼적으로 강직한지 — 매끄러운 영역들 사이에서 스펙트럼으로 결정되는지 — 는 미지입니다.</p>
       </div>
       <div class="gww-step">
-        <div class="gww-step-num">Convex domains</div>
-        <h4>Convexity Helps?</h4>
-        <p>No isospectral pair of convex planar domains is known. It is conjectured that convex domains are spectrally determined, but this remains unproved.</p>
+        <div class="gww-step-num">볼록 영역</div>
+        <h4>볼록성이 도움이 될까?</h4>
+        <p>알려진 볼록 평면 영역의 등스펙트럼 쌍은 없습니다. 볼록 영역은 스펙트럼으로 결정된다는 추측이 있지만 증명되지 않았습니다.</p>
       </div>
       <div class="gww-step">
-        <div class="gww-step-num">Neumann vs Dirichlet</div>
-        <h4>Boundary Conditions?</h4>
-        <p>The GWW domains are isospectral for <em>both</em> Dirichlet and Neumann boundary conditions simultaneously — a stronger result. Gordon–Webb showed this also follows from transplantation.</p>
+        <div class="gww-step-num">노이만 대 디리클레</div>
+        <h4>경계 조건?</h4>
+        <p>GWW 영역은 디리클레와 노이만 경계 조건 <em>모두</em>에 대해 동시에 등스펙트럼입니다 — 더 강한 결과입니다. Gordon–Webb은 이 역시 이식으로부터 따름을 보였습니다.</p>
       </div>
     </div>
   </div>
@@ -730,12 +730,12 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 
 <!-- §07 NODAL DOMAINS -->
 <div class="wrap fi" id="sec-nodal">
-  <div class="s-num">§ 07 — Nodal Domains <a href="https://kimsh.kr" target="_blank" class="s-brand">kimsh.kr</a></div>
-  <h2 class="s-title">Can You Count<br>the Silence?</h2>
+  <div class="s-num">§ 07 — 마디 영역 <a href="https://kimsh.kr" target="_blank" class="s-brand">kimsh.kr</a></div>
+  <h2 class="s-title">침묵을<br>셀 수 있을까?</h2>
 
   <div class="prose" style="max-width:760px">
-    <p>The <em>nodal set</em> of an eigenfunction <span class="math">φ</span> is the zero locus <span class="math">{φ=0}</span> — the curves where the membrane neither rises nor falls. The connected components of <span class="math">Ω ∖ {φ=0}</span> are the <em>nodal domains</em>: regions of pure positive or pure negative displacement, alternating like a checkerboard across the dividing lines.</p>
-    <p>On the circular drum, the nodal set of <span class="math">φₘₙ = Jₘ(jₘₙr/R)cos(mθ)</span> consists of <span class="math">n−1</span> interior concentric circles (where <span class="math">Jₘ</span> vanishes) and <span class="math">2m</span> radial lines (where <span class="math">cos(mθ)=0</span>). These divide the disk into exactly <span class="math">2mn</span> nodal domains for <span class="math">m≥1</span>, and <span class="math">n</span> for <span class="math">m=0</span>. Click any mode to see its nodal architecture.</p>
+    <p>고유함수 <span class="math">φ</span>의 <em>마디 집합</em>은 영점 집합 <span class="math">{φ=0}</span> — 막이 오르지도 내리지도 않는 곡선입니다. <span class="math">Ω ∖ {φ=0}</span>의 연결 성분들이 <em>마디 영역</em>입니다: 양 또는 음의 순수한 변위 영역들이 체커보드처럼 번갈아 나타납니다.</p>
+    <p>원형 드럼에서 <span class="math">φₘₙ = Jₘ(jₘₙr/R)cos(mθ)</span>의 마디 집합은 <span class="math">n−1</span>개의 동심원(<span class="math">Jₘ</span>이 소멸하는 곳)과 <span class="math">2m</span>개의 방사선(<span class="math">cos(mθ)=0</span>인 곳)으로 구성됩니다. 이것들이 원판을 <span class="math">m≥1</span>일 때 정확히 <span class="math">2mn</span>개, <span class="math">m=0</span>일 때 <span class="math">n</span>개의 마디 영역으로 나눕니다. 아무 모드나 클릭해서 마디 구조를 보세요.</p>
   </div>
 
   <!-- INTERACTIVE NODAL VIEWER -->
@@ -745,7 +745,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
       <div class="nodal-overlay">
         <div class="nodal-stat" id="nodal-count-display">
           <span class="nodal-big" id="nodal-n">2</span>
-          <span class="nodal-label">nodal domains</span>
+          <span class="nodal-label">마디 영역</span>
         </div>
         <div class="nodal-formula" id="nodal-formula">m=0, n=1 → ν = 1</div>
       </div>
@@ -756,28 +756,28 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 
       <!-- NODAL AUDIO PANEL -->
       <div class="nodal-audio-panel">
-        <div class="nap-title">Hear the Count</div>
+        <div class="nap-title">소리로 세어보기</div>
         <div class="nap-row">
           <button class="nap-btn nap-gold" id="nap-rhythm">
             <span class="nap-icon">♩</span>
-            <span class="nap-txt"><b>Nodal Rhythm</b><br>ν pulses at ω<sub>mn</sub></span>
+            <span class="nap-txt"><b>마디 리듬</b><br>ω<sub>mn</sub>에서 ν번 박동</span>
           </button>
           <button class="nap-btn nap-teal" id="nap-cascade">
             <span class="nap-icon">↑</span>
-            <span class="nap-txt"><b>Courant Cascade</b><br>ascend to bound n</span>
+            <span class="nap-txt"><b>쿠랑 폭포</b><br>n 경계까지 상승</span>
           </button>
         </div>
         <div class="nap-row">
           <button class="nap-btn nap-rose" id="nap-domains">
             <span class="nap-icon">±</span>
-            <span class="nap-txt"><b>Domain Tones</b><br>+ gold · − teal · 0 silence</span>
+            <span class="nap-txt"><b>영역 음색</b><br>+ 금색 · − 청록 · 0 침묵</span>
           </button>
           <button class="nap-btn nap-purple" id="nap-bell" style="border-color:#b080e055">
             <span class="nap-icon">∿</span>
-            <span class="nap-txt"><b>Nodal Bells</b><br>ring at each zero crossing</span>
+            <span class="nap-txt"><b>마디 종</b><br>각 영점 교차에서 울림</span>
           </button>
         </div>
-        <div class="nap-status" id="nap-status">click a button to listen</div>
+        <div class="nap-status" id="nap-status">버튼을 클릭하여 들어보세요</div>
       </div>
 
       <div class="courant-box">
@@ -799,42 +799,42 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 
     <div class="theorem-row">
       <div class="theorem-card theorem-gold">
-        <div class="theorem-year">Courant, 1923</div>
-        <h4 class="theorem-name">Nodal Domain Theorem</h4>
+        <div class="theorem-year">쿠랑, 1923</div>
+        <h4 class="theorem-name">마디 영역 정리</h4>
         <div class="theorem-eq">ν(φₙ) ≤ n</div>
-        <p>The <em>n</em>-th eigenfunction (counting with multiplicity) has at most <em>n</em> nodal domains. The bound is sharp for <span class="math">n=1,2</span> but becomes increasingly slack for large <span class="math">n</span>. Equality holds, for instance, for the <span class="math">n</span>-th mode of a 1D interval.</p>
+        <p>The <em>n</em>-th eigenfunction (counting with multiplicity) has at most <em>n</em> 마디 영역. The bound is sharp for <span class="math">n=1,2</span> but becomes increasingly slack for large <span class="math">n</span>. Equality holds, for instance, for the <span class="math">n</span>-th mode of a 1D interval.</p>
       </div>
       <div class="theorem-card theorem-teal">
-        <div class="theorem-year">Pleijel, 1956</div>
-        <h4 class="theorem-name">Asymptotic Improvement</h4>
+        <div class="theorem-year">플레이엘, 1956</div>
+        <h4 class="theorem-name">점근적 개선</h4>
         <div class="theorem-eq">limsup ν(φₙ)/n ≤ γ ≈ 0.6910</div>
-        <p>Pleijel proved that the Courant bound is <em>not</em> asymptotically sharp in 2D. The Pleijel constant is <span class="math">γ = (j₀,₁/π)² = (2.4048/π)² ≈ 0.691</span>. For any sequence of eigenfunctions, the ratio of nodal domains to eigenvalue index is bounded above by a constant strictly less than 1.</p>
+        <p>Pleijel proved that the Courant bound is <em>not</em> asymptotically sharp in 2D. The Pleijel constant is <span class="math">γ = (j₀,₁/π)² = (2.4048/π)² ≈ 0.691</span>. For any sequence of eigenfunctions, the ratio of 마디 영역 to eigenvalue index is bounded above by a constant strictly less than 1.</p>
       </div>
       <div class="theorem-card theorem-rose">
         <div class="theorem-year">Jung–Zelditch, 2016–2020</div>
         <h4 class="theorem-name">Quantum Ergodicity & Nodal Growth</h4>
         <div class="theorem-eq">ν(φₙ) → ∞ &nbsp;(a.e. QE sequence)</div>
-        <p>For surfaces with ergodic geodesic flow, Jung and Zelditch proved that <em>quantum ergodic</em> sequences of eigenfunctions — those equidistributing in phase space — have the number of nodal domains tending to infinity. The equidistribution of eigenfunctions forces their zero sets to become increasingly complex.</p>
+        <p>For surfaces with ergodic geodesic flow, Jung and Zelditch proved that <em>quantum ergodic</em> sequences of eigenfunctions — those equidistributing in phase space — have the number of 마디 영역 tending to infinity. The equidistribution of eigenfunctions forces their zero sets to become increasingly complex.</p>
       </div>
     </div>
 
     <!-- JUNG-JANG-ZELDITCH IN DEPTH -->
     <div class="jjz-section">
-      <div class="s-num" style="margin-top:0">Jung · Jang · Zelditch — A Closer Look</div>
+      <div class="s-num" style="margin-top:0">Jung · Jang · Zelditch — 자세히 보기</div>
 
       <div class="jjz-grid">
         <div class="jjz-paper">
           <div class="jjz-authors">Jung &amp; Zelditch</div>
-          <div class="jjz-title">"Number of nodal domains of eigenfunctions on non-positively curved surfaces with concave boundary"</div>
+          <div class="jjz-title">"Number of 마디 영역 of eigenfunctions on non-positively curved surfaces with concave boundary"</div>
         </div>
         <div class="jjz-paper">
           <div class="jjz-authors">Jung &amp; Zelditch</div>
-          <div class="jjz-title">"Boundedness of the number of nodal domains for eigenfunctions of generic Kaluza-Klein 3-folds"</div>
+          <div class="jjz-title">"Boundedness of the number of 마디 영역 for eigenfunctions of generic Kaluza-Klein 3-folds"</div>
         </div>
         <div class="jjz-paper">
           <div class="jjz-authors">Jang &amp; Jung</div>
           <div class="jjz-title">Nodal domains and the quantum ergodicity threshold</div>
-          <p>Jang and Jung study the precise threshold at which quantum ergodicity forces nodal complexity. Their results sharpen the relationship between <span class="math">L²</span>-equidistribution of eigenfunctions and the combinatorial topology of their zero sets — showing that even <em>partial</em> equidistribution in phase space has detectable consequences for the nodal domain count.</p>
+          <p>Jang와 Jung은 양자 에르고딕성이 마디 복잡성을 강제하는 정확한 임계점을 연구합니다. 그들의 결과는 고유함수의 <span class="math">L²</span>-균등 분포와 영점 집합의 조합적 위상 사이의 관계를 날카롭게 하며 — 위상 공간에서 <em>부분적인</em> 균등 분포조차도 마디 영역 수에 감지 가능한 영향을 미침을 보입니다.</p>
         </div>
       </div>
 
@@ -842,15 +842,15 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
       <div class="phase-diagram-wrap">
         <canvas id="phase-canvas" width="900" height="260"></canvas>
       </div>
-      <div class="phase-caption">The nodal domain spectrum: from integrable (bounded ν) through mixed to ergodic (ν → ∞). Position in this diagram is controlled by the dynamics of the geodesic flow.</div>
+      <div class="phase-caption">마디 영역 스펙트럼: 가적분계(ν 유계)에서 혼합을 거쳐 에르고딕계(ν → ∞)까지. 이 다이어그램에서의 위치는 측지선 흐름의 동역학이 결정합니다.</div>
     </div>
   </div>
 
   <!-- FUTURE DIRECTIONS -->
   <div class="future-section">
-    <div class="s-num">Frontiers &amp; Open Problems</div>
+    <div class="s-num">연구의 최전선과 미해결 문제들</div>
     <div class="future-intro prose">
-      <p>The theory of nodal domains sits at the meeting point of spectral theory, dynamical systems, probability, and topology. The following directions represent some of the most active and enticing open problems in the field — questions where a single idea could unlock a decade of mathematics.</p>
+      <p>The theory of 마디 영역 sits at the meeting point of spectral theory, dynamical systems, probability, and topology. The following directions represent some of the most active and enticing open problems in the field — questions where a single idea could unlock a decade of mathematics.</p>
     </div>
 
     <div class="future-grid">
@@ -859,9 +859,9 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
         <canvas class="future-bg-canvas" width="320" height="200"></canvas>
         <div class="future-card-content">
           <div class="future-num">01</div>
-          <h4>Lower Bounds on Nodal Volume</h4>
-          <p>Yau conjectured (1982) that the <span class="math">(n-1)</span>-dimensional measure of the nodal set satisfies <span class="math">c√λ ≤ H^{n-1}({φ=0}) ≤ C√λ</span>. Donnelly–Fefferman proved the upper bound; Logunov proved the lower bound in full generality in 2018. But the <em>precise constant</em> — and its dependence on the geometry — remains unknown.</p>
-          <div class="future-tag">Analytic · Geometric measure theory</div>
+          <h4>마디 집합의 부피 하한</h4>
+          <p>야우(Yau)는 1982년 마디 집합의 <span class="math">(n-1)</span>차원 측도가 <span class="math">c√λ ≤ H^{n-1}({φ=0}) ≤ C√λ</span>를 만족한다고 추측했습니다. Donnelly–Fefferman이 상한을, Logunov가 2018년 완전한 일반성으로 하한을 증명했습니다. 그러나 <em>정확한 상수</em> — 그리고 기하학에 대한 의존성 — 은 미지입니다.</p>
+          <div class="future-tag">해석학 · 기하 측도론</div>
         </div>
       </div>
 
@@ -869,9 +869,9 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
         <canvas class="future-bg-canvas" width="320" height="200"></canvas>
         <div class="future-card-content">
           <div class="future-num">02</div>
-          <h4>Random Wave Model &amp; Percolation</h4>
-          <p>Berry (1977) conjectured that high-energy eigenfunctions on ergodic surfaces locally resemble <em>random monochromatic waves</em>. Under this model, nodal domains form a percolation pattern with a precise critical density. Proving that real eigenfunctions exhibit this percolation structure — even on a torus — is wide open.</p>
-          <div class="future-tag">Probability · Quantum chaos</div>
+          <h4>무작위 파동 모형과 퍼콜레이션</h4>
+          <p>Berry (1977) conjectured that high-energy eigenfunctions on ergodic surfaces locally resemble <em>random monochromatic waves</em>. Under this model, 마디 영역 form a percolation pattern with a precise critical density. Proving that real eigenfunctions exhibit this percolation structure — even on a torus — is wide open.</p>
+          <div class="future-tag">확률론 · 양자 카오스</div>
         </div>
       </div>
 
@@ -879,9 +879,9 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
         <canvas class="future-bg-canvas" width="320" height="200"></canvas>
         <div class="future-card-content">
           <div class="future-num">03</div>
-          <h4>Nodal Domains vs. Spectral Geometry</h4>
-          <p>Can two isospectral drums — like the GWW pair — have <em>different</em> nodal domain counts for corresponding eigenfunctions? The transplantation map is an isometry of <span class="math">L²</span> but may not preserve the sign of eigenfunctions or the topology of their zero sets. This offers a potential geometric invariant <em>beyond</em> the spectrum.</p>
-          <div class="future-tag">Spectral geometry · Topology</div>
+          <h4>마디 영역 대 스펙트럼 기하학</h4>
+          <p>GWW 쌍처럼 등스펙트럼인 두 드럼이 대응하는 고유함수에 대해 <em>다른</em> 마디 영역 수를 가질 수 있을까요? 이식 사상은 <span class="math">L²</span>의 등거리 사상이지만 고유함수의 부호나 영점 집합의 위상을 보존하지 않을 수 있습니다. 이것은 스펙트럼을 <em>넘어서는</em> 잠재적 기하학적 불변량을 제공합니다.</p>
+          <div class="future-tag">스펙트럼 기하학 · 위상수학</div>
         </div>
       </div>
 
@@ -889,9 +889,9 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
         <canvas class="future-bg-canvas" width="320" height="200"></canvas>
         <div class="future-card-content">
           <div class="future-num">04</div>
-          <h4>Pleijel Constant in 3D</h4>
-          <p>Pleijel's theorem extends to <span class="math">d</span>-dimensional manifolds with constant <span class="math">γ_d = (j_{d/2−1,1} / ω_d^{1/d})^2</span> where <span class="math">ω_d</span> is the volume of the unit ball. The <em>sharp</em> limsup — achieving the Pleijel constant along some sequence — is not known in dimension <span class="math">d ≥ 3</span>, nor is it known which geometric features drive the maximum.</p>
-          <div class="future-tag">Higher dimensions · Sharp constants</div>
+          <h4>3차원에서의 플레이엘 상수</h4>
+          <p>플레이엘 정리는 상수 <span class="math">γ_d = (j_{d/2−1,1} / ω_d^{1/d})^2</span> (<span class="math">ω_d</span>는 단위 구의 부피)를 가진 <span class="math">d</span>차원 다양체로 확장됩니다. 어떤 수열을 따라 플레이엘 상수를 달성하는 <em>날카로운</em> limsup은 차원 <span class="math">d ≥ 3</span>에서 알려져 있지 않으며, 어떤 기하학적 특성이 최댓값을 이끄는지도 미지입니다.</p>
+          <div class="future-tag">고차원 · 날카로운 상수</div>
         </div>
       </div>
 
@@ -899,9 +899,9 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
         <canvas class="future-bg-canvas" width="320" height="200"></canvas>
         <div class="future-card-content">
           <div class="future-num">05</div>
-          <h4>Topology of Nodal Sets</h4>
-          <p>What topological types can nodal curves realize? On a surface of genus <span class="math">g</span>, the nodal set of the <span class="math">n</span>-th eigenfunction is a union of smooth embedded curves. Their collective topology — how many connected components, their linking, their genus — is essentially unconstrained by current theory. Jung's recent work begins to probe this frontier.</p>
-          <div class="future-tag">Low-dim topology · Morse theory</div>
+          <h4>마디 집합의 위상</h4>
+          <p>마디 곡선은 어떤 위상 유형을 실현할 수 있을까요? 종수 <span class="math">g</span>인 곡면에서 <span class="math">n</span>번째 고유함수의 마디 집합은 매끄럽게 삽입된 곡선들의 합집합입니다. 그것들의 집합적 위상 — 연결 성분의 수, 연결, 종수 — 은 현재 이론으로 본질적으로 제약이 없습니다. Jung의 최근 연구가 이 최전선을 탐색하기 시작했습니다.</p>
+          <div class="future-tag">저차원 위상수학 · 모스 이론</div>
         </div>
       </div>
 
@@ -909,9 +909,9 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
         <canvas class="future-bg-canvas" width="320" height="200"></canvas>
         <div class="future-card-content">
           <div class="future-num">06</div>
-          <h4>Arithmetic Quantum Chaos</h4>
-          <p>On arithmetic hyperbolic surfaces, Hecke–Maass eigenfunctions are highly constrained by number-theoretic symmetries. Jang–Jung results on quantum ergodicity apply, but the <em>rate</em> of nodal growth, and connections to the Riemann Hypothesis via L-function zeros, hint at deep arithmetic content encoded in the nodal structure of these extraordinary functions.</p>
-          <div class="future-tag">Number theory · Arithmetic geometry</div>
+          <h4>산술 양자 카오스</h4>
+          <p>산술 쌍곡 곡면에서 헤케-마스 고유함수는 정수론적 대칭에 의해 강하게 제약됩니다. 양자 에르고딕성에 관한 Jang–Jung 결과가 적용되지만, 마디 성장의 <em>속도</em>와 L함수 영점을 통한 리만 가설과의 연결은 이 특별한 함수들의 마디 구조에 인코딩된 깊은 산술적 내용을 암시합니다.</p>
+          <div class="future-tag">수론 · 산술 기하학</div>
         </div>
       </div>
 
@@ -921,8 +921,8 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 
 <hr class="divider">
 <footer>
-  <div class="s-num">References</div>
-  <h2 class="s-title" style="font-size:1.9rem;margin-bottom:1.5rem">Further Reading</h2>
+  <div class="s-num">참고문헌</div>
+  <h2 class="s-title" style="font-size:1.9rem;margin-bottom:1.5rem">더 읽어보기</h2>
   <div class="refs-grid">
     <div class="ref-item"><strong>M. Kac</strong> — "Can One Hear the Shape of a Drum?" <em>Amer. Math. Monthly</em> 73 (1966), 1–23.</div>
     <div class="ref-item"><strong>H. Weyl</strong> — "Über die Abhängigkeit der Eigenschwingungen einer Membran." <em>J. reine angew. Math.</em> 141 (1912).</div>
@@ -933,7 +933,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
     <div class="ref-item"><strong>J. Jung &amp; S. Zelditch</strong> — "Number of Nodal Domains of Eigenfunctions on Non-positively Curved Surfaces with Concave Boundary." <em>Math. Ann.</em> 375 (2019).</div>
     <div class="ref-item"><strong>J. Jung &amp; S. Zelditch</strong> — "Boundedness of the Number of Nodal Domains for Eigenfunctions of Generic Kaluza-Klein 3-folds." <em>Ann. Inst. Fourier</em> (2020).</div>
   </div>
-  <p class="epilogue">Bessel functions to 10⁻¹⁵. Eigenvalues exact: j²ₘₙ/R². Audio: Web Audio API modal synthesis with exponential decay and pitch glide.</p>
+  <p class="epilogue">베셀 함수: 10⁻¹⁵ 정밀도. 고유값 정확: j²ₘₙ/R². 오디오: Web Audio API 모달 합성, 지수 감쇠 및 음높이 활강.</p>
   <div class="footer-brand">
     <span class="footer-brand-sep">—</span>
     <a href="https://kimsh.kr" target="_blank" rel="noopener">kimsh.kr</a>
@@ -1085,7 +1085,7 @@ function iosUnlock(evt) {
   var overlay = document.getElementById('audio-overlay');
   if (overlay) overlay.classList.add('gone');
   var btn = document.getElementById('mute-btn');
-  if (btn) { btn.classList.add('on'); btn.textContent = '\u266a Sound ON'; }
+  if (btn) { btn.classList.add('on'); btn.textContent = '\u266a 소리 켜짐'; }
 
   startKeepAlive();
   watchContextState();
@@ -1104,7 +1104,7 @@ document.getElementById('mute-btn').addEventListener('click', function() {
   resumeIfSuspended();
   muted = !muted;
   if (masterGain && audioCtx) masterGain.gain.setTargetAtTime(muted ? 0 : 0.75, audioCtx.currentTime, 0.04);
-  this.textContent = muted ? '\u266a Sound OFF' : '\u266a Sound ON';
+  this.textContent = muted ? '\u266a 소리 꺼짐' : '\u266a 소리 켜짐';
   this.classList.toggle('on', !muted);
   stopBeatTones();
   if (muted) phasorOscs.forEach((_, i) => stopPhasorTone(i));
@@ -1574,7 +1574,7 @@ function paintSuperBuf(ctx, W, H, bufs, tfs, bg=[5,6,12]) {
 }
 
 // ================================================================
-// §03 — MODE GALLERY (all animated, click to hear)
+// §03 — MODE GALLERY (all animated, 클릭해서 들어보세요)
 // ================================================================
 {
   const grid=document.getElementById('modes-grid');
@@ -1587,7 +1587,7 @@ function paintSuperBuf(ctx, W, H, bufs, tfs, bg=[5,6,12]) {
       <div class="mode-meta">
         <div class="mode-name">Mode (m=${m}, n=${n+1})${mult>1?' ×2':''}</div>
         <div class="mode-ev">λ = ${lam}/R²  &nbsp;  ω = ${z.toFixed(4)} c/R</div>
-        <div class="mode-ev"><span class="play-badge">▶ click to hear</span></div>
+        <div class="mode-ev"><span class="play-badge">▶ 클릭해서 들어보세요</span></div>
       </div>`;
     const cv=card.querySelector('canvas');
     const ctx=cv.getContext('2d');
@@ -1822,7 +1822,7 @@ function paintSuperBuf(ctx, W, H, bufs, tfs, bg=[5,6,12]) {
     ctx.beginPath(); ctx.moveTo(lx(0),ny(0)); ctx.lineTo(lx(maxL),ny(maxL/4)); ctx.stroke();
     ctx.setLineDash([]);
     ctx.fillStyle='#c9a748cc'; ctx.font='italic 10px EB Garamond,serif'; ctx.textAlign='left';
-    ctx.fillText('N(λ) ∼ λ/4  (Weyl)',lx(140),ny(140/4)-9);
+    ctx.fillText('N(λ) ∼ λ/4  (바일)',lx(140),ny(140/4)-9);
 
     if(n>0){
       ctx.strokeStyle='#22b5aa'; ctx.lineWidth=2;
@@ -1880,7 +1880,7 @@ function paintSuperBuf(ctx, W, H, bufs, tfs, bg=[5,6,12]) {
 }
 
 // ================================================================
-// §06 — ISOSPECTRAL GWW (animated, click to hear shared spectrum)
+// §06 — ISOSPECTRAL GWW (animated, 클릭해서 들어보세요 shared spectrum)
 // ================================================================
 {
   const shapes=[
@@ -1935,7 +1935,7 @@ function paintSuperBuf(ctx, W, H, bufs, tfs, bg=[5,6,12]) {
     ctx.stroke(); ctx.shadowBlur=0;
     // Cursor hint
     ctx.fillStyle=drumColors[which]+'66'; ctx.font='italic 10px EB Garamond,monospace';
-    ctx.textAlign='center'; ctx.fillText('click to hear',W/2,H-10);
+    ctx.textAlign='center'; ctx.fillText('클릭해서 들어보세요',W/2,H-10);
   }
 
   function isoFrame(){ requestAnimationFrame(isoFrame); isoT+=.014; drawGWW(drumCanvases[0],0,isoT); drawGWW(drumCanvases[1],1,isoT); }
@@ -2081,11 +2081,11 @@ function paintSuperBuf(ctx, W, H, bufs, tfs, bg=[5,6,12]) {
     courantActual.style.width = (cpct * 100).toFixed(1) + '%';
     const col = pct > PLEIJEL ? '#c9a748' : '#22b5aa';
     courantActual.style.background = `linear-gradient(90deg, ${col}44, ${col})`;
-    courantNums.innerHTML = `<span>ν = ${nu}</span><span>n = ${idx}  (Courant bound)</span>`;
+    courantNums.innerHTML = `<span>ν = ${nu}</span><span>n = ${idx}  (쿠랑 경계)</span>`;
     const ratio = pct.toFixed(3);
     const pleijStr = PLEIJEL.toFixed(4);
     courantNote.innerHTML = `ν/n = ${ratio} &nbsp;|&nbsp; Pleijel γ = (j₀,₁/π)² ≈ ${pleijStr}<br>
-      ${pct <= PLEIJEL ? '✓ Within Pleijel bound' : '— Exceeds Pleijel asymptotic (low n regime)'}`;
+      ${pct <= PLEIJEL ? '✓ 플레이엘 경계 이내' : '— 플레이엘 점근 초과 (낮은 n 영역)'}`;
     nodalNDisplay.textContent = nu;
     nodalFormula.textContent = m === 0
       ? `m=0, n=${n+1} → ν = n = ${nu}`
@@ -2111,7 +2111,7 @@ function paintSuperBuf(ctx, W, H, bufs, tfs, bg=[5,6,12]) {
   }
 
   // ---- 1. NODAL RHYTHM: play exactly ν pulses at eigenfrequency ----
-  // Each pulse is a short sine burst — you literally count the nodal domains
+  // Each pulse is a short sine burst — you literally count the 마디 영역
   async function playNodalRhythm() {
     if (!audioCtx || audioCtx.state !== 'running') return;
     const [m, n] = NODAL_MODES[activeNodalMode];
@@ -2123,7 +2123,7 @@ function paintSuperBuf(ctx, W, H, bufs, tfs, bg=[5,6,12]) {
     const pulseDur  = Math.min(interval * 0.7, 0.18);
     const t0 = audioCtx.currentTime + 0.05;
 
-    setStatus(`playing ${nu} nodal pulses at ${freq.toFixed(1)} Hz…`);
+    setStatus(`재생 중: ${nu}개 마디 박동 @ ${freq.toFixed(1)} Hz…`);
 
     // First: a rich struck-drum tone to establish the eigenfrequency
     const introOsc = audioCtx.createOscillator();
@@ -2157,7 +2157,7 @@ function paintSuperBuf(ctx, W, H, bufs, tfs, bg=[5,6,12]) {
     }
 
     // Status clears after playback
-    setTimeout(() => setStatus(`ν = ${nu} domains counted`, false),
+    setTimeout(() => setStatus(`ν = ${nu}개 영역 확인됨`, false),
       (0.5 + totalDur + 0.3) * 1000);
   }
 
@@ -2171,13 +2171,13 @@ function paintSuperBuf(ctx, W, H, bufs, tfs, bg=[5,6,12]) {
 
     // Collect eigenvalues up to idx
     const cascade = sortedModes.slice(0, idx);
-    setStatus(`cascading through n=1…${idx} eigenfrequencies…`);
+    setStatus(`n=1…${idx}개 고유진동수 순차 재생…`);
 
     let step = 0;
     function playStep() {
       if (!cascadeRunning || step >= cascade.length) {
         cascadeRunning = false;
-        setStatus(`Courant bound n=${idx}, actual ν=${nu}`, false);
+        setStatus(`쿠랑 경계 n=${idx}, 실제 ν=${nu}`, false);
         return;
       }
       const { m: cm, n: cn } = cascade[step];
@@ -2198,7 +2198,7 @@ function paintSuperBuf(ctx, W, H, bufs, tfs, bg=[5,6,12]) {
       osc.connect(g); g.connect(masterGain);
       osc.start(t0); osc.stop(t0 + dur + 0.02);
 
-      if (isNodal) setStatus(`← ν = ${nu} nodal domains here`);
+      if (isNodal) setStatus(`← ν = ${nu} 마디 영역 here`);
 
       step++;
       const gap = isNodal ? 380 : isLast ? 300 : (step < 4 ? 200 : step < 12 ? 110 : 60);
@@ -2237,7 +2237,7 @@ function paintSuperBuf(ctx, W, H, bufs, tfs, bg=[5,6,12]) {
       { osc: oscPos, gain: gainPos, polarity: +1 },
       { osc: oscNeg, gain: gainNeg, polarity: -1 },
     ];
-    setStatus(`domain tones at ${freq.toFixed(1)} Hz — silence at nodal lines`);
+    setStatus(`영역 음색 재생: ${freq.toFixed(1)} Hz — 마디 선에서 침묵`);
   }
 
   function stopDomainTones() {
@@ -2308,7 +2308,7 @@ function paintSuperBuf(ctx, W, H, bufs, tfs, bg=[5,6,12]) {
       napDomainsActive = false;
       stopDomainTones();
       document.getElementById('nap-domains').classList.remove('active-sound');
-      setStatus('domain tones stopped', false);
+      setStatus('영역 음색 정지', false);
     } else {
       napDomainsActive = true;
       document.querySelectorAll('.nap-btn').forEach(b => b.classList.remove('active-sound'));
@@ -2322,11 +2322,11 @@ function paintSuperBuf(ctx, W, H, bufs, tfs, bg=[5,6,12]) {
     if (!audioReady()) return;
     napBellsActive = !napBellsActive;
     document.getElementById('nap-bell').classList.toggle('active-sound', napBellsActive);
-    if (napBellsActive) setStatus('nodal bells armed — listen at zero crossings');
-    else setStatus('nodal bells off', false);
+    if (napBellsActive) setStatus('마디 종 준비됨 — 영점 교차 시 들어보세요');
+    else setStatus('마디 종 끄기', false);
   });
 
-  // When mode changes, restart domain tones at new frequency
+  // When mode changes, restart 영역 음색 재생: new frequency
   function onNodalModeChange(m, n) {
     if (napDomainsActive && audioCtx && audioCtx.state === 'running') {
       startDomainTones();
@@ -2370,9 +2370,9 @@ function paintSuperBuf(ctx, W, H, bufs, tfs, bg=[5,6,12]) {
       pctx.fillRect(0, 0, pw, ph);
 
       const zones = [
-        { x: 0,    w: pw/3,   label: 'Integrable', sublabel: 'ν bounded', col: '#c9a748', desc: 'Kaluza–Klein, flat tori' },
-        { x: pw/3, w: pw/3,   label: 'Mixed',      sublabel: 'ν unclear', col: '#b080e0', desc: 'KAM surfaces, partial symmetry' },
-        { x: 2*pw/3, w: pw/3, label: 'Ergodic',    sublabel: 'ν → ∞',    col: '#22b5aa', desc: 'Negatively curved, stadium' },
+        { x: 0,    w: pw/3,   label: '가적분', sublabel: 'ν 유계', col: '#c9a748', desc: '칼루자–클라인, 평탄 원환면' },
+        { x: pw/3, w: pw/3,   label: '혼합',      sublabel: 'ν 불명확', col: '#b080e0', desc: 'KAM 곡면, 부분 대칭' },
+        { x: 2*pw/3, w: pw/3, label: '에르고딕',    sublabel: 'ν → ∞',    col: '#22b5aa', desc: '음곡률, 경기장' },
       ];
 
       zones.forEach(z => {
@@ -2442,7 +2442,7 @@ function paintSuperBuf(ctx, W, H, bufs, tfs, bg=[5,6,12]) {
       pctx.fillStyle = '#585d7a';
       pctx.font = '9px Space Mono, monospace';
       pctx.textAlign = 'left';
-      pctx.fillText('← n (eigenvalue index)', 8, ph - 36);
+      pctx.fillText('← n (고유값 지수)', 8, ph - 36);
       pctx.textAlign = 'right';
       pctx.fillText('ν(φₙ) →', pw - 8, ph - 36);
 
@@ -2455,7 +2455,7 @@ function paintSuperBuf(ctx, W, H, bufs, tfs, bg=[5,6,12]) {
       pctx.beginPath(); pctx.moveTo(pz.x, py_pleijel); pctx.lineTo(pz.x + pz.w, py_pleijel); pctx.stroke();
       pctx.setLineDash([]);
       pctx.fillStyle = '#c9a74888'; pctx.font = '8px Space Mono,monospace'; pctx.textAlign = 'right';
-      pctx.fillText('Pleijel γ', pz.x + pz.w - 4, py_pleijel - 4);
+      pctx.fillText('플레이엘 γ', pz.x + pz.w - 4, py_pleijel - 4);
     }
     drawPhase();
   }
@@ -2533,7 +2533,7 @@ function paintSuperBuf(ctx, W, H, bufs, tfs, bg=[5,6,12]) {
       }
     });
     ctx.fillStyle = '#b080e0'; ctx.font = 'italic 10px EB Garamond,serif'; ctx.textAlign='center';
-    ctx.fillText('different topology?', w/2, h-10);
+    ctx.fillText('다른 위상?', w/2, h-10);
   }
 
   function draw3DSpectrum(ctx, w, h, t, col) {
@@ -2588,7 +2588,7 @@ function paintSuperBuf(ctx, W, H, bufs, tfs, bg=[5,6,12]) {
     ctx.strokeStyle=col+'33'; ctx.lineWidth=1;
     ctx.beginPath(); ctx.moveTo(10,h/2); ctx.lineTo(w-10,h/2); ctx.stroke();
     ctx.fillStyle=col+'66'; ctx.font='8px Space Mono,monospace'; ctx.textAlign='center';
-    ctx.fillText('L-function zeros  (ℜ = ½)', w/2, h-8);
+    ctx.fillText('L함수 영점  (ℜ = ½)', w/2, h-8);
   }
 
   let fcT = 0;
@@ -2650,9 +2650,9 @@ function paintSuperBuf(ctx, W, H, bufs, tfs, bg=[5,6,12]) {
 {
   // Inject Web App Manifest dynamically
   const manifest = {
-    name: "Can You Hear the Shape of a Drum?",
-    short_name: "Hear the Drum",
-    description: "Interactive spectral geometry: eigenmodes, Fourier, nodal domains.",
+    name: "드럼의 모양을 들을 수 있을까?",
+    short_name: "드럼의 모양",
+    description: "Interactive spectral geometry: eigenmodes, Fourier, 마디 영역.",
     start_url: "./",
     display: "standalone",
     background_color: "#05060c",
@@ -2714,8 +2714,8 @@ self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>
 <div id="pwa-banner">
   <div id="pwa-banner-inner">
     <span class="pwa-icon">🥁</span>
-    <span class="pwa-txt"><b>Add to Home Screen</b>Share → Add to Home Screen</span>
-    <button class="pwa-add" id="pwa-add-btn">Install</button>
+    <span class="pwa-txt"><b>홈 화면에 추가</b>공유 → 홈 화면에 추가</span>
+    <button class="pwa-add" id="pwa-add-btn">설치</button>
     <span class="pwa-close" id="pwa-close-btn">✕</span>
   </div>
 </div>
