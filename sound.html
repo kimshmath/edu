@@ -745,8 +745,11 @@ footer {
   inset: 0;
   z-index: 10000;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 3vh 0;
   background: rgba(8,13,26,0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -762,10 +765,12 @@ footer {
   background: var(--bg3);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 20px;
-  padding: 2.5rem 2rem;
+  padding: 2rem 1.8rem;
   text-align: center;
   position: relative;
   box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  margin: auto;
+  flex-shrink: 0;
 }
 .notice-icon {
   font-size: 3rem;
