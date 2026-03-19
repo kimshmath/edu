@@ -184,6 +184,9 @@ input[type=range]::-moz-range-thumb{
     <p class="hero-label">A Mathematical Journey</p>
     <h1 class="hero-title">Living in a<br><em>Hyperbolic Space</em></h1>
     <p class="hero-sub">Where the parallel postulate fails, triangles contain less than 180°, and an infinite world hides inside a finite disk.</p>
+    
+    
+    <p style="font-family:'Cormorant Garamond',serif;font-size:.82rem;letter-spacing:.22em;color:rgba(201,168,76,0.62);text-transform:uppercase;margin-top:-.4rem;margin-bottom:2.4rem">kimsh.kr/edu</p>
     <div class="hero-scroller">
       <div class="scroll-bar"></div>
       <span>Explore</span>
@@ -670,13 +673,83 @@ input[type=range]::-moz-range-thumb{
       </div>
       <div id="growthData">
         <span class="gd-head">r</span>
-        <span class="gd-head">Euclidean C(r) = 2πr</span>
-        <span class="gd-head">Hyperbolic C(r) = 2π sinh r</span>
+        <span class="gd-head">Euclidean 2πr</span>
+        <span class="gd-head">Hyperbolic 2π sinh r</span>
+        <span class="gd-r">0.5</span><span class="gd-euc">3.14</span><span class="gd-hyp">3.27</span>
+        <span class="gd-r">1.0</span><span class="gd-euc">6.28</span><span class="gd-hyp">7.38</span>
+        <span class="gd-r">1.5</span><span class="gd-euc">9.42</span><span class="gd-hyp">13.38</span>
+        <span class="gd-r">2.0</span><span class="gd-euc">12.57</span><span class="gd-hyp">22.79</span>
+        <span class="gd-r">2.5</span><span class="gd-euc">15.71</span><span class="gd-hyp">38.01</span>
+        <span class="gd-r">3.0</span><span class="gd-euc">18.85</span><span class="gd-hyp">62.94</span>
       </div>
     </div>
     <div>
       <div class="disk-wrap">
-        <canvas id="growthCanvas" width="440" height="440"></canvas>
+        <svg viewBox="0 0 440 440" xmlns="http://www.w3.org/2000/svg"
+     role="img" aria-label="Concentric hyperbolic circles at radii 0.5 through 3, drawn in the Poincaré disk; circumference grows as 2π sinh(r)">
+  <defs>
+    <radialGradient id="gbkg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#0e1240"/>
+      <stop offset="65%"  stop-color="#06081e"/>
+      <stop offset="100%" stop-color="#020308"/>
+    </radialGradient>
+    <radialGradient id="glimb" cx="50%" cy="50%" r="50%">
+      <stop offset="75%" stop-color="transparent"/>
+      <stop offset="100%" stop-color="rgba(0,0,10,0.75)"/>
+    </radialGradient>
+    <clipPath id="egclip"><circle cx="220" cy="220" r="185"/></clipPath>
+    <filter id="gcglow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="440" height="440" fill="#04050e"/>
+  <circle cx="220" cy="220" r="185" fill="url(#gbkg)"/>
+
+  <!-- Faint tessellation texture: radial geodesics -->
+  <g clip-path="url(#egclip)">
+  <line x1="35.0" y1="220.0" x2="405.0" y2="220.0" stroke="rgba(255,255,255,0.045)" stroke-width="0.7"/>
+  <line x1="59.8" y1="127.5" x2="380.2" y2="312.5" stroke="rgba(255,255,255,0.045)" stroke-width="0.7"/>
+  <line x1="127.5" y1="59.8" x2="312.5" y2="380.2" stroke="rgba(255,255,255,0.045)" stroke-width="0.7"/>
+  <line x1="220.0" y1="35.0" x2="220.0" y2="405.0" stroke="rgba(255,255,255,0.045)" stroke-width="0.7"/>
+  <line x1="312.5" y1="59.8" x2="127.5" y2="380.2" stroke="rgba(255,255,255,0.045)" stroke-width="0.7"/>
+  <line x1="380.2" y1="127.5" x2="59.8" y2="312.5" stroke="rgba(255,255,255,0.045)" stroke-width="0.7"/>
+  
+  </g>
+
+  <!-- Hyperbolic circles (tanh(r/2)*R in disk coords) -->
+  <g clip-path="url(#gc)">
+  <circle cx="220" cy="220" r="45.3" fill="none" stroke="rgba(201,168,76,0.90)" stroke-width="2.1"/>
+  <circle cx="220" cy="220" r="85.5" fill="none" stroke="rgba(198,158,56,0.85)" stroke-width="1.9"/>
+  <circle cx="220" cy="220" r="117.5" fill="none" stroke="rgba(60,184,195,0.85)" stroke-width="1.8"/>
+  <circle cx="220" cy="220" r="140.9" fill="none" stroke="rgba(48,162,175,0.80)" stroke-width="1.7"/>
+  <circle cx="220" cy="220" r="156.9" fill="none" stroke="rgba(196,85,85,0.80)" stroke-width="1.6" stroke-dasharray="5,4"/>
+  <circle cx="220" cy="220" r="167.5" fill="none" stroke="rgba(178,68,68,0.75)" stroke-width="1.5" stroke-dasharray="5,4"/>
+  
+  </g>
+
+  <!-- Labels (outside clip so they can overflow slightly) -->
+  <text x="272.3" y="224.0" font-family="EB Garamond,serif" font-size="12.5" fill="rgba(201,168,76,0.90)">r = 0.5</text>
+  <text x="312.5" y="224.0" font-family="EB Garamond,serif" font-size="12.5" fill="rgba(198,158,56,0.85)">r = 1.0</text>
+  <text x="344.5" y="224.0" font-family="EB Garamond,serif" font-size="12.5" fill="rgba(60,184,195,0.85)">r = 1.5</text>
+  <text x="367.9" y="224.0" font-family="EB Garamond,serif" font-size="12.5" fill="rgba(48,162,175,0.80)">r = 2.0</text>
+  <text x="383.9" y="224.0" font-family="EB Garamond,serif" font-size="12.5" fill="rgba(196,85,85,0.80)">r = 2.5</text>
+  <text x="394.5" y="224.0" font-family="EB Garamond,serif" font-size="12.5" fill="rgba(178,68,68,0.75)">r = 3.0</text>
+  
+
+  <!-- Limb darkening + border -->
+  <circle cx="220" cy="220" r="185" fill="url(#glimb)"/>
+  <circle cx="220" cy="220" r="184.5" fill="none"
+          stroke="rgba(201,168,76,0.08)" stroke-width="9"/>
+  <circle cx="220" cy="220" r="184.5" fill="none"
+          stroke="rgba(201,168,76,0.36)" stroke-width="1.4" filter="url(#gcglow)"/>
+
+  <!-- Caption inside disk -->
+  <text x="220" y="226" text-anchor="middle"
+        font-family="Cormorant Garamond,serif" font-style="italic" font-size="13.5"
+        fill="rgba(201,168,76,0.30)">C(r) = 2π sinh r</text>
+</svg>
         <div class="ctrl-bar" style="flex-direction:column;align-items:flex-start;gap:.3rem">
           <span style="color:var(--text);font-size:.88rem">Concentric hyperbolic circles at r = 0.5, 1, 1.5, 2, 2.5, 3</span>
           <span style="color:var(--muted);font-size:.82rem">Drawn as Euclidean circles — but they are NOT Euclidean circles in general</span>
@@ -820,14 +893,372 @@ input[type=range]::-moz-range-thumb{
     </div>
     <div>
       <div class="disk-wrap" style="background:#07081c;margin-bottom:1.5rem">
-        <canvas id="geoCntCanvas" width="440" height="330"></canvas>
+        <svg viewBox="0 0 440 330" xmlns="http://www.w3.org/2000/svg"
+     role="img" aria-label="Simple closed geodesics on a genus-2 surface counted by length, growing polynomially">
+  <defs>
+    <radialGradient id="gbg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#0f1135"/>
+      <stop offset="70%"  stop-color="#06081a"/>
+      <stop offset="100%" stop-color="#020308"/>
+    </radialGradient>
+    <filter id="gglow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="440" height="330" fill="#05060f"/>
+
+  <!-- ── Left: Poincaré disk with concentric geodesic rings ── -->
+  <!-- Disk background -->
+  <circle cx="142" cy="158" r="118" fill="url(#gbg)"/>
+
+  <!-- Band fills: r₁..r₂ in disk pixels (disk radius 118) -->
+  <!-- L=1: r=0..53 -->
+  <circle cx="142" cy="158" r="53"  fill="rgba(201,168,76,0.55)"/>
+  <!-- L=2: r=53..85 -->
+  <path d="M142 40 A118 118 0 1 1 141.99 40 Z" fill="rgba(195,155,55,0.45)"/>
+  <circle cx="142" cy="158" r="85"  fill="rgba(201,168,76,0.0)"/>
+  <!-- Actually use annulus rings -->
+  <!-- Ring L=2 -->
+  <clipPath id="r2c"><circle cx="142" cy="158" r="85"/></clipPath>
+  <circle cx="142" cy="158" r="85" fill="rgba(185,148,50,0.50)" clip-path="url(#r2c)"/>
+  <circle cx="142" cy="158" r="53" fill="#05060f"/>
+  <!-- Redo properly with mask -->
+
+  <!-- Let me use a different approach: filled circles bottom-to-top -->
+  <!-- largest band first -->
+  <circle cx="142" cy="158" r="115" fill="rgba(170,65,65,0.55)"/>    <!-- L=6 -->
+  <circle cx="142" cy="158" r="107" fill="rgba(180,70,70,0.60)"/>    <!-- L=5 -->
+  <circle cx="142" cy="158" r="96"  fill="rgba(50,155,170,0.65)"/>   <!-- L=4 -->
+  <circle cx="142" cy="158" r="83"  fill="rgba(55,170,185,0.70)"/>   <!-- L=3 -->
+  <circle cx="142" cy="158" r="66"  fill="rgba(195,155,55,0.75)"/>   <!-- L=2 -->
+  <circle cx="142" cy="158" r="45"  fill="rgba(201,168,76,0.85)"/>   <!-- L=1 -->
+
+  <!-- Band separator circles -->
+  <circle cx="142" cy="158" r="45"  fill="none" stroke="rgba(5,6,15,0.80)" stroke-width="1.2"/>
+  <circle cx="142" cy="158" r="66"  fill="none" stroke="rgba(5,6,15,0.80)" stroke-width="1.2"/>
+  <circle cx="142" cy="158" r="83"  fill="none" stroke="rgba(5,6,15,0.80)" stroke-width="1.2"/>
+  <circle cx="142" cy="158" r="96"  fill="none" stroke="rgba(5,6,15,0.80)" stroke-width="1.2"/>
+  <circle cx="142" cy="158" r="107" fill="none" stroke="rgba(5,6,15,0.80)" stroke-width="1.2"/>
+
+  <!-- Faint radial lines (geodesics) -->
+  <g fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="0.8">
+    <line x1="142" y1="43" x2="142" y2="273"/>
+    <line x1="25"  y1="158" x2="259" y2="158"/>
+    <line x1="59"  y1="75"  x2="225" y2="241"/>
+    <line x1="225" y1="75"  x2="59"  y2="241"/>
+  </g>
+
+  <!-- Disk border -->
+  <circle cx="142" cy="158" r="118" fill="none" stroke="rgba(201,168,76,0.10)" stroke-width="8"/>
+  <circle cx="142" cy="158" r="118" fill="none" stroke="rgba(201,168,76,0.38)" stroke-width="1.4"
+          filter="url(#gglow)"/>
+
+  <!-- ── Right: bar chart of counts ── -->
+  <!-- Bars data: L=1:3, L=2:12, L=3:34, L=4:95, L=5:266, L=6:744 -->
+  <!-- (approximate counts for simple closed geodesics on genus-2 surface) -->
+  <!-- bar area: x=285..430, y=30..290 -->
+  <!-- normalize to max=744 → 260px height -->
+
+  <text x="358" y="20" text-anchor="middle"
+        font-family="Cormorant Garamond,serif" font-size="13" fill="rgba(232,204,128,0.75)">
+    #(simple closed geodesics on Σ₂)
+  </text>
+
+  <!-- Axis -->
+  <line x1="297" y1="295" x2="297" y2="32" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+  <line x1="297" y1="295" x2="432" y2="295" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
+
+  <!-- Bars -->
+  <!-- colors match rings: L=1 gold, L=2 gold2, L=3 cyan, L=4 cyan2, L=5 red, L=6 red2 -->
+  <g font-family="Cormorant Garamond,serif" font-style="italic" font-size="12">
+    <!-- L=1: count=3, bar_h = 3/744*260 = 1.0 (very small, show at least 4) -->
+    <rect x="301" y="291" width="17" height="5"  fill="rgba(201,168,76,0.85)"/>
+    <text x="309" y="304" text-anchor="middle" font-size="11" fill="rgba(201,168,76,0.70)">1</text>
+
+    <!-- L=2: count=12, bar_h = 4.2 -->
+    <rect x="320" y="287" width="17" height="9"  fill="rgba(195,155,55,0.80)"/>
+    <text x="328" y="304" text-anchor="middle" font-size="11" fill="rgba(195,155,55,0.70)">2</text>
+
+    <!-- L=3: count=34, bar_h = 11.9 -->
+    <rect x="339" y="283" width="17" height="13" fill="rgba(55,170,185,0.80)"/>
+    <text x="347" y="304" text-anchor="middle" font-size="11" fill="rgba(55,170,185,0.70)">3</text>
+
+    <!-- L=4: count=95, bar_h = 33.2 -->
+    <rect x="358" y="262" width="17" height="34" fill="rgba(50,155,170,0.80)"/>
+    <text x="366" y="304" text-anchor="middle" font-size="11" fill="rgba(50,155,170,0.70)">4</text>
+
+    <!-- L=5: count=266, bar_h = 93.0 -->
+    <rect x="377" y="202" width="17" height="94" fill="rgba(196,85,85,0.75)"/>
+    <text x="385" y="304" text-anchor="middle" font-size="11" fill="rgba(196,85,85,0.70)">5</text>
+
+    <!-- L=6: count=744, bar_h = 260 -->
+    <rect x="396" y="35" width="17" height="261" fill="rgba(170,65,65,0.75)"/>
+    <text x="404" y="304" text-anchor="middle" font-size="11" fill="rgba(170,65,65,0.70)">6</text>
+  </g>
+
+  <!-- Count labels on bars -->
+  <g font-family="EB Garamond,serif" font-size="10.5" fill="rgba(232,204,128,0.62)" text-anchor="middle">
+    <text x="309" y="288">3</text>
+    <text x="328" y="284">12</text>
+    <text x="347" y="279">34</text>
+    <text x="366" y="258">95</text>
+    <text x="385" y="198">266</text>
+    <text x="404" y="30">744</text>
+  </g>
+
+  <!-- Axis labels -->
+  <text x="365" y="316" text-anchor="middle"
+        font-family="EB Garamond,serif" font-size="11.5" fill="rgba(255,255,255,0.30)">L (length band)</text>
+  <text x="430" y="295" text-anchor="start"
+        font-family="EB Garamond,serif" font-size="11" fill="rgba(255,255,255,0.25)">→</text>
+
+  <!-- Polynomial growth label -->
+  <text x="358" y="322" text-anchor="middle"
+        font-family="EB Garamond,serif" font-size="11" fill="rgba(201,168,76,0.50)">
+    s(L,Σ₂) ~ c · L⁶  as L→∞  (polynomial, not exponential)
+  </text>
+</svg>
         <div class="ctrl-bar" style="flex-direction:column;align-items:flex-start;gap:.2rem">
           <span style="color:var(--text);font-size:.88rem">Simple closed geodesics by length class</span>
           <span style="color:var(--muted);font-size:.82rem">Each ring = geodesics in one unit length band. Count grows as L<sup>6g−6</sup></span>
         </div>
       </div>
       <div class="disk-wrap" style="background:#07081c">
-        <canvas id="mcshaneCanvas" width="440" height="250"></canvas>
+        <svg viewBox="0 0 640 430" xmlns="http://www.w3.org/2000/svg"
+     role="img" aria-label="Mirzakhani topological recursion: genus-2 surface cut along separating geodesic gamma into one-holed torus and another one-holed torus">
+  <defs>
+    <radialGradient id="mg1" cx="50%" cy="38%" r="62%">
+      <stop offset="0%"  stop-color="#252c78"/>
+      <stop offset="100%" stop-color="#080c28"/>
+    </radialGradient>
+    <radialGradient id="mg2" cx="46%" cy="36%" r="60%">
+      <stop offset="0%"  stop-color="#153858"/>
+      <stop offset="100%" stop-color="#060d1e"/>
+    </radialGradient>
+    <radialGradient id="mg3" cx="46%" cy="36%" r="60%">
+      <stop offset="0%"  stop-color="#2d1858"/>
+      <stop offset="100%" stop-color="#0c0620"/>
+    </radialGradient>
+    <filter id="mgl" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="1.6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <marker id="marr2" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+      <path d="M0,0.5 L0,6.5 L7,3.5 z" fill="rgba(201,168,76,0.78)"/>
+    </marker>
+  </defs>
+
+  <rect width="640" height="430" fill="#04050e"/>
+
+  <!-- ════════════════════════════════════════════
+       LEFT: Σ_{2,1}(b)
+       Genus-2 surface = two torus handles joined,
+       with ONE geodesic boundary b at the bottom.
+       γ is the SEPARATING geodesic cutting the waist
+       between the two handles — far above b.
+       ════════════════════════════════════════════ -->
+
+  <!-- Surface body -->
+  <ellipse cx="148" cy="130" rx="98" ry="78"
+           fill="url(#mg1)" stroke="rgba(201,168,76,0.30)" stroke-width="1.5"/>
+
+  <!-- Left handle -->
+  <ellipse cx="94"  cy="86"  rx="31" ry="20" fill="url(#mg1)"
+           stroke="rgba(201,168,76,0.24)" stroke-width="1.1"/>
+  <ellipse cx="94"  cy="86"  rx="15" ry="9"  fill="#04050e"
+           stroke="rgba(201,168,76,0.12)" stroke-width="0.9"/>
+
+  <!-- Right handle -->
+  <ellipse cx="202" cy="86"  rx="31" ry="20" fill="url(#mg1)"
+           stroke="rgba(201,168,76,0.24)" stroke-width="1.1"/>
+  <ellipse cx="202" cy="86"  rx="15" ry="9"  fill="#04050e"
+           stroke="rgba(201,168,76,0.12)" stroke-width="0.9"/>
+
+  <!-- Geodesic boundary b — clearly at the BOTTOM of the surface,
+       well separated from γ.
+       b spans y = 196..218. -->
+  <ellipse cx="148" cy="207" rx="30" ry="11"
+           fill="rgba(60,184,195,0.06)"
+           stroke="rgba(60,184,195,0.82)" stroke-width="2.0"
+           stroke-dasharray="5,3"/>
+
+  <!-- b label with arrow pointing at boundary so it's unambiguous -->
+  <line x1="148" y1="226" x2="148" y2="219"
+        stroke="rgba(60,184,195,0.60)" stroke-width="1.2"
+        marker-end="none"/>
+  <text x="148" y="238" text-anchor="middle"
+        font-family="Cormorant Garamond,serif" font-style="italic" font-size="15"
+        fill="rgba(60,184,195,0.90)">b</text>
+  <text x="148" y="252" text-anchor="middle"
+        font-family="EB Garamond,serif" font-size="10.5"
+        fill="rgba(60,184,195,0.50)">(boundary length)</text>
+
+  <!-- ── Separating geodesic γ ──
+       Runs through the WAIST between the two handles,
+       vertically from y≈86 to y≈148.
+       Bottom of γ (y=148) is 48px above top of b (y=196). ✓ -->
+  <ellipse cx="148" cy="117" rx="15" ry="35"
+           fill="none"
+           stroke="rgba(201,168,76,0.94)" stroke-width="2.2"
+           stroke-dasharray="7,4" filter="url(#mgl)"/>
+
+  <!-- γ label to the LEFT of the ellipse, with "length ℓ" clearly beneath -->
+  <text x="118" y="112" text-anchor="middle"
+        font-family="Cormorant Garamond,serif" font-style="italic" font-size="19"
+        fill="rgba(201,168,76,0.97)" filter="url(#mgl)">γ</text>
+  <text x="118" y="128" text-anchor="middle"
+        font-family="EB Garamond,serif" font-size="10.5"
+        fill="rgba(201,168,76,0.52)">length ℓ</text>
+
+  <!-- Surface label: Σ with readable subscript -->
+  <text x="115" y="285" text-anchor="start"
+        font-family="Cormorant Garamond,serif" font-style="italic" font-size="20"
+        fill="rgba(232,204,128,0.94)">Σ</text>
+  <text x="133" y="293" text-anchor="start"
+        font-family="Cormorant Garamond,serif" font-size="13"
+        fill="rgba(201,168,76,0.80)">2,1</text>
+  <text x="155" y="285" text-anchor="start"
+        font-family="Cormorant Garamond,serif" font-style="italic" font-size="18"
+        fill="rgba(232,204,128,0.88)">(b)</text>
+  <text x="148" y="305" text-anchor="middle"
+        font-family="EB Garamond,serif" font-size="11.5"
+        fill="rgba(150,140,200,0.58)">genus 2 · 1 geodesic boundary</text>
+
+  <!-- ══ Arrow "cut along γ" ══ -->
+  <line x1="268" y1="155" x2="316" y2="155"
+        stroke="rgba(201,168,76,0.70)" stroke-width="2.2"
+        marker-end="url(#marr2)"/>
+  <text x="292" y="145" text-anchor="middle"
+        font-family="EB Garamond,serif" font-style="italic" font-size="12"
+        fill="rgba(201,168,76,0.60)">cut along γ</text>
+
+  <!-- ════════════════════════════════════════════
+       RIGHT TOP: Σ_{1,2}(b, ℓ)
+       One-holed torus, 2 boundary components:
+       b (inherited from original) + ℓ (new cut boundary)
+       ════════════════════════════════════════════ -->
+  <ellipse cx="445" cy="88" rx="76" ry="56"
+           fill="url(#mg2)" stroke="rgba(201,168,76,0.28)" stroke-width="1.3"/>
+  <!-- One handle -->
+  <ellipse cx="418" cy="60" rx="25" ry="16" fill="url(#mg2)"
+           stroke="rgba(201,168,76,0.20)" stroke-width="1.0"/>
+  <ellipse cx="418" cy="60" rx="12" ry="7"  fill="#04050e"
+           stroke="rgba(201,168,76,0.10)" stroke-width="0.8"/>
+
+  <!-- Boundary b (bottom) -->
+  <ellipse cx="445" cy="134" rx="23" ry="9"
+           fill="rgba(60,184,195,0.05)"
+           stroke="rgba(60,184,195,0.75)" stroke-width="1.7" stroke-dasharray="5,3"/>
+  <text x="445" y="153" text-anchor="middle"
+        font-family="Cormorant Garamond,serif" font-style="italic" font-size="14"
+        fill="rgba(60,184,195,0.85)">b</text>
+
+  <!-- Boundary ℓ (right side — the new cut) -->
+  <ellipse cx="518" cy="88" rx="9" ry="30"
+           fill="rgba(201,168,76,0.04)"
+           stroke="rgba(201,168,76,0.82)" stroke-width="1.7" stroke-dasharray="5,3"/>
+  <text x="534" y="91" text-anchor="start"
+        font-family="Cormorant Garamond,serif" font-style="italic" font-size="14"
+        fill="rgba(201,168,76,0.88)">ℓ</text>
+
+  <!-- Label: Σ_{1,2}(b, ℓ) -->
+  <text x="418" y="176" text-anchor="start"
+        font-family="Cormorant Garamond,serif" font-style="italic" font-size="20"
+        fill="rgba(232,204,128,0.94)">Σ</text>
+  <text x="436" y="184" text-anchor="start"
+        font-family="Cormorant Garamond,serif" font-size="13"
+        fill="rgba(201,168,76,0.80)">1,2</text>
+  <text x="456" y="176" text-anchor="start"
+        font-family="Cormorant Garamond,serif" font-style="italic" font-size="18"
+        fill="rgba(232,204,128,0.88)">(b, ℓ)</text>
+  <text x="445" y="198" text-anchor="middle"
+        font-family="EB Garamond,serif" font-size="11.5"
+        fill="rgba(150,140,200,0.55)">genus 1 · 2 boundaries</text>
+
+  <!-- ══ Disjoint union ══ -->
+  <text x="445" y="233" text-anchor="middle"
+        font-family="Cormorant Garamond,serif" font-size="26"
+        fill="rgba(201,168,76,0.38)">⊔</text>
+
+  <!-- ════════════════════════════════════════════
+       RIGHT BOTTOM: Σ_{1,1}(ℓ)
+       One-holed torus, 1 boundary component ℓ
+       Positioned with 28px gap below ⊔ symbol.
+       ════════════════════════════════════════════ -->
+  <ellipse cx="445" cy="286" rx="70" ry="46"
+           fill="url(#mg3)" stroke="rgba(180,100,230,0.28)" stroke-width="1.3"/>
+  <!-- One handle -->
+  <ellipse cx="420" cy="260" rx="23" ry="15" fill="url(#mg3)"
+           stroke="rgba(180,100,230,0.20)" stroke-width="1.0"/>
+  <ellipse cx="420" cy="260" rx="11" ry="7"  fill="#04050e"
+           stroke="rgba(180,100,230,0.10)" stroke-width="0.8"/>
+
+  <!-- Boundary ℓ (right side — matching the cut) -->
+  <ellipse cx="513" cy="286" rx="9" ry="29"
+           fill="rgba(201,168,76,0.04)"
+           stroke="rgba(201,168,76,0.80)" stroke-width="1.7" stroke-dasharray="5,3"/>
+  <text x="528" y="289" text-anchor="start"
+        font-family="Cormorant Garamond,serif" font-style="italic" font-size="14"
+        fill="rgba(201,168,76,0.88)">ℓ</text>
+
+  <!-- Label: Σ_{1,1}(ℓ) — plenty of space at y=345-360, equation at y=375+ -->
+  <text x="418" y="345" text-anchor="start"
+        font-family="Cormorant Garamond,serif" font-style="italic" font-size="20"
+        fill="rgba(232,204,128,0.94)">Σ</text>
+  <text x="436" y="353" text-anchor="start"
+        font-family="Cormorant Garamond,serif" font-size="13"
+        fill="rgba(201,168,76,0.80)">1,1</text>
+  <text x="456" y="345" text-anchor="start"
+        font-family="Cormorant Garamond,serif" font-style="italic" font-size="18"
+        fill="rgba(232,204,128,0.88)">(ℓ)</text>
+  <text x="445" y="367" text-anchor="middle"
+        font-family="EB Garamond,serif" font-size="11.5"
+        fill="rgba(150,140,200,0.55)">genus 1 · 1 boundary</text>
+
+  <!-- ════════════════════════════════════════════
+       Equation box — bottom left, well below labels
+       ════════════════════════════════════════════ -->
+  <rect x="14" y="320" width="248" height="96" rx="6"
+        fill="rgba(16,18,50,0.92)" stroke="rgba(201,168,76,0.16)" stroke-width="1"/>
+  <!-- Line 1: V_{2,1}(b) = -->
+  <text x="131" y="343" text-anchor="middle"
+        font-family="Cormorant Garamond,serif" font-style="italic" font-size="14"
+        fill="rgba(201,168,76,0.88)">V</text>
+  <text x="141" y="350" text-anchor="start"
+        font-family="Cormorant Garamond,serif" font-size="11"
+        fill="rgba(201,168,76,0.70)">2,1</text>
+  <text x="157" y="343" text-anchor="start"
+        font-family="Cormorant Garamond,serif" font-style="italic" font-size="14"
+        fill="rgba(201,168,76,0.88)">(b)  =  ∫</text>
+  <text x="195" y="338" text-anchor="start"
+        font-family="Cormorant Garamond,serif" font-size="10"
+        fill="rgba(201,168,76,0.55)">∞</text>
+  <text x="196" y="352" text-anchor="start"
+        font-family="Cormorant Garamond,serif" font-size="10"
+        fill="rgba(201,168,76,0.55)">0</text>
+  <!-- Line 2: ℓ · V_{1,2}(b,ℓ) · V_{1,1}(ℓ) dℓ -->
+  <text x="131" y="372" text-anchor="middle"
+        font-family="Cormorant Garamond,serif" font-style="italic" font-size="13.5"
+        fill="rgba(201,168,76,0.82)">ℓ · V</text>
+  <text x="168" y="379" text-anchor="start"
+        font-family="Cormorant Garamond,serif" font-size="11"
+        fill="rgba(201,168,76,0.68)">1,2</text>
+  <text x="185" y="372" text-anchor="start"
+        font-family="Cormorant Garamond,serif" font-style="italic" font-size="13.5"
+        fill="rgba(201,168,76,0.82)">(b,ℓ) · V</text>
+  <text x="236" y="379" text-anchor="start"
+        font-family="Cormorant Garamond,serif" font-size="11"
+        fill="rgba(201,168,76,0.68)">1,1</text>
+  <text x="253" y="372" text-anchor="start"
+        font-family="Cormorant Garamond,serif" font-style="italic" font-size="13.5"
+        fill="rgba(201,168,76,0.82)">(ℓ) dℓ</text>
+  <!-- Line 3: + non-sep. terms -->
+  <text x="131" y="398" text-anchor="middle"
+        font-family="EB Garamond,serif" font-size="11"
+        fill="rgba(150,140,200,0.65)">+  non-separating terms</text>
+</svg>
         <div class="ctrl-bar" style="flex-direction:column;align-items:flex-start;gap:.2rem">
           <span style="color:var(--text);font-size:.88rem">Mirzakhani's recursion: cutting along a geodesic</span>
           <span style="color:var(--muted);font-size:.82rem">A surface of genus g breaks into simpler pieces, relating V<sub>g,n</sub> to smaller volumes</span>
@@ -896,7 +1327,208 @@ input[type=range]::-moz-range-thumb{
       </div>
       <p>Compare Euclidean Δ(d) ≈ θ·d. At d = 5: hyperbolic separation is sinh(5)/5 ≈ <strong>14.8×</strong> greater. Two walls that appear nearly parallel at d = 1 are exponentially far apart by d = 3.</p>
       <div class="disk-wrap" style="margin-top:1rem">
-        <canvas id="rayDivCanvas" width="440" height="290"></canvas>
+        <svg viewBox="0 0 440 290" xmlns="http://www.w3.org/2000/svg"
+     role="img" aria-label="Ray divergence comparison: Euclidean vs hyperbolic. Geodesic rays from a single point spread linearly in Euclidean space but exponentially in hyperbolic space.">
+  <defs>
+    <radialGradient id="dhbg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#0f1235"/>
+      <stop offset="70%"  stop-color="#06081a"/>
+      <stop offset="100%" stop-color="#020308"/>
+    </radialGradient>
+    <filter id="rdglow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="1.4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="rdleft"><rect x="0" y="0" width="214" height="290"/></clipPath>
+    <clipPath id="rddisk"><circle cx="326" cy="153" r="118"/></clipPath>
+  </defs>
+
+  <rect width="440" height="290" fill="#05060f"/>
+
+  <!-- ══ LEFT PANEL: Euclidean ══ -->
+  <!-- Background grid -->
+  <g fill="none" stroke="rgba(255,255,255,0.045)" stroke-width="0.6" clip-path="url(#rdleft)">
+    <line x1="0"   y1="254" x2="215" y2="254"/>
+    <line x1="0"   y1="214" x2="215" y2="214"/>
+    <line x1="0"   y1="174" x2="215" y2="174"/>
+    <line x1="0"   y1="134" x2="215" y2="134"/>
+    <line x1="0"   y1="94"  x2="215" y2="94"/>
+    <line x1="36"  y1="0"   x2="36"  y2="290"/>
+    <line x1="76"  y1="0"   x2="76"  y2="290"/>
+    <line x1="116" y1="0"   x2="116" y2="290"/>
+    <line x1="156" y1="0"   x2="156" y2="290"/>
+    <line x1="196" y1="0"   x2="196" y2="290"/>
+  </g>
+
+  <!-- Origin at (16, 270) -->
+  <!-- Two ray pairs at ±theta=0.18 and ±0.09 rad from horizontal, pointing right -->
+  <!-- Outer rays (theta=0.18): at d=5.5*33px=181.5px, sep = 2*5.5*sin(0.18)*33 = 65.5px half-sep=32.8 -->
+  <!-- Inner rays (theta=0.09): half-sep=16.4px -->
+
+  <!-- Euclidean outer rays -->
+  <line x1="16" y1="270" x2="205" y2="202"  
+        stroke="rgba(201,168,76,0.85)" stroke-width="1.9" stroke-linecap="round"/>
+  <line x1="16" y1="270" x2="205" y2="338"  
+        stroke="rgba(201,168,76,0.85)" stroke-width="1.9" stroke-linecap="round"
+        clip-path="url(#rdleft)"/>
+  <!-- Euclidean inner rays (theta=0.09) -->
+  <line x1="16" y1="270" x2="205" y2="236"
+        stroke="rgba(201,168,76,0.35)" stroke-width="1.1" stroke-linecap="round"/>
+  <line x1="16" y1="270" x2="205" y2="304"
+        stroke="rgba(201,168,76,0.35)" stroke-width="1.1" stroke-linecap="round"
+        clip-path="url(#rdleft)"/>
+
+  <!-- Separation arcs at d=1,3,5 (arc radii: 1*33=33, 3*33=99, 5*33=165) -->
+  <!-- d=1: arc r=33, angle span ±0.18 rad, center (16,270) -->
+  <path d="M 16 270 m 32.9 -5.9 A 33 33 0 0 0 32.9 -5.9"
+        fill="none"/>
+  <!-- draw arcs as partial circles -->
+  <path d="M 32.9 264.1 A 33 33 0 0 1 32.9 275.9"
+        fill="none" stroke="rgba(60,184,195,0.40)" stroke-width="1.1" transform="translate(16,270) translate(-16,-270)"/>
+  <!-- simpler: arc through two points on the rays -->
+  <!-- At d=1 (r=33px): upper=(16+33*cos(0.18), 270-33*sin(0.18))=(48.7,264.1), lower=(48.7,275.9) -->
+  <path d="M 48.7 264.1 A 33 33 0 0 1 48.7 275.9" transform="translate(0,0)"
+        fill="none" stroke="rgba(60,184,195,0.45)" stroke-width="1.1"/>
+  <text x="52" y="268" font-family="EB Garamond,serif" font-size="9.5"
+        fill="rgba(60,184,195,0.65)">Δ=0.36</text>
+
+  <!-- At d=3 (r=99px): (16+99*cos0.18, 270-99*sin0.18)=(113.8,252.2), lower 270+17.8=287.8 -->
+  <path d="M 113.8 252.2 A 99 99 0 0 1 113.8 287.8"
+        fill="none" stroke="rgba(60,184,195,0.40)" stroke-width="1.1"
+        clip-path="url(#rdleft)"/>
+  <text x="118" y="258" font-family="EB Garamond,serif" font-size="9.5"
+        fill="rgba(60,184,195,0.60)">Δ=1.07</text>
+
+  <!-- At d=5 (r=165px): x=178.8, upper=270-29.7=240.3, lower=270+29.7=299.7 -->
+  <path d="M 178.8 240.3 A 165 165 0 0 1 178.8 299.7"
+        fill="none" stroke="rgba(60,184,195,0.35)" stroke-width="1.1"
+        clip-path="url(#rdleft)"/>
+  <text x="182" y="246" font-family="EB Garamond,serif" font-size="9.5"
+        fill="rgba(60,184,195,0.55)">Δ=1.79</text>
+
+  <!-- Origin dot -->
+  <circle cx="16" cy="270" r="3.5" fill="#e8cc80"/>
+
+  <!-- Axis line -->
+  <line x1="16" y1="270" x2="210" y2="270"
+        stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+  <text x="215" y="274" font-family="EB Garamond,serif" font-size="10"
+        fill="rgba(255,255,255,0.25)">d</text>
+  <text x="5"   y="8"   font-family="EB Garamond,serif" font-size="9"
+        fill="rgba(255,255,255,0.18)">d=0  1    2    3    4    5</text>
+
+  <!-- Panel label -->
+  <text x="108" y="22" text-anchor="middle"
+        font-family="Cormorant Garamond,serif" font-weight="600" font-size="14"
+        fill="rgba(201,168,76,0.88)">Euclidean</text>
+  <text x="108" y="37" text-anchor="middle"
+        font-family="EB Garamond,serif" font-style="italic" font-size="12"
+        fill="rgba(201,168,76,0.55)">Δ(d) = θ · d</text>
+
+  <!-- Divider -->
+  <line x1="219" y1="10" x2="219" y2="280"
+        stroke="rgba(201,168,76,0.10)" stroke-width="1"/>
+
+  <!-- ══ RIGHT PANEL: Hyperbolic (Poincaré disk) ══ -->
+  <!-- Disk: center (326,153), radius 118 -->
+  <circle cx="326" cy="153" r="118" fill="url(#dhbg)"/>
+
+  <!-- Faint geodesic texture -->
+  <g clip-path="url(#rddisk)" fill="none" stroke="rgba(201,168,76,0.07)" stroke-width="0.7">
+    <line x1="208" y1="153" x2="444" y2="153"/>
+    <line x1="326" y1="35"  x2="326" y2="271"/>
+    <line x1="241" y1="68"  x2="411" y2="238"/>
+    <line x1="411" y1="68"  x2="241" y2="238"/>
+  </g>
+
+  <!-- Two geodesic ray pairs from center (all diameters from center) -->
+  <!-- theta=0.18 rad from vertical (pointing up from center) -->
+  <!-- Upper ray upper: angle = π/2 + 0.18 = 90+10.3° = 100.3° from x-axis = pointing upper-left -->
+  <!-- Actually: base angle pointing UP = 270° in SVG coords -->
+  <!-- Ray 1: 270°+10.3° = 280.3°, Ray 2: 270°-10.3° = 259.7° -->
+  <!-- cos(280.3°)=0.181, sin(280.3°)=-0.983 → direction: right and up in SVG -->
+  <!-- let me just use: angle from top (SVG up=negative y) -->
+  <!-- theta = 0.18 rad offset from straight up -->
+  <!-- Ray coords: from (326,153) direction angle α from north: (326+118*sinα, 153-118*cosα) -->
+  <!-- Outer pair: α = ±0.18 rad, inner: α = ±0.09 rad -->
+  <!-- α=+0.18: end=(326+118*sin(0.18), 153-118*cos(0.18))=(326+21.2, 153-116.6)=(347.2, 36.4) -->
+  <!-- α=-0.18: end=(326-21.2, 153-116.6)=(304.8, 36.4) -->
+  <!-- inner: α=+0.09: (326+10.6, 153-117.5)=(336.6,35.5), α=-0.09: (315.4,35.5) -->
+
+  <!-- Geodesic diameters (from center to boundary, going UP) -->
+  <line x1="326" y1="153" x2="347.2" y2="36.4"
+        stroke="rgba(201,168,76,0.85)" stroke-width="2.0" stroke-linecap="round"
+        clip-path="url(#rddisk)" filter="url(#rdglow)"/>
+  <line x1="326" y1="153" x2="304.8" y2="36.4"
+        stroke="rgba(201,168,76,0.85)" stroke-width="2.0" stroke-linecap="round"
+        clip-path="url(#rddisk)" filter="url(#rdglow)"/>
+  <line x1="326" y1="153" x2="336.6" y2="35.5"
+        stroke="rgba(201,168,76,0.32)" stroke-width="1.1" stroke-linecap="round"
+        clip-path="url(#rddisk)"/>
+  <line x1="326" y1="153" x2="315.4" y2="35.5"
+        stroke="rgba(201,168,76,0.32)" stroke-width="1.1" stroke-linecap="round"
+        clip-path="url(#rddisk)"/>
+
+  <!-- Also extend downward (full geodesics) -->
+  <line x1="326" y1="153" x2="304.8" y2="269.6" stroke="rgba(201,168,76,0.30)" stroke-width="1.0" clip-path="url(#rddisk)"/>
+  <line x1="326" y1="153" x2="347.2" y2="269.6" stroke="rgba(201,168,76,0.30)" stroke-width="1.0" clip-path="url(#rddisk)"/>
+
+  <!-- Hyperbolic distance circles: r_disk = tanh(d/2)*118 -->
+  <!-- d=1: r=tanh(0.5)*118=0.462*118=54.5 -->
+  <!-- d=2: r=tanh(1)*118=0.762*118=89.9 -->
+  <!-- d=3: r=tanh(1.5)*118=0.905*118=106.8 -->
+  <!-- d=4: r=tanh(2)*118=0.964*118=113.7 -->
+  <g clip-path="url(#rddisk)" fill="none" stroke="rgba(60,184,195,0.18)" stroke-width="0.9">
+    <circle cx="326" cy="153" r="54.5"/>
+    <circle cx="326" cy="153" r="89.9"/>
+    <circle cx="326" cy="153" r="106.8"/>
+    <circle cx="326" cy="153" r="113.7"/>
+  </g>
+
+  <!-- Separation arcs at each distance (angle 0.18 rad from center) -->
+  <!-- d=1, r_disk=54.5: arc from α=-0.18 to +0.18 centered at center, up direction -->
+  <!-- Arc endpoints: (326+54.5*sin(-0.18), 153-54.5*cos(-0.18)) = (316.2, 99.4) -->
+  <!--                (326+54.5*sin(+0.18), 153-54.5*cos(+0.18)) = (335.8, 99.4) -->
+  <!-- sweep arc from (316.2,99.4) to (335.8,99.4) -->
+  <path d="M 316.2 99.4 A 54.5 54.5 0 0 1 335.8 99.4"
+        fill="none" stroke="rgba(60,184,195,0.50)" stroke-width="1.4"
+        clip-path="url(#rddisk)"/>
+  <!-- hyp sep at d=1: 2*sinh(1)*sin(0.18)=2*1.175*0.179=0.421 -->
+  <text x="338" y="96" font-family="EB Garamond,serif" font-size="9.5"
+        fill="rgba(60,184,195,0.68)">Δ=0.42</text>
+
+  <!-- d=2, r_disk=89.9: endpoints (326+89.9*sin(±0.18), 153-89.9*cos(±0.18)) -->
+  <!-- = (326±16.1, 153-88.4) = (342.1,64.6) and (309.9,64.6) -->
+  <path d="M 309.9 64.6 A 89.9 89.9 0 0 1 342.1 64.6"
+        fill="none" stroke="rgba(60,184,195,0.44)" stroke-width="1.4"
+        clip-path="url(#rddisk)"/>
+  <!-- hyp sep at d=2: 2*sinh(2)*sin(0.18)=2*3.627*0.179=1.298 -->
+  <text x="344" y="62" font-family="EB Garamond,serif" font-size="9.5"
+        fill="rgba(60,184,195,0.60)">Δ=1.30</text>
+
+  <!-- d=3, r_disk=106.8: (326±19.1, 153-104.9)=(345.1,48.1) and (306.9,48.1) -->
+  <path d="M 306.9 48.1 A 106.8 106.8 0 0 1 345.1 48.1"
+        fill="none" stroke="rgba(60,184,195,0.38)" stroke-width="1.4"
+        clip-path="url(#rddisk)"/>
+  <!-- hyp sep at d=3: 2*sinh(3)*sin(0.18)=2*10.018*0.179=3.59 -->
+  <text x="347" y="46" font-family="EB Garamond,serif" font-size="9.5"
+        fill="rgba(60,184,195,0.55)">Δ=3.59</text>
+
+  <!-- Origin dot -->
+  <circle cx="326" cy="153" r="4" fill="#e8cc80" filter="url(#rdglow)"/>
+
+  <!-- Disk border -->
+  <circle cx="326" cy="153" r="117.5" fill="none" stroke="rgba(201,168,76,0.08)" stroke-width="8"/>
+  <circle cx="326" cy="153" r="117.5" fill="none" stroke="rgba(201,168,76,0.36)" stroke-width="1.4"/>
+
+  <!-- Panel label -->
+  <text x="326" y="280" text-anchor="middle"
+        font-family="Cormorant Garamond,serif" font-weight="600" font-size="14"
+        fill="rgba(201,168,76,0.88)">Hyperbolic (Poincaré disk)</text>
+  <text x="326" y="294" text-anchor="middle"
+        font-family="EB Garamond,serif" font-style="italic" font-size="12"
+        fill="rgba(201,168,76,0.55)">Δ(d) = 2 sinh(d) sin(θ/2) ≈ θ · eᵈ</text>
+</svg>
         <div class="ctrl-bar">
           <span style="color:var(--muted);font-size:.82rem">Left: Euclidean &nbsp;|&nbsp; Right: Hyperbolic (Poincaré disk)</span>
         </div>
@@ -911,7 +1543,63 @@ input[type=range]::-moz-range-thumb{
       </div>
       <p>Euclidean: α = s/d. At d = 5, a friend appears not 1/5 of her original angular size but <strong>e<sup>−5</sup>/2 ≈ 0.7%</strong> — she vanishes almost immediately.</p>
       <div class="disk-wrap" style="margin-top:1rem">
-        <canvas id="sizeCanvas" width="440" height="280"></canvas>
+        <svg viewBox="0 0 440 280" xmlns="http://www.w3.org/2000/svg"
+     role="img" aria-label="Apparent angular size vs hyperbolic distance: hyperbolic shrinkage is exponentially faster than Euclidean">
+  <defs>
+    <filter id="sfglow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="1.2" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <rect width="440" height="280" fill="#05060f"/>
+
+  <!-- Grid -->
+  <line x1="131.0" y1="258" x2="131.0" y2="40" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/><line x1="202.0" y1="258" x2="202.0" y2="40" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/><line x1="273.0" y1="258" x2="273.0" y2="40" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/><line x1="344.0" y1="258" x2="344.0" y2="40" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/><line x1="415.0" y1="258" x2="415.0" y2="40" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/><line x1="60" y1="216.5" x2="415" y2="216.5" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/><line x1="60" y1="175.0" x2="415" y2="175.0" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/><line x1="60" y1="133.4" x2="415" y2="133.4" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/><line x1="60" y1="91.9" x2="415" y2="91.9" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/><line x1="60" y1="50.4" x2="415" y2="50.4" stroke="rgba(255,255,255,0.05)" stroke-width="0.8"/>
+
+  <!-- Shaded region between curves -->
+  <path d="M 65.3,40.0 L 67.1,40.0 L 68.8,40.0 L 70.6,40.0 L 72.3,40.0 L 74.1,40.0 L 75.9,40.0 L 77.6,40.0 L 79.4,40.0 L 81.1,40.0 L 82.9,40.0 L 84.6,40.0 L 86.4,40.0 L 88.2,40.0 L 89.9,40.0 L 91.7,40.0 L 93.4,40.0 L 95.2,40.0 L 96.9,40.0 L 98.7,40.0 L 100.5,40.0 L 102.2,40.0 L 104.0,40.0 L 105.7,40.0 L 107.5,40.0 L 109.2,40.0 L 111.0,40.0 L 112.8,40.0 L 114.5,40.0 L 116.3,40.0 L 118.0,40.0 L 119.8,40.0 L 121.5,40.0 L 123.3,40.0 L 125.1,40.0 L 126.8,40.0 L 128.6,40.7 L 130.3,47.8 L 132.1,54.5 L 133.8,60.9 L 135.6,67.0 L 137.4,72.9 L 139.1,78.5 L 140.9,83.9 L 142.6,89.1 L 144.4,94.1 L 146.1,98.9 L 147.9,103.5 L 149.7,108.0 L 151.4,112.2 L 153.2,116.4 L 154.9,120.3 L 156.7,124.2 L 158.4,127.9 L 160.2,131.5 L 162.0,135.0 L 163.7,138.3 L 165.5,141.6 L 167.2,144.7 L 169.0,147.7 L 170.7,150.7 L 172.5,153.5 L 174.3,156.3 L 176.0,159.0 L 177.8,161.6 L 179.5,164.1 L 181.3,166.6 L 183.0,169.0 L 184.8,171.3 L 186.6,173.5 L 188.3,175.7 L 190.1,177.8 L 191.8,179.9 L 193.6,181.9 L 195.3,183.8 L 197.1,185.7 L 198.9,187.6 L 200.6,189.4 L 202.4,191.1 L 204.1,192.8 L 205.9,194.4 L 207.6,196.0 L 209.4,197.6 L 211.2,199.1 L 212.9,200.6 L 214.7,202.0 L 216.4,203.4 L 218.2,204.8 L 219.9,206.1 L 221.7,207.4 L 223.5,208.7 L 225.2,209.9 L 227.0,211.1 L 228.7,212.3 L 230.5,213.4 L 232.2,214.5 L 234.0,215.6 L 235.8,216.7 L 237.5,217.7 L 239.3,218.7 L 241.0,219.7 L 242.8,220.6 L 244.5,221.5 L 246.3,222.4 L 248.1,223.3 L 249.8,224.2 L 251.6,225.0 L 253.3,225.8 L 255.1,226.6 L 256.8,227.4 L 258.6,228.1 L 260.4,228.9 L 262.1,229.6 L 263.9,230.3 L 265.6,231.0 L 267.4,231.6 L 269.1,232.3 L 270.9,232.9 L 272.7,233.5 L 274.4,234.1 L 276.2,234.7 L 277.9,235.3 L 279.7,235.8 L 281.4,236.4 L 283.2,236.9 L 285.0,237.4 L 286.7,237.9 L 288.5,238.4 L 290.2,238.9 L 292.0,239.4 L 293.7,239.8 L 295.5,240.3 L 297.3,240.7 L 299.0,241.1 L 300.8,241.6 L 302.5,242.0 L 304.3,242.3 L 306.1,242.7 L 307.8,243.1 L 309.6,243.5 L 311.3,243.8 L 313.1,244.2 L 314.8,244.5 L 316.6,244.8 L 318.4,245.2 L 320.1,245.5 L 321.9,245.8 L 323.6,246.1 L 325.4,246.4 L 327.1,246.7 L 328.9,246.9 L 330.7,247.2 L 332.4,247.5 L 334.2,247.7 L 335.9,248.0 L 337.7,248.2 L 339.4,248.5 L 341.2,248.7 L 343.0,248.9 L 344.7,249.1 L 346.5,249.4 L 348.2,249.6 L 350.0,249.8 L 351.7,250.0 L 353.5,250.2 L 355.3,250.4 L 357.0,250.6 L 358.8,250.7 L 360.5,250.9 L 362.3,251.1 L 364.0,251.3 L 365.8,251.4 L 367.6,251.6 L 369.3,251.7 L 371.1,251.9 L 372.8,252.0 L 374.6,252.2 L 376.3,252.3 L 378.1,252.5 L 379.9,252.6 L 381.6,252.7 L 383.4,252.9 L 385.1,253.0 L 386.9,253.1 L 388.6,253.2 L 390.4,253.3 L 392.2,253.5 L 393.9,253.6 L 395.7,253.7 L 397.4,253.8 L 399.2,253.9 L 400.9,254.0 L 402.7,254.1 L 404.5,254.2 L 406.2,254.3 L 408.0,254.4 L 409.7,254.5 L 411.5,254.5 L 413.2,254.6 L 415.0,254.7 L 415.0,216.5 L 413.2,216.3 L 411.5,216.1 L 409.7,215.9 L 408.0,215.6 L 406.2,215.4 L 404.5,215.2 L 402.7,215.0 L 400.9,214.8 L 399.2,214.5 L 397.4,214.3 L 395.7,214.1 L 393.9,213.9 L 392.2,213.6 L 390.4,213.4 L 388.6,213.1 L 386.9,212.9 L 385.1,212.7 L 383.4,212.4 L 381.6,212.2 L 379.9,211.9 L 378.1,211.7 L 376.3,211.4 L 374.6,211.1 L 372.8,210.9 L 371.1,210.6 L 369.3,210.3 L 367.6,210.1 L 365.8,209.8 L 364.0,209.5 L 362.3,209.2 L 360.5,208.9 L 358.8,208.7 L 357.0,208.4 L 355.3,208.1 L 353.5,207.8 L 351.7,207.5 L 350.0,207.2 L 348.2,206.9 L 346.5,206.5 L 344.7,206.2 L 343.0,205.9 L 341.2,205.6 L 339.4,205.2 L 337.7,204.9 L 335.9,204.6 L 334.2,204.2 L 332.4,203.9 L 330.7,203.5 L 328.9,203.2 L 327.1,202.8 L 325.4,202.5 L 323.6,202.1 L 321.9,201.7 L 320.1,201.3 L 318.4,200.9 L 316.6,200.6 L 314.8,200.2 L 313.1,199.8 L 311.3,199.3 L 309.6,198.9 L 307.8,198.5 L 306.1,198.1 L 304.3,197.7 L 302.5,197.2 L 300.8,196.8 L 299.0,196.3 L 297.3,195.9 L 295.5,195.4 L 293.7,194.9 L 292.0,194.5 L 290.2,194.0 L 288.5,193.5 L 286.7,193.0 L 285.0,192.5 L 283.2,192.0 L 281.4,191.4 L 279.7,190.9 L 277.9,190.4 L 276.2,189.8 L 274.4,189.3 L 272.7,188.7 L 270.9,188.1 L 269.1,187.5 L 267.4,186.9 L 265.6,186.3 L 263.9,185.7 L 262.1,185.1 L 260.4,184.4 L 258.6,183.8 L 256.8,183.1 L 255.1,182.4 L 253.3,181.8 L 251.6,181.1 L 249.8,180.3 L 248.1,179.6 L 246.3,178.9 L 244.5,178.1 L 242.8,177.4 L 241.0,176.6 L 239.3,175.8 L 237.5,175.0 L 235.8,174.1 L 234.0,173.3 L 232.2,172.4 L 230.5,171.5 L 228.7,170.6 L 227.0,169.7 L 225.2,168.8 L 223.5,167.8 L 221.7,166.8 L 219.9,165.8 L 218.2,164.8 L 216.4,163.8 L 214.7,162.7 L 212.9,161.6 L 211.2,160.5 L 209.4,159.3 L 207.6,158.2 L 205.9,157.0 L 204.1,155.7 L 202.4,154.5 L 200.6,153.2 L 198.9,151.8 L 197.1,150.5 L 195.3,149.1 L 193.6,147.7 L 191.8,146.2 L 190.1,144.7 L 188.3,143.1 L 186.6,141.5 L 184.8,139.9 L 183.0,138.2 L 181.3,136.5 L 179.5,134.7 L 177.8,132.8 L 176.0,130.9 L 174.3,129.0 L 172.5,127.0 L 170.7,124.9 L 169.0,122.7 L 167.2,120.5 L 165.5,118.2 L 163.7,115.9 L 162.0,113.4 L 160.2,110.9 L 158.4,108.3 L 156.7,105.5 L 154.9,102.7 L 153.2,99.8 L 151.4,96.7 L 149.7,93.6 L 147.9,90.3 L 146.1,86.9 L 144.4,83.3 L 142.6,79.6 L 140.9,75.7 L 139.1,71.7 L 137.4,67.4 L 135.6,63.0 L 133.8,58.4 L 132.1,53.5 L 130.3,48.4 L 128.6,43.0 L 126.8,40.0 L 125.1,40.0 L 123.3,40.0 L 121.5,40.0 L 119.8,40.0 L 118.0,40.0 L 116.3,40.0 L 114.5,40.0 L 112.8,40.0 L 111.0,40.0 L 109.2,40.0 L 107.5,40.0 L 105.7,40.0 L 104.0,40.0 L 102.2,40.0 L 100.5,40.0 L 98.7,40.0 L 96.9,40.0 L 95.2,40.0 L 93.4,40.0 L 91.7,40.0 L 89.9,40.0 L 88.2,40.0 L 86.4,40.0 L 84.6,40.0 L 82.9,40.0 L 81.1,40.0 L 79.4,40.0 L 77.6,40.0 L 75.9,40.0 L 74.1,40.0 L 72.3,40.0 L 70.6,40.0 L 68.8,40.0 L 67.1,40.0 L 65.3,40.0 Z" fill="rgba(196,85,85,0.08)"/>
+
+  <!-- Euclidean curve: alpha = 1/d -->
+  <path d="M 65.3,40.0 L 67.1,40.0 L 68.8,40.0 L 70.6,40.0 L 72.3,40.0 L 74.1,40.0 L 75.9,40.0 L 77.6,40.0 L 79.4,40.0 L 81.1,40.0 L 82.9,40.0 L 84.6,40.0 L 86.4,40.0 L 88.2,40.0 L 89.9,40.0 L 91.7,40.0 L 93.4,40.0 L 95.2,40.0 L 96.9,40.0 L 98.7,40.0 L 100.5,40.0 L 102.2,40.0 L 104.0,40.0 L 105.7,40.0 L 107.5,40.0 L 109.2,40.0 L 111.0,40.0 L 112.8,40.0 L 114.5,40.0 L 116.3,40.0 L 118.0,40.0 L 119.8,40.0 L 121.5,40.0 L 123.3,40.0 L 125.1,40.0 L 126.8,40.0 L 128.6,43.0 L 130.3,48.4 L 132.1,53.5 L 133.8,58.4 L 135.6,63.0 L 137.4,67.4 L 139.1,71.7 L 140.9,75.7 L 142.6,79.6 L 144.4,83.3 L 146.1,86.9 L 147.9,90.3 L 149.7,93.6 L 151.4,96.7 L 153.2,99.8 L 154.9,102.7 L 156.7,105.5 L 158.4,108.3 L 160.2,110.9 L 162.0,113.4 L 163.7,115.9 L 165.5,118.2 L 167.2,120.5 L 169.0,122.7 L 170.7,124.9 L 172.5,127.0 L 174.3,129.0 L 176.0,130.9 L 177.8,132.8 L 179.5,134.7 L 181.3,136.5 L 183.0,138.2 L 184.8,139.9 L 186.6,141.5 L 188.3,143.1 L 190.1,144.7 L 191.8,146.2 L 193.6,147.7 L 195.3,149.1 L 197.1,150.5 L 198.9,151.8 L 200.6,153.2 L 202.4,154.5 L 204.1,155.7 L 205.9,157.0 L 207.6,158.2 L 209.4,159.3 L 211.2,160.5 L 212.9,161.6 L 214.7,162.7 L 216.4,163.8 L 218.2,164.8 L 219.9,165.8 L 221.7,166.8 L 223.5,167.8 L 225.2,168.8 L 227.0,169.7 L 228.7,170.6 L 230.5,171.5 L 232.2,172.4 L 234.0,173.3 L 235.8,174.1 L 237.5,175.0 L 239.3,175.8 L 241.0,176.6 L 242.8,177.4 L 244.5,178.1 L 246.3,178.9 L 248.1,179.6 L 249.8,180.3 L 251.6,181.1 L 253.3,181.8 L 255.1,182.4 L 256.8,183.1 L 258.6,183.8 L 260.4,184.4 L 262.1,185.1 L 263.9,185.7 L 265.6,186.3 L 267.4,186.9 L 269.1,187.5 L 270.9,188.1 L 272.7,188.7 L 274.4,189.3 L 276.2,189.8 L 277.9,190.4 L 279.7,190.9 L 281.4,191.4 L 283.2,192.0 L 285.0,192.5 L 286.7,193.0 L 288.5,193.5 L 290.2,194.0 L 292.0,194.5 L 293.7,194.9 L 295.5,195.4 L 297.3,195.9 L 299.0,196.3 L 300.8,196.8 L 302.5,197.2 L 304.3,197.7 L 306.1,198.1 L 307.8,198.5 L 309.6,198.9 L 311.3,199.3 L 313.1,199.8 L 314.8,200.2 L 316.6,200.6 L 318.4,200.9 L 320.1,201.3 L 321.9,201.7 L 323.6,202.1 L 325.4,202.5 L 327.1,202.8 L 328.9,203.2 L 330.7,203.5 L 332.4,203.9 L 334.2,204.2 L 335.9,204.6 L 337.7,204.9 L 339.4,205.2 L 341.2,205.6 L 343.0,205.9 L 344.7,206.2 L 346.5,206.5 L 348.2,206.9 L 350.0,207.2 L 351.7,207.5 L 353.5,207.8 L 355.3,208.1 L 357.0,208.4 L 358.8,208.7 L 360.5,208.9 L 362.3,209.2 L 364.0,209.5 L 365.8,209.8 L 367.6,210.1 L 369.3,210.3 L 371.1,210.6 L 372.8,210.9 L 374.6,211.1 L 376.3,211.4 L 378.1,211.7 L 379.9,211.9 L 381.6,212.2 L 383.4,212.4 L 385.1,212.7 L 386.9,212.9 L 388.6,213.1 L 390.4,213.4 L 392.2,213.6 L 393.9,213.9 L 395.7,214.1 L 397.4,214.3 L 399.2,214.5 L 400.9,214.8 L 402.7,215.0 L 404.5,215.2 L 406.2,215.4 L 408.0,215.6 L 409.7,215.9 L 411.5,216.1 L 413.2,216.3 L 415.0,216.5"
+        fill="none" stroke="rgba(201,168,76,0.88)" stroke-width="2.6"
+        stroke-linecap="round" stroke-linejoin="round" filter="url(#sfglow)"/>
+
+  <!-- Hyperbolic curve: alpha = 1/sinh(d) -->
+  <path d="M 65.3,40.0 L 67.1,40.0 L 68.8,40.0 L 70.6,40.0 L 72.3,40.0 L 74.1,40.0 L 75.9,40.0 L 77.6,40.0 L 79.4,40.0 L 81.1,40.0 L 82.9,40.0 L 84.6,40.0 L 86.4,40.0 L 88.2,40.0 L 89.9,40.0 L 91.7,40.0 L 93.4,40.0 L 95.2,40.0 L 96.9,40.0 L 98.7,40.0 L 100.5,40.0 L 102.2,40.0 L 104.0,40.0 L 105.7,40.0 L 107.5,40.0 L 109.2,40.0 L 111.0,40.0 L 112.8,40.0 L 114.5,40.0 L 116.3,40.0 L 118.0,40.0 L 119.8,40.0 L 121.5,40.0 L 123.3,40.0 L 125.1,40.0 L 126.8,40.0 L 128.6,40.7 L 130.3,47.8 L 132.1,54.5 L 133.8,60.9 L 135.6,67.0 L 137.4,72.9 L 139.1,78.5 L 140.9,83.9 L 142.6,89.1 L 144.4,94.1 L 146.1,98.9 L 147.9,103.5 L 149.7,108.0 L 151.4,112.2 L 153.2,116.4 L 154.9,120.3 L 156.7,124.2 L 158.4,127.9 L 160.2,131.5 L 162.0,135.0 L 163.7,138.3 L 165.5,141.6 L 167.2,144.7 L 169.0,147.7 L 170.7,150.7 L 172.5,153.5 L 174.3,156.3 L 176.0,159.0 L 177.8,161.6 L 179.5,164.1 L 181.3,166.6 L 183.0,169.0 L 184.8,171.3 L 186.6,173.5 L 188.3,175.7 L 190.1,177.8 L 191.8,179.9 L 193.6,181.9 L 195.3,183.8 L 197.1,185.7 L 198.9,187.6 L 200.6,189.4 L 202.4,191.1 L 204.1,192.8 L 205.9,194.4 L 207.6,196.0 L 209.4,197.6 L 211.2,199.1 L 212.9,200.6 L 214.7,202.0 L 216.4,203.4 L 218.2,204.8 L 219.9,206.1 L 221.7,207.4 L 223.5,208.7 L 225.2,209.9 L 227.0,211.1 L 228.7,212.3 L 230.5,213.4 L 232.2,214.5 L 234.0,215.6 L 235.8,216.7 L 237.5,217.7 L 239.3,218.7 L 241.0,219.7 L 242.8,220.6 L 244.5,221.5 L 246.3,222.4 L 248.1,223.3 L 249.8,224.2 L 251.6,225.0 L 253.3,225.8 L 255.1,226.6 L 256.8,227.4 L 258.6,228.1 L 260.4,228.9 L 262.1,229.6 L 263.9,230.3 L 265.6,231.0 L 267.4,231.6 L 269.1,232.3 L 270.9,232.9 L 272.7,233.5 L 274.4,234.1 L 276.2,234.7 L 277.9,235.3 L 279.7,235.8 L 281.4,236.4 L 283.2,236.9 L 285.0,237.4 L 286.7,237.9 L 288.5,238.4 L 290.2,238.9 L 292.0,239.4 L 293.7,239.8 L 295.5,240.3 L 297.3,240.7 L 299.0,241.1 L 300.8,241.6 L 302.5,242.0 L 304.3,242.3 L 306.1,242.7 L 307.8,243.1 L 309.6,243.5 L 311.3,243.8 L 313.1,244.2 L 314.8,244.5 L 316.6,244.8 L 318.4,245.2 L 320.1,245.5 L 321.9,245.8 L 323.6,246.1 L 325.4,246.4 L 327.1,246.7 L 328.9,246.9 L 330.7,247.2 L 332.4,247.5 L 334.2,247.7 L 335.9,248.0 L 337.7,248.2 L 339.4,248.5 L 341.2,248.7 L 343.0,248.9 L 344.7,249.1 L 346.5,249.4 L 348.2,249.6 L 350.0,249.8 L 351.7,250.0 L 353.5,250.2 L 355.3,250.4 L 357.0,250.6 L 358.8,250.7 L 360.5,250.9 L 362.3,251.1 L 364.0,251.3 L 365.8,251.4 L 367.6,251.6 L 369.3,251.7 L 371.1,251.9 L 372.8,252.0 L 374.6,252.2 L 376.3,252.3 L 378.1,252.5 L 379.9,252.6 L 381.6,252.7 L 383.4,252.9 L 385.1,253.0 L 386.9,253.1 L 388.6,253.2 L 390.4,253.3 L 392.2,253.5 L 393.9,253.6 L 395.7,253.7 L 397.4,253.8 L 399.2,253.9 L 400.9,254.0 L 402.7,254.1 L 404.5,254.2 L 406.2,254.3 L 408.0,254.4 L 409.7,254.5 L 411.5,254.5 L 413.2,254.6 L 415.0,254.7"
+        fill="none" stroke="rgba(60,184,195,0.88)" stroke-width="2.6"
+        stroke-linecap="round" stroke-linejoin="round" filter="url(#sfglow)"/>
+
+  <!-- Axes -->
+  <line x1="60" y1="258" x2="427" y2="258"
+        stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
+  <line x1="60" y1="258" x2="60" y2="30"
+        stroke="rgba(255,255,255,0.22)" stroke-width="1.5"/>
+
+  <!-- Axis labels -->
+  <text x="131.0" y="273" text-anchor="middle" font-family="EB Garamond,serif" font-size="12" fill="rgba(255,255,255,0.28)">1</text><text x="202.0" y="273" text-anchor="middle" font-family="EB Garamond,serif" font-size="12" fill="rgba(255,255,255,0.28)">2</text><text x="273.0" y="273" text-anchor="middle" font-family="EB Garamond,serif" font-size="12" fill="rgba(255,255,255,0.28)">3</text><text x="344.0" y="273" text-anchor="middle" font-family="EB Garamond,serif" font-size="12" fill="rgba(255,255,255,0.28)">4</text><text x="415.0" y="273" text-anchor="middle" font-family="EB Garamond,serif" font-size="12" fill="rgba(255,255,255,0.28)">5</text>
+  <text x="53" y="220.5" text-anchor="end" font-family="EB Garamond,serif" font-size="12" fill="rgba(255,255,255,0.28)">0.2</text><text x="53" y="179.0" text-anchor="end" font-family="EB Garamond,serif" font-size="12" fill="rgba(255,255,255,0.28)">0.4</text><text x="53" y="137.4" text-anchor="end" font-family="EB Garamond,serif" font-size="12" fill="rgba(255,255,255,0.28)">0.6</text><text x="53" y="95.9" text-anchor="end" font-family="EB Garamond,serif" font-size="12" fill="rgba(255,255,255,0.28)">0.8</text><text x="53" y="54.4" text-anchor="end" font-family="EB Garamond,serif" font-size="12" fill="rgba(255,255,255,0.28)">1.0</text>
+  <text x="237.5" y="288" text-anchor="middle"
+        font-family="EB Garamond,serif" font-size="13" fill="rgba(255,255,255,0.35)">distance d</text>
+  <text x="13" y="149.0" text-anchor="middle" font-size="12"
+        font-family="EB Garamond,serif" fill="rgba(255,255,255,0.32)"
+        transform="rotate(-90,13,149.0)">apparent size α(d)</text>
+
+  <!-- Annotation: gap at d=3 -->
+  <line x1="273.0" y1="188.8" x2="273.0" y2="233.6"
+        stroke="rgba(196,85,85,0.60)" stroke-width="1.2" stroke-dasharray="3,2"/>
+  <circle cx="273.0" cy="188.8" r="3" fill="rgba(201,168,76,0.85)"/>
+  <circle cx="273.0" cy="233.6" r="3" fill="rgba(60,184,195,0.85)"/>
+  <text x="281.0" y="211.2"
+        font-family="EB Garamond,serif" font-size="11" fill="rgba(196,85,85,0.80)">×2.8 larger in ℝ²</text>
+
+  <!-- Legend -->
+  <line x1="72" y1="18" x2="98" y2="18" stroke="rgba(201,168,76,0.85)" stroke-width="2.5"/>
+  <text x="104" y="22" font-family="Cormorant Garamond,serif" font-style="italic" font-size="13"
+        fill="rgba(201,168,76,0.85)">Euclidean:  α = 1/d</text>
+  <line x1="72" y1="36" x2="98" y2="36" stroke="rgba(60,184,195,0.85)" stroke-width="2.5"/>
+  <text x="104" y="40" font-family="Cormorant Garamond,serif" font-style="italic" font-size="13"
+        fill="rgba(60,184,195,0.85)">Hyperbolic:  α = 1/sinh(d) ≈ 2e⁻ᵈ</text>
+</svg>
         <div class="ctrl-bar" style="gap:1.5rem">
           <span style="color:var(--gold);font-size:.88rem">— Euclidean: 1/d</span>
           <span style="color:var(--cyan);font-size:.88rem">— Hyperbolic: 1/sinh(d)</span>
@@ -1459,46 +2147,6 @@ rebuildTiling();
 
 // ════════════════════════════════════════════════
 // §5 GROWTH CANVAS
-// ════════════════════════════════════════════════
-(function(){
-  const canvas=document.getElementById('growthCanvas');
-  const ctx=canvas.getContext('2d');
-  const{W,H,dcx,dcy,dR}=diskSetup(canvas);
-  drawDisk(ctx,dcx,dcy,dR,'#07091c','#04050f');
-  // Faint tessellation background
-  const tris=buildTess(7,3,1800);
-  if(tris) tris.forEach(({verts:[A,B,C],par})=>{
-    const d=Math.sqrt(((A[0]+B[0]+C[0])/3)**2+((A[1]+B[1]+C[1])/3)**2);
-    if(d>0.97) return;
-    ctx.fillStyle=`rgba(${par?40:30},${par?50:40},${par?80:60},${0.35-d*0.3})`;
-    fillHTri(ctx,A,B,C,dcx,dcy,dR);
-  });
-
-  // Hyperbolic circles centered at origin
-  // In Poincaré disk, hyp circle of radius r centered at 0 IS a Euclidean circle of radius tanh(r/2)
-  const radii=[0.5,1,1.5,2,2.5,3];
-  const cols=['rgba(201,168,76,0.9)','rgba(200,160,60,0.85)','rgba(60,184,195,0.85)',
-               'rgba(50,160,175,0.8)','rgba(196,85,85,0.8)','rgba(180,70,70,0.75)'];
-  radii.forEach((r,i)=>{
-    const er=Math.tanh(r/2); // Euclidean radius in disk coords
-    ctx.beginPath();ctx.arc(dcx,dcy,er*dR,0,TAU);
-    ctx.strokeStyle=cols[i];ctx.lineWidth=i<2?2:1.5;
-    ctx.setLineDash(i>=4?[5,4]:[]);ctx.stroke();ctx.setLineDash([]);
-    // Label
-    ctx.fillStyle=cols[i];ctx.font='13px "EB Garamond",serif';
-    ctx.fillText(`r=${r}`,dcx+er*dR+5,dcy+3);
-  });
-
-  drawDiskBorder(ctx,dcx,dcy,dR);
-
-  // Growth table
-  const tbl=document.getElementById('growthData');
-  radii.forEach(r=>{
-    const euc=(2*Math.PI*r).toFixed(2);
-    const hyp=(2*Math.PI*Math.sinh(r)).toFixed(2);
-    tbl.innerHTML+=`<span class="gd-r">${r}</span><span class="gd-euc">${euc}</span><span class="gd-hyp">${hyp}</span>`;
-  });
-})();
 
 
 // ════════════════════════════════════════════════
@@ -1959,157 +2607,10 @@ drawGenus3();
 // ════════════════════════════════════════════════
 // §8 GEODESIC COUNTING VISUAL
 // ════════════════════════════════════════════════
-(function(){
-  const canvas=document.getElementById('geoCntCanvas');
-  if(!canvas) return;
-  const ctx=canvas.getContext('2d');
-  const W=canvas.width,H=canvas.height;
-  const dcx=W/2,dcy=H/2,dR=Math.min(W,H)*0.43;
-
-  // Use the already-built {7,3} tessellation as backdrop
-  const tris=buildTess(7,3,2000);
-  drawDisk(ctx,dcx,dcy,dR,'#060820','#030410');
-
-  // Faint tiling
-  if(tris){
-    tris.forEach(({verts:[A,B,C],par})=>{
-      const d=Math.sqrt(((A[0]+B[0]+C[0])/3)**2+((A[1]+B[1]+C[1])/3)**2);
-      if(d>0.97) return;
-      ctx.fillStyle=`rgba(${par?25:20},${par?35:28},${par?65:50},${0.55-d*0.48})`;
-      fillHTri(ctx,A,B,C,dcx,dcy,dR);
-    });
-  }
-
-  // Draw concentric "bands" representing groups of simple closed geodesics
-  // In the Poincaré disk, hyperbolic circles at radii r1..r2 form bands
-  // Color each band by its count (bigger bands = more geodesics)
-  const bands=[
-    {r1:0,r2:0.45,label:'L=1',count:2,col:'rgba(201,168,76,0.75)'},
-    {r1:0.45,r2:0.72,label:'L=2',count:8,col:'rgba(195,155,55,0.65)'},
-    {r1:0.72,r2:0.855,label:'L=3',count:22,col:'rgba(60,184,195,0.7)'},
-    {r1:0.855,r2:0.922,label:'L=4',count:65,col:'rgba(50,160,175,0.65)'},
-    {r1:0.922,r2:0.957,label:'L=5',count:180,col:'rgba(196,85,85,0.6)'},
-    {r1:0.957,r2:0.978,label:'L=6',count:500,col:'rgba(170,65,65,0.55)'},
-  ];
-
-  bands.forEach(({r1,r2,col})=>{
-    ctx.save();
-    ctx.beginPath();ctx.arc(dcx,dcy,r2*dR,0,TAU);
-    ctx.arc(dcx,dcy,r1*dR,0,TAU,true);
-    ctx.fillStyle=col;ctx.fill();
-    ctx.restore();
-  });
-
-  // Band boundary circles
-  bands.forEach(({r2})=>{
-    ctx.beginPath();ctx.arc(dcx,dcy,r2*dR,0,TAU);
-    ctx.strokeStyle='rgba(255,255,255,0.06)';ctx.lineWidth=1;ctx.stroke();
-  });
-
-  // Labels outside the disk
-  ctx.save();
-  ctx.font='12px "EB Garamond",serif';
-  bands.forEach(({r1,r2,label,count,col})=>{
-    const rm=(r1+r2)/2;
-    const lx=dcx+rm*dR+6,ly=dcy+8;
-    ctx.fillStyle=col;
-    // Label in a line pointing right
-    ctx.fillText(`${label}: ~${count} geodesics`,dcx+(r2*dR)+5,dcy-rm*dR*0.2+(bands.indexOf(bands.find(b=>b.label===label)))*18-30);
-  });
-  // Simpler: label each band with an arrow
-  const labelY=[50,85,120,155,190,220];
-  bands.forEach(({label,count,col},i)=>{
-    ctx.fillStyle=col;
-    ctx.font='13px "Cormorant Garamond",serif';
-    ctx.fillStyle=col;
-    ctx.fillText(`${label}: ≈ ${count}`,W-110,labelY[i]);
-  });
-  ctx.fillStyle='rgba(201,168,76,0.5)';
-  ctx.font='11px "EB Garamond",serif';
-  ctx.fillText('Count grows as L^(6g−6)',W/2-55,H-12);
-  ctx.restore();
-
-  drawDiskBorder(ctx,dcx,dcy,dR);
-})();
 
 // ════════════════════════════════════════════════
 // §8 MIRZAKHANI RECURSION SCHEMATIC
 // ════════════════════════════════════════════════
-(function(){
-  const canvas=document.getElementById('mcshaneCanvas');
-  if(!canvas) return;
-  const ctx=canvas.getContext('2d');
-  const W=canvas.width,H=canvas.height;
-  ctx.fillStyle='#07081a';ctx.fillRect(0,0,W,H);
-
-  // Draw schematic: a surface with boundary, a cutting geodesic, resulting pieces
-  function drawSurface(cx3,cy3,rx,ry,handles,col,label){
-    ctx.save();
-    ctx.beginPath();ctx.ellipse(cx3,cy3,rx,ry,0,0,Math.PI*2);
-    ctx.fillStyle=col;ctx.fill();
-    ctx.strokeStyle='rgba(201,168,76,0.4)';ctx.lineWidth=1.5;ctx.stroke();
-    // Handles as small bumps
-    for(let i=0;i<handles;i++){
-      const a=-(Math.PI/3)+i*(Math.PI/2);
-      const hx=cx3+Math.cos(a)*rx*0.7,hy=cy3+Math.sin(a)*ry*0.7;
-      ctx.beginPath();ctx.ellipse(hx,hy,18,11,a,0,Math.PI*2);
-      ctx.fillStyle=col;ctx.fill();
-      ctx.strokeStyle='rgba(201,168,76,0.3)';ctx.stroke();
-      // Hole
-      ctx.beginPath();ctx.ellipse(hx,hy,9,5.5,a,0,Math.PI*2);
-      ctx.fillStyle='#07081a';ctx.fill();
-    }
-    // Boundary puncture
-    ctx.beginPath();ctx.arc(cx3,cy3+ry-10,5,0,TAU);
-    ctx.fillStyle='rgba(60,184,195,0.8)';ctx.fill();
-    // Label
-    if(label){
-      ctx.font='italic 13px "Cormorant Garamond",serif';
-      ctx.fillStyle='rgba(232,204,128,0.85)';
-      ctx.textAlign='center';
-      ctx.fillText(label,cx3,cy3+ry+18);
-    }
-    ctx.restore();
-  }
-
-  // Left side: big surface
-  drawSurface(120,H/2,90,75,2,'rgba(30,35,80,0.9)','Σ_{g,1}(b)');
-
-  // Cutting geodesic
-  ctx.save();
-  ctx.beginPath();ctx.moveTo(120,H/2-30);ctx.lineTo(120,H/2+30);
-  ctx.strokeStyle='rgba(201,168,76,0.9)';ctx.lineWidth=2.5;
-  ctx.setLineDash([6,3]);ctx.stroke();ctx.setLineDash([]);
-  ctx.font='italic 12px "Cormorant Garamond",serif';
-  ctx.fillStyle='rgba(201,168,76,0.8)';ctx.textAlign='center';
-  ctx.fillText('γ',108,H/2);
-  ctx.restore();
-
-  // Arrow
-  ctx.save();
-  ctx.beginPath();ctx.moveTo(225,H/2);ctx.lineTo(265,H/2);
-  ctx.strokeStyle='rgba(201,168,76,0.6)';ctx.lineWidth=2;ctx.stroke();
-  ctx.beginPath();ctx.moveTo(265,H/2);ctx.lineTo(258,H/2-5);ctx.lineTo(258,H/2+5);
-  ctx.fillStyle='rgba(201,168,76,0.6)';ctx.fill();
-  ctx.font='italic 11px "Cormorant Garamond",serif';
-  ctx.fillStyle='rgba(201,168,76,0.7)';ctx.textAlign='center';
-  ctx.fillText('cut',245,H/2-10);
-  ctx.restore();
-
-  // Right side: two smaller surfaces
-  drawSurface(340,H/2-48,58,42,1,'rgba(20,45,65,0.9)','Σ_{g-1,2}');
-  drawSurface(340,H/2+55,50,35,0,'rgba(45,20,60,0.9)','Σ_{0,3}');
-  // or second decomposition
-  ctx.save();
-  ctx.font='italic 12px "Cormorant Garamond",serif';
-  ctx.fillStyle='rgba(60,184,195,0.75)';ctx.textAlign='left';
-  ctx.fillText('V_{g,n} = ∫_{γ} V_{g-1,n+2} + Σ V_{g₁} · V_{g₂}',W/2-30,H-14);
-  ctx.restore();
-
-  // Subtle vertical divider
-  ctx.beginPath();ctx.moveTo(W/2+5,20);ctx.lineTo(W/2+5,H-30);
-  ctx.strokeStyle='rgba(201,168,76,0.08)';ctx.lineWidth=1;ctx.stroke();
-})();
 
 
 // ════════════════════════════════════════════════
@@ -2542,268 +3043,8 @@ drawGenus3();
 })();
 
 
-// §9 — RAY DIVERGENCE comparison
-// ════════════════════════════════════════════════
-(function(){
-  const canvas = document.getElementById('rayDivCanvas');
-  if(!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width, H = canvas.height;
-
-  ctx.fillStyle = '#06071a'; ctx.fillRect(0,0,W,H);
-
-  const THETA = 0.18;  // opening half-angle (radians) between the two ray pairs
-  const MAXD  = 5.5;   // max distance to draw
-
-  // --- LEFT PANEL: Euclidean ---
-  const EW = W/2 - 4, EH = H;
-  const eOx = 10, eOy = H-30;  // origin
-  const eScale = (EW-30) / MAXD;  // pixels per unit distance
-
-  // Grid lines
-  ctx.save();
-  for(let x=1; x<=5; x++){
-    ctx.beginPath();
-    ctx.moveTo(eOx + x*eScale, eOy);
-    ctx.lineTo(eOx + x*eScale, 30);
-    ctx.strokeStyle='rgba(255,255,255,0.05)'; ctx.lineWidth=1; ctx.stroke();
-  }
-  ctx.restore();
-
-  // Euclidean rays: two rays at angle ±THETA from horizontal
-  // At distance d: separation = 2*d*sin(THETA) ≈ 2*THETA*d
-  const eRays = [THETA, -THETA, THETA*0.5, -THETA*0.5];  // two pairs
-  const eColors = ['rgba(201,168,76,0.8)','rgba(201,168,76,0.8)','rgba(201,168,76,0.3)','rgba(201,168,76,0.3)'];
-
-  eRays.forEach((angle, i)=>{
-    ctx.beginPath();
-    ctx.moveTo(eOx, eOy);
-    const endX = eOx + MAXD*eScale*Math.cos(angle);
-    const endY = eOy - MAXD*eScale*Math.sin(angle);
-    ctx.lineTo(endX, endY);
-    ctx.strokeStyle = eColors[i]; ctx.lineWidth = i<2 ? 1.8 : 0.9; ctx.stroke();
-  });
-
-  // Separation arcs at d=1,3,5
-  [1,3,5].forEach(d=>{
-    const sep = 2*d*Math.sin(THETA)*eScale;
-    const dx = d*eScale;
-    ctx.beginPath();
-    ctx.arc(eOx, eOy, dx, -THETA, THETA);
-    ctx.strokeStyle = 'rgba(60,184,195,0.35)'; ctx.lineWidth=1; ctx.stroke();
-    // label
-    ctx.save();
-    ctx.font = '10px "EB Garamond",serif';
-    ctx.fillStyle = 'rgba(60,184,195,0.65)';
-    ctx.fillText(`Δ≈${(2*d*Math.sin(THETA)).toFixed(1)}`, eOx+dx+3, eOy-sep/2-4);
-    ctx.restore();
-  });
-
-  // Labels
-  ctx.save();
-  ctx.font = '13px "Cormorant Garamond",serif';
-  ctx.fillStyle = 'rgba(201,168,76,0.85)';
-  ctx.fillText('Euclidean', eOx+4, 22);
-  ctx.font = '11px "EB Garamond",serif';
-  ctx.fillStyle = 'rgba(201,168,76,0.55)';
-  ctx.fillText('Δ(d) = θ · d', eOx+4, 38);
-  ctx.restore();
-
-  // Axis arrow
-  ctx.beginPath();
-  ctx.moveTo(eOx, eOy); ctx.lineTo(eOx + EW - 15, eOy);
-  ctx.strokeStyle = 'rgba(255,255,255,0.15)'; ctx.lineWidth=1; ctx.stroke();
-  ctx.font='10px "EB Garamond",serif'; ctx.fillStyle='rgba(255,255,255,0.3)';
-  ctx.fillText('d →', eOx+EW-22, eOy+14);
-
-  // --- VERTICAL DIVIDER ---
-  ctx.beginPath();
-  ctx.moveTo(W/2, 10); ctx.lineTo(W/2, H-10);
-  ctx.strokeStyle='rgba(201,168,76,0.12)'; ctx.lineWidth=1; ctx.stroke();
-
-  // --- RIGHT PANEL: Hyperbolic (Poincaré disk) ---
-  const dR = Math.min(EW, EH)*0.40;
-  const dcx = W/2 + EW/2, dcy = H/2 + 14;
-
-  drawDisk(ctx,dcx,dcy,dR,'#060820','#030410');
-
-  // Draw faint {7,3} tessellation in background
-  const tris = buildTess(7,3,1600);
-  tris.forEach(({verts:[A,B,C],par})=>{
-    const d2 = Math.sqrt(((A[0]+B[0]+C[0])/3)**2+((A[1]+B[1]+C[1])/3)**2);
-    if(d2>0.97) return;
-    ctx.fillStyle=`rgba(${par?20:15},${par?28:22},${par?50:38},${0.55-d2*0.4})`;
-    fillHTri(ctx,A,B,C,dcx,dcy,dR);
-  });
-
-  // Two geodesic rays at angles THETA, -THETA from centre
-  // In Poincaré disk: geodesic through origin at angle α is a diameter
-  // We want geodesics from origin making angle THETA with vertical axis
-  // Separation at hyperbolic distance d: Δ_H = 2*sinh(d)*sin(THETA)
-  function diskGeodesic(ctx2, alpha, color, lw){
-    // Geodesic from origin: just a diameter
-    const ex = Math.cos(alpha), ey = Math.sin(alpha);
-    ctx2.beginPath();
-    ctx2.moveTo(dcx - ex*dR*0.03, dcy - ey*dR*0.03);  // slight inset from origin
-    ctx2.lineTo(dcx + ex*dR*0.97, dcy + ey*dR*0.97);
-    ctx2.strokeStyle = color; ctx2.lineWidth = lw; ctx2.stroke();
-  }
-
-  const BASE_ANGLE = Math.PI*1.5;  // pointing "up" in the canvas
-  diskGeodesic(ctx, BASE_ANGLE + THETA,   'rgba(201,168,76,0.85)', 2.0);
-  diskGeodesic(ctx, BASE_ANGLE - THETA,   'rgba(201,168,76,0.85)', 2.0);
-  diskGeodesic(ctx, BASE_ANGLE + THETA*0.5, 'rgba(201,168,76,0.3)', 1.0);
-  diskGeodesic(ctx, BASE_ANGLE - THETA*0.5, 'rgba(201,168,76,0.3)', 1.0);
-
-  // Hyperbolic circles (distance circles) and separation labels
-  [1,2,3,4].forEach(d=>{
-    const eR = Math.tanh(d/2)*dR;
-    ctx.beginPath(); ctx.arc(dcx,dcy, eR, 0, TAU);
-    ctx.strokeStyle='rgba(60,184,195,0.2)'; ctx.lineWidth=1; ctx.stroke();
-    // Separation arc at this distance
-    const sepAngle = THETA;
-    const arcR = eR;
-    ctx.beginPath(); ctx.arc(dcx, dcy, arcR, BASE_ANGLE-sepAngle, BASE_ANGLE+sepAngle);
-    ctx.strokeStyle='rgba(60,184,195,0.45)'; ctx.lineWidth=1.5; ctx.stroke();
-    // Separation value label
-    const sep_h = 2*Math.sinh(d)*Math.sin(THETA);
-    const px2 = dcx + arcR * Math.cos(BASE_ANGLE + sepAngle + 0.12);
-    const py2 = dcy + arcR * Math.sin(BASE_ANGLE + sepAngle + 0.12);
-    ctx.save();
-    ctx.font='10px "EB Garamond",serif';
-    ctx.fillStyle='rgba(60,184,195,0.65)';
-    ctx.fillText(`Δ≈${sep_h.toFixed(1)}`,px2+3,py2+3);
-    ctx.restore();
-  });
-
-  // Origin dot
-  ctx.beginPath(); ctx.arc(dcx,dcy,4,0,TAU);
-  ctx.fillStyle='#e8cc80';
-  ctx.shadowColor='#e8cc80'; ctx.shadowBlur=12; ctx.fill(); ctx.shadowBlur=0;
-
-  drawDiskBorder(ctx,dcx,dcy,dR);
-
-  // Labels
-  ctx.save();
-  ctx.font='13px "Cormorant Garamond",serif'; ctx.fillStyle='rgba(201,168,76,0.85)';
-  ctx.textAlign='center';
-  ctx.fillText('Hyperbolic', dcx, dcy-dR-14);
-  ctx.font='11px "EB Garamond",serif'; ctx.fillStyle='rgba(201,168,76,0.55)';
-  ctx.fillText('Δ(d) = 2·sinh(d)·sin(θ/2) ≈ θ·eᵈ', dcx, dcy-dR-1);
-  ctx.restore();
-})();
 
 // ════════════════════════════════════════════════
-// §9 — APPARENT SIZE vs DISTANCE chart
-// ════════════════════════════════════════════════
-(function(){
-  const canvas = document.getElementById('sizeCanvas');
-  if(!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width, H = canvas.height;
-
-  ctx.fillStyle='#06071a'; ctx.fillRect(0,0,W,H);
-
-  const PAD = {l:48, r:24, t:20, b:42};
-  const CW = W-PAD.l-PAD.r, CH = H-PAD.t-PAD.b;
-  const OX = PAD.l, OY = PAD.t+CH;
-
-  const DMAX = 5, YMAX = 1.05;
-
-  function toP(d,y){ return [OX+d/DMAX*CW, OY-y/YMAX*CH]; }
-
-  // Grid
-  ctx.save();
-  for(let d=1;d<=5;d++){
-    const [px] = toP(d,0);
-    ctx.beginPath(); ctx.moveTo(px,OY); ctx.lineTo(px,PAD.t);
-    ctx.strokeStyle='rgba(255,255,255,0.05)'; ctx.lineWidth=1; ctx.stroke();
-    ctx.font='10px "EB Garamond",serif'; ctx.fillStyle='rgba(255,255,255,0.3)';
-    ctx.textAlign='center'; ctx.fillText(d, px, OY+14);
-  }
-  for(let y=0.2; y<=1.0; y+=0.2){
-    const [,py] = toP(0,y);
-    ctx.beginPath(); ctx.moveTo(OX,py); ctx.lineTo(OX+CW,py);
-    ctx.strokeStyle='rgba(255,255,255,0.05)'; ctx.lineWidth=1; ctx.stroke();
-    ctx.fillStyle='rgba(255,255,255,0.3)'; ctx.textAlign='right';
-    ctx.fillText(y.toFixed(1), OX-6, py+3);
-  }
-  ctx.restore();
-
-  // Axes
-  ctx.beginPath();
-  ctx.moveTo(OX,OY); ctx.lineTo(OX+CW+8,OY);
-  ctx.moveTo(OX,OY); ctx.lineTo(OX,PAD.t);
-  ctx.strokeStyle='rgba(255,255,255,0.2)'; ctx.lineWidth=1.5; ctx.stroke();
-
-  // Axis labels
-  ctx.save();
-  ctx.font='11px "EB Garamond",serif'; ctx.fillStyle='rgba(255,255,255,0.4)';
-  ctx.textAlign='center'; ctx.fillText('Distance d', OX+CW/2, OY+28);
-  ctx.save(); ctx.translate(14, OY-CH/2); ctx.rotate(-Math.PI/2);
-  ctx.fillText('Apparent size α(d)', 0, 0); ctx.restore();
-  ctx.restore();
-
-  // Euclidean: α = 1/d  (normalised so α(1)=1)
-  ctx.beginPath();
-  for(let i=1; i<=200; i++){
-    const d = 0.05 + i*(DMAX-0.05)/200;
-    const y = 1/d;
-    const [px,py] = toP(d, Math.min(y, YMAX));
-    i===1 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
-  }
-  ctx.strokeStyle='rgba(201,168,76,0.85)'; ctx.lineWidth=2.5; ctx.stroke();
-
-  // Hyperbolic: α = 1/sinh(d)  (normalised so α(1)=1/sinh(1))
-  const normH = Math.sinh(1);
-  ctx.beginPath();
-  for(let i=1; i<=200; i++){
-    const d = 0.05 + i*(DMAX-0.05)/200;
-    const y = normH/Math.sinh(d);
-    const [px,py] = toP(d, Math.min(y, YMAX));
-    i===1 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
-  }
-  ctx.strokeStyle='rgba(60,184,195,0.85)'; ctx.lineWidth=2.5; ctx.stroke();
-
-  // Shaded gap between curves (how much faster hyperbolic shrinks)
-  ctx.beginPath();
-  for(let i=1; i<=200; i++){
-    const d = 0.1 + i*(DMAX-0.1)/200;
-    const y = Math.min(normH/Math.sinh(d), YMAX);
-    const [px,py] = toP(d,y);
-    i===1 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
-  }
-  for(let i=200; i>=1; i--){
-    const d = 0.1 + i*(DMAX-0.1)/200;
-    const y = Math.min(1/d, YMAX);
-    const [px,py] = toP(d,y);
-    ctx.lineTo(px,py);
-  }
-  ctx.closePath();
-  ctx.fillStyle='rgba(196,85,85,0.09)'; ctx.fill();
-
-  // Annotations at d=3
-  const d3e = 1/3, d3h = normH/Math.sinh(3);
-  ctx.save();
-  const [p3ex,p3ey] = toP(3, d3e);
-  const [p3hx,p3hy] = toP(3, d3h);
-  ctx.beginPath(); ctx.moveTo(p3ex,p3ey); ctx.lineTo(p3hx,p3hy);
-  ctx.strokeStyle='rgba(196,85,85,0.5)'; ctx.setLineDash([3,2]); ctx.lineWidth=1; ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.font='10px "EB Garamond",serif'; ctx.fillStyle='rgba(196,85,85,0.75)';
-  ctx.textAlign='left';
-  ctx.fillText(`×${(d3e/d3h).toFixed(1)} larger`, p3ex+4, (p3ey+p3hy)/2+3);
-  ctx.restore();
-
-  // Legend
-  ctx.save();
-  ctx.font='12px "Cormorant Garamond",serif';
-  ctx.fillStyle='rgba(201,168,76,0.85)';
-  ctx.fillText('Euclidean: α = 1/d', OX+CW*0.44, PAD.t+22);
-  ctx.fillStyle='rgba(60,184,195,0.85)';
-  ctx.fillText('Hyperbolic: α = 1/sinh(d) ≈ 2e⁻ᵈ', OX+CW*0.44, PAD.t+38);
-  ctx.restore();
-})();
 
 // ════════════════════════════════════════════════
 // SCROLL REVEAL
