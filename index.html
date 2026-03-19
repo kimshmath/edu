@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Math Demonstrations — kimsh.kr</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #080a10;
+  --card: rgba(255,255,255,0.022);
+  --card-hover: rgba(255,255,255,0.045);
+  --border: rgba(255,255,255,0.06);
+  --border-hover: rgba(255,255,255,0.14);
+  --text: #c8ccd8;
+  --muted: #5c6178;
+  --white: #edeef2;
+  --gold: #d4a853;
+  --gold-dim: rgba(212,168,83,0.12);
+  --f-display: 'Fraunces', Georgia, serif;
+  --f-body: 'DM Sans', sans-serif;
+  --f-mono: 'JetBrains Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--f-body);
+  font-weight: 300;
+  line-height: 1.7;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ─── Subtle grain ─── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ─── Ambient glow ─── */
+body::after {
+  content: '';
+  position: fixed;
+  top: -20vh; left: 50%;
+  transform: translateX(-50%);
+  width: 60vw; height: 40vh;
+  background: radial-gradient(ellipse, rgba(212,168,83,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ─── Layout ─── */
+.page {
+  max-width: 720px;
+  width: 100%;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* ─── Header ─── */
+header {
+  padding: 8rem 0 4rem;
+  text-align: left;
+}
+
+.site-tag {
+  font-family: var(--f-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+
+header h1 {
+  font-family: var(--f-display);
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  font-weight: 300;
+  color: var(--white);
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+
+header h1 em {
+  font-style: italic;
+  color: var(--gold);
+  font-weight: 400;
+}
+
+.intro {
+  margin-top: 1.5rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+  max-width: 520px;
+  line-height: 1.8;
+}
+
+/* ─── Divider ─── */
+.divider {
+  width: 40px;
+  height: 1px;
+  background: var(--border);
+  margin: 0 0 3rem;
+}
+
+/* ─── Project list ─── */
+.projects {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-bottom: 6rem;
+}
+
+.project-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  padding: 2rem 0;
+  border-top: 1px solid var(--border);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+}
+.project-link:last-child {
+  border-bottom: 1px solid var(--border);
+}
+
+.project-link:hover {
+  padding-left: 1.2rem;
+}
+.project-link:hover .proj-title {
+  color: var(--gold);
+}
+.project-link:hover .proj-arrow {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.proj-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.proj-number {
+  font-family: var(--f-mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+  min-width: 2rem;
+}
+
+.proj-title {
+  font-family: var(--f-display);
+  font-size: 1.35rem;
+  font-weight: 400;
+  color: var(--white);
+  transition: color 0.3s;
+  flex: 1;
+}
+
+.proj-arrow {
+  font-size: 0.85rem;
+  color: var(--gold);
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+
+.proj-desc {
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 500px;
+  padding-left: 2rem;
+}
+
+.proj-tags {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+  padding-left: 2rem;
+  flex-wrap: wrap;
+}
+
+.proj-tag {
+  font-family: var(--f-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+
+/* ─── Footer ─── */
+footer {
+  padding: 3rem 0;
+  width: 100%;
+  max-width: 720px;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+.footer-rule {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 1.5rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.footer-left {
+  font-family: var(--f-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+.footer-left a {
+  color: var(--gold);
+  text-decoration: none;
+}
+.footer-left a:hover {
+  text-decoration: underline;
+}
+
+.footer-right {
+  font-size: 0.6rem;
+  color: var(--muted);
+  font-family: var(--f-mono);
+  letter-spacing: 0.05em;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 600px) {
+  header { padding: 5rem 0 3rem; }
+  .proj-desc, .proj-tags { padding-left: 0; }
+  .proj-title { font-size: 1.15rem; }
+}
+
+/* ─── Entry animation ─── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+header { animation: fadeIn 0.8s ease both; }
+.project-link:nth-child(1) { animation: fadeIn 0.6s 0.15s ease both; }
+.project-link:nth-child(2) { animation: fadeIn 0.6s 0.25s ease both; }
+.project-link:nth-child(3) { animation: fadeIn 0.6s 0.35s ease both; }
+.project-link:nth-child(4) { animation: fadeIn 0.6s 0.45s ease both; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header>
+    <div class="site-tag">kimsh.kr</div>
+    <h1>Mathematics<br><em>Demonstration Projects</em></h1>
+    <p class="intro">Interactive explorations where abstract mathematics becomes something you can see, hear, and touch. Each project synthesizes its content in real time — no recordings, no pre-rendered assets. Just math.</p>
+  </header>
+
+  <div class="divider"></div>
+
+  <div class="projects">
+
+    <a class="project-link" href="sound.html">
+      <div class="proj-top">
+        <span class="proj-number">01</span>
+        <span class="proj-title">The Mathematics of Sound</span>
+        <span class="proj-arrow">→</span>
+      </div>
+      <p class="proj-desc">From Pythagoras to Fourier to your smartphone. Build waveforms from harmonics, compare tuning systems across instruments, and explore how the cochlea performs frequency analysis — all with live-synthesized audio.</p>
+      <div class="proj-tags">
+        <span class="proj-tag">Fourier Analysis</span>
+        <span class="proj-tag">Temperament</span>
+        <span class="proj-tag">Acoustics</span>
+        <span class="proj-tag">Web Audio</span>
+      </div>
+    </a>
+
+    <a class="project-link" href="sound-kr.html">
+      <div class="proj-top">
+        <span class="proj-number">02</span>
+        <span class="proj-title">소리의 수학 <span style="font-family:var(--f-body);font-size:0.8rem;color:var(--muted);font-weight:300;">&ensp;Korean edition</span></span>
+        <span class="proj-arrow">→</span>
+      </div>
+      <p class="proj-desc">The same interactive exploration of sound, tuning, and Fourier analysis — written for a Korean-speaking audience.</p>
+      <div class="proj-tags">
+        <span class="proj-tag">한국어</span>
+        <span class="proj-tag">Fourier Analysis</span>
+        <span class="proj-tag">Temperament</span>
+        <span class="proj-tag">Acoustics</span>
+      </div>
+    </a>
+
+    <a class="project-link" href="drum.html">
+      <div class="proj-top">
+        <span class="proj-number">03</span>
+        <span class="proj-title">Can You Hear the Shape of a Drum?</span>
+        <span class="proj-arrow">→</span>
+      </div>
+      <p class="proj-desc">Mark Kac's famous 1966 question, made audible. Strike virtual drums, see their vibrational modes as Bessel-function eigenstates, and hear why two differently shaped drums can produce identical spectra.</p>
+      <div class="proj-tags">
+        <span class="proj-tag">Spectral Geometry</span>
+        <span class="proj-tag">Bessel Functions</span>
+        <span class="proj-tag">Eigenvalues</span>
+        <span class="proj-tag">Modal Synthesis</span>
+      </div>
+    </a>
+
+    <a class="project-link" href="banach.html">
+      <div class="proj-top">
+        <span class="proj-number">04</span>
+        <span class="proj-title">Banach–Tarski: F₂ on S²</span>
+        <span class="proj-arrow">→</span>
+      </div>
+      <p class="proj-desc">The most counterintuitive theorem in mathematics, visualized. Watch the free group F₂ act on the sphere via rotations, and see how a ball can be decomposed and reassembled into two identical copies of itself.</p>
+      <div class="proj-tags">
+        <span class="proj-tag">Free Groups</span>
+        <span class="proj-tag">Paradoxical Decomposition</span>
+        <span class="proj-tag">3D Visualization</span>
+      </div>
+    </a>
+
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-rule"></div>
+  <div class="footer-content">
+    <div class="footer-left"><a href="https://kimsh.kr">kimsh.kr</a></div>
+    <div class="footer-right">All content synthesized in real time</div>
+  </div>
+</footer>
+
+</body>
+</html>
