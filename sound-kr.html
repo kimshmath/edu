@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Mathematics of Sound — An Interactive Exploration</title>
+<title>소리의 수학 — 인터랙티브 탐험</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -23,7 +23,7 @@
   --text: #e0e6f0;
   --muted: #7b8db5;
   --font-display: 'Fraunces', Georgia, serif;
-  --font-body: 'DM Sans', sans-serif;
+  --font-body: 'DM Sans', 'Noto Sans KR', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
@@ -495,7 +495,7 @@ footer {
   z-index: 2;
 }
 
-/* ─── Instrument Temperament Comparison ─── */
+/* ─── 악기 Temperament Comparison ─── */
 .inst-tabs {
   display: flex;
   gap: 0.5rem;
@@ -1032,8 +1032,8 @@ footer {
 <div id="audio-notice">
   <div class="notice-card">
     <span class="notice-icon">🎵</span>
-    <h2>This Page Is Meant to Be Heard</h2>
-    <p>Every sound on this page is synthesized in real time from pure mathematics.<br><strong>Make sure your device isn't muted.</strong></p>
+    <h2>이 페이지는 소리가 나옵니다</h2>
+    <p>이 페이지의 모든 소리는 순수 수학으로 실시간 합성됩니다.<br><strong>기기의 소리가 켜져 있는지 확인해 주세요.</strong></p>
     <div class="notice-vol">
       <div class="vol-bars">
         <div class="vol-bar"></div>
@@ -1042,23 +1042,23 @@ footer {
         <div class="vol-bar"></div>
         <div class="vol-bar"></div>
       </div>
-      <span>Set your volume to a comfortable level</span>
+      <span>볼륨을 적당히 올려주세요</span>
     </div>
     <div class="notice-ios" id="ios-notice" style="display:none;">
-      <span class="ios-badge">⚠ iPhone / iPad — Important</span>
-      <p style="font-size:0.92rem;font-weight:500;">You won't hear anything unless <strong>Silent Mode is off.</strong></p>
+      <span class="ios-badge">⚠ iPhone / iPad 사용자 필독</span>
+      <p style="font-size:0.92rem;font-weight:500;">소리를 들으려면 <strong>무음 모드를 꺼 주세요!</strong></p>
       <p class="ios-detail" style="margin-top:0.6rem;">
-        <strong style="color:var(--coral);">① Older iPhones (iPhone 14 and earlier)</strong><br>
-        Flip the <strong>Ring/Silent Switch</strong> on the left side upward.<br>
-        If you see orange, it's on silent → <strong>push it up until no orange is visible</strong>.<br><br>
-        <strong style="color:var(--coral);">② Newer iPhones (iPhone 15 Pro and later)</strong><br>
-        Long-press the <strong>Action Button</strong> to turn off Silent Mode.<br>
-        A 🔔 icon at the top of the screen confirms Ring Mode is on.<br><br>
+        <strong style="color:var(--coral);">① 구형 iPhone (iPhone 14 이하)</strong><br>
+        왼쪽 측면의 <strong>벨소리/무음 스위치</strong>를 위로 올리세요.<br>
+        주황색이 보이면 무음 상태 → <strong>주황색이 안 보이도록</strong> 올려야 합니다.<br><br>
+        <strong style="color:var(--coral);">② 신형 iPhone (iPhone 15 Pro 이후)</strong><br>
+        <strong>동작 버튼</strong>을 길게 눌러 무음 모드를 해제하세요.<br>
+        화면 상단에 🔔 아이콘이 나타나면 벨소리 모드입니다.<br><br>
         <strong style="color:var(--coral);">③ iPad</strong><br>
-        Open Control Center and make sure 🔔 Silent Mode is off.
+        제어 센터를 열어 🔔 무음 모드가 꺼져 있는지 확인하세요.
       </p>
     </div>
-    <button class="notice-start" onclick="dismissNotice()">🔊 I'm Ready — Let's Go</button>
+    <button class="notice-start" onclick="dismissNotice()">🔊 소리 켜고 시작하기</button>
   </div>
 </div>
 
@@ -1070,11 +1070,11 @@ footer {
   <canvas id="hero-canvas"></canvas>
   <div class="content">
     <h3 class="accent-gold">The Mathematics of Sound</h3>
-    <h1>The Secret Life<br>of Sound</h1>
-    <p class="subtitle">From Pythagoras to your smartphone</p>
-    <p class="tagline">A violin and a flute both play A4 — the exact same note. So why do they sound completely different?<br>The answer is mathematics, and you can hear it for yourself.</p>
+    <h1>소리의 비밀</h1>
+    <p class="subtitle">피타고라스에서 스마트폰까지</p>
+    <p class="tagline">바이올린과 플루트가 똑같은 A4를 연주합니다 — 같은 음인데 왜 다르게 들릴까요?<br>답은 수학에 있습니다. 직접 들어보세요.</p>
     <button class="start-btn" onclick="initAudio(); document.getElementById('sec-wave').scrollIntoView({behavior:'smooth'})">
-      ▶ Start Exploring
+      ▶ 소리의 여행 시작하기
     </button>
   </div>
 </section>
@@ -1083,13 +1083,13 @@ footer {
 <section id="sec-wave">
   <div class="section-inner">
     <div class="reveal">
-      <p class="section-num">01 — PHYSICS OF SOUND</p>
-      <h2>Sound Is <span class="accent-sky">Air in Motion</span></h2>
-      <p>At its core, sound is nothing more than pressure rippling through air. The simplest possible sound — a <strong>sine wave</strong> — is a single, pure frequency. Drag the sliders below to shape one yourself.</p>
+      <p class="section-num">01 — 소리의 물리학</p>
+      <h2>소리는 <span class="accent-sky">공기의 진동</span>이다</h2>
+      <p>소리의 본질은 공기 분자의 압력 변화입니다. 가장 단순한 소리인 <strong>사인파(sine wave)</strong>는 단 하나의 주파수를 가진 순음입니다. 아래에서 직접 주파수와 진폭을 조절해 보세요.</p>
     </div>
 
     <div class="demo-card reveal">
-      <div class="audio-note">Click to play. Adjust volume as needed.</div>
+      <div class="audio-note">클릭하면 소리가 납니다. 볼륨을 적당히 조절해 주세요.</div>
       <div class="canvas-wrap">
         <span class="wave-label" id="freq-label">440 Hz — A4</span>
         <canvas id="sine-canvas" height="200"></canvas>
@@ -1120,19 +1120,19 @@ footer {
 <section id="sec-pythagoras">
   <div class="section-inner">
     <div class="reveal">
-      <p class="section-num">02 — 2,500 YEARS AGO</p>
-      <h2>Pythagoras and the <span class="accent-gold">Blacksmith</span></h2>
-      <p>The story goes that Pythagoras walked past a blacksmith and noticed something strange: some pairs of hammers rang beautifully together, while others clashed. He investigated — and stumbled onto one of the deepest ideas in all of science:</p>
+      <p class="section-num">02 — 2500년 전</p>
+      <h2>피타고라스의 <span class="accent-gold">대장간</span></h2>
+      <p>전설에 따르면 피타고라스는 대장간을 지나다 망치 소리가 어떤 조합에서는 아름답고, 어떤 조합에서는 불쾌하다는 것을 발견했습니다. 실험 끝에 그는 놀라운 진실에 도달합니다:</p>
       <p style="font-family: var(--font-display); font-size: 1.4rem; color: var(--gold); font-style: italic; margin: 1.5rem 0; text-align: center;">
-        "Harmony is born from simple ratios of whole numbers."
+        "아름다운 화음은 단순한 정수의 비율에서 온다"
       </p>
-      <p>Click any interval below. The simpler the ratio, the more consonant the sound.</p>
+      <p>아래의 음정을 클릭해서 직접 들어보세요. 비율이 단순할수록 더 조화로운 소리가 납니다.</p>
     </div>
 
     <div class="demo-card reveal">
-      <div class="audio-note">Both notes play at once</div>
+      <div class="audio-note">두 음이 동시에 울립니다</div>
       <div class="canvas-wrap">
-        <span class="wave-label">Combined waveform of two notes</span>
+        <span class="wave-label">두 음의 합성파</span>
         <canvas id="interval-canvas" height="180"></canvas>
       </div>
       <div class="interval-grid" id="interval-grid">
@@ -1146,15 +1146,15 @@ footer {
 <section id="sec-temperament">
   <div class="section-inner">
     <div class="reveal">
-      <p class="section-num">03 — THE GREAT COMPROMISE</p>
-      <h2><span class="accent-sky">Just Intonation</span> vs <span class="accent-gold">Equal Temperament</span></h2>
-      <p>Just intonation sounds gorgeous — but it has a fatal flaw. You can't change key without retuning the entire instrument. The fix? <strong>Equal temperament</strong>: divide the octave into 12 identical steps, each a factor of 2<sup>1/12</sup> apart.</p>
-      <div class="fourier-eq">fₖ = f₀ × 2<sup>k/12</sup> &nbsp;&nbsp; (one semitone = ¹²√2 ≈ 1.05946…)</div>
-      <p>Bach's <em>Well-Tempered Clavier</em> was, in part, a declaration that this compromise could produce great art. Below, you can hear what the compromise actually sounds like.</p>
+      <p class="section-num">03 — 수학적 타협</p>
+      <h2><span class="accent-sky">순정률</span> vs <span class="accent-gold">평균율</span></h2>
+      <p>피타고라스의 정수비 음률(순정률)은 아름답지만 치명적인 문제가 있습니다 — <strong>전조(key change)가 불가능</strong>합니다. 그래서 탄생한 것이 평균율: 옥타브를 12개의 동일한 간격(각 2<sup>1/12</sup>)으로 나누는 방법입니다.</p>
+      <div class="fourier-eq">fₖ = f₀ × 2<sup>k/12</sup> &nbsp;&nbsp; (반음 하나 = ¹²√2 ≈ 1.05946…)</div>
+      <p>바흐의 「평균율 클라비어곡집」은 이 수학적 타협 위에 세워진 음악적 선언이었습니다. 아래에서 같은 음정의 순정률과 평균율 차이를 직접 들어보세요.</p>
     </div>
 
     <div class="demo-card reveal">
-      <div class="audio-note">Listen closely — headphones recommended</div>
+      <div class="audio-note">미세한 차이를 들어보세요 — 헤드폰 추천</div>
       <div class="temp-compare" id="temp-compare">
         <!-- Filled by JS -->
       </div>
@@ -1166,15 +1166,15 @@ footer {
 <section id="sec-instruments">
   <div class="section-inner">
     <div class="reveal">
-      <p class="section-num">03.5 — SIDE BY SIDE</p>
-      <h2><span class="accent-gold">Just</span> vs <span class="accent-coral">Equal</span> — Instrument by Instrument</h2>
-      <p>Fretless instruments — violin, cello, trombone — give the player total control over pitch. They can play in just intonation, equal temperament, or anything in between. Hear the same chord both ways.</p>
+      <p class="section-num">03.5 — 직접 비교</p>
+      <h2>악기별 <span class="accent-gold">순정률</span> vs <span class="accent-coral">평균율</span> 화음</h2>
+      <p>바이올린, 첼로, 트럼본은 프렛이 없는 악기 — 연주자가 원하면 순정률로도, 평균율로도 연주할 수 있습니다. 같은 화음이 두 음률에서 어떻게 다르게 울리는지 직접 들어보세요.</p>
     </div>
 
     <div class="demo-card reveal">
-      <div class="audio-note">Headphones make the beating much easier to hear</div>
+      <div class="audio-note">헤드폰을 사용하면 맥놀이(beating)의 차이를 더 선명하게 들을 수 있습니다</div>
 
-      <!-- Instrument tabs -->
+      <!-- 악기 tabs -->
       <div class="inst-tabs" id="inst-tabs"></div>
 
       <!-- Key selector -->
@@ -1199,14 +1199,14 @@ footer {
       <!-- Play cards -->
       <div class="tuning-grid">
         <div class="tuning-card just-card">
-          <div class="tuning-type just-type">Just Intonation</div>
-          <div class="tuning-title" style="color:#5db8a3;">Just Intonation</div>
+          <div class="tuning-type just-type">순정률</div>
+          <div class="tuning-title" style="color:#5db8a3;">순정률</div>
           <div class="tuning-freqs" id="just-freq-info"></div>
           <button class="play-tuning-btn just-play" id="inst-just-btn" onclick="instPlay('just')">▶ &nbsp;Just Intonation</button>
         </div>
         <div class="tuning-card equal-card">
-          <div class="tuning-type equal-type">Equal Temperament</div>
-          <div class="tuning-title" style="color:var(--coral);">Equal Temperament</div>
+          <div class="tuning-type equal-type">평균율</div>
+          <div class="tuning-title" style="color:var(--coral);">평균율</div>
           <div class="tuning-freqs" id="equal-freq-info"></div>
           <button class="play-tuning-btn equal-play" id="inst-equal-btn" onclick="instPlay('equal')">▶ &nbsp;Equal Temperament</button>
         </div>
@@ -1214,13 +1214,13 @@ footer {
 
       <!-- Compare button -->
       <div class="compare-row">
-        <button class="compare-btn" onclick="instPlayBoth()">⟷ A/B Compare: Just → Equal</button>
+        <button class="compare-btn" onclick="instPlayBoth()">⟷ 순정률 → 평균율 연속 비교</button>
         <span class="compare-note">Plays 2 seconds of each in sequence</span>
       </div>
     </div>
 
     <div class="inst-explanation reveal">
-      <p><strong style="color:var(--text);">Why does this happen?</strong> — In just intonation, frequencies line up as exact integer ratios. Harmonics lock in. <strong style="color:#5db8a3;">No beating.</strong> In equal temperament, those ratios are slightly off, and the misaligned harmonics create <strong style="color:var(--coral);">a slow pulsing called "beating."</strong> Professional string quartets and brass ensembles instinctively nudge toward just intonation when they want a chord to ring.</p>
+      <p><strong style="color:var(--text);">왜 차이가 나는가?</strong> — 순정률은 주파수 비율이 정확한 정수비이므로 배음이 완벽하게 맞물려 <strong style="color:#5db8a3;">맥놀이가 없습니다</strong>. 평균율은 정수비에서 미세하게 벗어나 있어 배음 사이에 주파수 차이가 생기고, 이것이 <strong style="color:var(--coral);">주기적인 음량 변화(beating)</strong>로 들립니다. 현악 사중주나 금관 앙상블에서 아름다운 화음이 들릴 때, 연주자들은 종종 본능적으로 순정률 쪽으로 음정을 미세 조정합니다.</p>
     </div>
   </div>
 </section>
@@ -1230,14 +1230,14 @@ footer {
 <section id="sec-extreme">
   <div class="section-inner">
     <div class="reveal">
-      <p class="section-num">THE EXTREME LAB</p>
-      <h2>Maximum <span class="accent-coral">Contrast</span></h2>
-      <p>When is the gap between just and equal temperament largest? Three ingredients: <strong>sustained tone, rich harmonics, and a major third</strong>. That interval is 386.3¢ in just intonation versus 400¢ in equal temperament — a <strong class="accent-coral">13.7-cent</strong> gap that produces unmistakable beating in the upper partials.</p>
-      <p>Below, we simulate a <strong>brass ensemble (trombone)</strong> — rich, sustained harmonics that make every cent of difference audible.</p>
+      <p class="section-num">극한 비교 실험실</p>
+      <h2>차이가 가장 <span class="accent-coral">극명한</span> 순간</h2>
+      <p>순정률과 평균율의 차이가 가장 크게 드러나는 조건은 무엇일까요? <strong>지속음 악기 + 풍부한 배음 + 장3도 음정</strong>입니다. 장3도의 순정률(5:4 = 386.3센트)과 평균율(400센트)은 <strong class="accent-coral">13.7센트</strong>나 차이나며, 이것은 배음에서 명확한 맥놀이(beating)로 들립니다.</p>
+      <p>아래는 <strong>금관 앙상블(트럼본)</strong> 음색을 시뮬레이션합니다 — 강한 배음이 지속되므로 맥놀이가 선명하게 들리는 악기입니다.</p>
     </div>
 
     <div class="demo-card reveal">
-      <div class="audio-note">Headphones strongly recommended — the contrast is striking</div>
+      <div class="audio-note">헤드폰 강력 추천 — 맥놀이의 차이가 극적으로 들립니다</div>
 
       <div class="extreme-presets" id="extreme-presets"></div>
 
@@ -1249,20 +1249,20 @@ footer {
 
       <div class="tuning-grid">
         <div class="tuning-card just-card">
-          <div class="tuning-type just-type">Just Intonation — Pure, No Beating</div>
+          <div class="tuning-type just-type">순정률 — 맥놀이 없음</div>
           <div class="tuning-freqs" id="ext-just-info" style="min-height:2rem;"></div>
           <button class="play-tuning-btn just-play" id="ext-just-btn" onclick="extPlay('just')">▶ Just</button>
         </div>
         <div class="tuning-card equal-card">
-          <div class="tuning-type equal-type">Equal Temperament — Audible Beating</div>
+          <div class="tuning-type equal-type">평균율 — 맥놀이 발생</div>
           <div class="tuning-freqs" id="ext-equal-info" style="min-height:2rem;"></div>
           <button class="play-tuning-btn equal-play" id="ext-equal-btn" onclick="extPlay('equal')">▶ Equal</button>
         </div>
       </div>
 
       <div class="compare-row">
-        <button class="compare-btn" onclick="extPlayBoth()">⟷ A/B Compare: Just → Equal</button>
-        <span class="compare-note">Hear beating appear in real time</span>
+        <button class="compare-btn" onclick="extPlayBoth()">⟷ 순정률 → 평균율 연속 비교</button>
+        <span class="compare-note">맥놀이의 유무를 직접 비교</span>
       </div>
     </div>
   </div>
@@ -1272,57 +1272,57 @@ footer {
 <section id="sec-bach">
   <div class="section-inner">
     <div class="reveal">
-      <p class="section-num">BACH'S SECRET</p>
-      <h2>A Third Way: <span class="accent-gold">Well-Temperament</span></h2>
-      <p>Bach's masterwork is called the <em>Well-Tempered</em> Clavier — not the <em>Equal-Tempered</em> Clavier. The distinction matters. <strong>Werckmeister III</strong>, the tuning Bach likely used, is neither just intonation nor modern 12-TET. It's a <strong>third path</strong> entirely.</p>
+      <p class="section-num">바흐의 비밀</p>
+      <h2>제3의 길: <span class="accent-gold">Well-Temperament</span></h2>
+      <p>바흐의 「평균율 클라비어곡집」(Das Wohltemperierte Clavier, 1722)의 제목은 사실 "well-tempered"이지 "equal-tempered"가 아닙니다. 바흐가 사용한 것으로 추정되는 <strong>Werckmeister III</strong> 조율법은 순정률도, 현대 평균율(12-TET)도 아닌 <strong>제3의 시스템</strong>입니다.</p>
     </div>
 
     <div class="demo-card reveal">
-      <h3 class="accent-gold" style="margin-bottom:0.5rem;">Three Systems at a Glance</h3>
+      <h3 class="accent-gold" style="margin-bottom:0.5rem;">세 가지 조율법의 핵심 차이</h3>
       <div style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;line-height:1.8;">
-        <strong style="color:#5db8a3;">Just Intonation</strong>: Pure integer ratios → flawless harmony, but no modulation<br>
-        <strong style="color:var(--gold);">Well-Temperament (Werckmeister III)</strong>: 4 fifths narrowed by 1/4 Pythagorean comma, remaining 8 are pure 3:2 — all keys playable, each with <strong>its own personality</strong><br>
-        <strong style="color:var(--coral);">Equal Temperament (12-TET)</strong>: Every semitone = 2<sup>1/12</sup> → all keys identical, no color
+        <strong style="color:#5db8a3;">순정률</strong>: 정수비 → 완벽한 화음, 전조 불가<br>
+        <strong style="color:var(--gold);">Well-Temperament (Werckmeister III)</strong>: 4 fifths narrowed by 1/4 Pythagorean comma, remaining 8 are pure 3:2 — 모든 조를 연주 가능하되, <strong>각 조가 고유한 색채</strong>를 가짐<br>
+        <strong style="color:var(--coral);">평균율 (12-TET)</strong>: 모든 반음 = 2<sup>1/12</sup> → 모든 조 동일, 개성 없음
       </div>
 
-      <h3 class="accent-gold" style="margin-bottom:0.5rem;">The Color of Every Key</h3>
-      <p style="font-size:0.8rem;color:var(--muted);margin-bottom:0.5rem;">In Werckmeister III, C major's third is 390¢ — warm, nearly pure. F# major's third is 408¢ — bright, Pythagorean, tense. Click any key to hear its character.</p>
+      <h3 class="accent-gold" style="margin-bottom:0.5rem;">각 조의 색채 — 장3도의 순도</h3>
+      <p style="font-size:0.8rem;color:var(--muted);margin-bottom:0.5rem;">Werckmeister III에서 C장조의 장3도(C→E)는 390센트로 순정(386센트)에 가깝지만, F#장조의 장3도는 408센트로 피타고라스적입니다. 각 조를 클릭해 보세요.</p>
 
       <div class="key-color-grid" id="key-color-grid"></div>
 
-      <div class="audio-note" style="margin-top:0.5rem;">Hear the selected key's major triad in all three systems</div>
+      <div class="audio-note" style="margin-top:0.5rem;">클릭한 조의 장3화음을 세 가지 조율법으로 비교합니다</div>
 
       <div id="bach-key-info" style="text-align:center;margin:0.8rem 0;font-family:var(--font-mono);font-size:0.85rem;color:var(--gold);"></div>
 
       <div class="three-way-grid">
         <div class="tw-card just-c">
-          <div class="tw-label" style="color:#5db8a3;">Just Intonation</div>
-          <div class="tw-title" style="color:#5db8a3;">Just Intonation</div>
-          <div class="tw-info" id="tw-just-info">Integer ratios</div>
+          <div class="tw-label" style="color:#5db8a3;">순정률</div>
+          <div class="tw-title" style="color:#5db8a3;">순정률</div>
+          <div class="tw-info" id="tw-just-info">정수비</div>
           <button class="tw-play just-p" id="tw-just-btn" onclick="bachPlay('just')">▶ Just</button>
         </div>
         <div class="tw-card well-c">
           <div class="tw-label" style="color:var(--gold);">Well-Temperament</div>
           <div class="tw-title" style="color:var(--gold);">Werckmeister III</div>
-          <div class="tw-info" id="tw-well-info">Bach's tuning</div>
+          <div class="tw-info" id="tw-well-info">바흐의 조율</div>
           <button class="tw-play well-p" id="tw-well-btn" onclick="bachPlay('well')">▶ Werckmeister</button>
         </div>
         <div class="tw-card equal-c">
-          <div class="tw-label" style="color:var(--coral);">Equal Temperament</div>
-          <div class="tw-title" style="color:var(--coral);">Equal Temperament</div>
+          <div class="tw-label" style="color:var(--coral);">평균율</div>
+          <div class="tw-title" style="color:var(--coral);">평균율</div>
           <div class="tw-info" id="tw-equal-info">12-TET</div>
           <button class="tw-play equal-p" id="tw-equal-btn" onclick="bachPlay('equal')">▶ Equal</button>
         </div>
       </div>
 
       <div class="compare-row">
-        <button class="compare-btn" onclick="bachPlayAll()">▶ Sequential: Just → Werckmeister → Equal</button>
+        <button class="compare-btn" onclick="bachPlayAll()">▶ 순정률 → Werckmeister → 평균율 순차 비교</button>
       </div>
     </div>
 
     <div class="inst-explanation reveal" style="border-left-color:var(--gold);">
-      <p><strong style="color:var(--text);">What Bach Actually Did</strong> — Well-temperament's genius is that every key works, but none sound alike. C major is warm and nearly pure; F# major crackles with tension. Bach's 24 preludes and fugues weren't proving that all keys are equal — they were <em>celebrating</em> that each one is different.</p>
-      <p style="margin-top:0.8rem;"><strong style="color:var(--text);">A Common Misunderstanding</strong> — Werckmeister III is <em>not</em> a system of pure integer ratios. Four of its fifths (C-G, G-D, D-A, B-F#) are each narrowed by ¼ of the Pythagorean comma — landing at roughly 696.09 cents, an irrational number. The other eight fifths stay pure at 3:2 (701.96 cents). This is what separates it from just intonation.</p>
+      <p><strong style="color:var(--text);">바흐의 혁신</strong> — Well-Temperament의 핵심은 "모든 조에서 연주할 수 있되, 각 조가 자기만의 성격을 갖는다"는 것입니다. C장조는 거의 순정에 가까운 따뜻함, F#장조는 밝고 긴장된 색채를 가집니다. 바흐가 24개의 전주곡과 푸가를 모든 장·단조로 쓴 것은 각 조의 <em>고유한 성격</em>을 탐구한 것이지, "모든 조가 동일하다"는 현대 평균율의 선언이 아닙니다.</p>
+      <p style="margin-top:0.8rem;"><strong style="color:var(--text);">흔한 오해 바로잡기</strong> — Werckmeister III는 순수한 정수비 체계가 아닙니다. 4개의 5도(C-G, G-D, D-A, B-F#)를 피타고라스 콤마의 1/4씩 좁히므로, 이 5도들은 약 696.09센트 — 무리수 값입니다. 나머지 8개의 5도만이 순정 3:2(701.96센트)를 유지합니다. 이것이 순정률과의 핵심 차이입니다.</p>
     </div>
   </div>
 </section>
@@ -1331,57 +1331,57 @@ footer {
 <section id="sec-fourier">
   <div class="section-inner">
     <div class="reveal">
-      <p class="section-num">04 — A RADICAL IDEA, 1822</p>
-      <h2>Fourier: <span class="accent-purple">He Was Studying Heat</span></h2>
-      <p>Joseph Fourier wasn't thinking about music at all — he was trying to understand how heat flows through metal. But along the way, he made a staggering claim: <strong>"Any waveform, no matter how complex, is just sine waves added together."</strong> The establishment pushed back. He was right.</p>
+      <p class="section-num">04 — 1822년의 혁명</p>
+      <h2>푸리에: <span class="accent-purple">열을 연구하다 음악을 풀다</span></h2>
+      <p>조제프 푸리에는 열전도 방정식을 풀다가 역사를 바꿀 주장을 합니다: <strong>"어떤 복잡한 파형이든 사인파의 합으로 분해할 수 있다."</strong> 라그랑주와 라플라스는 이를 믿지 않았지만, 그는 옳았습니다.</p>
       <div class="fourier-eq">
         f(t) = Σ <span class="accent-gold">aₙ</span> · sin(<span class="accent-sky">nωt</span> + <span class="accent-purple">φₙ</span>)
       </div>
-      <p>Use the sliders below to add harmonics one at a time. Watch a complex waveform emerge from nothing but sine waves.</p>
+      <p>아래에서 배음(harmonic)을 하나씩 추가해 보세요. 사인파들이 합쳐져 점점 복잡한 파형을 만들어냅니다.</p>
     </div>
 
     <div class="demo-card reveal">
-      <h3 class="accent-gold" style="margin-bottom: 1rem;">Harmonic Synthesizer</h3>
-      <div class="audio-note">Drag sliders to shape the sound — each controls one harmonic</div>
+      <h3 class="accent-gold" style="margin-bottom: 1rem;">배음 합성기 — Harmonic Synthesizer</h3>
+      <div class="audio-note">슬라이더로 각 배음의 세기를 조절합니다</div>
       <div id="harmonic-sliders"></div>
       <div class="canvas-wrap" style="margin-top: 1rem;">
-        <span class="wave-label">Resulting Waveform</span>
+        <span class="wave-label">합성 파형</span>
         <canvas id="fourier-canvas" height="220"></canvas>
       </div>
       <div class="btn-group">
         <button class="btn btn-gold" id="play-fourier-btn" onclick="toggleFourier()">▶ Play</button>
-        <button class="btn" onclick="setPreset('sine')">Sine</button>
-        <button class="btn" onclick="setPreset('piano')">Piano</button>
-        <button class="btn" onclick="setPreset('violin')">Violin</button>
-        <button class="btn" onclick="setPreset('cello')">Cello</button>
-        <button class="btn" onclick="setPreset('flute')">Flute</button>
-        <button class="btn" onclick="setPreset('oboe')">Oboe</button>
-        <button class="btn" onclick="setPreset('clarinet')">Clarinet</button>
-        <button class="btn" onclick="setPreset('trumpet')">Trumpet</button>
-        <button class="btn" onclick="setPreset('trombone')">Trombone</button>
-        <button class="btn" onclick="setPreset('sawtooth')">Sawtooth</button>
-        <button class="btn" onclick="setPreset('square')">Square</button>
-        <button class="btn" onclick="setPreset('triangle')">Triangle</button>
+        <button class="btn" onclick="setPreset('sine')">순음</button>
+        <button class="btn" onclick="setPreset('piano')">피아노</button>
+        <button class="btn" onclick="setPreset('violin')">바이올린</button>
+        <button class="btn" onclick="setPreset('cello')">첼로</button>
+        <button class="btn" onclick="setPreset('flute')">플루트</button>
+        <button class="btn" onclick="setPreset('oboe')">오보에</button>
+        <button class="btn" onclick="setPreset('clarinet')">클라리넷</button>
+        <button class="btn" onclick="setPreset('trumpet')">트럼펫</button>
+        <button class="btn" onclick="setPreset('trombone')">트럼본</button>
+        <button class="btn" onclick="setPreset('sawtooth')">톱니파</button>
+        <button class="btn" onclick="setPreset('square')">사각파</button>
+        <button class="btn" onclick="setPreset('triangle')">삼각파</button>
       </div>
       <div style="margin-top:1rem;">
-        <h3 style="font-size:0.75rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:0.5rem;">Chords — play the current timbre as a chord</h3>
+        <h3 style="font-size:0.75rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:0.5rem;">화음으로 듣기 — 위 음색으로 화음을 연주합니다</h3>
         <div class="btn-group" id="fourier-chord-btns">
-          <button class="btn active" onclick="setFourierChord('single',this)">Single</button>
-          <button class="btn" onclick="setFourierChord('oct',this)">Octave</button>
-          <button class="btn" onclick="setFourierChord('5th',this)">Perfect 5th</button>
-          <button class="btn" onclick="setFourierChord('maj3',this)">Major 3rd</button>
-          <button class="btn" onclick="setFourierChord('min3',this)">Minor 3rd</button>
-          <button class="btn" onclick="setFourierChord('maj',this)">Major Triad</button>
-          <button class="btn" onclick="setFourierChord('min',this)">Minor Triad</button>
-          <button class="btn" onclick="setFourierChord('maj7',this)">Major 7th</button>
-          <button class="btn" onclick="setFourierChord('dom7',this)">Dom 7th</button>
+          <button class="btn active" onclick="setFourierChord('single',this)">단음</button>
+          <button class="btn" onclick="setFourierChord('oct',this)">옥타브</button>
+          <button class="btn" onclick="setFourierChord('5th',this)">완전 5도</button>
+          <button class="btn" onclick="setFourierChord('maj3',this)">장 3도</button>
+          <button class="btn" onclick="setFourierChord('min3',this)">단 3도</button>
+          <button class="btn" onclick="setFourierChord('maj',this)">장 3화음</button>
+          <button class="btn" onclick="setFourierChord('min',this)">단 3화음</button>
+          <button class="btn" onclick="setFourierChord('maj7',this)">장 7화음</button>
+          <button class="btn" onclick="setFourierChord('dom7',this)">7화음</button>
         </div>
         <div style="margin-top:0.6rem;">
-          <h3 style="font-size:0.75rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:0.4rem;">Tuning System</h3>
+          <h3 style="font-size:0.75rem;color:var(--muted);letter-spacing:0.1em;margin-bottom:0.4rem;">조율법 선택</h3>
           <div class="btn-group" id="fourier-tuning-btns">
-            <button class="btn active" onclick="setFourierTuning('just',this)" style="border-color:rgba(93,184,163,0.4);color:#5db8a3;">Just Intonation</button>
+            <button class="btn active" onclick="setFourierTuning('just',this)" style="border-color:rgba(93,184,163,0.4);color:#5db8a3;">순정률</button>
             <button class="btn" onclick="setFourierTuning('well',this)" style="border-color:rgba(240,180,41,0.3);color:var(--gold);">Well-Temperament</button>
-            <button class="btn" onclick="setFourierTuning('equal',this)" style="border-color:rgba(251,113,133,0.3);color:var(--coral);">Equal Temperament</button>
+            <button class="btn" onclick="setFourierTuning('equal',this)" style="border-color:rgba(251,113,133,0.3);color:var(--coral);">평균율</button>
           </div>
         </div>
         <div id="fourier-chord-info" style="font-family:var(--font-mono);font-size:0.75rem;color:var(--muted);margin-top:0.4rem;line-height:1.7;"></div>
@@ -1394,24 +1394,24 @@ footer {
 <section id="sec-timbre">
   <div class="section-inner">
     <div class="reveal">
-      <p class="section-num">05 — MYSTERY SOLVED</p>
-      <h2>Same Note, Different <span class="accent-coral">Voice</span></h2>
-      <p>A violin and a flute can both play A4 at exactly 440 Hz — yet they sound nothing alike. The secret: their <strong>overtone fingerprints</strong> are different. The Fourier coefficients <span class="accent-gold">aₙ</span> <em>are</em> timbre.</p>
+      <p class="section-num">05 — 미스터리 해결</p>
+      <h2>같은 주파수, 다른 <span class="accent-coral">음색</span></h2>
+      <p>바이올린과 플루트가 같은 A4(440Hz)를 연주해도 다르게 들리는 이유 — 그것은 <strong>배음(overtone)의 세기</strong>가 다르기 때문입니다. 푸리에 계수 <span class="accent-gold">aₙ</span>이 바로 음색(timbre)의 정체입니다.</p>
     </div>
 
     <div class="demo-card reveal">
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
         <div>
-          <h3 class="accent-gold">Violin</h3>
-          <p style="font-size: 0.85rem; color: var(--muted);">Rich harmonics — warm, complex tone</p>
+          <h3 class="accent-gold">바이올린</h3>
+          <p style="font-size: 0.85rem; color: var(--muted);">풍부한 배음 — 따뜻하고 두꺼운 소리</p>
           <div class="harmonics-bars" id="violin-bars"></div>
-          <button class="btn btn-gold" style="margin-top: 2rem;" onclick="playTimbre('violin')">▶ Violin</button>
+          <button class="btn btn-gold" style="margin-top: 2rem;" onclick="playTimbre('violin')">▶ 바이올린 듣기</button>
         </div>
         <div>
-          <h3 class="accent-sky">Flute</h3>
-          <p style="font-size: 0.85rem; color: var(--muted);">Fundamental dominates — pure, airy tone</p>
+          <h3 class="accent-sky">플루트</h3>
+          <p style="font-size: 0.85rem; color: var(--muted);">기본파 지배적 — 맑고 깨끗한 소리</p>
           <div class="harmonics-bars" id="flute-bars"></div>
-          <button class="btn" style="margin-top: 2rem; border-color: var(--sky); color: var(--sky);" onclick="playTimbre('flute')">▶ Flute</button>
+          <button class="btn" style="margin-top: 2rem; border-color: var(--sky); color: var(--sky);" onclick="playTimbre('flute')">▶ 플루트 듣기</button>
         </div>
       </div>
     </div>
@@ -1422,14 +1422,14 @@ footer {
 <section id="sec-brain">
   <div class="section-inner">
     <div class="reveal">
-      <p class="section-num">06 — AN OPEN QUESTION</p>
-      <h2>Is Your Brain Running a <span class="accent-purple">Fourier Transform</span>?</h2>
-      <p>Inside your ear, the cochlea's basilar membrane vibrates at different positions for different frequencies — it's a <strong>biological spectrum analyzer</strong>. It's just 3.5 cm long, yet it covers the full range of a concert piano.</p>
+      <p class="section-num">06 — 열린 질문</p>
+      <h2>우리 뇌는 <span class="accent-purple">푸리에 변환</span>을 하고 있을까?</h2>
+      <p>달팽이관(cochlea)의 기저막은 위치별로 다른 주파수에 공명합니다 — 사실상 <strong>물리적 주파수 분해기</strong>입니다. 길이는 겨우 3.5cm인데, 피아노 건반 전체의 주파수 범위를 커버합니다.</p>
     </div>
 
     <div class="demo-card reveal">
-      <h3 class="accent-purple" style="margin-bottom: 1rem;">Cochlea Simulator</h3>
-      <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem;">Sweep the frequency and watch the resonance point travel along the spiral. Click to hear the tone.</p>
+      <h3 class="accent-purple" style="margin-bottom: 1rem;">달팽이관 시뮬레이터</h3>
+      <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem;">주파수를 바꾸면 기저막의 다른 위치가 반응합니다. 클릭하면 소리가 납니다.</p>
       <div class="canvas-wrap">
         <canvas id="cochlea-canvas" height="280"></canvas>
       </div>
@@ -1440,25 +1440,25 @@ footer {
       </div>
       <div class="btn-group">
         <button class="btn btn-gold" id="play-cochlea-btn" onclick="toggleCochlea()">▶ Play</button>
-        <button class="btn" onclick="setCochleaFreq(200)">200 Hz — Low</button>
-        <button class="btn" onclick="setCochleaFreq(1000)">1 kHz — Mid</button>
-        <button class="btn" onclick="setCochleaFreq(4000)">4 kHz — High</button>
+        <button class="btn" onclick="setCochleaFreq(200)">200 Hz (저음)</button>
+        <button class="btn" onclick="setCochleaFreq(1000)">1 kHz (중음)</button>
+        <button class="btn" onclick="setCochleaFreq(4000)">4 kHz (고음)</button>
       </div>
     </div>
 
     <div class="reveal" style="margin-top: 2rem;">
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
         <div class="demo-card" style="border-left: 3px solid var(--sky);">
-          <h3 class="accent-sky">What's Similar</h3>
-          <p style="font-size: 0.9rem;">The cochlea physically decomposes sound into frequency bands — functionally, a Fourier-like operation</p>
+          <h3 class="accent-sky">비슷한 점</h3>
+          <p style="font-size: 0.9rem;">달팽이관이 물리적으로 주파수를 분리 — 기능적으로 푸리에 변환과 유사한 연산</p>
         </div>
         <div class="demo-card" style="border-left: 3px solid var(--coral);">
-          <h3 class="accent-coral">What's Different</h3>
-          <p style="font-size: 0.9rem;">Finite time windows, log-spaced frequency resolution, nonlinear amplification via outer hair cells — not a textbook FFT</p>
+          <h3 class="accent-coral">다른 점</h3>
+          <p style="font-size: 0.9rem;">유한 시간 창, 로그 주파수 스케일, 외유모세포의 비선형 증폭 — 엄밀히 FFT는 아님</p>
         </div>
       </div>
       <p style="font-family: var(--font-display); font-style: italic; color: var(--gold); text-align: center; margin-top: 1.5rem; font-size: 1.1rem;">
-        "Fourier cracked half the puzzle in 1822.<br>Neuroscience is still working on the rest."
+        "푸리에가 1822년에 이야기의 절반을 열었고,<br>신경과학이 나머지 절반을 풀고 있다."
       </p>
     </div>
   </div>
@@ -1468,26 +1468,26 @@ footer {
 <section id="sec-digital">
   <div class="section-inner">
     <div class="reveal">
-      <p class="section-num">07 — FOURIER'S CHILDREN</p>
-      <h2><span class="accent-mint">Mathematics</span> in Your Pocket</h2>
-      <p>Why does a CD sample audio 44,100 times per second? Because of the Nyquist-Shannon theorem.</p>
+      <p class="section-num">07 — 푸리에의 유산</p>
+      <h2>당신의 주머니 속 <span class="accent-mint">수학</span></h2>
+      <p>CD가 1초에 44,100번 소리를 잘라 저장하는 이유? 나이퀴스트-섀넌 정리입니다.</p>
       <div class="fourier-eq">
         f<sub>sampling</sub> ≥ 2 × f<sub>max</sub> &nbsp;&nbsp; (44,100 ≥ 2 × 20,000)
       </div>
-      <p>MP3 runs a Fourier transform, then throws away the frequencies you'd never notice (psychoacoustic masking). 5G, Wi-Fi, streaming — they're all Fourier's children.</p>
+      <p>MP3는 푸리에 변환 후 인간이 잘 못 듣는 주파수 성분을 제거합니다(psychoacoustic masking). 5G, Wi-Fi, 스트리밍 — 모두 푸리에의 후예입니다.</p>
     </div>
 
     <div class="demo-card reveal">
-      <h3 class="accent-mint" style="margin-bottom: 1rem;">Sampling Simulator</h3>
-      <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem;">Lower the sampling rate and watch fidelity degrade. Red dots = digital samples. Blue curve = the original analog signal.</p>
+      <h3 class="accent-mint" style="margin-bottom: 1rem;">샘플링 시뮬레이터</h3>
+      <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem;">샘플링 레이트를 낮추면 소리가 어떻게 변하는지 눈으로 확인하세요. 빨간 점이 디지털 샘플, 파란 곡선이 원래 아날로그 신호입니다.</p>
       <div class="canvas-wrap">
-        <span class="wave-label" id="sampling-label">Samples: 44 / cycle</span>
+        <span class="wave-label" id="sampling-label">Samples: 44 / 주기</span>
         <canvas id="sampling-canvas" height="200"></canvas>
       </div>
       <div class="slider-row">
         <label>SR</label>
         <input type="range" id="sample-rate-slider" min="4" max="80" value="44" step="1">
-        <span class="val" id="sr-val">44 / cycle</span>
+        <span class="val" id="sr-val">44 / 주기</span>
       </div>
     </div>
   </div>
@@ -1497,23 +1497,23 @@ footer {
 <section id="sec-closing">
   <div class="section-inner" style="text-align: center;">
     <div class="reveal">
-      <h2>So —<br><span class="accent-gold">What Is Music?</span></h2>
+      <h2>다시,<br><span class="accent-gold">음악이란 무엇인가?</span></h2>
       <div style="margin: 2rem 0; line-height: 2.2; font-size: 1.1rem;">
-        <p><span class="accent-gold">Pythagoras</span> called it integer ratios</p>
-        <p><span class="accent-sky">Fourier</span> called it sums of sine waves</p>
-        <p><span class="accent-coral">Your cochlea</span> decomposes it in 3.5 centimeters</p>
-        <p><span class="accent-purple">Your brain</span> reassembles it all into beauty</p>
+        <p><span class="accent-gold">피타고라스</span>는 정수의 비율이라 했고</p>
+        <p><span class="accent-sky">푸리에</span>는 사인파의 합이라 했고</p>
+        <p><span class="accent-coral">달팽이관</span>은 3.5cm 안에서 주파수를 분해하고</p>
+        <p><span class="accent-purple">뇌</span>는 그 정보를 '아름다움'으로 재조립합니다</p>
       </div>
       <p style="color: var(--muted); font-family: var(--font-display); font-style: italic; font-size: 1.05rem; max-width: 600px; margin: 2rem auto;">
-        A question born in a blacksmith's forge 2,500 years ago<br>now lives inside the phone in your pocket.
+        2500년 전 대장간에서 시작된 질문이<br>지금 여러분의 주머니 속 스마트폰까지 이어져 있습니다.
       </p>
     </div>
   </div>
 </section>
 
 <footer>
-  <p>The Mathematics of Sound — An Interactive Exploration</p>
-  <p style="margin-top: 0.3rem; font-size: 0.7rem;">Every sound on this page is generated in real time via the Web Audio API. No recordings — just math.</p>
+  <p>소리의 수학 — 인터랙티브 탐험</p>
+  <p style="margin-top: 0.3rem; font-size: 0.7rem;">이 페이지의 모든 소리는 Web Audio API로 실시간 합성됩니다. 녹음 없이, 오직 수학으로.</p>
 </footer>
 
 <script>
@@ -1558,7 +1558,7 @@ function toggleSine() {
   if (sineActive) {
     sineGain.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + 0.1);
     setTimeout(() => { sineOsc.stop(); sineOsc = null; sineActive = false; }, 120);
-    btn.textContent = '▶ Play';
+    btn.textContent = '▶ 재생';
     btn.classList.remove('playing');
   } else {
     const freq = +document.getElementById('freq-slider').value;
@@ -1571,7 +1571,7 @@ function toggleSine() {
     sineOsc.connect(sineGain).connect(actx.destination);
     sineOsc.start();
     sineActive = true;
-    btn.textContent = '⏸ Stop';
+    btn.textContent = '⏸ 정지';
     btn.classList.add('playing');
   }
 }
@@ -1633,14 +1633,14 @@ drawSineWave();
 //  INTERVALS (Pythagoras)
 // ═══════════════════════════════════════════════
 const intervals = [
-  { ratio: [1,1], name: 'Unison', feel: 'One note' },
-  { ratio: [2,1], name: 'Octave', feel: 'Perfect harmony' },
-  { ratio: [3,2], name: 'Perfect 5th', feel: 'Bright and stable' },
-  { ratio: [4,3], name: 'Perfect 4th', feel: 'Soft stability' },
-  { ratio: [5,4], name: 'Major 3rd', feel: 'Warm resonance' },
-  { ratio: [6,5], name: 'Minor 3rd', feel: 'Lyrical' },
-  { ratio: [9,8], name: 'Major 2nd', feel: 'Tension' },
-  { ratio: [45,32], name: 'Tritone', feel: 'Unease — the devil\'s interval' },
+  { ratio: [1,1], name: '유니즌', feel: '하나의 음' },
+  { ratio: [2,1], name: '옥타브', feel: '완벽한 조화' },
+  { ratio: [3,2], name: '완전 5도', feel: '밝고 안정적' },
+  { ratio: [4,3], name: '완전 4도', feel: '부드러운 안정' },
+  { ratio: [5,4], name: '장 3도', feel: '따뜻한 울림' },
+  { ratio: [6,5], name: '단 3도', feel: '서정적' },
+  { ratio: [9,8], name: '장 2도', feel: '긴장감' },
+  { ratio: [45,32], name: '삼전음', feel: '불안, 악마의 음정' },
 ];
 
 const ig = document.getElementById('interval-grid');
@@ -1739,10 +1739,10 @@ animateIntervalWave();
 //  TEMPERAMENT COMPARISON
 // ═══════════════════════════════════════════════
 const tempIntervals = [
-  { name: 'Major 3rd (E)', just: 5/4, equal: Math.pow(2, 4/12), diff: 13.69 },
-  { name: 'Perfect 5th (G)', just: 3/2, equal: Math.pow(2, 7/12), diff: 1.96 },
-  { name: 'Minor 3rd (E♭)', just: 6/5, equal: Math.pow(2, 3/12), diff: 15.64 },
-  { name: 'Major 6th (A)', just: 5/3, equal: Math.pow(2, 9/12), diff: 15.64 },
+  { name: '장 3도 (E)', just: 5/4, equal: Math.pow(2, 4/12), diff: 13.69 },
+  { name: '완전 5도 (G)', just: 3/2, equal: Math.pow(2, 7/12), diff: 1.96 },
+  { name: '단 3도 (E♭)', just: 6/5, equal: Math.pow(2, 3/12), diff: 15.64 },
+  { name: '장 6도 (A)', just: 5/3, equal: Math.pow(2, 9/12), diff: 15.64 },
 ];
 
 const tc = document.getElementById('temp-compare');
@@ -1752,10 +1752,10 @@ tempIntervals.forEach((ti, idx) => {
   card.innerHTML = `
     <h4>${ti.name}</h4>
     <div class="btn-group" style="justify-content: center;">
-      <button class="btn" style="border-color: var(--sky); color: var(--sky);" onclick="playTemp(${idx}, 'just')">Just Intonation</button>
-      <button class="btn btn-gold" onclick="playTemp(${idx}, 'equal')">Equal Temperament</button>
+      <button class="btn" style="border-color: var(--sky); color: var(--sky);" onclick="playTemp(${idx}, 'just')">순정률</button>
+      <button class="btn btn-gold" onclick="playTemp(${idx}, 'equal')">평균율</button>
     </div>
-    <div class="cent-diff">Diff: ${ti.diff.toFixed(1)} cents</div>
+    <div class="cent-diff">Diff: ${ti.diff.toFixed(1)} 센트</div>
   `;
   tc.appendChild(card);
 });
@@ -1833,25 +1833,25 @@ function setPreset(name) {
 
 let fourierOscs = [], fourierGains = [], fourierActive = false, fourierMaster = null, fourierComp = null, fourierLimiter = null;
 
-// Werckmeister III cents from C
+// Werckmeister III 센트 from C
 const W3C = [0, 90.225, 192.18, 294.135, 390.225, 498.045, 588.27, 696.09, 792.18, 888.27, 996.09, 1092.18];
 
 // Chord definitions: semitone intervals + just ratios
 const FOURIER_CHORDS = {
-  single: { semis:[0],       justR:[1],               label:'Single' },
-  oct:    { semis:[0,12],    justR:[1, 2],             label:'Octave' },
-  '5th':  { semis:[0,7],     justR:[1, 3/2],           label:'Perfect 5th' },
-  maj3:   { semis:[0,4],     justR:[1, 5/4],           label:'Major 3rd' },
-  min3:   { semis:[0,3],     justR:[1, 6/5],           label:'Minor 3rd' },
-  maj:    { semis:[0,4,7],   justR:[1, 5/4, 3/2],      label:'Major Triad' },
-  min:    { semis:[0,3,7],   justR:[1, 6/5, 3/2],      label:'Minor Triad' },
-  maj7:   { semis:[0,4,7,11],justR:[1, 5/4, 3/2, 15/8],label:'Major 7th' },
-  dom7:   { semis:[0,4,7,10],justR:[1, 5/4, 3/2, 7/4], label:'Dom 7th' },
+  single: { semis:[0],       justR:[1],               label:'단음' },
+  oct:    { semis:[0,12],    justR:[1, 2],             label:'옥타브' },
+  '5th':  { semis:[0,7],     justR:[1, 3/2],           label:'완전 5도' },
+  maj3:   { semis:[0,4],     justR:[1, 5/4],           label:'장 3도' },
+  min3:   { semis:[0,3],     justR:[1, 6/5],           label:'단 3도' },
+  maj:    { semis:[0,4,7],   justR:[1, 5/4, 3/2],      label:'장 3화음' },
+  min:    { semis:[0,3,7],   justR:[1, 6/5, 3/2],      label:'단 3화음' },
+  maj7:   { semis:[0,4,7,11],justR:[1, 5/4, 3/2, 15/8],label:'장 7화음' },
+  dom7:   { semis:[0,4,7,10],justR:[1, 5/4, 3/2, 7/4], label:'7화음' },
 };
 
 let fourierChordKey = 'single';
 let fourierTuningKey = 'just';
-const TUNING_LABELS = { just:'Just Intonation', well:'Well-Temp (Werckmeister III)', equal:'Equal Temperament (12-TET)' };
+const TUNING_LABELS = { just:'순정률', well:'Well-Temp (Werckmeister III)', equal:'평균율 (12-TET)' };
 const TUNING_COLORS = { just:'#5db8a3', well:'#f0b429', equal:'#fb7185' };
 
 // Get frequencies for current chord + tuning
@@ -1969,11 +1969,11 @@ function toggleFourier() {
   const btn = document.getElementById('play-fourier-btn');
   if (fourierActive) {
     stopFourierSound();
-    btn.textContent = '▶ Play';
+    btn.textContent = '▶ 재생';
     btn.classList.remove('playing');
   } else {
     startFourierSound();
-    btn.textContent = '⏸ Stop';
+    btn.textContent = '⏸ 정지';
     btn.classList.add('playing');
   }
 }
@@ -2122,7 +2122,7 @@ function toggleCochlea() {
   if (cochActive) {
     cochGain.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + 0.1);
     setTimeout(() => { cochOsc.stop(); cochOsc = null; cochActive = false; }, 150);
-    btn.textContent = '▶ Play';
+    btn.textContent = '▶ 재생';
     btn.classList.remove('playing');
   } else {
     cochOsc = actx.createOscillator();
@@ -2133,7 +2133,7 @@ function toggleCochlea() {
     cochOsc.connect(cochGain).connect(actx.destination);
     cochOsc.start();
     cochActive = true;
-    btn.textContent = '⏸ Stop';
+    btn.textContent = '⏸ 정지';
     btn.classList.add('playing');
   }
 }
@@ -2217,8 +2217,8 @@ function drawCochlea() {
   cochCtx.textAlign = 'center';
   // Mark entrance and apex
   const eAngle = -Math.PI / 2;
-  cochCtx.fillText('High ↗', cx + maxR * 0.7, cy - maxR * 0.85);
-  cochCtx.fillText('↙ Low', cx - minR * 2.5, cy + minR * 3);
+  cochCtx.fillText('고음 ↗', cx + maxR * 0.7, cy - maxR * 0.85);
+  cochCtx.fillText('↙ 저음', cx - minR * 2.5, cy + minR * 3);
   // Current freq
   cochCtx.font = 'bold 28px "JetBrains Mono", monospace';
   cochCtx.fillStyle = '#f0b429';
@@ -2241,8 +2241,8 @@ function drawSampling() {
   const h = sampCanvas.height = 400;
   sampCtx.clearRect(0, 0, w, h);
   const sr = +document.getElementById('sample-rate-slider').value;
-  document.getElementById('sr-val').textContent = sr + ' / cycle';
-  document.getElementById('sampling-label').textContent = 'Samples: ' + sr + ' / cycle';
+  document.getElementById('sr-val').textContent = sr + ' / 주기';
+  document.getElementById('sampling-label').textContent = '샘플: ' + sr + ' / 주기';
   const t = performance.now() / 1000;
   const cycles = 3;
   // Analog wave
@@ -2367,17 +2367,17 @@ sections.forEach(id => {
 //  INSTRUMENT TEMPERAMENT COMPARISON
 // ═══════════════════════════════════════════════
 const INST_PROFILES = {
-  violin:   { harmonics:[1,.7,.5,.35,.25,.15,.1,.06,.04,.02], label:'Violin', emoji:'🎻', sub:'Rich harmonics' },
-  cello:    { harmonics:[1,.85,.65,.45,.3,.2,.13,.08,.05,.03], label:'Cello', emoji:'🎻', sub:'Deep bass' },
-  trombone: { harmonics:[1,.9,.7,.55,.4,.28,.18,.12,.07,.04], label:'Trombone', emoji:'🎺', sub:'Bright brass' },
+  violin:   { harmonics:[1,.7,.5,.35,.25,.15,.1,.06,.04,.02], label:'바이올린', emoji:'🎻', sub:'풍부한 배음' },
+  cello:    { harmonics:[1,.85,.65,.45,.3,.2,.13,.08,.05,.03], label:'첼로', emoji:'🎻', sub:'깊은 저음' },
+  trombone: { harmonics:[1,.9,.7,.55,.4,.28,.18,.12,.07,.04], label:'트럼본', emoji:'🎺', sub:'밝은 금관' },
 };
 const INST_CHORDS = {
-  major:  { label:'Major Triad', justR:[1,5/4,3/2],        eqS:[0,4,7] },
-  minor:  { label:'Minor Triad', justR:[1,6/5,3/2],        eqS:[0,3,7] },
-  fifth:  { label:'Perfect 5th', justR:[1,3/2],             eqS:[0,7] },
-  maj3:   { label:'Major 3rd',   justR:[1,5/4],             eqS:[0,4] },
-  min3:   { label:'Minor 3rd',   justR:[1,6/5],             eqS:[0,3] },
-  maj7:   { label:'Major 7th', justR:[1,5/4,3/2,15/8],   eqS:[0,4,7,11] },
+  major:  { label:'장 3화음', justR:[1,5/4,3/2],        eqS:[0,4,7] },
+  minor:  { label:'단 3화음', justR:[1,6/5,3/2],        eqS:[0,3,7] },
+  fifth:  { label:'완전 5도', justR:[1,3/2],             eqS:[0,7] },
+  maj3:   { label:'장 3도',   justR:[1,5/4],             eqS:[0,4] },
+  min3:   { label:'단 3도',   justR:[1,6/5],             eqS:[0,3] },
+  maj7:   { label:'장 7화음', justR:[1,5/4,3/2,15/8],   eqS:[0,4,7,11] },
 };
 const INST_KEYS = [
   {n:'C3',f:130.81},{n:'D3',f:146.83},{n:'E3',f:164.81},{n:'F3',f:174.61},
@@ -2402,7 +2402,7 @@ function buildInstUI() {
 
   // Keys
   const keys = document.getElementById('key-pills');
-  keys.innerHTML = '<span class="lbl">Root</span>' + INST_KEYS.map((k,i) =>
+  keys.innerHTML = '<span class="lbl">기본음</span>' + INST_KEYS.map((k,i) =>
     `<button class="key-pill ${i===instState.key?'active':''}" onclick="selectInstKey(${i})">${k.n}</button>`
   ).join('');
 
@@ -2451,15 +2451,15 @@ function updateInstInfo() {
   // Beat stats
   let maxCents = 0, maxBeat = 0;
   for(let i=1; i<justFreqs.length; i++) {
-    const cents = Math.abs(1200 * Math.log2(eqFreqs[i] / justFreqs[i]));
+    const 센트 = Math.abs(1200 * Math.log2(eqFreqs[i] / justFreqs[i]));
     const beat = Math.abs(eqFreqs[i] - justFreqs[i]);
-    if(cents > maxCents) maxCents = cents;
+    if(cents > maxCents) maxCents = 센트;
     if(beat > maxBeat) maxBeat = beat;
   }
   document.getElementById('beat-stats').innerHTML = `
-    <div class="beat-stat"><div class="bsl">Pitch Diff</div><div class="bsv">${maxCents.toFixed(1)} <span class="bsu">cents</span></div></div>
-    <div class="beat-stat"><div class="bsl">Beat Freq</div><div class="bsv">${maxBeat.toFixed(1)} <span class="bsu">Hz</span></div></div>
-    <div class="beat-stat"><div class="bsl">Root</div><div class="bsv">${INST_KEYS[instState.key].n} <span class="bsu">${base.toFixed(0)} Hz · ${chord.label}</span></div></div>
+    <div class="beat-stat"><div class="bsl">음정 차이</div><div class="bsv">${maxCents.toFixed(1)} <span class="bsu">cents</span></div></div>
+    <div class="beat-stat"><div class="bsl">맥놀이</div><div class="bsv">${maxBeat.toFixed(1)} <span class="bsu">Hz</span></div></div>
+    <div class="beat-stat"><div class="bsl">기본음</div><div class="bsv">${INST_KEYS[instState.key].n} <span class="bsu">${base.toFixed(0)} Hz · ${chord.label}</span></div></div>
   `;
 }
 updateInstInfo();
@@ -2540,7 +2540,7 @@ function instPlay(tuning) {
   const btn = document.getElementById(`inst-${tuning}-btn`);
   if(instActiveNodes[id]) {
     instStopSynth(id);
-    btn.innerHTML = `▶ &nbsp;${tuning==='just'?'Just Intonation':'Equal Temperament'}`;
+    btn.innerHTML = `▶ &nbsp;${tuning==='just'?'순정률':'평균율'}로 듣기``;
     btn.classList.remove('playing');
     return;
   }
@@ -2548,7 +2548,7 @@ function instPlay(tuning) {
   btn.innerHTML = '⏸ &nbsp;Playing…';
   btn.classList.add('playing');
   setTimeout(() => {
-    btn.innerHTML = `▶ &nbsp;${tuning==='just'?'Just Intonation':'Equal Temperament'}`;
+    btn.innerHTML = `▶ &nbsp;${tuning==='just'?'순정률':'평균율'}로 듣기``;
     btn.classList.remove('playing');
   }, 4000);
 }
@@ -2607,12 +2607,12 @@ drawOverlay();
 const EXTREME_HARMONICS = [1,.9,.7,.55,.4,.28,.18,.12,.07,.04]; // brass ensemble — strong harmonics, natural timbre
 
 const EXT_PRESETS = [
-  { id:'maj3', label:'Major 3rd', desc:'Largest difference (13.7¢)', justR:[1,5/4], eqS:[0,4], cents:13.7 },
-  { id:'triad', label:'Major Triad', desc:'Triad resonance', justR:[1,5/4,3/2], eqS:[0,4,7], cents:13.7 },
-  { id:'min3', label:'Minor 3rd', desc:'15.6¢ difference', justR:[1,6/5], eqS:[0,3], cents:15.6 },
-  { id:'min', label:'Minor Triad', desc:'Color of minor', justR:[1,6/5,3/2], eqS:[0,3,7], cents:15.6 },
-  { id:'maj7', label:'Major 7th', desc:'Accumulated deviation', justR:[1,5/4,3/2,15/8], eqS:[0,4,7,11], cents:13.7 },
-  { id:'dom7', label:'Dom 7th', desc:'Sound of the blues', justR:[1,5/4,3/2,7/4], eqS:[0,4,7,10], cents:31.2 },
+  { id:'maj3', label:'장 3도', desc:'가장 큰 차이 (13.7¢)', justR:[1,5/4], eqS:[0,4], 센트:13.7 },
+  { id:'triad', label:'장 3화음', desc:'3화음의 울림', justR:[1,5/4,3/2], eqS:[0,4,7], 센트:13.7 },
+  { id:'min3', label:'단 3도', desc:'15.6¢ 차이', justR:[1,6/5], eqS:[0,3], 센트:15.6 },
+  { id:'min', label:'단 3화음', desc:'단조의 색채', justR:[1,6/5,3/2], eqS:[0,3,7], 센트:15.6 },
+  { id:'maj7', label:'장 7화음', desc:'편차 누적', justR:[1,5/4,3/2,15/8], eqS:[0,4,7,11], 센트:13.7 },
+  { id:'dom7', label:'7화음', desc:'블루스의 소리', justR:[1,5/4,3/2,7/4], eqS:[0,4,7,10], 센트:31.2 },
 ];
 
 let extState = { preset: 0 };
@@ -2620,7 +2620,7 @@ const extPresetsEl = document.getElementById('extreme-presets');
 EXT_PRESETS.forEach((p, i) => {
   const el = document.createElement('div');
   el.className = 'extreme-preset' + (i===0?' active':'');
-  el.innerHTML = '<div class="ep-title">'+p.label+'</div><div class="ep-cents">Δ '+p.cents+' cents</div><div class="ep-desc">'+p.desc+'</div>';
+  el.innerHTML = '<div class="ep-title">'+p.label+'</div><div class="ep-cents">Δ '+p.cents+' 센트</div><div class="ep-desc">'+p.desc+'</div>';
   el.onclick = () => { extState.preset=i; document.querySelectorAll('.extreme-preset').forEach((e,j)=>e.classList.toggle('active',j===i)); updateExtInfo(); };
   extPresetsEl.appendChild(el);
 });
@@ -2635,9 +2635,9 @@ function updateExtInfo() {
   let maxBeat=0;
   for(let i=1;i<jf.length;i++) maxBeat=Math.max(maxBeat,Math.abs(ef[i]-jf[i]));
   document.getElementById('extreme-stats').innerHTML =
-    '<div class="beat-stat"><div class="bsl">Pitch Difference</div><div class="bsv">'+p.cents+'<span class="bsu"> cents</span></div></div>' +
-    '<div class="beat-stat"><div class="bsl">Beat Frequency</div><div class="bsv">'+maxBeat.toFixed(1)+'<span class="bsu"> Hz</span></div></div>' +
-    '<div class="beat-stat"><div class="bsl">Instrument</div><div class="bsv">Brass Ensemble<span class="bsu"> (Trombone)</span></div></div>';
+    '<div class="beat-stat"><div class="bsl">음정 차이erence</div><div class="bsv">'+p.cents+'<span class="bsu"> 센트</span></div></div>' +
+    '<div class="beat-stat"><div class="bsl">맥놀이uency</div><div class="bsv">'+maxBeat.toFixed(1)+'<span class="bsu"> Hz</span></div></div>' +
+    '<div class="beat-stat"><div class="bsl">악기</div><div class="bsv">금관 앙상블<span class="bsu"> (트럼본)</span></div></div>';
 }
 function fractionStrExt(r) { for(let d=1;d<=32;d++) for(let n=d;n<=d*3;n++) if(Math.abs(n/d-r)<0.0001) return n+'/'+d; return r.toFixed(3); }
 updateExtInfo();
@@ -2727,8 +2727,8 @@ function extPlay(tuning) {
   ensureAudio();
   extSynth(tuning, 4.5);
   const btn=document.getElementById('ext-'+tuning+'-btn');
-  btn.classList.add('playing'); btn.textContent='⏸ Playing…';
-  setTimeout(()=>{btn.classList.remove('playing');btn.textContent='▶ '+(tuning==='just'?'Just':'Equal');},4500);
+  btn.classList.add('playing'); btn.textContent='⏸ 재생 중…';
+  setTimeout(()=>{btn.classList.remove('playing');btn.textContent='▶ '+(tuning==='just'?'순정률':'평균율');},4500);
 }
 function extPlayBoth() {
   ensureAudio();
@@ -2771,9 +2771,9 @@ function drawBeat() {
   // Labels
   beatCtx.font='20px "JetBrains Mono",monospace';
   beatCtx.fillStyle='rgba(93,184,163,0.5)';beatCtx.textAlign='center';
-  beatCtx.fillText('Just',w/4,h-6);
+  beatCtx.fillText('순정률',w/4,h-6);
   beatCtx.fillStyle='rgba(251,113,133,0.5)';
-  beatCtx.fillText('Equal',w*3/4,h-6);
+  beatCtx.fillText('평균율',w*3/4,h-6);
   // Divider
   beatCtx.beginPath();beatCtx.moveTo(w/2,4);beatCtx.lineTo(w/2,h-4);
   beatCtx.strokeStyle='rgba(255,255,255,0.06)';beatCtx.lineWidth=1;beatCtx.stroke();
@@ -2791,9 +2791,9 @@ const NOTE_NAMES = ['C','C#','D','Eb','E','F','F#','G','Ab','A','Bb','B'];
 // Major third cent values for each key in Werckmeister III
 function w3MajorThirdCents(keyIdx) {
   const thirdIdx = (keyIdx + 4) % 12;
-  let cents = W3_CENTS[thirdIdx] - W3_CENTS[keyIdx];
-  if(cents < 0) cents += 1200;
-  return cents;
+  let 센트 = W3_CENTS[thirdIdx] - W3_CENTS[keyIdx];
+  if(cents < 0) 센트 += 1200;
+  return 센트;
 }
 
 // Build key color grid
@@ -2829,11 +2829,11 @@ function updateBachUI() {
   const baseFreq = 261.63 * Math.pow(2, W3_CENTS[bachKeyIdx]/1200);
 
   document.getElementById('bach-key-info').textContent =
-    name + ' Major Triad — Werckmeister M3: ' + m3w.toFixed(1) + '¢ (just 386.3¢ / equal 400¢)';
+    name + ' 장3화음 — Werckmeister 장3도: ' + m3w.toFixed(1) + '¢ (순정 386.3¢ / 평균 400¢)';
 
   // Just info
   const jf = [1,5/4,3/2].map(r=>baseFreq*r);
-  document.getElementById('tw-just-info').innerHTML = jf.map(f=>f.toFixed(1)+'Hz').join(', ')+'<br>M3 = 386.3¢';
+  document.getElementById('tw-just-info').innerHTML = jf.map(f=>f.toFixed(1)+'Hz').join(', ')+'<br>장3도 = 386.3¢';
 
   // Werckmeister info
   const wSemis = [0, 4, 7]; // intervals in semitones for major triad
@@ -2841,11 +2841,11 @@ function updateBachUI() {
     const noteIdx = (bachKeyIdx + s) % 12;
     return 261.63 * Math.pow(2, W3_CENTS[noteIdx]/1200);
   });
-  document.getElementById('tw-well-info').innerHTML = wf.map(f=>f.toFixed(1)+'Hz').join(', ')+'<br>M3 = '+m3w.toFixed(1)+'¢';
+  document.getElementById('tw-well-info').innerHTML = wf.map(f=>f.toFixed(1)+'Hz').join(', ')+'<br>장3도 = '+m3w.toFixed(1)+'¢';
 
   // Equal info
   const ef = wSemis.map(s => baseFreq * Math.pow(2, s/12));
-  document.getElementById('tw-equal-info').innerHTML = ef.map(f=>f.toFixed(1)+'Hz').join(', ')+'<br>M3 = 400.0¢';
+  document.getElementById('tw-equal-info').innerHTML = ef.map(f=>f.toFixed(1)+'Hz').join(', ')+'<br>장3도 = 400.0¢';
 }
 updateBachUI();
 
@@ -2906,9 +2906,9 @@ function bachStopSynth(id) {
 function bachPlay(tuning) {
   ensureAudio();
   bachSynth(tuning, 3.5);
-  const names={just:'Just Intonation',well:'Werckmeister',equal:'Equal'};
+  const names={just:'순정률',well:'Werckmeister',equal:'평균율'};
   const btn=document.getElementById('tw-'+tuning+'-btn');
-  btn.classList.add('playing'); btn.textContent='⏸ Playing…';
+  btn.classList.add('playing'); btn.textContent='⏸ 재생 중…';
   setTimeout(()=>{btn.classList.remove('playing');btn.textContent='▶ '+names[tuning];},3500);
 }
 function bachPlayAll() {
