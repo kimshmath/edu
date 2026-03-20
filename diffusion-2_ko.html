@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>기계는 어떻게 꿈을 꾸는가? — 확산 2/2편</title>
+<title>기계는 어떻게 꿈꾸는가? — 확산에서 AI까지</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -104,128 +104,283 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 <body>
 
 <!-- Audio Notice -->
-<div id="audio-notice"><div class="notice-card"><span class="notice-icon">✨</span><h2>2편 — 소리를 켜주세요</h2><p>실시간 오디오가 포함된 인터랙티브 데모입니다.<br><strong>기기의 음소거를 해제해 주세요.</strong></p><div class="notice-vol"><div class="vol-bars"><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div></div><span>적절한 음량으로 설정해 주세요</span></div><button class="notice-start" onclick="dismissNotice()">✨ 시작!</button></div></div>
+<div id="audio-notice"><div class="notice-card"><span class="notice-icon">✨</span><h2>Part II — 소리를 켜세요</h2><p>실시간 오디오와 함께하는 인터랙티브 데모입니다.<br><strong>기기의 음소거를 해제해 주세요.</strong></p><div class="notice-vol"><div class="vol-bars"><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div></div><span>적당한 볼륨으로 설정해 주세요</span></div><button class="notice-start" onclick="dismissNotice()">✨ 시작!</button></div></div>
 <nav id="nav-dots"></nav>
 
-<section id="hero"><canvas id="hero-canvas"></canvas><div class="content"><h3 class="accent-purple">확산의 수학 — 2/2편</h3><h1>기계는 어떻게<br><span class="accent-purple">꿈</span>을 꾸는가?</h1><p class="subtitle">열에서 픽셀까지, 200년의 여정</p><p class="tagline">1편에서 정보가 비가역적으로 퍼져나가는 것을 보았습니다. 이제 같은 방정식이 어떻게 기계에게 순수한 노이즈에서 이미지, 소리, 텍스트를 만들어내도록 가르쳤는지 알아보세요.</p><div style="display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;"><button class="start-btn" onclick="initAudio();document.getElementById('sec-cat').scrollIntoView({behavior:'smooth'})">✨ 탐험 시작</button><a href="diffusion-1_ko.html" class="start-btn" style="text-decoration:none;border-color:var(--muted);color:var(--muted);">← 1편</a></div></div></section>
+<section id="hero"><canvas id="hero-canvas"></canvas><div class="content"><h3 class="accent-purple">확산의 수학 — Part II</h3><h1>기계는 어떻게<br><span class="accent-purple">꿈꾸는가</span>?</h1><p class="subtitle">열에서 픽셀까지, 200년의 여정</p><p class="tagline">Part I에서 정보가 비가역적으로 퍼지는 것을 보았습니다. 이제 같은 방정식이 어떻게 기계에게 순수한 노이즈로부터 이미지, 소리, 텍스트를 만드는 법을 가르쳤는지 발견하세요.</p><div style="display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;"><button class="start-btn" onclick="initAudio();document.getElementById('sec-cat').scrollIntoView({behavior:'smooth'})">✨ 탐험 시작</button><a href="diffusion-1-ko.html" class="start-btn" style="text-decoration:none;border-color:var(--muted);color:var(--muted);">← Part I</a></div></div></section>
 
 <!-- 0. ARNOLD'S CAT MAP -->
-<section id="sec-cat"><div class="section-inner"><div class="reveal"><p class="section-num">00 — 워밍업 퍼즐</p><h2>혼돈은 스스로 <span class="accent-coral">되돌릴</span> 수 있을까?</h2>
-<p>1967년, 수학자 블라디미르 아르놀드는 놀라운 것을 발견했습니다. 아무 이미지, 예를 들어 고양이 사진을 가져와서 모든 픽셀에 다음 공식을 적용합니다:</p>
+<section id="sec-cat"><div class="section-inner"><div class="reveal"><p class="section-num">00 — 워밍업 퍼즐</p><h2>혼돈은 스스로 <span class="accent-coral">복원</span>될 수 있는가?</h2>
+<p>1967년, 수학자 블라디미르 아놀드는 놀라운 것을 발견했습니다. 아무 이미지나 — 예를 들어, 고양이 사진을 가져와서 모든 픽셀에 이 공식을 적용합니다:</p>
 <div style="font-family:var(--font-mono);font-size:clamp(0.9rem,2vw,1.2rem);color:var(--gold);text-align:center;padding:1rem;background:var(--bg3);border-radius:10px;border:1px solid rgba(240,180,41,0.15);margin:1rem 0;">
 (x, y) → (<span class="accent-coral">2x + y</span>, <span class="accent-sky">x + y</span>) mod N
 </div>
-<p>이미지는 <strong>완전히 파괴된</strong> 것처럼 보입니다 — 노이즈와 구별할 수 없습니다. 하지만 같은 공식을 계속 적용하면, 정확히 <strong>12단계</strong> 후에 원본 이미지가 <em>마법처럼 다시 나타납니다</em>. 완벽하게. 모든 픽셀이 제자리로 돌아옵니다.</p>
+<p>이미지는 <strong>완전히 파괴된</strong> 것처럼 보입니다 — 노이즈와 구별할 수 없죠. 하지만 같은 공식을 계속 적용하면, 정확히 <strong>12단계</strong> 후에 원본 이미지가 <em>마법처럼 되살아납니다</em>. 완벽하게. 모든 픽셀이 제자리로.</p>
 </div>
 <div class="demo-card reveal">
-<div class="audio-note">질서가 녹아내렸다가 다시 형성되는 소리를 들어보세요 — 각 단계마다 소리가 납니다</div>
+<div class="audio-note">질서가 해체되고 재구성되는 소리를 들어보세요 — 매 스텝마다 소리가 납니다</div>
 <div style="display:flex;gap:1.5rem;justify-content:center;align-items:flex-start;flex-wrap:wrap;">
 <div style="text-align:center;"><canvas id="cat-canvas" width="280" height="280" style="width:280px;height:280px;border-radius:12px;image-rendering:pixelated;"></canvas>
-<div style="font-family:var(--font-mono);font-size:0.75rem;margin-top:0.5rem;" id="cat-info"><span style="color:var(--mint);">단계 0</span> · 원본</div></div>
+<div style="font-family:var(--font-mono);font-size:0.75rem;margin-top:0.5rem;" id="cat-info"><span style="color:var(--mint);">Step 0</span> · Original</div></div>
 <div style="text-align:center;"><canvas id="cat-orig" width="280" height="280" style="width:280px;height:280px;border-radius:12px;image-rendering:pixelated;opacity:0.35;"></canvas>
 <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);margin-top:0.5rem;">원본 (참조)</div></div>
 </div>
 <!-- Similarity timeline graph -->
 <div style="margin-top:1rem;">
-<div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.3rem;">시간에 따른 원본과의 유사도</div>
+<div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.3rem;">시간에 따른 원본 유사도</div>
 <canvas id="cat-graph" height="80" style="width:100%;height:80px;background:rgba(0,0,0,0.2);border-radius:8px;display:block;"></canvas>
 </div>
 <div class="stat-row">
-<div class="stat-box"><div class="sl">단계</div><div class="sv" id="cat-step">0 <span class="su">/ 12</span></div></div>
+<div class="stat-box"><div class="sl">스텝</div><div class="sv" id="cat-step">0 <span class="su">/ 12</span></div></div>
 <div class="stat-box"><div class="sl">유사도</div><div class="sv" id="cat-sim">100%</div></div>
-<div class="stat-box"><div class="sl">상태</div><div class="sv" id="cat-status" style="font-size:0.85rem;">원본</div></div>
+<div class="stat-box"><div class="sl">상태</div><div class="sv" id="cat-status" style="font-size:0.85rem;">Original</div></div>
 </div>
 <div class="slider-row">
 <label>⏩</label>
 <input type="range" id="cat-speed" min="1" max="5" value="2" step="1">
-<span class="val" id="cat-speed-val">보통</span>
+<span class="val" id="cat-speed-val">Normal</span>
 </div>
 <div class="btn-group">
-<button class="btn btn-gold" id="cat-btn" onclick="toggleCat()">▶ 섞기 — 되돌아오는 과정 보기</button>
+<button class="btn btn-gold" id="cat-btn" onclick="toggleCat()">▶ 섞기 — 돌아오는 것을 지켜보세요</button>
 <button class="btn" onclick="resetCat()">초기화</button>
-<button class="btn" onclick="stepCatOnce()">단계 ×1</button>
+<button class="btn" onclick="stepCatOnce()">스텝 ×1</button>
 <button class="btn" onclick="skipToReturn()">⏭ 복원으로 건너뛰기</button>
 <button class="btn" onclick="cycleCatImg()">🔄 이미지 변경</button>
 </div>
 </div>
 <div class="explanation-card reveal" style="border-left-color:var(--coral);">
-<p><strong style="color:var(--text);">이것이 왜 중요한가?</strong> — 아르놀드의 고양이 사상은 <strong>결정론적이고 가역적</strong>입니다. 토러스 위의 선형 사상이며 — 어떤 정보도 절대 잃어버리지 않습니다. 모든 픽셀에는 하나의 목적지와 하나의 출발지만 있습니다. 이 시스템은 반드시 <em>되돌아옵니다</em> (푸앵카레 재귀 정리).</p>
-<p style="margin-top:0.5rem;">이제 이것을 <strong>확산</strong>과 비교해 보세요: 이미지에 <em>무작위</em> 노이즈를 추가하면, 파괴는 확률적이고 비가역적입니다. 단순히 되돌릴 <strong>수 없습니다</strong> — 무작위성이 되돌아가는 경로를 지워버렸기 때문입니다. 확산을 되돌리려면, 신경망이 데이터로부터 역방향 매핑을 <em>학습</em>해야 합니다. 그것이 Stable Diffusion의 기적입니다.</p>
-<p style="margin-top:0.8rem;font-family:var(--font-display);font-style:italic;color:var(--gold);font-size:1.05rem;">아르놀드의 고양이는 스스로 돌아옵니다.<br>확산의 고양이는 집으로 돌아갈 AI가 필요합니다.</p>
+<p><strong style="color:var(--text);">왜 이것이 중요한가?</strong> — 아놀드의 캣 맵은 <strong>결정론적이고 가역적</strong>입니다. 토러스 위의 선형 사상(linear map)이므로 — 정보가 결코 손실되지 않습니다. 모든 픽셀에는 단 하나의 목적지와 단 하나의 출발점이 있습니다. 시스템은 반드시 돌아올 것이 <em>보장</em>됩니다 (푸앵카레 재귀 정리).</p>
+<p style="margin-top:0.5rem;">이제 이것을 <strong>확산</strong>과 비교해 보세요: 이미지에 <em>무작위</em> 노이즈를 더하면, 그 파괴는 확률적이고 비가역적입니다. 단순히 되돌릴 수 <strong>없습니다</strong> — 무작위성이 돌아가는 길을 지워버렸습니다. 확산을 되돌리려면 신경망이 데이터로부터 역방향 매핑을 <em>학습</em>해야 합니다. 이것이 Stable Diffusion의 기적입니다.</p>
+<p style="margin-top:0.8rem;font-family:var(--font-display);font-style:italic;color:var(--gold);font-size:1.05rem;">아놀드의 고양이는 스스로 돌아옵니다.<br>확산의 고양이는 AI가 있어야 집을 찾습니다.</p>
 </div></div></section>
 
 <!-- 01. IMAGE FROM NOISE -->
-<section id="sec-image"><div class="section-inner"><div class="reveal"><p class="section-num">01 — 직접 보기</p><h2>이미지가 노이즈에서 <span class="accent-purple">나타나는</span> 과정 보기</h2><p>아래는 순수한 무작위 정적입니다. <strong>노이즈 제거</strong>를 누르면 숨겨진 이미지가 단계별로 나타나는 것을 볼 수 있습니다 — Stable Diffusion이 매일 수백만 번 하는 것과 정확히 같습니다.</p></div>
-<div class="demo-card reveal"><div class="audio-note">각 단계마다 소리가 납니다 — 혼돈에서 질서가 나타나는 소리를 들어보세요</div><div class="pixel-grid-wrap"><canvas id="img-canvas" width="280" height="280" style="width:280px;height:280px;border-radius:12px;image-rendering:pixelated;"></canvas></div>
-<div class="stat-row"><div class="stat-box"><div class="sl">단계</div><div class="sv" id="img-step">0 <span class="su">/ 40</span></div></div><div class="stat-box"><div class="sl">노이즈</div><div class="sv" id="img-noise">100%</div></div><div class="stat-box"><div class="sl">선명도</div><div class="sv" id="img-clarity">없음</div></div></div>
-<div class="btn-group"><button class="btn btn-gold" id="img-btn" onclick="startImgDenoise()">▶ 노이즈 제거</button><button class="btn" onclick="resetImgDenoise()">초기화</button><button class="btn" onclick="cycleImg()">🔄 이미지 변경</button></div></div></div></section>
+<section id="sec-image"><div class="section-inner"><div class="reveal"><p class="section-num">01 — 눈으로 보세요</p><h2>이미지가 <span class="accent-purple">노이즈에서 나타나는</span> 것을 보세요</h2><p>아래는 순수한 랜덤 노이즈입니다. <strong>디노이즈</strong>를 누르고 숨겨진 이미지가 한 단계씩 나타나는 것을 지켜보세요 — Stable Diffusion이 매일 수백만 번 하는 일입니다.</p></div>
+<div class="demo-card reveal"><div class="audio-note">매 스텝마다 소리가 납니다 — 혼돈에서 질서가 나타나는 소리를 들어보세요</div><div class="pixel-grid-wrap"><canvas id="img-canvas" width="280" height="280" style="width:280px;height:280px;border-radius:12px;image-rendering:pixelated;"></canvas></div>
+<div class="stat-row"><div class="stat-box"><div class="sl">스텝</div><div class="sv" id="img-step">0 <span class="su">/ 40</span></div></div><div class="stat-box"><div class="sl">노이즈</div><div class="sv" id="img-noise">100%</div></div><div class="stat-box"><div class="sl">선명도</div><div class="sv" id="img-clarity">None</div></div></div>
+<div class="btn-group"><button class="btn btn-gold" id="img-btn" onclick="startImgDenoise()">▶ Denoise</button><button class="btn" onclick="resetImgDenoise()">초기화</button><button class="btn" onclick="cycleImg()">🔄 이미지 변경</button></div></div></div></section>
 
 <!-- 2. AUDIO DENOISE -->
-<section id="sec-audio"><div class="section-inner"><div class="reveal"><p class="section-num">02 — 직접 듣기</p><h2>멜로디가 정적에서 <span class="accent-sky">떠오르는</span> 소리 듣기</h2><p>단순한 멜로디가 노이즈 아래 묻혀 있습니다. 슬라이더를 드래그하여 점진적으로 노이즈를 제거하세요. 어느 순간 당신의 뇌가 갑자기 멜로디를 "잡아내는" 순간이 옵니다 — 노이즈 제거의 마법입니다.</p></div>
-<div class="demo-card reveal"><div class="audio-note">최상의 효과를 위해 헤드폰을 사용하세요</div><div class="canvas-wrap"><span class="wave-label" id="audio-label">순수한 정적</span><canvas id="audio-vis" height="180"></canvas></div>
-<div class="slider-row"><label>🔊</label><input type="range" id="audio-slider" min="0" max="100" value="0" step="1"><span class="val" id="audio-val">100% 노이즈</span></div>
-<div class="btn-group"><button class="btn btn-gold" id="audio-btn" onclick="toggleAudio()">▶ 재생</button><button class="btn" onclick="setAud(0)">전체 노이즈</button><button class="btn" onclick="setAud(50)">절반 선명</button><button class="btn" onclick="setAud(100)">완전 선명</button></div></div></div></section>
+<section id="sec-audio"><div class="section-inner"><div class="reveal"><p class="section-num">02 — 귀로 들어보세요</p><h2>멜로디가 <span class="accent-sky">정적에서 솟아오르는</span> 것을 들어보세요</h2><p>단순한 멜로디가 노이즈 아래 묻혀 있습니다. 슬라이더를 드래그하여 서서히 노이즈를 제거하세요. 어느 순간 여러분의 뇌가 갑자기 멜로디를 "잡아내는" 순간이 옵니다 — 디노이징의 마법입니다.</p></div>
+<div class="demo-card reveal"><div class="audio-note">최상의 효과를 위해 헤드폰을 사용하세요</div><div class="canvas-wrap"><span class="wave-label" id="audio-label">순수 정적</span><canvas id="audio-vis" height="180"></canvas></div>
+<div class="slider-row"><label>🔊</label><input type="range" id="audio-slider" min="0" max="100" value="0" step="1"><span class="val" id="audio-val">100% noise</span></div>
+<div class="btn-group"><button class="btn btn-gold" id="audio-btn" onclick="toggleAudio()">▶ Play</button><button class="btn" onclick="setAud(0)">전체 노이즈</button><button class="btn" onclick="setAud(50)">절반 선명</button><button class="btn" onclick="setAud(100)">완전 선명</button></div></div></div></section>
 
 <!-- 3. TEXT FROM NOISE -->
-<section id="sec-text"><div class="section-inner"><div class="reveal"><p class="section-num">03 — 직접 읽기</p><h2>텍스트가 <span class="accent-gold">결정화</span>되는 과정 보기</h2><p>슬라이더를 드래그하여 무작위 픽셀을 읽을 수 있는 단어로 노이즈 제거하세요. 소리 데모처럼 — 어느 노이즈 수준에서 당신의 뇌가 갑자기 텍스트를 <em>인식</em>합니다. 그 인식의 순간이 확산 모델도 "구조"를 보는 임계점입니다.</p></div>
+<section id="sec-text"><div class="section-inner"><div class="reveal"><p class="section-num">03 — 읽어보세요</p><h2>텍스트가 <span class="accent-gold">결정화</span>되는 것을 보세요</h2><p>슬라이더를 드래그하여 랜덤 픽셀을 읽을 수 있는 단어로 변환하세요. 소리 데모처럼 — 어느 노이즈 수준에서 여러분의 뇌가 갑자기 텍스트를 <em>인식</em>합니다. 그 인식의 순간이 확산 모델도 구조를 "보는" 임계점입니다.</p></div>
 <div class="demo-card reveal"><div class="pixel-grid-wrap"><canvas id="txt-canvas" width="400" height="120" style="width:400px;height:120px;border-radius:12px;image-rendering:pixelated;"></canvas></div>
-<div class="slider-row"><label>🔍</label><input type="range" id="txt-slider" min="0" max="100" value="0" step="1"><span class="val" id="txt-val">100% 노이즈</span></div>
-<div class="stat-row"><div class="stat-box"><div class="sl">선명도</div><div class="sv" id="txt-clarity">0%</div></div><div class="stat-box"><div class="sl">읽을 수 있나요?</div><div class="sv" id="txt-read">아니오</div></div></div>
-<div class="btn-group"><button class="btn" onclick="setTxtSlider(0)">전체 노이즈</button><button class="btn" onclick="setTxtSlider(50)">절반 선명</button><button class="btn" onclick="setTxtSlider(100)">완전 선명</button><button class="btn btn-gold" id="txt-btn" onclick="animateTxt()">▶ 애니메이션</button><button class="btn" onclick="cycleTxt()">🔄 단어 변경</button></div></div></div></section>
+<div class="slider-row"><label>🔍</label><input type="range" id="txt-slider" min="0" max="100" value="0" step="1"><span class="val" id="txt-val">100% noise</span></div>
+<div class="stat-row"><div class="stat-box"><div class="sl">선명도</div><div class="sv" id="txt-clarity">0%</div></div><div class="stat-box"><div class="sl">읽을 수 있나요?</div><div class="sv" id="txt-read">No</div></div></div>
+<div class="btn-group"><button class="btn" onclick="setTxtSlider(0)">전체 노이즈</button><button class="btn" onclick="setTxtSlider(50)">절반 선명</button><button class="btn" onclick="setTxtSlider(100)">완전 선명</button><button class="btn btn-gold" id="txt-btn" onclick="animateTxt()">▶ Animate</button><button class="btn" onclick="cycleTxt()">🔄 단어 변경</button></div></div></div></section>
 
 <!-- 4. SUPER-RESOLUTION -->
-<section id="sec-super"><div class="section-inner"><div class="reveal"><p class="section-num">04 — 해상도 향상</p><h2><span class="accent-coral">초해상도</span>: 흐릿함 → 선명함</h2><p>흐릿한 사진은 선명한 사진의 부분적으로 노이즈가 추가된 버전입니다. 슬라이더를 드래그하여 해상도를 향상시키세요 — 모델이 누락된 세부 사항을 채워 넣습니다.</p></div>
+<section id="sec-super"><div class="section-inner"><div class="reveal"><p class="section-num">04 — 해상도 높이기</p><h2><span class="accent-coral">초해상도</span>: 흐릿한 → 선명한</h2><p>흐릿한 사진은 선명한 사진에 부분적으로 노이즈가 추가된 것입니다. 슬라이더를 드래그하여 해상도를 높여보세요 — 모델이 빠진 세부사항을 채워 넣습니다.</p></div>
 <div class="demo-card reveal"><div style="display:flex;gap:1rem;justify-content:center;align-items:center;flex-wrap:wrap;"><div style="text-align:center;"><canvas id="sr-lo" width="140" height="140" style="width:140px;height:140px;border-radius:10px;image-rendering:pixelated;border:2px solid rgba(251,113,133,0.3);"></canvas><div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--coral);margin-top:0.4rem;">저해상도</div></div><div style="font-size:2rem;color:var(--gold);">→</div><div style="text-align:center;"><canvas id="sr-hi" width="140" height="140" style="width:140px;height:140px;border-radius:10px;image-rendering:pixelated;border:2px solid rgba(52,211,153,0.3);"></canvas><div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--mint);margin-top:0.4rem;">향상됨</div></div></div>
-<div class="slider-row" style="margin-top:1rem;"><label>↑</label><input type="range" id="sr-slider" min="0" max="100" value="0" step="1"><span class="val" id="sr-val">1× 흐릿함</span></div>
+<div class="slider-row" style="margin-top:1rem;"><label>↑</label><input type="range" id="sr-slider" min="0" max="100" value="0" step="1"><span class="val" id="sr-val">1× blurry</span></div>
 <div class="btn-group"><button class="btn" onclick="cycleSR()">🔄 이미지 변경</button></div></div></div></section>
 
 <!-- 5. HOW -->
-<section id="sec-how" style="min-height:auto;padding:4rem 2rem;"><div class="section-inner"><div class="reveal"><p class="section-num">05 — 핵심 비밀</p><h2>실제로 <span class="accent-purple">어떻게 작동</span>하나요?</h2><p>방금 경험한 모든 것은 동일한 3단계 과정을 사용합니다:</p></div>
-<div class="demo-card reveal"><div class="ml-analogy"><div class="ml-analogy-step"><div class="mas-num" style="color:var(--mint);">1단계</div><div class="mas-icon">🖼️ → 📺</div><div class="mas-title">파괴</div><div class="mas-desc">원본이 사라질 때까지 점진적으로 노이즈를 추가합니다.</div></div><div class="ml-analogy-arrow">→</div><div class="ml-analogy-step"><div class="mas-num" style="color:var(--gold);">2단계</div><div class="mas-icon">🧠</div><div class="mas-title">학습</div><div class="mas-desc">모든 노이즈 수준에서 수백만 개의 예시로 훈련합니다.</div></div><div class="ml-analogy-arrow">→</div><div class="ml-analogy-step"><div class="mas-num" style="color:var(--purple);">3단계</div><div class="mas-icon">📺 → 🖼️</div><div class="mas-title">생성</div><div class="mas-desc">노이즈에서 시작하여 단계별로 제거합니다.</div></div></div>
-<p style="font-family:var(--font-display);font-style:italic;color:var(--gold);text-align:center;margin-top:1.5rem;font-size:1.05rem;">"사진이 어떻게 정적이 되는지 기계에게 가르치면,<br>정적이 어떻게 사진이 되는지를 학습합니다."</p></div></div></section>
+<section id="sec-how" style="min-height:auto;padding:4rem 2rem;"><div class="section-inner"><div class="reveal"><p class="section-num">05 — 비밀</p><h2>실제로 <span class="accent-purple">어떻게 작동</span>하는 걸까요?</h2><p>여러분이 방금 경험한 모든 것은 같은 3단계 과정을 사용합니다:</p></div>
+<div class="demo-card reveal"><div class="ml-analogy"><div class="ml-analogy-step"><div class="mas-num" style="color:var(--mint);">Step 1</div><div class="mas-icon">🖼️ → 📺</div><div class="mas-title">파괴</div><div class="mas-desc">원본이 사라질 때까지 점점 노이즈를 추가합니다.</div></div><div class="ml-analogy-arrow">→</div><div class="ml-analogy-step"><div class="mas-num" style="color:var(--gold);">Step 2</div><div class="mas-icon">🧠</div><div class="mas-title">학습</div><div class="mas-desc">모든 노이즈 수준에서 수백만 개의 예시로 훈련합니다.</div></div><div class="ml-analogy-arrow">→</div><div class="ml-analogy-step"><div class="mas-num" style="color:var(--purple);">Step 3</div><div class="mas-icon">📺 → 🖼️</div><div class="mas-title">생성</div><div class="mas-desc">노이즈에서 시작. 한 단계씩 제거합니다.</div></div></div>
+<p style="font-family:var(--font-display);font-style:italic;color:var(--gold);text-align:center;margin-top:1.5rem;font-size:1.05rem;">"기계에게 사진이 어떻게 정적이 되는지 가르치면,<br>정적이 어떻게 사진이 되는지를 배웁니다."</p></div></div></section>
+
+<!-- 5.5 DDPM & STABLE DIFFUSION EXPLAINED -->
+<section id="sec-ddpm" style="min-height:auto;padding:4rem 2rem;"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">05b — 돌파구</p>
+<h2>DDPM과 <span class="accent-purple">Stable Diffusion</span> — 정확히 무엇인가?</h2>
+</div>
+
+<div class="demo-card reveal" style="border-left:3px solid var(--sky);">
+<h3 class="accent-sky" style="margin-bottom:0.8rem;">DDPM — 모든 것이 맞아떨어진 순간 (2020)</h3>
+<p style="font-size:0.92rem;">확산을 역전시키는 아이디어는 2015년부터 있었지만, 결과는 흐릿하고 설득력이 없었습니다. 그러다 2020년, UC 버클리의 Jonathan Ho, Ajay Jain, Pieter Abbeel이 <strong>"Denoising Diffusion Probabilistic Models"</strong> — 줄여서 DDPM — 이라는 논문을 발표했고, 모든 것이 바뀌었습니다.</p>
+<p style="font-size:0.92rem;">그들의 통찰은 아름다울 정도로 단순했습니다: <strong>깨끗한 이미지를 직접 예측하려 하지 말고, 그냥 노이즈를 예측하라.</strong></p>
+<p style="font-size:0.92rem;">이것이 무슨 뜻인지 설명하겠습니다. 사진을 가져옵니다. 알려진 양의 가우시안 노이즈를 추가합니다. 이제 노이즈가 낀 결과를 신경망에 보여주고 물어봅니다: <em>"어떤 노이즈가 추가되었나요?"</em> 신경망이 이 질문에 정확히 대답할 수 있다면, 예측된 노이즈를 빼서 — 약간 더 깨끗한 이미지를 복구할 수 있습니다. 순수한 정적에서 시작하여 이것을 1,000번 반복하면, 아무것도 없는 곳에서 완전히 새로운 이미지가 나타납니다.</p>
+<p style="font-size:0.92rem;">훈련 목표는 터무니없이 단순했습니다 — 그냥 평균 제곱 오차:</p>
+<div style="font-family:var(--font-mono);font-size:clamp(0.85rem,1.8vw,1.1rem);color:var(--gold);text-align:center;padding:0.8rem;background:var(--bg3);border-radius:8px;margin:0.8rem 0;border:1px solid rgba(240,180,41,0.12);">
+Loss = ‖ <span class="accent-sky">ε</span> − <span class="accent-purple">ε<sub>θ</sub></span>(x<sub>t</sub>, t) ‖²
+</div>
+<p style="font-size:0.85rem;color:var(--muted);">쉽게 말하면: 신경망의 노이즈 예측(<span class="accent-purple">ε<sub>θ</sub></span>)이 실제 추가된 노이즈(<span class="accent-sky">ε</span>)와 얼마나 다른지를 측정합니다. 그게 전부입니다. 이 하나의 방정식이 처음으로 GAN에 필적하는 이미지를 생성하는 모델을 훈련시켰고 — 훈련이 훨씬 안정적이었습니다.</p>
+<p style="font-size:0.92rem;">문제점? DDPM은 <strong>느렸습니다</strong>. 이미지 하나를 생성하려면 신경망을 <strong>1,000번</strong> 순차적으로 실행해야 했고, 매번 조금씩 더 디노이징했습니다. 강력한 GPU에서도 이미지 하나에 몇 분이 걸릴 수 있었습니다.</p>
+</div>
+
+<div class="demo-card reveal" style="border-left:3px solid var(--purple);">
+<h3 class="accent-purple" style="margin-bottom:0.8rem;">Stable Diffusion — 빠르게, 그리고 무료로 (2022)</h3>
+<p style="font-size:0.92rem;"><strong>Stable Diffusion</strong>은 LMU 뮌헨 팀(Robin Rombach, Andreas Blattmann 등)이 Stability AI와 협력하여 만든 특정 오픈소스 모델의 이름입니다. DDPM의 속도 문제를 하나의 기발한 아이디어로 해결했습니다:</p>
+<p style="font-family:var(--font-display);font-size:1.1rem;font-weight:600;color:var(--purple);text-align:center;margin:1rem 0;">픽셀 공간에서 확산하지 말고, 압축 공간에서 확산하라.</p>
+<p style="font-size:0.92rem;">512×512 이미지는 786,432개의 픽셀 값을 가집니다. 이 전부에 확산을 실행하면 비용이 많이 듭니다. 그래서 Stable Diffusion은 먼저 사전 훈련된 오토인코더를 사용하여 이미지를 아주 작은 <strong>잠재 표현(latent representation)</strong> — 64×64×4 = 16,384개 숫자 — 으로 압축합니다. 그런 다음 이 압축 공간에서 확산 과정(전방 및 역방향)을 실행합니다. 마지막으로 결과를 다시 전체 이미지로 디코딩합니다.</p>
+<div style="display:flex;align-items:center;gap:0;justify-content:center;margin:1.2rem 0;flex-wrap:wrap;">
+<div style="background:rgba(0,0,0,0.2);border-radius:10px;padding:0.8rem 1rem;text-align:center;border:1px solid rgba(255,255,255,0.04);">
+<div style="font-size:1.5rem;">🖼️</div>
+<div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);margin-top:0.3rem;">512×512 이미지</div>
+</div>
+<div style="font-family:var(--font-mono);font-size:0.9rem;color:var(--sky);padding:0 0.5rem;">→ encode →</div>
+<div style="background:rgba(167,139,250,0.08);border-radius:10px;padding:0.8rem 1rem;text-align:center;border:1px solid rgba(167,139,250,0.2);">
+<div style="font-size:1.5rem;">🧊</div>
+<div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--purple);margin-top:0.3rem;">64×64 잠재공간<br><strong>48배 작음</strong></div>
+</div>
+<div style="font-family:var(--font-mono);font-size:0.9rem;color:var(--gold);padding:0 0.5rem;">→ diffuse →</div>
+<div style="background:rgba(167,139,250,0.08);border-radius:10px;padding:0.8rem 1rem;text-align:center;border:1px solid rgba(167,139,250,0.2);">
+<div style="font-size:1.5rem;">✨</div>
+<div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--purple);margin-top:0.3rem;">64×64 디노이즈된<br>잠재공간</div>
+</div>
+<div style="font-family:var(--font-mono);font-size:0.9rem;color:var(--mint);padding:0 0.5rem;">→ decode →</div>
+<div style="background:rgba(0,0,0,0.2);border-radius:10px;padding:0.8rem 1rem;text-align:center;border:1px solid rgba(255,255,255,0.04);">
+<div style="font-size:1.5rem;">🎨</div>
+<div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--mint);margin-top:0.3rem;">512×512 출력</div>
+</div>
+</div>
+<p style="font-size:0.92rem;">이것으로 생성이 <strong>약 50배 빨라졌습니다</strong>. 하지만 이건 절반의 이야기입니다. Stable Diffusion은 언어를 이해하는 <strong>텍스트 인코더</strong>(CLIP)도 추가했습니다. "석양의 산 위에 앉아 있는 고양이"라고 입력하면, CLIP이 그 단어들을 수치 벡터로 변환하여 매 스텝마다 디노이징 과정을 안내합니다 — 노이즈를 여러분의 설명과 일치하는 이미지로 이끕니다.</p>
+<p style="font-size:0.92rem;">결과: 문장을 입력하고, 몇 초 기다리면, 사실적인 이미지를 얻습니다. 그리고 Stability AI가 모델 가중치를 공개했기 때문에, 전 세계 누구나 사용하고, 수정하고, 발전시킬 수 있었습니다 — 오늘날 보이는 AI 생성 예술의 폭발을 촉발했습니다.</p>
+</div>
+
+<div class="demo-card reveal" style="border-left:3px solid var(--gold);">
+<h3 class="accent-gold" style="margin-bottom:0.5rem;">계보</h3>
+<p style="font-size:0.88rem;color:var(--muted);margin-bottom:0.8rem;">이 모든 것이 어떻게 연결되는지:</p>
+<div style="display:flex;flex-direction:column;gap:0.6rem;">
+<div style="display:flex;align-items:center;gap:0.8rem;">
+<div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--sky);min-width:4rem;text-align:right;">2015</div>
+<div style="width:8px;height:8px;border-radius:50%;background:var(--sky);flex-shrink:0;"></div>
+<div style="font-size:0.85rem;"><strong>Diffusion Models</strong> (Sohl-Dickstein) — 확산 역전이 가능하다는 최초 증명, 하지만 흐린 결과</div>
+</div>
+<div style="display:flex;align-items:center;gap:0.8rem;">
+<div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--coral);min-width:4rem;text-align:right;">2020</div>
+<div style="width:8px;height:8px;border-radius:50%;background:var(--coral);flex-shrink:0;"></div>
+<div style="font-size:0.85rem;"><strong>DDPM</strong> (Ho et al.) — "노이즈만 예측하라" → 최초의 선명한 고품질 이미지</div>
+</div>
+<div style="display:flex;align-items:center;gap:0.8rem;">
+<div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--gold);min-width:4rem;text-align:right;">2021</div>
+<div style="width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;"></div>
+<div style="font-size:0.85rem;"><strong>DDIM, Guided Diffusion</strong> — 빠른 샘플링, 텍스트/클래스 가이던스</div>
+</div>
+<div style="display:flex;align-items:center;gap:0.8rem;">
+<div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--purple);min-width:4rem;text-align:right;">2022</div>
+<div style="width:8px;height:8px;border-radius:50%;background:var(--purple);flex-shrink:0;"></div>
+<div style="font-size:0.85rem;"><strong style="color:var(--purple);">Stable Diffusion</strong> (Rombach et al.) — 잠재 공간 + 텍스트 인코더 + 오픈소스 → 혁명</div>
+</div>
+<div style="display:flex;align-items:center;gap:0.8rem;">
+<div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--mint);min-width:4rem;text-align:right;">2023–</div>
+<div style="width:8px;height:8px;border-radius:50%;background:var(--mint);flex-shrink:0;"></div>
+<div style="font-size:0.85rem;"><strong>DALL·E 3, Midjourney v5, SDXL, Sora</strong> — 같은 핵심 아이디어, 영상 이상으로 확장</div>
+</div>
+</div>
+</div>
+</div></section>
 
 <!-- 6. FORWARD/REVERSE -->
-<section id="sec-process"><div class="section-inner"><div class="reveal"><p class="section-num">06 — 수학적 원리</p><h2>순방향과 <span class="accent-coral">역방향</span></h2><p>이제 그 뒤에 있는 수학을 보세요. 신호를 노이즈로 녹인 다음, 300개의 입자가 혼돈에서 구조로 수렴하는 것을 관찰하세요.</p></div>
-<div class="demo-card reveal"><h3 class="accent-mint" style="margin-bottom:0.5rem;">순방향: 신호 → 노이즈</h3><div class="canvas-wrap"><span class="wave-label" id="fwd-label">신호 온전함</span><canvas id="fwd-canvas" height="200"></canvas></div>
+
+<!-- 6. STABLE DIFFUSION PIPELINE DEMO -->
+<section id="sec-sd-demo"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">06 — 직접 해보세요</p>
+<h2><span class="accent-purple">Stable Diffusion</span> 파이프라인 — 라이브</h2>
+<p>프롬프트를 선택하고 파이프라인의 모든 단계를 관찰하세요: 텍스트가 디노이징을 안내하고, 노이즈가 작은 잠재 공간을 채우고, U-Net이 단계별로 노이즈를 제거하고, 디코더가 전체 이미지를 재구성합니다.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">매 디노이징 스텝마다 높아지는 음이 울립니다 — 이미지에 초점이 맞춰지는 소리를 들어보세요</div>
+
+<!-- Prompt selector -->
+<div style="margin-bottom:1rem;">
+<div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.4rem;">프롬프트를 선택하세요</div>
+<div class="btn-group" id="sd-prompts" style="margin:0;">
+<button class="btn active" onclick="pickSDPrompt(0,this)" style="font-size:0.78rem;">🐱 "고양이"</button>
+<button class="btn" onclick="pickSDPrompt(1,this)" style="font-size:0.78rem;">⭐ "별"</button>
+<button class="btn" onclick="pickSDPrompt(2,this)" style="font-size:0.78rem;">🏔️ "산"</button>
+<button class="btn" onclick="pickSDPrompt(3,this)" style="font-size:0.78rem;">🌀 "소용돌이"</button>
+<button class="btn" onclick="pickSDPrompt(4,this)" style="font-size:0.78rem;">🌳 "나무"</button>
+</div>
+</div>
+
+<!-- Pipeline stages strip -->
+<div style="display:flex;align-items:center;gap:0;justify-content:center;margin:1rem 0;flex-wrap:wrap;">
+<div style="text-align:center;min-width:80px;">
+<div id="sd-p1" style="width:64px;height:64px;border-radius:10px;background:var(--bg3);border:2px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto;transition:border-color 0.5s,box-shadow 0.5s;">💬</div>
+<div style="font-family:var(--font-mono);font-size:0.55rem;color:var(--muted);margin-top:0.3rem;">① CLIP</div>
+</div>
+<div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);padding:0 0.15rem;">→</div>
+<div style="text-align:center;min-width:80px;">
+<canvas id="sd-lat-sm" width="64" height="64" style="width:64px;height:64px;border-radius:10px;border:2px solid rgba(255,255,255,0.04);image-rendering:pixelated;transition:border-color 0.5s,box-shadow 0.5s;"></canvas>
+<div style="font-family:var(--font-mono);font-size:0.55rem;color:var(--muted);margin-top:0.3rem;">② Latent</div>
+</div>
+<div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);padding:0 0.15rem;">→</div>
+<div style="text-align:center;min-width:80px;">
+<div id="sd-p3" style="width:64px;height:64px;border-radius:10px;background:var(--bg3);border:2px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto;transition:border-color 0.5s,box-shadow 0.5s;">🧠</div>
+<div style="font-family:var(--font-mono);font-size:0.55rem;color:var(--muted);margin-top:0.3rem;">③ U-Net ×<span id="sd-ucount">30</span></div>
+</div>
+<div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);padding:0 0.15rem;">→</div>
+<div style="text-align:center;min-width:80px;">
+<div id="sd-p4" style="width:64px;height:64px;border-radius:10px;background:var(--bg3);border:2px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto;transition:border-color 0.5s,box-shadow 0.5s;">📤</div>
+<div style="font-family:var(--font-mono);font-size:0.55rem;color:var(--muted);margin-top:0.3rem;">④ Decode</div>
+</div>
+</div>
+
+<!-- Main canvases -->
+<div style="display:flex;gap:1.5rem;justify-content:center;align-items:flex-end;flex-wrap:wrap;margin:1rem 0;">
+<div style="text-align:center;">
+<div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--purple);margin-bottom:0.3rem;">잠재 공간 (8×8) — 48배 압축</div>
+<canvas id="sd-latent" width="160" height="160" style="width:160px;height:160px;border-radius:10px;image-rendering:pixelated;border:2px solid rgba(167,139,250,0.2);"></canvas>
+</div>
+<div style="text-align:center;">
+<div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--mint);margin-bottom:0.3rem;">디코딩된 출력 (32×32)</div>
+<canvas id="sd-output" width="256" height="256" style="width:256px;height:256px;border-radius:10px;image-rendering:pixelated;border:2px solid rgba(52,211,153,0.2);"></canvas>
+</div>
+</div>
+
+<div class="stat-row">
+<div class="stat-box"><div class="sl">단계</div><div class="sv" id="sd-stage" style="font-size:0.85rem;">Ready</div></div>
+<div class="stat-box"><div class="sl">디노이즈 스텝</div><div class="sv" id="sd-step">0 <span class="su">/ 30</span></div></div>
+<div class="stat-box"><div class="sl">프롬프트</div><div class="sv" id="sd-prompt-show" style="font-size:0.75rem;">"고양이"</div></div>
+</div>
+
+<div class="btn-group">
+<button class="btn btn-gold" id="sd-go" onclick="runSD()" style="font-size:0.95rem;padding:0.7rem 2rem;">✨ 이미지 생성</button>
+<button class="btn" onclick="resetSD()">초기화</button>
+</div>
+</div>
+</div></section>
+
+<!-- 7. FORWARD/REVERSE -->
+<section id="sec-process"><div class="section-inner"><div class="reveal"><p class="section-num">07 — 수학</p><h2>정방향과 <span class="accent-coral">역방향</span></h2><p>이제 그 뒤의 수학을 보세요. 신호를 노이즈로 녹이고, 300개의 입자가 혼돈에서 구조로 수렴하는 것을 관찰하세요.</p></div>
+<div class="demo-card reveal"><h3 class="accent-mint" style="margin-bottom:0.5rem;">정방향: 신호 → 노이즈</h3><div class="canvas-wrap"><span class="wave-label" id="fwd-label">Signal intact</span><canvas id="fwd-canvas" height="200"></canvas></div>
 <div class="slider-row"><label>t</label><input type="range" id="fwd-slider" min="0" max="100" value="0" step="1"><span class="val" id="fwd-val">0</span></div>
-<div class="btn-group"><button class="btn btn-gold" id="fwd-btn" onclick="toggleFwd()">▶ 녹이기</button><button class="btn" onclick="document.getElementById('fwd-slider').value=0">초기화</button></div></div>
-<div class="demo-card reveal"><h3 class="accent-purple" style="margin-bottom:0.5rem;">역방향: 노이즈 → 구조</h3><div class="audio-note">질서가 나타남에 따라 상승하는 음이 동반됩니다</div>
-<div class="canvas-wrap"><span class="wave-label" id="rev-label">역방향 확산</span><canvas id="rev-canvas" height="220"></canvas></div>
-<div class="stat-row"><div class="stat-box"><div class="sl">단계</div><div class="sv" id="rev-step">0 <span class="su">/ 200</span></div></div><div class="stat-box"><div class="sl">노이즈</div><div class="sv" id="rev-sigma">높음</div></div><div class="stat-box"><div class="sl">수렴도</div><div class="sv" id="rev-conv">0%</div></div></div>
-<div class="btn-group"><button class="btn btn-gold" id="rev-btn" onclick="startRev()">▶ 생성</button><button class="btn" onclick="resetRev()">초기화</button></div></div></div></section>
+<div class="btn-group"><button class="btn btn-gold" id="fwd-btn" onclick="toggleFwd()">▶ Dissolve</button><button class="btn" onclick="document.getElementById('fwd-slider').value=0">초기화</button></div></div>
+<div class="demo-card reveal"><h3 class="accent-purple" style="margin-bottom:0.5rem;">역방향: 노이즈 → 구조</h3><div class="audio-note">질서가 나타남에 따라 음이 높아집니다</div>
+<div class="canvas-wrap"><span class="wave-label" id="rev-label">Reverse diffusion</span><canvas id="rev-canvas" height="220"></canvas></div>
+<div class="stat-row"><div class="stat-box"><div class="sl">스텝</div><div class="sv" id="rev-step">0 <span class="su">/ 200</span></div></div><div class="stat-box"><div class="sl">노이즈</div><div class="sv" id="rev-sigma">High</div></div><div class="stat-box"><div class="sl">수렴</div><div class="sv" id="rev-conv">0%</div></div></div>
+<div class="btn-group"><button class="btn btn-gold" id="rev-btn" onclick="startRev()">▶ Generate</button><button class="btn" onclick="resetRev()">초기화</button></div></div></div></section>
 
 <!-- 7. USES -->
-<section id="sec-uses" style="min-height:auto;padding:4rem 2rem;"><div class="section-inner"><div class="reveal"><p class="section-num">07 — 혁명</p><h2>이 <span class="accent-gold">수학</span>이 만들어내는 것</h2></div>
+<section id="sec-uses" style="min-height:auto;padding:4rem 2rem;"><div class="section-inner"><div class="reveal"><p class="section-num">08 — 혁명</p><h2>이 <span class="accent-gold">수학</span>이 만들어내는 것</h2></div>
 <div class="use-case-grid reveal">
-<div class="use-case-card"><div class="uc-icon">🎨</div><div class="uc-title">텍스트-이미지 변환</div><div class="uc-desc">설명을 입력하면 사실적인 이미지를 생성합니다.</div><span class="uc-example">Stable Diffusion · DALL·E · Midjourney</span></div>
-<div class="use-case-card"><div class="uc-icon">🎬</div><div class="uc-title">동영상 생성</div><div class="uc-desc">텍스트로부터 일관된 동영상 클립을 생성합니다.</div><span class="uc-example">Sora · Runway · Kling</span></div>
-<div class="use-case-card"><div class="uc-icon">✏️</div><div class="uc-title">이미지 편집</div><div class="uc-desc">한 영역에 노이즈를 추가하고, 새로운 프롬프트로 다시 노이즈를 제거합니다.</div><span class="uc-example">"이것 제거" · "하늘 바꾸기"</span></div>
-<div class="use-case-card"><div class="uc-icon">🔬</div><div class="uc-title">초해상도</div><div class="uc-desc">흐릿함을 노이즈로 취급하고, 누락된 세부 사항을 채워 넣습니다.</div><span class="uc-example">오래된 사진 · 의료 · 위성</span></div>
-<div class="use-case-card"><div class="uc-icon">🧬</div><div class="uc-title">신약 발견</div><div class="uc-desc">노이즈에서 3D 분자 구조를 생성합니다.</div><span class="uc-example">단백질 · 재료 과학</span></div>
-<div class="use-case-card"><div class="uc-icon">🎵</div><div class="uc-title">오디오 & 음악</div><div class="uc-desc">스펙트로그램의 노이즈를 제거하여 소리를 만듭니다.</div><span class="uc-example">음악 · 음성 합성</span></div>
+<div class="use-case-card"><div class="uc-icon">🎨</div><div class="uc-title">텍스트-이미지</div><div class="uc-desc">설명을 입력하면, 사실적 이미지가 나옵니다.</div><span class="uc-example">Stable Diffusion · DALL·E · Midjourney</span></div>
+<div class="use-case-card"><div class="uc-icon">🎬</div><div class="uc-title">영상 생성</div><div class="uc-desc">텍스트로부터 일관된 영상 클립을 생성합니다.</div><span class="uc-example">Sora · Runway · Kling</span></div>
+<div class="use-case-card"><div class="uc-icon">✏️</div><div class="uc-title">이미지 편집</div><div class="uc-desc">한 영역에 노이즈를 추가하고, 새 프롬프트로 다시 디노이즈합니다.</div><span class="uc-example">"이것 제거" · "하늘 변경"</span></div>
+<div class="use-case-card"><div class="uc-icon">🔬</div><div class="uc-title">초해상도</div><div class="uc-desc">흐림을 노이즈로 취급하고, 빠진 디테일을 채웁니다.</div><span class="uc-example">오래된 사진 · 의료 · 위성</span></div>
+<div class="use-case-card"><div class="uc-icon">🧬</div><div class="uc-title">신약 발견</div><div class="uc-desc">노이즈로부터 3D 분자 구조를 생성합니다.</div><span class="uc-example">단백질 · 재료과학</span></div>
+<div class="use-case-card"><div class="uc-icon">🎵</div><div class="uc-title">오디오 & 음악</div><div class="uc-desc">스펙트로그램을 디노이즈하여 소리를 만듭니다.</div><span class="uc-example">음악 · 음성 합성</span></div>
 </div></div></section>
 
 <!-- 8. CONNECTION -->
-<section id="sec-conn" style="min-height:auto;padding:4rem 2rem;"><div class="section-inner"><div class="reveal"><p class="section-num">08 — 연결고리</p><h2>이것은 <span class="accent-gold">비유</span>가 아닙니다</h2></div>
+<section id="sec-conn" style="min-height:auto;padding:4rem 2rem;"><div class="section-inner"><div class="reveal"><p class="section-num">09 — 연결</p><h2>이것은 <span class="accent-gold">비유</span>가 아닙니다</h2></div>
 <div class="demo-card reveal"><table class="rosetta-simple"><thead><tr><th></th><th style="color:var(--gold);">물리학</th><th style="color:var(--purple);">Stable Diffusion</th></tr></thead><tbody>
-<tr><td class="rs-icon">🌡️</td><td><strong>열이 퍼져</strong> 균일해짐</td><td><strong>노이즈가 추가되어</strong> 순수한 정적이 됨</td></tr>
-<tr><td class="rs-icon">📐</td><td><strong>가우시안</strong> 종형 곡선</td><td>노이즈는 <strong>정확히 가우시안</strong></td></tr>
+<tr><td class="rs-icon">🌡️</td><td><strong>열이 퍼져</strong> 균일해짐</td><td><strong>노이즈 추가</strong>하여 순수한 정적이 됨</td></tr>
+<tr><td class="rs-icon">📐</td><td><strong>가우시안</strong> 종 모양 곡선</td><td>노이즈는 <strong>정확히 가우시안</strong></td></tr>
 <tr><td class="rs-icon">🎲</td><td><strong>브라운 운동</strong></td><td><strong>무작위 노이즈 주입</strong></td></tr>
-<tr><td class="rs-icon">⏪</td><td>확산은 <strong>비가역적</strong></td><td>신경망이 이를 <strong>되돌리는 법을 학습</strong></td></tr>
-<tr><td class="rs-icon">⚖️</td><td><strong>평형</strong> = 정보 없음</td><td><strong>순수한 노이즈</strong> = 이미지 없음</td></tr>
+<tr><td class="rs-icon">⏪</td><td>확산은 <strong>비가역적</strong></td><td>신경망이 <strong>역전을 학습</strong></td></tr>
+<tr><td class="rs-icon">⚖️</td><td><strong>평형</strong> = 정보 없음</td><td><strong>순수 노이즈</strong> = 이미지 없음</td></tr>
 </tbody></table></div>
 <div class="demo-card reveal"><h3 class="accent-purple" style="margin-bottom:0.8rem;">열에서 픽셀까지 200년</h3><div class="ml-milestone-strip">
-<div class="ml-ms"><div class="ms-year" style="color:var(--gold);">1822</div><div class="ms-who">푸리에</div><div class="ms-what">열 방정식</div></div>
-<div class="ml-ms"><div class="ms-year" style="color:var(--coral);">1905</div><div class="ms-who">아인슈타인</div><div class="ms-what">랜덤 워크</div></div>
-<div class="ml-ms"><div class="ms-year" style="color:var(--sky);">1982</div><div class="ms-who">앤더슨</div><div class="ms-what">역시간 SDE</div></div>
+<div class="ml-ms"><div class="ms-year" style="color:var(--gold);">1822</div><div class="ms-who">Fourier</div><div class="ms-what">Heat equation</div></div>
+<div class="ml-ms"><div class="ms-year" style="color:var(--coral);">1905</div><div class="ms-who">Einstein</div><div class="ms-what">Random walks</div></div>
+<div class="ml-ms"><div class="ms-year" style="color:var(--sky);">1982</div><div class="ms-who">Anderson</div><div class="ms-what">역시간 SDE</div></div>
 <div class="ml-ms"><div class="ms-year" style="color:var(--purple);">2020</div><div class="ms-who">Ho et al.</div><div class="ms-what">DDPM</div></div>
 <div class="ml-ms"><div class="ms-year" style="color:var(--mint);">2022</div><div class="ms-who">Stable Diffusion</div><div class="ms-what">오픈소스</div></div>
 </div></div></div></section>
 
 <!-- CLOSING -->
-<section id="sec-closing"><div class="section-inner" style="text-align:center;"><div class="reveal"><h2>확산 방정식이<br><span class="accent-gold">200년</span> 걸려서<br>첫 번째 이미지를 생성했습니다.</h2><p style="color:var(--muted);font-family:var(--font-display);font-style:italic;font-size:1.05rem;max-width:600px;margin:2rem auto;">푸리에는 쇠막대를 연구하고 있었습니다.<br>아인슈타인은 꽃가루 입자를 관찰하고 있었습니다.<br>앤더슨은 순수 수학 정리를 쓰고 있었습니다.<br><br>누구도 이미지를 생각하고 있지 않았습니다.<br>하지만 그들의 수학이 정확히 필요한 것이었습니다.</p><div style="margin-top:2rem;"><a href="diffusion-1_ko.html" class="start-btn" style="text-decoration:none;border-color:var(--muted);color:var(--muted);">← 1편: 물리학</a></div></div></div></section>
+<section id="sec-closing"><div class="section-inner" style="text-align:center;"><div class="reveal"><h2>확산 방정식이 첫 번째 이미지를<br>생성하기까지<br><span class="accent-gold">200년</span>이 걸렸습니다.</h2><p style="color:var(--muted);font-family:var(--font-display);font-style:italic;font-size:1.05rem;max-width:600px;margin:2rem auto;">푸리에는 쇠막대를 연구하고 있었습니다.<br>아인슈타인은 꽃가루 입자를 관찰하고 있었습니다.<br>앤더슨은 순수 수학 정리를 증명하고 있었습니다.<br><br>그 중 누구도 이미지를 생각하고 있지 않았습니다.<br>하지만 그들의 수학이 정확히 필요한 것이었습니다.</p><div style="margin-top:2rem;"><a href="diffusion-1-ko.html" class="start-btn" style="text-decoration:none;border-color:var(--muted);color:var(--muted);">← Part I: 확산의 물리학</a></div></div></div></section>
 
-<footer><p>기계는 어떻게 꿈을 꾸는가? — 2편</p><p style="margin-top:0.3rem;font-size:0.7rem;">모든 시뮬레이션은 실시간으로 계산됩니다 — 순수한 수학입니다.</p><p style="margin-top:0.5rem;"><a href="diffusion-1_ko.html" style="color:var(--gold);text-decoration:none;font-size:0.85rem;">← 1편: 확산의 물리학</a></p><div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:.2rem"><div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;color:#edeef2;">Sang-hyun Kim</div><div style="font-family:'DM Sans',sans-serif;font-size:.72rem;color:#5c6178;">Korea Institute for Advanced Study</div><a href="https://kimsh.kr" style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;margin-top:.25rem">kimsh.kr</a></div></footer>
+<footer><p>기계는 어떻게 꿈꾸는가? — Part II</p><p style="margin-top:0.3rem;font-size:0.7rem;">모든 시뮬레이션은 실시간으로 계산됩니다 — 오직 수학만으로.</p><p style="margin-top:0.5rem;"><a href="diffusion-1-ko.html" style="color:var(--gold);text-decoration:none;font-size:0.85rem;">← Part I: 확산의 물리학 of Diffusion</a></p><div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:.2rem"><div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;color:#edeef2;">Sang-hyun Kim</div><div style="font-family:'DM Sans',sans-serif;font-size:.72rem;color:#5c6178;">Korea Institute for Advanced Study</div><a href="https://kimsh.kr" style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;margin-top:.25rem">kimsh.kr</a></div></footer>
 <a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
 
 <script>
@@ -377,7 +532,7 @@ function drawCatGraph(){
   catGX.fillText('100%',4,16);catGX.fillText('0%',4,h-4);
   // Period markers
   catGX.fillStyle='rgba(240,180,41,0.15)';catGX.textAlign='center';
-  if(CAT_PERIOD){const px=(CAT_PERIOD/(CAT_PERIOD+5))*w;catGX.beginPath();catGX.moveTo(px,0);catGX.lineTo(px,h);catGX.strokeStyle='rgba(52,211,153,0.2)';catGX.setLineDash([3,3]);catGX.stroke();catGX.setLineDash([]);catGX.fillStyle='rgba(52,211,153,0.3)';catGX.fillText('↑ 복원',px,h-4);}
+  if(CAT_PERIOD){const px=(CAT_PERIOD/(CAT_PERIOD+5))*w;catGX.beginPath();catGX.moveTo(px,0);catGX.lineTo(px,h);catGX.strokeStyle='rgba(52,211,153,0.2)';catGX.setLineDash([3,3]);catGX.stroke();catGX.setLineDash([]);catGX.fillStyle='rgba(52,211,153,0.3)';catGX.fillText('↑ return',px,h-4);}
   // Similarity curve
   catGX.beginPath();
   const maxSteps=Math.max(catSimHistory.length,CAT_PERIOD+5);
@@ -405,20 +560,20 @@ function updateCatUI(sim){
   const info=document.getElementById('cat-info');
   const status=document.getElementById('cat-status');
   if(sim>0.99&&catStep>0){
-    info.innerHTML='<span style="color:var(--mint);">단계 '+catStep+'</span> · 🎉 <strong>완벽하게 복원!</strong>';
-    status.textContent='🎉 복원됨!';status.style.color='var(--mint)';
+    info.innerHTML='<span style="color:var(--mint);">Step '+catStep+'</span> · 🎉 <strong>PERFECTLY RETURNED!</strong>';
+    status.textContent='🎉 완벽 복원!';status.style.color='var(--mint)';
   }else if(catStep===0){
-    info.innerHTML='<span style="color:var(--mint);">단계 0</span> · 원본';
+    info.innerHTML='<span style="color:var(--mint);">Step 0</span> · Original';
     status.textContent='원본';status.style.color='var(--gold)';
   }else{
     const pct=catStep/CAT_PERIOD;
     let phase,col;
     if(pct<0.1){phase='섞는 중...';col='var(--coral)';}
     else if(sim<0.35){phase='완전한 혼돈';col='var(--coral)';}
-    else if(sim<0.6){phase='희미한 메아리';col='var(--purple)';}
-    else if(sim<0.85){phase='형체가 나타남';col='var(--sky)';}
-    else{phase='거의 돌아옴!';col='var(--mint)';}
-    info.innerHTML='<span style="color:'+col+';">단계 '+catStep+'</span> · '+phase;
+    else if(sim<0.6){phase='희미한 흔적';col='var(--purple)';}
+    else if(sim<0.85){phase='유령 출현';col='var(--sky)';}
+    else{phase='거의 돌아왔다!';col='var(--mint)';}
+    info.innerHTML='<span style="color:'+col+';">Step '+catStep+'</span> · '+phase;
     status.textContent=phase;status.style.color=col;
   }
 }
@@ -458,7 +613,7 @@ function skipToReturn(){
 function resetCat(){
   clearInterval(catTimer);catRunning=false;catStep=0;catSimHistory=[1.0];
   buildCatImg();drawCatCanvas(catX,catPixels);drawCatCanvas(catOX,catOrigPixels);drawCatGraph();
-  document.getElementById('cat-btn').textContent='▶ 섞기 — 되돌아오는 과정 보기';document.getElementById('cat-btn').classList.remove('playing');
+  document.getElementById('cat-btn').textContent='▶ 섞기 — 돌아오는 것을 지켜보세요';document.getElementById('cat-btn').classList.remove('playing');
   updateCatUI(1.0);
 }
 
@@ -476,10 +631,10 @@ const IMGS=[
 ];
 let imgIdx=0,imgTgt=new Float32Array(IS*IS),imgCur=new Float32Array(IS*IS),imgSt=0,imgRun=false,imgTm=null;
 function buildImg(){const fn=IMGS[imgIdx];for(let y=0;y<IS;y++)for(let x=0;x<IS;x++)imgTgt[y*IS+x]=fn(x,y);}
-function resetImgDenoise(){clearInterval(imgTm);imgRun=false;imgSt=0;buildImg();for(let i=0;i<imgCur.length;i++)imgCur[i]=Math.random();drawImg();document.getElementById('img-btn').textContent='▶ 노이즈 제거';document.getElementById('img-btn').classList.remove('playing');document.getElementById('img-step').innerHTML='0 <span class="su">/ 40</span>';document.getElementById('img-noise').textContent='100%';document.getElementById('img-clarity').textContent='없음';}
+function resetImgDenoise(){clearInterval(imgTm);imgRun=false;imgSt=0;buildImg();for(let i=0;i<imgCur.length;i++)imgCur[i]=Math.random();drawImg();document.getElementById('img-btn').textContent='▶ 디노이즈';document.getElementById('img-btn').classList.remove('playing');document.getElementById('img-step').innerHTML='0 <span class="su">/ 40</span>';document.getElementById('img-noise').textContent='100%';document.getElementById('img-clarity').textContent='없음';}
 function drawImg(){const id=imgX.createImageData(IS*IP,IS*IP);for(let py=0;py<IS;py++)for(let px=0;px<IS;px++){const v=imgCur[py*IS+px],r=Math.round(30+v*200),g=Math.round(15+v*140),b=Math.round(60+v*120);for(let dy=0;dy<IP;dy++)for(let dx=0;dx<IP;dx++){const i=((py*IP+dy)*IS*IP+(px*IP+dx))*4;id.data[i]=r;id.data[i+1]=g;id.data[i+2]=b;id.data[i+3]=255;}}imgX.putImageData(id,0,0);}
-function stepImg(){if(imgSt>=40){clearInterval(imgTm);imgRun=false;document.getElementById('img-btn').textContent='▶ 노이즈 제거';document.getElementById('img-btn').classList.remove('playing');return;}imgSt++;const t=imgSt/40;for(let i=0;i<imgCur.length;i++){imgCur[i]=imgTgt[i]*t+imgCur[i]*(1-t*0.7)*(1-t)+Math.random()*(1-t)*0.15;imgCur[i]=Math.max(0,Math.min(1,imgCur[i]));}drawImg();playChime(imgSt,40);document.getElementById('img-step').innerHTML=imgSt+' <span class="su">/ 40</span>';document.getElementById('img-noise').textContent=Math.round((1-t)*100)+'%';document.getElementById('img-clarity').textContent=t<0.3?'흐릿함':t<0.6?'나타나는 중':t<0.9?'선명함':'매우 선명';}
-function startImgDenoise(){ensureAudio();if(imgRun){clearInterval(imgTm);imgRun=false;document.getElementById('img-btn').textContent='▶ 노이즈 제거';document.getElementById('img-btn').classList.remove('playing');return;}if(imgSt>=40)resetImgDenoise();imgRun=true;document.getElementById('img-btn').textContent='⏸ 일시정지';document.getElementById('img-btn').classList.add('playing');imgTm=setInterval(stepImg,120);}
+function stepImg(){if(imgSt>=40){clearInterval(imgTm);imgRun=false;document.getElementById('img-btn').textContent='▶ 디노이즈';document.getElementById('img-btn').classList.remove('playing');return;}imgSt++;const t=imgSt/40;for(let i=0;i<imgCur.length;i++){imgCur[i]=imgTgt[i]*t+imgCur[i]*(1-t*0.7)*(1-t)+Math.random()*(1-t)*0.15;imgCur[i]=Math.max(0,Math.min(1,imgCur[i]));}drawImg();playChime(imgSt,40);document.getElementById('img-step').innerHTML=imgSt+' <span class="su">/ 40</span>';document.getElementById('img-noise').textContent=Math.round((1-t)*100)+'%';document.getElementById('img-clarity').textContent=t<0.3?'흐릿':t<0.6?'나타나는 중':t<0.9?'선명':'매우 선명';}
+function startImgDenoise(){ensureAudio();if(imgRun){clearInterval(imgTm);imgRun=false;document.getElementById('img-btn').textContent='▶ 디노이즈';document.getElementById('img-btn').classList.remove('playing');return;}if(imgSt>=40)resetImgDenoise();imgRun=true;document.getElementById('img-btn').textContent='⏸ 일시정지';document.getElementById('img-btn').classList.add('playing');imgTm=setInterval(stepImg,120);}
 function cycleImg(){imgIdx=(imgIdx+1)%IMGS.length;resetImgDenoise();}
 resetImgDenoise();
 
@@ -494,7 +649,7 @@ melG=actx.createGain();melG.connect(actx.destination);melIdx=0;playNote();melTm=
 function playNote(){if(!audActive)return;const f=MEL[melIdx%MEL.length],o=actx.createOscillator(),g=actx.createGain(),now=actx.currentTime;o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0.15,now);g.gain.exponentialRampToValueAtTime(0.0001,now+MDUR*0.9);o.connect(g).connect(melG);o.start(now);o.stop(now+MDUR);melIdx++;}
 function stopAud(){audActive=false;clearInterval(melTm);try{noiseN.stop();}catch(e){}document.getElementById('audio-btn').textContent='▶ 재생';document.getElementById('audio-btn').classList.remove('playing');}
 function setAud(v){document.getElementById('audio-slider').value=v;updAud();}
-function updAud(){const v=+document.getElementById('audio-slider').value/100;document.getElementById('audio-val').textContent=Math.round((1-v)*100)+'% 노이즈';document.getElementById('audio-label').textContent=v<0.1?'순수한 정적':v<0.5?'들리시나요?':v<0.9?'멜로디가 나타나는 중':'완전히 선명';if(noiseG)noiseG.gain.setValueAtTime(0.12*(1-v),actx.currentTime);if(melG)melG.gain.setValueAtTime(v*0.8,actx.currentTime);}
+function updAud(){const v=+document.getElementById('audio-slider').value/100;document.getElementById('audio-val').textContent=Math.round((1-v)*100)+'% noise';document.getElementById('audio-label').textContent=v<0.1?'순수 정적':v<0.5?'들리시나요?':v<0.9?'멜로디 출현':'완전 선명';if(noiseG)noiseG.gain.setValueAtTime(0.12*(1-v),actx.currentTime);if(melG)melG.gain.setValueAtTime(v*0.8,actx.currentTime);}
 document.getElementById('audio-slider').addEventListener('input',updAud);
 function drawAudVis(){const w=audVis.width=audVis.clientWidth*2,h=audVis.height=360;audCtx.clearRect(0,0,w,h);const t=performance.now()/1000,cl=+document.getElementById('audio-slider').value/100;
 audCtx.beginPath();for(let i=0;i<=w;i++){const x=i/w,sig=Math.sin(6.28*4*x-t*3)*0.6,nz=(Math.sin(x*137+t*20)+Math.sin(x*293-t*15)+Math.sin(x*73+t*30))/3,mx=sig*cl+nz*(1-cl),y=h/2-mx*(h/2-10);i===0?audCtx.moveTo(i,y):audCtx.lineTo(i,y);}
@@ -512,9 +667,9 @@ function buildTxt(){const tmp=document.createElement('canvas');tmp.width=TW;tmp.
 
 function drawTxtAtLevel(){
   const cl=+document.getElementById('txt-slider').value/100;
-  document.getElementById('txt-val').textContent=Math.round((1-cl)*100)+'% 노이즈';
+  document.getElementById('txt-val').textContent=Math.round((1-cl)*100)+'% noise';
   document.getElementById('txt-clarity').textContent=Math.round(cl*100)+'%';
-  document.getElementById('txt-read').textContent=cl<0.25?'아니오':cl<0.45?'흠...':cl<0.65?'거의!':cl<0.85?'네!':'✓ '+WORDS[wIdx];
+  document.getElementById('txt-read').textContent=cl<0.25?'아니오':cl<0.45?'흠...':cl<0.65?'거의!':cl<0.85?'보인다!':'✓ '+WORDS[wIdx];
   // Mix target and noise based on clarity level
   const id=txtX.createImageData(TW*TS,TH*TS);
   for(let py=0;py<TH;py++)for(let px=0;px<TW;px++){
@@ -551,7 +706,7 @@ const SS=28,SSC=5;srLo.width=SS*SSC;srLo.height=SS*SSC;srHi.width=SS*SSC;srHi.he
 const SRI=[function(x,y){return Math.min(1,Math.max(0,1-Math.abs(x-10)/8)*(1-y/SS)*2+Math.max(0,1-Math.abs(x-20)/6)*(1-y/SS)*1.5+(y>SS*0.7?0.3:0)+(y<SS*0.3?0.15:0));},function(x,y){const d=Math.sqrt((x-14)**2+(y-14)**2);return d<10?0.8+0.15*Math.sin(x*0.8):0.05;},function(x,y){return 0.5+0.4*Math.sin(x*0.5)*Math.cos(y*0.4);}];
 let srIdx=0,srTgt=new Float32Array(SS*SS);
 function buildSR(){const fn=SRI[srIdx];for(let y=0;y<SS;y++)for(let x=0;x<SS;x++)srTgt[y*SS+x]=fn(x,y);drawSR();}
-function drawSR(){const e=+document.getElementById('sr-slider').value/100;document.getElementById('sr-val').textContent=e<0.1?'1× 흐릿함':e<0.9?(1+e*3).toFixed(0)+'×':'4× 향상됨';
+function drawSR(){const e=+document.getElementById('sr-slider').value/100;document.getElementById('sr-val').textContent=e<0.1?'1× 흐릿':e<0.9?(1+e*3).toFixed(0)+'×':'4× 향상';
 const br=3,lo=new Float32Array(SS*SS);for(let y=0;y<SS;y++)for(let x=0;x<SS;x++){let s=0,c=0;for(let dy=-br;dy<=br;dy++)for(let dx=-br;dx<=br;dx++){s+=srTgt[Math.max(0,Math.min(SS-1,y+dy))*SS+Math.max(0,Math.min(SS-1,x+dx))];c++;}lo[y*SS+x]=s/c;}
 const hi=new Float32Array(SS*SS);for(let i=0;i<SS*SS;i++)hi[i]=lo[i]*(1-e)+srTgt[i]*e;
 function dg(ctx,d){const id=ctx.createImageData(SS*SSC,SS*SSC);for(let py=0;py<SS;py++)for(let px=0;px<SS;px++){const v=d[py*SS+px],r=Math.round(20+v*210),g=Math.round(30+v*170),b=Math.round(50+v*140);for(let dy=0;dy<SSC;dy++)for(let dx=0;dx<SSC;dx++){const i=((py*SSC+dy)*SS*SSC+(px*SSC+dx))*4;id.data[i]=r;id.data[i+1]=g;id.data[i+2]=b;id.data[i+3]=255;}}ctx.putImageData(id,0,0);}
@@ -559,15 +714,229 @@ dg(srLoX,lo);dg(srHiX,hi);}
 function cycleSR(){srIdx=(srIdx+1)%SRI.length;buildSR();}
 document.getElementById('sr-slider').addEventListener('input',drawSR);buildSR();
 
-// ═══ 6. FORWARD ═══
+// ═══ 6. STABLE DIFFUSION PIPELINE DEMO ═══
+const sdLatC=document.getElementById('sd-latent'),sdLatX=sdLatC.getContext('2d');
+const sdLatSm=document.getElementById('sd-lat-sm'),sdLatSmX=sdLatSm.getContext('2d');
+const sdOutC=document.getElementById('sd-output'),sdOutX=sdOutC.getContext('2d');
+const SD_LAT=8,SD_OUT=32,SD_STEPS=30;
+const SD_LAT_SC=20,SD_OUT_SC=8;
+sdLatC.width=SD_LAT*SD_LAT_SC;sdLatC.height=SD_LAT*SD_LAT_SC;sdLatC.style.width=SD_LAT*SD_LAT_SC+'px';sdLatC.style.height=SD_LAT*SD_LAT_SC+'px';
+sdLatSm.width=SD_LAT*8;sdLatSm.height=SD_LAT*8;
+sdOutC.width=SD_OUT*SD_OUT_SC;sdOutC.height=SD_OUT*SD_OUT_SC;sdOutC.style.width=SD_OUT*SD_OUT_SC+'px';sdOutC.style.height=SD_OUT*SD_OUT_SC+'px';
+
+// Target latent patterns for each prompt (8x8, values 0-1)
+const SD_TARGETS=[
+  // Cat (sitting, front-facing)
+  function(x,y){const cx=3.5,cy=3.5,d=Math.sqrt((x-cx)*(x-cx)+(y-cy)*(y-cy));
+    if(d<2.5&&y>1)return 0.8; // body
+    if(Math.sqrt((x-cx)*(x-cx)+((y-1.5)*1.2)*((y-1.5)*1.2))<1.8)return 0.85; // head
+    if(x<3&&y<1.2&&y>-0.5)return 0.7; // ear L
+    if(x>4&&y<1.2&&y>-0.5)return 0.7; // ear R
+    if(Math.abs(x-2.5)<0.6&&Math.abs(y-1.3)<0.5)return 0.95; // eye L
+    if(Math.abs(x-4.5)<0.6&&Math.abs(y-1.3)<0.5)return 0.95; // eye R
+    return 0.08;},
+  // Star
+  function(x,y){const cx=3.5,cy=3.5,a=Math.atan2(y-cy,x-cx),d=Math.sqrt((x-cx)*(x-cx)+(y-cy)*(y-cy));
+    return d<1.2+1.8*Math.cos(5*a)?0.9:0.08;},
+  // Mountains
+  function(x,y){const h1=Math.max(0,3-Math.abs(x-2.5))*0.35;const h2=Math.max(0,2.5-Math.abs(x-5.5))*0.4;
+    const ground=y>5.5?0.4:0; const sky=y<2?0.15:0;
+    return y>(7-h1*7)&&y>(7-h2*7)?0.05:(7-y)/7*(h1+h2)>((7-y)/7*0.3)?0.75+sky:0.1+ground+sky;},
+  // Spiral
+  function(x,y){const cx=3.5,cy=3.5,a=Math.atan2(y-cy,x-cx),d=Math.sqrt((x-cx)*(x-cx)+(y-cy)*(y-cy));
+    const spiral=Math.sin(a*2-d*2);return(d<3.5&&spiral>0)?0.8:0.1;},
+  // Tree
+  function(x,y){if(x>3&&x<4&&y>4)return 0.5; // trunk
+    const cy=2.5,cx=3.5,d=Math.sqrt((x-cx)*(x-cx)+((y-cy)*1.3)*((y-cy)*1.3));
+    if(d<2.2&&y<5)return 0.7+Math.sin(x*3+y*2)*0.15; // canopy
+    if(y>6.5)return 0.2; // ground
+    return 0.05;}
+];
+const SD_PROMPT_NAMES=['"고양이"','"별"','"산"','"소용돌이"','"나무"'];
+// Decoded output targets (32x32)
+const SD_OUT_TARGETS=[
+  // Cat
+  function(x,y){const N=SD_OUT,nx=x/N,ny=y/N;
+    const cx=0.5,bodD=Math.sqrt((nx-cx)*(nx-cx)+((ny-0.6)*0.85)*((ny-0.6)*0.85));
+    const headD=Math.sqrt((nx-cx)*(nx-cx)+((ny-0.3)*1.1)*((ny-0.3)*1.1));
+    if(headD<0.22){
+      if(Math.sqrt(((nx-0.4)*1.8)*((nx-0.4)*1.8)+(ny-0.27)*(ny-0.27))<0.05)return[52,211,153];
+      if(Math.sqrt(((nx-0.6)*1.8)*((nx-0.6)*1.8)+(ny-0.27)*(ny-0.27))<0.05)return[52,211,153];
+      if(Math.sqrt((nx-cx)*(nx-cx)+((ny-0.33)*2)*((ny-0.33)*2))<0.03)return[251,113,133];
+      return[210+Math.sin(x)*15,150+Math.sin(y)*10,60];}
+    if(bodD<0.28&&ny>0.35)return[200+Math.sin(x*0.5)*15,140+Math.sin(y*0.3)*10,50];
+    if(nx>0.2&&nx<0.37&&ny<0.22)return[190,130,50]; // ear L
+    if(nx>0.63&&nx<0.8&&ny<0.22)return[190,130,50]; // ear R
+    if(nx>0.6&&nx<0.85&&ny>0.65){const ty=0.68-0.1*Math.sin((nx-0.6)*10);if(Math.abs(ny-ty)<0.04)return[200,140,55];}
+    if(ny>0.88)return[40,55,35]; // ground
+    return[12,18,38];},
+  // Star
+  function(x,y){const N=SD_OUT,cx=N/2,cy=N/2,a=Math.atan2(y-cy,x-cx),d=Math.sqrt((x-cx)*(x-cx)+(y-cy)*(y-cy));
+    if(d<N*0.12+N*0.25*Math.cos(5*a)){const b=0.7+0.3*Math.cos(a*3);return[Math.round(240*b),Math.round(200*b),Math.round(60*b)];}
+    return[10,14,35];},
+  // Mountains
+  function(x,y){const N=SD_OUT,nx=x/N,ny=y/N;
+    const p1=Math.max(0,1-Math.abs(nx-0.35)/0.25)*(1-ny)*2.2;
+    const p2=Math.max(0,1-Math.abs(nx-0.7)/0.2)*(1-ny)*1.8;
+    const snow1=p1>0.6&&ny<0.35?1:0;const snow2=p2>0.5&&ny<0.4?1:0;
+    if(ny>0.78)return[35,65,30]; // ground
+    if(snow1||snow2)return[220,225,235];
+    if(p1>0.3&&ny>0.2)return[80+p1*40,90+p1*30,120+p1*20];
+    if(p2>0.25&&ny>0.25)return[70+p2*50,80+p2*30,110+p2*30];
+    if(ny<0.25){const s=ny/0.25;return[15+s*20,20+s*30,60+s*40];}
+    return[20,30,50];},
+  // Spiral
+  function(x,y){const N=SD_OUT,cx=N/2,cy=N/2,a=Math.atan2(y-cy,x-cx),d=Math.sqrt((x-cx)*(x-cx)+(y-cy)*(y-cy));
+    const sp=Math.sin(a*2.5-d*0.4);const r=d/N;
+    if(r<0.45&&sp>0)return[Math.round(120+r*200),Math.round(80+sp*100),Math.round(200-r*100)];
+    return[12,15,35];},
+  // Tree
+  function(x,y){const N=SD_OUT,nx=x/N,ny=y/N;
+    if(nx>0.43&&nx<0.57&&ny>0.6&&ny<0.92)return[90,60,30]; // trunk
+    const cd=Math.sqrt((nx-0.5)*(nx-0.5)+((ny-0.38)*1.3)*((ny-0.38)*1.3));
+    if(cd<0.28&&ny<0.65){const v=Math.sin(x*2+y*1.5)*0.15;return[30+v*30,120+v*50+cd*80,40+v*20];}
+    if(ny>0.88)return[35,55,25];
+    if(ny<0.2)return[15,20,50];
+    return[12,18,38];}
+];
+
+let sdPromptIdx=0,sdLatent=new Float32Array(SD_LAT*SD_LAT),sdLatNoise=new Float32Array(SD_LAT*SD_LAT);
+let sdRunning=false,sdTimer=null,sdCurStep=0;
+
+function pickSDPrompt(idx,btn){sdPromptIdx=idx;
+  document.querySelectorAll('#sd-prompts .btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  document.getElementById('sd-prompt-show').textContent=SD_PROMPT_NAMES[idx];
+  resetSD();}
+
+function resetSD(){clearInterval(sdTimer);sdRunning=false;sdCurStep=0;
+  // Fill latent with noise
+  for(let i=0;i<sdLatent.length;i++){sdLatent[i]=Math.random();sdLatNoise[i]=Math.random();}
+  drawSDLatent();drawSDOutput(0);
+  // Reset pipeline highlights
+  ['sd-p1','sd-p3','sd-p4'].forEach(id=>{const e=document.getElementById(id);e.style.borderColor='rgba(255,255,255,0.04)';e.style.boxShadow='none';});
+  document.getElementById('sd-lat-sm').style.borderColor='rgba(255,255,255,0.04)';
+  document.getElementById('sd-go').textContent='✨ 이미지 생성';document.getElementById('sd-go').classList.remove('playing');
+  document.getElementById('sd-stage').textContent='준비';document.getElementById('sd-stage').style.color='var(--gold)';
+  document.getElementById('sd-step').innerHTML='0 <span class="su">/ 30</span>';
+  document.getElementById('sd-ucount').textContent='30';}
+
+function drawSDLatent(){
+  // Draw latent to both canvases
+  function drawTo(ctx,w,h,sc){
+    const id=ctx.createImageData(w,h);
+    for(let py=0;py<SD_LAT;py++)for(let px=0;px<SD_LAT;px++){
+      const v=sdLatent[py*SD_LAT+px];
+      const r=Math.round(20+v*170),g=Math.round(15+v*100),b=Math.round(60+v*180);
+      for(let dy=0;dy<sc;dy++)for(let dx=0;dx<sc;dx++){
+        const i=((py*sc+dy)*SD_LAT*sc+(px*sc+dx))*4;
+        id.data[i]=r;id.data[i+1]=g;id.data[i+2]=b;id.data[i+3]=255;}}
+    ctx.putImageData(id,0,0);}
+  drawTo(sdLatX,SD_LAT*SD_LAT_SC,SD_LAT*SD_LAT_SC,SD_LAT_SC);
+  drawTo(sdLatSmX,SD_LAT*8,SD_LAT*8,8);
+}
+
+function drawSDOutput(clarity){
+  const fn=SD_OUT_TARGETS[sdPromptIdx];
+  const id=sdOutX.createImageData(SD_OUT*SD_OUT_SC,SD_OUT*SD_OUT_SC);
+  for(let py=0;py<SD_OUT;py++)for(let px=0;px<SD_OUT;px++){
+    const c=fn(px,py);
+    const ni=(py%SD_LAT)*SD_LAT+(px%SD_LAT);
+    const nv=sdLatNoise[ni%sdLatNoise.length];
+    const t=clarity;
+    const r=Math.round(c[0]*t+(nv*120+15)*(1-t));
+    const g=Math.round(c[1]*t+(nv*100+12)*(1-t));
+    const b=Math.round(c[2]*t+(nv*140+30)*(1-t));
+    for(let dy=0;dy<SD_OUT_SC;dy++)for(let dx=0;dx<SD_OUT_SC;dx++){
+      const i=((py*SD_OUT_SC+dy)*SD_OUT*SD_OUT_SC+(px*SD_OUT_SC+dx))*4;
+      id.data[i]=r;id.data[i+1]=g;id.data[i+2]=b;id.data[i+3]=255;}}
+  sdOutX.putImageData(id,0,0);
+}
+
+function highlightPipe(stage){
+  const ids=['sd-p1','sd-lat-sm','sd-p3','sd-p4'];
+  const colors=['var(--sky)','var(--purple)','var(--gold)','var(--mint)'];
+  ids.forEach((id,i)=>{
+    const el=document.getElementById(id);
+    if(i===stage){el.style.borderColor=colors[i];el.style.boxShadow='0 0 15px '+colors[i].replace('var(--','rgba(').replace(')','')+'50)';}
+    else if(i<stage){el.style.borderColor=colors[i];el.style.boxShadow='none';}
+    else{el.style.borderColor='rgba(255,255,255,0.04)';el.style.boxShadow='none';}
+  });
+}
+
+function runSD(){
+  ensureAudio();
+  if(sdRunning){clearInterval(sdTimer);sdRunning=false;document.getElementById('sd-go').textContent='✨ 이미지 생성';document.getElementById('sd-go').classList.remove('playing');return;}
+  resetSD();sdRunning=true;
+  document.getElementById('sd-go').textContent='⏸ 일시정지';document.getElementById('sd-go').classList.add('playing');
+
+  // Stage 1: CLIP encode (brief flash)
+  document.getElementById('sd-stage').textContent='① CLIP 인코딩...';document.getElementById('sd-stage').style.color='var(--sky)';
+  highlightPipe(0);
+  if(actx){const now=actx.currentTime,o=actx.createOscillator(),g=actx.createGain();o.type='sine';o.frequency.value=880;g.gain.setValueAtTime(0.05,now);g.gain.exponentialRampToValueAtTime(0.0001,now+0.2);o.connect(g).connect(actx.destination);o.start(now);o.stop(now+0.25);}
+
+  setTimeout(()=>{
+    if(!sdRunning)return;
+    // Stage 2: Show noisy latent
+    document.getElementById('sd-stage').textContent='② 잠재 공간 노이즈';document.getElementById('sd-stage').style.color='var(--purple)';
+    highlightPipe(1);
+    drawSDLatent();drawSDOutput(0);
+
+    setTimeout(()=>{
+      if(!sdRunning)return;
+      // Stage 3: U-Net denoising loop
+      document.getElementById('sd-stage').textContent='③ U-Net 디노이징...';document.getElementById('sd-stage').style.color='var(--gold)';
+      highlightPipe(2);
+      sdCurStep=0;
+      const tgtFn=SD_TARGETS[sdPromptIdx];
+      // Build latent target
+      const latTgt=new Float32Array(SD_LAT*SD_LAT);
+      for(let y=0;y<SD_LAT;y++)for(let x=0;x<SD_LAT;x++)latTgt[y*SD_LAT+x]=tgtFn(x,y);
+
+      sdTimer=setInterval(()=>{
+        if(!sdRunning){clearInterval(sdTimer);return;}
+        sdCurStep++;
+        const t=sdCurStep/SD_STEPS;
+        // Denoise latent: mix toward target
+        for(let i=0;i<sdLatent.length;i++){
+          const noise=Math.random()*(1-t)*0.08;
+          sdLatent[i]=latTgt[i]*t+sdLatNoise[i]*(1-t)+noise;
+          sdLatent[i]=Math.max(0,Math.min(1,sdLatent[i]));
+        }
+        drawSDLatent();
+        drawSDOutput(t*t); // quadratic ease for output clarity
+        document.getElementById('sd-step').innerHTML=sdCurStep+' <span class="su">/ 30</span>';
+        document.getElementById('sd-ucount').textContent=(SD_STEPS-sdCurStep);
+        playChime(sdCurStep,SD_STEPS);
+
+        if(sdCurStep>=SD_STEPS){
+          clearInterval(sdTimer);
+          // Stage 4: Decode
+          document.getElementById('sd-stage').textContent='④ 디코딩...';document.getElementById('sd-stage').style.color='var(--mint)';
+          highlightPipe(3);
+          setTimeout(()=>{
+            drawSDOutput(1);
+            document.getElementById('sd-stage').textContent='✓ 완료!';document.getElementById('sd-stage').style.color='var(--mint)';
+            highlightPipe(4);
+            document.getElementById('sd-go').textContent='✨ 이미지 생성';document.getElementById('sd-go').classList.remove('playing');
+            sdRunning=false;
+            // Celebration chord
+            if(actx){const now=actx.currentTime;[523.25,659.25,783.99].forEach((f,i)=>{const o=actx.createOscillator(),g=actx.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0.06,now+i*0.08);g.gain.exponentialRampToValueAtTime(0.0001,now+0.6);o.connect(g).connect(actx.destination);o.start(now+i*0.08);o.stop(now+0.65);});}
+          },400);
+        }
+      },100);
+    },600);
+  },500);
+}
+resetSD();
 const fwdC=document.getElementById('fwd-canvas'),fwdX=fwdC.getContext('2d');let fwdRun=false,fwdTm=null;
 function sigVal(x){return 1.2*Math.exp(-((x+1.2)*(x+1.2))/0.18)+0.9*Math.exp(-((x-0.8)*(x-0.8))/0.25)+0.5*Math.exp(-((x-2.2)*(x-2.2))/0.3);}
-function toggleFwd(){if(fwdRun){clearInterval(fwdTm);fwdRun=false;document.getElementById('fwd-btn').textContent='▶ 녹이기';document.getElementById('fwd-btn').classList.remove('playing');return;}fwdRun=true;document.getElementById('fwd-btn').textContent='⏸';document.getElementById('fwd-btn').classList.add('playing');let v=0;document.getElementById('fwd-slider').value=0;fwdTm=setInterval(()=>{v+=0.5;if(v>100){v=100;clearInterval(fwdTm);fwdRun=false;document.getElementById('fwd-btn').textContent='▶ 녹이기';document.getElementById('fwd-btn').classList.remove('playing');}document.getElementById('fwd-slider').value=v;},30);}
+function toggleFwd(){if(fwdRun){clearInterval(fwdTm);fwdRun=false;document.getElementById('fwd-btn').textContent='▶ 용해';document.getElementById('fwd-btn').classList.remove('playing');return;}fwdRun=true;document.getElementById('fwd-btn').textContent='⏸';document.getElementById('fwd-btn').classList.add('playing');let v=0;document.getElementById('fwd-slider').value=0;fwdTm=setInterval(()=>{v+=0.5;if(v>100){v=100;clearInterval(fwdTm);fwdRun=false;document.getElementById('fwd-btn').textContent='▶ 용해';document.getElementById('fwd-btn').classList.remove('playing');}document.getElementById('fwd-slider').value=v;},30);}
 const fNC=new Float32Array(600);for(let i=0;i<600;i++)fNC[i]=gaussRand();
 function drawFwd(){const w=fwdC.width=fwdC.clientWidth*2,h=fwdC.height=400;fwdX.clearRect(0,0,w,h);
 const tR=+document.getElementById('fwd-slider').value,t=tR/100;document.getElementById('fwd-val').textContent=Math.round(tR*10);
 const aB=Math.cos(t*Math.PI/2)**2,sf=Math.sqrt(aB),nf=Math.sqrt(1-aB);
-document.getElementById('fwd-label').textContent='신호: '+Math.round(sf*100)+'% · 노이즈: '+Math.round(nf*100)+'%';
+document.getElementById('fwd-label').textContent='Signal: '+Math.round(sf*100)+'% · Noise: '+Math.round(nf*100)+'%';
 const xR=4,zY=h-25,pH=zY-15,nS=Math.max(nf*1.2,0.01),pts=250,mV=1.6;
 fwdX.beginPath();fwdX.moveTo(0,zY);fwdX.lineTo(w,zY);fwdX.strokeStyle='rgba(255,255,255,0.06)';fwdX.lineWidth=1;fwdX.stroke();
 const dn=new Float32Array(pts);for(let i=0;i<pts;i++){const x=((i/pts)-0.5)*2*xR;if(t<0.01){dn[i]=sigVal(x);}else{let s=0;const ns=30,dx=2*xR/ns;for(let j=0;j<=ns;j++){const xp=-xR+j*dx;s+=sigVal(xp)*sf*(1/(nS*2.507))*Math.exp(-((x-xp*sf)**2)/(2*nS*nS))*dx;}dn[i]=s;}}
@@ -592,13 +961,13 @@ revX.beginPath();for(let i=0;i<=w;i++){const x=((i/w)-0.5)*2*xR,y=zY-dd(x)*h*1.8
 const bins=60,cnt=new Float32Array(bins);for(let i=0;i<NR;i++){const bx=Math.floor((rP[i]/xR/2+0.5)*bins);if(bx>=0&&bx<bins)cnt[bx]++;}const mc=Math.max(...cnt,1),bW=w/bins;
 for(let i=0;i<bins;i++){if(!cnt[i])continue;const bh=(cnt[i]/mc)*(zY-20)*0.6,x=i*bW;const gd=revX.createLinearGradient(0,zY-bh,0,zY);gd.addColorStop(0,'rgba('+(56+p*184)+','+(189-p*50)+','+(248-p*100)+',0.5)');gd.addColorStop(1,'rgba('+(56+p*184)+','+(189-p*50)+','+(248-p*100)+',0.15)');revX.fillStyle=gd;revX.fillRect(x+1,zY-bh,bW-2,bh);}
 const pY=zY+h*0.1;for(let i=0;i<NR;i++){const px=w/2+(rP[i]/xR)*(w/2),j=Math.sin(i*73.1)*h*0.05;revX.beginPath();revX.arc(px,pY+j,2,0,6.28);revX.fillStyle=(Math.abs(rP[i]-rM1)<0.8||Math.abs(rP[i]-rM2)<0.8)?'rgba(52,211,153,0.6)':'rgba(56,189,248,0.4)';revX.fill();}
-revX.font='14px "JetBrains Mono",monospace';revX.textAlign='center';revX.fillStyle=p<0.5?'rgba(255,255,255,0.15)':p<0.9?'rgba(52,211,153,0.3)':'rgba(52,211,153,0.5)';revX.fillText(p<0.1?'순수한 노이즈':p<0.5?'구조가 나타나는 중...':p<0.9?'수렴 중':'✓ 노이즈에서 생성됨',w/2,20);
+revX.font='14px "JetBrains Mono",monospace';revX.textAlign='center';revX.fillStyle=p<0.5?'rgba(255,255,255,0.15)':p<0.9?'rgba(52,211,153,0.3)':'rgba(52,211,153,0.5)';revX.fillText(p<0.1?'순수 노이즈':p<0.5?'구조 출현...':p<0.9?'수렴 중':'✓ 노이즈에서 생성됨',w/2,20);
 requestAnimationFrame(drawRev);}drawRev();
 
 // ═══ NAV ═══
 const obs=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.15});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
-const secs=['hero','sec-cat','sec-image','sec-audio','sec-text','sec-super','sec-how','sec-process','sec-uses','sec-conn','sec-closing'];
+const secs=['hero','sec-cat','sec-image','sec-audio','sec-text','sec-super','sec-how','sec-ddpm','sec-sd-demo','sec-process','sec-uses','sec-conn','sec-closing'];
 const nd=document.getElementById('nav-dots');secs.forEach(id=>{const d=document.createElement('button');d.className='nav-dot';d.onclick=()=>document.getElementById(id).scrollIntoView({behavior:'smooth'});nd.appendChild(d);});
 const sO=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){const i=secs.indexOf(e.target.id);document.querySelectorAll('.nav-dot').forEach((d,j)=>d.classList.toggle('active',j===i));}});},{threshold:0.3});
 secs.forEach(id=>{const el=document.getElementById(id);if(el)sO.observe(el);});
