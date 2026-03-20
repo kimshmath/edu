@@ -137,28 +137,14 @@ header h1 em {
   margin-bottom: 6rem;
 }
 
-.project-link {
+.project-entry {
   display: block;
-  text-decoration: none;
-  color: inherit;
   padding: 2rem 0;
   border-top: 1px solid var(--border);
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   position: relative;
 }
-.project-link:last-child {
+.project-entry:last-child {
   border-bottom: 1px solid var(--border);
-}
-
-.project-link:hover {
-  padding-left: 1.2rem;
-}
-.project-link:hover .proj-title {
-  color: var(--gold);
-}
-.project-link:hover .proj-arrow {
-  opacity: 1;
-  transform: translateX(0);
 }
 
 .proj-top {
@@ -183,17 +169,36 @@ header h1 em {
   font-size: 1.35rem;
   font-weight: 400;
   color: var(--white);
-  transition: color 0.3s;
   flex: 1;
 }
 
-.proj-arrow {
-  font-size: 0.85rem;
-  color: var(--gold);
-  opacity: 0;
-  transform: translateX(-8px);
-  transition: all 0.3s;
+/* ─── Language selectors ─── */
+.proj-langs {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
   flex-shrink: 0;
+  align-self: center;
+}
+
+.lang-btn {
+  font-family: var(--f-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 0.28rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  text-decoration: none;
+  transition: color 0.22s, border-color 0.22s, background 0.22s, transform 0.22s;
+  white-space: nowrap;
+}
+.lang-btn:hover {
+  color: var(--gold);
+  border-color: rgba(212,168,83,0.45);
+  background: var(--gold-dim);
+  transform: translateY(-1px);
 }
 
 .proj-desc {
@@ -279,6 +284,8 @@ footer {
   header { padding: 5rem 0 3rem; }
   .proj-desc, .proj-tags { padding-left: 0; }
   .proj-title { font-size: 1.15rem; }
+  .proj-top { flex-wrap: wrap; }
+  .proj-langs { margin-left: 2.5rem; margin-top: 0.4rem; }
 }
 
 /* ─── Entry animation ─── */
@@ -287,14 +294,10 @@ footer {
   to { opacity: 1; transform: translateY(0); }
 }
 header { animation: fadeIn 0.8s ease both; }
-.project-link:nth-child(1) { animation: fadeIn 0.6s 0.15s ease both; }
-.project-link:nth-child(2) { animation: fadeIn 0.6s 0.22s ease both; }
-.project-link:nth-child(3) { animation: fadeIn 0.6s 0.29s ease both; }
-.project-link:nth-child(4) { animation: fadeIn 0.6s 0.36s ease both; }
-.project-link:nth-child(5) { animation: fadeIn 0.6s 0.43s ease both; }
-.project-link:nth-child(6) { animation: fadeIn 0.6s 0.50s ease both; }
-.project-link:nth-child(7) { animation: fadeIn 0.6s 0.57s ease both; }
-.project-link:nth-child(8) { animation: fadeIn 0.6s 0.64s ease both; }
+.project-entry:nth-child(1) { animation: fadeIn 0.6s 0.15s ease both; }
+.project-entry:nth-child(2) { animation: fadeIn 0.6s 0.25s ease both; }
+.project-entry:nth-child(3) { animation: fadeIn 0.6s 0.35s ease both; }
+.project-entry:nth-child(4) { animation: fadeIn 0.6s 0.45s ease both; }
 </style>
 </head>
 <body>
@@ -310,11 +313,13 @@ header { animation: fadeIn 0.8s ease both; }
 
   <div class="projects">
 
-    <a class="project-link" href="banach.html">
+    <div class="project-entry">
       <div class="proj-top">
         <span class="proj-number">01</span>
         <span class="proj-title">Banach–Tarski: F₂ on S²</span>
-        <span class="proj-arrow">→</span>
+        <div class="proj-langs">
+          <a href="banach.html" class="lang-btn">EN →</a>
+        </div>
       </div>
       <p class="proj-desc">The most counterintuitive theorem in mathematics, visualized. Watch the free group F₂ act on the sphere via rotations, and see how a ball can be decomposed and reassembled into two identical copies of itself.</p>
       <div class="proj-tags">
@@ -322,13 +327,16 @@ header { animation: fadeIn 0.8s ease both; }
         <span class="proj-tag">Paradoxical Decomposition</span>
         <span class="proj-tag">3D Visualization</span>
       </div>
-    </a>
+    </div>
 
-    <a class="project-link" href="drum.html">
+    <div class="project-entry">
       <div class="proj-top">
         <span class="proj-number">02</span>
         <span class="proj-title">Can You Hear the Shape of a Drum?</span>
-        <span class="proj-arrow">→</span>
+        <div class="proj-langs">
+          <a href="drum.html" class="lang-btn">EN</a>
+          <a href="drum_ko.html" class="lang-btn">한국어</a>
+        </div>
       </div>
       <p class="proj-desc">Mark Kac's famous 1966 question, made audible. Strike virtual drums, see their vibrational modes as Bessel-function eigenstates, and hear why two differently shaped drums can produce identical spectra.</p>
       <div class="proj-tags">
@@ -337,28 +345,16 @@ header { animation: fadeIn 0.8s ease both; }
         <span class="proj-tag">Eigenvalues</span>
         <span class="proj-tag">Modal Synthesis</span>
       </div>
-    </a>
+    </div>
 
-    <a class="project-link" href="drum_ko.html">
-      <div class="proj-top">
-        <span class="proj-number">02k</span>
-        <span class="proj-title">드럼의 모양을 들을 수 있을까? <span style="font-family:var(--f-body);font-size:0.8rem;color:var(--muted);font-weight:300;">&ensp;Korean edition</span></span>
-        <span class="proj-arrow">→</span>
-      </div>
-      <p class="proj-desc">Mark Kac의 1966년 질문 — 스펙트럼 기하학, 고유모드, GWW 드럼을 인터랙티브로 탐험합니다. Korean-language version of the drum shape problem.</p>
-      <div class="proj-tags">
-        <span class="proj-tag">한국어</span>
-        <span class="proj-tag">Spectral Geometry</span>
-        <span class="proj-tag">Bessel Functions</span>
-        <span class="proj-tag">Modal Synthesis</span>
-      </div>
-    </a>
-
-    <a class="project-link" href="sound.html">
+    <div class="project-entry">
       <div class="proj-top">
         <span class="proj-number">03</span>
         <span class="proj-title">The Mathematics of Sound</span>
-        <span class="proj-arrow">→</span>
+        <div class="proj-langs">
+          <a href="sound.html" class="lang-btn">EN</a>
+          <a href="sound_ko.html" class="lang-btn">한국어</a>
+        </div>
       </div>
       <p class="proj-desc">From Pythagoras to Fourier to your smartphone. Build waveforms from harmonics, compare tuning systems across instruments, and explore how the cochlea performs frequency analysis — all with live-synthesized audio.</p>
       <div class="proj-tags">
@@ -367,28 +363,16 @@ header { animation: fadeIn 0.8s ease both; }
         <span class="proj-tag">Acoustics</span>
         <span class="proj-tag">Web Audio</span>
       </div>
-    </a>
+    </div>
 
-    <a class="project-link" href="sound_ko.html">
-      <div class="proj-top">
-        <span class="proj-number">03k</span>
-        <span class="proj-title">소리의 수학 <span style="font-family:var(--f-body);font-size:0.8rem;color:var(--muted);font-weight:300;">&ensp;Korean edition</span></span>
-        <span class="proj-arrow">→</span>
-      </div>
-      <p class="proj-desc">피타고라스에서 푸리에, 스마트폰까지. 배음 합성기, 조율법 비교, 달팽이관 시뮬레이터를 한국어로 탐험합니다. Korean-language version of the mathematics of sound.</p>
-      <div class="proj-tags">
-        <span class="proj-tag">한국어</span>
-        <span class="proj-tag">Fourier Analysis</span>
-        <span class="proj-tag">Temperament</span>
-        <span class="proj-tag">Acoustics</span>
-      </div>
-    </a>
-
-    <a class="project-link" href="hyperbolic.html">
+    <div class="project-entry">
       <div class="proj-top">
         <span class="proj-number">04</span>
         <span class="proj-title">Living in a Hyperbolic Space</span>
-        <span class="proj-arrow">→</span>
+        <div class="proj-langs">
+          <a href="hyperbolic.html" class="lang-btn">EN</a>
+          <a href="hyperbolic_ko.html" class="lang-btn">한국어</a>
+        </div>
       </div>
       <p class="proj-desc">Where the parallel postulate fails and triangles contain less than 180°. Walk through hyperbolic 3-space, tile the infinite plane, explore Teichmüller space, and follow Mirzakhani's path from geodesics to the Witten conjecture.</p>
       <div class="proj-tags">
@@ -397,22 +381,7 @@ header { animation: fadeIn 0.8s ease both; }
         <span class="proj-tag">Teichmüller Space</span>
         <span class="proj-tag">Mirzakhani</span>
       </div>
-    </a>
-
-    <a class="project-link" href="hyperbolic_ko.html">
-      <div class="proj-top">
-        <span class="proj-number">04k</span>
-        <span class="proj-title">쌍곡 공간에서 살아가기 <span style="font-family:var(--f-body);font-size:0.8rem;color:var(--muted);font-weight:300;">&ensp;Korean edition</span></span>
-        <span class="proj-arrow">→</span>
-      </div>
-      <p class="proj-desc">평행선 공리가 성립하지 않는 세계. 쌍곡 3차원 공간을 걷고, 테셀레이션을 탐험하고, 미르자하니의 부피 재귀까지 — 한국어로. Korean-language version of the hyperbolic space exploration.</p>
-      <div class="proj-tags">
-        <span class="proj-tag">한국어</span>
-        <span class="proj-tag">Hyperbolic Geometry</span>
-        <span class="proj-tag">Tessellations</span>
-        <span class="proj-tag">Mirzakhani</span>
-      </div>
-    </a>
+    </div>
 
   </div>
 
