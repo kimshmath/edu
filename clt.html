@@ -1021,70 +1021,176 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 /* ===== POLLING CANVAS ===== */
 (function(){
-  const cv=document.getElementById('poll-canvas');
-  const slider=document.getElementById('poll-slider');
-  if(!cv||!slider)return;
-  const ctx=cv.getContext('2d');
-  const P=0.52;
+  const cv = document.getElementById('poll-canvas');
+  const slider = document.getElementById('poll-slider');
+  if (!cv || !slider) return;
+  const ctx = cv.getContext('2d');
 
-  function resize(){cv.width=cv.offsetWidth;cv.height=cv.offsetHeight}
-  resize();new ResizeObserver(resize).observe(cv);
+  // Fixed true values: A leads 52 vs 48
+  const PA = 0.52, PB = 0.48;
+  // FIXED x-axis: always 0.25 to 0.75 — so curves visibly narrow as n grows
+  const LO = 0.25, HI = 0.75;
 
-  function render(n){
-    const W=cv.width,H=cv.height;
-    ctx.clearRect(0,0,W,H);
-    const se=Math.sqrt(P*(1-P)/n);
-    const moe=1.96*se;
-    const lo=P-4*se,hi=P+4*se;
-    // Bell curve
-    ctx.strokeStyle='rgba(110,162,224,0.9)';ctx.lineWidth=3;ctx.beginPath();
-    for(let x=0;x<W;x+=2){
-      const r=lo+(x/W)*(hi-lo);
-      const z=(r-P)/se;
-      const pdf=Math.exp(-.5*z*z)/(se*Math.sqrt(2*Math.PI));
-      const y=H-15-pdf*se*(H-25)*4.5;
-      if(x===0)ctx.moveTo(x,Math.max(5,y));else ctx.lineTo(x,Math.max(5,y));
+  let curN = 1200, animN = 1200, rafId = null;
+
+  function resize() {
+    cv.width  = cv.offsetWidth  || 320;
+    cv.height = cv.offsetHeight || 220;
+  }
+  resize();
+  new ResizeObserver(() => { resize(); render(curN); }).observe(cv);
+
+  function gauss(x, mu, se) {
+    const z = (x - mu) / se;
+    return Math.exp(-0.5 * z * z) / (se * Math.sqrt(2 * Math.PI));
+  }
+
+  // Numerical overlap (fraction of A's area covered by B)
+  function overlapPct(seA, seB) {
+    const steps = 500;
+    const dx = (HI - LO) / steps;
+    let ov = 0, tot = 0;
+    for (let i = 0; i <= steps; i++) {
+      const p = LO + i * dx;
+      ov  += Math.min(gauss(p, PA, seA), gauss(p, PB, seB));
+      tot += gauss(p, PA, seA);
     }
-    ctx.stroke();
-    // Fill ±MOE
-    const xLo=(P-moe-lo)/(hi-lo)*W;
-    const xHi=(P+moe-lo)/(hi-lo)*W;
+    return Math.min(1, ov / tot);
+  }
+
+  function render(n) {
+    const W = cv.width, H = cv.height;
+    ctx.clearRect(0, 0, W, H);
+
+    const seA = Math.sqrt(PA * (1 - PA) / n);
+    const seB = Math.sqrt(PB * (1 - PB) / n);
+    const pToX = p => (p - LO) / (HI - LO) * W;
+    // Scale: tallest curve at n=5000 fills about 80% height
+    // se_min ~ 0.00707, peak ~ 56.4. We want peak*scale ~ 0.8*H
+    // Use fixed scale so height actually grows as n grows
+    const SCALE = (H - 28) / (1 / (0.007 * Math.sqrt(2 * Math.PI)));
+
+    // --- curves: fill then stroke ---
+    function drawCurve(mu, se, fillColor, strokeColor) {
+      ctx.beginPath();
+      for (let px = 0; px <= W; px++) {
+        const p = LO + (px / W) * (HI - LO);
+        const pdf = gauss(p, mu, se);
+        const y = H - 20 - pdf * SCALE;
+        if (px === 0) ctx.moveTo(px, Math.max(4, y));
+        else ctx.lineTo(px, Math.max(4, y));
+      }
+      ctx.lineTo(W, H - 20); ctx.lineTo(0, H - 20); ctx.closePath();
+      ctx.fillStyle = fillColor; ctx.fill();
+
+      ctx.beginPath();
+      for (let px = 0; px <= W; px++) {
+        const p = LO + (px / W) * (HI - LO);
+        const pdf = gauss(p, mu, se);
+        const y = H - 20 - pdf * SCALE;
+        if (px === 0) ctx.moveTo(px, Math.max(4, y));
+        else ctx.lineTo(px, Math.max(4, y));
+      }
+      ctx.strokeStyle = strokeColor; ctx.lineWidth = 2.5; ctx.stroke();
+    }
+
+    // Overlap shaded region (min of the two PDFs)
     ctx.beginPath();
-    for(let x=Math.max(0,xLo);x<=Math.min(W,xHi);x+=2){
-      const r=lo+(x/W)*(hi-lo);
-      const z=(r-P)/se;
-      const pdf=Math.exp(-.5*z*z)/(se*Math.sqrt(2*Math.PI));
-      const y=H-15-pdf*se*(H-25)*4.5;
-      if(x===Math.max(0,xLo))ctx.moveTo(x,Math.max(5,y));else ctx.lineTo(x,Math.max(5,y));
+    for (let px = 0; px <= W; px++) {
+      const p  = LO + (px / W) * (HI - LO);
+      const y  = H - 20 - Math.min(gauss(p, PA, seA), gauss(p, PB, seB)) * SCALE;
+      if (px === 0) ctx.moveTo(px, Math.max(4, y));
+      else ctx.lineTo(px, Math.max(4, y));
     }
-    ctx.lineTo(Math.min(W,xHi),H-15);ctx.lineTo(Math.max(0,xLo),H-15);ctx.closePath();
-    ctx.fillStyle='rgba(110,162,224,0.15)';ctx.fill();
-    // True proportion line
-    const cx=W/2;
-    ctx.strokeStyle='rgba(201,167,72,0.7)';ctx.lineWidth=2;ctx.setLineDash([]);
-    ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,H-15);ctx.stroke();
-    // MOE dashes
-    ctx.strokeStyle='rgba(201,167,72,0.35)';ctx.lineWidth=1;ctx.setLineDash([4,5]);
-    ctx.beginPath();ctx.moveTo(xLo,0);ctx.lineTo(xLo,H-15);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(xHi,0);ctx.lineTo(xHi,H-15);ctx.stroke();
+    ctx.lineTo(W, H - 20); ctx.lineTo(0, H - 20); ctx.closePath();
+    ctx.fillStyle = 'rgba(200,80,100,0.28)'; ctx.fill();
+
+    drawCurve(PA, seA, 'rgba(80,150,230,0.18)', 'rgba(100,170,255,0.95)');
+    drawCurve(PB, seB, 'rgba(220,80,100,0.18)', 'rgba(240,100,120,0.95)');
+
+    // Baseline
+    ctx.strokeStyle = 'rgba(255,255,255,0.10)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, H-20); ctx.lineTo(W, H-20); ctx.stroke();
+
+    // Vertical mean lines
+    const xA = pToX(PA), xB = pToX(PB);
+    ctx.setLineDash([4, 5]); ctx.lineWidth = 1.5;
+    ctx.strokeStyle = 'rgba(100,170,255,0.55)';
+    ctx.beginPath(); ctx.moveTo(xA, H-20); ctx.lineTo(xA, 6); ctx.stroke();
+    ctx.strokeStyle = 'rgba(240,100,120,0.55)';
+    ctx.beginPath(); ctx.moveTo(xB, H-20); ctx.lineTo(xB, 6); ctx.stroke();
     ctx.setLineDash([]);
-    // Margin label
-    ctx.fillStyle='rgba(201,167,72,0.85)';ctx.font='12px "Space Mono",monospace';
-    ctx.textAlign='center';ctx.fillText('±'+( moe*100).toFixed(1)+'%',cx,H-2);
-    ctx.textAlign='left';
+
+    // MOE brackets
+    const moeA = 1.96 * seA;
+    function bracket(cx, moe, col) {
+      const x1 = pToX(cx - moe), x2 = pToX(cx + moe);
+      const by = H - 6;
+      ctx.strokeStyle = col; ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x1, by - 5); ctx.lineTo(x1, by); ctx.lineTo(x2, by); ctx.lineTo(x2, by - 5);
+      ctx.stroke();
+    }
+    bracket(PA, moeA, 'rgba(100,170,255,0.8)');
+    bracket(PB, 1.96 * seB, 'rgba(240,100,120,0.8)');
+
+    // Candidate labels
+    ctx.font = 'bold 12px "Space Mono",monospace';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(130,190,255,0.95)'; ctx.fillText('A  52%', xA, 20);
+    ctx.fillStyle = 'rgba(255,120,140,0.95)'; ctx.fillText('B  48%', xB, 20);
+
+    // x-axis tick marks at 10% intervals
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.font = '9px "Space Mono",monospace';
+    ctx.textAlign = 'center';
+    for (let p = 0.30; p <= 0.70; p += 0.10) {
+      const x = pToX(p);
+      ctx.beginPath(); ctx.moveTo(x, H-20); ctx.lineTo(x, H-14); ctx.strokeStyle='rgba(255,255,255,0.15)'; ctx.lineWidth=1; ctx.stroke();
+      ctx.fillStyle='rgba(255,255,255,0.2)';
+      ctx.fillText(Math.round(p*100)+'%', x, H-3);
+    }
+    ctx.textAlign = 'left';
+
+    // Update stats + verdict
+    const ov = overlapPct(seA, seB);
+    const moe = moeA * 100;
+    const el = id => document.getElementById(id);
+    if (el('poll-n-display')) el('poll-n-display').textContent = n.toLocaleString();
+    if (el('poll-moe'))     el('poll-moe').textContent = '±' + moe.toFixed(1) + '%';
+    if (el('poll-overlap')) el('poll-overlap').textContent = Math.round(ov * 100) + '%';
+
+    const vt = el('poll-verdict-text');
+    if (vt) {
+      if (ov > 0.38) {
+        vt.textContent = 'TOO CLOSE TO CALL';
+        vt.style.cssText = 'font-family:"Space Mono",monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;padding:.35rem 1.2rem;border-radius:100px;background:rgba(192,69,96,0.2);border:1px solid rgba(192,69,96,0.5);color:#e07090;transition:all .4s';
+      } else if (ov > 0.06) {
+        vt.textContent = 'A LIKELY LEADS';
+        vt.style.cssText = 'font-family:"Space Mono",monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;padding:.35rem 1.2rem;border-radius:100px;background:rgba(201,167,72,0.15);border:1px solid rgba(201,167,72,0.45);color:#c9a748;transition:all .4s';
+      } else {
+        vt.textContent = 'A WINS — CLEAR MAJORITY';
+        vt.style.cssText = 'font-family:"Space Mono",monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;padding:.35rem 1.2rem;border-radius:100px;background:rgba(94,196,122,0.15);border:1px solid rgba(94,196,122,0.45);color:#5ec47a;transition:all .4s';
+      }
+    }
   }
 
-  function update(){
-    const n=parseInt(slider.value);
-    const moe=1.96*Math.sqrt(P*(1-P)/n)*100;
-    const el=(id)=>document.getElementById(id);
-    if(el('poll-n-display'))el('poll-n-display').textContent=n.toLocaleString();
-    if(el('poll-moe'))el('poll-moe').textContent='±'+moe.toFixed(1)+'%';
-    if(el('poll-range'))el('poll-range').textContent=(P*100-moe).toFixed(1)+'% – '+(P*100+moe).toFixed(1)+'%';
-    render(n);
+  // Smooth animated interpolation when slider moves
+  function animateTo(target) {
+    curN = target;
+    if (rafId) cancelAnimationFrame(rafId);
+    function step() {
+      const diff = curN - animN;
+      if (Math.abs(diff) < 0.8) { animN = curN; render(Math.round(animN)); rafId = null; return; }
+      animN += diff * 0.20;
+      render(Math.round(animN));
+      rafId = requestAnimationFrame(step);
+    }
+    rafId = requestAnimationFrame(step);
   }
-  slider.addEventListener('input',update);
-  update();
+
+  slider.addEventListener('input', () => animateTo(parseInt(slider.value)));
+  resize(); render(1200);
 })();
 
 /* ===== INSURANCE CANVAS ===== */
