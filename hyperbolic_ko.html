@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>쌍곡 공간에서 살아가기</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -173,6 +173,10 @@ input[type=range]::-moz-range-thumb{
   min-width:2.6rem;transition:background .12s}
 .h3btn:active{background:rgba(201,168,76,.28)}
 .h3-row{display:flex;gap:4px;justify-content:center}
+
+/* ─── Floating badge ─── */
+.floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:lowercase;color:#8db830;background:transparent;padding:.35rem .7rem;text-decoration:none;transition:color .25s,text-shadow .25s,transform .25s;text-shadow:0 0 6px rgba(141,184,48,.4),0 0 16px rgba(141,184,48,.15)}
+.floating-badge:hover{color:#a8d43a;text-shadow:0 0 8px rgba(141,184,48,.65),0 0 22px rgba(141,184,48,.28);transform:translateY(-1px)}
 </style>
 </head>
 <body>
@@ -186,7 +190,7 @@ input[type=range]::-moz-range-thumb{
     <p class="hero-sub">평행선 공리가 성립하지 않고, 삼각형의 내각의 합이 180°보다 작으며, 무한한 세계가 유한한 원반 안에 숨어 있는 공간.</p>
     
     
-    <p style="font-family:'Cormorant Garamond',serif;font-size:.82rem;letter-spacing:.22em;color:rgba(201,168,76,0.62);text-transform:uppercase;margin-top:-.4rem;margin-bottom:2.4rem">kimsh.kr/edu</p>
+    <p style="font-family:'Cormorant Garamond',serif;font-size:.82rem;letter-spacing:.22em;color:rgba(201,168,76,0.62);text-transform:uppercase;margin-top:-.4rem;margin-bottom:2.4rem"></p>
     <div class="hero-scroller">
       <div class="scroll-bar"></div>
       <span>탐험하기</span>
@@ -1640,13 +1644,17 @@ input[type=range]::-moz-range-thumb{
 </section>
 
 <footer>
-  <span class="name">김상현 · 고등과학원</span>
   <p>푸앵카레 원판 모델 · 삼각군 (2, p, q) 테셀레이션 · 가우스–보네 · 타이히뮐러 공간 · 미르자하니–위튼</p>
   <p style="margin-top:.5rem;font-size:.8rem">
     M.C. 에셔의 <em>원의 한계</em> 연작에서 영감 ·
     로이스 넬슨 &amp; 헨리 세게르만, <em>쌍곡 벌집 구조 시각화</em> ·
     W.P. 서스턴, <em>3차원 기하학과 위상수학</em>
   </p>
+  <div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:.2rem;text-align:left">
+    <div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;font-weight:400;color:#edeef2;letter-spacing:-.01em">Sang-hyun Kim</div>
+    <div style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:300;color:#5c6178;letter-spacing:.01em">Korea Institute for Advanced Study</div>
+    <a href="https://kimsh.kr" style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;display:inline-block;margin-top:.25rem">kimsh.kr</a>
+  </div>
 </footer>
 <script>
 "use strict";
@@ -3359,5 +3367,7 @@ document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 // ════════════════════════════════════════════════
 
 </script>
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
 </body>
 </html>

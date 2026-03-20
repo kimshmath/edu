@@ -12,7 +12,7 @@
 <link rel="manifest" id="pwa-manifest">
 <title>드럼의 모양을 들을 수 있을까?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Space+Mono:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -175,15 +175,9 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 @keyframes aoGlow{0%,100%{box-shadow:0 0 16px rgba(201,167,72,.2)}50%{box-shadow:0 0 36px rgba(201,167,72,.5)}}
 .ao-btn:hover{background:rgba(201,167,72,.1);box-shadow:0 0 40px rgba(201,167,72,.4)}
 
-/* ===== BRAND CORNER — fluorescent, left-bottom only ===== */
-#brand-corner{position:fixed;bottom:1.8rem;left:1.8rem;z-index:998;transition:transform .25s}
-#brand-corner:hover{transform:translateY(-2px)}
-#brand-corner a{font-family:'Space Mono',monospace;font-size:.95rem;letter-spacing:.22em;text-decoration:none;text-transform:lowercase;color:#00ffaa;display:flex;align-items:center;transition:color .3s}
-#brand-corner a:hover{color:#80ffda;text-shadow:0 0 18px #00ffaa}
-/* Remove hud-brand from view */
-.hud-brand{display:none}
-.s-brand{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18em;text-transform:lowercase;color:var(--border);float:right;margin-top:.1rem;text-decoration:none;transition:color .2s}
-.s-brand:hover{color:var(--gold)}
+/* ===== FLOATING BADGE ===== */
+.floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:lowercase;color:#8db830;background:transparent;padding:.35rem .7rem;text-decoration:none;transition:color .25s,text-shadow .25s,transform .25s;text-shadow:0 0 6px rgba(141,184,48,.4),0 0 16px rgba(141,184,48,.15)}
+.floating-badge:hover{color:#a8d43a;text-shadow:0 0 8px rgba(141,184,48,.65),0 0 22px rgba(141,184,48,.28);transform:translateY(-1px)}
 
 /* ===== FLOATING SECTION NAV ===== */
 #sec-nav{position:fixed;right:1.2rem;top:50%;transform:translateY(-50%);z-index:990;display:flex;flex-direction:column;gap:.35rem}
@@ -279,9 +273,6 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 .future-card-purple{background:linear-gradient(160deg,#0a0214,#10011e);border:1px solid #9060d055}
 .future-card-purple .future-num,.future-card-purple .future-tag{color:#b080e0}
 .future-card-purple:hover{box-shadow:0 16px 48px rgba(144,96,208,.18)}
-.footer-brand a{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:lowercase;color:#00ffaa;text-decoration:none;transition:color .2s,text-shadow .2s}
-.footer-brand a:hover{color:#80ffda;text-shadow:0 0 18px #00ffaa}
-.footer-brand-sep{color:var(--border);font-size:.8rem}
 /* ===== BEAT PICKER — fix visibility ===== */
 .bp{font-family:'Space Mono',monospace;font-size:.62rem;padding:.4rem .8rem;border:1.5px solid #2a2e45;border-radius:100px;background:#0d0f1a;color:#9099bc;cursor:pointer;transition:all .2s;white-space:nowrap}
 .bp:hover{border-color:#c9a74888;color:#c9a748}
@@ -352,14 +343,11 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
   <div class="sn-dot" data-target="sec-nodal">   <span class="sn-dot-label">§07 마디 영역</span> <span class="sn-dot-pip"></span></div>
 </nav>
 
-<!-- BRAND CORNER -->
-<div id="brand-corner"><a href="https://kimsh.kr" target="_blank" rel="noopener">kimsh.kr</a></div>
-
 <!-- AUDIO START OVERLAY -->
 <div id="audio-overlay">
   <div class="ao-drum">🥁</div>
   <div class="ao-title">드럼의 모양을 들을 수 있을까?</div>
-  <div class="ao-sub">kimsh.kr &nbsp;·&nbsp; Interactive spectral geometry</div>
+  <div class="ao-sub">인터랙티브 스펙트럼 기하학</div>
 
   <!-- Silent switch warning — most common iOS audio issue -->
   <div style="margin:1rem auto 1.5rem;max-width:320px;background:rgba(192,69,96,.12);border:1px solid rgba(192,69,96,.4);border-radius:8px;padding:.7rem 1.1rem;font-family:Space Mono,monospace;font-size:.6rem;letter-spacing:.05em;color:#e08090;text-align:center;line-height:1.8">
@@ -386,7 +374,6 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
     <span id="pitch-val">1×</span>
   </div>
   <button id="mute-btn">♪ 소리 켜짐</button>
-  <a href="https://kimsh.kr" target="_blank" rel="noopener" class="hud-brand">kimsh.kr</a>
 </div>
 
 <!-- HERO -->
@@ -394,7 +381,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
   <canvas id="hero-canvas"></canvas>
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <div class="hero-kicker">스펙트럼 기하학 · 푸리에 해석 · 수리물리학 &nbsp;·&nbsp; <a href="https://kimsh.kr" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;letter-spacing:.38em">kimsh.kr</a></div>
+    <div class="hero-kicker">스펙트럼 기하학 · 푸리에 해석 · 수리물리학</div>
     <h1 class="hero-title">
       <span class="title-line"><span class="title-word tl1">드럼의</span></span>
       <span class="title-line"><span class="title-word tl2 hero-italic">모양을</span>&ensp;<span class="title-word tl3">들을 수</span></span>
@@ -410,7 +397,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 
 <!-- §01 STRIKE -->
 <div class="wrap fi" id="sec-strike">
-  <div class="s-num">§ 01 — 드럼의 목소리 <a href="https://kimsh.kr" target="_blank" class="s-brand">kimsh.kr</a></div>
+  <div class="s-num">§ 01 — 드럼의 목소리</div>
   <h2 class="s-title">두드리고, 듣고,<br>분해하라</h2>
   <div class="strike-layout">
     <div>
@@ -438,7 +425,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 
 <!-- §02 PHASORS -->
 <div class="wrap fi" id="sec-phasor">
-  <div class="s-num">§ 02 — 회전 벡터로서의 푸리에 <a href="https://kimsh.kr" target="_blank" class="s-brand">kimsh.kr</a></div>
+  <div class="s-num">§ 02 — 회전 벡터로서의 푸리에</div>
   <h2 class="s-title">페이저<br>성좌</h2>
   <div class="phasor-layout">
     <div>
@@ -467,7 +454,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 
 <!-- §03 MODE GALLERY -->
 <div class="wrap fi" id="sec-modes">
-  <div class="s-num">§ 03 — 원형 드럼의 고유모드 <a href="https://kimsh.kr" target="_blank" class="s-brand">kimsh.kr</a></div>
+  <div class="s-num">§ 03 — 원형 드럼의 고유모드</div>
   <h2 class="s-title">순수한 소리의<br>형태들</h2>
   <div class="prose">
     <p>각 카드는 순수한 진동수로 진동하는 단일 고유모드 <span class="math">φₘₙ = Jₘ(jₘₙ r/R)cos(mθ)</span>입니다. 카드를 클릭하면 그 음만 듣고 볼 수 있습니다. 고차 모드는 더 높고 빠르게 감쇠합니다 — 드럼 소리는 높은 음에서 낮은 음으로 사그라집니다.</p>
@@ -480,7 +467,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 
 <!-- §04 BEATING -->
 <div class="wrap fi" id="sec-beat">
-  <div class="s-num">§ 04 — 간섭과 맥놀이 <a href="https://kimsh.kr" target="_blank" class="s-brand">kimsh.kr</a></div>
+  <div class="s-num">§ 04 — 간섭과 맥놀이</div>
   <h2 class="s-title">두 모드가<br>충돌할 때</h2>
   <div class="prose" style="margin-bottom:2rem">
     <p>두 모드의 고유값이 가까우면 중첩이 <em>맥놀이</em>를 일으킵니다 — 진폭이 <span class="math">|ω₁−ω₂|/2</span>의 속도로 천천히 진동합니다. 쌍을 선택하고 재생 버튼을 눌러 직접 들어보세요.</p>
@@ -554,7 +541,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 
 <!-- §05 WEYL -->
 <div class="wrap fi" id="sec-weyl">
-  <div class="s-num">§ 05 — 스펙트럼에 담긴 넓이 <a href="https://kimsh.kr" target="_blank" class="s-brand">kimsh.kr</a></div>
+  <div class="s-num">§ 05 — 스펙트럼에 담긴 넓이</div>
   <h2 class="s-title">바일 법칙:<br>넓이를 들을 수 있다</h2>
   <div class="weyl-layout">
     <div>
@@ -582,7 +569,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 
 <!-- §06 ISOSPECTRAL GWW -->
 <div class="wrap fi" id="sec-iso">
-  <div class="s-num">§ 06 — Gordon, Webb &amp; Wolpert (1992) <a href="https://kimsh.kr" target="_blank" class="s-brand">kimsh.kr</a></div>
+  <div class="s-num">§ 06 — Gordon, Webb &amp; Wolpert (1992)</div>
   <h2 class="s-title">모양을 항상<br>들을 수는 없다</h2>
 
   <div class="prose">
@@ -730,7 +717,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 
 <!-- §07 NODAL DOMAINS -->
 <div class="wrap fi" id="sec-nodal">
-  <div class="s-num">§ 07 — 마디 영역 <a href="https://kimsh.kr" target="_blank" class="s-brand">kimsh.kr</a></div>
+  <div class="s-num">§ 07 — 마디 영역</div>
   <h2 class="s-title">침묵을<br>셀 수 있을까?</h2>
 
   <div class="prose" style="max-width:760px">
@@ -934,10 +921,10 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
     <div class="ref-item"><strong>J. Jung &amp; S. Zelditch</strong> — "Boundedness of the Number of Nodal Domains for Eigenfunctions of Generic Kaluza-Klein 3-folds." <em>Ann. Inst. Fourier</em> (2020).</div>
   </div>
   <p class="epilogue">베셀 함수: 10⁻¹⁵ 정밀도. 고유값 정확: j²ₘₙ/R². 오디오: Web Audio API 모달 합성, 지수 감쇠 및 음높이 활강.</p>
-  <div class="footer-brand">
-    <span class="footer-brand-sep">—</span>
-    <a href="https://kimsh.kr" target="_blank" rel="noopener">kimsh.kr</a>
-    <span class="footer-brand-sep">—</span>
+  <div class="footer-attr" style="margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border)">
+    <div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;font-weight:400;color:#edeef2;letter-spacing:-.01em">Sang-hyun Kim</div>
+    <div style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:300;color:#5c6178;letter-spacing:.01em;margin-top:.2rem">Korea Institute for Advanced Study</div>
+    <a href="https://kimsh.kr" style="font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;display:inline-block;margin-top:.25rem">kimsh.kr</a>
   </div>
 </footer>
 
@@ -2719,5 +2706,7 @@ self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>
     <span class="pwa-close" id="pwa-close-btn">✕</span>
   </div>
 </div>
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
 </body>
 </html>

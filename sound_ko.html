@@ -1028,6 +1028,9 @@ footer {
   .key-color-grid { grid-template-columns: repeat(6, 1fr); }
   .extreme-presets { grid-template-columns: repeat(2, 1fr); }
 }
+/* ─── Floating badge ─── */
+.floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:lowercase;color:#8db830;background:transparent;padding:.35rem .7rem;text-decoration:none;transition:color .25s,text-shadow .25s,transform .25s;text-shadow:0 0 6px rgba(141,184,48,.4),0 0 16px rgba(141,184,48,.15)}
+.floating-badge:hover{color:#a8d43a;text-shadow:0 0 8px rgba(141,184,48,.65),0 0 22px rgba(141,184,48,.28);transform:translateY(-1px)}
 
 </style>
 </head>
@@ -1519,6 +1522,11 @@ footer {
 <footer>
   <p>소리의 수학 — 인터랙티브 탐험</p>
   <p style="margin-top: 0.3rem; font-size: 0.7rem;">이 페이지의 모든 소리는 Web Audio API로 실시간 합성됩니다. 녹음 없이, 오직 수학으로.</p>
+  <div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:.2rem">
+    <div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;font-weight:400;color:#edeef2;letter-spacing:-.01em">Sang-hyun Kim</div>
+    <div style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:300;color:#5c6178;letter-spacing:.01em">Korea Institute for Advanced Study</div>
+    <a href="https://kimsh.kr" style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;display:inline-block;margin-top:.25rem">kimsh.kr</a>
+  </div>
 </footer>
 
 <script>
@@ -2924,5 +2932,7 @@ function bachPlayAll() {
 }
 
 </script>
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
 </body>
 </html>
