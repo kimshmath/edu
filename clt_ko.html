@@ -27,7 +27,7 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',Georgia,se
 .hero-overlay{position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 50% 50%,transparent 20%,rgba(5,6,12,.75) 65%,rgba(5,6,12,.97) 100%);pointer-events:none}
 .hero-content{position:relative;z-index:10;text-align:center;padding:2rem;pointer-events:none}
 .hero-kicker{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);margin-bottom:2.2rem;opacity:0;animation:fadeUp .9s .2s forwards}
-.hero-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3rem,6vw,5.5rem);line-height:1.02;letter-spacing:-.01em;color:var(--cream)}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2.8rem,7vw,5.5rem);line-height:1.02;letter-spacing:-.01em;color:var(--cream)}
 .title-line{display:block;overflow:hidden}
 .title-word{display:inline-block;opacity:0;transform:translateY(100%);animation:wordIn .85s cubic-bezier(.22,1,.36,1) forwards}
 .tl1{animation-delay:.4s}.tl2{animation-delay:.55s}.tl3{animation-delay:.7s}
@@ -51,22 +51,31 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',Georgia,se
 .panel h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.25rem;color:var(--gold);margin-bottom:1rem}
 
 /* ===== SPECIFIC UI ===== */
-.two-col{display:grid;grid-template-columns:1fr 1.1fr;gap:2.5rem;align-items:start;margin-top:2.5rem}
-@media(max-width:720px){.two-col{grid-template-columns:1fr}}
+.grid-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:2.5rem;align-items:start;margin-top:2.5rem}
+@media(max-width:800px){.grid-layout{grid-template-columns:1fr}}
 .draw-canvas{width:100%;aspect-ratio:2/1;background:var(--bg);border-radius:6px;border:1px solid var(--border);cursor:crosshair;touch-action:none;}
-.sim-canvas{width:100%;aspect-ratio:3/2;background:var(--bg);border-radius:6px;border:1px solid var(--border);margin-top:1rem;display:block;}
+.sim-canvas{width:100%;aspect-ratio:4/3;background:var(--bg);border-radius:6px;border:1px solid var(--border);margin-top:1rem;display:block;}
+.galton-canvas{width:100%;max-width:600px;background:var(--bg);border-radius:6px;border:1px solid var(--border);margin:2rem auto;display:block;}
 
-.controls{display:flex;gap:1rem;margin-top:1rem;align-items:center}
+.controls{display:flex;gap:1.5rem;margin-top:1rem;align-items:center}
 .btn{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;padding:.5rem 1.2rem;border:1px solid var(--teal);color:var(--teal);background:transparent;border-radius:100px;cursor:pointer;transition:all .2s;}
 .btn:hover{background:var(--surface);box-shadow:0 0 10px rgba(34,181,170,.3)}
 
 /* Interactive Grid for theorems */
 .theory-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2.5rem}
 @media(max-width:760px){.theory-grid{grid-template-columns:1fr}}
-.theory-card{padding:1.6rem;border-radius:12px;border:1px solid var(--border);background:linear-gradient(145deg, #0a0d18, #05060c);position:relative;overflow:hidden;}
+.theory-card{padding:1.6rem;border-radius:12px;border:1px solid var(--border);background:linear-gradient(145deg, #0a0d18, #05060c);position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s;}
+.theory-card:hover{transform:translateY(-5px)}
 .theory-card::before{content:'';position:absolute;inset:0;opacity:.04;background:repeating-linear-gradient(45deg,currentColor 0,currentColor 1px,transparent 1px,transparent 8px)}
-.theory-card h4{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.35rem;color:var(--cream);margin-bottom:1rem}
+.theory-card h4{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.35rem;color:var(--cream);margin-bottom:1rem;line-height:1.2}
 .theory-year{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.2em;color:var(--gold);margin-bottom:.5rem;text-transform:uppercase}
+
+.timeline{position:relative;padding-left:2rem;margin-top:1.5rem}
+.timeline::before{content:'';position:absolute;left:.45rem;top:.5rem;bottom:.5rem;width:1px;background:var(--border)}
+.tl-item{position:relative;margin-bottom:1.5rem}
+.tl-item::before{content:'';position:absolute;left:-1.62rem;top:.45rem;width:8px;height:8px;border-radius:50%;background:var(--gold);border:2px solid var(--bg)}
+.tl-year{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.1em;margin-bottom:.3rem}
+.tl-body{font-size:.98rem;color:var(--text);line-height:1.65}
 
 footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding:5rem 2.5rem 4rem}
 .footer-attr{display:flex;flex-direction:column;gap:0.2rem;}
@@ -95,71 +104,123 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 </div>
 </section>
 <hr class="divider"/>
-<div class="wrap" id="sec-intro">
+<div class="wrap fi" id="sec-intro">
 <div class="s-num">§ 01 — 군중 소집</div>
-<h2 class="s-title">법칙<br/>큰 숫자</h2>
-<div class="two-col">
+<h2 class="s-title">다음에서 주문<br/>혼돈</h2>
+<div class="grid-layout">
 <div>
 <div class="prose">
-<p>정치, 생물학, 열역학에서 우리는 일관되게 다음을 관찰합니다. <em>정규분포</em> (벨 곡선)이 혼돈에서 나옵니다.</p>
-<p>수백만 명의 사람들이 누구에게 투표할지 선택하거나 꽃가루 입자가 무작위로 튀는 등 독립적이고 완전히 불규칙한 사건이 집합적으로 완벽하고 매끄러운 동일한 곡선을 형성하는 이유는 무엇입니까?</p>
-<p>무작위로 혼란스러운 소음을 시뮬레이션해 보겠습니다. 캔버스에 그림을 그려 이상한 확률 분포를 선택한 다음 1,000명의 "투표자"를 보드 아래로 떨어뜨립니다.</p>
+<p>정치, 생물학, 열역학, 금융 분야에서 우리는 일관되게 마법 같은 현상을 관찰합니다. <em>정규분포</em> (벨 곡선)은 완전한 혼돈에서 자발적으로 나타납니다.</p>
+<p>백만 명의 사람들이 누구에게 투표할지 선택하거나 수십억 개의 꽃가루 입자가 현미경 아래에서 무작위로 진동하는 것과 같이 독립적이고 근본적으로 완전히 불규칙한 사건이 전체적으로 완벽하고 동일하며 무한히 예측 가능한 곡선을 형성하는 이유는 무엇입니까?</p>
+<p>이것이 의 본질이다 <strong>중심 극한 정리</strong> (CLT). 이는 확률 이론의 비공식적 주권자입니다. 이는 많은 수의 독립 확률 변수를 더할 때마다 — <em>원래 모양과 상관없이</em> — 정규화된 합계는 가우스 벨 곡선으로 적극적으로 수렴됩니다.</p>
+<p>아래는 Francis Galton 경이 발명한 Galton 보드(Quincunx)입니다. 수백 개의 가상 공이 삼각형 그리드의 페그를 통해 떨어지도록 합니다. 각 바운스는 50/50의 독립적인 선택입니다(왼쪽 또는 오른쪽). 바닥에 어떤 모양이 쌓이는지 살펴보세요.</p>
+</div>
+<div class="callout">
+        "나는 오류 빈도의 법칙에 의해 표현된 우주 질서의 경이로운 형태만큼 상상력을 자극하기에 적합한 것은 거의 없다고 알고 있습니다. 만약 그리스인들이 이 법칙을 알았다면 이 법칙을 의인화하고 신격화했을 것입니다."
+        <cite>— 프랜시스 골턴 경</cite>
+</div>
+</div>
+<div>
+<div class="panel" style="padding:1rem; text-align:center;">
+<h3 style="margin-bottom:0.5rem">갈튼 보드</h3>
+<p style="font-size:0.8rem;color:var(--muted);font-family:'Space Mono',monospace;">공은 왼쪽이나 오른쪽으로 무작위로 튕깁니다. 선택의 합이 더미를 형성합니다.</p>
+<canvas class="galton-canvas" height="500" id="galton-canvas" width="400"></canvas>
+<button class="btn" id="btn-galton">공 1000개 떨어뜨리기</button>
+</div>
+</div>
+</div>
+</div>
+<hr class="divider"/>
+<div class="wrap fi" id="sec-conv">
+<div class="s-num">§ 02 — 확률의 기계</div>
+<h2 class="s-title">회선:<br/>곡선으로 흐려짐</h2>
+<div class="prose" style="max-width:800px; margin-bottom: 2rem;">
+<p>수학은 실제로 이것을 어떻게 달성합니까? 두 개의 독립 확률 변수를 추가하면 확률 분포는 다음과 같습니다. <em>복잡한</em>. 컨볼루션(Convolution)은 본질적으로 다른 함수의 모양을 사용하여 한 함수를 "흐리게" 하는 수학적 연산입니다. 두 개의 공정한 주사위를 굴릴 경우 합이 나올 확률은 두 개의 균일한 이산 분포가 컨볼루션되어 삼각형을 형성하는 것입니다.</p>
+<p>반복적으로 얽히면서 <em>어느</em> 그 자체로 기능하면 날카로운 모서리가 부드러워지고 평평한 고원이 둥글게 되며 꼬리가 기하급수적으로 쇠퇴합니다. 한계 내에서 모양은 컨볼루션 연산자의 매끄러운 가우스 고유 함수가 됩니다.</p>
+<p>특성 함수(확률 분포의 푸리에 변환)를 사용하면 컨볼루션이 간단한 곱셈으로 전환됩니다. 정규화된 합의 특성 함수는 한계에서 $e^{-t^2/2}$에 접근합니다. 가우스의 푸리에 변환은... 또 다른 가우스입니다!</p>
 </div>
 <div class="eq">S_N = X_1 + X_2 + \cdots + X_N
-lim_{N \to \infty} P\left( \frac{S_N - N\mu}{\sigma\sqrt{N}} \le z \right) = \Phi(z)</div>
-<div class="callout">
-        "중심 극한 정리는 확률 이론의 비공식 주권자입니다. 절대적인 혼돈 속에서 엄격하고 깨지지 않는 법칙이 형성됩니다."
-        <cite>— 우주의 질서</cite>
+lim_{N \to \infty} P\left( \frac{S_N - N\mu}{\sigma\sqrt{N}} \le z \right) = \Phi(z) = \frac{1}{\sqrt{2\pi}} \int_{-\infty}^{z} e^{-x^2/2} dx</div>
+<div class="timeline" style="margin-top:4rem;">
+<div class="s-num" style="margin-bottom:1.5rem">한도의 간략한 역사</div>
+<div class="tl-item">
+<div class="tl-year">1733 - 아브라함 드 무아브르</div>
+<div class="tl-body">도박 확률을 분석할 때 이항 분포(동전 뒤집기)에 대한 근사치로 정규 분포를 도출했습니다. 그는 개별 시험에서 벨 곡선이 나타나는 것을 처음으로 본 사람이었습니다.</div>
+</div>
+<div class="tl-item">
+<div class="tl-year">1812 - 피에르 시몽 라플라스</div>
+<div class="tl-body">드 무아브르의 연구는 동전 뒤집기 이상으로 확장되어 천문 관측의 오류는 작고 독립적인 근본 원인의 합이므로 정규 분포를 따른다는 점을 제안했습니다.</div>
+</div>
+<div class="tl-item">
+<div class="tl-year">1901년 - 알렉산드르 리아푸노프</div>
+<div class="tl-body">특성 함수(푸리에 분석)를 사용하여 중심 극한 정리에 대한 최초의 엄격한 일반 증명을 제공하여 현대 통계의 초석으로 굳혔습니다.</div>
+</div>
+</div>
+</div>
+<hr class="divider"/>
+<div class="wrap fi" id="sec-interactive">
+<div class="s-num">§ 03 — 궁극적인 테스트</div>
+<h2 class="s-title">나만의 그림 그리기<br/>혼돈</h2>
+<div class="grid-layout">
+<div>
+<div class="prose">
+<p>중심 극한 정리의 진정한 힘은 <strong>가정의 부족</strong>. 원래 분포는 대칭형, 평활형 또는 정규 분포일 필요는 없습니다. 분산이 유한한 한 평균은 정규값을 갖습니다.</p>
+<p>아래 캔버스에 말 그대로 연속적인 모양을 그립니다. 터무니없거나, 왜곡되거나, 이중 모드로 만드세요. 그런 다음 2,000개의 샘플을 떨어뜨립니다. 컴퓨터는 여러분의 미친 분포에서 완전히 추출된 샘플을 합산할 것이며 여러분은 그 결과 합이 마술처럼 종형 곡선을 형성하는 것을 보게 될 것입니다.</p>
+</div>
+<div class="panel" style="margin-top: 2rem;">
+<h3>1. 원본 PDF를 그립니다.</h3>
+<p style="font-size:0.8rem;color:var(--muted);margin-bottom:0.8rem;font-family:'Space Mono',monospace;">어머니 분포. 새로 시작하려면 닦아주세요.</p>
+<canvas class="draw-canvas" id="draw-pdf"></canvas>
+<div class="controls">
+<button class="btn" id="btn-clear" style="border-color:var(--rose); color:var(--rose);">분명한</button>
+<button class="btn" id="btn-drop">샘플 2000개 떨어뜨리기</button>
+</div>
 </div>
 </div>
 <div>
 <div class="panel">
-<h3>1. 나만의 분포 그리기(PDF)</h3>
-<p style="font-size:0.8rem;color:var(--muted);margin-bottom:0.5rem;font-family:'Space Mono',monospace;">문자 그대로 비뚤어진 모양, 이중 모양, 균일한 모양 등 연속적인 모양을 그립니다.</p>
-<canvas class="draw-canvas" id="draw-pdf"></canvas>
-<div class="controls">
-<button class="btn" id="btn-clear">분명한</button>
-<button class="btn" id="btn-drop">샘플 1000개 떨어뜨리기</button>
-</div>
-<h3 style="margin-top:2rem">2. 더 썸(플린코스)</h3>
-<p style="font-size:0.8rem;color:var(--muted);margin-bottom:0.5rem;font-family:'Space Mono',monospace;">N개의 독립 보행의 합입니다. 벨 곡선이 나타나는 것을 지켜보십시오.</p>
+<h3>2. 합계 히스토그램</h3>
+<p style="font-size:0.8rem;color:var(--muted);margin-bottom:0.5rem;font-family:'Space Mono',monospace;">$S_{12}$의 분포. 빨간색 선은 이론적 가우스 적합입니다.</p>
 <canvas class="sim-canvas" id="sim-canvas"></canvas>
 </div>
 </div>
 </div>
 </div>
 <hr class="divider"/>
-<div class="wrap" id="sec-modern">
-<div class="s-num">§ 02 — 현대적 관점</div>
+<div class="wrap fi" id="sec-modern">
+<div class="s-num">§ 04 — 현대 걸작</div>
 <h2 class="s-title">너머<br/>고전적 한계</h2>
-<div class="prose">
-<p>고전적인 중심 극한 정리는 다음과 같이 말합니다. <em>무엇</em> 발생하지만 그렇지 않습니다 <em>얼마나 빨리</em> 이런 일이 발생하거나 상호 작용하는 비독립적 시스템으로 일반화되지도 않습니다. 현대 수학은 보편성의 지평을 크게 확장했습니다.</p>
+<div class="prose" style="margin-bottom: 2rem;">
+<p>고전적인 중심 극한 정리는 다음과 같이 말합니다. <em>무엇</em> 발생하지만 그렇지 않습니다 <em>얼마나 빨리</em> 이런 일이 발생하며 상호 작용하는 비독립적 시스템으로 쉽게 일반화되지도 않습니다. 20세기에는 보편성의 지평이 확장되는 획기적인 발전이 있었습니다.</p>
 </div>
 <div class="theory-grid">
 <div class="theory-card" style="border-color: rgba(201,167,72,0.3);">
 <div class="theory-year">베리-에센(1941)</div>
 <h4 style="color:var(--gold)">융합의 속도</h4>
-<p style="font-size:0.95rem; line-height:1.6; color:var(--text)">Berry-Esseen 정리는 합계의 실제 분포와 이상적인 가우스 곡선 간의 최대 차이를 제한합니다. 이는 오류가 다음과 같은 비율로 감소한다는 것을 증명합니다. <strong>1 / √N</strong>. 특히, 세 번째 모멘트 $\rho$를 갖는 확률 변수의 경우,</p>
-<div class="math" style="margin-top:0.8rem; display:block; padding:1rem; text-align:center;">
-        $$ \sup_z |F_N(z) - \Phi(z)| \le \frac{C \cdot \rho}{\sigma^3 \sqrt{N}} $$
+<p style="font-size:0.95rem; line-height:1.6; color:var(--text)">Berry-Esseen 정리는 합계의 실제 분포와 완벽한 가우스 곡선 사이의 최대 차이를 제한합니다. 이는 오류가 다음 비율로 정확하게 감소한다는 것을 증명합니다. <strong>1 / √N</strong>. 특히, 세 번째 모멘트 $\rho$를 갖는 확률 변수의 경우,</p>
+<div class="math" style="margin-top:0.8rem; display:block; padding:1rem; text-align:center; font-size:1.1rem;">
+        $$ \sup_x |F_n(x) - \Phi(x)| \le \frac{C \cdot \rho}{\sigma^3 \sqrt{n}} $$
       </div>
-<p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-top:0.8rem">이 경계는 완전히 보편적이며 원래의 기본 분포 형태와 독립적입니다.</p>
+<p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-top:0.8rem">이 경계는 매우 치우친 분포(큰 $\rho$)가 더 느리게 수렴하지만 모두 필연적으로 1/√N 확률 속도 제한을 따릅니다.</p>
 </div>
 <div class="theory-card" style="border-color: rgba(34,181,170,0.3);">
 <div class="theory-year">찰스 스타인 (1972)</div>
 <h4 style="color:var(--teal)">스타인의 방법</h4>
-<p style="font-size:0.95rem; line-height:1.6; color:var(--text)">한계를 취하는 대신 Stein은 정규 분포를 특징짓는 미분 연산자 방정식을 발견했습니다. 변수 Z는 다음과 같은 경우에만 표준 정규입니다.</p>
-<div class="math" style="margin-top:0.8rem; display:block; padding:1rem; text-align:center;">
+<p style="font-size:0.95rem; line-height:1.6; color:var(--text)">푸리에 변환의 한계를 취하는 대신 Stein은 정규 분포를 특징짓는 미분 연산자 방정식을 발견했습니다. 부드러운 확률 변수 $Z$는 다음과 같은 경우에만 표준 정규입니다.</p>
+<div class="math" style="margin-top:0.8rem; display:block; padding:1rem; text-align:center; font-size:1.1rem;">
         $$ \mathbb{E}[Z f(Z)] = \mathbb{E}[f'(Z)] $$
       </div>
-<p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-top:0.8rem">이는 수학자들이 매우 복잡한 문제에 대해 정규 분포까지의 거리를 계산할 수 있게 함으로써 확률에 혁명을 일으켰습니다. <em>매달린</em> 네트워크 형성 및 무작위 그래프와 같은 변수.</p>
+<p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-top:0.8rem">이는 현대 확률에 혁명을 일으켰습니다. 이 미분 방정식에 대해 변수를 테스트함으로써 수학자들은 매우 복잡한 정규 곡선까지의 거리를 계산할 수 있습니다. <em>매달린</em> 네트워크 형성 및 카드 무작위 섞기와 같은 변수.</p>
 </div>
-<div class="theory-card" style="border-color: rgba(192,69,96,0.3); grid-column: span 2;">
+<div class="theory-card" style="border-color: rgba(192,69,96,0.3); grid-column: 1 / -1;">
 <div class="theory-year">위그너(1955), 트레이시-위덤(1994)</div>
 <h4 style="color:var(--rose)">무작위 행렬과 새로운 보편성</h4>
-<p style="font-size:0.95rem; line-height:1.6; color:var(--text); max-width:800px">대규모 무작위 행렬(무거운 원자핵부터 쿠에르나바카의 버스 도착 시간까지 모든 것을 모델링)의 고유값을 추적할 때 중심 극한 정리가 변환됩니다. 대량 고유값은 Wigner의 반원 법칙을 따르는 반면, 최대 고유값은 Tracy-Widom 분포(20세기 후반에 발견된 완전히 새로운 보편성 클래스를 나타내는 비대칭, 근본적으로 다른 곡선)에 따라 변동됩니다.</p>
-<div style="text-align:center; padding:2rem 0;">
-<canvas height="200" id="wigner-canvas" style="background:#000; border:1px solid #1a1d30; border-radius:8px;" width="600"></canvas>
+<div style="display:grid; grid-template-columns: 1.2fr 1fr; gap:2rem; align-items:center;">
+<p style="font-size:0.95rem; line-height:1.6; color:var(--text);">양자 역학에서 무거운 원자핵은 단일 입자가 아니라 난수로 채워진 거대한 행렬로 모델링됩니다. 이러한 거대하고 완전한 무작위 행렬의 고유값을 추적하면 중심 극한 정리가 변환됩니다.<br/><br/>벨 곡선 대신 대량 고유값은 다음을 따릅니다. <strong>위그너의 반원 법칙</strong>, 완벽한 반원을 형성합니다.<br/><br/>한편, 최대 고유값은 다음에 따라 변동합니다. <strong>트레이시-위덤 분포</strong> — 쿠에르나바카의 버스 도착부터 가장 길게 증가하는 순열의 하위 시퀀스에 이르기까지 모든 것에서 발생하는 완전히 새로운 보편성 클래스를 나타내는 비대칭적이고 근본적으로 다른 곡선입니다.</p>
+<div style="text-align:center;">
+<canvas height="240" id="wigner-canvas" style="background:#0a0c14; border:1px solid #1a1d30; border-radius:8px; width:100%; object-fit:contain;" width="400"></canvas>
+<p style="font-size:0.7rem; color:var(--muted); font-family:'Space Mono',monospace; margin-top:0.8rem">실시간 시뮬레이션: Wigner 반원을 형성하는 50×50 대칭 행렬의 고유값 추적.</p>
+</div>
 </div>
 </div>
 </div>
@@ -167,7 +228,7 @@ lim_{N \to \infty} P\left( \frac{S_N - N\mu}{\sigma\sqrt{N}} \le z \right) = \Ph
 <footer>
 <div class="footer-attr">
 <div class="footer-name">김상현</div>
-<div class="footer-inst">한국고등연구원</div>
+<div class="footer-inst">고등과학원</div>
 <a class="footer-url" href="https://kimsh.kr">kimsh.kr</a>
 </div>
 </footer>
@@ -179,102 +240,152 @@ lim_{N \to \infty} P\left( \frac{S_N - N\mu}{\sigma\sqrt{N}} \le z \right) = \Ph
 const heroCv = document.getElementById('hero-canvas');
 const hctx = heroCv.getContext('2d');
 let hw, hh;
-function resizeHero() {
-  hw = heroCv.width = window.innerWidth;
-  hh = heroCv.height = window.innerHeight;
-}
+function resizeHero() { hw = heroCv.width = window.innerWidth; hh = heroCv.height = window.innerHeight; }
 window.addEventListener('resize', resizeHero);
 resizeHero();
 
 const particles = [];
-for (let i = 0; i < 200; i++) {
+for (let i = 0; i < 250; i++) {
   particles.push({
-    x: Math.random() * hw,
-    y: Math.random() * hh,
-    vx: (Math.random() - 0.5) * 0.5,
-    vy: Math.random() * -1 - 0.2,
-    sz: Math.random() * 2 + 0.5,
-    alpha: Math.random() * 0.5 + 0.1
+    x: Math.random() * hw, y: Math.random() * hh,
+    vx: (Math.random() - 0.5) * 0.4, vy: Math.random() * -1 - 0.1,
+    sz: Math.random() * 2 + 0.5, alpha: Math.random() * 0.5 + 0.1
   });
 }
 function drawHero() {
   hctx.clearRect(0, 0, hw, hh);
   hctx.fillStyle = '#c9a748';
   particles.forEach(p => {
-    p.x += p.vx;
-    p.y += p.vy;
-    if (p.x < 0) p.x = hw;
-    if (p.x > hw) p.x = 0;
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = hw; if (p.x > hw) p.x = 0;
     if (p.y < 0) p.y = hh;
     hctx.globalAlpha = p.alpha;
-    hctx.beginPath();
-    hctx.arc(p.x, p.y, p.sz, 0, Math.PI * 2);
-    hctx.fill();
+    hctx.beginPath(); hctx.arc(p.x, p.y, p.sz, 0, Math.PI * 2); hctx.fill();
   });
   requestAnimationFrame(drawHero);
 }
 drawHero();
 
 /*
- * 2. INTERACTIVE DISTRIBUTION DRAWING
+ * 2. GALTON BOARD (Quincunx)
+ */
+const gCv = document.getElementById('galton-canvas');
+const gctx = gCv.getContext('2d');
+let gBalls = [];
+let gBins = new Array(21).fill(0);
+let gMaxBin = 1;
+
+function dropGalton() {
+  gBalls = [];
+  gBins.fill(0);
+  gMaxBin = 1;
+  for(let i=0; i<1000; i++) {
+    gBalls.push({
+      x: gCv.width / 2,
+      y: 20,
+      targetLevel: 0,
+      binIndex: 10,
+      delay: i * 0.5,
+      active: false,
+      vy: 0
+    });
+  }
+}
+document.getElementById('btn-galton').addEventListener('click', dropGalton);
+
+function drawGalton() {
+  gctx.clearRect(0,0,gCv.width,gCv.height);
+  
+  // Draw pegs
+  gctx.fillStyle = 'rgba(201,167,72,0.3)';
+  let levels = 20;
+  let pegYSpacing = 15;
+  let pegXSpacing = 15;
+  for(let row=0; row<levels; row++) {
+    let y = 40 + row * pegYSpacing;
+    let numStruts = row + 1;
+    let startX = gCv.width/2 - (numStruts*pegXSpacing)/2 + pegXSpacing/2;
+    for(let col=0; col<numStruts; col++) {
+      gctx.beginPath();
+      gctx.arc(startX + col*pegXSpacing, y, 2, 0, Math.PI*2);
+      gctx.fill();
+    }
+  }
+
+  // Draw Bins
+  gctx.fillStyle = 'rgba(34,181,170,0.6)';
+  let bw = gCv.width / 21;
+  let maxH = 120;
+  for(let i=0; i<21; i++) {
+    let h = (gBins[i] / gMaxBin) * maxH;
+    gctx.fillRect(i*bw + 1, gCv.height - h, bw-2, h);
+  }
+
+  // Animate balls
+  gctx.fillStyle = '#fff';
+  gBalls.forEach(b => {
+    if (b.delay > 0) { b.delay -= 1; return; }
+    if (!b.active) { b.active = true; }
+    if (b.targetLevel < levels) {
+      if (Math.random() > 0.5) b.binIndex += 0.5; else b.binIndex -= 0.5;
+      b.x = gCv.width/2 + (b.binIndex - 10) * pegXSpacing;
+      b.targetLevel++;
+      b.y = 40 + b.targetLevel * pegYSpacing;
+      gctx.beginPath(); gctx.arc(b.x, b.y, 2.5, 0, Math.PI*2); gctx.fill();
+    } else if (b.y < gCv.height - 20) {
+      b.y += 10;
+      gctx.beginPath(); gctx.arc(b.x, b.y, 2.5, 0, Math.PI*2); gctx.fill();
+    } else if (!b.done) {
+      b.done = true;
+      let fBin = Math.floor(b.binIndex);
+      if(fBin < 0) fBin=0; if(fBin>20) fBin=20;
+      gBins[fBin]++;
+      if (gBins[fBin] > gMaxBin) gMaxBin = gBins[fBin];
+    }
+  });
+
+  requestAnimationFrame(drawGalton);
+}
+drawGalton();
+
+/*
+ * 3. INTERACTIVE DISTRIBUTION DRAWING
  */
 const drawCv = document.getElementById('draw-pdf');
 const dctx = drawCv.getContext('2d');
 let drawing = false;
 let pdfData = new Array(100).fill(0.1); 
-function resizeDraw() {
-  const rect = drawCv.getBoundingClientRect();
-  drawCv.width = rect.width;
-  drawCv.height = rect.height;
-  renderDraw();
-}
+function resizeDraw() { const rect=drawCv.getBoundingClientRect(); drawCv.width=rect.width; drawCv.height=rect.height; renderDraw(); }
 window.addEventListener('resize', resizeDraw);
 
 function renderDraw() {
   dctx.clearRect(0, 0, drawCv.width, drawCv.height);
-  dctx.strokeStyle = '#22b5aa';
-  dctx.lineWidth = 3;
-  dctx.lineCap = 'round';
-  dctx.lineJoin = 'round';
+  dctx.strokeStyle = '#c04560'; dctx.lineWidth = 4; dctx.lineCap = 'round'; dctx.lineJoin = 'round';
   dctx.beginPath();
-  let maxVal = Math.max(...pdfData);
-  if(maxVal === 0) maxVal = 1;
+  let maxVal = Math.max(...pdfData) || 1;
   const wScale = drawCv.width / pdfData.length;
   for (let i = 0; i < pdfData.length; i++) {
     const x = i * wScale + wScale/2;
-    const h = (pdfData[i] / maxVal) * (drawCv.height - 20) + 10;
+    const h = (pdfData[i] / maxVal) * (drawCv.height - 25) + 5;
     const y = drawCv.height - h;
-    if (i === 0) dctx.moveTo(x, y);
-    else dctx.lineTo(x, y);
+    if (i === 0) dctx.moveTo(x, y); else dctx.lineTo(x, y);
   }
   dctx.stroke();
-  
-  // Fill gradient
-  dctx.lineTo(drawCv.width, drawCv.height);
-  dctx.lineTo(0, drawCv.height);
-  dctx.closePath();
+  dctx.lineTo(drawCv.width, drawCv.height); dctx.lineTo(0, drawCv.height); dctx.closePath();
   const grad = dctx.createLinearGradient(0,0,0,drawCv.height);
-  grad.addColorStop(0, 'rgba(34,181,170,0.3)');
-  grad.addColorStop(1, 'rgba(34,181,170,0.0)');
-  dctx.fillStyle = grad;
-  dctx.fill();
+  grad.addColorStop(0, 'rgba(192,69,96,0.2)'); grad.addColorStop(1, 'rgba(192,69,96,0.0)');
+  dctx.fillStyle = grad; dctx.fill();
 }
 
 function handlePointer(e) {
   const rect = drawCv.getBoundingClientRect();
   const px = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
   const py = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-  
   let idx = Math.floor((px / rect.width) * pdfData.length);
-  if (idx < 0) idx = 0;
-  if (idx >= pdfData.length) idx = pdfData.length - 1;
-  
+  idx = Math.max(0, Math.min(pdfData.length - 1, idx));
   let val = 1.0 - (py / rect.height);
-  if (val < 0.05) val = 0.05;
-  if (val > 1) val = 1;
-  
-  // Smooth radius
-  const radius = 6;
+  val = Math.max(0.02, Math.min(1, val));
+  const radius = 5;
   for (let i = -radius; i <= radius; i++) {
     if (idx + i >= 0 && idx + i < pdfData.length) {
       let weight = Math.exp(-(i*i)/(radius));
@@ -287,166 +398,104 @@ function handlePointer(e) {
 drawCv.addEventListener('mousedown', e => { drawing = true; handlePointer(e); });
 window.addEventListener('mouseup', () => drawing = false);
 drawCv.addEventListener('mousemove', e => { if (drawing) handlePointer(e); });
-drawCv.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; handlePointer(e); }, {passive:false});
+drawCv.addEventListener('touchstart', e => { e.preventDefault(); drawing=true; handlePointer(e); }, {passive:false});
 window.addEventListener('touchend', () => drawing = false);
 drawCv.addEventListener('touchmove', e => { e.preventDefault(); if(drawing) handlePointer(e); }, {passive:false});
 
 document.addEventListener("DOMContentLoaded", () => {
     resizeDraw();
-    for(let i=0; i<pdfData.length; i++) {
-        pdfData[i] = Math.max(0.1, Math.sin(i / 15)*0.8);
-    }
-    renderDraw();
-    resizeSim();
+    for(let i=0; i<pdfData.length; i++) { pdfData[i] = Math.max(0.1, Math.exp(-Math.pow(i-30,2)/200) + 0.3*Math.exp(-Math.pow(i-80,2)/100)); }
+    renderDraw(); resizeSim();
 });
-
-document.getElementById('btn-clear').addEventListener('click', () => {
-  pdfData.fill(0.1);
-  renderDraw();
-});
+document.getElementById('btn-clear').addEventListener('click', () => { pdfData.fill(0.05); renderDraw(); });
 
 /*
- * 3. SIMULATION (Balls falling forming Bell Curve)
+ * 4. SIMULATION (Balls falling forming Bell Curve)
  */
 const simCv = document.getElementById('sim-canvas');
 const sctx = simCv.getContext('2d');
 let simBalls = [];
 let bins = new Array(50).fill(0);
 let maxBin = 1;
-
-function resizeSim() {
-  const rect = simCv.getBoundingClientRect();
-  simCv.width = rect.width;
-  simCv.height = rect.height;
-  renderSim();
-}
-window.addEventListener('resize', resizeSim);
+function resizeSim() { const rect=simCv.getBoundingClientRect(); simCv.width=rect.width; simCv.height=rect.height; renderSim(); }
 
 function samplePDF() {
-  // rejection sampling
   let maxV = Math.max(...pdfData);
   while(true) {
-    let rng = Math.random();
-    let idx = Math.floor(rng * pdfData.length);
-    if (Math.random() * maxV <= pdfData[idx]) {
-      return (idx / pdfData.length); // 0 to 1
-    }
+    let rng = Math.random(); let idx = Math.floor(rng * pdfData.length);
+    if (Math.random() * maxV <= pdfData[idx]) return (idx / pdfData.length);
   }
 }
 
 document.getElementById('btn-drop').addEventListener('click', () => {
-  bins.fill(0);
-  maxBin = 1;
-  simBalls = [];
-  
-  const NO_OF_BALLS = 1000;
-  const SUMS = 12; // how many variables we sum to form a single data point
-  
+  bins.fill(0); maxBin = 1; simBalls = [];
+  const NO_OF_BALLS = 2000; const SUMS = 12; 
   for (let i = 0; i < NO_OF_BALLS; i++) {
-    // Generate the sum!
-    let total = 0;
-    for(let k=0; k<SUMS; k++) total += samplePDF();
-    total /= SUMS;
-    
-    simBalls.push({
-      x: drawCv.width/2, // start middle
-      y: 0,
-      targetX: total * simCv.width,
-      targetY: simCv.height,
-      delay: i * 2, // frams delay
-      active: false,
-      done: false
-    });
+    let total = 0; for(let k=0; k<SUMS; k++) total += samplePDF(); total /= SUMS;
+    simBalls.push({ x: drawCv.width/2, y: 0, targetX: total * simCv.width, targetY: simCv.height, delay: i * 1, active: false, done: false });
   }
 });
 
 function renderSim() {
   sctx.clearRect(0, 0, simCv.width, simCv.height);
-  
-  // draw bins
   sctx.fillStyle = 'rgba(201,167,72,0.6)';
   const bw = simCv.width / bins.length;
   for(let i=0; i<bins.length; i++) {
-    const h = (bins[i] / maxBin) * (simCv.height - 20);
+    const h = (bins[i] / maxBin) * (simCv.height - 30);
     sctx.fillRect(i * bw + 1, simCv.height - h, bw - 2, h);
   }
   
-  // draw active balls
   sctx.fillStyle = '#fff';
   simBalls.forEach(b => {
     if (!b.done) {
-      if (b.delay > 0) b.delay--;
-      else {
+      if (b.delay > 0) b.delay--; else {
         if (!b.active) { b.active = true; b.x = simCv.width/2; }
-        // falling
-        b.y += 12;
-        // move towards target horizontally
-        let dx = b.targetX - b.x;
-        b.x += dx * 0.1;
-        
-        sctx.beginPath();
-        sctx.arc(b.x, b.y, 3, 0, Math.PI*2);
-        sctx.fill();
-        
+        b.y += 18; b.x += (b.targetX - b.x) * 0.15;
+        sctx.beginPath(); sctx.arc(b.x, b.y, 2.5, 0, Math.PI*2); sctx.fill();
         if (b.y >= simCv.height - 5) {
           b.done = true;
           let bIdx = Math.floor((b.targetX / simCv.width) * bins.length);
-          if (bIdx < 0) bIdx = 0;
-          if (bIdx >= bins.length) bIdx = bins.length - 1;
-          bins[bIdx]++;
-          if (bins[bIdx] > maxBin) maxBin = bins[bIdx];
+          bIdx = Math.max(0, Math.min(bins.length - 1, bIdx));
+          bins[bIdx]++; if (bins[bIdx] > maxBin) maxBin = bins[bIdx];
         }
       }
     }
   });
   
-  // Gaussian overlay
   const mean = simBalls.reduce((a,b) => a + b.targetX, 0) / Math.max(1, simBalls.length) || simCv.width/2;
   const variance = simBalls.reduce((a,b) => a + Math.pow(b.targetX - mean, 2), 0) / Math.max(1, simBalls.length) || 1;
   const stdev = Math.sqrt(variance);
   
   if (simBalls.some(b => b.done)) {
-    sctx.strokeStyle = '#c04560';
-    sctx.lineWidth = 2;
+    sctx.strokeStyle = '#22b5aa'; sctx.lineWidth = 3;
     sctx.beginPath();
-    for (let x = 0; x < simCv.width; x+=5) {
-      // Gaussian
+    for (let x = 0; x < simCv.width; x+=4) {
       let z = (x - mean) / stdev;
       let pdf = Math.exp(-0.5 * z * z) / (Math.sqrt(2 * Math.PI) * stdev);
-      // scale to maxBin height roughly
-      let h = pdf * maxBin * bw * 30; // empirical scaling
+      let h = pdf * maxBin * bw * 35; // tuning factor
       if(h > simCv.height) h = simCv.height;
-      if (x === 0) sctx.moveTo(x, simCv.height - h);
-      else sctx.lineTo(x, simCv.height - h);
+      if (x === 0) sctx.moveTo(x, simCv.height - h); else sctx.lineTo(x, simCv.height - h);
     }
     sctx.stroke();
   }
-
   requestAnimationFrame(renderSim);
 }
-renderSim();
-
 
 /*
- * 4. WIGNER SEMICIRCLE
+ * 5. WIGNER SEMICIRCLE
  */
 const wgCv = document.getElementById('wigner-canvas');
 const wctx = wgCv.getContext('2d');
 const wBins = new Array(50).fill(0);
 let wMax = 1;
-
 function genWigner() {
-  const N = 40; // small matrix
-  // Simulating the ensemble empirically via random walks
-  // A Wigner random matrix has random gaussian entries.
-  for(let j=0; j<50; j++) {
-    // Generate eigenvalues simply using Wigner semicircle density:
-    // f(x) = sqrt(4 - x^2) / (2pi)
+  for(let j=0; j<80; j++) {
     let x = (Math.random() * 4) - 2;
-    let y = Math.random() * 0.35; // max density is ~0.318
+    let y = Math.random() * 0.35; 
     let pdf = Math.sqrt(Math.max(0, 4 - x*x)) / (2 * Math.PI);
     if (y < pdf) {
       let bIdx = Math.floor(((x+2)/4) * wBins.length);
+      bIdx = Math.max(0, Math.min(wBins.length - 1, bIdx));
       wBins[bIdx]++;
       if (wBins[bIdx] > wMax) wMax = wBins[bIdx];
     }
@@ -457,31 +506,23 @@ setInterval(genWigner, 50);
 function drawWigner() {
   wctx.clearRect(0,0, wgCv.width, wgCv.height);
   const bw = wgCv.width / wBins.length;
-  
   wctx.fillStyle = 'rgba(192,69,96,0.6)';
   for(let i=0; i<wBins.length; i++) {
-    const h = (wBins[i] / wMax) * (wgCv.height - 20);
+    const h = (wBins[i] / wMax) * (wgCv.height - 25);
     wctx.fillRect(i * bw + 1, wgCv.height - h, bw - 2, h);
   }
-  
-  // Theoretical Semicircle
-  wctx.strokeStyle = 'rgba(255,255,255,0.8)';
-  wctx.lineWidth = 2;
-  wctx.beginPath();
+  wctx.strokeStyle = 'rgba(255,255,255,0.8)'; wctx.lineWidth = 2.5; wctx.beginPath();
   for(let i=0; i<=wgCv.width; i+=2) {
     let px = (i / wgCv.width) * 4 - 2;
     let py = Math.sqrt(Math.max(0, 4 - px*px)) / (2 * Math.PI);
-    let scaleH = (py / 0.3183) * (wgCv.height - 20); // max approx 0.3183
+    let scaleH = (py / 0.3183) * (wgCv.height - 25);
     let y = wgCv.height - scaleH;
-    if(i===0) wctx.moveTo(i, y);
-    else wctx.lineTo(i, y);
+    if(i===0) wctx.moveTo(i, y); else wctx.lineTo(i, y);
   }
   wctx.stroke();
-
   requestAnimationFrame(drawWigner);
 }
 drawWigner();
-
 </script>
 </body>
 </html>
