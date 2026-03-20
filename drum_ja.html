@@ -1,0 +1,2652 @@
+html
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="Hear the Drum" name="apple-mobile-web-app-title"/>
+<meta content="#05060c" name="theme-color"/>
+<meta content="Can You Hear the Shape of a Drum? An interactive spectral geometry experience." name="description"/>
+<link href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'&gt;&lt;rect width='180' height='180' fill='%2305060c'/&gt;&lt;circle cx='90' cy='90' r='72' fill='none' stroke='%23c9a748' stroke-width='3'/&gt;&lt;circle cx='90' cy='90' r='48' fill='none' stroke='%2322b5aa' stroke-width='2'/&gt;&lt;circle cx='90' cy='90' r='24' fill='none' stroke='%23c9a748' stroke-width='1.5'/&gt;&lt;text x='90' y='96' font-family='serif' font-size='24' fill='%23f0e8d8' text-anchor='middle'&gt;🥁&lt;/text&gt;&lt;/svg&gt;" rel="apple-touch-icon"/>
+<link id="pwa-manifest" rel="manifest"/>
+<title>ドラムの形が聞こえますか？</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&amp;family=EB+Garamond:ital,wght@0,400;0,500;1,400&amp;family=Space+Mono:ital@0;1&amp;family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&amp;family=DM+Sans:wght@300;400&amp;display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#05060c;--surface:#0c0e1a;--border:#1a1d30;
+  --text:#ddd7cc;--muted:#585d7a;--gold:#c9a748;--teal:#22b5aa;
+  --rose:#c04560;--cream:#f0e8d8;
+  --glow-gold:rgba(201,167,72,.18);--glow-teal:rgba(34,181,170,.18);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'EB Garamond',Georgia,serif;font-size:18px;line-height:1.72;overflow-x:hidden}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* ===== FLOATING HUD ===== */
+#hud{position:fixed;top:1.2rem;right:1.4rem;z-index:999;display:flex;align-items:center;gap:.7rem}
+#mute-btn{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;padding:.45rem 1rem;border:1px solid var(--border);border-radius:100px;background:rgba(5,6,12,.7);color:var(--muted);cursor:pointer;backdrop-filter:blur(8px);transition:border-color .2s,color .2s}
+#mute-btn.on{border-color:var(--gold);color:var(--gold)}
+#mute-btn:hover{border-color:var(--gold)88;color:var(--text)}
+.hud-sep{color:var(--border);font-size:.7rem}
+#pitch-wrap{display:flex;align-items:center;gap:.5rem;background:rgba(5,6,12,.7);border:1px solid var(--border);border-radius:100px;padding:.35rem .9rem;backdrop-filter:blur(8px)}
+#pitch-label{font-family:'Space Mono',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.08em;white-space:nowrap}
+#pitch-slider{-webkit-appearance:none;width:70px;height:2px;background:var(--border);border-radius:1px;outline:none;cursor:pointer}
+#pitch-slider::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;border-radius:50%;background:var(--gold);cursor:pointer;box-shadow:0 0 6px var(--gold)}
+#pitch-val{font-family:'Space Mono',monospace;font-size:.55rem;color:var(--gold);min-width:32px}
+
+/* ===== HERO ===== */
+#hero{position:relative;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:crosshair}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-overlay{position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 50% 50%,transparent 20%,rgba(5,6,12,.75) 65%,rgba(5,6,12,.97) 100%);pointer-events:none}
+.hero-content{position:relative;z-index:10;text-align:center;padding:2rem;pointer-events:none}
+.hero-kicker{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);margin-bottom:2.2rem;opacity:0;animation:fadeUp .9s .2s forwards}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(3rem,8vw,6.5rem);line-height:1.02;letter-spacing:-.01em;color:var(--cream)}
+.title-line{display:block;overflow:hidden}
+.title-word{display:inline-block;opacity:0;transform:translateY(100%);animation:wordIn .85s cubic-bezier(.22,1,.36,1) forwards}
+.tl1{animation-delay:.4s}.tl2{animation-delay:.55s}.tl3{animation-delay:.7s}.tl4{animation-delay:.85s}
+@keyframes wordIn{to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{to{opacity:.85}}
+.hero-italic{font-style:italic;color:var(--gold)}
+.hero-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:1.05rem;color:var(--muted);margin-top:2rem;opacity:0;animation:fadeUp .9s 1.1s forwards}
+.hero-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);opacity:0;animation:fadeUp 1s 1.6s forwards}
+.hero-hint::after{content:'';display:block;margin:10px auto 0;width:1px;height:42px;background:linear-gradient(to bottom,var(--muted),transparent);animation:bob 2s 2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:scaleY(1);opacity:.4}50%{transform:scaleY(1.3);opacity:.8}}
+.hero-click-hint{position:absolute;bottom:6.5rem;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);opacity:0;animation:fadeUp 1s 2.2s forwards}
+
+/* ===== LAYOUT ===== */
+.wrap{max-width:1160px;margin:0 auto;padding:7rem 2.5rem}
+.divider{border:none;border-top:1px solid var(--border)}
+.s-num{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem}
+.s-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,4.5vw,3.6rem);line-height:1.08;color:var(--cream);margin-bottom:2.2rem}
+.prose{font-size:1.05rem;color:var(--text);max-width:680px}
+.prose p+p{margin-top:1rem}
+.math{font-family:'Space Mono',monospace;font-size:.8em;background:#111420;border:1px solid var(--border);border-radius:2px;padding:.1em .4em;color:var(--teal)}
+.eq{font-family:'Space Mono',monospace;font-size:.84rem;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:1rem 1.4rem;color:var(--teal);margin:1.6rem 0;overflow-x:auto;white-space:pre;line-height:2.1}
+.callout{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--teal);border-radius:0 8px 8px 0;padding:1.3rem 1.8rem;margin:2rem 0;font-style:italic;color:var(--text);font-size:1.03rem}
+.callout cite{display:block;margin-top:.6rem;font-style:normal;font-family:'Space Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.05em}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem;transition:border-color .3s,box-shadow .3s}
+.panel h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.25rem;color:var(--gold);margin-bottom:1rem}
+
+/* ===== §01 STRIKE ===== */
+.strike-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:2.5rem;align-items:start;margin-top:2.5rem}
+@media(max-width:720px){.strike-layout{grid-template-columns:1fr}}
+#strike-canvas{width:100%;aspect-ratio:1;display:block;border-radius:8px;cursor:crosshair}
+.bar-list{margin-top:.5rem}
+.mode-bar{display:flex;align-items:center;gap:.8rem;margin-bottom:.65rem;font-family:'Space Mono',monospace;font-size:.62rem;color:var(--muted)}
+.mode-bar-label{width:60px;text-align:right}
+.bar-track{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:4px;position:absolute;left:0;transition:width .04s linear}
+.bar-freq{width:55px;text-align:left;color:var(--muted);font-size:.56rem}
+
+/* ===== §02 PHASORS ===== */
+.phasor-layout{display:grid;grid-template-columns:1.1fr 1fr;gap:2.5rem;align-items:start;margin-top:2.5rem}
+@media(max-width:720px){.phasor-layout{grid-template-columns:1fr}}
+#phasor-canvas{width:100%;display:block;border-radius:8px}
+.phasor-controls{display:flex;flex-direction:column;gap:.8rem;margin-top:1.2rem}
+.phasor-toggle{display:flex;align-items:center;gap:.8rem;cursor:pointer;font-family:'Space Mono',monospace;font-size:.62rem;padding:.55rem .9rem;border:1px solid var(--border);border-radius:100px;transition:border-color .2s,background .2s;background:transparent;color:var(--muted);letter-spacing:.04em}
+.phasor-toggle.on{background:var(--surface);color:var(--cream)}
+.pt-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+#waveform-canvas{width:100%;display:block;border-radius:8px;margin-top:1rem}
+.tone-hint{font-family:'Space Mono',monospace;font-size:.57rem;color:var(--muted);margin-top:.8rem;letter-spacing:.04em}
+
+/* ===== §03 MODE GALLERY ===== */
+.modes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;margin-top:2.5rem}
+@media(max-width:560px){.modes-grid{grid-template-columns:repeat(2,1fr)}}
+.mode-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:border-color .3s,transform .25s,box-shadow .3s;position:relative}
+.mode-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,transparent 40%,rgba(5,6,12,.35) 100%);pointer-events:none}
+.mode-card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 16px 48px var(--glow-gold)}
+.mode-card.active-card{border-color:var(--teal);box-shadow:0 0 0 1px var(--teal),0 16px 48px var(--glow-teal)}
+.mode-card canvas{width:100%;aspect-ratio:1;display:block}
+.mode-meta{padding:.65rem 1rem .8rem}
+.mode-name{font-family:'Space Mono',monospace;font-size:.64rem;color:var(--gold);margin-bottom:.25rem}
+.mode-ev{font-family:'Space Mono',monospace;font-size:.57rem;color:var(--muted);line-height:1.7}
+.play-badge{display:inline-block;font-family:'Space Mono',monospace;font-size:.54rem;color:var(--teal);border:1px solid var(--teal)55;border-radius:100px;padding:.1rem .5rem;margin-top:.3rem}
+
+/* ===== §04 BEATING ===== */
+.beat-layout{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2rem}
+@media(max-width:660px){.beat-layout{grid-template-columns:1fr}}
+#beat-canvas{width:100%;aspect-ratio:1;display:block;border-radius:8px}
+#beat-canvas2{width:100%;aspect-ratio:1;display:block;border-radius:8px}
+.beat-info{padding:1rem 0;font-family:'Space Mono',monospace;font-size:.65rem;color:var(--muted);line-height:2}
+.beat-info b{color:var(--teal)}
+.beat-picker{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.8rem}
+.bp{font-family:'Space Mono',monospace;font-size:.6rem;padding:.3rem .65rem;border:1px solid var(--border);border-radius:100px;background:transparent;color:var(--muted);cursor:pointer;transition:all .2s}
+.bp.sel{border-color:var(--gold);color:var(--gold);background:var(--surface)}
+.beat-play-btn{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:.45rem 1.2rem;border:1px solid var(--teal)55;border-radius:100px;background:transparent;color:var(--teal);cursor:pointer;transition:all .2s;margin-top:1rem}
+.beat-play-btn:hover{border-color:var(--teal);background:var(--surface)}
+
+/* ===== §05 WEYL ===== */
+.weyl-layout{display:grid;grid-template-columns:1fr 1.4fr;gap:3.5rem;align-items:start;margin-top:2.5rem}
+@media(max-width:720px){.weyl-layout{grid-template-columns:1fr}}
+#weyl-canvas{width:100%;display:block;border-radius:8px}
+.action-btn{font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;padding:.55rem 1.2rem;border:1px solid var(--border);border-radius:100px;background:transparent;color:var(--gold);cursor:pointer;transition:border-color .2s,background .2s;margin-top:1.5rem}
+.action-btn:hover{border-color:var(--gold);background:var(--surface)}
+
+/* ===== §06 ISO ===== */
+.iso-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2.5rem}
+@media(max-width:580px){.iso-grid{grid-template-columns:1fr}}
+.drum-panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem;text-align:center}
+.drum-panel h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.35rem;color:var(--cream);margin-bottom:1rem}
+.drum-panel canvas{width:100%;max-width:240px;margin:0 auto;display:block;border-radius:4px}
+.ev-tbl{margin-top:1rem;font-family:'Space Mono',monospace;font-size:.62rem}
+.ev-head{display:flex;justify-content:space-between;color:var(--muted);border-bottom:1px solid var(--border);padding:.35rem 0;letter-spacing:.05em}
+.ev-row{display:flex;justify-content:space-between;padding:.22rem 0;border-bottom:1px solid #1a1d3022;color:var(--teal)}
+.ev-row span:first-child{color:var(--muted)}
+
+/* ===== FOOTER ===== */
+footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding:5rem 2.5rem 4rem}
+.refs-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2rem}
+@media(max-width:600px){.refs-grid{grid-template-columns:1fr}}
+.ref-item{font-size:.88rem;color:var(--muted);font-style:italic;padding:.75rem 1rem;border-left:2px solid var(--border);line-height:1.6}
+.ref-item strong{font-style:normal;color:var(--text)}
+.epilogue{margin-top:3rem;text-align:center;font-style:italic;color:var(--muted);font-size:.9rem}
+
+
+/* ===== PWA INSTALL BANNER ===== */
+#pwa-banner{position:fixed;bottom:5rem;left:50%;transform:translateX(-50%) translateY(20px);z-index:888;opacity:0;pointer-events:none;transition:all .4s ease;white-space:nowrap}
+#pwa-banner.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+#pwa-banner-inner{display:flex;align-items:center;gap:.8rem;background:rgba(12,14,26,.97);border:1px solid var(--gold);border-radius:100px;padding:.6rem 1.1rem .6rem .9rem;backdrop-filter:blur(12px);box-shadow:0 4px 24px rgba(201,167,72,.2)}
+#pwa-banner .pwa-icon{font-size:1.1rem}
+#pwa-banner .pwa-txt{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.08em;color:var(--text)}
+#pwa-banner .pwa-txt b{display:block;color:var(--gold);font-size:.64rem;margin-bottom:.1rem}
+#pwa-banner .pwa-add{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:.35rem .85rem;border:1px solid var(--gold);border-radius:100px;color:var(--gold);background:transparent;cursor:pointer;transition:background .2s}
+#pwa-banner .pwa-add:hover{background:rgba(201,167,72,.1)}
+#pwa-banner .pwa-close{font-size:.7rem;color:var(--muted);cursor:pointer;padding:.2rem .4rem;line-height:1;transition:color .2s}
+#pwa-banner .pwa-close:hover{color:var(--text)}
+/* Fade-in */
+.fi{opacity:0;transform:translateY(30px);transition:opacity .85s ease,transform .85s ease}
+.fi.vis{opacity:1;transform:none}
+
+/* Ding animation */
+@keyframes ding{0%{box-shadow:0 0 0 0 rgba(201,167,72,.7)}100%{box-shadow:0 0 0 18px rgba(201,167,72,0)}}
+.dinging{animation:ding .5s ease-out}
+
+/* ===== AUDIO START OVERLAY ===== */
+#audio-overlay{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(5,6,12,.92);backdrop-filter:blur(18px);cursor:pointer;transition:opacity .5s,visibility .5s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#audio-overlay.gone{opacity:0;visibility:hidden;pointer-events:none}
+.ao-drum{font-size:3.5rem;margin-bottom:1.5rem;animation:aoDrum 1.8s ease-in-out infinite}
+@keyframes aoDrum{0%,100%{transform:scale(1) rotate(-4deg)}50%{transform:scale(1.12) rotate(4deg)}}
+.ao-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.6rem,4vw,2.6rem);color:var(--cream);margin-bottom:.6rem;text-align:center}
+.ao-sub{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:2.5rem;text-align:center}
+.ao-btn{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;padding:.75rem 2.2rem;border:1.5px solid var(--gold);border-radius:100px;color:var(--gold);background:transparent;cursor:pointer;transition:background .2s,box-shadow .2s;animation:aoGlow 2.5s ease-in-out infinite}
+@keyframes aoGlow{0%,100%{box-shadow:0 0 16px rgba(201,167,72,.2)}50%{box-shadow:0 0 36px rgba(201,167,72,.5)}}
+.ao-btn:hover{background:rgba(201,167,72,.1);box-shadow:0 0 40px rgba(201,167,72,.4)}
+
+/* ===== FLOATING BADGE ===== */
+.floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:lowercase;color:#8db830;background:transparent;padding:.35rem .7rem;text-decoration:none;transition:color .25s,text-shadow .25s,transform .25s;text-shadow:0 0 6px rgba(141,184,48,.4),0 0 16px rgba(141,184,48,.15)}
+.floating-badge:hover{color:#a8d43a;text-shadow:0 0 8px rgba(141,184,48,.65),0 0 22px rgba(141,184,48,.28);transform:translateY(-1px)}
+
+/* ===== FLOATING SECTION NAV ===== */
+#sec-nav{position:fixed;right:1.2rem;top:50%;transform:translateY(-50%);z-index:990;display:flex;flex-direction:column;gap:.35rem}
+.sn-dot{display:flex;align-items:center;gap:.55rem;cursor:pointer;justify-content:flex-end;group:hover}
+.sn-dot-pip{width:7px;height:7px;border-radius:50%;border:1.5px solid var(--muted);background:transparent;flex-shrink:0;transition:background .2s,border-color .2s,box-shadow .2s}
+.sn-dot-label{font-family:'Space Mono',monospace;font-size:.52rem;letter-spacing:.08em;color:var(--muted);opacity:0;transform:translateX(6px);transition:opacity .2s,transform .2s;white-space:nowrap;text-align:right}
+.sn-dot:hover .sn-dot-label{opacity:1;transform:translateX(0)}
+.sn-dot:hover .sn-dot-pip{border-color:var(--text)}
+.sn-dot.active .sn-dot-pip{background:var(--gold);border-color:var(--gold);box-shadow:0 0 8px var(--gold)}
+.sn-dot.active .sn-dot-label{color:var(--gold)}
+@media(max-width:600px){#sec-nav{display:none}}
+.nodal-layout{display:grid;grid-template-columns:440px 1fr;gap:2.5rem;margin-top:2.5rem;align-items:start}
+@media(max-width:800px){.nodal-layout{grid-template-columns:1fr}}
+#nodal-canvas{display:block;width:100%;border-radius:8px}
+.nodal-overlay{position:absolute;bottom:1rem;left:1rem;right:1rem;display:flex;align-items:flex-end;justify-content:space-between;pointer-events:none}
+.nodal-stat{display:flex;flex-direction:column;align-items:flex-start}
+.nodal-big{font-family:'Cormorant Garamond',serif;font-size:3.5rem;font-weight:300;color:var(--cream);line-height:1;text-shadow:0 0 30px rgba(240,232,216,.3)}
+.nodal-label{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.nodal-formula{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--gold);background:rgba(5,6,12,.7);padding:.3rem .7rem;border-radius:4px;border:1px solid var(--border)}
+.nodal-right{display:flex;flex-direction:column;gap:1.5rem}
+.nodal-mode-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.7rem}
+.nodal-mode-btn{position:relative;cursor:pointer;border-radius:6px;overflow:hidden;border:1.5px solid var(--border);transition:border-color .25s,transform .2s,box-shadow .25s;background:var(--surface)}
+.nodal-mode-btn canvas{width:100%;aspect-ratio:1;display:block}
+.nodal-mode-btn .nmb-label{font-family:'Space Mono',monospace;font-size:.55rem;color:var(--muted);text-align:center;padding:.3rem .2rem;background:var(--surface);line-height:1.5}
+.nodal-mode-btn.active-nodal{border-color:var(--gold);box-shadow:0 0 16px var(--glow-gold);transform:scale(1.03)}
+.nodal-mode-btn:hover:not(.active-nodal){border-color:var(--muted);transform:scale(1.01)}
+.nodal-audio-panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.1rem 1.3rem}
+.nap-title{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.9rem}
+.nap-row{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:.6rem}
+.nap-btn{display:flex;align-items:center;gap:.6rem;padding:.65rem .8rem;border-radius:8px;border:1px solid var(--border);background:transparent;cursor:pointer;text-align:left;transition:border-color .2s,background .2s,box-shadow .2s;width:100%}
+.nap-btn:hover{background:var(--surface)}
+.nap-btn.active-sound{background:var(--surface)}
+.nap-icon{font-size:1.2rem;line-height:1;flex-shrink:0;width:22px;text-align:center}
+.nap-txt{font-family:'Space Mono',monospace;font-size:.54rem;line-height:1.7;color:var(--muted)}
+.nap-txt b{font-size:.6rem;display:block;margin-bottom:.1rem}
+.nap-gold{border-color:var(--gold)33}.nap-gold:hover,.nap-gold.active-sound{border-color:var(--gold);box-shadow:0 0 12px rgba(201,167,72,.2)}.nap-gold .nap-icon{color:var(--gold)}.nap-gold .nap-txt b{color:var(--gold)}
+.nap-teal{border-color:var(--teal)33}.nap-teal:hover,.nap-teal.active-sound{border-color:var(--teal);box-shadow:0 0 12px rgba(34,181,170,.2)}.nap-teal .nap-icon{color:var(--teal)}.nap-teal .nap-txt b{color:var(--teal)}
+.nap-rose{border-color:var(--rose)33}.nap-rose:hover,.nap-rose.active-sound{border-color:var(--rose);box-shadow:0 0 12px rgba(192,69,96,.2)}.nap-rose .nap-icon{color:var(--rose)}.nap-rose .nap-txt b{color:var(--rose)}
+.nap-purple{border-color:#b080e033}.nap-purple:hover,.nap-purple.active-sound{border-color:#b080e0;box-shadow:0 0 12px rgba(176,128,224,.2)}.nap-purple .nap-icon{color:#b080e0}.nap-purple .nap-txt b{color:#b080e0}
+.nap-status{font-family:'Space Mono',monospace;font-size:.56rem;color:var(--muted);margin-top:.5rem;min-height:1.2em;letter-spacing:.04em;transition:color .3s}
+.nap-status.active{color:var(--gold)}
+.courant-bar-wrap{display:flex;flex-direction:column;gap:.5rem}
+.courant-label{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.courant-track{height:14px;background:#0d0f1a;border-radius:7px;position:relative;overflow:hidden}
+.courant-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--border),#2a2e45);border-radius:7px;transition:width .5s ease}
+.courant-actual{position:absolute;left:0;top:0;bottom:0;border-radius:7px;transition:width .5s ease}
+.courant-nums{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--muted);display:flex;justify-content:space-between}
+.courant-note{font-family:'EB Garamond',serif;font-style:italic;font-size:.92rem;color:var(--text);margin-top:.8rem;line-height:1.6}
+.nodal-theory{margin-top:4rem}
+.theorem-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.4rem;margin-top:1.5rem}
+@media(max-width:780px){.theorem-row{grid-template-columns:1fr}}
+.theorem-card{border-radius:12px;padding:1.6rem;position:relative;overflow:hidden}
+.theorem-card::before{content:'';position:absolute;inset:0;opacity:.06;background:repeating-linear-gradient(45deg,currentColor 0,currentColor 1px,transparent 1px,transparent 8px)}
+.theorem-gold{background:linear-gradient(135deg,#120e02,#1a1500);border:1px solid var(--gold)44;color:var(--gold)}
+.theorem-teal{background:linear-gradient(135deg,#021210,#001a18);border:1px solid var(--teal)44;color:var(--teal)}
+.theorem-rose{background:linear-gradient(135deg,#120208,#1a0010);border:1px solid var(--rose)44;color:var(--rose)}
+.theorem-year{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;opacity:.8;margin-bottom:.5rem}
+.theorem-name{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.3rem;color:var(--cream);margin-bottom:.8rem;line-height:1.2}
+.theorem-eq{font-family:'Space Mono',monospace;font-size:.8rem;padding:.6rem .9rem;background:rgba(0,0,0,.35);border-radius:5px;margin-bottom:.9rem;letter-spacing:.04em;white-space:nowrap;overflow-x:auto}
+.theorem-card p{font-size:.95rem;color:var(--text);line-height:1.7}
+.jjz-section{margin-top:3.5rem;padding:2.5rem;background:var(--surface);border:1px solid var(--border);border-radius:14px}
+.jjz-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.4rem;margin-top:1.5rem}
+@media(max-width:780px){.jjz-grid{grid-template-columns:1fr}}
+.jjz-paper{border-left:2px solid var(--rose);padding-left:1.2rem}
+.jjz-authors{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--rose);margin-bottom:.4rem}
+.jjz-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:var(--cream);margin-bottom:.7rem;line-height:1.4}
+.jjz-paper p{font-size:.93rem;color:var(--text);line-height:1.7}
+.phase-diagram-wrap{margin-top:2rem;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+#phase-canvas{display:block;width:100%}
+.phase-caption{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.06em;color:var(--muted);text-align:center;margin-top:.7rem}
+.future-section{margin-top:4rem}
+.future-intro{margin:1rem 0 2.5rem;max-width:720px}
+.future-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem}
+@media(max-width:780px){.future-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.future-grid{grid-template-columns:1fr}}
+.future-card{position:relative;border-radius:12px;overflow:hidden;cursor:default;transition:transform .3s,box-shadow .3s}
+.future-card:hover{transform:translateY(-5px)}
+.future-bg-canvas{position:absolute;inset:0;width:100% !important;height:100% !important;display:block;opacity:.45}
+.future-card-content{position:relative;z-index:1;padding:1.4rem}
+.future-num{font-family:'Space Mono',monospace;font-size:2rem;font-weight:400;opacity:.15;line-height:1;margin-bottom:.5rem}
+.future-card h4{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.2rem;color:var(--cream);margin-bottom:.65rem;line-height:1.25}
+.future-card p{font-size:.88rem;color:var(--text);line-height:1.7;margin-bottom:.8rem}
+.future-tag{font-family:'Space Mono',monospace;font-size:.54rem;letter-spacing:.1em;text-transform:uppercase;opacity:.65}
+.future-card-gold{background:linear-gradient(160deg,#0f0c01,#191200);border:1px solid var(--gold)33}
+.future-card-gold .future-num,.future-card-gold .future-tag{color:var(--gold)}
+.future-card-gold:hover{box-shadow:0 16px 48px rgba(201,167,72,.18)}
+.future-card-teal{background:linear-gradient(160deg,#01100f,#001a18);border:1px solid var(--teal)33}
+.future-card-teal .future-num,.future-card-teal .future-tag{color:var(--teal)}
+.future-card-teal:hover{box-shadow:0 16px 48px rgba(34,181,170,.18)}
+.future-card-rose{background:linear-gradient(160deg,#100108,#1a0010);border:1px solid var(--rose)33}
+.future-card-rose .future-num,.future-card-rose .future-tag{color:var(--rose)}
+.future-card-rose:hover{box-shadow:0 16px 48px rgba(192,69,96,.18)}
+.future-card-purple{background:linear-gradient(160deg,#0a0214,#10011e);border:1px solid #9060d055}
+.future-card-purple .future-num,.future-card-purple .future-tag{color:#b080e0}
+.future-card-purple:hover{box-shadow:0 16px 48px rgba(144,96,208,.18)}
+/* ===== BEAT PICKER — fix visibility ===== */
+.bp{font-family:'Space Mono',monospace;font-size:.62rem;padding:.4rem .8rem;border:1.5px solid #2a2e45;border-radius:100px;background:#0d0f1a;color:#9099bc;cursor:pointer;transition:all .2s;white-space:nowrap}
+.bp:hover{border-color:#c9a74888;color:#c9a748}
+.bp.sel-a{border-color:#c9a748;color:#c9a748;background:#1a150000;box-shadow:0 0 10px rgba(201,167,72,.2)}
+.bp.sel-b{border-color:#22b5aa;color:#22b5aa;background:#001a1800;box-shadow:0 0 10px rgba(34,181,170,.2)}
+.beat-play-btn{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;padding:.55rem 1.4rem;border:1.5px solid #22b5aa;border-radius:100px;background:#001a18;color:#22b5aa;cursor:pointer;transition:all .25s;margin-top:1.2rem;display:inline-flex;align-items:center;gap:.5rem}
+.beat-play-btn:hover{background:#00302c;box-shadow:0 0 16px rgba(34,181,170,.3);color:#4dd9cf}
+/* ===== §04b THREE MODES ===== */
+.three-selectors{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2rem;margin-top:2rem}
+@media(max-width:650px){.three-selectors{grid-template-columns:1fr}}
+.mode-sel-panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.2rem}
+.mode-sel-panel h4{font-family:'Space Mono',monospace;font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.9rem;color:var(--gold)}
+.mode-sel-panel select{width:100%;background:#0d0f1a;border:1px solid var(--border);border-radius:6px;padding:.45rem .7rem;font-family:'Space Mono',monospace;font-size:.62rem;color:var(--text);cursor:pointer;outline:none;-webkit-appearance:none;appearance:none}
+.three-canvas-row{display:grid;grid-template-columns:1fr 1fr 1fr 1.3fr;gap:1rem;margin-top:1.5rem;align-items:start}
+@media(max-width:800px){.three-canvas-row{grid-template-columns:1fr 1fr}}
+.three-mini{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.three-mini canvas{width:100%;aspect-ratio:1;display:block}
+.three-mini-lbl{font-family:'Space Mono',monospace;font-size:.56rem;color:var(--muted);padding:.45rem .7rem;text-align:center;line-height:1.6}
+.three-super{background:var(--surface);border:1.5px solid var(--teal);border-radius:8px;overflow:hidden;box-shadow:0 0 20px rgba(34,181,170,.12)}
+.three-super canvas{width:100%;aspect-ratio:1;display:block}
+.three-super-lbl{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--teal);padding:.5rem .8rem;text-align:center}
+.three-play-btn{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.12em;text-transform:uppercase;padding:.55rem 1.4rem;border:1.5px solid var(--gold);border-radius:100px;background:#100d00;color:var(--gold);cursor:pointer;transition:all .25s;margin-top:1.2rem;display:inline-flex;align-items:center;gap:.5rem}
+.three-play-btn:hover{background:#1e1600;box-shadow:0 0 16px rgba(201,167,72,.3)}
+.three-info{margin-top:1rem;font-family:'Space Mono',monospace;font-size:.63rem;color:var(--muted);line-height:2;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem 1.2rem}
+.three-info b{color:var(--teal)}
+.gww-construction{margin-top:3rem}
+.gww-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;margin-top:2rem;align-items:start}
+@media(max-width:700px){.gww-grid{grid-template-columns:1fr}}
+.gww-step{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin-bottom:1.2rem;position:relative}
+.gww-step-num{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem}
+.gww-step h4{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.35rem;color:var(--cream);margin-bottom:.75rem}
+.gww-step p{font-size:.98rem;color:var(--text);line-height:1.7}
+.gww-step p+p{margin-top:.7rem}
+.gww-canvas-wrap{text-align:center}
+.gww-canvas-wrap canvas{width:100%;max-width:340px;display:block;margin:0 auto;border-radius:8px;border:1px solid var(--border)}
+.gww-caption{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--muted);margin-top:.6rem;text-align:center;letter-spacing:.04em}
+.transplant-diagram{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin-top:2rem}
+.transplant-diagram h4{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.35rem;color:var(--cream);margin-bottom:1rem}
+.trow{display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:center;margin:1rem 0;font-family:'Space Mono',monospace;font-size:.66rem}
+.trow-cell{background:#111420;border:1px solid var(--border);border-radius:6px;padding:.7rem;color:var(--teal);line-height:1.8}
+.trow-arrow{color:var(--gold);font-size:1.2rem;text-align:center}
+.timeline{position:relative;padding-left:2rem;margin-top:1.5rem}
+.timeline::before{content:'';position:absolute;left:.45rem;top:.5rem;bottom:.5rem;width:1px;background:var(--border)}
+.tl-item{position:relative;margin-bottom:1.5rem}
+.tl-item::before{content:'';position:absolute;left:-1.62rem;top:.45rem;width:8px;height:8px;border-radius:50%;background:var(--gold);border:2px solid var(--bg)}
+.tl-year{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--gold);letter-spacing:.1em;margin-bottom:.3rem}
+.tl-body{font-size:.98rem;color:var(--text);line-height:1.65}
+.label-tag{display:inline-block;font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;padding:.15rem .55rem;border-radius:100px;margin-left:.5rem;vertical-align:middle}
+.tag-open{background:#0d2030;border:1px solid var(--teal)55;color:var(--teal)}
+.tag-settled{background:#0d1a0d;border:1px solid #90d85855;color:#90d858}
+.sunada-box{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--rose);border-radius:0 10px 10px 0;padding:1.5rem 2rem;margin:2rem 0}
+.sunada-box h4{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.35rem;color:var(--cream);margin-bottom:.8rem}
+.sunada-box p{font-size:.98rem;color:var(--text);line-height:1.7}
+.sunada-box p+p{margin-top:.6rem}
+</style>
+</head>
+<body>
+ フローティングセクションナビ 
+<nav id="sec-nav">
+<div class="sn-dot" data-target="hero"> <span class="sn-dot-label">トップ</span> <span class="sn-dot-pip"></span></div>
+<div class="sn-dot" data-target="sec-strike"> <span class="sn-dot-label">§01 太鼓の声</span><span class="sn-dot-pip"></span></div>
+<div class="sn-dot" data-target="sec-phasor"> <span class="sn-dot-label">§02 フェーザー</span> <span class="sn-dot-pip"></span></div>
+<div class="sn-dot" data-target="sec-modes"> <span class="sn-dot-label">§03 固有モード</span> <span class="sn-dot-pip"></span></div>
+<div class="sn-dot" data-target="sec-beat"> <span class="sn-dot-label">§04 殴る</span> <span class="sn-dot-pip"></span></div>
+<div class="sn-dot" data-target="sec-weyl"> <span class="sn-dot-label">§05 ワイルの法則</span> <span class="sn-dot-pip"></span></div>
+<div class="sn-dot" data-target="sec-iso"> <span class="sn-dot-label">§06 GWW ドラム</span> <span class="sn-dot-pip"></span></div>
+<div class="sn-dot" data-target="sec-nodal"> <span class="sn-dot-label">§07 ノードドメイン</span> <span class="sn-dot-pip"></span></div>
+</nav>
+ オーディオスタートオーバーレイ 
+<div id="audio-overlay">
+<div class="ao-drum">🥁</div>
+<div class="ao-title">ドラムの形が聞こえますか？</div>
+<div class="ao-sub">インタラクティブなスペクトル幾何学</div>
+ サイレント スイッチの警告 - 最も一般的な iOS オーディオの問題 
+<div style="margin:1rem auto 1.5rem;max-width:320px;background:rgba(192,69,96,.12);border:1px solid rgba(192,69,96,.4);border-radius:8px;padding:.7rem 1.1rem;font-family:Space Mono,monospace;font-size:.6rem;letter-spacing:.05em;color:#e08090;text-align:center;line-height:1.8">
+    📵 iPhone: を確認してください。 <strong style="color:#f0a0b0">着信/サイレントスイッチ</strong> 左側にあります。<br/>
+    サイレントモードがオンの場合、Web 音声はミュートされます。
+  </div>
+<button class="ao-btn" id="ao-btn-main" onclick="iosUnlock(event)" ontouchend="iosUnlock(event)" style="touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none">
+    タップして開始
+  </button>
+<div style="margin-top:.8rem;font-family:Space Mono,monospace;font-size:.52rem;color:#3a3f55;text-align:center">
+    こちらも確認してください: [設定] → [Chrome] → [オーディオを許可]
+  </div>
+</div>
+<div id="hud">
+<div id="pitch-wrap">
+<span id="pitch-label">ドラムサイズ</span>
+<input id="pitch-slider" max="200" min="40" step="1" type="range" value="100"/>
+<span id="pitch-val">1×</span>
+</div>
+<button id="mute-btn">♪サウンドON</button>
+</div>
+ ヒーロー 
+<section id="hero">
+<canvas id="hero-canvas"></canvas>
+<div class="hero-overlay"></div>
+<div class="hero-content">
+<div class="hero-kicker">スペクトル幾何学・フーリエ解析・数理物理学</div>
+<h1 class="hero-title">
+<span class="title-line"><span class="title-word tl1">できますか</span></span>
+<span class="title-line"><span class="title-word tl2 hero-italic">聞く</span> <span class="title-word tl3">形</span></span>
+<span class="title-line"><span class="title-word tl4">ドラムの？</span></span>
+</h1>
+<div class="hero-sub">によってポーズをとられた <em>マーク・カック</em>、1966年 — 回答者 <em>ゴードン、ウェッブ、ウォルパート</em>, 1992</div>
+</div>
+<div class="hero-click-hint">↑膜をクリックして叩く</div>
+<div class="hero-hint">スクロール</div>
+</section>
+<hr class="divider"/>
+ §01 ストライク 
+<div class="wrap fi" id="sec-strike">
+<div class="s-num">§ 01 — ドラムの声</div>
+<h2 class="s-title">打って、聞いて、<br/>分解する</h2>
+<div class="strike-layout">
+<div>
+<div class="prose">
+<p>どこでも、下のドラムを叩いてください。変位は次の重ね合わせに分解されます。 <em>ノーマルモード</em> その周波数はベッセル関数のゼロであり、不調和です。これが、ドラムがベルではなくドラムのように聞こえる理由です。</p>
+</div>
+<div class="eq">u(x,y,t)  =  Σₙ  aₙ · φₙ(x,y) · cos(ωₙ t)
+ωₙ  =  jₘₙ · c / R   (inharmonic spectrum)</div>
+<div class="prose">
+<p>中心付近を叩くと放射状モードのみが励起されます。 <span class="math">m=0</span>。中心をずらして攻撃して非対称モードを起動する <span class="math">m≥1</span>。違いを聞くことができます。励起された固有関数が変化すると音色が変化します。</p>
+<p>の <em>ドラムサイズスライダー</em> (右上) R をスケールし、すべての周波数を同時にシフトします。 <span class="math">ω ∝ 1/R</span>.</p>
+</div>
+</div>
+<div>
+<div class="panel">
+<h3>クリックして叩いて聞いてください</h3>
+<canvas height="380" id="strike-canvas" width="380"></canvas>
+<div class="bar-list" id="bar-list"></div>
+</div>
+</div>
+</div>
+</div>
+<hr class="divider"/>
+ §02 フェーザー 
+<div class="wrap fi" id="sec-phasor">
+<div class="s-num">§ 02 — 回転ベクトルとしてのフーリエ</div>
+<h2 class="s-title">フェーザー<br/>星座</h2>
+<div class="phasor-layout">
+<div>
+<div class="panel" style="padding:0;overflow:hidden">
+<canvas height="460" id="phasor-canvas" width="460"></canvas>
+</div>
+<div class="panel" style="margin-top:1rem;padding:1rem">
+<canvas height="100" id="waveform-canvas" width="460"></canvas>
+</div>
+</div>
+<div>
+<div class="prose">
+<p>各固有周波数 <span class="math">ωₙ = jₙ c/R</span> 回転フェーザーです。モードを切り替えて回転を追加または削除し、その結果生じるトーンの変化をリアルタイムで聞いてください。トーンはドラムの正確な物理周波数です。</p>
+<p>4 つのモードすべてがアクティブな場合、波形は純粋な正弦波ではなく、 <em>不調和な</em> ドラムに特徴的なサウンドを与える重ね合わせ。</p>
+</div>
+<div class="phasor-controls" id="phasor-controls"></div>
+<p class="tone-hint">↑ 各トグルは正弦波を開始/停止します</p>
+<div class="callout" style="margin-top:1.5rem">
+        ドラムのスペクトルは、まさにここでフェーザーが表示される周波数のセットです。同一のスペクトルを持つ 2 つのドラムは、同じ重ね合わせを生成します。これらは音響的に区別できません。
+      </div>
+</div>
+</div>
+</div>
+<hr class="divider"/>
+ §03 モードギャラリー 
+<div class="wrap fi" id="sec-modes">
+<div class="s-num">§ 03 — 円形ドラムの固有モード</div>
+<h2 class="s-title">の形<br/>ピュアサウンド</h2>
+<div class="prose">
+<p>各カードは単一の固有モードです <span class="math">φₘₙ = Jₘ(jₘₙ r/R)cos(mθ)</span> 純粋な周波数で発振します。カードをクリックすると、その音だけを聞いて確認できます。高いモードでは、周波数が高く、持続時間が短くなります。モードが鳴り響くにつれて、ドラムの声が高音から低音に減衰します。</p>
+</div>
+<div class="eq">φₘₙ(r,θ) = Jₘ(jₘₙ · r/R) · cos(mθ)     λₘₙ = (jₘₙ/R)²</div>
+<div class="modes-grid" id="modes-grid"></div>
+</div>
+<hr class="divider"/>
+ §04 殴打 
+<div class="wrap fi" id="sec-beat">
+<div class="s-num">§ 04 — 干渉と暴力</div>
+<h2 class="s-title">2つのモードの場合<br/>衝突する</h2>
+<div class="prose" style="margin-bottom:2rem">
+<p>2 つのモードの固有値が近い場合、それらの重ね合わせは <em>ビート</em> — 振幅は一定のレートでゆっくりと振動します。 <span class="math">|ω₁−ω₂|/2</span>。これははっきりと聞こえます。ペアを選択して [再生] を押します。</p>
+</div>
+<div class="beat-picker" id="beat-picker"></div>
+<button class="beat-play-btn" id="beat-play-btn">▶ 両方の音色を演奏して、鼓動を聞いてください。</button>
+<div class="beat-layout">
+<div class="panel">
+<h3>モードA</h3>
+<canvas height="320" id="beat-canvas" width="320"></canvas>
+<div class="beat-info" id="beat-info-a"></div>
+</div>
+<div class="panel">
+<h3>A+B（重ね合わせ）</h3>
+<canvas height="320" id="beat-canvas2" width="320"></canvas>
+<div class="beat-info" id="beat-info-b"></div>
+</div>
+</div>
+</div>
+<hr class="divider"/>
+ §04b 3 つのモード 
+<div class="wrap fi" id="sec-three">
+<div class="s-num">§ 04b — 3 モード干渉</div>
+<h2 class="s-title">3つのモードの場合<br/>Meet</h2>
+<div class="prose" style="margin-bottom:1.5rem">
+<p>With three modes the superposition <span class="math">φ_A cos(ω_A t) + φ_B cos(ω_B t) + φ_C cos(ω_C t)</span> generates richer interference. When no two frequency differences are commensurate, the pattern is <em>quasi-periodic</em> — never repeating exactly, yet bounded. The beating structure becomes a tangle of three rhythms at once.</p>
+<p>Choose any three modes and hear the combination. Watch how the spatial pattern morphs as the three standing waves drift in and out of phase.</p>
+</div>
+<div class="three-selectors">
+<div class="mode-sel-panel" style="border-color:#c9a74855">
+<h4 style="color:#c9a748">Mode A</h4>
+<select id="three-sel-a"></select>
+</div>
+<div class="mode-sel-panel" style="border-color:#22b5aa55">
+<h4 style="color:#22b5aa">Mode B</h4>
+<select id="three-sel-b"></select>
+</div>
+<div class="mode-sel-panel" style="border-color:#c0456055">
+<h4 style="color:#c04560">Mode C</h4>
+<select id="three-sel-c"></select>
+</div>
+</div>
+<div class="three-canvas-row">
+<div class="three-mini" style="border-color:#c9a74855">
+<canvas height="220" id="three-cv-a" width="220"></canvas>
+<div class="three-mini-lbl" id="three-lbl-a" style="color:#c9a748">Mode A</div>
+</div>
+<div class="three-mini" style="border-color:#22b5aa55">
+<canvas height="220" id="three-cv-b" width="220"></canvas>
+<div class="three-mini-lbl" id="three-lbl-b" style="color:#22b5aa">Mode B</div>
+</div>
+<div class="three-mini" style="border-color:#c0456055">
+<canvas height="220" id="three-cv-c" width="220"></canvas>
+<div class="three-mini-lbl" id="three-lbl-c" style="color:#c04560">Mode C</div>
+</div>
+<div class="three-super">
+<canvas height="260" id="three-cv-sum" width="260"></canvas>
+<div class="three-super-lbl">A + B + C</div>
+</div>
+</div>
+<button class="three-play-btn" id="three-play-btn">▶ Play all three tones</button>
+<div class="three-info" id="three-info"></div>
+</div>
+<hr class="divider"/>
+ §05 WEYL 
+<div class="wrap fi" id="sec-weyl">
+<div class="s-num">§ 05 — The Spectrum Encodes Area</div>
+<h2 class="s-title">Weyl's Law:<br/>You Can Hear the Area</h2>
+<div class="weyl-layout">
+<div>
+<div class="prose">
+<p>Weyl proved in 1911 that the density of eigenvalues recovers the area. Let <span class="math">N(λ)</span> count eigenvalues below <span class="math">λ</span>:</p>
+</div>
+<div class="eq">N(λ)  ∼  Area(Ω) · λ / (4π)    as λ → ∞</div>
+<div class="prose">
+<p>For the unit disk (Area = π), this gives <span class="math">N(λ) ∼ λ/4</span>. Each step of the staircase is a new eigenfrequency clicking into place — as the Weyl animation runs, you hear each new mode added as a brief pure tone.</p>
+</div>
+<div class="callout">
+        "From the asymptotic growth of a sequence of numbers, Weyl extracted a continuous geometric quantity. The finite encodes the infinite."
+        <cite>— Spectral geometry tradition</cite>
+</div>
+<button class="action-btn" id="weyl-replay">↺ Replay with sound</button>
+</div>
+<div class="panel">
+<h3>Spectral counting function N(λ)</h3>
+<canvas height="420" id="weyl-canvas" width="500"></canvas>
+</div>
+</div>
+</div>
+<hr class="divider"/>
+ §06 ISOSPECTRAL GWW 
+<div class="wrap fi" id="sec-iso">
+<div class="s-num">§ 06 — Gordon, Webb &amp; Wolpert (1992)</div>
+<h2 class="s-title">You Cannot Always<br/>Hear the Shape</h2>
+<div class="prose">
+<p>In 1992, Carolyn Gordon, David Webb, and Scott Wolpert gave the definitive answer to Kac's question: <em>No.</em> They exhibited two planar domains — each assembled from seven right triangles — that share every eigenvalue of <span class="math">−Δ</span> with Dirichlet boundary conditions, yet are not congruent. The drums below are identical to the ear. Click either to hear the shared voice.</p>
+</div>
+<div class="iso-grid">
+<div class="drum-panel">
+<h3>Drum Ω₁</h3>
+<canvas height="240" id="drum1" width="240"></canvas>
+<div class="ev-tbl"><div class="ev-head"><span>n</span><span>λₙ</span></div><div id="ev1"></div></div>
+</div>
+<div class="drum-panel">
+<h3>Drum Ω₂</h3>
+<canvas height="240" id="drum2" width="240"></canvas>
+<div class="ev-tbl"><div class="ev-head"><span>n</span><span>λₙ</span></div><div id="ev2"></div></div>
+</div>
+</div>
+ TIMELINE 
+<div class="gww-construction">
+<div class="s-num" style="margin-top:1rem">Historical Road to the Answer</div>
+<div class="timeline">
+<div class="tl-item">
+<div class="tl-year">1966 — MARK KAC</div>
+<div class="tl-body">Kac popularized the problem in a landmark <em>Amer. Math. Monthly</em> paper. He knew Weyl's law gave area, and conjectured that the full spectrum might determine the domain. He was wrong — but spectacularly productively wrong.</div>
+</div>
+<div class="tl-item">
+<div class="tl-year">1964 — MILNOR (predecessor)</div>
+<div class="tl-body">Milnor had already shown that two non-isometric flat 16-dimensional tori can have the same Laplace spectrum — but these are not planar domains. The question for 2D planar regions remained wide open for nearly three decades.</div>
+</div>
+<div class="tl-item">
+<div class="tl-year">1985 — SUNADA'S THEOREM</div>
+<div class="tl-body">Toshikazu Sunada proved an abstract group-theoretic criterion sufficient for isospectrality. His theorem gave a systematic machine for manufacturing isospectral manifolds — but all known examples were either higher-dimensional or had boundary. Finding planar examples required additional geometric ingenuity.</div>
+</div>
+<div class="tl-item">
+<div class="tl-year">1992 — GORDON, WEBB, WOLPERT</div>
+<div class="tl-body">Gordon, Webb, and Wolpert combined Sunada's machinery with an explicit geometric construction in the plane, producing the first pair of isospectral planar domains with piecewise-linear boundary. The paper is four pages long. <span class="label-tag tag-settled">Kac's question: resolved</span></div>
+</div>
+<div class="tl-item">
+<div class="tl-year">1994 — BUSER ET AL.</div>
+<div class="tl-body">Buser, Conway, Doyle, and Semmler gave an elementary direct proof ("drums") and produced further isospectral pairs using a "transplantation by coloring" method, making the core idea accessible without heavy group theory.</div>
+</div>
+<div class="tl-item">
+<div class="tl-year">2000 — ZELDITCH</div>
+<div class="tl-body">Zelditch proved that among analytic domains with a bilateral symmetry (mirror symmetry), the Dirichlet spectrum <em>does</em> determine the domain up to isometry. So the counterexamples must break symmetry in an essential way. <span class="label-tag tag-open">Generic smooth domain: open</span></div>
+</div>
+</div>
+</div>
+ SUNADA'S THEOREM 
+<div class="sunada-box">
+<h4>Sunada's Theorem (1985)</h4>
+<p>Let <span class="math">M</span> be a compact Riemannian manifold and <span class="math">G</span> a finite group acting on <span class="math">M</span> by isometries. Let <span class="math">H₁, H₂ ≤ G</span> be subgroups that are <em>almost conjugate</em> — meaning: for every conjugacy class <span class="math">[g] ⊂ G</span>, we have <span class="math">|H₁ ∩ [g]| = |H₂ ∩ [g]|</span>. Then the quotient manifolds <span class="math">H₁\M</span> and <span class="math">H₂\M</span> are isospectral.</p>
+<p>The almost-conjugacy condition ensures that the <em>representation multiplicities</em> of <span class="math">G</span> on <span class="math">L²(H₁\M)</span> and <span class="math">L²(H₂\M)</span> agree, forcing equal spectra. Note: almost-conjugate does <em>not</em> mean conjugate — that would force <span class="math">H₁\M ≅ H₂\M</span> isometrically. The gap between almost-conjugacy and conjugacy is exactly the room where isospectral non-congruent pairs live.</p>
+</div>
+ THE CONSTRUCTION 
+<div class="s-num" style="margin-top:3rem">The GWW Construction</div>
+<div class="gww-grid">
+<div>
+<div class="gww-step">
+<div class="gww-step-num">Step 1 — The building block</div>
+<h4>A Right Triangle T</h4>
+<p>Fix a right triangle <span class="math">T</span> with legs of length 1 and 2 (the specific shape matters for the geometry, not for the spectral argument). Seven congruent copies of <span class="math">T</span> will tile each domain, assembled by gluing along their hypotenuses and legs.</p>
+<p>The isosceles right triangle with equal legs also works; Gordon–Webb–Wolpert used a right triangle whose smaller angle is arctan(1/2). What matters is that reflections across every edge of <span class="math">T</span> generate a finite group action on a larger base surface.</p>
+</div>
+<div class="gww-step">
+<div class="gww-step-num">Step 2 — The group</div>
+<h4>G = GL(3, 𝔽₂)</h4>
+<p>The ambient group is <span class="math">G = GL(3, 𝔽₂)</span>, the group of invertible 3×3 matrices over the two-element field — a group of order 168, isomorphic to <span class="math">PSL(2, 7)</span>. Gordon and Webb found two subgroups <span class="math">H₁, H₂ ≤ G</span> of order 24 that are almost conjugate but not conjugate in <span class="math">G</span>.</p>
+<p>Almost-conjugacy was verified by computing, for each of the 6 conjugacy classes of <span class="math">G</span>, that <span class="math">|H₁ ∩ [g]| = |H₂ ∩ [g]|</span> — a finite check. The two subgroups are not conjugate, so the quotient domains they produce are genuinely non-isometric.</p>
+</div>
+</div>
+<div>
+<div class="gww-step">
+<div class="gww-step-num">Step 3 — The base surface M</div>
+<h4>Unfolding to a Planar Domain</h4>
+<p>Construct a base surface <span class="math">M</span> by reflecting the triangle <span class="math">T</span> across its sides repeatedly, tracking the group element applied at each step, until 168 copies tile a larger polygon (a fundamental domain for <span class="math">G</span> acting on the plane by reflections).</p>
+<p>The orbit of each copy under <span class="math">G</span> is labeled by elements of <span class="math">G</span>. The quotient <span class="math">H_i\M</span> is then a union of exactly <span class="math">|G|/|H_i| = 168/24 = 7</span> triangles — which is why both domains consist of exactly 7 copies of <span class="math">T</span>.</p>
+</div>
+<div class="gww-step">
+<div class="gww-step-num">Step 4 — Equal invariants</div>
+<h4>Weyl Constraints Are Satisfied</h4>
+<p>Both domains <span class="math">Ω₁, Ω₂</span> automatically inherit the same Weyl invariants. They have equal <strong>area</strong> (7 copies of <span class="math">T</span> each), equal <strong>perimeter</strong> (the boundary lengths agree because the gluing patterns are balanced), and the same number of corners with the same angles. Weyl's law and its boundary corrections are therefore consistent — the spectra could in principle be equal, and by Sunada's theorem they are.</p>
+</div>
+</div>
+</div>
+ TRANSPLANTATION OPERATOR 
+<div class="transplant-diagram">
+<h4>The Transplantation Isomorphism</h4>
+<p style="font-size:.98rem;color:var(--text);line-height:1.7;margin-bottom:1.2rem">
+      The core of the proof is an explicit linear map <span class="math">T: L²(Ω₁) → L²(Ω₂)</span> that intertwines the Laplacians. Label the 7 triangles in <span class="math">Ω₁</span> as <span class="math">A₁…A₇</span> and in <span class="math">Ω₂</span> as <span class="math">B₁…B₇</span>. Given an eigenfunction <span class="math">φ</span> of <span class="math">−Δ</span> on <span class="math">Ω₁</span> with eigenvalue <span class="math">λ</span>, the transplant is:
+    </p>
+<div class="eq" style="margin:0 0 1rem">     Tφ|_{Bⱼ}  =  Σᵢ  cᵢⱼ · (φ|_{Aᵢ} reflected to Bⱼ)</div>
+<p style="font-size:.98rem;color:var(--text);line-height:1.7;margin-bottom:1.2rem">
+      where the matrix <span class="math">(cᵢⱼ) ∈ {−1, 0, 1}^{7×7}</span> encodes the almost-conjugacy relation between <span class="math">H₁</span> and <span class="math">H₂</span> in <span class="math">G</span>. Three properties must be verified:
+    </p>
+<div class="trow">
+<div class="trow-cell">Tφ is smooth<br/>across all interior<br/>edges of Ω₂</div>
+<div class="trow-arrow">⟹</div>
+<div class="trow-cell">Tφ ∈ Dom(−Δ<sub>Ω₂</sub>)<br/>with Dirichlet<br/>boundary conditions</div>
+</div>
+<div class="trow">
+<div class="trow-cell">−Δ(Tφ) = λ·Tφ<br/>holds on each<br/>triangle Bⱼ</div>
+<div class="trow-arrow">⟹</div>
+<div class="trow-cell">λ is an eigenvalue<br/>of −Δ<sub>Ω₂</sub> with<br/>eigenfunction Tφ</div>
+</div>
+<div class="trow">
+<div class="trow-cell">T is an<br/>L² isometry<br/>(‖Tφ‖ = ‖φ‖)</div>
+<div class="trow-arrow">⟹</div>
+<div class="trow-cell">Multiplicities match:<br/>dim ker(−Δ₁−λ)<br/>= dim ker(−Δ₂−λ)</div>
+</div>
+<p style="font-size:.95rem;color:var(--muted);margin-top:1rem;line-height:1.7">
+      All three properties follow from the almost-conjugacy condition on <span class="math">H₁, H₂</span>. Smoothness across interior edges uses the fact that reflections across each edge correspond to elements of <span class="math">G</span>, and the matrix <span class="math">(cᵢⱼ)</span> is precisely calibrated to cancel discontinuities. The argument is purely algebraic — no analysis of the actual eigenvalues is needed.
+    </p>
+</div>
+ WHAT REMAINS OPEN 
+<div style="margin-top:3rem">
+<div class="s-num">What Remains Open</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2rem;margin-top:1.5rem">
+<div class="gww-step">
+<div class="gww-step-num">Smooth domains</div>
+<h4>Generic Shape?</h4>
+<p>All known planar isospectral counterexamples have corners. Whether a generic smooth planar domain is spectrally rigid — determined by its spectrum among smooth domains — is unknown.</p>
+</div>
+<div class="gww-step">
+<div class="gww-step-num">Convex domains</div>
+<h4>Convexity Helps?</h4>
+<p>No isospectral pair of convex planar domains is known. It is conjectured that convex domains are spectrally determined, but this remains unproved.</p>
+</div>
+<div class="gww-step">
+<div class="gww-step-num">Neumann vs Dirichlet</div>
+<h4>Boundary Conditions?</h4>
+<p>The GWW domains are isospectral for <em>both</em> Dirichlet and Neumann boundary conditions simultaneously — a stronger result. Gordon–Webb showed this also follows from transplantation.</p>
+</div>
+</div>
+</div>
+</div>
+<hr class="divider"/>
+ §07 NODAL DOMAINS 
+<div class="wrap fi" id="sec-nodal">
+<div class="s-num">§ 07 — Nodal Domains</div>
+<h2 class="s-title">Can You Count<br/>the Silence?</h2>
+<div class="prose" style="max-width:760px">
+<p>The <em>nodal set</em> of an eigenfunction <span class="math">φ</span> is the zero locus <span class="math">{φ=0}</span> — the curves where the membrane neither rises nor falls. The connected components of <span class="math">Ω ∖ {φ=0}</span> are the <em>nodal domains</em>: regions of pure positive or pure negative displacement, alternating like a checkerboard across the dividing lines.</p>
+<p>On the circular drum, the nodal set of <span class="math">φₘₙ = Jₘ(jₘₙr/R)cos(mθ)</span> consists of <span class="math">n−1</span> interior concentric circles (where <span class="math">Jₘ</span> vanishes) and <span class="math">2m</span> radial lines (where <span class="math">cos(mθ)=0</span>). These divide the disk into exactly <span class="math">2mn</span> nodal domains for <span class="math">m≥1</span>, and <span class="math">n</span> for <span class="math">m=0</span>. Click any mode to see its nodal architecture.</p>
+</div>
+ INTERACTIVE NODAL VIEWER 
+<div class="nodal-layout">
+<div class="panel" style="padding:0;overflow:hidden;position:relative">
+<canvas height="440" id="nodal-canvas" width="440"></canvas>
+<div class="nodal-overlay">
+<div class="nodal-stat" id="nodal-count-display">
+<span class="nodal-big" id="nodal-n">2</span>
+<span class="nodal-label">nodal domains</span>
+</div>
+<div class="nodal-formula" id="nodal-formula">m=0, n=1 → ν = 1</div>
+</div>
+</div>
+<div class="nodal-right">
+<div class="nodal-mode-grid" id="nodal-mode-grid"></div>
+ NODAL AUDIO PANEL 
+<div class="nodal-audio-panel">
+<div class="nap-title">Hear the Count</div>
+<div class="nap-row">
+<button class="nap-btn nap-gold" id="nap-rhythm">
+<span class="nap-icon">♩</span>
+<span class="nap-txt"><b>Nodal Rhythm</b><br/>ν pulses at ω<sub>mn</sub></span>
+</button>
+<button class="nap-btn nap-teal" id="nap-cascade">
+<span class="nap-icon">↑</span>
+<span class="nap-txt"><b>Courant Cascade</b><br/>ascend to bound n</span>
+</button>
+</div>
+<div class="nap-row">
+<button class="nap-btn nap-rose" id="nap-domains">
+<span class="nap-icon">±</span>
+<span class="nap-txt"><b>Domain Tones</b><br/>+ gold · − teal · 0 silence</span>
+</button>
+<button class="nap-btn nap-purple" id="nap-bell" style="border-color:#b080e055">
+<span class="nap-icon">∿</span>
+<span class="nap-txt"><b>Nodal Bells</b><br/>ring at each zero crossing</span>
+</button>
+</div>
+<div class="nap-status" id="nap-status">click a button to listen</div>
+</div>
+<div class="courant-box">
+<div class="courant-bar-wrap">
+<div class="courant-label">Courant bound</div>
+<div class="courant-track">
+<div class="courant-fill" id="courant-fill"></div>
+<div class="courant-actual" id="courant-actual"></div>
+</div>
+<div class="courant-nums" id="courant-nums"></div>
+</div>
+<p class="courant-note" id="courant-note"></p>
+</div>
+</div>
+</div>
+ THE MATHEMATICS 
+<div class="nodal-theory">
+<div class="theorem-row">
+<div class="theorem-card theorem-gold">
+<div class="theorem-year">Courant, 1923</div>
+<h4 class="theorem-name">Nodal Domain Theorem</h4>
+<div class="theorem-eq">ν(φₙ) ≤ n</div>
+<p>The <em>n</em>-th eigenfunction (counting with multiplicity) has at most <em>n</em> nodal domains. The bound is sharp for <span class="math">n=1,2</span> but becomes increasingly slack for large <span class="math">n</span>. Equality holds, for instance, for the <span class="math">n</span>-th mode of a 1D interval.</p>
+</div>
+<div class="theorem-card theorem-teal">
+<div class="theorem-year">Pleijel, 1956</div>
+<h4 class="theorem-name">Asymptotic Improvement</h4>
+<div class="theorem-eq">limsup ν(φₙ)/n ≤ γ ≈ 0.6910</div>
+<p>Pleijel proved that the Courant bound is <em>not</em> asymptotically sharp in 2D. The Pleijel constant is <span class="math">γ = (j₀,₁/π)² = (2.4048/π)² ≈ 0.691</span>. For any sequence of eigenfunctions, the ratio of nodal domains to eigenvalue index is bounded above by a constant strictly less than 1.</p>
+</div>
+<div class="theorem-card theorem-rose">
+<div class="theorem-year">Jung–Zelditch, 2016–2020</div>
+<h4 class="theorem-name">Quantum Ergodicity &amp; Nodal Growth</h4>
+<div class="theorem-eq">ν(φₙ) → ∞  (a.e. QE sequence)</div>
+<p>For surfaces with ergodic geodesic flow, Jung and Zelditch proved that <em>quantum ergodic</em> sequences of eigenfunctions — those equidistributing in phase space — have the number of nodal domains tending to infinity. The equidistribution of eigenfunctions forces their zero sets to become increasingly complex.</p>
+</div>
+</div>
+ JUNG-JANG-ZELDITCH IN DEPTH 
+<div class="jjz-section">
+<div class="s-num" style="margin-top:0">Jung · Jang · Zelditch — A Closer Look</div>
+<div class="jjz-grid">
+<div class="jjz-paper">
+<div class="jjz-authors">Jung &amp; Zelditch</div>
+<div class="jjz-title">"Number of nodal domains of eigenfunctions on non-positively curved surfaces with concave boundary"</div>
+</div>
+<div class="jjz-paper">
+<div class="jjz-authors">Jung &amp; Zelditch</div>
+<div class="jjz-title">"Boundedness of the number of nodal domains for eigenfunctions of generic Kaluza-Klein 3-folds"</div>
+</div>
+<div class="jjz-paper">
+<div class="jjz-authors">Jang &amp; Jung</div>
+<div class="jjz-title">Nodal domains and the quantum ergodicity threshold</div>
+<p>Jang and Jung study the precise threshold at which quantum ergodicity forces nodal complexity. Their results sharpen the relationship between <span class="math">L²</span>-equidistribution of eigenfunctions and the combinatorial topology of their zero sets — showing that even <em>partial</em> equidistribution in phase space has detectable consequences for the nodal domain count.</p>
+</div>
+</div>
+ PHASE SPACE DIAGRAM 
+<div class="phase-diagram-wrap">
+<canvas height="260" id="phase-canvas" width="900"></canvas>
+</div>
+<div class="phase-caption">The nodal domain spectrum: from integrable (bounded ν) through mixed to ergodic (ν → ∞). Position in this diagram is controlled by the dynamics of the geodesic flow.</div>
+</div>
+</div>
+ FUTURE DIRECTIONS 
+<div class="future-section">
+<div class="s-num">Frontiers &amp; Open Problems</div>
+<div class="future-intro prose">
+<p>The theory of nodal domains sits at the meeting point of spectral theory, dynamical systems, probability, and topology. The following directions represent some of the most active and enticing open problems in the field — questions where a single idea could unlock a decade of mathematics.</p>
+</div>
+<div class="future-grid">
+<div class="future-card future-card-gold" id="fc0">
+<canvas class="future-bg-canvas" height="200" width="320"></canvas>
+<div class="future-card-content">
+<div class="future-num">01</div>
+<h4>Lower Bounds on Nodal Volume</h4>
+<p>Yau conjectured (1982) that the <span class="math">(n-1)</span>-dimensional measure of the nodal set satisfies <span class="math">c√λ ≤ H^{n-1}({φ=0}) ≤ C√λ</span>. Donnelly–Fefferman proved the upper bound; Logunov proved the lower bound in full generality in 2018. But the <em>precise constant</em> — and its dependence on the geometry — remains unknown.</p>
+<div class="future-tag">Analytic · Geometric measure theory</div>
+</div>
+</div>
+<div class="future-card future-card-teal" id="fc1">
+<canvas class="future-bg-canvas" height="200" width="320"></canvas>
+<div class="future-card-content">
+<div class="future-num">02</div>
+<h4>Random Wave Model &amp; Percolation</h4>
+<p>Berry (1977) conjectured that high-energy eigenfunctions on ergodic surfaces locally resemble <em>random monochromatic waves</em>. Under this model, nodal domains form a percolation pattern with a precise critical density. Proving that real eigenfunctions exhibit this percolation structure — even on a torus — is wide open.</p>
+<div class="future-tag">Probability · Quantum chaos</div>
+</div>
+</div>
+<div class="future-card future-card-rose" id="fc2">
+<canvas class="future-bg-canvas" height="200" width="320"></canvas>
+<div class="future-card-content">
+<div class="future-num">03</div>
+<h4>Nodal Domains vs. Spectral Geometry</h4>
+<p>Can two isospectral drums — like the GWW pair — have <em>different</em> nodal domain counts for corresponding eigenfunctions? The transplantation map is an isometry of <span class="math">L²</span> but may not preserve the sign of eigenfunctions or the topology of their zero sets. This offers a potential geometric invariant <em>beyond</em> the spectrum.</p>
+<div class="future-tag">Spectral geometry · Topology</div>
+</div>
+</div>
+<div class="future-card future-card-purple" id="fc3">
+<canvas class="future-bg-canvas" height="200" width="320"></canvas>
+<div class="future-card-content">
+<div class="future-num">04</div>
+<h4>Pleijel Constant in 3D</h4>
+<p>Pleijel's theorem extends to <span class="math">d</span>-dimensional manifolds with constant <span class="math">γ_d = (j_{d/2−1,1} / ω_d^{1/d})^2</span> where <span class="math">ω_d</span> is the volume of the unit ball. The <em>sharp</em> limsup — achieving the Pleijel constant along some sequence — is not known in dimension <span class="math">d ≥ 3</span>, nor is it known which geometric features drive the maximum.</p>
+<div class="future-tag">Higher dimensions · Sharp constants</div>
+</div>
+</div>
+<div class="future-card future-card-gold" id="fc4">
+<canvas class="future-bg-canvas" height="200" width="320"></canvas>
+<div class="future-card-content">
+<div class="future-num">05</div>
+<h4>Topology of Nodal Sets</h4>
+<p>What topological types can nodal curves realize? On a surface of genus <span class="math">g</span>, the nodal set of the <span class="math">n</span>-th eigenfunction is a union of smooth embedded curves. Their collective topology — how many connected components, their linking, their genus — is essentially unconstrained by current theory. Jung's recent work begins to probe this frontier.</p>
+<div class="future-tag">Low-dim topology · Morse theory</div>
+</div>
+</div>
+<div class="future-card future-card-teal" id="fc5">
+<canvas class="future-bg-canvas" height="200" width="320"></canvas>
+<div class="future-card-content">
+<div class="future-num">06</div>
+<h4>Arithmetic Quantum Chaos</h4>
+<p>On arithmetic hyperbolic surfaces, Hecke–Maass eigenfunctions are highly constrained by number-theoretic symmetries. Jang–Jung results on quantum ergodicity apply, but the <em>rate</em> of nodal growth, and connections to the Riemann Hypothesis via L-function zeros, hint at deep arithmetic content encoded in the nodal structure of these extraordinary functions.</p>
+<div class="future-tag">Number theory · Arithmetic geometry</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr class="divider"/>
+<footer>
+<div class="s-num">References</div>
+<h2 class="s-title" style="font-size:1.9rem;margin-bottom:1.5rem">Further Reading</h2>
+<div class="refs-grid">
+<div class="ref-item"><strong>M. Kac</strong> — "Can One Hear the Shape of a Drum?" <em>Amer. Math. Monthly</em> 73 (1966), 1–23.</div>
+<div class="ref-item"><strong>H. Weyl</strong> — "Über die Abhängigkeit der Eigenschwingungen einer Membran." <em>J. reine angew. Math.</em> 141 (1912).</div>
+<div class="ref-item"><strong>C. Gordon, D. Webb, S. Wolpert</strong> — "One Cannot Hear the Shape of a Drum." <em>Bull. AMS</em> 27 (1992), 134–138.</div>
+<div class="ref-item"><strong>S. Zelditch</strong> — "Spectral Determination of Analytic Bi-axisymmetric Plane Domains." <em>GAFA</em> 10 (2000), 628–677.</div>
+<div class="ref-item"><strong>R. Courant</strong> — "Ein allgemeiner Satz zur Theorie der Eigenfunktionen." <em>Nachr. Ges. Wiss. Göttingen</em> (1923), 81–84.</div>
+<div class="ref-item"><strong>Å. Pleijel</strong> — "Remarks on Courant's Nodal Line Theorem." <em>Comm. Pure Appl. Math.</em> 9 (1956), 543–550.</div>
+<div class="ref-item"><strong>J. Jung &amp; S. Zelditch</strong> — "Number of Nodal Domains of Eigenfunctions on Non-positively Curved Surfaces with Concave Boundary." <em>Math. Ann.</em> 375 (2019).</div>
+<div class="ref-item"><strong>J. Jung &amp; S. Zelditch</strong> — "Boundedness of the Number of Nodal Domains for Eigenfunctions of Generic Kaluza-Klein 3-folds." <em>Ann. Inst. Fourier</em> (2020).</div>
+</div>
+<p class="epilogue">Bessel functions to 10⁻¹⁵. Eigenvalues exact: j²ₘₙ/R². Audio: Web Audio API modal synthesis with exponential decay and pitch glide.</p>
+<div class="footer-attr" style="margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border)">
+<div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;font-weight:400;color:#edeef2;letter-spacing:-.01em">Sang-hyun Kim</div>
+<div style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:300;color:#5c6178;letter-spacing:.01em;margin-top:.2rem">Korea Institute for Advanced Study</div>
+<a href="https://kimsh.kr" style="font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;display:inline-block;margin-top:.25rem">kimsh.kr</a>
+</div>
+</footer>
+<script>
+"use strict";
+// ================================================================
+// MATH CORE
+// ================================================================
+function besselJ(m, x) {
+  if (x <= 0) return m === 0 ? 1 : 0;
+  const h = x * .5;
+  let term = 1;
+  for (let i = 1; i <= m; i++) term *= h / i;
+  let sum = term;
+  for (let k = 1; k <= 80; k++) {
+    term *= -(h * h) / (k * (m + k));
+    sum += term;
+    if (k > 4 && Math.abs(term) < 1e-15 * (Math.abs(sum) + 1e-30)) break;
+  }
+  return sum;
+}
+
+const ZEROS = {
+  0:[2.404826,5.520078,8.653728,11.791534,14.930918],
+  1:[3.831706,7.015587,10.173468,13.323692,16.470630],
+  2:[5.135622,8.417244,11.619841,14.795952],
+  3:[6.380162,9.761023,13.015201],
+  4:[7.588342,11.064709],
+  5:[8.771484,12.338604],
+};
+
+const GALLERY = [[0,0],[1,0],[2,0],[0,1],[3,0],[1,1]];
+const COLORS = ['#c9a748','#22b5aa','#c04560','#6080e0','#90d858','#e06080'];
+
+// ================================================================
+// AUDIO ENGINE  — iOS Chrome compatible, minimal graph
+// ================================================================
+let audioCtx    = null;
+let masterGain  = null;
+let muted       = false;
+let audioUnlocked = false;
+let unlockCalled  = false;
+let BASE_FREQ   = 110;
+
+function modeFreqHz(m, n) { return BASE_FREQ * ZEROS[m][n] / ZEROS[0][0]; }
+function modeDecay(m, n)  { return Math.max(0.25, 3.2 / (0.4 + ZEROS[m][n] * 0.09)); }
+
+// True only when safe to schedule audio nodes
+function audioReady() {
+  return !!(audioCtx && audioUnlocked && audioCtx.state === 'running' && !muted);
+}
+
+// Call synchronously inside any gesture handler to re-gate iOS context
+function resumeIfSuspended() {
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+// Heartbeat: prevent iOS from auto-suspending
+function startKeepAlive() {
+  setInterval(() => {
+    if (!audioCtx) return;
+    if (audioCtx.state === 'suspended') { audioCtx.resume(); return; }
+    if (audioCtx.state !== 'running') return;
+    const b = audioCtx.createBuffer(1, 1, audioCtx.sampleRate);
+    const s = audioCtx.createBufferSource(); s.buffer = b;
+    s.connect(audioCtx.destination); s.start(0);
+  }, 20000);
+}
+
+function watchContextState() {
+  if (!audioCtx) return;
+  audioCtx.onstatechange = () => {
+    const overlay = document.getElementById('audio-overlay');
+    const btn     = overlay && overlay.querySelector('.ao-btn');
+    if (audioCtx.state === 'suspended' && audioUnlocked) {
+      if (overlay) overlay.classList.remove('gone');
+      if (btn) btn.textContent = 'Tap to resume audio';
+    }
+    if (audioCtx.state === 'running' && audioUnlocked) {
+      if (overlay) overlay.classList.add('gone');
+    }
+  };
+}
+
+// ---- THE UNLOCK — iOS Chrome minimal approach ----
+// Key: function declared globally, called directly from ontouchend inline attribute.
+// No async, no Promise before start(), no preventDefault before AudioContext ops.
+// Oscillator connects DIRECTLY to destination first — no gain chain during init.
+
+function iosUnlock(evt) {
+  if (evt && evt.preventDefault) evt.preventDefault();
+  if (evt && evt.stopPropagation) evt.stopPropagation();
+
+  function log(msg) {}
+
+  log('creating context...');
+
+  // Step 1: Create AudioContext (no options — iOS Chrome rejects some option objects)
+  try {
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) { log('ERROR: no AudioContext'); return; }
+    audioCtx = new AC();
+    log('ctx state: ' + audioCtx.state);
+  } catch(e) {
+    log('ERROR create: ' + e.message);
+    return;
+  }
+
+  // Step 2: Build minimal graph — gain → destination
+  try {
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = 0.75;
+    masterGain.connect(audioCtx.destination);
+  } catch(e) {
+    log('ERROR graph: ' + e.message);
+    return;
+  }
+
+  // Step 3: Play a real oscillator synchronously — the iOS gate
+  try {
+    var osc = audioCtx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.value = 110;
+    var g = audioCtx.createGain();
+    g.gain.value = 0.3;
+    osc.connect(g);
+    g.connect(audioCtx.destination);  // direct to destination, not masterGain
+    osc.start(0);
+    osc.stop(audioCtx.currentTime + 0.5);
+    log('osc started, ctx: ' + audioCtx.state);
+  } catch(e) {
+    log('ERROR osc: ' + e.message);
+    return;
+  }
+
+  // Step 4: resume() — after start() for maximum iOS compatibility
+  try {
+    audioCtx.resume();
+  } catch(e) {}
+
+  // Step 5: Mark as unlocked and update UI
+  audioUnlocked = true;
+  unlockCalled  = true;
+
+  var overlay = document.getElementById('audio-overlay');
+  if (overlay) overlay.classList.add('gone');
+  var btn = document.getElementById('mute-btn');
+  if (btn) { btn.classList.add('on'); btn.textContent = '\u266a Sound ON'; }
+
+  startKeepAlive();
+  watchContextState();
+}
+
+// Fallback: also listen on the overlay itself (desktop / Android)
+var audioOverlay = document.getElementById('audio-overlay');
+audioOverlay.addEventListener('click', function(e) { iosUnlock(e); });
+
+document.addEventListener('touchstart', () => {
+  if (audioUnlocked && audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+}, { passive: true });
+
+// ---- MUTE ----
+document.getElementById('mute-btn').addEventListener('click', function() {
+  resumeIfSuspended();
+  muted = !muted;
+  if (masterGain && audioCtx) masterGain.gain.setTargetAtTime(muted ? 0 : 0.75, audioCtx.currentTime, 0.04);
+  this.textContent = muted ? '\u266a Sound OFF' : '\u266a Sound ON';
+  this.classList.toggle('on', !muted);
+  stopBeatTones();
+  if (muted) phasorOscs.forEach((_, i) => stopPhasorTone(i));
+});
+
+// ---- PITCH SLIDER ----
+const pitchSlider = document.getElementById('pitch-slider');
+const pitchVal    = document.getElementById('pitch-val');
+pitchSlider.addEventListener('input', function() {
+  BASE_FREQ = 110 * this.value / 100;
+  pitchVal.textContent = (this.value / 100).toFixed(2) + '\u00d7';
+  if (audioCtx) phasorOscs.forEach((p, i) => {
+    if (!p) return;
+    const [m, n] = [[0,0],[0,1],[0,2],[0,3]][i];
+    p.osc.frequency.setTargetAtTime(modeFreqHz(m, n), audioCtx.currentTime, 0.08);
+  });
+  document.querySelectorAll('.bar-freq').forEach((el, i) => {
+    const SMODES = [[0,0],[0,1],[0,2],[1,0],[1,1],[2,0]];
+    if (SMODES[i]) el.textContent = modeFreqHz(...SMODES[i]).toFixed(0) + 'Hz';
+  });
+  document.querySelectorAll('.phasor-toggle').forEach((btn, i) => {
+    const PMODES = [[0,0],[0,1],[0,2],[0,3]];
+    const [m, n] = PMODES[i]; const z = ZEROS[m][n];
+    btn.innerHTML = '<span class="pt-dot" style="background:' + ['#c9a748','#22b5aa','#c04560','#6080e0'][i] + '"></span>'
+      + '\u03c9' + (i+1) + ' = ' + z.toFixed(3) + ' \u00b7 c/R = ' + modeFreqHz(m, n).toFixed(1) + ' Hz';
+  });
+});
+
+// ---- NOISE ----
+function playNoise(gainVal, duration) {
+  if (!audioReady()) return;
+  gainVal  = gainVal  || 0.25;
+  duration = duration || 0.028;
+  try {
+    const n   = Math.ceil(audioCtx.sampleRate * duration);
+    const buf = audioCtx.createBuffer(1, n, audioCtx.sampleRate);
+    const d   = buf.getChannelData(0);
+    for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+    const src = audioCtx.createBufferSource(); src.buffer = buf;
+    const hp  = audioCtx.createBiquadFilter();
+    hp.type = 'highpass'; hp.frequency.value = 800;
+    const g = audioCtx.createGain(); const t0 = audioCtx.currentTime;
+    g.gain.setValueAtTime(gainVal, t0);
+    g.gain.exponentialRampToValueAtTime(0.001, t0 + duration);
+    src.connect(hp); hp.connect(g); g.connect(masterGain);
+    src.start(t0); src.stop(t0 + duration + 0.01);
+  } catch(e) {}
+}
+
+// ---- STRIKE ----
+function strikeDrum(modes, amps, noiseGain) {
+  if (!audioReady()) return;
+  noiseGain = noiseGain || 0.2;
+  try {
+    const t0 = audioCtx.currentTime + 0.01;
+    playNoise(noiseGain, 0.03);
+    modes.forEach(function([m, n], i) {
+      const a = Math.max(0, amps[i] || 0);
+      if (a < 0.025) return;
+      const freq  = modeFreqHz(m, n);
+      const decay = modeDecay(m, n);
+      const osc = audioCtx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq * 1.018, t0);
+      osc.frequency.exponentialRampToValueAtTime(freq, t0 + 0.045);
+      const g = audioCtx.createGain();
+      g.gain.setValueAtTime(0, t0);
+      g.gain.linearRampToValueAtTime(a * 0.38, t0 + 0.003);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + decay);
+      osc.connect(g); g.connect(masterGain);
+      osc.start(t0); osc.stop(t0 + decay + 0.1);
+    });
+  } catch(e) {}
+}
+
+// ---- SINGLE TONE ----
+function playTone(m, n, duration, gainVal) {
+  if (!audioReady()) return;
+  duration = duration || 1.2; gainVal = gainVal || 0.18;
+  try {
+    const freq = modeFreqHz(m, n);
+    const t0   = audioCtx.currentTime + 0.01;
+    const osc  = audioCtx.createOscillator(); osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, t0);
+    const g = audioCtx.createGain();
+    g.gain.setValueAtTime(0, t0);
+    g.gain.linearRampToValueAtTime(gainVal, t0 + 0.025);
+    g.gain.setValueAtTime(gainVal, t0 + duration - 0.15);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + duration);
+    osc.connect(g); g.connect(masterGain);
+    osc.start(t0); osc.stop(t0 + duration + 0.1);
+  } catch(e) {}
+}
+
+// ---- PHASOR TONES ----
+const phasorOscs = [null, null, null, null];
+function startPhasorTone(i, m, n) {
+  if (!audioReady()) return;
+  stopPhasorTone(i);
+  try {
+    const osc = audioCtx.createOscillator(); osc.type = 'sine';
+    osc.frequency.value = modeFreqHz(m, n);
+    const g = audioCtx.createGain();
+    g.gain.setValueAtTime(0, audioCtx.currentTime);
+    g.gain.linearRampToValueAtTime(0.12, audioCtx.currentTime + 0.08);
+    osc.connect(g); g.connect(masterGain); osc.start();
+    phasorOscs[i] = { osc, gain: g };
+  } catch(e) {}
+}
+function stopPhasorTone(i) {
+  if (!phasorOscs[i] || !audioCtx) { phasorOscs[i] = null; return; }
+  try {
+    phasorOscs[i].gain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.05);
+    phasorOscs[i].osc.stop(audioCtx.currentTime + 0.3);
+  } catch(e) {}
+  phasorOscs[i] = null;
+}
+
+// ---- BEAT TONES ----
+let beatOscs = [];
+function stopBeatTones() {
+  if (!audioCtx) { beatOscs = []; return; }
+  beatOscs.forEach(function({ osc, gain }) {
+    try { gain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.04); osc.stop(audioCtx.currentTime + 0.3); } catch(e) {}
+  });
+  beatOscs = [];
+}
+function playBeatTones(mA, nA, mB, nB) {
+  if (!audioReady()) return;
+  stopBeatTones();
+  try {
+    [[mA,nA],[mB,nB]].forEach(function([m, n]) {
+      const osc = audioCtx.createOscillator(); osc.type = 'sine';
+      osc.frequency.value = modeFreqHz(m, n);
+      const g = audioCtx.createGain();
+      g.gain.setValueAtTime(0, audioCtx.currentTime);
+      g.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 0.04);
+      osc.connect(g); g.connect(masterGain); osc.start();
+      beatOscs.push({ osc, gain: g });
+    });
+    setTimeout(stopBeatTones, 4000);
+  } catch(e) {}
+}
+
+function updateAllFreqs() {}  // legacy stub
+// ================================================================
+// RENDERING CORE
+// ================================================================
+function buildBuf(W, H, m, n) {
+  const cx = W*.5, cy = H*.5, R = Math.min(W,H)*.46;
+  const z0 = ZEROS[m][n];
+  const buf = new Float32Array(W*H);
+  let mx = 0;
+  for (let py = 0; py < H; py++) {
+    for (let px = 0; px < W; px++) {
+      const dx = px-cx, dy = py-cy, r = Math.sqrt(dx*dx+dy*dy);
+      if (r > R+1) { buf[py*W+px] = 1e10; continue; }
+      const v = besselJ(m, z0*Math.min(r/R, 1)) * (m===0 ? 1 : Math.cos(m*Math.atan2(dy,dx)));
+      buf[py*W+px] = v;
+      if (Math.abs(v) > mx) mx = Math.abs(v);
+    }
+  }
+  if (mx > 0) for (let i = 0; i < W*H; i++) if (buf[i] < 1e9) buf[i] /= mx;
+  return buf;
+}
+
+function paintBuf(ctx, W, H, buf, tf, bg=[5,6,12]) {
+  const img = ctx.createImageData(W, H), d = img.data;
+  for (let i = 0; i < W*H; i++) {
+    const v = buf[i], k = i*4;
+    if (v > 1e9) { d[k]=bg[0];d[k+1]=bg[1];d[k+2]=bg[2];d[k+3]=255; continue; }
+    const a = v*tf;
+    let r,g,b;
+    if (a >= 0) {
+      const t = a; r=bg[0]+t*(220-bg[0]); g=bg[1]+t*(155-bg[1]); b=bg[2]+t*(8-bg[2]);
+    } else {
+      const t = -a; r=bg[0]+t*(5-bg[0]); g=bg[1]+t*(165-bg[1]); b=bg[2]+t*(235-bg[2]);
+    }
+    d[k]=r|0; d[k+1]=g|0; d[k+2]=b|0; d[k+3]=255;
+  }
+  ctx.putImageData(img, 0, 0);
+}
+
+function paintSuperBuf(ctx, W, H, bufs, tfs, bg=[5,6,12]) {
+  const img = ctx.createImageData(W, H), d = img.data;
+  for (let i = 0; i < W*H; i++) {
+    const k = i*4;
+    let outside = true, v = 0;
+    for (let j = 0; j < bufs.length; j++) {
+      if (bufs[j][i] < 1e9) { outside = false; v += bufs[j][i]*tfs[j]; }
+    }
+    if (outside) { d[k]=bg[0];d[k+1]=bg[1];d[k+2]=bg[2];d[k+3]=255; continue; }
+    const mx = 1.4, a = Math.max(-mx, Math.min(mx, v))/mx;
+    let r,g,b;
+    if (a >= 0) {
+      const t=a; r=bg[0]+t*(220-bg[0]); g=bg[1]+t*(155-bg[1]); b=bg[2]+t*(8-bg[2]);
+    } else {
+      const t=-a; r=bg[0]+t*(5-bg[0]); g=bg[1]+t*(165-bg[1]); b=bg[2]+t*(235-bg[2]);
+    }
+    d[k]=r|0; d[k+1]=g|0; d[k+2]=b|0; d[k+3]=255;
+  }
+  ctx.putImageData(img, 0, 0);
+}
+
+// ================================================================
+// HERO — morphing membrane
+// ================================================================
+{
+  const cv = document.getElementById('hero-canvas');
+  let W, H;
+  function resize() { W = cv.width = cv.offsetWidth; H = cv.height = cv.offsetHeight; }
+  resize(); window.addEventListener('resize', resize);
+
+  const RES = 512;
+  const HMODES = [[0,0],[1,0],[2,0],[0,1],[1,1]];
+  const hbufs = HMODES.map(([m,n]) => buildBuf(RES,RES,m,n));
+  const amps = HMODES.map((_,i) => i===0 ? 1.2 : 0);
+  const vels = HMODES.map(() => 0);
+  const targets = HMODES.map((_,i) => i===0 ? 1.2 : 0);
+  const tmpC = document.createElement('canvas');
+  tmpC.width = tmpC.height = RES;
+  const tctx = tmpC.getContext('2d');
+  const tmpBuf = new Float32Array(RES*RES);
+  const ripples = [];
+  let T = 0, retarget = 0;
+
+  function heroInteract(e) {
+    resumeIfSuspended();
+    const rect = cv.getBoundingClientRect();
+    const fx = (e.clientX-rect.left)/rect.width;
+    const fy = (e.clientY-rect.top)/rect.height;
+    ripples.push({ x:fx, y:fy, r:0, life:130 });
+
+    // Compute strike amplitudes
+    const rx = (fx-.5)*2, ry = (fy-.5)*2;
+    const r = Math.sqrt(rx*rx+ry*ry);
+    const th = Math.atan2(ry, rx);
+    const modes = HMODES, samps = HMODES.map(([m,n]) => {
+      const a = besselJ(m, ZEROS[m][n]*Math.min(r,.99)) * (m===0?1:Math.cos(m*th));
+      return Math.abs(a)*1.4 + .08;
+    });
+    strikeDrum(modes, samps);
+
+    HMODES.forEach(([m,n], i) => {
+      const dist = r;
+      targets[i] = Math.max(0.05, (1-dist)*1.4*(m===0?1.3:0.8))*(0.5+Math.random()*.9);
+    });
+  }
+
+  function heroLoop() {
+    requestAnimationFrame(heroLoop);
+    T += .012;
+    if (--retarget < 0) {
+      retarget = 100+Math.random()*120;
+      const pick = Math.floor(Math.random()*HMODES.length);
+      HMODES.forEach((_,i) => { targets[i] = i===pick ? 1.0+Math.random()*.6 : Math.random()*.4; });
+    }
+    amps.forEach((a,i) => {
+      vels[i] += (targets[i]-a)*.04; vels[i] *= .88; amps[i] += vels[i];
+    });
+
+    for (let i = 0; i < RES*RES; i++) tmpBuf[i] = 0;
+    HMODES.forEach(([m,n],mi) => {
+      const tf = amps[mi]*Math.cos(ZEROS[m][n]*T*.6);
+      const buf = hbufs[mi];
+      for (let i = 0; i < RES*RES; i++) if (buf[i] < 1e9) tmpBuf[i] += buf[i]*tf;
+    });
+    for (let i = 0; i < RES*RES; i++) if (hbufs[0][i] > 1e9) tmpBuf[i] = 1e10;
+    paintBuf(tctx, RES, RES, tmpBuf, 1);
+
+    const ctx = cv.getContext('2d');
+    ctx.clearRect(0,0,W,H);
+    const s = Math.min(W,H), ox=(W-s)*.5, oy=(H-s)*.5;
+    ctx.drawImage(tmpC, ox, oy, s, s);
+
+    // Ripples
+    for (let i = ripples.length-1; i >= 0; i--) {
+      const rp = ripples[i];
+      rp.r += 3.8; rp.life--;
+      if (rp.life <= 0) { ripples.splice(i,1); continue; }
+      const al = rp.life/130;
+      const cx2 = rp.x*W, cy2 = rp.y*H;
+      ctx.beginPath(); ctx.arc(cx2,cy2,rp.r,0,Math.PI*2);
+      ctx.strokeStyle = `rgba(201,167,72,${al*.6})`; ctx.lineWidth=1.8; ctx.stroke();
+      if (rp.r>20) {
+        ctx.beginPath(); ctx.arc(cx2,cy2,rp.r*.62,0,Math.PI*2);
+        ctx.strokeStyle = `rgba(34,181,170,${al*.35})`; ctx.lineWidth=1; ctx.stroke();
+      }
+      if (rp.r>45) {
+        ctx.beginPath(); ctx.arc(cx2,cy2,rp.r*.38,0,Math.PI*2);
+        ctx.strokeStyle = `rgba(192,69,96,${al*.2})`; ctx.lineWidth=.7; ctx.stroke();
+      }
+    }
+
+    // Glow ring
+    const cr = s*.46, gox = W*.5, goy = H*.5;
+    const grd = ctx.createRadialGradient(gox,goy,cr*.9,gox,goy,cr*1.08);
+    grd.addColorStop(0,'rgba(201,167,72,0)');
+    grd.addColorStop(.5,`rgba(201,167,72,${.1+.05*Math.sin(T*1.1)})`);
+    grd.addColorStop(1,'rgba(201,167,72,0)');
+    ctx.beginPath(); ctx.arc(gox,goy,cr,0,Math.PI*2);
+    ctx.strokeStyle = grd; ctx.lineWidth = 3; ctx.stroke();
+  }
+  cv.addEventListener('click', heroInteract);
+  cv.addEventListener('touchstart', e => { e.preventDefault(); heroInteract(e.touches[0]); }, {passive:false});
+  heroLoop();
+}
+
+// ================================================================
+// §01 — STRIKE CANVAS
+// ================================================================
+{
+  const cv = document.getElementById('strike-canvas');
+  const W=cv.width, H=cv.height;
+  const ctx = cv.getContext('2d');
+  const SMODES = [[0,0],[0,1],[0,2],[1,0],[1,1],[2,0]];
+  const sbufs  = SMODES.map(([m,n]) => buildBuf(W,H,m,n));
+  const samps  = SMODES.map(() => 0);
+  const sdec   = SMODES.map(([m,n]) => Math.exp(-0.003*(1+ZEROS[m][n]*.04)));
+  let sT = 0;
+
+  const barList = document.getElementById('bar-list');
+  const barFills = [];
+  SMODES.forEach(([m,n],i) => {
+    const color = COLORS[i];
+    const freq  = modeFreqHz(m,n);
+    const div   = document.createElement('div');
+    div.className = 'mode-bar';
+    div.innerHTML = `<span class="mode-bar-label" style="color:${color}">J${m},${n+1}</span>
+      <div class="bar-track"><div class="bar-fill" style="background:${color}"></div></div>
+      <span class="bar-freq">${freq.toFixed(0)}Hz</span>`;
+    barList.appendChild(div);
+    barFills.push(div.querySelector('.bar-fill'));
+  });
+  // Live freq update when slider moves
+  pitchSlider.addEventListener('input', () => {
+    document.querySelectorAll('.bar-freq').forEach((el,i) => {
+      const [m,n] = SMODES[i];
+      el.textContent = modeFreqHz(m,n).toFixed(0)+'Hz';
+    });
+  });
+
+  function strikeAt(fx, fy) {
+    const cx=W*.5, cy=H*.5, R=Math.min(W,H)*.46;
+    const rx=(fx-cx)/R, ry=(fy-cy)/R;
+    const r=Math.sqrt(rx*rx+ry*ry);
+    const th=Math.atan2(ry,rx);
+    SMODES.forEach(([m,n],i) => {
+      const a = besselJ(m, ZEROS[m][n]*Math.min(r,.99)) * (m===0?1:Math.cos(m*th));
+      samps[i] = Math.abs(a)*1.4 + .08;
+    });
+    strikeDrum(SMODES, samps, 0.22);
+  }
+  function strikeInteract(e) {
+    resumeIfSuspended();
+    const r = cv.getBoundingClientRect();
+    strikeAt((e.clientX-r.left)/r.width*W, (e.clientY-r.top)/r.height*H);
+  }
+  cv.addEventListener('click', strikeInteract);
+  cv.addEventListener('touchstart', e => { e.preventDefault(); strikeInteract(e.touches[0]); }, {passive:false});
+  strikeAt(W*.5, H*.5);
+
+  function sFrame() {
+    requestAnimationFrame(sFrame);
+    sT += .018;
+    const tfs = SMODES.map(([m,n],i) => samps[i]*Math.cos(ZEROS[m][n]*sT*.55));
+    paintSuperBuf(ctx,W,H,sbufs,tfs,[12,14,26]);
+    SMODES.forEach((_,i) => { samps[i] *= sdec[i]; });
+    barFills.forEach((bf,i) => { bf.style.width = Math.min(100,samps[i]*90)+'%'; });
+  }
+  sFrame();
+}
+
+// ================================================================
+// §02 — PHASORS with continuous tones
+// ================================================================
+{
+  const pc=document.getElementById('phasor-canvas');
+  const wc=document.getElementById('waveform-canvas');
+  const PW=pc.width, PH=pc.height, WW=wc.width, WH=wc.height;
+  const pctx=pc.getContext('2d'), wctx=wc.getContext('2d');
+
+  const PMODES=[[0,0],[0,1],[0,2],[0,3]];
+  const pActive=PMODES.map((_,i)=>i<3);
+  const pAmps=[1.0,.45,.22,.13];
+  const pColors=['#c9a748','#22b5aa','#c04560','#6080e0'];
+  let pT=0;
+
+  const ctrl=document.getElementById('phasor-controls');
+  PMODES.forEach(([m,n],i)=>{
+    const z=ZEROS[m][n];
+    const btn=document.createElement('button');
+    btn.className='phasor-toggle'+(pActive[i]?' on':'');
+    btn.innerHTML=`<span class="pt-dot" style="background:${pColors[i]}"></span>ω${i+1} = ${z.toFixed(3)} · c/R  =  ${modeFreqHz(m,n).toFixed(1)} Hz`;
+    btn.dataset.idx=i; btn.dataset.m=m; btn.dataset.n=n;
+    btn.addEventListener('click', ()=>{
+      resumeIfSuspended();
+      pActive[i]=!pActive[i];
+      btn.classList.toggle('on',pActive[i]);
+      if(pActive[i]){ startPhasorTone(i,m,n); }
+      else { stopPhasorTone(i); }
+    });
+    ctrl.appendChild(btn);
+  });
+  // Update button Hz labels on pitch change
+  pitchSlider.addEventListener('input',()=>{
+    document.querySelectorAll('.phasor-toggle').forEach((btn,i)=>{
+      const [m,n]=PMODES[i], z=ZEROS[m][n];
+      btn.innerHTML=`<span class="pt-dot" style="background:${pColors[i]}"></span>ω${i+1} = ${z.toFixed(3)} · c/R  =  ${modeFreqHz(m,n).toFixed(1)} Hz`;
+    });
+  });
+
+  const TRAIL=WW, trailY=new Float32Array(TRAIL);
+  let trailHead=0;
+
+  function pFrame(){
+    requestAnimationFrame(pFrame);
+    pT+=.015;
+    pctx.fillStyle='#0c0e1a'; pctx.fillRect(0,0,PW,PH);
+    const cx=PW*.5, cy=PH*.5, baseR=Math.min(PW,PH)*.135;
+    let ex=cx, ey=cy;
+    PMODES.forEach(([m,n],i)=>{
+      const z=ZEROS[m][n], R=baseR*pAmps[i];
+      if(!pActive[i]) return;
+      const angle=z*pT*.7;
+      // Ghost circle
+      pctx.beginPath(); pctx.arc(ex,ey,R,0,Math.PI*2);
+      pctx.strokeStyle=pColors[i]+'28'; pctx.lineWidth=1; pctx.stroke();
+      // Spoke
+      const nx=ex+R*Math.cos(angle), ny=ey+R*Math.sin(angle);
+      pctx.beginPath(); pctx.moveTo(ex,ey); pctx.lineTo(nx,ny);
+      pctx.strokeStyle=pColors[i]+'cc'; pctx.lineWidth=2; pctx.stroke();
+      // Dot
+      const grd=pctx.createRadialGradient(nx,ny,0,nx,ny,7);
+      grd.addColorStop(0,pColors[i]); grd.addColorStop(1,pColors[i]+'00');
+      pctx.fillStyle=grd; pctx.beginPath(); pctx.arc(nx,ny,7,0,Math.PI*2); pctx.fill();
+      pctx.fillStyle=pColors[i]; pctx.beginPath(); pctx.arc(nx,ny,3,0,Math.PI*2); pctx.fill();
+      ex=nx; ey=ny;
+    });
+    // Dashed to edge
+    pctx.beginPath(); pctx.setLineDash([3,4]);
+    pctx.moveTo(ex,ey); pctx.lineTo(PW,ey);
+    pctx.strokeStyle='#ffffff18'; pctx.lineWidth=1; pctx.stroke(); pctx.setLineDash([]);
+
+    // Axis labels
+    pctx.fillStyle='#585d7a'; pctx.font='9px Space Mono,monospace';
+    pctx.textAlign='center'; pctx.fillText('Re',cx,PH-10);
+    pctx.save(); pctx.translate(14,cy); pctx.rotate(-Math.PI/2); pctx.fillText('Im',0,0); pctx.restore();
+
+    // Waveform
+    const val=(ey-cy)/(baseR*3);
+    trailY[trailHead%TRAIL]=val; trailHead++;
+    wctx.fillStyle='#0c0e1a'; wctx.fillRect(0,0,WW,WH);
+    wctx.strokeStyle='#1a1d30'; wctx.lineWidth=1;
+    wctx.beginPath(); wctx.moveTo(0,WH*.5); wctx.lineTo(WW,WH*.5); wctx.stroke();
+    wctx.beginPath(); wctx.strokeStyle='#f0e8d8cc'; wctx.lineWidth=1.5;
+    for(let px=0;px<WW;px++){
+      const idx=(trailHead-WW+px+TRAIL*2)%TRAIL;
+      const y=WH*.5+trailY[idx]*WH*.42;
+      px===0?wctx.moveTo(px,y):wctx.lineTo(px,y);
+    }
+    wctx.stroke();
+    wctx.beginPath(); wctx.arc(WW-1,WH*.5+val*WH*.42,4,0,Math.PI*2);
+    wctx.fillStyle='#f0e8d8'; wctx.fill();
+  }
+  pFrame();
+}
+
+// ================================================================
+// §03 — MODE GALLERY (all animated, click to hear)
+// ================================================================
+{
+  const grid=document.getElementById('modes-grid');
+  const RES=180;
+  GALLERY.forEach(([m,n],idx)=>{
+    const z=ZEROS[m][n], lam=(z*z).toFixed(3), mult=m===0?1:2;
+    const card=document.createElement('div');
+    card.className='mode-card'+(idx===0?' active-card':'');
+    card.innerHTML=`<canvas width="${RES}" height="${RES}"></canvas>
+      <div class="mode-meta">
+        <div class="mode-name">Mode (m=${m}, n=${n+1})${mult>1?' ×2':''}</div>
+        <div class="mode-ev">λ = ${lam}/R²  &nbsp;  ω = ${z.toFixed(4)} c/R</div>
+        <div class="mode-ev"><span class="play-badge">▶ click to hear</span></div>
+      </div>`;
+    const cv=card.querySelector('canvas');
+    const ctx=cv.getContext('2d');
+    const buf=buildBuf(RES,RES,m,n);
+    let t=idx*(Math.PI*2/GALLERY.length), speed=0.4+idx*.08;
+    function loop(){ requestAnimationFrame(loop); t+=speed*.015; paintBuf(ctx,RES,RES,buf,Math.cos(z*t*.5),[13,15,26]); }
+    loop();
+    card.addEventListener('click', ()=>{
+      resumeIfSuspended();
+      document.querySelectorAll('.mode-card').forEach(c=>c.classList.remove('active-card'));
+      card.classList.add('active-card');
+      playTone(m,n,1.6,0.22);
+      card.classList.remove('dinging');
+      void card.offsetWidth;
+      card.classList.add('dinging');
+    });
+    grid.appendChild(card);
+  });
+}
+
+// ================================================================
+// §04 — BEATING MODES
+// ================================================================
+{
+  const BMODES=[
+    {m:0,n:0,label:'(0,1) j=2.405'},{m:0,n:1,label:'(0,2) j=5.520'},
+    {m:1,n:0,label:'(1,1) j=3.832'},{m:2,n:0,label:'(2,1) j=5.136'},
+    {m:0,n:2,label:'(0,3) j=8.654'},{m:1,n:1,label:'(1,2) j=7.016'},
+  ];
+  let selA=0, selB=2;
+  const RES=320;
+  const bbufs=BMODES.map(({m,n})=>buildBuf(RES,RES,m,n));
+  const bc1=document.getElementById('beat-canvas'), bc2=document.getElementById('beat-canvas2');
+  const b1ctx=bc1.getContext('2d'), b2ctx=bc2.getContext('2d');
+  let bT=0;
+
+  const picker=document.getElementById('beat-picker');
+  function buildPicker(){
+    picker.innerHTML='';
+    BMODES.forEach((bm,i)=>{
+      const btn=document.createElement('button');
+      let cls='bp';
+      if(i===selA) cls+=' sel-a';
+      else if(i===selB) cls+=' sel-b';
+      btn.className=cls;
+      btn.textContent=bm.label;
+      btn.addEventListener('click',()=>{
+        if(i===selA||i===selB) return;
+        selA=selB; selB=i; buildPicker();
+      });
+      picker.appendChild(btn);
+    });
+  }
+  buildPicker();
+
+  document.getElementById('beat-play-btn').addEventListener('click', ()=>{
+    resumeIfSuspended();
+    const mA=BMODES[selA], mB=BMODES[selB];
+    playBeatTones(mA.m,mA.n,mB.m,mB.n);
+  });
+
+  const infA=document.getElementById('beat-info-a'), infB=document.getElementById('beat-info-b');
+  function bFrame(){
+    requestAnimationFrame(bFrame);
+    bT+=.014;
+    const mA=BMODES[selA], mB=BMODES[selB];
+    const zA=ZEROS[mA.m][mA.n], zB=ZEROS[mB.m][mB.n];
+    const tfA=Math.cos(zA*bT*.5), tfB=Math.cos(zB*bT*.5);
+    paintBuf(b1ctx,RES,RES,bbufs[selA],tfA,[12,14,26]);
+    paintSuperBuf(b2ctx,RES,RES,[bbufs[selA],bbufs[selB]],[tfA,tfB*.9],[12,14,26]);
+    const beatHz = Math.abs(modeFreqHz(mA.m,mA.n)-modeFreqHz(mB.m,mB.n));
+    infA.innerHTML=`<b>${modeFreqHz(mA.m,mA.n).toFixed(2)} Hz</b>  ω=${zA.toFixed(4)} c/R\nλ = ${(zA*zA).toFixed(3)}/R²`;
+    infB.innerHTML=`Beat period: 1/|f₁−f₂| = ${(1/beatHz).toFixed(3)} s\n|f₁−f₂| = ${beatHz.toFixed(2)} Hz`;
+  }
+  bFrame();
+}
+
+// ================================================================
+// §04b — THREE MODES
+// ================================================================
+{
+  const ALL3 = [];
+  for (const [ms, zeros] of Object.entries(ZEROS)) {
+    const m = parseInt(ms);
+    zeros.forEach((z, n) => {
+      ALL3.push({ m, n, z, label: `(m=${m},n=${n+1})  j=${z.toFixed(3)}  ω=${(z*110/2.404826).toFixed(1)}Hz` });
+    });
+  }
+  ALL3.sort((a,b)=>a.z-b.z);
+
+  const selIds = ['three-sel-a','three-sel-b','three-sel-c'];
+  const defaults = [0, 2, 4]; // (0,1), (1,1), (2,1)
+  selIds.forEach((id, si) => {
+    const sel = document.getElementById(id);
+    ALL3.forEach((md, i) => {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = md.label;
+      if (i === defaults[si]) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  });
+
+  const RES3 = 220, RSUP = 260;
+  const cvA = document.getElementById('three-cv-a'), ctxA = cvA.getContext('2d');
+  const cvB = document.getElementById('three-cv-b'), ctxB = cvB.getContext('2d');
+  const cvC = document.getElementById('three-cv-c'), ctxC = cvC.getContext('2d');
+  const cvS = document.getElementById('three-cv-sum'), ctxS = cvS.getContext('2d');
+  const lblA = document.getElementById('three-lbl-a');
+  const lblB = document.getElementById('three-lbl-b');
+  const lblC = document.getElementById('three-lbl-c');
+  const info = document.getElementById('three-info');
+
+  let idxA = defaults[0], idxB = defaults[1], idxC = defaults[2];
+  let bufA, bufB, bufC;
+
+  function rebuildBufs() {
+    bufA = buildBuf(RES3, RES3, ALL3[idxA].m, ALL3[idxA].n);
+    bufB = buildBuf(RES3, RES3, ALL3[idxB].m, ALL3[idxB].n);
+    bufC = buildBuf(RSUP, RSUP, ALL3[idxC].m, ALL3[idxC].n); // will rebuild below
+    bufC = buildBuf(RES3, RES3, ALL3[idxC].m, ALL3[idxC].n);
+    // also need sum-res buffers
+    bufA_s = buildBuf(RSUP, RSUP, ALL3[idxA].m, ALL3[idxA].n);
+    bufB_s = buildBuf(RSUP, RSUP, ALL3[idxB].m, ALL3[idxB].n);
+    bufC_s = buildBuf(RSUP, RSUP, ALL3[idxC].m, ALL3[idxC].n);
+  }
+  let bufA_s, bufB_s, bufC_s;
+  rebuildBufs();
+
+  function updateLabels() {
+    const md = [ALL3[idxA], ALL3[idxB], ALL3[idxC]];
+    lblA.textContent = `Mode A · (m=${md[0].m},n=${md[0].n+1}) · ${modeFreqHz(md[0].m,md[0].n).toFixed(1)} Hz`;
+    lblB.textContent = `Mode B · (m=${md[1].m},n=${md[1].n+1}) · ${modeFreqHz(md[1].m,md[1].n).toFixed(1)} Hz`;
+    lblC.textContent = `Mode C · (m=${md[2].m},n=${md[2].n+1}) · ${modeFreqHz(md[2].m,md[2].n).toFixed(1)} Hz`;
+
+    const fA = modeFreqHz(md[0].m,md[0].n), fB = modeFreqHz(md[1].m,md[1].n), fC = modeFreqHz(md[2].m,md[2].n);
+    const dAB = Math.abs(fA-fB), dAC = Math.abs(fA-fC), dBC = Math.abs(fB-fC);
+    info.innerHTML =
+      `<b>f_A</b> = ${fA.toFixed(2)} Hz  &nbsp; <b>f_B</b> = ${fB.toFixed(2)} Hz  &nbsp; <b>f_C</b> = ${fC.toFixed(2)} Hz\n` +
+      `|f_A−f_B| = ${dAB.toFixed(2)} Hz  &nbsp; beat period: ${dAB>0.01?(1/dAB).toFixed(3):'∞'} s\n` +
+      `|f_A−f_C| = ${dAC.toFixed(2)} Hz  &nbsp; beat period: ${dAC>0.01?(1/dAC).toFixed(3):'∞'} s\n` +
+      `|f_B−f_C| = ${dBC.toFixed(2)} Hz  &nbsp; beat period: ${dBC>0.01?(1/dBC).toFixed(3):'∞'} s`;
+  }
+  updateLabels();
+
+  document.getElementById('three-sel-a').addEventListener('change', e => { idxA=+e.target.value; rebuildBufs(); updateLabels(); });
+  document.getElementById('three-sel-b').addEventListener('change', e => { idxB=+e.target.value; rebuildBufs(); updateLabels(); });
+  document.getElementById('three-sel-c').addEventListener('change', e => { idxC=+e.target.value; rebuildBufs(); updateLabels(); });
+
+  // Hold three tones
+  let threeOscs = [];
+  function stopThreeTones() {
+    if (!audioCtx) { threeOscs=[]; return; }
+    threeOscs.forEach(({osc,gain})=>{
+      gain.gain.setTargetAtTime(0,audioCtx.currentTime,.05);
+      osc.stop(audioCtx.currentTime+.3);
+    });
+    threeOscs=[];
+  }
+  document.getElementById('three-play-btn').addEventListener('click', () => {
+    resumeIfSuspended();
+    if (!audioReady()) return;
+    stopThreeTones();
+    [ALL3[idxA],ALL3[idxB],ALL3[idxC]].forEach(md => {
+      const osc=audioCtx.createOscillator(); osc.type='sine';
+      osc.frequency.value=modeFreqHz(md.m,md.n);
+      const g=audioCtx.createGain();
+      g.gain.setValueAtTime(0,audioCtx.currentTime);
+      g.gain.linearRampToValueAtTime(0.12,audioCtx.currentTime+.05);
+      osc.connect(g); g.connect(masterGain); osc.start();
+      threeOscs.push({osc,gain:g});
+    });
+    setTimeout(()=>stopThreeTones(), 5000);
+  });
+
+  let tT = 0;
+  function threeFrame() {
+    requestAnimationFrame(threeFrame);
+    tT += .014;
+    const zA=ALL3[idxA].z, zB=ALL3[idxB].z, zC=ALL3[idxC].z;
+    const tfA=Math.cos(zA*tT*.5), tfB=Math.cos(zB*tT*.5), tfC=Math.cos(zC*tT*.5);
+    paintBuf(ctxA, RES3, RES3, bufA, tfA, [12,10,5]);
+    paintBuf(ctxB, RES3, RES3, bufB, tfB, [5,12,10]);
+    paintBuf(ctxC, RES3, RES3, bufC, tfC, [12,5,10]);
+    paintSuperBuf(ctxS, RSUP, RSUP, [bufA_s,bufB_s,bufC_s], [tfA,tfB,tfC], [10,11,18]);
+  }
+  threeFrame();
+}
+
+// ================================================================
+// §05 — WEYL ANIMATED STAIRCASE (tones on each step)
+// ================================================================
+{
+  const cv=document.getElementById('weyl-canvas'), ctx=cv.getContext('2d');
+  const W=cv.width, H=cv.height;
+  const ml=54,mr=18,mt=24,mb=44, pw=W-ml-mr, ph=H-mt-mb;
+
+  // Collect eigenvalues with [m,n] info for audio
+  const evEntries=[];
+  for(const[ms,zeros] of Object.entries(ZEROS)){
+    const m=parseInt(ms);
+    zeros.forEach((z,n)=>{
+      const mult=m===0?1:2;
+      for(let k=0;k<mult;k++) evEntries.push({lam:z*z,m,n,z});
+    });
+  }
+  evEntries.sort((a,b)=>a.lam-b.lam);
+  const maxL=280, ev=evEntries.filter(e=>e.lam<=maxL);
+
+  function lx(l){return ml+(l/maxL)*pw;}
+  function ny(n){return mt+ph-(n/(ev.length+2))*ph;}
+
+  function drawWeyl(n){
+    ctx.fillStyle='#0c0e1a'; ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle='#1a1d30'; ctx.lineWidth=1;
+    [50,100,150,200,250].forEach(l=>{
+      ctx.beginPath(); ctx.moveTo(lx(l),mt); ctx.lineTo(lx(l),mt+ph); ctx.stroke();
+      ctx.fillStyle='#585d7a'; ctx.font='9px Space Mono,monospace'; ctx.textAlign='center';
+      ctx.fillText(l,lx(l),mt+ph+16);
+    });
+    const ys=Math.ceil(ev.length/5);
+    for(let i=0;i<=ev.length;i+=ys){
+      ctx.beginPath(); ctx.moveTo(ml,ny(i)); ctx.lineTo(ml+pw,ny(i)); ctx.stroke();
+      ctx.fillStyle='#585d7a'; ctx.font='9px Space Mono,monospace'; ctx.textAlign='right';
+      ctx.fillText(i,ml-7,ny(i)+3);
+    }
+    ctx.fillStyle='#585d7a'; ctx.font='9px Space Mono,monospace';
+    ctx.textAlign='center'; ctx.fillText('λ',ml+pw*.5,mt+ph+32);
+    ctx.save(); ctx.translate(14,mt+ph*.5); ctx.rotate(-Math.PI*.5); ctx.fillText('N(λ)',0,0); ctx.restore();
+
+    ctx.strokeStyle='#c9a74888'; ctx.lineWidth=1.5; ctx.setLineDash([7,5]);
+    ctx.beginPath(); ctx.moveTo(lx(0),ny(0)); ctx.lineTo(lx(maxL),ny(maxL/4)); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='#c9a748cc'; ctx.font='italic 10px EB Garamond,serif'; ctx.textAlign='left';
+    ctx.fillText('N(λ) ∼ λ/4  (Weyl)',lx(140),ny(140/4)-9);
+
+    if(n>0){
+      ctx.strokeStyle='#22b5aa'; ctx.lineWidth=2;
+      ctx.beginPath();
+      let px2=lx(0), py2=ny(0); ctx.moveTo(px2,py2);
+      for(let i=0;i<n;i++){
+        const x=lx(ev[i].lam), y=ny(i+1);
+        ctx.lineTo(x,py2); ctx.lineTo(x,y); px2=x; py2=y;
+      }
+      ctx.lineTo(lx(ev[n-1].lam+2),py2); ctx.stroke();
+
+      const ex=lx(ev[n-1].lam), ey=ny(n);
+      const grd=ctx.createRadialGradient(ex,ey,0,ex,ey,14);
+      grd.addColorStop(0,'rgba(34,181,170,.9)'); grd.addColorStop(1,'rgba(34,181,170,0)');
+      ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(ex,ey,14,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='#22b5aa'; ctx.beginPath(); ctx.arc(ex,ey,3.5,0,Math.PI*2); ctx.fill();
+    }
+    ctx.fillStyle='#22b5aa'; ctx.font='10px Space Mono,monospace'; ctx.textAlign='left';
+    ctx.fillText(`N(λ): ${n} / ${ev.length}`,lx(200),mt+ph*.3);
+  }
+
+  let weylRunning=false, animN=0;
+  function runWeyl(){
+    weylRunning=true; animN=0;
+    function step(){
+      if(!weylRunning) return;
+      drawWeyl(animN);
+      // Play a brief tone for each new eigenvalue (early ones get longer tones)
+      if(animN>0 && animN<ev.length && audioReady()){
+        const e=ev[animN-1];
+        const osc=audioCtx.createOscillator(); osc.type='sine';
+        osc.frequency.value=modeFreqHz(e.m,e.n);
+        const g=audioCtx.createGain(), t0=audioCtx.currentTime;
+        const dur = animN<8?0.22:animN<25?0.12:0.055;
+        g.gain.setValueAtTime(0,t0);
+        g.gain.linearRampToValueAtTime(0.08,t0+0.01);
+        g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+        osc.connect(g); g.connect(masterGain);
+        osc.start(t0); osc.stop(t0+dur+0.05);
+      }
+      if(animN<ev.length){ animN++; setTimeout(step, animN<6?320:animN<22?100:36); }
+    }
+    step();
+  }
+  drawWeyl(0);
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting&&!weylRunning) runWeyl();});
+  },{threshold:.25});
+  obs.observe(document.getElementById('sec-weyl'));
+  document.getElementById('weyl-replay').addEventListener('click', ()=>{
+    resumeIfSuspended();
+    weylRunning=false; stopBeatTones();
+    setTimeout(()=>runWeyl(), 80);
+  });
+}
+
+// ================================================================
+// §06 — ISOSPECTRAL GWW (animated, click to hear shared spectrum)
+// ================================================================
+{
+  const shapes=[
+    [[0,3],[1,3],[1,4],[3,4],[3,3],[2,3],[2,2],[3,2],[3,0],[2,0],[2,1],[0,1]],
+    [[0,2],[1,2],[1,4],[2,4],[2,3],[3,3],[3,1],[2,1],[2,0],[1,0],[1,1],[0,1]]
+  ];
+  const drumColors=['#c9a748','#22b5aa'];
+  const drumCanvases=[document.getElementById('drum1'),document.getElementById('drum2')];
+  let isoT=0;
+
+  // Both drums use same eigenvalues (by construction)
+  // We'll strike the circular fundamental for the "sound" — they truly sound the same
+  const isoModes=[[0,0],[0,1],[1,0],[2,0],[0,2]];
+  const isoAmps=[1.0,.55,.40,.28,.18];
+
+  drumCanvases.forEach(cv=>{
+    cv.style.cursor='pointer';
+    function isoTap() { resumeIfSuspended(); strikeDrum(isoModes, isoAmps, 0.18); }
+    cv.addEventListener('click', isoTap);
+    cv.addEventListener('touchstart', e=>{ e.preventDefault(); isoTap(); }, {passive:false});
+  });
+
+  function drawGWW(cv,which,t){
+    const ctx=cv.getContext('2d');
+    const W=cv.width, H=cv.height;
+    const u=Math.min(W,H)/5.5;
+    const pts=shapes[which];
+    const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);
+    const mnx=Math.min(...xs),mxx=Math.max(...xs),mny=Math.min(...ys),mxy=Math.max(...ys);
+    const offX=W/2-(mnx+mxx)/2*u, offY=H/2-(mny+mxy)/2*u;
+    const toC=([x,y])=>[offX+x*u,offY+y*u];
+    ctx.fillStyle='#0c0e1a'; ctx.fillRect(0,0,W,H);
+    const pulse=(Math.sin(t*ZEROS[0][0]*.5)+1)/2;
+    const r=Math.round(12+pulse*(201-12)), g=Math.round(14+pulse*(167-14)), b_=Math.round(26+pulse*(72-26));
+    ctx.strokeStyle=drumColors[which]+'15'; ctx.lineWidth=.5;
+    for(let x=0;x<=4;x++){ctx.beginPath();ctx.moveTo(offX+x*u,offY);ctx.lineTo(offX+x*u,offY+4*u);ctx.stroke();}
+    for(let y=0;y<=4;y++){ctx.beginPath();ctx.moveTo(offX,offY+y*u);ctx.lineTo(offX+4*u,offY+y*u);ctx.stroke();}
+    for(let d=-4;d<=4;d++){
+      ctx.beginPath();
+      ctx.moveTo(offX+Math.max(0,d)*u,offY+Math.max(0,-d)*u);
+      ctx.lineTo(offX+Math.min(4,4+d)*u,offY+Math.min(4,4-d)*u);
+      ctx.stroke();
+    }
+    ctx.beginPath();
+    pts.forEach(([x,y],i)=>{const[cx,cy]=toC([x,y]);i===0?ctx.moveTo(cx,cy):ctx.lineTo(cx,cy);});
+    ctx.closePath(); ctx.fillStyle=`rgba(${r},${g},${b_},0.32)`; ctx.fill();
+    ctx.strokeStyle=drumColors[which]; ctx.lineWidth=2;
+    ctx.beginPath();
+    pts.forEach(([x,y],i)=>{const[cx,cy]=toC([x,y]);i===0?ctx.moveTo(cx,cy):ctx.lineTo(cx,cy);});
+    ctx.closePath();
+    ctx.shadowColor=drumColors[which]; ctx.shadowBlur=7+4*pulse;
+    ctx.stroke(); ctx.shadowBlur=0;
+    // Cursor hint
+    ctx.fillStyle=drumColors[which]+'66'; ctx.font='italic 10px EB Garamond,monospace';
+    ctx.textAlign='center'; ctx.fillText('click to hear',W/2,H-10);
+  }
+
+  function isoFrame(){ requestAnimationFrame(isoFrame); isoT+=.014; drawGWW(drumCanvases[0],0,isoT); drawGWW(drumCanvases[1],1,isoT); }
+  isoFrame();
+
+  const syms=['λ₁','λ₂','λ₃','λ₄','λ₅','λ₆','λ₇','λ₈'];
+  ['ev1','ev2'].forEach(id=>{
+    const div=document.getElementById(id);
+    syms.forEach((s,i)=>{ const row=document.createElement('div'); row.className='ev-row'; row.innerHTML=`<span>${i+1}</span><span>${s} ✓</span>`; div.appendChild(row); });
+  });
+}
+// ================================================================
+// §07 — NODAL DOMAINS
+// ================================================================
+{
+  // Nodal domain count for mode (m,n): m=0 → n domains; m≥1 → 2*m*n domains
+  // (exact for circular disk with these separable eigenfunctions)
+  function nodalCount(m, n) { return m === 0 ? (n + 1) : 2 * m * (n + 1); }
+
+  // Eigenvalue index (approximate rank in sorted list) for Courant comparison
+  // We precompute them from ALL_MODES sorted by lam
+  const sortedModes = [];
+  for (const [ms, zs] of Object.entries(ZEROS)) {
+    const m = parseInt(ms);
+    zs.forEach((z, n) => {
+      const mult = m === 0 ? 1 : 2;
+      for (let k = 0; k < mult; k++) sortedModes.push({ m, n, lam: z * z });
+    });
+  }
+  sortedModes.sort((a, b) => a.lam - b.lam);
+
+  function eigenIndex(m, n) {
+    const lam = ZEROS[m][n] ** 2;
+    let rank = 1;
+    for (const s of sortedModes) { if (s.lam < lam - 1e-6) rank++; }
+    return rank;
+  }
+
+  const NODAL_MODES = [[0,0],[1,0],[2,0],[0,1],[3,0],[1,1],[2,1],[0,2]];
+  let activeNodalMode = 0;
+  let nodalT = 0;
+
+  // ---- Build thumbnail buttons ----
+  const nmg = document.getElementById('nodal-mode-grid');
+  const thumbBufs = NODAL_MODES.map(([m, n]) => buildBuf(100, 100, m, n));
+
+  NODAL_MODES.forEach(([m, n], i) => {
+    const div = document.createElement('div');
+    div.className = 'nodal-mode-btn' + (i === 0 ? ' active-nodal' : '');
+    const cv = document.createElement('canvas');
+    cv.width = cv.height = 100;
+    const lbl = document.createElement('div');
+    lbl.className = 'nmb-label';
+    lbl.textContent = `(${m},${n+1})  ν=${nodalCount(m,n)}`;
+    div.appendChild(cv); div.appendChild(lbl);
+    div.addEventListener('click', () => {
+      activeNodalMode = i;
+      document.querySelectorAll('.nodal-mode-btn').forEach(b => b.classList.remove('active-nodal'));
+      div.classList.add('active-nodal');
+      updateCourant(m, n);
+      onNodalModeChange(m, n);
+    });
+    nmg.appendChild(div);
+
+    // Animate thumbnail
+    let tt = i * 0.8;
+    function thumbLoop() {
+      requestAnimationFrame(thumbLoop);
+      tt += 0.02;
+      paintNodalBuf(cv.getContext('2d'), 100, 100, thumbBufs[i], Math.cos(ZEROS[m][n] * tt * 0.4));
+    }
+    thumbLoop();
+  });
+
+  // ---- Main nodal canvas ----
+  const nc = document.getElementById('nodal-canvas');
+  const nW = nc.width, nH = nc.height;
+  const nctx = nc.getContext('2d');
+  const mainBufs = NODAL_MODES.map(([m, n]) => buildBuf(nW, nH, m, n));
+
+  // Nodal-aware painter: color + and - domains differently, draw nodal lines
+  function paintNodalBuf(ctx, W, H, buf, tf) {
+    const img = ctx.createImageData(W, H), d = img.data;
+    for (let i = 0; i < W * H; i++) {
+      const v = buf[i], k = i * 4;
+      if (v > 1e9) { d[k]=5;d[k+1]=6;d[k+2]=12;d[k+3]=255; continue; }
+      const a = v * tf;
+      const pos = a > 0;
+      const t = Math.pow(Math.abs(a), 0.65);
+      let r, g, b;
+      if (pos) {
+        // Gold domain
+        r = 10 + t * (210 - 10); g = 8 + t * (145 - 8); b = 5 + t * (12 - 5);
+      } else {
+        // Teal domain
+        r = 5 + t * (8 - 5); g = 8 + t * (155 - 8); b = 12 + t * (225 - 12);
+      }
+      d[k]=r|0; d[k+1]=g|0; d[k+2]=b|0; d[k+3]=255;
+    }
+    ctx.putImageData(img, 0, 0);
+
+    // Draw nodal lines (where buf ≈ 0) with a bright thin stroke
+    const nimg = ctx.createImageData(W, H), nd = nimg.data;
+    const thresh = 0.06;
+    for (let py = 1; py < H - 1; py++) {
+      for (let px = 1; px < W - 1; px++) {
+        const i = py * W + px;
+        if (buf[i] > 1e9) continue;
+        const v0 = buf[i] * tf;
+        // Check neighbours — if sign changes, we're near a nodal line
+        const v1 = buf[(py)*W+(px+1)] * tf;
+        const v2 = buf[(py+1)*W+(px)] * tf;
+        if ((v0 > 0 && v1 < 0) || (v0 < 0 && v1 > 0) ||
+            (v0 > 0 && v2 < 0) || (v0 < 0 && v2 > 0) ||
+            Math.abs(v0) < thresh) {
+          const k = i * 4;
+          nd[k]=240; nd[k+1]=232; nd[k+2]=216; nd[k+3]=200;
+        }
+      }
+    }
+    // Composite nodal lines
+    const tmp = document.createElement('canvas'); tmp.width=W; tmp.height=H;
+    const tc = tmp.getContext('2d'); tc.putImageData(nimg, 0, 0);
+    ctx.drawImage(tmp, 0, 0);
+  }
+
+  // ---- Courant bar ----
+  const courantFill   = document.getElementById('courant-fill');
+  const courantActual = document.getElementById('courant-actual');
+  const courantNums   = document.getElementById('courant-nums');
+  const courantNote   = document.getElementById('courant-note');
+  const nodalNDisplay = document.getElementById('nodal-n');
+  const nodalFormula  = document.getElementById('nodal-formula');
+
+  const PLEIJEL = Math.pow(2.404826 / Math.PI, 2); // ≈ 0.6910
+
+  function updateCourant(m, n) {
+    const nu   = nodalCount(m, n);
+    const idx  = eigenIndex(m, n);
+    const pct  = nu / idx;
+    const cpct = Math.min(1, pct);
+    courantFill.style.width = '100%';
+    courantActual.style.width = (cpct * 100).toFixed(1) + '%';
+    const col = pct > PLEIJEL ? '#c9a748' : '#22b5aa';
+    courantActual.style.background = `linear-gradient(90deg, ${col}44, ${col})`;
+    courantNums.innerHTML = `<span>ν = ${nu}</span><span>n = ${idx}  (Courant bound)</span>`;
+    const ratio = pct.toFixed(3);
+    const pleijStr = PLEIJEL.toFixed(4);
+    courantNote.innerHTML = `ν/n = ${ratio} &nbsp;|&nbsp; Pleijel γ = (j₀,₁/π)² ≈ ${pleijStr}<br>
+      ${pct <= PLEIJEL ? '✓ Within Pleijel bound' : '— Exceeds Pleijel asymptotic (low n regime)'}`;
+    nodalNDisplay.textContent = nu;
+    nodalFormula.textContent = m === 0
+      ? `m=0, n=${n+1} → ν = n = ${nu}`
+      : `m=${m}, n=${n+1} → ν = 2mn* = ${nu}`;
+  }
+  updateCourant(0, 0);
+
+  // ================================================================
+  // NODAL AUDIO ENGINE
+  // ================================================================
+
+  // Active continuous sound modes
+  let napDomainsActive = false;
+  let napBellsActive   = false;
+  let domainOscs       = []; // {osc, gain} pairs for domain tones
+  let lastTfSign       = 0;  // track zero crossings
+  let cascadeRunning   = false;
+  const napStatus = document.getElementById('nap-status');
+
+  function setStatus(msg, active=true) {
+    napStatus.textContent = msg;
+    napStatus.classList.toggle('active', active);
+  }
+
+  // ---- 1. NODAL RHYTHM: play exactly ν pulses at eigenfrequency ----
+  // Each pulse is a short sine burst — you literally count the nodal domains
+  async function playNodalRhythm() {
+    if (!audioCtx || audioCtx.state !== 'running') return;
+    const [m, n] = NODAL_MODES[activeNodalMode];
+    const nu   = nodalCount(m, n);
+    const freq = modeFreqHz(m, n);
+    // Spread ν pulses over ~2.5 seconds, faster for more domains
+    const totalDur  = Math.min(3.0, Math.max(1.5, nu * 0.18));
+    const interval  = totalDur / nu;
+    const pulseDur  = Math.min(interval * 0.7, 0.18);
+    const t0 = audioCtx.currentTime + 0.05;
+
+    setStatus(`playing ${nu} nodal pulses at ${freq.toFixed(1)} Hz…`);
+
+    // First: a rich struck-drum tone to establish the eigenfrequency
+    const introOsc = audioCtx.createOscillator();
+    introOsc.type = 'sine';
+    introOsc.frequency.setValueAtTime(freq * 1.015, t0);
+    introOsc.frequency.exponentialRampToValueAtTime(freq, t0 + 0.04);
+    const introG = audioCtx.createGain();
+    introG.gain.setValueAtTime(0, t0);
+    introG.gain.linearRampToValueAtTime(0.35, t0 + 0.008);
+    introG.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.45);
+    introOsc.connect(introG); introG.connect(masterGain);
+    introOsc.start(t0); introOsc.stop(t0 + 0.5);
+
+    // Then: ν rhythmic pulses, each a brief sine burst
+    // Pitch rises very slightly each pulse — you "count upward"
+    for (let k = 0; k < nu; k++) {
+      const pt = t0 + 0.5 + k * interval;
+      // Pitch: eigenfrequency, slight upward sweep across beats for clarity
+      const pfreq = freq * (1 + k / nu * 0.08);
+      const osc = audioCtx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = pfreq;
+      const g = audioCtx.createGain();
+      // Accent on last pulse (the full count)
+      const amp = k === nu - 1 ? 0.22 : (k % Math.max(1, Math.round(nu/4)) === 0 ? 0.15 : 0.10);
+      g.gain.setValueAtTime(0, pt);
+      g.gain.linearRampToValueAtTime(amp, pt + 0.004);
+      g.gain.exponentialRampToValueAtTime(0.0001, pt + pulseDur);
+      osc.connect(g); g.connect(masterGain);
+      osc.start(pt); osc.stop(pt + pulseDur + 0.02);
+    }
+
+    // Status clears after playback
+    setTimeout(() => setStatus(`ν = ${nu} domains counted`, false),
+      (0.5 + totalDur + 0.3) * 1000);
+  }
+
+  // ---- 2. COURANT CASCADE: ascend through eigenfrequencies 1..n, pause at ν ----
+  async function playCourantCascade() {
+    if (!audioCtx || audioCtx.state !== 'running' || cascadeRunning) return;
+    cascadeRunning = true;
+    const [m, n] = NODAL_MODES[activeNodalMode];
+    const nu  = nodalCount(m, n);
+    const idx = eigenIndex(m, n);
+
+    // Collect eigenvalues up to idx
+    const cascade = sortedModes.slice(0, idx);
+    setStatus(`cascading through n=1…${idx} eigenfrequencies…`);
+
+    let step = 0;
+    function playStep() {
+      if (!cascadeRunning || step >= cascade.length) {
+        cascadeRunning = false;
+        setStatus(`Courant bound n=${idx}, actual ν=${nu}`, false);
+        return;
+      }
+      const { m: cm, n: cn } = cascade[step];
+      const freq = modeFreqHz(cm, cn);
+      const isNodal = (step + 1 === nu); // this is the ν-th step
+      const isLast  = (step + 1 === idx);
+      const dur = isNodal ? 0.38 : isLast ? 0.30 : 0.075;
+      const amp = isNodal ? 0.28 : isLast ? 0.18 : 0.07;
+
+      const osc = audioCtx.createOscillator();
+      osc.type = isNodal ? 'triangle' : 'sine'; // nodal step sounds different
+      osc.frequency.value = freq;
+      const g = audioCtx.createGain();
+      const t0 = audioCtx.currentTime + 0.01;
+      g.gain.setValueAtTime(0, t0);
+      g.gain.linearRampToValueAtTime(amp, t0 + 0.008);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      osc.connect(g); g.connect(masterGain);
+      osc.start(t0); osc.stop(t0 + dur + 0.02);
+
+      if (isNodal) setStatus(`← ν = ${nu} nodal domains here`);
+
+      step++;
+      const gap = isNodal ? 380 : isLast ? 300 : (step < 4 ? 200 : step < 12 ? 110 : 60);
+      setTimeout(playStep, gap);
+    }
+    playStep();
+  }
+
+  // ---- 3. DOMAIN TONES: continuous sine for + domains, inverted for − ----
+  // The two tones are at the eigenfrequency with opposite polarity.
+  // When the membrane is at maximum, you hear one; at minimum, the other;
+  // at the nodal crossing (zero) they cancel to near-silence.
+  function startDomainTones() {
+    stopDomainTones();
+    const [m, n] = NODAL_MODES[activeNodalMode];
+    const freq   = modeFreqHz(m, n);
+
+    // Two oscillators: one per polarity, modulated by the animation envelope
+    const oscPos = audioCtx.createOscillator(); // + domain (gold)
+    const oscNeg = audioCtx.createOscillator(); // − domain (teal)
+    oscPos.type = oscNeg.type = 'sine';
+    oscPos.frequency.value = freq;
+    oscNeg.frequency.value = freq;
+
+    const gainPos = audioCtx.createGain();
+    const gainNeg = audioCtx.createGain();
+    gainPos.gain.value = 0;
+    gainNeg.gain.value = 0;
+
+    // Connect without panning — StereoPanner unreliable on iOS Chrome
+    oscPos.connect(gainPos); gainPos.connect(masterGain);
+    oscNeg.connect(gainNeg); gainNeg.connect(masterGain);
+
+    oscPos.start(); oscNeg.start();
+    domainOscs = [
+      { osc: oscPos, gain: gainPos, polarity: +1 },
+      { osc: oscNeg, gain: gainNeg, polarity: -1 },
+    ];
+    setStatus(`domain tones at ${freq.toFixed(1)} Hz — silence at nodal lines`);
+  }
+
+  function stopDomainTones() {
+    domainOscs.forEach(({ osc, gain }) => {
+      gain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.04);
+      osc.stop(audioCtx.currentTime + 0.2);
+    });
+    domainOscs = [];
+  }
+
+  // Update domain tone gains from current animation tf value
+  function updateDomainGains(tf) {
+    if (!napDomainsActive || domainOscs.length < 2) return;
+    // tf ∈ [-1, +1] is the temporal envelope: cos(ω·t)
+    // + domain amplitude = max(0, tf) → heard when membrane is positive
+    // − domain amplitude = max(0, -tf) → heard when membrane is negative
+    // At zero crossing both go to silence → nodal line is audible as quiet
+    const t = audioCtx.currentTime;
+    const posAmp = Math.max(0, tf) * 0.20;
+    const negAmp = Math.max(0, -tf) * 0.20;
+    domainOscs[0].gain.gain.setTargetAtTime(posAmp, t, 0.015);
+    domainOscs[1].gain.gain.setTargetAtTime(negAmp, t, 0.015);
+  }
+
+  // ---- 4. NODAL CROSSING BELLS: soft ping on each zero crossing ----
+  function playNodalBell() {
+    if (!audioCtx || audioCtx.state !== 'running' || muted) return;
+    const [m, n] = NODAL_MODES[activeNodalMode];
+    const freq = modeFreqHz(m, n);
+    // Bell tone: eigenfrequency plus its fifth (harmonic partial), very soft
+    [freq, freq * 1.5].forEach((f, i) => {
+      const osc = audioCtx.createOscillator();
+      osc.type = 'sine'; osc.frequency.value = f;
+      const g = audioCtx.createGain();
+      const t0 = audioCtx.currentTime;
+      g.gain.setValueAtTime(0, t0);
+      g.gain.linearRampToValueAtTime(0.06 / (i + 1), t0 + 0.005);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.22);
+      osc.connect(g); g.connect(masterGain);
+      osc.start(t0); osc.stop(t0 + 0.25);
+    });
+  }
+
+  // Toggle buttons
+  document.getElementById('nap-rhythm').addEventListener('click', () => {
+    resumeIfSuspended();
+    if (!audioReady()) return;
+    stopDomainTones(); napDomainsActive = false; napBellsActive = false;
+    document.querySelectorAll('.nap-btn').forEach(b => b.classList.remove('active-sound'));
+    document.getElementById('nap-rhythm').classList.add('active-sound');
+    playNodalRhythm();
+  });
+
+  document.getElementById('nap-cascade').addEventListener('click', () => {
+    resumeIfSuspended();
+    if (!audioReady()) return;
+    stopDomainTones(); napDomainsActive = false; napBellsActive = false; cascadeRunning = false;
+    document.querySelectorAll('.nap-btn').forEach(b => b.classList.remove('active-sound'));
+    document.getElementById('nap-cascade').classList.add('active-sound');
+    setTimeout(() => playCourantCascade(), 50);
+  });
+
+  document.getElementById('nap-domains').addEventListener('click', () => {
+    resumeIfSuspended();
+    if (!audioReady()) return;
+    cascadeRunning = false;
+    if (napDomainsActive) {
+      napDomainsActive = false;
+      stopDomainTones();
+      document.getElementById('nap-domains').classList.remove('active-sound');
+      setStatus('domain tones stopped', false);
+    } else {
+      napDomainsActive = true;
+      document.querySelectorAll('.nap-btn').forEach(b => b.classList.remove('active-sound'));
+      document.getElementById('nap-domains').classList.add('active-sound');
+      startDomainTones();
+    }
+  });
+
+  document.getElementById('nap-bell').addEventListener('click', () => {
+    resumeIfSuspended();
+    if (!audioReady()) return;
+    napBellsActive = !napBellsActive;
+    document.getElementById('nap-bell').classList.toggle('active-sound', napBellsActive);
+    if (napBellsActive) setStatus('nodal bells armed — listen at zero crossings');
+    else setStatus('nodal bells off', false);
+  });
+
+  // When mode changes, restart domain tones at new frequency
+  function onNodalModeChange(m, n) {
+    if (napDomainsActive && audioCtx && audioCtx.state === 'running') {
+      startDomainTones();
+    }
+    cascadeRunning = false;
+  }
+
+  // ---- Main animation — enhanced with audio hooks ----
+  let prevTf = 1;
+  function nodalFrame() {
+    requestAnimationFrame(nodalFrame);
+    nodalT += 0.014;
+    const [m, n] = NODAL_MODES[activeNodalMode];
+    const tf = Math.cos(ZEROS[m][n] * nodalT * 0.5);
+    paintNodalBuf(nctx, nW, nH, mainBufs[activeNodalMode], tf);
+
+    // Update domain tone gains continuously
+    if (napDomainsActive) updateDomainGains(tf);
+
+    // Detect zero crossing for bells
+    if (napBellsActive && audioReady()) {
+      if ((prevTf > 0.04 && tf < -0.04) || (prevTf < -0.04 && tf > 0.04)) {
+        playNodalBell();
+      }
+    }
+    prevTf = tf;
+  }
+  nodalFrame();
+
+  // ---- Phase space diagram ----
+  {
+    const pc = document.getElementById('phase-canvas');
+    const pw = pc.width, ph = pc.height;
+    const pctx = pc.getContext('2d');
+    let pT = 0;
+
+    function drawPhase() {
+      requestAnimationFrame(drawPhase);
+      pT += 0.008;
+      pctx.fillStyle = '#0c0e1a';
+      pctx.fillRect(0, 0, pw, ph);
+
+      const zones = [
+        { x: 0,    w: pw/3,   label: 'Integrable', sublabel: 'ν bounded', col: '#c9a748', desc: 'Kaluza–Klein, flat tori' },
+        { x: pw/3, w: pw/3,   label: 'Mixed',      sublabel: 'ν unclear', col: '#b080e0', desc: 'KAM surfaces, partial symmetry' },
+        { x: 2*pw/3, w: pw/3, label: 'Ergodic',    sublabel: 'ν → ∞',    col: '#22b5aa', desc: 'Negatively curved, stadium' },
+      ];
+
+      zones.forEach(z => {
+        // Background gradient
+        const grd = pctx.createLinearGradient(z.x, 0, z.x + z.w, 0);
+        grd.addColorStop(0, z.col + '08');
+        grd.addColorStop(0.5, z.col + '14');
+        grd.addColorStop(1, z.col + '08');
+        pctx.fillStyle = grd;
+        pctx.fillRect(z.x, 0, z.w, ph);
+
+        // Divider
+        if (z.x > 0) {
+          pctx.strokeStyle = '#1a1d30';
+          pctx.lineWidth = 1;
+          pctx.setLineDash([4, 4]);
+          pctx.beginPath(); pctx.moveTo(z.x, 20); pctx.lineTo(z.x, ph - 20); pctx.stroke();
+          pctx.setLineDash([]);
+        }
+
+        // Label
+        pctx.fillStyle = z.col;
+        pctx.font = 'bold 11px Space Mono, monospace';
+        pctx.textAlign = 'center';
+        pctx.fillText(z.label, z.x + z.w / 2, 28);
+        pctx.fillStyle = z.col + 'aa';
+        pctx.font = '10px Space Mono, monospace';
+        pctx.fillText(z.sublabel, z.x + z.w / 2, 46);
+        pctx.fillStyle = '#585d7a';
+        pctx.font = 'italic 11px EB Garamond, serif';
+        pctx.fillText(z.desc, z.x + z.w / 2, ph - 16);
+      });
+
+      // Animated nodal count curves
+      zones.forEach((z, zi) => {
+        pctx.beginPath();
+        pctx.strokeStyle = z.col + 'cc';
+        pctx.lineWidth = 1.5;
+        for (let px = 0; px < z.w; px++) {
+          const n = px / z.w * 40 + 1;
+          let nu;
+          if (zi === 0) nu = 3 + Math.sin(pT * 0.3) * 0.5;   // bounded
+          else if (zi === 1) nu = 1.5 + n * 0.2 * (0.5 + 0.5 * Math.sin(pT * 0.5 + n * 0.4)); // irregular
+          else nu = n * PLEIJEL * (0.8 + 0.2 * Math.sin(pT * 0.4 + px * 0.1));   // grows ~ Pleijel
+          const y = ph - 65 - Math.min(nu / (PLEIJEL * 40) * (ph - 95), ph - 95);
+          px === 0 ? pctx.moveTo(z.x + px, y) : pctx.lineTo(z.x + px, y);
+        }
+        pctx.stroke();
+
+        // Glow dot at right edge
+        const n_end = 40;
+        let nu_end;
+        if (zi === 0) nu_end = 3 + Math.sin(pT * 0.3) * 0.5;
+        else if (zi === 1) nu_end = 1.5 + n_end * 0.2 * (0.5 + 0.5 * Math.sin(pT * 0.5 + n_end * 0.4));
+        else nu_end = n_end * PLEIJEL * (0.8 + 0.2 * Math.sin(pT * 0.4 + z.w * 0.1));
+        const ydot = ph - 65 - Math.min(nu_end / (PLEIJEL * 40) * (ph - 95), ph - 95);
+        const grd2 = pctx.createRadialGradient(z.x + z.w - 2, ydot, 0, z.x + z.w - 2, ydot, 10);
+        grd2.addColorStop(0, z.col);
+        grd2.addColorStop(1, z.col + '00');
+        pctx.fillStyle = grd2;
+        pctx.beginPath(); pctx.arc(z.x + z.w - 2, ydot, 10, 0, Math.PI * 2); pctx.fill();
+        pctx.fillStyle = z.col;
+        pctx.beginPath(); pctx.arc(z.x + z.w - 2, ydot, 3, 0, Math.PI * 2); pctx.fill();
+      });
+
+      // Axis label
+      pctx.fillStyle = '#585d7a';
+      pctx.font = '9px Space Mono, monospace';
+      pctx.textAlign = 'left';
+      pctx.fillText('← n (eigenvalue index)', 8, ph - 36);
+      pctx.textAlign = 'right';
+      pctx.fillText('ν(φₙ) →', pw - 8, ph - 36);
+
+      // Pleijel line across ergodic zone
+      const pz = zones[2];
+      pctx.strokeStyle = '#c9a74855';
+      pctx.lineWidth = 1;
+      pctx.setLineDash([5, 4]);
+      const py_pleijel = ph - 65 - (ph - 95) * 0.85;
+      pctx.beginPath(); pctx.moveTo(pz.x, py_pleijel); pctx.lineTo(pz.x + pz.w, py_pleijel); pctx.stroke();
+      pctx.setLineDash([]);
+      pctx.fillStyle = '#c9a74888'; pctx.font = '8px Space Mono,monospace'; pctx.textAlign = 'right';
+      pctx.fillText('Pleijel γ', pz.x + pz.w - 4, py_pleijel - 4);
+    }
+    drawPhase();
+  }
+
+  // ---- Future card animated backgrounds ----
+  const futureCards = [
+    { id: 'fc0', draw: (ctx, w, h, t) => drawNodalLines(ctx, w, h, t, '#c9a748') },
+    { id: 'fc1', draw: (ctx, w, h, t) => drawRandomWave(ctx, w, h, t, '#22b5aa') },
+    { id: 'fc2', draw: (ctx, w, h, t) => drawIsospecDiff(ctx, w, h, t) },
+    { id: 'fc3', draw: (ctx, w, h, t) => draw3DSpectrum(ctx, w, h, t, '#b080e0') },
+    { id: 'fc4', draw: (ctx, w, h, t) => drawTopology(ctx, w, h, t, '#c9a748') },
+    { id: 'fc5', draw: (ctx, w, h, t) => drawArithmetic(ctx, w, h, t, '#22b5aa') },
+  ];
+
+  function drawNodalLines(ctx, w, h, t, col) {
+    ctx.fillStyle = '#0a0800'; ctx.fillRect(0,0,w,h);
+    // Animated nodal curves from superposition
+    for (let m = 0; m <= 2; m++) {
+      ctx.beginPath(); ctx.strokeStyle = col + (m===0?'ff':'88'); ctx.lineWidth = m===0?1.2:.7;
+      for (let px = 0; px < w; px++) {
+        const x = (px/w)*Math.PI*4 - Math.PI*2;
+        // nodal line of J_m
+        const y = h/2 + Math.sin(x*1.8 + t*(1+m*.4) + m*1.2) * h*(.25+m*.06)
+                      + Math.sin(x*3.1 - t*.7 + m) * h*.08;
+        px===0 ? ctx.moveTo(px,y) : ctx.lineTo(px,y);
+      }
+      ctx.stroke();
+    }
+    // Domain shading
+    const grd = ctx.createLinearGradient(0,0,0,h);
+    grd.addColorStop(0, col+'22'); grd.addColorStop(1, col+'00');
+    ctx.fillStyle = grd; ctx.fillRect(0,0,w,h*0.45);
+  }
+
+  function drawRandomWave(ctx, w, h, t, col) {
+    ctx.fillStyle = '#000f0e'; ctx.fillRect(0,0,w,h);
+    const N = 6;
+    for (let i = 0; i < N; i++) {
+      const kx = (i+1)*0.7, ky = (N-i)*0.5, ph = i*1.3;
+      ctx.strokeStyle = col + (i===0?'cc':'44'); ctx.lineWidth = i===0?1:.5;
+      ctx.beginPath();
+      for (let px = 0; px < w; px++) {
+        const x = px/w * 4;
+        let y = 0;
+        for (let j = 0; j <= i; j++) y += Math.sin(kx*x + ky*(px/w)*3 + t*(0.5+j*.2) + ph*j);
+        y = h/2 + (y/(i+1)) * h*0.28;
+        px===0 ? ctx.moveTo(px,y) : ctx.lineTo(px,y);
+      }
+      ctx.stroke();
+    }
+    // Percolation dots
+    for (let i = 0; i < 30; i++) {
+      const px = ((i*137.5)%w), py = ((i*93.7)%h);
+      const pulse = 0.5+0.5*Math.sin(t*1.2+i);
+      ctx.beginPath(); ctx.arc(px,py,1.5,0,Math.PI*2);
+      ctx.fillStyle = col+(Math.floor(pulse*255)).toString(16).padStart(2,'0');
+      ctx.fill();
+    }
+  }
+
+  function drawIsospecDiff(ctx, w, h, t) {
+    ctx.fillStyle = '#080010'; ctx.fillRect(0,0,w,h);
+    // Two overlapping nodal patterns, slightly different
+    ['#c9a748','#22b5aa'].forEach((col, si) => {
+      ctx.strokeStyle = col + '88'; ctx.lineWidth = 1;
+      for (let k = 0; k < 3; k++) {
+        ctx.beginPath();
+        for (let px = 0; px < w; px++) {
+          const x = px/w*Math.PI*3;
+          const y = h/2 + Math.sin(x*(1.5+si*.12) + t*(0.6+k*.15) + k*2.1 + si*0.8) * h*(0.2+k*.04)
+                       - Math.sin(x*2.8 - t*.5 + si) * h*.06;
+          px===0 ? ctx.moveTo(px,y) : ctx.lineTo(px,y);
+        }
+        ctx.stroke();
+      }
+    });
+    ctx.fillStyle = '#b080e0'; ctx.font = 'italic 10px EB Garamond,serif'; ctx.textAlign='center';
+    ctx.fillText('different topology?', w/2, h-10);
+  }
+
+  function draw3DSpectrum(ctx, w, h, t, col) {
+    ctx.fillStyle = '#080010'; ctx.fillRect(0,0,w,h);
+    // Simulate staircase in 3D projection
+    const steps = 12;
+    for (let i = 0; i < steps; i++) {
+      const x = 20 + i*(w-40)/steps;
+      const bh = (i+1)/(steps) * (h-40) * (.5+.5*Math.sin(t*.3+i*.5));
+      const grd = ctx.createLinearGradient(x, h-20, x, h-20-bh);
+      grd.addColorStop(0, col+'00'); grd.addColorStop(1, col+'66');
+      ctx.fillStyle = grd; ctx.fillRect(x, h-20-bh, (w-40)/steps-2, bh);
+      ctx.strokeStyle = col+'44'; ctx.lineWidth=.5;
+      ctx.strokeRect(x, h-20-bh, (w-40)/steps-2, bh);
+    }
+    const pleijY = h-20-(h-40)*PLEIJEL;
+    ctx.strokeStyle=col+'88'; ctx.lineWidth=1; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(20,pleijY); ctx.lineTo(w-20,pleijY); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  function drawTopology(ctx, w, h, t, col) {
+    ctx.fillStyle = '#0a0800'; ctx.fillRect(0,0,w,h);
+    // Animated closed curves (nodal topology)
+    for (let k = 0; k < 4; k++) {
+      const r = 20 + k*14, cx = w/2, cy = h/2;
+      const pts = 6 + k*2;
+      ctx.beginPath(); ctx.strokeStyle = col+(k===0?'ff':'55'-(k*10).toString(16)); ctx.lineWidth=k===0?1.5:.7;
+      for (let i = 0; i <= pts; i++) {
+        const angle = i/pts * Math.PI*2;
+        const wobble = r + Math.sin(pts*angle + t*(0.5+k*.2)+k) * (3+k*2);
+        const x = cx + wobble*Math.cos(angle);
+        const y = cy + wobble*Math.sin(angle);
+        i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+      }
+      ctx.closePath(); ctx.stroke();
+    }
+  }
+
+  function drawArithmetic(ctx, w, h, t, col) {
+    ctx.fillStyle = '#000f0e'; ctx.fillRect(0,0,w,h);
+    // L-function zero simulation
+    const zeros = [14.134,21.022,25.010,30.424,32.935,37.586,40.918];
+    zeros.forEach((z, i) => {
+      const x = (z - 10) / 35 * (w-20) + 10;
+      const pulse = 0.3 + 0.7*Math.abs(Math.sin(t*0.4 + i*0.7));
+      const grd = ctx.createRadialGradient(x,h/2,0,x,h/2,12*pulse);
+      grd.addColorStop(0,col); grd.addColorStop(1,col+'00');
+      ctx.fillStyle=grd; ctx.beginPath(); ctx.arc(x,h/2,12*pulse,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle=col; ctx.beginPath(); ctx.arc(x,h/2,2,0,Math.PI*2); ctx.fill();
+    });
+    ctx.strokeStyle=col+'33'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(10,h/2); ctx.lineTo(w-10,h/2); ctx.stroke();
+    ctx.fillStyle=col+'66'; ctx.font='8px Space Mono,monospace'; ctx.textAlign='center';
+    ctx.fillText('L-function zeros  (ℜ = ½)', w/2, h-8);
+  }
+
+  let fcT = 0;
+  function futureFrame() {
+    requestAnimationFrame(futureFrame);
+    fcT += 0.012;
+    futureCards.forEach(({ id, draw }) => {
+      const card = document.getElementById(id);
+      if (!card) return;
+      const canvas = card.querySelector('.future-bg-canvas');
+      if (!canvas) return;
+      const cw = canvas.offsetWidth || 320;
+      const ch = canvas.offsetHeight || 200;
+      if (canvas.width !== cw && cw > 0) { canvas.width = cw; canvas.height = ch; }
+      draw(canvas.getContext('2d'), canvas.width, canvas.height, fcT);
+    });
+  }
+  futureFrame();
+}
+// ================================================================
+// FLOATING SECTION NAV
+// ================================================================
+{
+  const dots = document.querySelectorAll('.sn-dot');
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const id = dot.dataset.target;
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  const SECTION_IDS = ['hero','sec-strike','sec-phasor','sec-modes','sec-beat','sec-weyl','sec-iso','sec-nodal'];
+
+  function updateActiveDot() {
+    let current = 0;
+    SECTION_IDS.forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.5) current = i;
+    });
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+
+  window.addEventListener('scroll', updateActiveDot, { passive: true });
+  updateActiveDot();
+}
+
+{
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting) e.target.classList.add('vis');});
+  },{threshold:.08});
+  document.querySelectorAll('.fi').forEach(el=>obs.observe(el));
+}
+
+// ================================================================
+// PWA — Manifest injection, install prompt, service worker
+// ================================================================
+{
+  // Inject Web App Manifest dynamically
+  const manifest = {
+    name: "Can You Hear the Shape of a Drum?",
+    short_name: "Hear the Drum",
+    description: "Interactive spectral geometry: eigenmodes, Fourier, nodal domains.",
+    start_url: "./",
+    display: "standalone",
+    background_color: "#05060c",
+    theme_color: "#05060c",
+    orientation: "portrait-primary",
+    icons: [{
+      src: "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="80" fill="#05060c"/><circle cx="256" cy="256" r="200" fill="none" stroke="#c9a748" stroke-width="8"/><circle cx="256" cy="256" r="133" fill="none" stroke="#22b5aa" stroke-width="5"/><circle cx="256" cy="256" r="67" fill="none" stroke="#c9a748" stroke-width="3"/><circle cx="256" cy="256" r="12" fill="#c9a748"/></svg>'),
+      sizes: "512x512", type: "image/svg+xml", purpose: "any maskable"
+    }]
+  };
+  try { const mBlob = new Blob([JSON.stringify(manifest)], {type:'application/json'}); const el = document.getElementById('pwa-manifest'); if(el) el.href = URL.createObjectURL(mBlob); } catch(e) {}
+
+  // Service Worker — caches page for offline use
+  if ('serviceWorker' in navigator) {
+    const sw = `const C='drum-v1';
+self.addEventListener('install',e=>{self.skipWaiting();});
+self.addEventListener('activate',e=>{self.clients.claim();e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))));});
+self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>{if(r)return r;return fetch(e.request).then(resp=>{if(resp&&resp.status===200){const cl=resp.clone();caches.open(C).then(c=>c.put(e.request,cl));}return resp;}).catch(()=>caches.match('./'));})  );});`;
+    const swBlob = new Blob([sw], {type:'application/javascript'});
+    navigator.serviceWorker.register(URL.createObjectURL(swBlob), {scope:'./'}).catch(()=>{});
+  }
+
+  // Android: native install prompt
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault(); deferredPrompt = e;
+    if (!(function(){try{return localStorage.getItem('pwa-dismissed')}catch(e){return true}}()))
+      setTimeout(() => document.getElementById('pwa-banner').classList.add('show'), 3000);
+  });
+
+  document.getElementById('pwa-add-btn').addEventListener('click', () => {
+    document.getElementById('pwa-banner').classList.remove('show');
+    if (deferredPrompt) { deferredPrompt.prompt(); deferredPrompt.userChoice.then(()=>{deferredPrompt=null;}); }
+  });
+
+  document.getElementById('pwa-close-btn').addEventListener('click', () => {
+    document.getElementById('pwa-banner').classList.remove('show');
+    try{localStorage.setItem('pwa-dismissed','1')}catch(e){}
+  });
+
+  // iOS: show "Add to Home Screen" instruction banner
+  const isStandalone = window.navigator.standalone === true
+    || window.matchMedia('(display-mode: standalone)').matches;
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  if (isIOS && !isStandalone && !(function(){try{return localStorage.getItem('pwa-dismissed')}catch(e){return true}}())) {
+    setTimeout(() => {
+      const banner = document.getElementById('pwa-banner');
+      const txt = banner.querySelector('.pwa-txt');
+      const btn = document.getElementById('pwa-add-btn');
+      if (txt) txt.innerHTML = '<b>홈 화면에 추가</b>Safari: 공유 ⬆︎ → 홈 화면에 추가';
+      if (btn) btn.style.display = 'none';
+      banner.classList.add('show');
+    }, 5000);
+  }
+}
+</script>
+ PWA INSTALL BANNER 
+<div id="pwa-banner">
+<div id="pwa-banner-inner">
+<span class="pwa-icon">🥁</span>
+<span class="pwa-txt"><b>Add to Home Screen</b>Share → Add to Home Screen</span>
+<button class="pwa-add" id="pwa-add-btn">Install</button>
+<span class="pwa-close" id="pwa-close-btn">✕</span>
+</div>
+</div>
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+</body>
+</html>

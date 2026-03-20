@@ -175,6 +175,7 @@ header h1 em {
 /* ─── Language selectors ─── */
 .proj-langs {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.35rem;
   align-items: center;
   flex-shrink: 0;
@@ -298,6 +299,46 @@ header { animation: fadeIn 0.8s ease both; }
 .project-entry:nth-child(2) { animation: fadeIn 0.6s 0.25s ease both; }
 .project-entry:nth-child(3) { animation: fadeIn 0.6s 0.35s ease both; }
 .project-entry:nth-child(4) { animation: fadeIn 0.6s 0.45s ease both; }
+
+.lang-select {
+  background: transparent;
+  color: var(--teal);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2322b5aa%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right .5rem top 50%;
+  background-size: .45rem auto;
+  padding-right: 1.4rem;
+}
+.lang-select:hover {
+  border-color: var(--teal);
+}
+.lang-select option {
+  background: var(--surface);
+  color: var(--cream);
+}
+
+.proj-title-link {
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s;
+  display: inline-block;
+}
+.proj-title-link:hover .proj-title {
+  color: var(--gold);
+  text-shadow: 0 0 12px var(--glow-gold);
+}
+.proj-title-link .proj-title {
+  transition: color 0.2s, text-shadow 0.2s;
+}
 </style>
 </head>
 <body>
@@ -316,12 +357,15 @@ header { animation: fadeIn 0.8s ease both; }
     <div class="project-entry">
       <div class="proj-top">
         <span class="proj-number">01</span>
-        <span class="proj-title">Banach–Tarski: F₂ on S²</span>
+        <a href="javascript:void(0)" class="proj-title-link" onclick="window.location.href=document.getElementById('sel-banach').value"><span class="proj-title">Banach–Tarski: F₂ on S²</span></a>
         <div class="proj-langs">
-          <a href="banach.html" class="lang-btn">EN</a>
-          <a href="banach_fr.html" class="lang-btn">FR</a>
-          <a href="banach_th.html" class="lang-btn">TH</a>
-          <a href="banach_ja.html" class="lang-btn">日本語</a>
+          <select id="sel-banach" class="lang-select" aria-label="Language selection">
+            <option value="banach.html">EN</option>
+            <option value="banach_ko.html">한국어</option>
+            <option value="banach_zh.html">中文</option>
+            <option value="banach_ja.html">日本語</option>
+            <option value="banach_fr.html">FR</option>
+          </select>
         </div>
       </div>
       <p class="proj-desc">The most counterintuitive theorem in mathematics, visualized. Watch the free group F₂ act on the sphere via rotations, and see how a ball can be decomposed and reassembled into two identical copies of itself.</p>
@@ -335,10 +379,15 @@ header { animation: fadeIn 0.8s ease both; }
     <div class="project-entry">
       <div class="proj-top">
         <span class="proj-number">02</span>
-        <span class="proj-title">Can You Hear the Shape of a Drum?</span>
+        <a href="javascript:void(0)" class="proj-title-link" onclick="window.location.href=document.getElementById('sel-drum').value"><span class="proj-title">Can You Hear the Shape of a Drum?</span></a>
         <div class="proj-langs">
-          <a href="drum.html" class="lang-btn">EN</a>
-          <a href="drum_ko.html" class="lang-btn">한국어</a>
+          <select id="sel-drum" class="lang-select" aria-label="Language selection">
+            <option value="drum.html">EN</option>
+            <option value="drum_ko.html">한국어</option>
+            <option value="drum_zh.html">中文</option>
+            <option value="drum_ja.html">日本語</option>
+            <option value="drum_fr.html">FR</option>
+          </select>
         </div>
       </div>
       <p class="proj-desc">Mark Kac's famous 1966 question, made audible. Strike virtual drums, see their vibrational modes as Bessel-function eigenstates, and hear why two differently shaped drums can produce identical spectra.</p>
@@ -353,10 +402,15 @@ header { animation: fadeIn 0.8s ease both; }
     <div class="project-entry">
       <div class="proj-top">
         <span class="proj-number">03</span>
-        <span class="proj-title">The Mathematics of Sound</span>
+        <a href="javascript:void(0)" class="proj-title-link" onclick="window.location.href=document.getElementById('sel-sound').value"><span class="proj-title">The Mathematics of Sound</span></a>
         <div class="proj-langs">
-          <a href="sound.html" class="lang-btn">EN</a>
-          <a href="sound_ko.html" class="lang-btn">한국어</a>
+          <select id="sel-sound" class="lang-select" aria-label="Language selection">
+            <option value="sound.html">EN</option>
+            <option value="sound_ko.html">한국어</option>
+            <option value="sound_zh.html">中文</option>
+            <option value="sound_ja.html">日本語</option>
+            <option value="sound_fr.html">FR</option>
+          </select>
         </div>
       </div>
       <p class="proj-desc">From Pythagoras to Fourier to your smartphone. Build waveforms from harmonics, compare tuning systems across instruments, and explore how the cochlea performs frequency analysis — all with live-synthesized audio.</p>
@@ -371,10 +425,15 @@ header { animation: fadeIn 0.8s ease both; }
     <div class="project-entry">
       <div class="proj-top">
         <span class="proj-number">04</span>
-        <span class="proj-title">Living in a Hyperbolic Space</span>
+        <a href="javascript:void(0)" class="proj-title-link" onclick="window.location.href=document.getElementById('sel-hyperbolic').value"><span class="proj-title">Living in a Hyperbolic Space</span></a>
         <div class="proj-langs">
-          <a href="hyperbolic.html" class="lang-btn">EN</a>
-          <a href="hyperbolic_ko.html" class="lang-btn">한국어</a>
+          <select id="sel-hyperbolic" class="lang-select" aria-label="Language selection">
+            <option value="hyperbolic.html">EN</option>
+            <option value="hyperbolic_ko.html">한국어</option>
+            <option value="hyperbolic_zh.html">中文</option>
+            <option value="hyperbolic_ja.html">日本語</option>
+            <option value="hyperbolic_fr.html">FR</option>
+          </select>
         </div>
       </div>
       <p class="proj-desc">Where the parallel postulate fails and triangles contain less than 180°. Walk through hyperbolic 3-space, tile the infinite plane, explore Teichmüller space, and follow Mirzakhani's path from geodesics to the Witten conjecture.</p>
@@ -383,6 +442,29 @@ header { animation: fadeIn 0.8s ease both; }
         <span class="proj-tag">Tessellations</span>
         <span class="proj-tag">Teichmüller Space</span>
         <span class="proj-tag">Mirzakhani</span>
+      </div>
+    </div>
+
+    <div class="project-entry">
+      <div class="proj-top">
+        <span class="proj-number">05</span>
+        <a href="javascript:void(0)" class="proj-title-link" onclick="window.location.href=document.getElementById('sel-clt').value"><span class="proj-title">Why do the polls look the same??</span></a>
+        <div class="proj-langs">
+          <select id="sel-clt" class="lang-select" aria-label="Language selection">
+            <option value="clt.html">EN</option>
+            <option value="clt_ko.html">한국어</option>
+            <option value="clt_zh.html">中文</option>
+            <option value="clt_ja.html">日本語</option>
+            <option value="clt_fr.html">FR</option>
+          </select>
+        </div>
+      </div>
+      <p class="proj-desc">A visual exploration of the Central Limit Theorem and modern probability. Draw your own bizarre distribution and watch the inevitable rise of the Gaussian Bell Curve. Featuring Stein's method, the Berry-Esseen bound, and Wigner's Semicircle Law.</p>
+      <div class="proj-tags">
+        <span class="proj-tag">Central Limit Theorem</span>
+        <span class="proj-tag">Random Matrices</span>
+        <span class="proj-tag">Probability</span>
+        <span class="proj-tag">Universality</span>
       </div>
     </div>
 
