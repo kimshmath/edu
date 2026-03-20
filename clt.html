@@ -57,6 +57,17 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',Georgia,se
 .app-card h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.8rem;color:var(--cream);margin-bottom:1rem;}
 .app-card p{font-size:1.05rem;line-height:1.6;color:var(--muted);}
 
+/* Miracle Stack */
+.miracle-stack { display:flex; flex-direction:column; gap:6rem; margin-top:2rem; margin-bottom: 2rem; }
+.m-row { display:flex; align-items:center; gap:5rem; }
+.m-row:nth-child(even) { flex-direction:row-reverse; }
+.m-col-text { flex: 1.2; }
+.m-col-vis { flex: 1; min-height: 320px; border-radius: 12px; background:linear-gradient(145deg, #0a0c16, #05060c); border:1px solid var(--border); position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; box-shadow:0 15px 40px rgba(0,0,0,0.3); }
+.m-col-vis::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background: radial-gradient(circle at center, var(--glow-gold) 0, transparent 60%); opacity:0.1; }
+.m-icon-huge { font-size:7.5rem; filter:drop-shadow(0 0 30px rgba(255,255,255,0.05)); }
+@media(max-width:900px) { .m-row, .m-row:nth-child(even) { flex-direction:column; gap:3rem; text-align:center; } }
+.m-badge { display:inline-block; font-family:'Space Mono',monospace; font-size:0.65rem; padding:0.4rem 1rem; border-radius:100px; color:var(--bg); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:1.5rem; font-weight:600;}
+
 /* Theory Grid (Modern Math) */
 .theory-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2.5rem}
 @media(max-width:760px){.theory-grid{grid-template-columns:1fr}}
@@ -145,26 +156,59 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
     <p>You interact with the Central Limit Theorem every single day. Because almost everything we observe in reality is the macroscopic sum of countless microscopic, independent forces, the Bell Curve becomes the default geometry of nature and human society. Whether assessing biological factors or designing financial rockets, the Gaussian curve is the foundational bedrock.</p>
   </div>
   
-  <div class="app-grid">
-    <div class="app-card">
-      <div class="app-icon" style="color:#e9859f">👶</div>
-      <h3 style="color:#e9859f">Birth Weights</h3>
-      <p>A baby’s birth weight is influenced by thousands of independent genetic markers, maternal nutrition factors, and environmental impacts. Each contributes a tiny random push. By adding together thousands of independent variables, the final weight of full-term infants across the world inevitably plots a flawless Bell Curve.</p>
+  <div class="miracle-stack">
+    <!-- Row 1 -->
+    <div class="m-row">
+      <div class="m-col-text">
+        <div class="m-badge" style="background:#e9859f">Biology</div>
+        <h3 style="font-family:'Cormorant Garamond',serif; font-size:2.8rem; color:#e9859f; line-height:1.1; margin-bottom:1.5rem">The Blueprint of Life</h3>
+        <p style="font-size:1.1rem; line-height:1.8; color:var(--text); margin-bottom:1rem">A baby’s birth weight is not determined by a single master gene or a single environmental choice. Instead, it is the cumulative result of thousands of independent micro-factors: rare genetic markers, subtle altitude variations, maternal nutrition, and epigenetic cascades.</p>
+        <p style="font-size:1.1rem; line-height:1.8; color:var(--muted)">Each factor contributes a virtually invisible nudge to the final weight. Yet, when nature adds these countless independent variables together, the resulting human weights rigorously organize themselves into a flawless Bell Curve. The same inescapable mathematics molds human height, blood pressure, and even the varied sizes of leaves in a forest.</p>
+      </div>
+      <div class="m-col-vis">
+        <div class="m-icon-huge">🧬👶</div>
+      </div>
     </div>
-    <div class="app-card">
-      <div class="app-icon" style="color:#6ea2e0">📝</div>
-      <h3 style="color:#6ea2e0">Exam Grading & SATs</h3>
-      <p>Why do standardized tests like the SAT universally yield a Bell Curve of scores? An exam is simply a collection of 100 independent micro-events (questions). Whether a student guesses entirely, knows half the material, or gets lucky on tricky phrasing, the sum of these independent sub-probabilities mathematically guarantees the emergence of normal distribution.</p>
+
+    <!-- Row 2 -->
+    <div class="m-row">
+      <div class="m-col-text">
+        <div class="m-badge" style="background:#6ea2e0">Society</div>
+        <h3 style="font-family:'Cormorant Garamond',serif; font-size:2.8rem; color:#6ea2e0; line-height:1.1; margin-bottom:1.5rem">The Illusion of Merit</h3>
+        <p style="font-size:1.1rem; line-height:1.8; color:var(--text); margin-bottom:1rem">Why do standardized tests like the SAT universally yield a rigid, inescapable Bell Curve of scores year after year? An exam is simply a collection of perhaps 100 independent events: the true-or-false nature of individual questions.</p>
+        <p style="font-size:1.1rem; line-height:1.8; color:var(--muted)">Whether a student guesses wildly, knows exactly half the material, or gets lucky on tricky phrasing—the test score is merely the sum of 100 independent micro-probabilities. Mathematics guarantees that this sum will always forcefully pull the vast student population into a Gaussian distribution, turning chaotic human cognition into a perfectly predictable, symmetrical graph.</p>
+      </div>
+      <div class="m-col-vis">
+        <div class="m-icon-huge">📝🎓</div>
+      </div>
     </div>
-    <div class="app-card">
-      <div class="app-icon" style="color:#8fca75">📈</div>
-      <h3 style="color:#8fca75">The Stock Market</h3>
-      <p>Price movements in stock markets are the result of millions of independent daily trades. The <strong>Black-Scholes Equation</strong>, which revolutionized modern finance and won a Nobel Prize, models stock prices as a log-normal distribution. It relies directly on the Central Limit Theorem, assuming the chaotic swarm of emotional traders coalesces into Gaussian predictability over time.</p>
+    
+    <!-- Row 3 -->
+    <div class="m-row">
+      <div class="m-col-text">
+        <div class="m-badge" style="background:#8fca75">Economics</div>
+        <h3 style="font-family:'Cormorant Garamond',serif; font-size:2.8rem; color:#8fca75; line-height:1.1; margin-bottom:1.5rem">Taming the Stock Market</h3>
+        <p style="font-size:1.1rem; line-height:1.8; color:var(--text); margin-bottom:1rem">Price movements in global stock markets are the violent result of millions of independent, emotional trades made daily. To the individual day-trader, the market is an unpredictable, stormy ocean.</p>
+        <p style="font-size:1.1rem; line-height:1.8; color:var(--muted)">But to a mathematician, the sum of chaotic moves is highly ordered. The <strong>Black-Scholes Equation</strong>, which revolutionized modern finance and earned a Nobel Prize, rests precisely on this concept. It models stock returns as a log-normal distribution, leaning directly on the Central Limit Theorem to predict option pricing under the assumption that the chaotic swarm of traders coalesces into beautiful Gaussian predictability over time.</p>
+      </div>
+      <div class="m-col-vis">
+        <div class="m-icon-huge">📉💸</div>
+      </div>
     </div>
-    <div class="app-card">
-      <div class="app-icon" style="color:#e6c76a">🪙</div>
-      <h3 style="color:#e6c76a">The Binomial Theorem</h3>
-      <p>In 1733, Abraham de Moivre analyzed the odds in gambling by expanding the binomial $(p+q)^n$. He realized that as $n$ grows vast, the clunky mathematical factorials morph into a beautiful exponential curve. The Bell Curve is actually the continuous soul of the discrete Binomial Theorem—the mathematical limit of flipping an infinite number of coins.</p>
+
+    <!-- Row 4 -->
+    <div class="m-row">
+      <div class="m-col-text">
+        <div class="m-badge" style="background:#e6c76a">Mathematics</div>
+        <h3 style="font-family:'Cormorant Garamond',serif; font-size:2.8rem; color:#e6c76a; line-height:1.1; margin-bottom:1.5rem">Flipping to Infinity</h3>
+        <p style="font-size:1.1rem; line-height:1.8; color:var(--text); margin-bottom:1rem">In 1733, the mathematician Abraham de Moivre analyzed the odds in games of chance by expanding the binomial expression $(p+q)^n$. Working without a calculator, calculating massive factorials to track the odds of flipping thousands of coins was physically impossible.</p>
+        <p style="font-size:1.1rem; line-height:1.8; color:var(--muted)">He realized something profound: as $n$ grows vast, the jagged, discrete stair steps of Pascal's Triangle morph into a breathtakingly smooth exponential curve: $e^{-x^2}$. The mathematical limit of an infinite number of discrete random flips is simply the continuous soul of the Bell Curve.</p>
+      </div>
+      <div class="m-col-vis">
+        <div style="font-size:2.5rem; color: #e6c76a; font-family:'EB Garamond',serif; font-style:italic;">
+          e <sup>-x²</sup>
+        </div>
+      </div>
     </div>
   </div>
 </div>
