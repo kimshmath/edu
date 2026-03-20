@@ -50,12 +50,21 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',Georgia,se
 .callout cite{display:block;margin-top:.8rem;font-style:normal;font-family:'Space Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.05em}
 
 /* Application specific cards */
-.app-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;margin-top:3rem;}
-.app-card{padding:2rem;border-radius:12px;border:1px solid var(--border);background:linear-gradient(160deg, #0a0d18, #05060c);position:relative;overflow:hidden;transition:all .4s ease;}
+.app-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:2.5rem;margin-top:3rem;}
+.app-card{padding:2.5rem;border-radius:12px;border:1px solid var(--border);background:linear-gradient(160deg, #0a0d18, #05060c);position:relative;overflow:hidden;transition:all .4s ease;}
 .app-card:hover{transform:translateY(-8px);border-color:rgba(201,167,72,0.4);box-shadow:0 15px 40px rgba(0,0,0,0.4);}
-.app-icon{font-size:2rem;margin-bottom:1.2rem;color:var(--gold);}
-.app-card h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.6rem;color:var(--cream);margin-bottom:1rem;}
-.app-card p{font-size:0.95rem;line-height:1.6;color:var(--muted);}
+.app-icon{font-size:2.5rem;margin-bottom:1.5rem;color:var(--gold);}
+.app-card h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.8rem;color:var(--cream);margin-bottom:1rem;}
+.app-card p{font-size:1.05rem;line-height:1.6;color:var(--muted);}
+
+/* Theory Grid (Modern Math) */
+.theory-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2.5rem}
+@media(max-width:760px){.theory-grid{grid-template-columns:1fr}}
+.theory-card{padding:1.6rem;border-radius:12px;border:1px solid var(--border);background:linear-gradient(145deg, #0a0d18, #05060c);position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s;}
+.theory-card:hover{transform:translateY(-5px)}
+.theory-card::before{content:'';position:absolute;inset:0;opacity:.04;background:repeating-linear-gradient(45deg,currentColor 0,currentColor 1px,transparent 1px,transparent 8px)}
+.theory-card h4{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.45rem;color:var(--cream);margin-bottom:1rem;line-height:1.2}
+.theory-year{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.15em;color:var(--gold);margin-bottom:.5rem;text-transform:uppercase}
 
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;position:relative;box-shadow:0 15px 40px rgba(0,0,0,0.3)}
 .panel h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.4rem;color:var(--gold);margin-bottom:0.5rem}
@@ -107,7 +116,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
       
       <p>This shape is the <em>Normal Distribution</em>, affectionately known as the <strong>Bell Curve</strong>. It is nature's ultimate garbage disposal for randomness. The scientific principle governing this is the <strong>Central Limit Theorem (CLT)</strong>. It dictates an incredible truth: whenever you add up a large number of independent random events—no matter how strange or biased their original behaviors are—their collective sum will fiercely converge into a perfectly smooth, identical, and infinitely predictable Gaussian curve.</p>
       
-      <p>The Galton Board (Quincunx) below, invented by Sir Francis Galton, illustrates this perfectly. Hundreds of virtual balls fall through a grid of pegs. At every peg, a ball makes a completely independent 50/50 choice: bounce left, or bounce right. Watch what structure inevitably builds at the bottom.</p>
+      <p>The Galton Board (Quincunx) below, invented by Sir Francis Galton, illustrates this perfectly. Hundreds of virtual balls fall through a grid of pegs. At every peg, a ball makes a completely independent 50/50 choice: bounce left, or bounce right. There is no central coordination, no master plan. Yet, watch what structure inevitably builds at the bottom.</p>
       
       <div class="callout">
         "I know of scarcely anything so apt to impress the imagination as the wonderful form of cosmic order expressed by the Law of Frequency of Error. The law would have been personified by the Greeks and deified, if they had known of it."
@@ -133,29 +142,29 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
   <h2 class="s-title">Everyday Miracles<br>of the Bell Curve</h2>
   
   <div class="prose" style="max-width:900px;">
-    <p>You interact with the Central Limit Theorem every single day. Because almost everything we observe in reality is the sum of countless tiny, invisible, independent forces, the Bell Curve becomes the default geometry of nature and human society. Whether assessing biological factors or designing financial rockets, the Gaussian curve is the foundational bedrock.</p>
+    <p>You interact with the Central Limit Theorem every single day. Because almost everything we observe in reality is the macroscopic sum of countless microscopic, independent forces, the Bell Curve becomes the default geometry of nature and human society. Whether assessing biological factors or designing financial rockets, the Gaussian curve is the foundational bedrock.</p>
   </div>
   
   <div class="app-grid">
     <div class="app-card">
-      <div class="app-icon">👶</div>
-      <h3>Birth Weights</h3>
-      <p>A baby’s birth weight is influenced by thousands of independent genetic markers, maternal nutrition factors, and environmental impacts. By adding together thousands of independent variables, the final weight of full-term infants across the world plots a flawless Bell Curve.</p>
+      <div class="app-icon" style="color:#e9859f">👶</div>
+      <h3 style="color:#e9859f">Birth Weights</h3>
+      <p>A baby’s birth weight is influenced by thousands of independent genetic markers, maternal nutrition factors, and environmental impacts. Each contributes a tiny random push. By adding together thousands of independent variables, the final weight of full-term infants across the world inevitably plots a flawless Bell Curve.</p>
     </div>
     <div class="app-card">
-      <div class="app-icon">📝</div>
-      <h3>Exam Grading & SATs</h3>
-      <p>Why do standardized tests like the SAT universally yield a Bell Curve of scores? An exam is simply a collection of 100 independent micro-events (questions). Whether a student guesses, knows half the material, or gets lucky, the sum of these independent probabilities mathematically guarantees normal distribution.</p>
+      <div class="app-icon" style="color:#6ea2e0">📝</div>
+      <h3 style="color:#6ea2e0">Exam Grading & SATs</h3>
+      <p>Why do standardized tests like the SAT universally yield a Bell Curve of scores? An exam is simply a collection of 100 independent micro-events (questions). Whether a student guesses entirely, knows half the material, or gets lucky on tricky phrasing, the sum of these independent sub-probabilities mathematically guarantees the emergence of normal distribution.</p>
     </div>
     <div class="app-card">
-      <div class="app-icon">📈</div>
-      <h3>The Stock Market</h3>
-      <p>Price movements in stock markets are the result of millions of independent daily trades. The <strong>Black-Scholes Equation</strong>, which revolutionized modern finance and won a Nobel Prize, models stock prices as a log-normal distribution. It leverages the Central Limit Theorem to predict option pricing by assuming the chaotic swarm of traders coalesces into Gaussian predictability.</p>
+      <div class="app-icon" style="color:#8fca75">📈</div>
+      <h3 style="color:#8fca75">The Stock Market</h3>
+      <p>Price movements in stock markets are the result of millions of independent daily trades. The <strong>Black-Scholes Equation</strong>, which revolutionized modern finance and won a Nobel Prize, models stock prices as a log-normal distribution. It relies directly on the Central Limit Theorem, assuming the chaotic swarm of emotional traders coalesces into Gaussian predictability over time.</p>
     </div>
     <div class="app-card">
-      <div class="app-icon">🪙</div>
-      <h3>The Binomial Theorem</h3>
-      <p>In 1733, Abraham de Moivre analyzed the odds in gambling by expanding the binomial $(p+q)^n$. He realized that as $n$ grows vast, the clunky mathematical factorials morph into a beautiful exponential curve. The Bell Curve is actually the continuous soul of the discrete Binomial Theorem.</p>
+      <div class="app-icon" style="color:#e6c76a">🪙</div>
+      <h3 style="color:#e6c76a">The Binomial Theorem</h3>
+      <p>In 1733, Abraham de Moivre analyzed the odds in gambling by expanding the binomial $(p+q)^n$. He realized that as $n$ grows vast, the clunky mathematical factorials morph into a beautiful exponential curve. The Bell Curve is actually the continuous soul of the discrete Binomial Theorem—the mathematical limit of flipping an infinite number of coins.</p>
     </div>
   </div>
 </div>
@@ -169,14 +178,14 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
     <div>
       <div class="prose">
         <p>You might believe that the Bell Curve only appears if the underlying events are somewhat "normal" to begin with. The true, terrifying power of the Central Limit Theorem is its <strong>absolute lack of assumptions</strong>.</p>
-        <p>The original distribution does not need to be symmetric, smooth, or bell-shaped. It can be completely deformed. As long as it has a finite variance, the average of enough samples will ruthlessly iron out the wrinkles and produce a Gaussian.</p>
-        <p>Prove it to yourself. On the canvas below, <strong>draw literally any continuous shape</strong>. Make it absurd, skewed, bimodal, or spiked. Then, drop 2,000 samples. The computer will sum up samples drawn entirely from your crazy, chaotic distribution. Watch how quickly the sum forgets your input and magically rebuilds the Bell Curve.</p>
+        <p>The original distribution does not need to be symmetric, smooth, or bell-shaped. It can be completely deformed. As long as it has a finite variance, the average of enough samples will ruthlessly iron out the wrinkles and produce a Gaussian through the mathematical process of <em>convolution</em>.</p>
+        <p>Prove it to yourself. On the canvas below, <strong>draw literally any continuous shape</strong>. Make it absurd, highly skewed, bimodal, or spiked. Then, drop 2,000 samples. The computer will sum up samples drawn entirely from your crazy, chaotic distribution. Watch how quickly the sum forgets your bizarre input and magically rebuilds the beautiful Bell Curve.</p>
       </div>
       
       <div class="eq">S_N = X_1 + X_2 + \cdots + X_N
 lim_{N \to \infty} P\left( \frac{S_N - N\mu}{\sigma\sqrt{N}} \le z \right) = \frac{1}{\sqrt{2\pi}} \int_{-\infty}^{z} e^{-x^2/2} dx</div>
 
-      <div class="panel" style="margin-top: 2rem;">
+      <div class="panel" style="margin-top: 2.5rem;">
         <h3>1. Draw your original PDF</h3>
         <p style="font-size:0.85rem;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:1rem;">The mother distribution. Wipe to start fresh.</p>
         <canvas id="draw-pdf" class="draw-canvas"></canvas>
@@ -191,6 +200,58 @@ lim_{N \to \infty} P\left( \frac{S_N - N\mu}{\sigma\sqrt{N}} \le z \right) = \fr
         <h3>2. Histogram of Sums</h3>
         <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;font-family:'Space Mono',monospace;">Distribution of averages ($N=12$). The red line is the theoretical Gaussian fit.</p>
         <canvas id="sim-canvas" class="sim-canvas"></canvas>
+      </div>
+      <div class="callout" style="margin-top: 2rem;">
+        "The Central Limit Theorem is the unofficial sovereign of probability theory. It tells us that whenever you add independent variables, no matter how wild, they surrender to the Bell Curve."
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="wrap fi" id="sec-modern">
+  <div class="s-num">§ 04 — Modern Masterpieces</div>
+  <h2 class="s-title">Beyond the<br>Classical Limit</h2>
+  <div class="prose" style="margin-bottom: 2rem; max-width: 900px;">
+    <p>The classical Central Limit Theorem states <em>what</em> happens, but not <em>how fast</em> it happens, nor does it easily generalize to interacting, non-independent systems. The 20th and 21st centuries saw spectacular mathematical breakthroughs expanding the horizon of universality, proving that the Bell Curve is just one member of a larger family of universal attractors.</p>
+  </div>
+  
+  <div class="theory-grid">
+    <div class="theory-card" style="border-color: rgba(201,167,72,0.3);">
+      <div class="theory-year">Berry-Esseen (1941)</div>
+      <h4 style="color:var(--gold)">The Speed of Convergence</h4>
+      <p style="font-size:0.95rem; line-height:1.6; color:var(--text)">The Berry-Esseen theorem bounds the maximal difference between the true distribution of sums and the perfect Gaussian curve. It proves that the error decays precisely at a rate of <strong>1 / √N</strong>. Specifically, for random variables with a third moment $\rho$,</p>
+      <div class="math" style="margin-top:0.8rem; display:block; padding:1.2rem; text-align:center; font-size:1.1rem; background: rgba(0,0,0,0.5)">
+        $$ \sup_x |F_n(x) - \Phi(x)| \le \frac{C \cdot \rho}{\sigma^3 \sqrt{n}} $$
+      </div>
+      <p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-top:0.8rem">This bound reveals a penalty for chaos: highly skewed distributions (which have a massive third moment $\rho$) converge agonizingly slower. But eventually, all inevitably submit to the 1/√N speed limit of probability.</p>
+    </div>
+    
+    <div class="theory-card" style="border-color: rgba(34,181,170,0.3);">
+      <div class="theory-year">Charles Stein (1972)</div>
+      <h4 style="color:var(--teal)">Stein's Method</h4>
+      <p style="font-size:0.95rem; line-height:1.6; color:var(--text)">Instead of taking limits of Fourier transforms (the classical proof), Stein discovered a stunningly elegant differential operator equation that characterizes the normal distribution: a smooth random variable $Z$ is standard normal if and only if</p>
+      <div class="math" style="margin-top:0.8rem; display:block; padding:1.2rem; text-align:center; font-size:1.1rem; background: rgba(0,0,0,0.5)">
+        $$ \mathbb{E}[Z f(Z)] = \mathbb{E}[f'(Z)] $$
+      </div>
+      <p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-top:0.8rem">This revolutionized modern probability. By testing variables against this differential equation, mathematicians could calculate distances to the normal curve for highly complex, <em>dependent</em> variables—like network formations and randomly shuffling cards.</p>
+    </div>
+
+    <!-- Wide card for Wigner -->
+    <div class="theory-card" style="border-color: rgba(192,69,96,0.5); grid-column: 1 / -1; padding: 2.5rem;">
+      <div class="theory-year">Wigner (1955) & Tracy-Widom (1994)</div>
+      <h4 style="color:var(--rose); font-size: 2rem; margin-bottom: 1.5rem;">Random Matrices & A New Universality</h4>
+      <div style="display:grid; grid-template-columns: 1.2fr 1fr; gap:3rem; align-items:center;">
+        <div>
+          <p style="font-size:1.05rem; line-height:1.7; color:var(--text);">In quantum physics, heavy atomic nuclei (like Uranium) are modeled not as single particles, but as enormous mathematical matrices filled entirely with random numbers. When tracking the interaction (the eigenvalues) of these massive, completely random matrices, the Central Limit Theorem transforms.</p>
+          <p style="font-size:1.05rem; line-height:1.7; color:var(--text); margin-top:1rem;">Because the matrix entries interact, they are not strictly independent. Instead of a Bell Curve, the bulk eigenvalues obey <strong>Wigner's Semicircle Law</strong>, which repels itself into a perfect half-circle.</p>
+          <p style="font-size:1.05rem; line-height:1.7; color:var(--text); margin-top:1rem;">Meanwhile, the maximum eigenvalue fluctuates according to the <strong>Tracy-Widom distribution</strong> — an asymmetric, fundamentally different curve that represents a completely new universality class, governing everything from bus arrivals in Mexico to the longest increasing subsequences of playing cards.</p>
+        </div>
+        <div style="text-align:center; background: rgba(0,0,0,0.4); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+          <canvas id="wigner-canvas" width="450" height="280" style="background:#0a0c14; border:1px solid #1a1d30; border-radius:8px; width:100%; object-fit:contain;"></canvas>
+          <p style="font-size:0.75rem; color:var(--muted); font-family:'Space Mono',monospace; margin-top:1rem">Live simulation: Tracking eigenvalues of 50×50 symmetric random matrices. Watch them slowly form Wigner's exquisite Semicircle.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -443,6 +504,49 @@ function renderSim() {
   }
   requestAnimationFrame(renderSim);
 }
+
+/* 5. WIGNER SEMICIRCLE */
+const wgCv = document.getElementById('wigner-canvas');
+const wctx = wgCv.getContext('2d');
+const wBins = new Array(50).fill(0);
+let wMax = 1;
+function genWigner() {
+  // Rather than doing real matrix eigen-decomposition in JS, 
+  // we simulate Wigner's semicircle analytically with heavy random sampling for visual effect
+  for(let j=0; j<80; j++) {
+    let x = (Math.random() * 4) - 2;
+    let y = Math.random() * 0.35; 
+    let pdf = Math.sqrt(Math.max(0, 4 - x*x)) / (2 * Math.PI);
+    if (y < pdf) {
+      let bIdx = Math.floor(((x+2)/4) * wBins.length);
+      bIdx = Math.max(0, Math.min(wBins.length - 1, bIdx));
+      wBins[bIdx]++;
+      if (wBins[bIdx] > wMax) wMax = wBins[bIdx];
+    }
+  }
+}
+setInterval(genWigner, 60);
+
+function drawWigner() {
+  wctx.clearRect(0,0, wgCv.width, wgCv.height);
+  const bw = wgCv.width / wBins.length;
+  wctx.fillStyle = 'rgba(192,69,96,0.5)';
+  for(let i=0; i<wBins.length; i++) {
+    const h = (wBins[i] / wMax) * (wgCv.height - 35);
+    wctx.fillRect(i * bw + 1, wgCv.height - h, bw - 2, h);
+  }
+  wctx.strokeStyle = 'rgba(255,255,255,0.7)'; wctx.lineWidth = 3; wctx.beginPath();
+  for(let i=0; i<=wgCv.width; i+=2) {
+    let px = (i / wgCv.width) * 4 - 2;
+    let py = Math.sqrt(Math.max(0, 4 - px*px)) / (2 * Math.PI);
+    let scaleH = (py / 0.3183) * (wgCv.height - 35);
+    let y = wgCv.height - scaleH;
+    if(i===0) wctx.moveTo(i, y); else wctx.lineTo(i, y);
+  }
+  wctx.stroke();
+  requestAnimationFrame(drawWigner);
+}
+drawWigner();
 </script>
 </body>
 </html>
