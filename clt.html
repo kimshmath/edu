@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#05060c">
 <meta name="description" content="Why do the polls look the same?? A beautiful visual exploration of the Central Limit Theorem.">
-<title>Why do the polls look the same?? - Central Limit Theorem</title>
+<title>The Bell Curve — Central Limit Theorem</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Space+Mono:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
@@ -14,12 +14,16 @@
 :root{
   --bg:#05060c;--surface:#0c0e1a;--border:#1a1d30;
   --text:#ddd7cc;--muted:#686d8c;--gold:#c9a748;--teal:#22b5aa;
-  --rose:#c04560;--cream:#f0e8d8;
-  --glow-gold:rgba(201,167,72,.18);--glow-teal:rgba(34,181,170,.18);
+  --rose:#c04560;--cream:#f0e8d8;--green:#5ec47a;
+  --glow-gold:rgba(201,167,72,.18);--glow-teal:rgba(34,181,170,.18);--glow-rose:rgba(192,69,96,.18);
 }
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'EB Garamond',Georgia,serif;font-size:18px;line-height:1.76;overflow-x:hidden}
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* ===== SCROLL FADE ===== */
+.fi{opacity:0;transform:translateY(32px);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform .9s cubic-bezier(.22,1,.36,1)}
+.fi.visible{opacity:1;transform:none}
 
 /* ===== HERO ===== */
 #hero{position:relative;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
@@ -34,7 +38,19 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',Georgia,se
 @keyframes wordIn{to{opacity:1;transform:translateY(0)}}
 @keyframes fadeUp{to{opacity:.85; transform:translateY(0)}}
 .hero-italic{font-style:italic;color:var(--teal)}
-.hero-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:1.2rem;color:var(--muted);margin-top:2rem;opacity:0;transform:translateY(10px);animation:fadeUp .9s 1.1s forwards; max-width:600px; margin-inline:auto;}
+.hero-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:1.2rem;color:var(--muted);margin-top:2rem;opacity:0;transform:translateY(10px);animation:fadeUp .9s 1.1s forwards;max-width:600px;margin-inline:auto;}
+.scroll-hint{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:var(--muted);opacity:0;animation:fadeUp 1s 1.6s forwards;display:flex;flex-direction:column;align-items:center;gap:.5rem}
+.scroll-hint::after{content:'';display:block;width:1px;height:40px;background:linear-gradient(to bottom,var(--muted),transparent)}
+
+/* ===== LIVE TICKER ===== */
+.ticker-bar{background:var(--surface);border-bottom:1px solid var(--border);overflow:hidden;padding:.6rem 0;position:relative}
+.ticker-bar::before,.ticker-bar::after{content:'';position:absolute;top:0;width:80px;height:100%;z-index:2;pointer-events:none}
+.ticker-bar::before{left:0;background:linear-gradient(to right,var(--surface),transparent)}
+.ticker-bar::after{right:0;background:linear-gradient(to left,var(--surface),transparent)}
+.ticker-inner{display:flex;gap:0;white-space:nowrap;animation:ticker 30s linear infinite}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.ticker-item{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.05em;color:var(--muted);padding:0 2.5rem;border-right:1px solid var(--border)}
+.ticker-item span{color:var(--gold);font-weight:600}
 
 /* ===== LAYOUT ===== */
 .wrap{max-width:1160px;margin:0 auto;padding:7rem 2.5rem}
@@ -44,64 +60,120 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',Georgia,se
 .prose{font-size:1.1rem;color:var(--text);max-width:720px;}
 .prose p+p{margin-top:1.2rem}
 .dropcap::first-letter{font-family:'Cormorant Garamond',serif;font-size:3.8rem;float:left;line-height:0.8;padding-right:0.15em;color:var(--gold);}
-.math{font-family:'Space Mono',monospace;font-size:.8em;background:#111420;border:1px solid var(--border);border-radius:2px;padding:.1em .4em;color:var(--teal)}
+.math-inline{font-family:'Space Mono',monospace;font-size:.8em;background:#111420;border:1px solid var(--border);border-radius:2px;padding:.1em .4em;color:var(--teal)}
 .eq{font-family:'Space Mono',monospace;font-size:.84rem;background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:1.4rem 1.8rem;color:var(--teal);margin:2rem 0;overflow-x:auto;white-space:pre;line-height:2.1;box-shadow:0 10px 30px rgba(0,0,0,0.2)}
 .callout{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--teal);border-radius:0 8px 8px 0;padding:1.6rem 2rem;margin:2.5rem 0;font-style:italic;color:var(--text);font-size:1.1rem;box-shadow:0 10px 30px rgba(0,0,0,0.2)}
 .callout cite{display:block;margin-top:.8rem;font-style:normal;font-family:'Space Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.05em}
+.callout.danger{border-left-color:var(--rose)}
+.callout.gold{border-left-color:var(--gold)}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;position:relative;box-shadow:0 15px 40px rgba(0,0,0,0.3)}
+.panel h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.4rem;color:var(--gold);margin-bottom:0.5rem}
 
-/* Application specific cards */
-.app-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:2.5rem;margin-top:3rem;}
-.app-card{padding:2.5rem;border-radius:12px;border:1px solid var(--border);background:linear-gradient(160deg, #0a0d18, #05060c);position:relative;overflow:hidden;transition:all .4s ease;}
-.app-card:hover{transform:translateY(-8px);border-color:rgba(201,167,72,0.4);box-shadow:0 15px 40px rgba(0,0,0,0.4);}
-.app-icon{font-size:2.5rem;margin-bottom:1.5rem;color:var(--gold);}
-.app-card h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.8rem;color:var(--cream);margin-bottom:1rem;}
-.app-card p{font-size:1.05rem;line-height:1.6;color:var(--muted);}
+/* Miracle stack */
+.miracle-stack{display:flex;flex-direction:column;gap:6rem;margin-top:2rem;margin-bottom:2rem}
+.m-row{display:flex;align-items:center;gap:5rem}
+.m-row:nth-child(even){flex-direction:row-reverse}
+.m-col-text{flex:1.2}
+.m-col-vis{flex:1;min-height:320px;border-radius:12px;background:linear-gradient(145deg,#0a0c16,#05060c);border:1px solid var(--border);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 15px 40px rgba(0,0,0,0.3)}
+@media(max-width:900px){.m-row,.m-row:nth-child(even){flex-direction:column;gap:3rem;text-align:center}.m-col-vis{min-height:240px;width:100%}}
+.m-badge{display:inline-block;font-family:'Space Mono',monospace;font-size:.65rem;padding:.4rem 1rem;border-radius:100px;color:var(--bg);text-transform:uppercase;letter-spacing:.1em;margin-bottom:1.5rem;font-weight:600}
 
-/* Miracle Stack */
-.miracle-stack { display:flex; flex-direction:column; gap:6rem; margin-top:2rem; margin-bottom: 2rem; }
-.m-row { display:flex; align-items:center; gap:5rem; }
-.m-row:nth-child(even) { flex-direction:row-reverse; }
-.m-col-text { flex: 1.2; }
-.m-col-vis { flex: 1; min-height: 320px; border-radius: 12px; background:linear-gradient(145deg, #0a0c16, #05060c); border:1px solid var(--border); position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; box-shadow:0 15px 40px rgba(0,0,0,0.3); }
-.m-col-vis::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background: radial-gradient(circle at center, var(--glow-gold) 0, transparent 60%); opacity:0.1; }
-.m-icon-huge { font-size:7.5rem; filter:drop-shadow(0 0 30px rgba(255,255,255,0.05)); }
-@media(max-width:900px) { .m-row, .m-row:nth-child(even) { flex-direction:column; gap:3rem; text-align:center; } }
-.m-badge { display:inline-block; font-family:'Space Mono',monospace; font-size:0.65rem; padding:0.4rem 1rem; border-radius:100px; color:var(--bg); text-transform:uppercase; letter-spacing:0.1em; margin-bottom:1.5rem; font-weight:600;}
+/* Application grid */
+.app-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;margin-top:3rem}
+.app-card{padding:2rem;border-radius:12px;border:1px solid var(--border);background:linear-gradient(160deg,#0a0d18,#05060c);position:relative;overflow:hidden;transition:all .4s ease}
+.app-card:hover{transform:translateY(-6px);border-color:rgba(201,167,72,.35);box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.app-card h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.6rem;color:var(--cream);margin-bottom:.8rem}
+.app-card p{font-size:1rem;line-height:1.65;color:var(--muted)}
+.app-icon-canvas{width:100%;height:120px;border-radius:8px;margin-bottom:1.5rem;background:#060810}
 
-/* Theory Grid (Modern Math) */
+/* Theory Grid */
 .theory-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:2.5rem}
 @media(max-width:760px){.theory-grid{grid-template-columns:1fr}}
-.theory-card{padding:1.6rem;border-radius:12px;border:1px solid var(--border);background:linear-gradient(145deg, #0a0d18, #05060c);position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s;}
+.theory-card{padding:1.6rem;border-radius:12px;border:1px solid var(--border);background:linear-gradient(145deg,#0a0d18,#05060c);position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s}
 .theory-card:hover{transform:translateY(-5px)}
 .theory-card::before{content:'';position:absolute;inset:0;opacity:.04;background:repeating-linear-gradient(45deg,currentColor 0,currentColor 1px,transparent 1px,transparent 8px)}
 .theory-card h4{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.45rem;color:var(--cream);margin-bottom:1rem;line-height:1.2}
 .theory-year{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.15em;color:var(--gold);margin-bottom:.5rem;text-transform:uppercase}
 
-.panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;position:relative;box-shadow:0 15px 40px rgba(0,0,0,0.3)}
-.panel h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.4rem;color:var(--gold);margin-bottom:0.5rem}
-
 /* ===== SPECIFIC UI ===== */
 .grid-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:3.5rem;align-items:start;margin-top:3rem}
 @media(max-width:900px){.grid-layout{grid-template-columns:1fr}}
-.draw-canvas{width:100%;aspect-ratio:2/1;background:var(--bg);border-radius:6px;border:1px solid var(--border);cursor:crosshair;touch-action:none;box-shadow:inset 0 0 20px rgba(0,0,0,0.5)}
-.sim-canvas{width:100%;aspect-ratio:16/10;background:var(--bg);border-radius:6px;border:1px solid var(--border);margin-top:1rem;display:block;}
-.galton-canvas{width:100%;max-width:600px;background:var(--bg);border-radius:6px;border:1px solid var(--border);margin:2rem auto;display:block;}
-
-.controls{display:flex;gap:1.5rem;margin-top:1.5rem;align-items:center}
-.btn{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;padding:.7rem 1.5rem;border:1px solid var(--teal);color:var(--teal);background:transparent;border-radius:100px;cursor:pointer;transition:all .3s;}
+.draw-canvas{width:100%;aspect-ratio:2/1;background:var(--bg);border-radius:6px;border:1px solid var(--border);cursor:crosshair;touch-action:none;box-shadow:inset 0 0 20px rgba(0,0,0,.5)}
+.sim-canvas{width:100%;aspect-ratio:16/10;background:var(--bg);border-radius:6px;border:1px solid var(--border);margin-top:1rem;display:block}
+.galton-canvas{width:100%;max-width:600px;background:var(--bg);border-radius:6px;border:1px solid var(--border);margin:2rem auto;display:block}
+.controls{display:flex;gap:1.5rem;margin-top:1.5rem;align-items:center;flex-wrap:wrap}
+.btn{font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;padding:.7rem 1.5rem;border:1px solid var(--teal);color:var(--teal);background:transparent;border-radius:100px;cursor:pointer;transition:all .3s}
 .btn:hover{background:var(--teal);color:var(--bg);box-shadow:0 0 15px rgba(34,181,170,.4)}
+.btn.danger{border-color:var(--rose);color:var(--rose)}
+.btn.danger:hover{background:var(--rose);color:#fff;box-shadow:0 0 15px rgba(192,69,96,.4)}
+.btn.gold{border-color:var(--gold);color:var(--gold)}
+.btn.gold:hover{background:var(--gold);color:var(--bg);box-shadow:0 0 15px rgba(201,167,72,.4)}
+.btn.active{background:var(--teal);color:var(--bg)}
 
+/* ===== STOCK SECTION ===== */
+.stock-section{background:linear-gradient(180deg, #050810 0%, #060b12 40%, #050610 100%); border-top: 1px solid #12192a; border-bottom: 1px solid #12192a; position: relative; overflow: hidden;}
+.stock-section::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(34,181,170,.3),transparent)}
+.stock-section::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,rgba(201,167,72,.2),transparent)}
+.stock-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem}
+@media(max-width:900px){.stock-grid{grid-template-columns:1fr}}
+.stock-canvas-wrap{position:relative;background:#060a14;border:1px solid #131b2e;border-radius:12px;overflow:hidden}
+.stock-canvas-label{position:absolute;top:.8rem;left:1rem;font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+.stock-canvas{width:100%;height:240px;display:block}
+.stock-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;background:var(--surface);border:1px solid var(--border);border-radius:0 0 12px 12px;border-top:none;margin-top:-1px}
+.stat-cell{padding:.8rem 1rem;border-right:1px solid var(--border);text-align:center}
+.stat-cell:last-child{border-right:none}
+.stat-label{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:.3rem}
+.stat-val{font-family:'Space Mono',monospace;font-size:1rem;color:var(--cream)}
+.stat-val.up{color:#5ec47a}
+.stat-val.down{color:var(--rose)}
+.portfolio-toggle{display:flex;gap:.5rem;align-items:center;margin-top:1.5rem;flex-wrap:wrap}
+.ptoggle-label{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-right:.5rem}
+.ptoggle-btn{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.05em;padding:.45rem 1rem;border:1px solid var(--border);color:var(--muted);background:transparent;border-radius:4px;cursor:pointer;transition:all .25s}
+.ptoggle-btn:hover{border-color:var(--teal);color:var(--teal)}
+.ptoggle-btn.active{background:var(--teal);border-color:var(--teal);color:var(--bg);font-weight:700}
+.fat-tails-callout{background:linear-gradient(135deg,rgba(192,69,96,.06),rgba(192,69,96,.02));border:1px solid rgba(192,69,96,.25);border-radius:12px;padding:2rem;margin-top:3rem;position:relative;overflow:hidden}
+.fat-tails-callout::before{content:'⚠';position:absolute;top:-1rem;right:1.5rem;font-size:4rem;opacity:.06}
+
+/* ===== POLLING SECTION ===== */
+.polling-wrap{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2rem;margin-top:2rem}
+.poll-canvas{width:100%;height:200px;display:block;background:#060810;border-radius:8px}
+.poll-slider-wrap{margin-top:1.5rem}
+.poll-slider{width:100%;-webkit-appearance:none;appearance:none;height:3px;background:var(--border);border-radius:2px;outline:none;margin:1rem 0}
+.poll-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--gold);cursor:pointer;box-shadow:0 0 10px rgba(201,167,72,.5)}
+.poll-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--gold);cursor:pointer;border:none}
+.poll-stats-row{display:flex;gap:2rem;margin-top:1rem;flex-wrap:wrap}
+.poll-stat{display:flex;flex-direction:column;gap:.2rem}
+.poll-stat-label{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.poll-stat-val{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--cream)}
+.poll-stat-val em{font-size:1.2rem;color:var(--gold);font-style:normal}
+
+/* ===== FACT BLOCK ===== */
+.fact-row{display:flex;gap:0;margin:3rem 0;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+@media(max-width:700px){.fact-row{flex-direction:column}}
+.fact-cell{flex:1;padding:2rem 1.8rem;border-right:1px solid var(--border);text-align:center;background:linear-gradient(135deg,#0a0d1a,#05060c);transition:background .3s}
+.fact-cell:hover{background:linear-gradient(135deg,#0d1120,#070911)}
+.fact-cell:last-child{border-right:none}
+.fact-number{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;color:var(--gold);line-height:1;margin-bottom:.4rem}
+.fact-label{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);line-height:1.5}
+
+/* ===== DIVIDER ===== */
+.divider{border:none;border-top:1px solid var(--border)}
+.section-glow{position:relative}
+.section-glow::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(to right,transparent,rgba(201,167,72,.4),transparent)}
+
+/* ===== FOOTER ===== */
 footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding:5rem 2.5rem 4rem}
-.footer-attr{display:flex;flex-direction:column;gap:0.2rem;}
-.footer-name{font-family:'Fraunces',Georgia,serif;font-size:0.85rem;font-weight:400;color:var(--white);letter-spacing:-0.01em;}
-.footer-inst{font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:300;color:var(--muted);letter-spacing:0.01em;}
-.footer-url{font-family:'Space Mono',monospace;font-size:0.6rem;letter-spacing:0.08em;color:var(--gold);text-decoration:none;margin-top:0.25rem;display:inline-block;}
+.footer-attr{display:flex;flex-direction:column;gap:.2rem}
+.footer-name{font-family:'Fraunces',Georgia,serif;font-size:.85rem;font-weight:400;color:var(--cream);letter-spacing:-.01em}
+.footer-inst{font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:300;color:var(--muted);letter-spacing:.01em}
+.footer-url{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:var(--gold);text-decoration:none;margin-top:.25rem;display:inline-block}
 </style>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {delimiters: [{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
 </head>
 <body>
 
+<!-- ===== HERO ===== -->
 <section id="hero">
   <canvas id="hero-canvas"></canvas>
   <div class="hero-overlay"></div>
@@ -112,141 +184,301 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
       <span class="title-line"><span class="title-word tl2 hero-italic">polls look</span></span>
       <span class="title-line"><span class="title-word tl3">the same??</span></span>
     </h1>
-    <div class="hero-sub">The hidden fingerprint of the universe: how independent chaos inevitably sculpts the beautiful, predictable Bell Curve.</div>
+    <div class="hero-sub">The hidden fingerprint of the universe — how independent chaos inevitably sculpts the beautiful, eternal Bell Curve.</div>
   </div>
+  <div class="scroll-hint">scroll</div>
 </section>
+
+<!-- ===== LIVE TICKER ===== -->
+<div class="ticker-bar">
+  <div class="ticker-inner" id="ticker-inner"></div>
+</div>
 
 <hr class="divider">
 
+<!-- ===== § 01 — ORDER OUT OF CHAOS ===== -->
 <div class="wrap fi" id="sec-intro">
   <div class="s-num">§ 01 — Assembling the Crowd</div>
   <h2 class="s-title">Order Out of<br>Chaos</h2>
   <div class="grid-layout">
     <div class="prose">
-      <p class="dropcap">If you flip a fair coin a thousand times, and count the number of heads, the result is wildly unpredictable. If millions of people are asked to guess the weight of an ox, their individual answers will be hilariously wrong. Yet, in both scenarios, if you plot everyone's results on a graph, a magical shape emerges from the complete irregularity.</p>
-      
-      <p>This shape is the <em>Normal Distribution</em>, affectionately known as the <strong>Bell Curve</strong>. It is nature's ultimate garbage disposal for randomness. The scientific principle governing this is the <strong>Central Limit Theorem (CLT)</strong>. It dictates an incredible truth: whenever you add up a large number of independent random events—no matter how strange or biased their original behaviors are—their collective sum will fiercely converge into a perfectly smooth, identical, and infinitely predictable Gaussian curve.</p>
-      
-      <p>The Galton Board (Quincunx) below, invented by Sir Francis Galton, illustrates this perfectly. Hundreds of virtual balls fall through a grid of pegs. At every peg, a ball makes a completely independent 50/50 choice: bounce left, or bounce right. There is no central coordination, no master plan. Yet, watch what structure inevitably builds at the bottom.</p>
-      
+      <p class="dropcap">If you flip a fair coin a thousand times, the result is wildly unpredictable. If millions of people are asked to guess the weight of an ox, their individual answers will be hilariously wrong. Yet in both scenarios, if you plot everyone's results on a graph, a magical shape emerges from the complete irregularity.</p>
+      <p>This shape is the <em>Normal Distribution</em> — the <strong>Bell Curve</strong>. It is nature's ultimate garbage disposal for randomness. The governing principle is the <strong>Central Limit Theorem (CLT)</strong>: whenever you add up a large number of independent random events — no matter how strange or biased their original behavior — their collective sum will fiercely converge into a smooth, predictable Gaussian curve.</p>
+      <p>It does not matter if each individual is wildly irrational. It does not matter if the original distribution is jagged, bimodal, or heavily skewed. The mathematics is merciless and universal: add enough independent things together, and the Bell Curve emerges from the wreckage.</p>
       <div class="callout">
         "I know of scarcely anything so apt to impress the imagination as the wonderful form of cosmic order expressed by the Law of Frequency of Error. The law would have been personified by the Greeks and deified, if they had known of it."
-        <cite>— Sir Francis Galton</cite>
+        <cite>— Sir Francis Galton, <em>Natural Inheritance</em>, 1889</cite>
+      </div>
+      <p>The Galton Board (Quincunx) illustrates this perfectly. Balls fall through a grid of pegs. At every peg, a ball makes an independent, memoryless 50/50 choice: bounce left or bounce right. There is no coordination. No master plan. Yet watch what inevitably builds at the bottom.</p>
+    </div>
+    <div>
+      <div class="panel" style="text-align:center">
+        <h3>The Galton Board</h3>
+        <p style="font-size:.85rem;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:1rem">Each ball's final position is the sum of 20 independent random choices.</p>
+        <canvas id="galton-canvas" class="galton-canvas" width="420" height="440" style="margin-top:0"></canvas>
+        <button class="btn" id="btn-galton" style="margin-top:1.5rem">Drop 1000 Balls</button>
       </div>
     </div>
-    
-    <div>
-      <div class="panel" style="text-align:center;">
-        <h3>The Galton Board</h3>
-        <p style="font-size:0.85rem;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:1.5rem;">The sum of left/right choices shapes the pile.</p>
-        <canvas id="galton-canvas" class="galton-canvas" width="400" height="420" style="margin-top:0;"></canvas>
-        <button class="btn" id="btn-galton" style="margin-top:1.5rem;">Drop 1000 Balls</button>
-      </div>
+  </div>
+
+  <div class="fact-row" style="margin-top:5rem">
+    <div class="fact-cell">
+      <div class="fact-number">∞</div>
+      <div class="fact-label">Distributions that all<br>converge to the Bell Curve</div>
+    </div>
+    <div class="fact-cell">
+      <div class="fact-number">1733</div>
+      <div class="fact-label">Year de Moivre first<br>discovered the Gaussian</div>
+    </div>
+    <div class="fact-cell">
+      <div class="fact-number">1/√n</div>
+      <div class="fact-label">Rate at which error<br>shrinks as sample grows</div>
+    </div>
+    <div class="fact-cell">
+      <div class="fact-number">$1Q</div>
+      <div class="fact-label">Global derivatives market<br>built on CLT assumptions</div>
     </div>
   </div>
 </div>
 
 <hr class="divider">
 
-<div class="wrap fi" id="sec-everyday">
-  <div class="s-num">§ 02 — The Universal Blueprint</div>
-  <h2 class="s-title">Everyday Miracles<br>of the Bell Curve</h2>
-  
-  <div class="prose" style="max-width:900px;">
-    <p>You interact with the Central Limit Theorem every single day. Because almost everything we observe in reality is the macroscopic sum of countless microscopic, independent forces, the Bell Curve becomes the default geometry of nature and human society. Whether assessing biological factors or designing financial rockets, the Gaussian curve is the foundational bedrock.</p>
+<!-- ===== § 02 — THE MARKET NEVER LIES ===== -->
+<div class="stock-section" id="sec-market">
+<div class="wrap fi">
+  <div class="s-num">§ 02 — The Market Never Lies</div>
+  <h2 class="s-title">Every Trade is<br>a Coin Flip</h2>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;margin-bottom:3rem">
+    <div class="prose">
+      <p class="dropcap">Every morning on Wall Street, roughly 10 billion shares change hands. Each trade is a vote — a buyer believes the price will rise, a seller believes it will fall. These individual decisions are as chaotic as the weather: driven by earnings reports, geopolitical crises, CEO tweets, supply chain disruptions, and pure human panic.</p>
+      <p>Yet the Central Limit Theorem whispers a secret. If you look not at the price itself, but at the <em>daily returns</em> — the percentage change from one close to the next — something remarkable emerges. Each daily return is the aggregate effect of millions of independent decisions, nudging the market up or down by tiny fractions of a percent.</p>
+      <p>By the CLT, their sum should approach a normal distribution. Not because any individual trader is rational. Not because markets are efficient. But because <em>addition is addition</em>, and enough independent additions always converge to the same shape.</p>
+    </div>
+    <div class="prose">
+      <p>This is not a metaphor. It is the mathematical foundation of modern finance — the hidden theorem behind every derivative contract, every risk model, every option price calculated in every bank on Earth.</p>
+      <p><strong>Portfolio diversification is literally the CLT.</strong> When you hold one stock, you experience its full, chaotic volatility. When you hold 20 uncorrelated stocks, you experience the <em>average</em> of their volatilities. By the CLT, that average is dramatically more predictable and less extreme than any individual stock — and it becomes more Gaussian the more positions you add.</p>
+      <div class="callout gold" style="margin-top:1.5rem">
+        "The stock market is a device for transferring money from the impatient to the patient. But mathematics is what makes patience profitable."
+        <cite>— adapted from Warren Buffett</cite>
+      </div>
+    </div>
   </div>
-  
-  <div class="miracle-stack">
-    <!-- Row 1 -->
-    <div class="m-row">
-      <div class="m-col-text">
-        <div class="m-badge" style="background:#e9859f">Biology</div>
-        <h3 style="font-family:'Cormorant Garamond',serif; font-size:2.8rem; color:#e9859f; line-height:1.1; margin-bottom:1.5rem">The Blueprint of Life</h3>
-        <p style="font-size:1.1rem; line-height:1.8; color:var(--text); margin-bottom:1rem">A baby’s birth weight is not determined by a single master gene or a single environmental choice. Instead, it is the cumulative result of thousands of independent micro-factors: rare genetic markers, subtle altitude variations, maternal nutrition, and epigenetic cascades.</p>
-        <p style="font-size:1.1rem; line-height:1.8; color:var(--muted)">Each factor contributes a virtually invisible nudge to the final weight. Yet, when nature adds these countless independent variables together, the resulting human weights rigorously organize themselves into a flawless Bell Curve. The same inescapable mathematics molds human height, blood pressure, and even the varied sizes of leaves in a forest.</p>
+
+  <!-- Live Stock Simulator -->
+  <div style="background:#060a14;border:1px solid #131b2e;border-radius:16px;padding:2rem;margin:2rem 0">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem">
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--cream)">Live Stock Return Simulator</div>
+        <div style="font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:.3rem">Geometric Brownian Motion · μ = 7% annual · σ = 19% annual</div>
       </div>
-      <div class="m-col-vis">
-        <div class="m-icon-huge">🧬👶</div>
+      <div class="controls" style="margin:0">
+        <button class="btn" id="btn-stock-run">▶ Simulate</button>
+        <button class="btn danger" id="btn-stock-reset">Reset</button>
       </div>
     </div>
 
-    <!-- Row 2 -->
-    <div class="m-row">
-      <div class="m-col-text">
-        <div class="m-badge" style="background:#6ea2e0">Society</div>
-        <h3 style="font-family:'Cormorant Garamond',serif; font-size:2.8rem; color:#6ea2e0; line-height:1.1; margin-bottom:1.5rem">The Illusion of Merit</h3>
-        <p style="font-size:1.1rem; line-height:1.8; color:var(--text); margin-bottom:1rem">Why do standardized tests like the SAT universally yield a rigid, inescapable Bell Curve of scores year after year? An exam is simply a collection of perhaps 100 independent events: the true-or-false nature of individual questions.</p>
-        <p style="font-size:1.1rem; line-height:1.8; color:var(--muted)">Whether a student guesses wildly, knows exactly half the material, or gets lucky on tricky phrasing—the test score is merely the sum of 100 independent micro-probabilities. Mathematics guarantees that this sum will always forcefully pull the vast student population into a Gaussian distribution, turning chaotic human cognition into a perfectly predictable, symmetrical graph.</p>
+    <div class="stock-grid">
+      <div>
+        <div class="stock-canvas-wrap">
+          <div class="stock-canvas-label">Price Path</div>
+          <canvas id="stock-price-canvas" class="stock-canvas"></canvas>
+        </div>
       </div>
-      <div class="m-col-vis">
-        <div class="m-icon-huge">📝🎓</div>
-      </div>
-    </div>
-    
-    <!-- Row 3 -->
-    <div class="m-row">
-      <div class="m-col-text">
-        <div class="m-badge" style="background:#8fca75">Economics</div>
-        <h3 style="font-family:'Cormorant Garamond',serif; font-size:2.8rem; color:#8fca75; line-height:1.1; margin-bottom:1.5rem">Taming the Stock Market</h3>
-        <p style="font-size:1.1rem; line-height:1.8; color:var(--text); margin-bottom:1rem">Price movements in global stock markets are the violent result of millions of independent, emotional trades made daily. To the individual day-trader, the market is an unpredictable, stormy ocean.</p>
-        <p style="font-size:1.1rem; line-height:1.8; color:var(--muted)">But to a mathematician, the sum of chaotic moves is highly ordered. The <strong>Black-Scholes Equation</strong>, which revolutionized modern finance and earned a Nobel Prize, rests precisely on this concept. It models stock returns as a log-normal distribution, leaning directly on the Central Limit Theorem to predict option pricing under the assumption that the chaotic swarm of traders coalesces into beautiful Gaussian predictability over time.</p>
-      </div>
-      <div class="m-col-vis">
-        <div class="m-icon-huge">📉💸</div>
+      <div>
+        <div class="stock-canvas-wrap">
+          <div class="stock-canvas-label">Distribution of Daily Returns</div>
+          <canvas id="stock-return-canvas" class="stock-canvas"></canvas>
+        </div>
       </div>
     </div>
 
-    <!-- Row 4 -->
-    <div class="m-row">
-      <div class="m-col-text">
-        <div class="m-badge" style="background:#e6c76a">Mathematics</div>
-        <h3 style="font-family:'Cormorant Garamond',serif; font-size:2.8rem; color:#e6c76a; line-height:1.1; margin-bottom:1.5rem">Flipping to Infinity</h3>
-        <p style="font-size:1.1rem; line-height:1.8; color:var(--text); margin-bottom:1rem">In 1733, the mathematician Abraham de Moivre analyzed the odds in games of chance by expanding the binomial expression $(p+q)^n$. Working without a calculator, calculating massive factorials to track the odds of flipping thousands of coins was physically impossible.</p>
-        <p style="font-size:1.1rem; line-height:1.8; color:var(--muted)">He realized something profound: as $n$ grows vast, the jagged, discrete stair steps of Pascal's Triangle morph into a breathtakingly smooth exponential curve: $e^{-x^2}$. The mathematical limit of an infinite number of discrete random flips is simply the continuous soul of the Bell Curve.</p>
-      </div>
-      <div class="m-col-vis">
-        <div style="font-size:2.5rem; color: #e6c76a; font-family:'EB Garamond',serif; font-style:italic;">
-          e <sup>-x²</sup>
+    <div class="stock-stats" style="margin-top:1rem;border-radius:12px;border:1px solid #131b2e">
+      <div class="stat-cell"><span class="stat-label">Current Price</span><span class="stat-val" id="stat-price">$100.00</span></div>
+      <div class="stat-cell"><span class="stat-label">Trading Days</span><span class="stat-val" id="stat-days">0</span></div>
+      <div class="stat-cell"><span class="stat-label">Annualised Vol</span><span class="stat-val" id="stat-vol">—</span></div>
+      <div class="stat-cell"><span class="stat-label">Annual Return</span><span class="stat-val" id="stat-mean">—</span></div>
+    </div>
+
+    <div class="portfolio-toggle" style="margin-top:1.5rem">
+      <span class="ptoggle-label">Portfolio size:</span>
+      <button class="ptoggle-btn active" data-n="1">1 Stock</button>
+      <button class="ptoggle-btn" data-n="5">5 Stocks</button>
+      <button class="ptoggle-btn" data-n="20">20 Stocks</button>
+      <button class="ptoggle-btn" data-n="100">100 Stocks</button>
+      <span style="font-family:'Space Mono',monospace;font-size:.6rem;color:var(--muted);margin-left:.5rem">← More stocks = smoother returns (CLT!)</span>
+    </div>
+  </div>
+
+  <!-- Black-Scholes -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;margin:4rem 0 3rem">
+    <div class="prose">
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--cream);margin-bottom:1.5rem;font-weight:300">The Nobel Prize<br>Inside the Bell Curve</h3>
+      <p>In 1973, Fischer Black and Myron Scholes published a paper that changed the world. Their equation — the Black-Scholes formula — allowed banks, for the first time, to precisely <em>price</em> financial options: contracts giving the right (but not obligation) to buy a stock at a future price.</p>
+      <p>At its heart, Black-Scholes assumes that log-returns are independently normally distributed — exactly what the CLT guarantees. The entire derivation collapses into an integral of the Bell Curve:</p>
+    </div>
+    <div>
+      <div class="panel" style="background:linear-gradient(135deg,#070a14,#060810)">
+        <h3 style="color:var(--teal);margin-bottom:1.2rem">Black-Scholes Option Price</h3>
+        <div style="font-size:.9rem;line-height:2.2;margin-bottom:1.5rem">$$C = S_0\,\Phi(d_1) - Ke^{-rT}\Phi(d_2)$$</div>
+        <div style="font-size:.9rem;line-height:2">$$d_1 = \frac{\ln(S_0/K) + (r+\tfrac{\sigma^2}{2})T}{\sigma\sqrt{T}}, \quad d_2 = d_1 - \sigma\sqrt{T}$$</div>
+        <div style="margin-top:1.5rem;font-family:'Space Mono',monospace;font-size:.65rem;color:var(--muted);line-height:1.8">
+          Φ = cumulative normal distribution (= integral of Bell Curve)<br>
+          σ = volatility (the standard deviation of log-returns)<br>
+          <span style="color:var(--gold)">Every option price on Earth depends on Φ — the CLT made financial.</span>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Fat Tails Warning -->
+  <div class="fat-tails-callout">
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--rose);margin-bottom:1.2rem;font-weight:300">But the Market Can Lie</h3>
+    <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:3rem">
+      <div>
+        <p style="font-size:1.05rem;line-height:1.8;color:var(--text);margin-bottom:1rem">On October 19, 1987 — <strong>Black Monday</strong> — the Dow Jones fell 22.6% in a single day. Under the Gaussian model that Black-Scholes assumes, this was a <strong>23-sigma event</strong>. The probability? One in $10^{135}$. The expected waiting time? Far, far longer than the age of the universe.</p>
+        <p style="font-size:1.05rem;line-height:1.8;color:var(--text);margin-bottom:1rem">Yet it happened. And then it happened again: the 1997 Asian crisis, the 1998 LTCM collapse, the 2008 financial crisis, the 2020 COVID crash.</p>
+        <p style="font-size:1.05rem;line-height:1.8;color:var(--muted)">The mathematician Benoit Mandelbrot spent his career documenting this: market returns have <em>fat tails</em>. Extreme events occur far more often than any Gaussian model predicts — because panics cascade, fear is contagious, and algorithms amplify each other. The conditions the CLT requires (independence) are violated at precisely the moments of greatest consequence.</p>
+      </div>
+      <div>
+        <canvas id="fat-tails-canvas" width="400" height="260" style="width:100%;height:auto;background:#060810;border-radius:8px;border:1px solid rgba(192,69,96,.2)"></canvas>
+        <p style="font-family:'Space Mono',monospace;font-size:.6rem;color:var(--muted);margin-top:.8rem;text-align:center">Gaussian model (teal) vs fat-tailed reality (rose). The tails tell the whole story.</p>
+      </div>
+    </div>
+    <div class="callout danger" style="margin-top:2rem;margin-bottom:0">
+      "The bell curve fits reality poorly. In 1900, markets in Paris had daily moves that, under Gaussian assumptions, should happen once in 100,000 years. In fact, they happened every few years."
+      <cite>— Benoit Mandelbrot, <em>The Misbehavior of Markets</em></cite>
+    </div>
+  </div>
+</div>
 </div>
 
 <hr class="divider">
 
+<!-- ===== § 03 — EVERYDAY MIRACLES ===== -->
+<div class="wrap fi" id="sec-everyday">
+  <div class="s-num">§ 03 — The Universal Blueprint</div>
+  <h2 class="s-title">Everyday Miracles<br>of the Bell Curve</h2>
+
+  <div class="prose" style="max-width:900px">
+    <p>You interact with the Central Limit Theorem every single day. Almost everything we observe is the macroscopic sum of countless microscopic, independent forces. The Bell Curve becomes the default geometry of nature and human society — not because anyone designed it that way, but because mathematics leaves no alternative.</p>
+  </div>
+
+  <div class="miracle-stack">
+
+    <!-- Biology -->
+    <div class="m-row fi">
+      <div class="m-col-text">
+        <div class="m-badge" style="background:#e9859f">Biology</div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:#e9859f;line-height:1.1;margin-bottom:1.5rem">The Blueprint of Life</h3>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--text);margin-bottom:1rem">A baby's birth weight is not determined by a single gene or a single environmental choice. It is the cumulative result of thousands of independent micro-factors: rare genetic markers, subtle altitude variations, maternal nutrition, epigenetic cascades, uterine conditions, and dozens of hormonal signals.</p>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted);margin-bottom:1rem">Each factor contributes a virtually invisible nudge. Yet when nature adds these countless independent variables together, the resulting weights rigorously organize themselves into a flawless Bell Curve. Human height, blood pressure, IQ scores, bone density, lung capacity — the same mathematics molds them all.</p>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted)">This is why doctors define "normal" as within two standard deviations of the mean. The CLT <em>guarantees</em> that 95.4% of any population will fall within that range — not because of empirical observation, but because the theorem demands it.</p>
+      </div>
+      <div class="m-col-vis">
+        <canvas id="bio-canvas" style="width:100%;height:100%;display:block"></canvas>
+      </div>
+    </div>
+
+    <!-- Polling -->
+    <div class="m-row fi">
+      <div class="m-col-text">
+        <div class="m-badge" style="background:#6ea2e0">Politics & Polling</div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:#6ea2e0;line-height:1.1;margin-bottom:1.5rem">How 1,200 People<br>Predict 150 Million</h3>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--text);margin-bottom:1rem">A presidential election involves 150 million voters. Yet a properly conducted poll of just 1,200 randomly selected people can predict the outcome to within ±3%. This seems magical. It is mathematics.</p>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted);margin-bottom:1rem">The CLT guarantees that the distribution of sample proportions (all possible polls we could have taken) follows a Bell Curve centered on the true population proportion. The margin of error is exactly $1.96 \cdot \sigma/\sqrt{n}$ — it has nothing to do with the population size, only with the sample size.</p>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted)">This is why the math is the same whether you're polling 150 million Americans or 1.4 billion Indians. The population is irrelevant. What matters is $n$.</p>
+      </div>
+      <div class="m-col-vis" style="flex-direction:column;padding:1.5rem">
+        <div class="polling-wrap" style="width:100%;background:transparent;border:none;padding:0">
+          <div style="font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem">Sampling distribution width vs. sample size n</div>
+          <canvas id="poll-canvas" class="poll-canvas"></canvas>
+          <div class="poll-slider-wrap">
+            <input type="range" min="100" max="10000" value="1200" id="poll-slider" class="poll-slider">
+          </div>
+          <div class="poll-stats-row">
+            <div class="poll-stat">
+              <span class="poll-stat-label">Sample Size</span>
+              <span class="poll-stat-val" id="poll-n-display">1,200</span>
+            </div>
+            <div class="poll-stat">
+              <span class="poll-stat-label">Margin of Error</span>
+              <span class="poll-stat-val"><em id="poll-moe">±2.8%</em></span>
+            </div>
+            <div class="poll-stat">
+              <span class="poll-stat-label">95% Confidence</span>
+              <span class="poll-stat-val" id="poll-range" style="font-size:1.3rem">49.2% – 54.8%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Insurance -->
+    <div class="m-row fi">
+      <div class="m-col-text">
+        <div class="m-badge" style="background:#5ec47a">Insurance & Risk</div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:#5ec47a;line-height:1.1;margin-bottom:1.5rem">The Actuary's Secret Weapon</h3>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--text);margin-bottom:1rem">No one can predict whether a specific 45-year-old will have a heart attack next year. The uncertainty of a single life is irreducible. Yet insurance companies make these bets on millions of lives simultaneously — and profit reliably, year after year.</p>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted);margin-bottom:1rem">The CLT is the reason. While individual outcomes are completely unpredictable, the <em>average</em> outcome across thousands of policyholders converges to a highly predictable value. The standard deviation of the average shrinks as $1/\sqrt{n}$ — so a pool of 1,000,000 lives has 1,000 times less variance per-capita than a pool of 1,000.</p>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted)">Every insurance premium you pay is set by an actuary who has implicitly invoked the CLT: the chaos of individual human mortality, when pooled across millions, becomes a predictable, priceable mathematical quantity.</p>
+      </div>
+      <div class="m-col-vis" style="flex-direction:column;gap:1rem;padding:2rem">
+        <canvas id="insurance-canvas" style="width:100%;flex:1;min-height:200px;display:block"></canvas>
+      </div>
+    </div>
+
+    <!-- Manufacturing -->
+    <div class="m-row fi">
+      <div class="m-col-text">
+        <div class="m-badge" style="background:#e6c76a">Manufacturing</div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:#e6c76a;line-height:1.1;margin-bottom:1.5rem">Six Sigma and<br>the Bell Curve Factory</h3>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--text);margin-bottom:1rem">When Boeing manufactures a wing bolt, it must be within 0.001 mm of specification. No machining process is perfect — temperature fluctuations, tool wear, material variability, and vibration all introduce tiny independent errors into every component.</p>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted);margin-bottom:1rem">By the CLT, these accumulated independent manufacturing errors distribute perfectly normally. This is the foundation of <strong>Statistical Process Control</strong> — the system that allowed Toyota, Motorola, and Boeing to engineer quality at scale. The "Six Sigma" target means tolerating defects only 6 standard deviations from the mean: a defect rate of 3.4 parts per million.</p>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted)">Every iPhone, car engine, and medical device you touch was built with a Bell Curve as its quality standard. The CLT is the foundation of modern manufacturing precision.</p>
+      </div>
+      <div class="m-col-vis">
+        <canvas id="mfg-canvas" style="width:100%;height:100%;display:block"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===== § 04 — DRAW YOUR OWN ===== -->
 <div class="wrap fi" id="sec-interactive">
-  <div class="s-num">§ 03 — The Ultimate Test</div>
+  <div class="s-num">§ 04 — The Ultimate Test</div>
   <h2 class="s-title">Draw Your Own<br>Chaos</h2>
   <div class="grid-layout">
     <div>
       <div class="prose">
-        <p>You might believe that the Bell Curve only appears if the underlying events are somewhat "normal" to begin with. The true, terrifying power of the Central Limit Theorem is its <strong>absolute lack of assumptions</strong>.</p>
-        <p>The original distribution does not need to be symmetric, smooth, or bell-shaped. It can be completely deformed. As long as it has a finite variance, the average of enough samples will ruthlessly iron out the wrinkles and produce a Gaussian through the mathematical process of <em>convolution</em>.</p>
-        <p>Prove it to yourself. On the canvas below, <strong>draw literally any continuous shape</strong>. Make it absurd, highly skewed, bimodal, or spiked. Then, drop 2,000 samples. The computer will sum up samples drawn entirely from your crazy, chaotic distribution. Watch how quickly the sum forgets your bizarre input and magically rebuilds the beautiful Bell Curve.</p>
+        <p>You might believe the Bell Curve only appears if the underlying distribution is somewhat "normal" to begin with. The true, terrifying power of the CLT is its <strong>absolute lack of assumptions</strong>.</p>
+        <p>The original distribution does not need to be symmetric, smooth, or bell-shaped. It can be completely deformed — skewed to one side, jagged, multimodal, nearly flat. As long as it has a finite variance, the average of enough samples will ruthlessly iron out the wrinkles and reconstruct a Gaussian through the mathematical process of <em>convolution</em>.</p>
+        <p>Prove it to yourself. Draw literally any continuous shape on the canvas below. Make it absurd: heavily biased, twin-peaked, wildly asymmetric. Then drop 2,000 samples. Watch how quickly the sum forgets your bizarre input and magically rebuilds the eternal Bell Curve.</p>
+        <p style="font-size:.95rem;color:var(--muted)">This is the most confronting demonstration of the CLT: no matter how hard you try to break it, the Bell Curve always wins.</p>
       </div>
-      
-      <div class="eq">S_N = X_1 + X_2 + \cdots + X_N
-lim_{N \to \infty} P\left( \frac{S_N - N\mu}{\sigma\sqrt{N}} \le z \right) = \frac{1}{\sqrt{2\pi}} \int_{-\infty}^{z} e^{-x^2/2} dx</div>
 
-      <div class="panel" style="margin-top: 2.5rem;">
-        <h3>1. Draw your original PDF</h3>
-        <p style="font-size:0.85rem;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:1rem;">The mother distribution. Wipe to start fresh.</p>
+      <div class="eq">$$\lim_{N \to \infty}\, P\!\left(\frac{S_N - N\mu}{\sigma\sqrt{N}} \le z\right) = \Phi(z) = \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{z}e^{-x^2/2}\,dx$$</div>
+
+      <div class="panel" style="margin-top:2.5rem">
+        <h3>1. Draw your original distribution</h3>
+        <p style="font-size:.85rem;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:1rem">Click and drag to sculpt any shape. Wilder = more impressive result.</p>
         <canvas id="draw-pdf" class="draw-canvas"></canvas>
         <div class="controls">
-          <button class="btn" id="btn-clear" style="border-color:var(--rose); color:var(--rose);">Clear Shape</button>
+          <button class="btn danger" id="btn-clear">Clear Shape</button>
           <button class="btn" id="btn-drop">Drop 2000 Samples</button>
         </div>
       </div>
     </div>
     <div>
       <div class="panel">
-        <h3>2. Histogram of Sums</h3>
-        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;font-family:'Space Mono',monospace;">Distribution of averages ($N=12$). The red line is the theoretical Gaussian fit.</p>
+        <h3>2. Distribution of Averages (N=12)</h3>
+        <p style="font-size:.85rem;color:var(--muted);margin-bottom:1rem;font-family:'Space Mono',monospace">Each bar = average of 12 samples. Teal curve = theoretical Gaussian fit.</p>
         <canvas id="sim-canvas" class="sim-canvas"></canvas>
       </div>
-      <div class="callout" style="margin-top: 2rem;">
-        "The Central Limit Theorem is the unofficial sovereign of probability theory. It tells us that whenever you add independent variables, no matter how wild, they surrender to the Bell Curve."
+      <div class="callout" style="margin-top:2rem">
+        "The Central Limit Theorem is the unofficial sovereign of probability theory. It tells us that whenever you add independent variables — no matter how wild — they surrender, inevitably, to the Bell Curve."
       </div>
     </div>
   </div>
@@ -254,47 +486,43 @@ lim_{N \to \infty} P\left( \frac{S_N - N\mu}{\sigma\sqrt{N}} \le z \right) = \fr
 
 <hr class="divider">
 
+<!-- ===== § 05 — MODERN MASTERPIECES ===== -->
 <div class="wrap fi" id="sec-modern">
-  <div class="s-num">§ 04 — Modern Masterpieces</div>
+  <div class="s-num">§ 05 — Modern Masterpieces</div>
   <h2 class="s-title">Beyond the<br>Classical Limit</h2>
-  <div class="prose" style="margin-bottom: 2rem; max-width: 900px;">
-    <p>The classical Central Limit Theorem states <em>what</em> happens, but not <em>how fast</em> it happens, nor does it easily generalize to interacting, non-independent systems. The 20th and 21st centuries saw spectacular mathematical breakthroughs expanding the horizon of universality, proving that the Bell Curve is just one member of a larger family of universal attractors.</p>
+  <div class="prose" style="margin-bottom:2rem;max-width:900px">
+    <p>The classical CLT states <em>what</em> happens, but not <em>how fast</em> it happens, nor does it easily generalize to interacting, non-independent systems. The 20th and 21st centuries saw spectacular mathematical breakthroughs expanding the horizon of universality — proving that the Bell Curve is just one member of a larger family of universal attractors.</p>
   </div>
-  
+
   <div class="theory-grid">
-    <div class="theory-card" style="border-color: rgba(201,167,72,0.3);">
+    <div class="theory-card" style="border-color:rgba(201,167,72,.3)">
       <div class="theory-year">Berry-Esseen (1941)</div>
       <h4 style="color:var(--gold)">The Speed of Convergence</h4>
-      <p style="font-size:0.95rem; line-height:1.6; color:var(--text)">The Berry-Esseen theorem bounds the maximal difference between the true distribution of sums and the perfect Gaussian curve. It proves that the error decays precisely at a rate of <strong>1 / √N</strong>. Specifically, for random variables with a third moment $\rho$,</p>
-      <div class="math" style="margin-top:0.8rem; display:block; padding:1.2rem; text-align:center; font-size:1.1rem; background: rgba(0,0,0,0.5)">
-        $$ \sup_x |F_n(x) - \Phi(x)| \le \frac{C \cdot \rho}{\sigma^3 \sqrt{n}} $$
-      </div>
-      <p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-top:0.8rem">This bound reveals a penalty for chaos: highly skewed distributions (which have a massive third moment $\rho$) converge agonizingly slower. But eventually, all inevitably submit to the 1/√N speed limit of probability.</p>
-    </div>
-    
-    <div class="theory-card" style="border-color: rgba(34,181,170,0.3);">
-      <div class="theory-year">Charles Stein (1972)</div>
-      <h4 style="color:var(--teal)">Stein's Method</h4>
-      <p style="font-size:0.95rem; line-height:1.6; color:var(--text)">Instead of taking limits of Fourier transforms (the classical proof), Stein discovered a stunningly elegant differential operator equation that characterizes the normal distribution: a smooth random variable $Z$ is standard normal if and only if</p>
-      <div class="math" style="margin-top:0.8rem; display:block; padding:1.2rem; text-align:center; font-size:1.1rem; background: rgba(0,0,0,0.5)">
-        $$ \mathbb{E}[Z f(Z)] = \mathbb{E}[f'(Z)] $$
-      </div>
-      <p style="font-size:0.95rem; line-height:1.6; color:var(--text); margin-top:0.8rem">This revolutionized modern probability. By testing variables against this differential equation, mathematicians could calculate distances to the normal curve for highly complex, <em>dependent</em> variables—like network formations and randomly shuffling cards.</p>
+      <p style="font-size:.95rem;line-height:1.6;color:var(--text)">The Berry-Esseen theorem bounds the maximum difference between the true distribution of sums and the perfect Gaussian. It proves that the error decays at precisely <strong>1/√N</strong>. For variables with third moment ρ:</p>
+      <div style="margin:1rem 0;padding:1rem;background:rgba(0,0,0,.5);border-radius:6px;font-size:.9rem">$$\sup_x |F_n(x) - \Phi(x)| \le \frac{C\cdot\rho}{\sigma^3\sqrt{n}}$$</div>
+      <p style="font-size:.9rem;line-height:1.6;color:var(--muted)">This reveals a penalty for chaos: highly skewed distributions (massive third moment ρ) converge agonizingly slower. But eventually, all inevitably submit to the 1/√N speed limit.</p>
     </div>
 
-    <!-- Wide card for Wigner -->
-    <div class="theory-card" style="border-color: rgba(192,69,96,0.5); grid-column: 1 / -1; padding: 2.5rem;">
+    <div class="theory-card" style="border-color:rgba(34,181,170,.3)">
+      <div class="theory-year">Charles Stein (1972)</div>
+      <h4 style="color:var(--teal)">Stein's Method</h4>
+      <p style="font-size:.95rem;line-height:1.6;color:var(--text)">Instead of Fourier transforms, Stein discovered an elegant differential equation characterizing the normal distribution: $Z$ is standard normal if and only if</p>
+      <div style="margin:1rem 0;padding:1rem;background:rgba(0,0,0,.5);border-radius:6px;font-size:.9rem">$$\mathbb{E}[Z f(Z)] = \mathbb{E}[f'(Z)]$$</div>
+      <p style="font-size:.9rem;line-height:1.6;color:var(--muted)">This revolutionized modern probability. By testing variables against this equation, mathematicians could quantify distance to the normal curve for highly complex, <em>dependent</em> structures — like social networks, random graphs, and card shuffling.</p>
+    </div>
+
+    <div class="theory-card" style="border-color:rgba(192,69,96,.5);grid-column:1/-1;padding:2.5rem">
       <div class="theory-year">Wigner (1955) & Tracy-Widom (1994)</div>
-      <h4 style="color:var(--rose); font-size: 2rem; margin-bottom: 1.5rem;">Random Matrices & A New Universality</h4>
-      <div style="display:grid; grid-template-columns: 1.2fr 1fr; gap:3rem; align-items:center;">
+      <h4 style="color:var(--rose);font-size:2rem;margin-bottom:1.5rem">Random Matrices & A New Universality</h4>
+      <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:3rem;align-items:center">
         <div>
-          <p style="font-size:1.05rem; line-height:1.7; color:var(--text);">In quantum physics, heavy atomic nuclei (like Uranium) are modeled not as single particles, but as enormous mathematical matrices filled entirely with random numbers. When tracking the interaction (the eigenvalues) of these massive, completely random matrices, the Central Limit Theorem transforms.</p>
-          <p style="font-size:1.05rem; line-height:1.7; color:var(--text); margin-top:1rem;">Because the matrix entries interact, they are not strictly independent. Instead of a Bell Curve, the bulk eigenvalues obey <strong>Wigner's Semicircle Law</strong>, which repels itself into a perfect half-circle.</p>
-          <p style="font-size:1.05rem; line-height:1.7; color:var(--text); margin-top:1rem;">Meanwhile, the maximum eigenvalue fluctuates according to the <strong>Tracy-Widom distribution</strong> — an asymmetric, fundamentally different curve that represents a completely new universality class, governing everything from bus arrivals in Mexico to the longest increasing subsequences of playing cards.</p>
+          <p style="font-size:1.05rem;line-height:1.7;color:var(--text)">In quantum physics, heavy atomic nuclei (like Uranium) are modeled as enormous matrices filled with random numbers. When tracking the eigenvalues of these massive random matrices, the Central Limit Theorem transforms.</p>
+          <p style="font-size:1.05rem;line-height:1.7;color:var(--text);margin-top:1rem">Because matrix entries interact (they are not independent), the bulk eigenvalues obey <strong>Wigner's Semicircle Law</strong> — a perfect half-circle, utterly unlike the Bell Curve.</p>
+          <p style="font-size:1.05rem;line-height:1.7;color:var(--text);margin-top:1rem">Meanwhile, the <em>maximum</em> eigenvalue fluctuates according to the <strong>Tracy-Widom distribution</strong> — an asymmetric, new universality class governing everything from bus arrivals in Mexico City to the longest increasing subsequence of a shuffled deck of cards.</p>
         </div>
-        <div style="text-align:center; background: rgba(0,0,0,0.4); padding: 1.5rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
-          <canvas id="wigner-canvas" width="450" height="280" style="background:#0a0c14; border:1px solid #1a1d30; border-radius:8px; width:100%; object-fit:contain;"></canvas>
-          <p style="font-size:0.75rem; color:var(--muted); font-family:'Space Mono',monospace; margin-top:1rem">Live simulation: Tracking eigenvalues of 50×50 symmetric random matrices. Watch them slowly form Wigner's exquisite Semicircle.</p>
+        <div style="text-align:center;background:rgba(0,0,0,.4);padding:1.5rem;border-radius:12px;border:1px solid rgba(255,255,255,.05)">
+          <canvas id="wigner-canvas" width="450" height="280" style="background:#0a0c14;border:1px solid #1a1d30;border-radius:8px;width:100%;object-fit:contain"></canvas>
+          <p style="font-size:.72rem;color:var(--muted);font-family:'Space Mono',monospace;margin-top:1rem">Live simulation: eigenvalue density of 50×50 symmetric random matrices forming Wigner's Semicircle Law.</p>
         </div>
       </div>
     </div>
@@ -308,289 +536,770 @@ lim_{N \to \infty} P\left( \frac{S_N - N\mu}{\sigma\sqrt{N}} \le z \right) = \fr
     <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
   </div>
 </footer>
-<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
 
 <script>
-/* 1. HERO ANIMATION (Floating gaussian particles) */
-const heroCv = document.getElementById('hero-canvas');
-const hctx = heroCv.getContext('2d');
-let hw, hh;
-function resizeHero() { hw = heroCv.width = window.innerWidth; hh = heroCv.height = window.innerHeight; }
-window.addEventListener('resize', resizeHero);
-resizeHero();
+/* ===== GAUSSIAN RNG ===== */
+function randn(){let u,v;do{u=Math.random()}while(u===0);v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
 
-const particles = [];
-for (let i = 0; i < 250; i++) {
+/* ===== SCROLL ANIMATIONS ===== */
+const observer=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.08});
+document.querySelectorAll('.fi').forEach(el=>observer.observe(el));
+
+/* ===== TICKER ===== */
+const tickerData=[
+  ['NYSE daily trades','~10 Billion'],['CLT convergence rate','1/√n'],['Standard deviations','±1σ = 68.27%'],
+  ['Black-Scholes uses','Φ(x) — the Bell Curve'],['Poll confidence','95%'],['±2σ population','95.45%'],
+  ['Six Sigma defects','3.4 per million'],['IQ distribution','μ=100, σ=15'],['Height std dev','~2.8 inches'],
+  ['Annual US clinical trials','~40,000'],['Cards shuffled to randomize','7 riffle shuffles'],['±3σ population','99.73%']
+];
+const ticker=document.getElementById('ticker-inner');
+const makeItems=()=>tickerData.map(([l,v])=>`<div class="ticker-item">${l}: <span>${v}</span></div>`).join('');
+ticker.innerHTML=makeItems()+makeItems();
+
+/* ===== HERO ANIMATION ===== */
+const heroCv=document.getElementById('hero-canvas');
+const hctx=heroCv.getContext('2d');
+let hw,hh;
+function resizeHero(){hw=heroCv.width=window.innerWidth;hh=heroCv.height=window.innerHeight}
+window.addEventListener('resize',resizeHero);resizeHero();
+
+// Particles distributed along a bell curve
+const particles=[];
+for(let i=0;i<300;i++){
+  const x=randn()*hw*0.18+hw*0.5;
   particles.push({
-    x: Math.random() * hw, y: Math.random() * hh,
-    vx: (Math.random() - 0.5) * 0.4, vy: Math.random() * -1 - 0.1,
-    sz: Math.random() * 2 + 0.5, alpha: Math.random() * 0.5 + 0.1
+    x,y:Math.random()*hh,
+    vx:(Math.random()-.5)*.3,vy:Math.random()*-.6-.05,
+    sz:Math.random()*1.8+.4,alpha:Math.random()*.45+.05,
+    col:Math.random()<.7?'#c9a748':'#22b5aa'
   });
 }
-function drawHero() {
-  hctx.clearRect(0, 0, hw, hh);
-  hctx.fillStyle = '#c9a748';
-  particles.forEach(p => {
-    p.x += p.vx; p.y += p.vy;
-    if (p.x < 0) p.x = hw; if (p.x > hw) p.x = 0;
-    if (p.y < 0) p.y = hh;
-    hctx.globalAlpha = p.alpha;
-    hctx.beginPath(); hctx.arc(p.x, p.y, p.sz, 0, Math.PI * 2); hctx.fill();
+// Draw bell curve guide
+function drawHero(){
+  hctx.clearRect(0,0,hw,hh);
+  // Faint bell curve in background
+  hctx.save();
+  hctx.strokeStyle='rgba(201,167,72,0.06)';hctx.lineWidth=2;hctx.beginPath();
+  const sigma=hw*.12,mu=hw*.5,amplitude=hh*.55;
+  for(let x=0;x<hw;x+=2){
+    const z=(x-mu)/sigma;
+    const y=hh*.72-Math.exp(-.5*z*z)*amplitude;
+    if(x===0)hctx.moveTo(x,y);else hctx.lineTo(x,y);
+  }
+  hctx.stroke();hctx.restore();
+  // Particles
+  particles.forEach(p=>{
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0)p.x=hw;if(p.x>hw)p.x=0;
+    if(p.y<0){p.y=hh;p.x=randn()*hw*.18+hw*.5}
+    hctx.globalAlpha=p.alpha;
+    hctx.fillStyle=p.col;
+    hctx.beginPath();hctx.arc(p.x,p.y,p.sz,0,Math.PI*2);hctx.fill();
   });
+  hctx.globalAlpha=1;
   requestAnimationFrame(drawHero);
 }
 drawHero();
 
-/* 2. GALTON BOARD (Quincunx) */
-const gCv = document.getElementById('galton-canvas');
-const gctx = gCv.getContext('2d');
-let gBalls = [];
-let gBins = new Array(21).fill(0);
-let gMaxBin = 1;
-
-function dropGalton() {
-  gBalls = [];
-  gBins.fill(0);
-  gMaxBin = 1;
-  for(let i=0; i<1000; i++) {
-    gBalls.push({
-      x: gCv.width / 2,
-      y: 15,
-      targetLevel: 0,
-      binIndex: 10,
-      delay: i * 0.4,
-      active: false,
-      vy: 0
-    });
-  }
+/* ===== GALTON BOARD ===== */
+const gCv=document.getElementById('galton-canvas');
+const gctx=gCv.getContext('2d');
+let gBalls=[],gBins=new Array(21).fill(0),gMaxBin=1;
+function dropGalton(){
+  gBalls=[];gBins.fill(0);gMaxBin=1;
+  for(let i=0;i<1000;i++)gBalls.push({x:gCv.width/2,y:15,targetLevel:0,binIndex:10,delay:i*.35,active:false,done:false});
 }
-document.getElementById('btn-galton').addEventListener('click', dropGalton);
+document.getElementById('btn-galton').addEventListener('click',dropGalton);
 
-function drawGalton() {
+function drawGalton(){
   gctx.clearRect(0,0,gCv.width,gCv.height);
-  
-  gctx.fillStyle = 'rgba(201,167,72,0.3)';
-  let levels = 22;
-  let pegYSpacing = 13;
-  let pegXSpacing = 13;
-  for(let row=0; row<levels; row++) {
-    let y = 30 + row * pegYSpacing;
-    let numStruts = row + 1;
-    let startX = gCv.width/2 - (numStruts*pegXSpacing)/2 + pegXSpacing/2;
-    for(let col=0; col<numStruts; col++) {
-      gctx.beginPath();
-      gctx.arc(startX + col*pegXSpacing, y, 2.5, 0, Math.PI*2);
-      gctx.fill();
+  const levels=22,pegY=13.5,pegX=13.5;
+  // Draw pegs
+  gctx.fillStyle='rgba(201,167,72,0.35)';
+  for(let row=0;row<levels;row++){
+    const y=28+row*pegY,n=row+1;
+    const startX=gCv.width/2-(n*pegX)/2+pegX/2;
+    for(let col=0;col<n;col++){
+      gctx.beginPath();gctx.arc(startX+col*pegX,y,2.8,0,Math.PI*2);gctx.fill();
     }
   }
-
-  gctx.fillStyle = 'rgba(34,181,170,0.6)';
-  let bw = gCv.width / 21;
-  let maxH = 80;
-  for(let i=0; i<21; i++) {
-    let h = (gBins[i] / Math.max(1, gMaxBin)) * maxH;
-    gctx.fillRect(i*bw + 1, gCv.height - h, bw-2, h);
+  // Bins
+  const bw=gCv.width/21;
+  const maxH=90;
+  // Bin gradient
+  for(let i=0;i<21;i++){
+    const h=(gBins[i]/Math.max(1,gMaxBin))*maxH;
+    const grad=gctx.createLinearGradient(0,gCv.height-h,0,gCv.height);
+    grad.addColorStop(0,'rgba(34,181,170,0.9)');grad.addColorStop(1,'rgba(34,181,170,0.3)');
+    gctx.fillStyle=grad;
+    gctx.fillRect(i*bw+1,gCv.height-h,bw-2,h);
   }
-
-  gctx.fillStyle = '#fff';
-  gBalls.forEach(b => {
-    if (b.delay > 0) { b.delay -= 1; return; }
-    if (!b.active) { b.active = true; }
-    if (b.targetLevel < levels) {
-      if (Math.random() > 0.5) b.binIndex += 0.5; else b.binIndex -= 0.5;
-      b.x = gCv.width/2 + (b.binIndex - 10) * pegXSpacing;
-      b.targetLevel++;
-      b.y = 30 + b.targetLevel * pegYSpacing;
-      gctx.globalAlpha = 0.8;
-      gctx.beginPath(); gctx.arc(b.x, b.y, 2.5, 0, Math.PI*2); gctx.fill();
-    } else if (b.y < gCv.height - 10) {
-      b.y += 12;
-      gctx.globalAlpha = 0.5;
-      gctx.beginPath(); gctx.arc(b.x, b.y, 2.5, 0, Math.PI*2); gctx.fill();
-    } else if (!b.done) {
-      b.done = true;
-      let fBin = Math.floor(b.binIndex);
-      if(fBin < 0) fBin=0; if(fBin>20) fBin=20;
-      gBins[fBin]++;
-      if (gBins[fBin] > gMaxBin) gMaxBin = gBins[fBin];
+  // Balls
+  gctx.fillStyle='rgba(255,255,255,0.85)';
+  gBalls.forEach(b=>{
+    if(b.delay>0){b.delay-=1;return}
+    if(!b.active)b.active=true;
+    if(b.targetLevel<levels){
+      if(Math.random()>.5)b.binIndex+=.5;else b.binIndex-=.5;
+      b.x=gCv.width/2+(b.binIndex-10)*pegX;
+      b.targetLevel++;b.y=28+b.targetLevel*pegY;
+      gctx.globalAlpha=.75;
+      gctx.beginPath();gctx.arc(b.x,b.y,2.2,0,Math.PI*2);gctx.fill();
+    }else if(b.y<gCv.height-10){
+      b.y+=10;gctx.globalAlpha=.4;
+      gctx.beginPath();gctx.arc(b.x,b.y,2.2,0,Math.PI*2);gctx.fill();
+    }else if(!b.done){
+      b.done=true;
+      let fb=Math.floor(b.binIndex);fb=Math.max(0,Math.min(20,fb));
+      gBins[fb]++;if(gBins[fb]>gMaxBin)gMaxBin=gBins[fb];
     }
   });
-
+  gctx.globalAlpha=1;
   requestAnimationFrame(drawGalton);
 }
 drawGalton();
 
-/* 3. INTERACTIVE DISTRIBUTION DRAWING */
-const drawCv = document.getElementById('draw-pdf');
-const dctx = drawCv.getContext('2d');
-let drawing = false;
-let pdfData = new Array(100).fill(0.1); 
-function resizeDraw() { const rect=drawCv.getBoundingClientRect(); drawCv.width=rect.width; drawCv.height=rect.height; renderDraw(); }
-window.addEventListener('resize', resizeDraw);
+/* ===== STOCK MARKET SIMULATOR ===== */
+const stockSim=(()=>{
+  let priceCtx,returnCtx,priceCv,returnCv;
+  let prices=[100],returns=[],bins=new Array(80).fill(0),maxBin=1;
+  let running=false,animId=null,portfolioSize=1;
+  const MU=0.0003,SIGMA=0.012,MAX=504,BMIN=-.065,BMAX=.065;
 
-function renderDraw() {
-  dctx.clearRect(0, 0, drawCv.width, drawCv.height);
-  dctx.strokeStyle = '#c04560'; dctx.lineWidth = 4; dctx.lineCap = 'round'; dctx.lineJoin = 'round';
+  function init(){
+    priceCv=document.getElementById('stock-price-canvas');
+    returnCv=document.getElementById('stock-return-canvas');
+    priceCtx=priceCv.getContext('2d');
+    returnCtx=returnCv.getContext('2d');
+    resizeCanvases();
+    render();
+  }
+
+  function resizeCanvases(){
+    [priceCv,returnCv].forEach(cv=>{
+      const r=cv.getBoundingClientRect();
+      cv.width=r.width*devicePixelRatio||r.width;
+      cv.height=r.height*devicePixelRatio||r.height;
+    });
+  }
+
+  function reset(){
+    prices=[100];returns=[];bins.fill(0);maxBin=1;
+    stop();render();updateStats();
+  }
+
+  function tick(){
+    if(prices.length>=MAX){stop();return}
+    let r=0;
+    for(let i=0;i<portfolioSize;i++)r+=MU+SIGMA*randn();
+    r/=portfolioSize;
+    returns.push(r);
+    prices.push(prices[prices.length-1]*Math.exp(r));
+    let bi=Math.floor((r-BMIN)/(BMAX-BMIN)*bins.length);
+    bi=Math.max(0,Math.min(bins.length-1,bi));
+    bins[bi]++;if(bins[bi]>maxBin)maxBin=bins[bi];
+  }
+
+  function start(){
+    if(running)return;
+    running=true;
+    const loop=()=>{
+      if(!running)return;
+      const speed=portfolioSize>10?4:2;
+      for(let t=0;t<speed;t++)tick();
+      render();updateStats();
+      animId=requestAnimationFrame(loop);
+    };
+    animId=requestAnimationFrame(loop);
+  }
+  function stop(){running=false;if(animId){cancelAnimationFrame(animId);animId=null}}
+
+  function renderPrice(){
+    const cv=priceCv,ctx=priceCtx;
+    const W=cv.width,H=cv.height;
+    ctx.clearRect(0,0,W,H);
+    // Grid
+    ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=1;
+    for(let i=0;i<=4;i++){const y=i/4*H;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+    for(let i=0;i<=8;i++){const x=i/8*W;ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}
+    if(prices.length<2)return;
+    const minP=Math.min(...prices)*.985,maxP=Math.max(...prices)*1.015;
+    const xSc=W/(MAX-1),ySc=(H-20)/(maxP-minP);
+    const last=prices[prices.length-1];
+    const isUp=last>=100;
+    // Area fill
+    ctx.beginPath();
+    prices.forEach((p,i)=>{
+      const x=i*xSc,y=H-10-(p-minP)*ySc;
+      if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    });
+    ctx.lineTo((prices.length-1)*xSc,H);ctx.lineTo(0,H);ctx.closePath();
+    ctx.fillStyle=isUp?'rgba(34,181,170,0.06)':'rgba(192,69,96,0.06)';ctx.fill();
+    // Line
+    const grad=priceCtx.createLinearGradient(0,0,W,0);
+    grad.addColorStop(0,'rgba(201,167,72,0.4)');
+    grad.addColorStop(1,isUp?'rgba(94,196,122,0.9)':'rgba(192,69,96,0.9)');
+    ctx.strokeStyle=grad;ctx.lineWidth=2;ctx.beginPath();
+    prices.forEach((p,i)=>{
+      const x=i*xSc,y=H-10-(p-minP)*ySc;
+      if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+    // Dot at end
+    const lx=(prices.length-1)*xSc,ly=H-10-(last-minP)*ySc;
+    ctx.fillStyle=isUp?'#5ec47a':'#c04560';
+    ctx.beginPath();ctx.arc(lx,ly,5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,0.8)';ctx.beginPath();ctx.arc(lx,ly,2.5,0,Math.PI*2);ctx.fill();
+    // $100 baseline
+    const baseY=H-10-(100-minP)*ySc;
+    if(baseY>10&&baseY<H-5){
+      ctx.strokeStyle='rgba(201,167,72,0.2)';ctx.lineWidth=1;ctx.setLineDash([4,6]);
+      ctx.beginPath();ctx.moveTo(0,baseY);ctx.lineTo(W,baseY);ctx.stroke();ctx.setLineDash([]);
+    }
+  }
+
+  function renderReturns(){
+    const cv=returnCv,ctx=returnCtx;
+    const W=cv.width,H=cv.height;
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=1;
+    for(let i=0;i<=4;i++){const y=i/4*H;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+    // Histogram
+    const bw=W/bins.length;
+    for(let i=0;i<bins.length;i++){
+      const h=(bins[i]/maxBin)*(H-20);
+      const r=(BMIN+(i+.5)/bins.length*(BMAX-BMIN));
+      const col=r<0?'rgba(192,69,96,0.7)':'rgba(201,167,72,0.7)';
+      const grad=ctx.createLinearGradient(0,H-h,0,H);
+      grad.addColorStop(0,col);grad.addColorStop(1,r<0?'rgba(192,69,96,0.2)':'rgba(201,167,72,0.2)');
+      ctx.fillStyle=grad;
+      ctx.fillRect(i*bw+1,H-h,bw-2,h);
+    }
+    // Bell curve overlay
+    if(returns.length>20){
+      const n=returns.length;
+      const mean=returns.reduce((a,b)=>a+b,0)/n;
+      const variance=returns.reduce((a,b)=>a+(b-mean)**2,0)/n;
+      const std=Math.sqrt(variance);
+      if(std>0){
+        ctx.strokeStyle='rgba(34,181,170,0.9)';ctx.lineWidth=3;ctx.beginPath();
+        for(let x=0;x<W;x+=2){
+          const r=BMIN+(x/W)*(BMAX-BMIN);
+          const z=(r-mean)/std;
+          const pdf=Math.exp(-.5*z*z)/(std*Math.sqrt(2*Math.PI));
+          const bw2=(BMAX-BMIN)/bins.length;
+          const h=pdf*bw2*n/maxBin*(H-20);
+          const y=H-Math.min(h,H-8);
+          if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+        }
+        ctx.stroke();
+        // Sigma lines
+        for(let s=-3;s<=3;s+=1){
+          const r=mean+s*std;
+          const x=(r-BMIN)/(BMAX-BMIN)*W;
+          if(x>5&&x<W-5){
+            ctx.strokeStyle=s===0?'rgba(201,167,72,0.5)':'rgba(255,255,255,0.08)';
+            ctx.lineWidth=1;ctx.setLineDash(s===0?[]:[3,5]);
+            ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();ctx.setLineDash([]);
+            if(s!==0&&Math.abs(s)<=2){
+              ctx.fillStyle='rgba(255,255,255,0.35)';
+              ctx.font=`${Math.round(9*devicePixelRatio)}px "Space Mono",monospace`;
+              ctx.fillText(s>0?`+${s}σ`:`${s}σ`,x+3,18);
+            }
+          }
+        }
+      }
+    }
+    // Zero line
+    const zeroX=(0-BMIN)/(BMAX-BMIN)*W;
+    ctx.strokeStyle='rgba(255,255,255,0.15)';ctx.lineWidth=1;ctx.setLineDash([]);
+    ctx.beginPath();ctx.moveTo(zeroX,0);ctx.lineTo(zeroX,H);ctx.stroke();
+  }
+
+  function render(){renderPrice();renderReturns()}
+
+  function updateStats(){
+    const n=returns.length;
+    const price=prices[prices.length-1];
+    const el=(id)=>document.getElementById(id);
+    const pEl=el('stat-price');
+    if(pEl){
+      pEl.textContent='$'+price.toFixed(2);
+      pEl.className='stat-val '+(price>=100?'up':'down');
+    }
+    if(el('stat-days'))el('stat-days').textContent=n;
+    if(n>5){
+      const mean=returns.reduce((a,b)=>a+b,0)/n;
+      const variance=returns.reduce((a,b)=>a+(b-mean)**2,0)/n;
+      const av=Math.sqrt(variance*252)*100;
+      const am=mean*252*100;
+      if(el('stat-vol'))el('stat-vol').textContent=av.toFixed(1)+'%';
+      const mEl=el('stat-mean');
+      if(mEl){mEl.textContent=(am>=0?'+':'')+am.toFixed(1)+'%';mEl.className='stat-val '+(am>=0?'up':'down')}
+    }
+  }
+
+  return{init,start,stop,reset,setPortfolio(n){portfolioSize=n;reset()}};
+})();
+
+document.addEventListener('DOMContentLoaded',()=>{
+  stockSim.init();
+  let stockRunning=false;
+  document.getElementById('btn-stock-run').addEventListener('click',function(){
+    stockRunning=!stockRunning;
+    if(stockRunning){stockSim.start();this.textContent='⏸ Pause';this.classList.add('active')}
+    else{stockSim.stop();this.textContent='▶ Simulate';this.classList.remove('active')}
+  });
+  document.getElementById('btn-stock-reset').addEventListener('click',()=>{
+    stockSim.reset();stockRunning=false;
+    document.getElementById('btn-stock-run').textContent='▶ Simulate';
+    document.getElementById('btn-stock-run').classList.remove('active');
+  });
+  document.querySelectorAll('.ptoggle-btn').forEach(btn=>{
+    btn.addEventListener('click',function(){
+      document.querySelectorAll('.ptoggle-btn').forEach(b=>b.classList.remove('active'));
+      this.classList.add('active');
+      stockSim.setPortfolio(parseInt(this.dataset.n));
+      stockRunning=false;
+      document.getElementById('btn-stock-run').textContent='▶ Simulate';
+      document.getElementById('btn-stock-run').classList.remove('active');
+    });
+  });
+});
+
+/* ===== FAT TAILS CANVAS ===== */
+(function(){
+  const cv=document.getElementById('fat-tails-canvas');
+  if(!cv)return;
+  const ctx=cv.getContext('2d');
+  const W=cv.width,H=cv.height;
+  ctx.clearRect(0,0,W,H);
+  // Grid
+  ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){const y=i/4*H;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+  const drawCurve=(pdf,color,lw)=>{
+    ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.beginPath();
+    for(let x=0;x<W;x+=2){
+      const t=(x/W)*8-4;
+      const y=H-8-pdf(t)*(H-20);
+      if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+  };
+  // Gaussian
+  const gauss=t=>Math.exp(-.5*t*t)/Math.sqrt(2*Math.PI)*2.2;
+  // Fat-tailed: Student's t with df=3
+  const studentT3=t=>1/((1+t*t/3)**2)*2.0;
+  drawCurve(gauss,'rgba(34,181,170,0.8)',3);
+  drawCurve(studentT3,'rgba(192,69,96,0.85)',3);
+  // Fill fat tails
+  ctx.fillStyle='rgba(192,69,96,0.12)';ctx.beginPath();
+  for(let x=W*.73;x<W;x+=2){
+    const t=(x/W)*8-4;
+    const y=H-8-studentT3(t)*(H-20);
+    if(x===W*.73)ctx.moveTo(x,H-8);ctx.lineTo(x,y);
+  }
+  ctx.lineTo(W,H-8);ctx.closePath();ctx.fill();
+  ctx.fillStyle='rgba(192,69,96,0.12)';ctx.beginPath();
+  for(let x=0;x<W*.27;x+=2){
+    const t=(x/W)*8-4;
+    const y=H-8-studentT3(t)*(H-20);
+    if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+  }
+  ctx.lineTo(W*.27,H-8);ctx.lineTo(0,H-8);ctx.closePath();ctx.fill();
+  // Labels
+  ctx.font='13px "Space Mono",monospace';
+  ctx.fillStyle='rgba(34,181,170,0.9)';ctx.fillText('Gaussian',W*.38,H-15);
+  ctx.fillStyle='rgba(192,69,96,0.9)';ctx.fillText('Fat tails (reality)',W*.52,25);
+  // Arrows pointing to tail
+  ctx.strokeStyle='rgba(192,69,96,0.6)';ctx.lineWidth=1.5;ctx.setLineDash([3,3]);
+  ctx.beginPath();ctx.moveTo(W*.72,20);ctx.lineTo(W*.88,H*.3);ctx.stroke();ctx.setLineDash([]);
+})();
+
+/* ===== BIOLOGY CANVAS ===== */
+(function animBio(){
+  const cv=document.getElementById('bio-canvas');
+  if(!cv)return;
+  const ctx=cv.getContext('2d');
+  const dots=[];
+  let t=0;
+  function resize(){cv.width=cv.offsetWidth;cv.height=cv.offsetHeight}
+  resize();
+  new ResizeObserver(resize).observe(cv);
+
+  for(let i=0;i<120;i++){
+    dots.push({
+      x:randn()*.15+.5+(.5-Math.random())*.02,
+      alpha:0,delay:i*8,
+      y:.15+Math.random()*.7,
+      vy:(Math.random()-.5)*.002,vx:(Math.random()-.5)*.001
+    });
+  }
+
+  function draw(){
+    const W=cv.width,H=cv.height;
+    ctx.clearRect(0,0,W,H);
+    t++;
+    dots.forEach(d=>{
+      if(t<d.delay)return;
+      d.alpha=Math.min(1,d.alpha+.04);
+      d.y+=d.vy;d.x+=d.vx;
+      if(d.y<.05||d.y>.95)d.vy*=-1;
+      const px=d.x*W,py=d.y*H;
+      const glow=ctx.createRadialGradient(px,py,0,px,py,8);
+      glow.addColorStop(0,'rgba(233,133,159,'+d.alpha*0.8+')');
+      glow.addColorStop(1,'rgba(233,133,159,0)');
+      ctx.fillStyle=glow;ctx.beginPath();ctx.arc(px,py,8,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='rgba(255,200,210,'+d.alpha+')';
+      ctx.beginPath();ctx.arc(px,py,2.5,0,Math.PI*2);ctx.fill();
+    });
+    // Bell curve overlay
+    ctx.strokeStyle='rgba(233,133,159,0.5)';ctx.lineWidth=2;ctx.beginPath();
+    for(let x=0;x<W;x+=3){
+      const z=(x/W-.5)/.12;
+      const y=H*.82-Math.exp(-.5*z*z)*H*.6;
+      if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ===== POLLING CANVAS ===== */
+(function(){
+  const cv=document.getElementById('poll-canvas');
+  const slider=document.getElementById('poll-slider');
+  if(!cv||!slider)return;
+  const ctx=cv.getContext('2d');
+  const P=0.52;
+
+  function resize(){cv.width=cv.offsetWidth;cv.height=cv.offsetHeight}
+  resize();new ResizeObserver(resize).observe(cv);
+
+  function render(n){
+    const W=cv.width,H=cv.height;
+    ctx.clearRect(0,0,W,H);
+    const se=Math.sqrt(P*(1-P)/n);
+    const moe=1.96*se;
+    const lo=P-4*se,hi=P+4*se;
+    // Bell curve
+    ctx.strokeStyle='rgba(110,162,224,0.9)';ctx.lineWidth=3;ctx.beginPath();
+    for(let x=0;x<W;x+=2){
+      const r=lo+(x/W)*(hi-lo);
+      const z=(r-P)/se;
+      const pdf=Math.exp(-.5*z*z)/(se*Math.sqrt(2*Math.PI));
+      const y=H-15-pdf*se*(H-25)*4.5;
+      if(x===0)ctx.moveTo(x,Math.max(5,y));else ctx.lineTo(x,Math.max(5,y));
+    }
+    ctx.stroke();
+    // Fill ±MOE
+    const xLo=(P-moe-lo)/(hi-lo)*W;
+    const xHi=(P+moe-lo)/(hi-lo)*W;
+    ctx.beginPath();
+    for(let x=Math.max(0,xLo);x<=Math.min(W,xHi);x+=2){
+      const r=lo+(x/W)*(hi-lo);
+      const z=(r-P)/se;
+      const pdf=Math.exp(-.5*z*z)/(se*Math.sqrt(2*Math.PI));
+      const y=H-15-pdf*se*(H-25)*4.5;
+      if(x===Math.max(0,xLo))ctx.moveTo(x,Math.max(5,y));else ctx.lineTo(x,Math.max(5,y));
+    }
+    ctx.lineTo(Math.min(W,xHi),H-15);ctx.lineTo(Math.max(0,xLo),H-15);ctx.closePath();
+    ctx.fillStyle='rgba(110,162,224,0.15)';ctx.fill();
+    // True proportion line
+    const cx=W/2;
+    ctx.strokeStyle='rgba(201,167,72,0.7)';ctx.lineWidth=2;ctx.setLineDash([]);
+    ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,H-15);ctx.stroke();
+    // MOE dashes
+    ctx.strokeStyle='rgba(201,167,72,0.35)';ctx.lineWidth=1;ctx.setLineDash([4,5]);
+    ctx.beginPath();ctx.moveTo(xLo,0);ctx.lineTo(xLo,H-15);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(xHi,0);ctx.lineTo(xHi,H-15);ctx.stroke();
+    ctx.setLineDash([]);
+    // Margin label
+    ctx.fillStyle='rgba(201,167,72,0.85)';ctx.font='12px "Space Mono",monospace';
+    ctx.textAlign='center';ctx.fillText('±'+( moe*100).toFixed(1)+'%',cx,H-2);
+    ctx.textAlign='left';
+  }
+
+  function update(){
+    const n=parseInt(slider.value);
+    const moe=1.96*Math.sqrt(P*(1-P)/n)*100;
+    const el=(id)=>document.getElementById(id);
+    if(el('poll-n-display'))el('poll-n-display').textContent=n.toLocaleString();
+    if(el('poll-moe'))el('poll-moe').textContent='±'+moe.toFixed(1)+'%';
+    if(el('poll-range'))el('poll-range').textContent=(P*100-moe).toFixed(1)+'% – '+(P*100+moe).toFixed(1)+'%';
+    render(n);
+  }
+  slider.addEventListener('input',update);
+  update();
+})();
+
+/* ===== INSURANCE CANVAS ===== */
+(function(){
+  const cv=document.getElementById('insurance-canvas');
+  if(!cv)return;
+  const ctx=cv.getContext('2d');
+  function resize(){cv.width=cv.offsetWidth;cv.height=cv.offsetHeight||220}
+  resize();new ResizeObserver(resize).observe(cv);
+  let t=0;
+  function draw(){
+    const W=cv.width,H=cv.height;
+    ctx.clearRect(0,0,W,H);
+    t++;
+    const configs=[
+      {n:10,label:'10 people',col:'rgba(192,69,96,0.8)',x:.15},
+      {n:100,label:'100 people',col:'rgba(201,167,72,0.8)',x:.45},
+      {n:10000,label:'10,000 people',col:'rgba(94,196,122,0.8)',x:.75}
+    ];
+    const mu=.05,sigma=.3;
+    configs.forEach(({n,label,col,x})=>{
+      const se=sigma/Math.sqrt(n);
+      const cx=x*W;
+      // Draw distribution curve
+      const h=H*.8;
+      ctx.strokeStyle=col;ctx.lineWidth=2.5;ctx.beginPath();
+      for(let i=0;i<W*.3;i+=2){
+        const rx=cx-W*.18+i;
+        const z=(rx-cx)/(se*W*2);
+        const pdf=Math.exp(-.5*z*z)/(se*Math.sqrt(2*Math.PI));
+        const scale=se*W*2;
+        const y=H*.88-Math.min(pdf*scale*H*.0035,H*.75);
+        if(i===0)ctx.moveTo(rx,y);else ctx.lineTo(rx,y);
+      }
+      ctx.stroke();
+      // Mean line
+      ctx.strokeStyle=col.replace('0.8','0.3');ctx.lineWidth=1;ctx.setLineDash([3,4]);
+      ctx.beginPath();ctx.moveTo(cx,0);ctx.lineTo(cx,H*.88);ctx.stroke();ctx.setLineDash([]);
+      // Label
+      ctx.fillStyle=col;ctx.font=`${Math.round(11)}px "Space Mono",monospace`;
+      ctx.textAlign='center';ctx.fillText(label,cx,H*.95);
+    });
+    // Baseline
+    ctx.strokeStyle='rgba(255,255,255,0.1)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(0,H*.88);ctx.lineTo(W,H*.88);ctx.stroke();
+    ctx.textAlign='left';
+  }
+  draw();
+  new ResizeObserver(draw).observe(cv);
+})();
+
+/* ===== MANUFACTURING CANVAS ===== */
+(function(){
+  const cv=document.getElementById('mfg-canvas');
+  if(!cv)return;
+  const ctx=cv.getContext('2d');
+  function resize(){cv.width=cv.offsetWidth;cv.height=cv.offsetHeight||300}
+  resize();new ResizeObserver(resize).observe(cv);
+  let t=0,dots=[];
+  for(let i=0;i<200;i++){
+    const x=randn();
+    dots.push({x,delay:i*3,alpha:0});
+  }
+  function draw(){
+    const W=cv.width,H=cv.height;
+    ctx.clearRect(0,0,W,H);
+    t++;
+    // Spec limits
+    const specLo=W*.2,specHi=W*.8,mu=W*.5;
+    const sigma6=specHi-mu;
+    // Fill regions
+    ctx.fillStyle='rgba(94,196,122,0.04)';ctx.fillRect(specLo,0,specHi-specLo,H);
+    ctx.fillStyle='rgba(192,69,96,0.08)';ctx.fillRect(0,0,specLo,H);
+    ctx.fillStyle='rgba(192,69,96,0.08)';ctx.fillRect(specHi,0,W-specHi,H);
+    // Spec lines
+    ctx.strokeStyle='rgba(192,69,96,0.5)';ctx.lineWidth=1.5;ctx.setLineDash([5,5]);
+    ctx.beginPath();ctx.moveTo(specLo,0);ctx.lineTo(specLo,H);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(specHi,0);ctx.lineTo(specHi,H);ctx.stroke();
+    ctx.setLineDash([]);
+    // Bell curve
+    ctx.strokeStyle='rgba(230,199,106,0.8)';ctx.lineWidth=2.5;ctx.beginPath();
+    for(let x=0;x<W;x+=2){
+      const z=(x-mu)/(sigma6/3);
+      const pdf=Math.exp(-.5*z*z);
+      const y=H*.88-pdf*H*.7;
+      if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+    // Sigma marks
+    for(let s=-6;s<=6;s+=1){
+      const x=mu+s*sigma6/6;
+      ctx.strokeStyle=Math.abs(s)===6?'rgba(192,69,96,0.5)':'rgba(255,255,255,0.07)';
+      ctx.lineWidth=1;ctx.setLineDash([2,4]);
+      ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H*.88);ctx.stroke();ctx.setLineDash([]);
+    }
+    // Dots raining
+    dots.forEach(d=>{
+      if(t<d.delay)return;
+      d.alpha=Math.min(1,d.alpha+.05);
+      const px=mu+d.x*sigma6/3;
+      const isOut=px<specLo||px>specHi;
+      ctx.fillStyle=isOut?`rgba(192,69,96,${d.alpha*0.8})`:`rgba(94,196,122,${d.alpha*0.8})`;
+      ctx.beginPath();ctx.arc(px,H*.9+(Math.random()-.5)*2,2.5,0,Math.PI*2);ctx.fill();
+    });
+    // Labels
+    ctx.fillStyle='rgba(192,69,96,0.7)';ctx.font='11px "Space Mono",monospace';
+    ctx.textAlign='center';ctx.fillText('LSL',specLo,H-5);
+    ctx.fillText('USL',specHi,H-5);
+    ctx.fillStyle='rgba(230,199,106,0.8)';ctx.fillText('±6σ',mu,H-5);
+    ctx.textAlign='left';
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ===== INTERACTIVE DISTRIBUTION DRAWING ===== */
+const drawCv=document.getElementById('draw-pdf');
+const dctx=drawCv.getContext('2d');
+let drawing=false;
+let pdfData=new Array(100).fill(0.1);
+function resizeDraw(){const r=drawCv.getBoundingClientRect();drawCv.width=r.width;drawCv.height=r.height;renderDraw()}
+window.addEventListener('resize',resizeDraw);
+function renderDraw(){
+  dctx.clearRect(0,0,drawCv.width,drawCv.height);
+  dctx.strokeStyle='#c04560';dctx.lineWidth=4;dctx.lineCap='round';dctx.lineJoin='round';
   dctx.beginPath();
-  let maxVal = Math.max(...pdfData) || 1;
-  const wScale = drawCv.width / pdfData.length;
-  for (let i = 0; i < pdfData.length; i++) {
-    const x = i * wScale + wScale/2;
-    const h = (pdfData[i] / maxVal) * (drawCv.height - 25) + 5;
-    const y = drawCv.height - h;
-    if (i === 0) dctx.moveTo(x, y); else dctx.lineTo(x, y);
+  let maxVal=Math.max(...pdfData)||1;
+  const wScale=drawCv.width/pdfData.length;
+  for(let i=0;i<pdfData.length;i++){
+    const x=i*wScale+wScale/2;
+    const h=(pdfData[i]/maxVal)*(drawCv.height-25)+5;
+    const y=drawCv.height-h;
+    if(i===0)dctx.moveTo(x,y);else dctx.lineTo(x,y);
   }
   dctx.stroke();
-  dctx.lineTo(drawCv.width, drawCv.height); dctx.lineTo(0, drawCv.height); dctx.closePath();
-  const grad = dctx.createLinearGradient(0,0,0,drawCv.height);
-  grad.addColorStop(0, 'rgba(192,69,96,0.25)'); grad.addColorStop(1, 'rgba(192,69,96,0.0)');
-  dctx.fillStyle = grad; dctx.fill();
+  dctx.lineTo(drawCv.width,drawCv.height);dctx.lineTo(0,drawCv.height);dctx.closePath();
+  const grad=dctx.createLinearGradient(0,0,0,drawCv.height);
+  grad.addColorStop(0,'rgba(192,69,96,0.3)');grad.addColorStop(1,'rgba(192,69,96,0)');
+  dctx.fillStyle=grad;dctx.fill();
 }
-
-function handlePointer(e) {
-  const rect = drawCv.getBoundingClientRect();
-  const px = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-  const py = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-  let idx = Math.floor((px / rect.width) * pdfData.length);
-  idx = Math.max(0, Math.min(pdfData.length - 1, idx));
-  let val = 1.0 - (py / rect.height);
-  val = Math.max(0.02, Math.min(1, val));
-  const radius = 5;
-  for (let i = -radius; i <= radius; i++) {
-    if (idx + i >= 0 && idx + i < pdfData.length) {
-      let weight = Math.exp(-(i*i)/(radius));
-      pdfData[idx+i] = Math.max(pdfData[idx+i], val * weight);
+function handlePointer(e){
+  const rect=drawCv.getBoundingClientRect();
+  const px=(e.touches?e.touches[0].clientX:e.clientX)-rect.left;
+  const py=(e.touches?e.touches[0].clientY:e.clientY)-rect.top;
+  let idx=Math.floor((px/rect.width)*pdfData.length);
+  idx=Math.max(0,Math.min(pdfData.length-1,idx));
+  let val=1.0-(py/rect.height);val=Math.max(.02,Math.min(1,val));
+  const radius=5;
+  for(let i=-radius;i<=radius;i++){
+    if(idx+i>=0&&idx+i<pdfData.length){
+      let w=Math.exp(-(i*i)/radius);
+      pdfData[idx+i]=Math.max(pdfData[idx+i],val*w);
     }
   }
   renderDraw();
 }
+drawCv.addEventListener('mousedown',e=>{drawing=true;handlePointer(e)});
+window.addEventListener('mouseup',()=>drawing=false);
+drawCv.addEventListener('mousemove',e=>{if(drawing)handlePointer(e)});
+drawCv.addEventListener('touchstart',e=>{e.preventDefault();drawing=true;handlePointer(e)},{passive:false});
+window.addEventListener('touchend',()=>drawing=false);
+drawCv.addEventListener('touchmove',e=>{e.preventDefault();if(drawing)handlePointer(e)},{passive:false});
+document.getElementById('btn-clear').addEventListener('click',()=>{pdfData.fill(0.05);renderDraw()});
 
-drawCv.addEventListener('mousedown', e => { drawing = true; handlePointer(e); });
-window.addEventListener('mouseup', () => drawing = false);
-drawCv.addEventListener('mousemove', e => { if (drawing) handlePointer(e); });
-drawCv.addEventListener('touchstart', e => { e.preventDefault(); drawing=true; handlePointer(e); }, {passive:false});
-window.addEventListener('touchend', () => drawing = false);
-drawCv.addEventListener('touchmove', e => { e.preventDefault(); if(drawing) handlePointer(e); }, {passive:false});
-
-document.addEventListener("DOMContentLoaded", () => {
-    resizeDraw();
-    for(let i=0; i<pdfData.length; i++) { pdfData[i] = Math.max(0.1, Math.exp(-Math.pow(i-20,2)/100) + 0.6*Math.exp(-Math.pow(i-75,2)/200)); }
-    renderDraw(); resizeSim();
-});
-document.getElementById('btn-clear').addEventListener('click', () => { pdfData.fill(0.05); renderDraw(); });
-
-/* 4. SIMULATION (Balls falling forming Bell Curve) */
-const simCv = document.getElementById('sim-canvas');
-const sctx = simCv.getContext('2d');
-let simBalls = [];
-let bins = new Array(60).fill(0);
-let maxBin = 1;
-function resizeSim() { const rect=simCv.getBoundingClientRect(); simCv.width=rect.width; simCv.height=rect.height; renderSim(); }
-
-function samplePDF() {
-  let maxV = Math.max(...pdfData);
-  while(true) {
-    let rng = Math.random(); let idx = Math.floor(rng * pdfData.length);
-    if (Math.random() * maxV <= pdfData[idx]) return (idx / pdfData.length);
-  }
+/* ===== CLT SIMULATION (DRAW YOUR OWN) ===== */
+const simCv=document.getElementById('sim-canvas');
+const sctx=simCv.getContext('2d');
+let simBalls=[],bins2=new Array(60).fill(0),maxBin2=1;
+function resizeSim(){const r=simCv.getBoundingClientRect();simCv.width=r.width;simCv.height=r.height;renderSim()}
+function samplePDF(){
+  let maxV=Math.max(...pdfData);
+  while(true){const idx=Math.floor(Math.random()*pdfData.length);if(Math.random()*maxV<=pdfData[idx])return idx/pdfData.length}
 }
-
-document.getElementById('btn-drop').addEventListener('click', () => {
-  bins.fill(0); maxBin = 1; simBalls = [];
-  const NO_OF_BALLS = 2000; const SUMS = 12; 
-  for (let i = 0; i < NO_OF_BALLS; i++) {
-    let total = 0; for(let k=0; k<SUMS; k++) total += samplePDF(); total /= SUMS;
-    simBalls.push({ x: drawCv.width/2, y: 0, targetX: total * simCv.width, targetY: simCv.height, delay: i * 0.8, active: false, done: false });
+document.getElementById('btn-drop').addEventListener('click',()=>{
+  bins2.fill(0);maxBin2=1;simBalls=[];
+  for(let i=0;i<2000;i++){
+    let total=0;for(let k=0;k<12;k++)total+=samplePDF();total/=12;
+    simBalls.push({x:drawCv.width/2,y:0,targetX:total*simCv.width,targetY:simCv.height,delay:i*.7,active:false,done:false});
   }
 });
-
-function renderSim() {
-  sctx.clearRect(0, 0, simCv.width, simCv.height);
-  sctx.fillStyle = 'rgba(201,167,72,0.6)';
-  const bw = simCv.width / bins.length;
-  for(let i=0; i<bins.length; i++) {
-    const h = (bins[i] / maxBin) * (simCv.height - 35);
-    sctx.fillRect(i * bw + 1, simCv.height - h, bw - 2, h);
+function renderSim(){
+  sctx.clearRect(0,0,simCv.width,simCv.height);
+  sctx.fillStyle='rgba(201,167,72,0.6)';
+  const bw=simCv.width/bins2.length;
+  for(let i=0;i<bins2.length;i++){
+    const h=(bins2[i]/maxBin2)*(simCv.height-35);
+    sctx.fillRect(i*bw+1,simCv.height-h,bw-2,h);
   }
-  
-  sctx.fillStyle = '#fff';
-  simBalls.forEach(b => {
-    if (!b.done) {
-      if (b.delay > 0) b.delay--; else {
-        if (!b.active) { b.active = true; b.x = simCv.width/2; }
-        b.y += 20; b.x += (b.targetX - b.x) * 0.12;
-        sctx.beginPath(); sctx.arc(b.x, b.y, 2.5, 0, Math.PI*2); sctx.fill();
-        if (b.y >= simCv.height - 5) {
-          b.done = true;
-          let bIdx = Math.floor((b.targetX / simCv.width) * bins.length);
-          bIdx = Math.max(0, Math.min(bins.length - 1, bIdx));
-          bins[bIdx]++; if (bins[bIdx] > maxBin) maxBin = bins[bIdx];
+  sctx.fillStyle='rgba(255,255,255,0.85)';
+  simBalls.forEach(b=>{
+    if(!b.done){
+      if(b.delay>0)b.delay--;
+      else{
+        if(!b.active){b.active=true;b.x=simCv.width/2}
+        b.y+=18;b.x+=(b.targetX-b.x)*.1;
+        sctx.beginPath();sctx.arc(b.x,b.y,2.5,0,Math.PI*2);sctx.fill();
+        if(b.y>=simCv.height-5){
+          b.done=true;
+          let bi=Math.floor((b.targetX/simCv.width)*bins2.length);
+          bi=Math.max(0,Math.min(bins2.length-1,bi));
+          bins2[bi]++;if(bins2[bi]>maxBin2)maxBin2=bins2[bi];
         }
       }
     }
   });
-  
-  const mean = simBalls.reduce((a,b) => a + b.targetX, 0) / Math.max(1, simBalls.length) || simCv.width/2;
-  const variance = simBalls.reduce((a,b) => a + Math.pow(b.targetX - mean, 2), 0) / Math.max(1, simBalls.length) || 1;
-  const stdev = Math.sqrt(variance);
-  
-  if (simBalls.some(b => b.done)) {
-    sctx.strokeStyle = '#22b5aa'; sctx.lineWidth = 3.5;
-    sctx.beginPath();
-    for (let x = 0; x < simCv.width; x+=4) {
-      let z = (x - mean) / stdev;
-      let pdf = Math.exp(-0.5 * z * z) / (Math.sqrt(2 * Math.PI) * stdev);
-      let h = pdf * maxBin * bw * 42; 
-      if(h > simCv.height) h = simCv.height;
-      if (x === 0) sctx.moveTo(x, simCv.height - h); else sctx.lineTo(x, simCv.height - h);
+  if(simBalls.some(b=>b.done)){
+    const mean=simBalls.reduce((a,b)=>a+b.targetX,0)/Math.max(1,simBalls.length)||simCv.width/2;
+    const variance=simBalls.reduce((a,b)=>a+(b.targetX-mean)**2,0)/Math.max(1,simBalls.length)||1;
+    const stdev=Math.sqrt(variance);
+    sctx.strokeStyle='#22b5aa';sctx.lineWidth=3.5;sctx.beginPath();
+    for(let x=0;x<simCv.width;x+=4){
+      const z=(x-mean)/stdev;
+      const pdf=Math.exp(-.5*z*z)/(Math.sqrt(2*Math.PI)*stdev);
+      const h=pdf*maxBin2*bw*40;
+      if(x===0)sctx.moveTo(x,simCv.height-Math.min(h,simCv.height));
+      else sctx.lineTo(x,simCv.height-Math.min(h,simCv.height));
     }
     sctx.stroke();
   }
   requestAnimationFrame(renderSim);
 }
 
-/* 5. WIGNER SEMICIRCLE */
-const wgCv = document.getElementById('wigner-canvas');
-const wctx = wgCv.getContext('2d');
-const wBins = new Array(50).fill(0);
-let wMax = 1;
-function genWigner() {
-  // Rather than doing real matrix eigen-decomposition in JS, 
-  // we simulate Wigner's semicircle analytically with heavy random sampling for visual effect
-  for(let j=0; j<80; j++) {
-    let x = (Math.random() * 4) - 2;
-    let y = Math.random() * 0.35; 
-    let pdf = Math.sqrt(Math.max(0, 4 - x*x)) / (2 * Math.PI);
-    if (y < pdf) {
-      let bIdx = Math.floor(((x+2)/4) * wBins.length);
-      bIdx = Math.max(0, Math.min(wBins.length - 1, bIdx));
-      wBins[bIdx]++;
-      if (wBins[bIdx] > wMax) wMax = wBins[bIdx];
+/* ===== WIGNER SEMICIRCLE ===== */
+const wgCv=document.getElementById('wigner-canvas');
+const wctx=wgCv.getContext('2d');
+const wBins=new Array(50).fill(0);let wMax=1;
+function genWigner(){
+  for(let j=0;j<80;j++){
+    const x=(Math.random()*4)-2;
+    const y=Math.random()*.35;
+    const pdf=Math.sqrt(Math.max(0,4-x*x))/(2*Math.PI);
+    if(y<pdf){
+      let bi=Math.floor(((x+2)/4)*wBins.length);
+      bi=Math.max(0,Math.min(wBins.length-1,bi));
+      wBins[bi]++;if(wBins[bi]>wMax)wMax=wBins[bi];
     }
   }
 }
-setInterval(genWigner, 60);
-
-function drawWigner() {
-  wctx.clearRect(0,0, wgCv.width, wgCv.height);
-  const bw = wgCv.width / wBins.length;
-  wctx.fillStyle = 'rgba(192,69,96,0.5)';
-  for(let i=0; i<wBins.length; i++) {
-    const h = (wBins[i] / wMax) * (wgCv.height - 35);
-    wctx.fillRect(i * bw + 1, wgCv.height - h, bw - 2, h);
+setInterval(genWigner,60);
+function drawWigner(){
+  wctx.clearRect(0,0,wgCv.width,wgCv.height);
+  const bw=wgCv.width/wBins.length;
+  for(let i=0;i<wBins.length;i++){
+    const h=(wBins[i]/wMax)*(wgCv.height-35);
+    const grad=wctx.createLinearGradient(0,wgCv.height-h,0,wgCv.height);
+    grad.addColorStop(0,'rgba(192,69,96,0.7)');grad.addColorStop(1,'rgba(192,69,96,0.2)');
+    wctx.fillStyle=grad;
+    wctx.fillRect(i*bw+1,wgCv.height-h,bw-2,h);
   }
-  wctx.strokeStyle = 'rgba(255,255,255,0.7)'; wctx.lineWidth = 3; wctx.beginPath();
-  for(let i=0; i<=wgCv.width; i+=2) {
-    let px = (i / wgCv.width) * 4 - 2;
-    let py = Math.sqrt(Math.max(0, 4 - px*px)) / (2 * Math.PI);
-    let scaleH = (py / 0.3183) * (wgCv.height - 35);
-    let y = wgCv.height - scaleH;
-    if(i===0) wctx.moveTo(i, y); else wctx.lineTo(i, y);
+  wctx.strokeStyle='rgba(255,255,255,0.75)';wctx.lineWidth=3;wctx.beginPath();
+  for(let i=0;i<=wgCv.width;i+=2){
+    const px=(i/wgCv.width)*4-2;
+    const py=Math.sqrt(Math.max(0,4-px*px))/(2*Math.PI);
+    const scaleH=(py/0.3183)*(wgCv.height-35);
+    const y=wgCv.height-scaleH;
+    if(i===0)wctx.moveTo(i,y);else wctx.lineTo(i,y);
   }
   wctx.stroke();
   requestAnimationFrame(drawWigner);
 }
 drawWigner();
+
+/* ===== INIT ===== */
+document.addEventListener('DOMContentLoaded',()=>{
+  resizeDraw();
+  for(let i=0;i<pdfData.length;i++)pdfData[i]=Math.max(.1,Math.exp(-Math.pow(i-20,2)/100)+.6*Math.exp(-Math.pow(i-75,2)/200));
+  renderDraw();resizeSim();
+});
 </script>
 </body>
 </html>
