@@ -7,7 +7,7 @@
 <meta name="description" content="Why do the polls look the same?? A beautiful visual exploration of the Central Limit Theorem.">
 <title>The Bell Curve — Central Limit Theorem</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Space+Mono:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Space+Mono:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -162,11 +162,9 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',Georgia,se
 .section-glow::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(to right,transparent,rgba(201,167,72,.4),transparent)}
 
 /* ===== FOOTER ===== */
-footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding:5rem 2.5rem 4rem}
-.footer-attr{display:flex;flex-direction:column;gap:.2rem}
-.footer-name{font-family:'Fraunces',Georgia,serif;font-size:.85rem;font-weight:400;color:var(--cream);letter-spacing:-.01em}
-.footer-inst{font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:300;color:var(--muted);letter-spacing:.01em}
-.footer-url{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:var(--gold);text-decoration:none;margin-top:.25rem;display:inline-block}
+footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.8rem}
+.floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:lowercase;color:#8db830;background:transparent;padding:.35rem .7rem;text-decoration:none;transition:color .25s,text-shadow .25s,transform .25s;text-shadow:0 0 6px rgba(141,184,48,.4),0 0 16px rgba(141,184,48,.15)}
+.floating-badge:hover{color:#a8d43a;text-shadow:0 0 8px rgba(141,184,48,.65),0 0 22px rgba(141,184,48,.28);transform:translateY(-1px)}
 </style>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]})"></script>
@@ -530,12 +528,15 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 </div>
 
 <footer>
-  <div class="footer-attr">
-    <div class="footer-name">Sang-hyun Kim</div>
-    <div class="footer-inst">Korea Institute for Advanced Study</div>
-    <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+  <p>Why Do the Polls Look the Same? — The Central Limit Theorem</p>
+  <div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:.2rem">
+    <div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;font-weight:400;color:#edeef2;letter-spacing:-.01em">Sang-hyun Kim</div>
+    <div style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:300;color:#5c6178;letter-spacing:.01em">Korea Institute for Advanced Study</div>
+    <a href="https://kimsh.kr" style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;display:inline-block;margin-top:.25rem">kimsh.kr</a>
   </div>
 </footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
 
 <script>
 /* ===== GAUSSIAN RNG ===== */
@@ -604,60 +605,95 @@ drawHero();
 /* ===== GALTON BOARD ===== */
 const gCv=document.getElementById('galton-canvas');
 const gctx=gCv.getContext('2d');
-let gBalls=[],gBins=new Array(21).fill(0),gMaxBin=1;
+const G_LEVELS=22,G_PEGY=13.5,G_PEGX=13.5;
+const G_LEVEL_MS=85;   // ms per peg level — consistent at any frame rate
+const G_STAGGER_MS=18; // ms between each ball's launch
+const G_DROP_PX_MS=0.28; // pixels per ms for final fall to bin
+
+let gBalls=[],gBins=new Array(21).fill(0),gMaxBin=1,gLastTs=0;
+
 function dropGalton(){
   gBalls=[];gBins.fill(0);gMaxBin=1;
-  for(let i=0;i<1000;i++)gBalls.push({x:gCv.width/2,y:15,targetLevel:0,binIndex:10,delay:i*.35,active:false,done:false});
+  for(let i=0;i<1000;i++)gBalls.push({
+    x:gCv.width/2, y:28,
+    binIndex:10, targetLevel:0,
+    delayMs:i*G_STAGGER_MS,
+    levelMs:0,         // time accumulator within current level
+    dropY:0,           // y position during final fall
+    active:false, atBottom:false, done:false
+  });
 }
 document.getElementById('btn-galton').addEventListener('click',dropGalton);
 
-function drawGalton(){
-  gctx.clearRect(0,0,gCv.width,gCv.height);
-  const levels=22,pegY=13.5,pegX=13.5;
-  // Draw pegs
+function drawGalton(ts){
+  const dt=gLastTs ? Math.min(ts-gLastTs, 50) : 16; // cap at 50ms to avoid jumps
+  gLastTs=ts;
+
+  const W=gCv.width,H=gCv.height;
+  gctx.clearRect(0,0,W,H);
+
+  // Pegs
   gctx.fillStyle='rgba(201,167,72,0.35)';
-  for(let row=0;row<levels;row++){
-    const y=28+row*pegY,n=row+1;
-    const startX=gCv.width/2-(n*pegX)/2+pegX/2;
+  for(let row=0;row<G_LEVELS;row++){
+    const y=28+row*G_PEGY,n=row+1;
+    const sx=W/2-(n*G_PEGX)/2+G_PEGX/2;
     for(let col=0;col<n;col++){
-      gctx.beginPath();gctx.arc(startX+col*pegX,y,2.8,0,Math.PI*2);gctx.fill();
+      gctx.beginPath();gctx.arc(sx+col*G_PEGX,y,2.8,0,Math.PI*2);gctx.fill();
     }
   }
+
   // Bins
-  const bw=gCv.width/21;
-  const maxH=90;
-  // Bin gradient
+  const bw=W/21,maxH=90;
   for(let i=0;i<21;i++){
     const h=(gBins[i]/Math.max(1,gMaxBin))*maxH;
-    const grad=gctx.createLinearGradient(0,gCv.height-h,0,gCv.height);
+    const grad=gctx.createLinearGradient(0,H-h,0,H);
     grad.addColorStop(0,'rgba(34,181,170,0.9)');grad.addColorStop(1,'rgba(34,181,170,0.3)');
     gctx.fillStyle=grad;
-    gctx.fillRect(i*bw+1,gCv.height-h,bw-2,h);
+    gctx.fillRect(i*bw+1,H-h,bw-2,h);
   }
+
   // Balls
-  gctx.fillStyle='rgba(255,255,255,0.85)';
   gBalls.forEach(b=>{
-    if(b.delay>0){b.delay-=1;return}
-    if(!b.active)b.active=true;
-    if(b.targetLevel<levels){
-      if(Math.random()>.5)b.binIndex+=.5;else b.binIndex-=.5;
-      b.x=gCv.width/2+(b.binIndex-10)*pegX;
-      b.targetLevel++;b.y=28+b.targetLevel*pegY;
-      gctx.globalAlpha=.75;
-      gctx.beginPath();gctx.arc(b.x,b.y,2.2,0,Math.PI*2);gctx.fill();
-    }else if(b.y<gCv.height-10){
-      b.y+=10;gctx.globalAlpha=.4;
-      gctx.beginPath();gctx.arc(b.x,b.y,2.2,0,Math.PI*2);gctx.fill();
-    }else if(!b.done){
-      b.done=true;
-      let fb=Math.floor(b.binIndex);fb=Math.max(0,Math.min(20,fb));
-      gBins[fb]++;if(gBins[fb]>gMaxBin)gMaxBin=gBins[fb];
+    if(b.done) return;
+
+    // Stagger delay (ms-based)
+    if(b.delayMs>0){ b.delayMs-=dt; return; }
+    b.active=true;
+
+    if(b.targetLevel<G_LEVELS){
+      // Advance through peg levels at a fixed ms-per-level rate
+      b.levelMs+=dt;
+      while(b.levelMs>=G_LEVEL_MS && b.targetLevel<G_LEVELS){
+        b.levelMs-=G_LEVEL_MS;
+        if(Math.random()>.5) b.binIndex+=.5; else b.binIndex-=.5;
+        b.targetLevel++;
+      }
+      // Smooth interpolated position between levels
+      const frac=b.levelMs/G_LEVEL_MS;
+      b.x=W/2+(b.binIndex-10)*G_PEGX;
+      b.y=28+(b.targetLevel+frac)*G_PEGY;
+      gctx.globalAlpha=.8;
+    } else {
+      // All pegs passed — fall straight down to bin
+      if(!b.atBottom){ b.dropY=b.y; b.atBottom=true; }
+      b.dropY+=G_DROP_PX_MS*dt;
+      b.y=b.dropY;
+      if(b.y>=H-8){
+        b.done=true;
+        let fb=Math.round(b.binIndex);fb=Math.max(0,Math.min(20,fb));
+        gBins[fb]++;if(gBins[fb]>gMaxBin)gMaxBin=gBins[fb];
+        return;
+      }
+      gctx.globalAlpha=.45;
     }
+
+    gctx.fillStyle='rgba(255,255,255,0.9)';
+    gctx.beginPath();gctx.arc(b.x,b.y,2.2,0,Math.PI*2);gctx.fill();
   });
   gctx.globalAlpha=1;
   requestAnimationFrame(drawGalton);
 }
-drawGalton();
+requestAnimationFrame(drawGalton);
 
 /* ===== STOCK MARKET SIMULATOR ===== */
 const stockSim=(()=>{
