@@ -160,7 +160,7 @@ header h1 em {
   color: var(--muted);
   letter-spacing: 0.05em;
   flex-shrink: 0;
-  min-width: 2rem;
+  min-width: 2.5rem;
 }
 
 .proj-title {
@@ -186,14 +186,14 @@ header h1 em {
   color: var(--muted);
   line-height: 1.7;
   max-width: 500px;
-  padding-left: 2rem;
+  padding-left: 2.5rem;
 }
 
 .proj-tags {
   display: flex;
   gap: 0.5rem;
   margin-top: 0.6rem;
-  padding-left: 2rem;
+  padding-left: 2.5rem;
   flex-wrap: wrap;
 }
 
@@ -266,9 +266,13 @@ footer {
 }
 header { animation: fadeIn 0.8s ease both; }
 .project-link:nth-child(1) { animation: fadeIn 0.6s 0.15s ease both; }
-.project-link:nth-child(2) { animation: fadeIn 0.6s 0.25s ease both; }
-.project-link:nth-child(3) { animation: fadeIn 0.6s 0.35s ease both; }
-.project-link:nth-child(4) { animation: fadeIn 0.6s 0.45s ease both; }
+.project-link:nth-child(2) { animation: fadeIn 0.6s 0.22s ease both; }
+.project-link:nth-child(3) { animation: fadeIn 0.6s 0.29s ease both; }
+.project-link:nth-child(4) { animation: fadeIn 0.6s 0.36s ease both; }
+.project-link:nth-child(5) { animation: fadeIn 0.6s 0.43s ease both; }
+.project-link:nth-child(6) { animation: fadeIn 0.6s 0.50s ease both; }
+.project-link:nth-child(7) { animation: fadeIn 0.6s 0.57s ease both; }
+.project-link:nth-child(8) { animation: fadeIn 0.6s 0.64s ease both; }
 </style>
 </head>
 <body>
@@ -299,8 +303,6 @@ header { animation: fadeIn 0.8s ease both; }
       </div>
     </a>
 
-
-
     <a class="project-link" href="drum.html">
       <div class="proj-top">
         <span class="proj-number">02</span>
@@ -316,7 +318,20 @@ header { animation: fadeIn 0.8s ease both; }
       </div>
     </a>
 
-
+    <a class="project-link" href="drum_ko.html">
+      <div class="proj-top">
+        <span class="proj-number">02k</span>
+        <span class="proj-title">드럼의 모양을 들을 수 있을까? <span style="font-family:var(--f-body);font-size:0.8rem;color:var(--muted);font-weight:300;">&ensp;Korean edition</span></span>
+        <span class="proj-arrow">→</span>
+      </div>
+      <p class="proj-desc">Mark Kac의 1966년 질문 — 스펙트럼 기하학, 고유모드, GWW 드럼을 인터랙티브로 탐험합니다. Korean-language version of the drum shape problem.</p>
+      <div class="proj-tags">
+        <span class="proj-tag">한국어</span>
+        <span class="proj-tag">Spectral Geometry</span>
+        <span class="proj-tag">Bessel Functions</span>
+        <span class="proj-tag">Modal Synthesis</span>
+      </div>
+    </a>
 
     <a class="project-link" href="sound.html">
       <div class="proj-top">
@@ -333,28 +348,13 @@ header { animation: fadeIn 0.8s ease both; }
       </div>
     </a>
 
-    <a class="project-link" href="sound-kr.html">
+    <a class="project-link" href="sound_ko.html">
       <div class="proj-top">
-        <span class="proj-number">04</span>
+        <span class="proj-number">03k</span>
         <span class="proj-title">소리의 수학 <span style="font-family:var(--f-body);font-size:0.8rem;color:var(--muted);font-weight:300;">&ensp;Korean edition</span></span>
         <span class="proj-arrow">→</span>
       </div>
-      <p class="proj-desc">The landscape is determined by the geometry that you are living in. We view, roam and imagine hyperbolic spaces, where there is too much room.</p>
-      <div class="proj-tags">
-        <span class="proj-tag">한국어</span>
-        <span class="proj-tag">hyperbolic geometry</span>
-        <span class="proj-tag">Witten conjecture</span>
-        <span class="proj-tag">manifold</span>
-      </div>
-    </a>
-
-       <a class="project-link" href="hyperbolic.html">
-      <div class="proj-top">
-        <span class="proj-number">05</span>
-        <span class="proj-title">Living in a Hyperbolic Space <span style="font-family:var(--f-body);font-size:0.8rem;color:var(--muted);font-weight:300;">&ensp;Korean edition</span></span>
-        <span class="proj-arrow">→</span>
-      </div>
-      <p class="proj-desc">The same interactive exploration of sound, tuning, and Fourier analysis — written for a Korean-speaking audience.</p>
+      <p class="proj-desc">피타고라스에서 푸리에, 스마트폰까지. 배음 합성기, 조율법 비교, 달팽이관 시뮬레이터를 한국어로 탐험합니다. Korean-language version of the mathematics of sound.</p>
       <div class="proj-tags">
         <span class="proj-tag">한국어</span>
         <span class="proj-tag">Fourier Analysis</span>
@@ -362,17 +362,48 @@ header { animation: fadeIn 0.8s ease both; }
         <span class="proj-tag">Acoustics</span>
       </div>
     </a>
-     
-</div>
 
+    <a class="project-link" href="hyperbolic.html">
+      <div class="proj-top">
+        <span class="proj-number">04</span>
+        <span class="proj-title">Living in a Hyperbolic Space</span>
+        <span class="proj-arrow">→</span>
+      </div>
+      <p class="proj-desc">Where the parallel postulate fails and triangles contain less than 180°. Walk through hyperbolic 3-space, tile the infinite plane, explore Teichmüller space, and follow Mirzakhani's path from geodesics to the Witten conjecture.</p>
+      <div class="proj-tags">
+        <span class="proj-tag">Hyperbolic Geometry</span>
+        <span class="proj-tag">Tessellations</span>
+        <span class="proj-tag">Teichmüller Space</span>
+        <span class="proj-tag">Mirzakhani</span>
+      </div>
+    </a>
 
-<footer>
-  <div class="footer-rule"></div>
-  <div class="footer-content">
-    <div class="footer-left"><a href="https://kimsh.kr/edu">kimsh.kr/edu</a></div>
-    <div class="footer-right"><a href="https://kimsh.kr">Sang-hyun Kim</a>, KIAS</div>
+    <a class="project-link" href="hyperbolic_ko.html">
+      <div class="proj-top">
+        <span class="proj-number">04k</span>
+        <span class="proj-title">쌍곡 공간에서 살아가기 <span style="font-family:var(--f-body);font-size:0.8rem;color:var(--muted);font-weight:300;">&ensp;Korean edition</span></span>
+        <span class="proj-arrow">→</span>
+      </div>
+      <p class="proj-desc">평행선 공리가 성립하지 않는 세계. 쌍곡 3차원 공간을 걷고, 테셀레이션을 탐험하고, 미르자하니의 부피 재귀까지 — 한국어로. Korean-language version of the hyperbolic space exploration.</p>
+      <div class="proj-tags">
+        <span class="proj-tag">한국어</span>
+        <span class="proj-tag">Hyperbolic Geometry</span>
+        <span class="proj-tag">Tessellations</span>
+        <span class="proj-tag">Mirzakhani</span>
+      </div>
+    </a>
+
   </div>
-</footer>
+
+  <footer>
+    <div class="footer-rule"></div>
+    <div class="footer-content">
+      <div class="footer-left"><a href="https://kimsh.kr/edu">kimsh.kr/edu</a></div>
+      <div class="footer-right"><a href="https://kimsh.kr">Sang-hyun Kim</a>, KIAS</div>
+    </div>
+  </footer>
+
+</div>
 
 </body>
 </html>
