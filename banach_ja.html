@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Banach–Tarski · F₂ on S²</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,400&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      width: 100%; height: 100%;
+      background: #06101e; overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    }
+
+    #app {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+    }
+
+    #panels {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* Portrait: stack panels vertically */
+    @media (max-aspect-ratio: 1/1) {
+      #panels { flex-direction: column; }
+      #left-panel  { border-right: none !important; border-bottom: 1px solid rgba(80,120,210,.18); }
+    }
+
+    /* LEFT: Tree */
+    #left-panel {
+      flex: 1;
+      position: relative;
+      border-right: 1px solid rgba(80,120,210,.18);
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    #tree-canvas {
+      display: block;
+      position: absolute;
+      inset: 0;
+      touch-action: none;
+    }
+
+    .panel-hint {
+      position: absolute;
+      top: 10px; left: 0; right: 0;
+      text-align: center;
+      font-size: 9px;
+      letter-spacing: .07em;
+      color: rgba(150,185,240,.22);
+      pointer-events: none;
+      user-select: none;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .panel-subtitle {
+      position: absolute;
+      bottom: 18px; left: 0; right: 0;
+      text-align: center;
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 13px;
+      font-style: italic;
+      color: rgba(180, 200, 255, 0.55);
+      pointer-events: none;
+      user-select: none;
+      letter-spacing: 0.02em;
+    }
+
+    .panel-subtitle .katex {
+      color: rgba(180, 200, 255, 0.55);
+      font-size: 13px;
+    }
+
+    /* RIGHT: Globe */
+    #right-panel {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    #globe-container {
+      position: absolute;
+      inset: 0;
+      touch-action: none;
+    }
+
+    #city-labels {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .city-label {
+      position: absolute;
+      transform: translate(-50%, -180%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: .06em;
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .city-dot {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    /* ─── Floating badge ─── */
+    .floating-badge {
+      position: fixed;
+      bottom: 1.75rem;
+      left: 1.75rem;
+      z-index: 10000;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: lowercase;
+      color: #8db830;
+      background: transparent;
+      padding: 0.35rem 0.7rem;
+      border: none;
+      text-decoration: none;
+      transition: color 0.25s, text-shadow 0.25s, transform 0.25s;
+      text-shadow: 0 0 6px rgba(141,184,48,0.4), 0 0 16px rgba(141,184,48,0.15);
+    }
+    .floating-badge:hover {
+      color: #a8d43a;
+      text-shadow: 0 0 8px rgba(141,184,48,0.65), 0 0 22px rgba(141,184,48,0.28);
+      transform: translateY(-1px);
+    }
+
+    /* ─── Attribution overlay ─── */
+    .attr-overlay {
+      position: fixed;
+      bottom: 1.75rem;
+      right: 1.75rem;
+      z-index: 10000;
+      text-align: right;
+      pointer-events: none;
+    }
+    .attr-name {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: #edeef2;
+      letter-spacing: -0.01em;
+      display: block;
+    }
+    .attr-inst {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 300;
+      color: #5c6178;
+      letter-spacing: 0.01em;
+      display: block;
+      margin-top: 0.2rem;
+    }
+    .attr-url {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      color: #d4a853;
+      display: inline-block;
+      margin-top: 0.25rem;
+      text-decoration: none;
+      pointer-events: all;
+    }
+    .attr-url:hover { text-decoration: underline; }
+
+    /* Loading */
+    #loading {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: #06101e; z-index: 20; gap: 14px;
+      transition: opacity 0.6s;
+    }
+    #loading.hide { opacity: 0; pointer-events: none; }
+    .spinner {
+      width: 28px; height: 28px;
+      border: 2px solid rgba(80,120,210,.22);
+      border-top-color: #6670c8;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loading p {
+      font-size: 0.68rem;
+      color: rgba(150,185,240,.38);
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: .05em;
+    }
+
+    /* BOTTOM BAR */
+    #bottom-bar {
+      flex-shrink: 0;
+      height: 58px;
+      background: rgba(5,9,28,.96);
+      border-top: 1px solid rgba(80,120,210,.20);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0 12px;
+    }
+
+    .bar-label {
+      font-size: 9px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: rgba(160,195,255,.40);
+      font-family: 'JetBrains Mono', monospace;
+      white-space: nowrap;
+    }
+
+    .ctrl-group {
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .cbtn {
+      background: rgba(80,120,210,.13);
+      border: 0.5px solid rgba(100,150,255,.30);
+      color: rgba(190,215,255,.90);
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      font-size: 19px; line-height: 1;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background .15s;
+      touch-action: manipulation;
+    }
+    .cbtn:hover  { background: rgba(80,120,210,.28); }
+    .cbtn:active { transform: scale(.94); }
+    .cbtn:disabled { opacity: 0.22; cursor: not-allowed; }
+
+    #rval {
+      font-size: 24px; font-weight: 400;
+      color: rgba(225,238,255,.95);
+      font-family: 'JetBrains Mono', monospace;
+      min-width: 28px; text-align: center; line-height: 1;
+    }
+
+    input[type=range] {
+      -webkit-appearance: none; appearance: none;
+      width: 130px; height: 4px;
+      background: rgba(80,120,210,.22);
+      border-radius: 2px; outline: none; cursor: pointer; flex-shrink: 0;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: rgba(150,190,255,.90);
+      border: 0.5px solid rgba(100,150,255,.60);
+      cursor: pointer;
+    }
+    input[type=range]::-moz-range-thumb {
+      width: 18px; height: 18px; border-radius: 50%;
+      background: rgba(150,190,255,.90);
+      border: 0.5px solid rgba(100,150,255,.60);
+    }
+
+    @media (max-width: 500px) { #rslider { display: none; } }
+
+    .bar-sep { width: 1px; height: 22px; background: rgba(80,120,210,.20); flex-shrink: 0; }
+
+    .arc-toggle {
+      padding: 6px 13px;
+      border-radius: 8px;
+      border: 0.5px solid rgba(100,150,255,.36);
+      background: rgba(80,120,210,.12);
+      color: rgba(180,210,255,.82);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 7px;
+      transition: background .2s, border-color .2s, color .2s;
+      touch-action: manipulation;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .arc-toggle.off {
+      border-color: rgba(255,255,255,.07);
+      background: rgba(255,255,255,.03);
+      color: rgba(140,175,240,.30);
+    }
+    .arc-toggle:hover {
+      background: rgba(80,120,210,.24);
+      border-color: rgba(100,150,255,.52);
+      color: rgba(200,225,255,.95);
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <div id="panels">
+
+    <!-- LEFT: 4-Regular Tree (Three.js) -->
+    <div id="left-panel">
+      <canvas id="tree-canvas"></canvas>
+      <div class="panel-hint">ドラッグ・回転 &nbsp;|&nbsp; Shift-ドラッグ・移動 &nbsp;|&nbsp; スクロール・ズーム</div>
+      <div class="panel-subtitle">等しい辺の長さを持つ3次元の4価ツリー</div>
+    </div>
+
+    <!-- RIGHT: Globe -->
+    <div id="right-panel">
+      <div id="globe-container"></div>
+      <div id="city-labels"></div>
+      <div class="panel-hint">ドラッグ・回転 &nbsp;|&nbsp; Shift-ドラッグ・移動 &nbsp;|&nbsp; スクロール・ズーム</div>
+      <div class="panel-subtitle" id="right-subtitle"></div>
+      <div id="loading"><div class="spinner"></div><p>地図を読み込み中…</p></div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div id="bottom-bar">
+    <div class="ctrl-group">
+      <span class="bar-label">半径</span>
+      <button class="cbtn" id="btn-dec" onclick="setRadius(globalR-1)" disabled>&#8722;</button>
+      <span id="rval">0</span>
+      <input type="range" id="rslider" min="0" max="6" value="0" step="1"
+             oninput="setRadius(+this.value)">
+      <button class="cbtn" id="btn-inc" onclick="setRadius(globalR+1)">&#43;</button>
+    </div>
+    <div class="bar-sep"></div>
+    <button class="arc-toggle" id="arc-toggle-btn" onclick="toggleArcs()">
+      <span>⌇</span><span id="arc-label">測地線 オン</span>
+    </button>
+    <div class="bar-sep"></div>
+    <button class="arc-toggle" onclick="shuffleColors()" title="色をシャッフル">
+      <span>⟳</span><span>色をシャッフル</span>
+    </button>
+  </div>
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://unpkg.com/three@0.128.0/examples/js/lines/LineSegmentsGeometry.js"></script>
+<script src="https://unpkg.com/three@0.128.0/examples/js/lines/LineMaterial.js"></script>
+<script src="https://unpkg.com/three@0.128.0/examples/js/lines/LineSegments2.js"></script>
+<script src="https://unpkg.com/globe.gl@2.30.0/dist/globe.gl.min.js"></script>
+<script src="https://unpkg.com/topojson-client@3/dist/topojson-client.min.js"></script>
+
+<script>
+'use strict';
+
+// Render math subtitle
+katex.render(
+  String.raw`\text{回転 } \arccos\!\left(\tfrac{1}{3}\right)=70.5287794\cdots\degree`,
+  document.getElementById('right-subtitle'),
+  { throwOnError: false, displayMode: false }
+);
+
+// ═══════════════════════════════════════════════════
+// SHARED STATE
+// ═══════════════════════════════════════════════════
+let globalR  = 0;
+let showArcs = true;
+const MAX_R  = 6;
+
+// ═══════════════════════════════════════════════════
+// THREE.JS TREE  (left panel)
+// ═══════════════════════════════════════════════════
+const S0   = 0.88;
+const BRAT = 2.2;
+const RING_SEG = 96;
+
+function computeZlevels(maxR) {
+  const z = [0];
+  for (let k = 0; k < maxR; k++) {
+    const Lk = S0 / Math.pow(BRAT, k);
+    const dz = Math.sqrt(Math.max(0, 1 - Lk * Lk));
+    z.push(z[k] - dz);
+  }
+  return z;
+}
+
+function levelBoundR(k) {
+  let r = 0;
+  for (let j = 0; j < k; j++) r += S0 / Math.pow(BRAT, j);
+  return r;
+}
+
+// Shared depth→color (used by both tree and globe)
+// depth 0 = white; depth 1..maxD = warm gold → deep indigo
+function hslToRgb(h, s, l) {
+  let r, g, b;
+  if (s === 0) { r = g = b = l; }
+  else {
+    const q = l < 0.5 ? l*(1+s) : l+s-l*s, p = 2*l - q;
+    const hue2rgb = (p,q,t) => {
+      if(t<0) t+=1; if(t>1) t-=1;
+      if(t<1/6) return p+(q-p)*6*t;
+      if(t<1/2) return q;
+      if(t<2/3) return p+(q-p)*(2/3-t)*6;
+      return p;
+    };
+    r=hue2rgb(p,q,h+1/3); g=hue2rgb(p,q,h); b=hue2rgb(p,q,h-1/3);
+  }
+  return [r,g,b];
+}
+
+function depthColor(d, maxD, alpha=1) {
+  if (d === 0) return `rgba(255,255,255,${alpha.toFixed(2)})`;
+  const t = maxD > 0 ? d / maxD : 0;
+  const [r,g,b] = hslToRgb((52 + 208*t)/360, 0.88, 0.58 - 0.28*t);
+  return `rgba(${Math.round(r*255)},${Math.round(g*255)},${Math.round(b*255)},${alpha.toFixed(2)})`;
+}
+
+let treeHueOffset = 0;  // randomised by shuffleColors()
+
+function nodeColor(d, maxD) {
+  if (d === 0) return new THREE.Color(1, 1, 1);
+  const hue = ((d * 137.508 + treeHueOffset) % 360) / 360;
+  const sat = 0.92;
+  const lit = 0.62 - Math.min(d, maxD) / maxD * 0.22;
+  return new THREE.Color().setHSL(hue, sat, lit);
+}
+
+function ptRadius(k) {
+  // Returns size in PIXELS (sizeAttenuation: false)
+  // Edge linewidth = 3.5px → vertices must be >= 7px
+  const n = k === 0 ? 1 : 4 * Math.pow(3, k - 1);
+  return Math.max(7, 22 / Math.sqrt(n));
+}
+
+const DIR = [[1,0],[0,1],[-1,0],[0,-1]];
+const rotL = d => (d + 1) & 3;
+const rotR = d => (d + 3) & 3;
+
+function buildTreeData(R) {
+  const zL = computeZlevels(R);
+  const edgePos = [], edgeCol = [];
+  const levelVtx = [];
+  for (let k = 0; k <= R; k++) levelVtx.push({ pos:[], col:[] });
+  const maxD = Math.max(1, R);
+  const C = d => nodeColor(d, maxD);
+
+  function addV(k, x, y) {
+    const c = C(k);
+    levelVtx[k].pos.push(x, y, zL[k]);
+    levelVtx[k].col.push(c.r, c.g, c.b);
+  }
+  function addE(x1,y1,z1,x2,y2,z2,d1,d2) {
+    const c1=C(d1), c2=C(d2);
+    edgePos.push(x1,y1,z1,x2,y2,z2);
+    edgeCol.push(c1.r,c1.g,c1.b,c2.r,c2.g,c2.b);
+  }
+
+  addV(0, 0, 0);
+  if (R === 0) return { edgePos, edgeCol, levelVtx, zL };
+
+  const queue = [];
+  for (let dir = 0; dir < 4; dir++) {
+    const [dx,dy] = DIR[dir];
+    const cx = S0*dx, cy = S0*dy;
+    addV(1, cx, cy);
+    addE(0,0,zL[0], cx,cy,zL[1], 0,1);
+    if (R > 1) queue.push({ d:1, x:cx, y:cy, dir });
+  }
+  while (queue.length) {
+    const { d, x, y, dir } = queue.shift();
+    if (d >= R) continue;
+    const cd = d + 1;
+    const Ld = S0 / Math.pow(BRAT, d);
+    for (const cdir of [dir, rotL(dir), rotR(dir)]) {
+      const [dx,dy] = DIR[cdir];
+      const cx = x + Ld*dx, cy = y + Ld*dy;
+      addV(cd, cx, cy);
+      addE(x,y,zL[d], cx,cy,zL[cd], d,cd);
+      if (cd < R) queue.push({ d:cd, x:cx, y:cy, dir:cdir });
+    }
+  }
+  return { edgePos, edgeCol, levelVtx, zL };
+}
+
+// Three.js setup scoped to left panel
+const treeCanvas = document.getElementById('tree-canvas');
+const treeRenderer = new THREE.WebGLRenderer({ canvas: treeCanvas, antialias: true });
+treeRenderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+treeRenderer.setClearColor(0x06101e, 1);
+
+const treeScene  = new THREE.Scene();
+// Orthographic camera — true xy projection, no perspective distortion
+const treeCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.001, 3000);
+treeCamera.position.set(0, 0, 10);
+let orthoHalfH = 1.6;  // half-height in world units; scroll adjusts this
+
+// Stars
+(() => {
+  const geo = new THREE.BufferGeometry();
+  const pos = [];
+  for (let i = 0; i < 900; i++) {
+    const r  = 800 + Math.random() * 1200;
+    const th = Math.random() * Math.PI * 2;
+    const ph = Math.acos(2 * Math.random() - 1);
+    pos.push(r*Math.sin(ph)*Math.cos(th), r*Math.sin(ph)*Math.sin(th), r*Math.cos(ph));
+  }
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  treeScene.add(new THREE.Points(geo, new THREE.PointsMaterial({
+    color: 0x2a4060, size: 2.0, transparent: true, opacity: 0.55,
+    blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true,
+  })));
+})();
+
+const treeGroup = new THREE.Group();
+treeGroup.rotation.x = 0;
+treeScene.add(treeGroup);
+
+let edgeMesh = null, axisMesh = null;
+let ptMeshes = [], ringMeshes = [];
+let maxTreeCamZ = 10000;
+
+function disposeTree() {
+  const rm = m => { treeGroup.remove(m); m.geometry.dispose(); m.material.dispose(); };
+  if (edgeMesh) { rm(edgeMesh); edgeMesh = null; }
+  if (axisMesh) { rm(axisMesh); axisMesh = null; }
+  ptMeshes.forEach(rm);   ptMeshes   = [];
+  ringMeshes.forEach(rm); ringMeshes = [];
+}
+
+function rebuildTree(R) {
+  disposeTree();
+  const { edgePos, edgeCol, levelVtx, zL } = buildTreeData(R);
+
+  // Orthographic: fit the full tree in view with some padding
+  const xyMax = S0 * BRAT / (BRAT - 1);   // geometric-series xy limit
+  orthoHalfH = xyMax * 1.2;
+  const panel2 = document.getElementById('left-panel');
+  const aspect2 = panel2.clientWidth / Math.max(1, panel2.clientHeight);
+  treeCamera.left   = -orthoHalfH * aspect2;
+  treeCamera.right  =  orthoHalfH * aspect2;
+  treeCamera.top    =  orthoHalfH;
+  treeCamera.bottom = -orthoHalfH;
+  treeCamera.near   = 0.001;
+  treeCamera.far    = 3000;
+  treeCamera.position.set(0, 0, 10);
+  treeCamera.updateProjectionMatrix();
+  maxTreeCamZ = 100;  // not used for perspective any more, kept for compat
+
+  const ptScale = 2.5;  // fixed scale — no perspective depth
+
+  if (edgePos.length) {
+    const geo = new THREE.LineSegmentsGeometry();
+    geo.setPositions(edgePos);
+    geo.setColors(edgeCol);
+    const panel = document.getElementById('left-panel');
+    const mat = new THREE.LineMaterial({
+      vertexColors: true,
+      linewidth: 3.5,          // pixels — broadcast-quality thickness
+      transparent: true,
+      opacity: 0.92,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      resolution: new THREE.Vector2(panel.clientWidth || 800, panel.clientHeight || 600),
+    });
+    edgeMesh = new THREE.LineSegments2(geo, mat);
+    edgeMesh.visible = true;
+    treeGroup.add(edgeMesh);
+  }
+
+  for (let k = 0; k <= R; k++) {
+    const lv = levelVtx[k];
+    if (!lv.pos.length) continue;
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(lv.pos, 3));
+    g.setAttribute('color',    new THREE.Float32BufferAttribute(lv.col, 3));
+    const m = new THREE.Points(g, new THREE.PointsMaterial({
+      vertexColors: true, size: ptRadius(k),
+      transparent: true, opacity: 1.0,
+      blending: THREE.AdditiveBlending, depthWrite: false,
+      sizeAttenuation: false,
+    }));
+    treeGroup.add(m);
+    ptMeshes.push(m);
+  }
+
+  // (rings suppressed)
+
+  if (R > 0) {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute([0,0,zL[0],0,0,zL[R]], 3));
+    axisMesh = new THREE.Line(g, new THREE.LineBasicMaterial({
+      color: 0x1a3055, transparent: true, opacity: 0.45,
+      blending: THREE.AdditiveBlending, depthWrite: false,
+    }));
+    treeGroup.add(axisMesh);
+  }
+}
+
+// Tree resize
+function resizeTree() {
+  const panel = document.getElementById('left-panel');
+  const w = panel.clientWidth, h = panel.clientHeight;
+  if (w < 1 || h < 1) return;
+  treeRenderer.setSize(w, h);
+  const aspect = w / h;
+  const cx = treeCamera.position.x, cy = treeCamera.position.y;
+  treeCamera.left   = cx - orthoHalfH * aspect;
+  treeCamera.right  = cx + orthoHalfH * aspect;
+  treeCamera.top    = cy + orthoHalfH;
+  treeCamera.bottom = cy - orthoHalfH;
+  treeCamera.updateProjectionMatrix();
+  // Update fat-line resolution so linewidth stays in pixels
+  if (edgeMesh && edgeMesh.material && edgeMesh.material.resolution) {
+    edgeMesh.material.resolution.set(w, h);
+  }
+}
+
+// Tree interaction
+let tRotDrag=false, trlx=0, trly=0, trvx=0, trvy=0;
+let tPanDrag=false, tplx=0, tply=0, tpvx=0, tpvy=0;
+const treePanScale = () => orthoHalfH * 0.002;
+
+function tStartRot(x,y) { tRotDrag=true; trlx=x; trly=y; trvx=trvy=0; }
+function tMoveRot(x,y)  {
+  if(!tRotDrag) return;
+  trvx=(y-trly)*0.014; trvy=(x-trlx)*0.014;
+  treeGroup.rotation.x+=trvx; treeGroup.rotation.y+=trvy;
+  trlx=x; trly=y;
+}
+function tStartPan(x,y) { tPanDrag=true; tplx=x; tply=y; tpvx=tpvy=0; }
+function tMovePan(x,y)  {
+  if(!tPanDrag) return;
+  const s = orthoHalfH * 0.003;
+  tpvx=-(x-tplx)*s; tpvy=(y-tply)*s;
+  treeCamera.position.x-=(x-tplx)*s;
+  treeCamera.position.y+=(y-tply)*s;
+  // Keep ortho frustum centered on camera position
+  const panel = document.getElementById('left-panel');
+  const aspect = panel.clientWidth / Math.max(1, panel.clientHeight);
+  treeCamera.left   = treeCamera.position.x - orthoHalfH * aspect;
+  treeCamera.right  = treeCamera.position.x + orthoHalfH * aspect;
+  treeCamera.top    = treeCamera.position.y + orthoHalfH;
+  treeCamera.bottom = treeCamera.position.y - orthoHalfH;
+  treeCamera.updateProjectionMatrix();
+  tplx=x; tply=y;
+}
+function tEndAll() { tRotDrag=false; tPanDrag=false; }
+
+treeCanvas.addEventListener('mousedown', e=>{
+  e.preventDefault();
+  if(e.button===2||e.shiftKey) tStartPan(e.clientX,e.clientY);
+  else                          tStartRot(e.clientX,e.clientY);
+});
+treeCanvas.addEventListener('mousemove', e=>{
+  if(tPanDrag) tMovePan(e.clientX,e.clientY);
+  else         tMoveRot(e.clientX,e.clientY);
+});
+treeCanvas.addEventListener('mouseup',    tEndAll);
+treeCanvas.addEventListener('mouseleave', tEndAll);
+treeCanvas.addEventListener('contextmenu', e=>e.preventDefault());
+
+// Touch on tree: 1 finger=rotate, 2 fingers=pan
+treeCanvas.addEventListener('touchstart', e=>{
+  e.preventDefault();
+  if(e.touches.length===1) tStartRot(e.touches[0].clientX, e.touches[0].clientY);
+  else { tEndAll(); tStartPan(e.touches[0].clientX, e.touches[0].clientY); }
+}, {passive:false});
+treeCanvas.addEventListener('touchmove', e=>{
+  e.preventDefault();
+  if(e.touches.length===1&&tRotDrag) tMoveRot(e.touches[0].clientX,e.touches[0].clientY);
+  else if(tPanDrag) tMovePan(e.touches[0].clientX,e.touches[0].clientY);
+}, {passive:false});
+treeCanvas.addEventListener('touchend', tEndAll);
+
+treeCanvas.addEventListener('wheel', e=>{
+  e.preventDefault();
+  orthoHalfH *= (1 + e.deltaY * 0.001);
+  orthoHalfH = Math.max(0.2, Math.min(20, orthoHalfH));
+  resizeTree();
+}, {passive:false});
+
+// Tree render loop
+(function tAnimate() {
+  requestAnimationFrame(tAnimate);
+  if(!tRotDrag&&(Math.abs(trvx)>4e-5||Math.abs(trvy)>4e-5)){
+    treeGroup.rotation.x+=trvx; treeGroup.rotation.y+=trvy; trvx*=0.90; trvy*=0.90;
+  }
+  if(!tPanDrag&&(Math.abs(tpvx)>2e-5||Math.abs(tpvy)>2e-5)){
+    treeCamera.position.x+=tpvx; treeCamera.position.y+=tpvy; tpvx*=0.88; tpvy*=0.88;
+  }
+  treeRenderer.render(treeScene, treeCamera);
+})();
+
+// ═══════════════════════════════════════════════════
+// GLOBE  (right panel)
+// ═══════════════════════════════════════════════════
+const CITIES = [
+  { name:'Seoul',    lat:37.5665,  lng:126.978,  color:'#FF2040' },
+  { name:'Warsaw',   lat:52.2297,  lng:21.0122,  color:'#FF8000' },
+  { name:'London',   lat:51.5074,  lng:-0.1278,  color:'#00FF88' },
+  { name:'Tokyo',    lat:35.6762,  lng:139.6503, color:'#FFE600' },
+  { name:'Beijing',  lat:39.9042,  lng:116.4074, color:'#00CFFF' },
+  { name:'Baghdad',  lat:33.3152,  lng:44.3661,  color:'#CC00FF' },
+  { name:'Honolulu', lat:21.3069,  lng:-157.858, color:'#FF0080' },
+];
+CITIES.forEach(c => c.renderedColor = c.color);
+
+const GCOS=1/3, GSIN=Math.sqrt(8/9);
+const MAT_E=[[GCOS,-GSIN,0],[GSIN,GCOS,0],[0,0,1]];
+const MAT_W=[[GCOS, GSIN,0],[-GSIN,GCOS,0],[0,0,1]];
+const MAT_N=[[1,0,0],[0,GCOS,-GSIN],[0,GSIN,GCOS]];
+const MAT_S=[[1,0,0],[0,GCOS, GSIN],[0,-GSIN,GCOS]];
+const GGENS=[{key:'E',mat:MAT_E,inv:'W'},{key:'W',mat:MAT_W,inv:'E'},
+             {key:'N',mat:MAT_N,inv:'S'},{key:'S',mat:MAT_S,inv:'N'}];
+const GINV={E:'W',W:'E',N:'S',S:'N'};
+
+const gApplyMat=(mat,v)=>[
+  mat[0][0]*v[0]+mat[0][1]*v[1]+mat[0][2]*v[2],
+  mat[1][0]*v[0]+mat[1][1]*v[1]+mat[1][2]*v[2],
+  mat[2][0]*v[0]+mat[2][1]*v[1]+mat[2][2]*v[2],
+];
+const gToVec=(lat,lng)=>{
+  const φ=lat*Math.PI/180, λ=lng*Math.PI/180;
+  return [Math.cos(φ)*Math.cos(λ), Math.cos(φ)*Math.sin(λ), Math.sin(φ)];
+};
+const gToLL=v=>({
+  lat:Math.asin(Math.max(-1,Math.min(1,v[2])))*180/Math.PI,
+  lng:Math.atan2(v[1],v[0])*180/Math.PI,
+});
+const gHexA=(hex,a)=>{
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${a.toFixed(2)})`;
+};
+
+const gCache=new Map();
+function getOrbit(ci,depth){
+  const key=`${ci}:${depth}`;
+  if(gCache.has(key)) return gCache.get(key);
+  const c=CITIES[ci];
+  const rv=gToVec(c.lat,c.lng);
+  if(depth===0){gCache.set(key,{nodes:[{vec:rv,depth:0}],arcs:[]});return gCache.get(key);}
+  const root={vec:rv,lastKey:null,depth:0};
+  const nodes=[root], arcs=[];
+  let frontier=[root];
+  for(let d=0;d<depth;d++){
+    const next=[];
+    for(const node of frontier){
+      for(const gen of GGENS){
+        if(node.lastKey&&gen.key===GINV[node.lastKey]) continue;
+        const child={vec:gApplyMat(gen.mat,node.vec),lastKey:gen.key,depth:d+1};
+        nodes.push(child);
+        arcs.push({fromVec:node.vec,toVec:child.vec,genKey:gen.key,depth:d+1});
+        next.push(child);
+      }
+    }
+    frontier=next;
+  }
+  gCache.set(key,{nodes,arcs});
+  return gCache.get(key);
+}
+
+let globe=null;
+
+function updateGlobe(){
+  if(!globe) return;
+  const allPts=[], allArcs=[];
+  const r=globalR;
+  CITIES.forEach((city,i)=>{
+    const {nodes,arcs}=getOrbit(i,r);
+    nodes.forEach(node=>{
+      if(node.depth===0) return; // origin dot rendered as DOM element in label overlay
+      const pos = gToLL(node.vec);
+      const alpha = Math.max(0.30,0.95-node.depth*0.07);
+      allPts.push({lat:pos.lat,lng:pos.lng,
+        color:gHexA(city.renderedColor,alpha),
+        radius: Math.max(0.36,1.26-node.depth*0.10),
+        altitude: 0.01});
+    });
+    if(showArcs){
+      arcs.forEach(arc=>{
+        const f=arc.depth===1?{lat:city.lat,lng:city.lng}:gToLL(arc.fromVec);
+        const t=gToLL(arc.toVec);
+        const alpha=Math.max(0.07,0.60-(arc.depth-1)*0.08);
+        allArcs.push({sLat:f.lat,sLng:f.lng,eLat:t.lat,eLng:t.lng,
+          color:gHexA(city.color,alpha),
+          stroke:Math.max(0.05,0.28-arc.depth*0.02),
+          altitude:Math.max(0.001,0.014-arc.depth*0.001)});
+      });
+    }
+  });
+  globe.pointsData(allPts).arcsData(allArcs);
+}
+
+async function initGlobe(){
+  const topoRaw=await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(r=>r.json());
+  const countries=topojson.feature(topoRaw,topoRaw.objects.countries);
+
+  const loadEl=document.getElementById('loading');
+  loadEl.classList.add('hide');
+  setTimeout(()=>loadEl.style.display='none',700);
+
+  globe=Globe()(document.getElementById('globe-container'))
+    .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-night.jpg')
+    .backgroundImageUrl('https://unpkg.com/three-globe/example/img/night-sky.png')
+    .atmosphereColor('rgba(80,100,200,0.9)')
+    .atmosphereAltitude(0.12)
+    .polygonsData(countries.features)
+    .polygonCapColor(()=>'rgba(18,24,68,0.55)')
+    .polygonSideColor(()=>'rgba(40,60,160,0.12)')
+    .polygonStrokeColor(()=>'rgba(70,95,195,0.45)')
+    .polygonAltitude(0.003)
+    .pointsData([])
+    .pointLat(d=>d.lat).pointLng(d=>d.lng)
+    .pointColor(d=>d.color).pointAltitude(d=>d.altitude)
+    .pointRadius(d=>d.radius).pointResolution(10)
+    .arcsData([])
+    .arcStartLat(d=>d.sLat).arcStartLng(d=>d.sLng)
+    .arcEndLat(d=>d.eLat).arcEndLng(d=>d.eLng)
+    .arcColor(d=>d.color)
+    .arcAltitudeAutoScale(0.18)
+    .arcStroke(d=>d.stroke)
+    .arcDashLength(1).arcDashGap(0);
+
+  globe.pointOfView({lat:35,lng:60,altitude:2.3},0);
+  globe.controls().autoRotate=false;
+  globe.controls().enableDamping=true;
+
+  // Shift+drag = pan (desktop)
+  const gCtrl=globe.controls();
+  const gEl=document.getElementById('globe-container');
+  let gPanDrag=false, gPanLast=null;
+
+  gEl.addEventListener('mousedown', e=>{
+    if(e.shiftKey){
+      gPanDrag=true; gPanLast={x:e.clientX,y:e.clientY};
+      gCtrl.enabled=false; e.stopPropagation();
+    }
+  });
+  window.addEventListener('mousemove', e=>{
+    if(!gPanDrag) return;
+    const dx=e.clientX-gPanLast.x, dy=e.clientY-gPanLast.y;
+    gPanLast={x:e.clientX,y:e.clientY};
+    const pov=globe.pointOfView(), s=pov.altitude*0.03;
+    globe.pointOfView({lat:Math.max(-85,Math.min(85,pov.lat-dy*s)),lng:pov.lng-dx*s,altitude:pov.altitude});
+  });
+  const endGPan=()=>{ if(gPanDrag){gPanDrag=false;gPanLast=null;gCtrl.enabled=true;} };
+  window.addEventListener('mouseup', endGPan);
+  window.addEventListener('keyup', e=>{ if(e.key==='Shift') endGPan(); });
+
+  // Two-finger touch = pan (mobile)
+  let gTouchPan=false, gTouchLast=null;
+  gEl.addEventListener('touchstart', e=>{
+    if(e.touches.length>=2){
+      gTouchPan=true;
+      const mx=(e.touches[0].clientX+e.touches[1].clientX)/2;
+      const my=(e.touches[0].clientY+e.touches[1].clientY)/2;
+      gTouchLast={x:mx,y:my};
+      gCtrl.enabled=false;
+      e.preventDefault();
+    }
+  },{passive:false});
+  gEl.addEventListener('touchmove', e=>{
+    if(!gTouchPan||e.touches.length<2) return;
+    e.preventDefault();
+    const mx=(e.touches[0].clientX+e.touches[1].clientX)/2;
+    const my=(e.touches[0].clientY+e.touches[1].clientY)/2;
+    const dx=mx-gTouchLast.x, dy=my-gTouchLast.y;
+    gTouchLast={x:mx,y:my};
+    const pov=globe.pointOfView(), s=pov.altitude*0.03;
+    globe.pointOfView({lat:Math.max(-85,Math.min(85,pov.lat-dy*s)),lng:pov.lng-dx*s,altitude:pov.altitude});
+  },{passive:false});
+  gEl.addEventListener('touchend', e=>{
+    if(e.touches.length<2){ gTouchPan=false; gCtrl.enabled=true; }
+  });
+
+  function resizeGlobe(){
+    const el=document.getElementById('globe-container');
+    globe.width(el.clientWidth).height(el.clientHeight);
+  }
+  window.addEventListener('resize', ()=>{ resizeTree(); resizeGlobe(); });
+  resizeGlobe();
+
+  // ── Custom city labels (RAF loop for always-correct color) ──────────
+  const labelContainer = document.getElementById('city-labels');
+  const labelEls = CITIES.map(city => {
+    const dot = document.createElement('div');
+    dot.className = 'city-dot';
+    labelContainer.appendChild(dot);
+
+    const el = document.createElement('div');
+    el.className = 'city-label';
+    el.textContent = city.name;
+    labelContainer.appendChild(el);
+
+    return { el, dot, city };
+  });
+
+  function updateLabels() {
+    requestAnimationFrame(updateLabels);
+    const containerRect = document.getElementById('globe-container').getBoundingClientRect();
+    labelEls.forEach(({ el, dot, city }) => {
+      // Single source of truth: city.color, read once per frame
+      const c = city.color;
+      el.style.color = c;
+      el.style.textShadow = `0 0 7px ${c}99, 0 1px 4px #000c`;
+      dot.style.background = c;
+      dot.style.boxShadow = `0 0 6px ${c}bb`;
+
+      const coords = globe.getScreenCoords(city.lat, city.lng, 0.015);
+      if (!coords) { el.style.display = 'none'; dot.style.display = 'none'; return; }
+
+      const x = coords.x, y = coords.y;
+      const offscreen = x < -50 || x > containerRect.width + 50
+                     || y < -50 || y > containerRect.height + 50;
+      const vis = offscreen ? 'none' : 'block';
+      el.style.display = vis;
+      dot.style.display = vis;
+      el.style.left  = x + 'px';
+      el.style.top   = y + 'px';
+      dot.style.left = x + 'px';
+      dot.style.top  = y + 'px';
+    });
+  }
+  updateLabels();
+
+  updateGlobe();
+}
+
+// ═══════════════════════════════════════════════════
+// SHARED CONTROLS
+// ═══════════════════════════════════════════════════
+window.setRadius = function(r){
+  globalR = Math.max(0, Math.min(MAX_R, r));
+  document.getElementById('rval').textContent = globalR;
+  document.getElementById('rslider').value = globalR;
+  document.getElementById('btn-dec').disabled = globalR===0;
+  document.getElementById('btn-inc').disabled = globalR===MAX_R;
+  rebuildTree(globalR);
+  updateGlobe();
+};
+
+window.shuffleColors = function() {
+  // Tree: random hue offset so golden-angle palette rotates
+  treeHueOffset = Math.random() * 360;
+
+  // Cities: evenly spaced hues starting from a random offset,
+  // neon/fluorescent: full saturation, low-mid lightness
+  const baseHue = Math.random() * 360;
+  const n = CITIES.length;
+  // Avoid hues that look washed out (yellow is bright, shift it slightly)
+  CITIES.forEach((city, i) => {
+    const hue = (baseHue + i * (360 / n) + (Math.random() - 0.5) * 15) % 360;
+    const sat = 1.0;
+    // Keep lightness in 45–58% — vivid neon, never white or pastel
+    const lit = 0.45 + Math.random() * 0.13;
+    const [r,g,b] = hslToRgb(hue / 360, sat, lit);
+    city.color = `#${[r,g,b].map(v=>Math.round(v*255).toString(16).padStart(2,'0')).join('')}`;
+  });
+
+  // Rebuild tree (re-runs nodeColor with new offset)
+  rebuildTree(globalR);
+
+  // Update globe HTML labels and points
+  if (globe) {
+    updateGlobe();
+  }
+};
+
+window.toggleArcs = function(){
+  showArcs = !showArcs;
+  document.getElementById('arc-toggle-btn').classList.toggle('off', !showArcs);
+  document.getElementById('arc-label').textContent = showArcs ? '測地線 オン' : '測地線 オフ';
+  // tree edges always visible; only globe arcs are toggled
+  updateGlobe();
+};
+
+document.addEventListener('keydown', e=>{
+  if(e.key==='+'||e.key==='='||e.key==='ArrowRight') setRadius(globalR+1);
+  if(e.key==='-'||e.key==='_'||e.key==='ArrowLeft')  setRadius(globalR-1);
+});
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+rebuildTree(0);
+resizeTree();
+initGlobe();
+</script>
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
+<div class="attr-overlay">
+  <span class="attr-name">Sang-hyun Kim</span>
+  <span class="attr-inst">Korea Institute for Advanced Study</span>
+  <a class="attr-url" href="https://kimsh.kr">kimsh.kr</a>
+</div>
+
+</body>
+</html>
