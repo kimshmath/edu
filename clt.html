@@ -387,27 +387,44 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.8rem}
         <p style="font-size:1.1rem;line-height:1.8;color:var(--muted);margin-bottom:1rem">The CLT guarantees that the distribution of sample proportions (all possible polls we could have taken) follows a Bell Curve centered on the true population proportion. The margin of error is exactly $1.96 \cdot \sigma/\sqrt{n}$ — it has nothing to do with the population size, only with the sample size.</p>
         <p style="font-size:1.1rem;line-height:1.8;color:var(--muted)">This is why the math is the same whether you're polling 150 million Americans or 1.4 billion Indians. The population is irrelevant. What matters is $n$.</p>
       </div>
-      <div class="m-col-vis" style="flex-direction:column;padding:1.5rem">
-        <div class="polling-wrap" style="width:100%;background:transparent;border:none;padding:0">
-          <div style="font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem">Sampling distribution width vs. sample size n</div>
-          <canvas id="poll-canvas" class="poll-canvas"></canvas>
-          <div class="poll-slider-wrap">
-            <input type="range" min="100" max="10000" value="1200" id="poll-slider" class="poll-slider">
+      <div class="m-col-vis" style="flex-direction:column;padding:1.5rem 1.5rem 1.8rem;align-items:stretch;justify-content:flex-start;gap:0">
+
+        <!-- Verdict badge -->
+        <div style="text-align:center;margin-bottom:.8rem;height:2.2rem;display:flex;align-items:center;justify-content:center">
+          <span id="poll-verdict-text" style="font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;padding:.35rem 1.2rem;border-radius:100px;transition:all .4s ease"></span>
+        </div>
+
+        <!-- Main canvas -->
+        <canvas id="poll-canvas" style="width:100%;height:220px;display:block;border-radius:8px;background:#050810"></canvas>
+
+        <!-- Slider -->
+        <div style="margin-top:1.1rem">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.3rem">
+            <span style="font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Sample size  n =</span>
+            <span id="poll-n-display" style="font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--cream);line-height:1">1,200</span>
           </div>
-          <div class="poll-stats-row">
-            <div class="poll-stat">
-              <span class="poll-stat-label">Sample Size</span>
-              <span class="poll-stat-val" id="poll-n-display">1,200</span>
-            </div>
-            <div class="poll-stat">
-              <span class="poll-stat-label">Margin of Error</span>
-              <span class="poll-stat-val"><em id="poll-moe">±2.8%</em></span>
-            </div>
-            <div class="poll-stat">
-              <span class="poll-stat-label">95% Confidence</span>
-              <span class="poll-stat-val" id="poll-range" style="font-size:1.3rem">49.2% – 54.8%</span>
-            </div>
+          <input type="range" min="50" max="5000" value="1200" id="poll-slider" class="poll-slider" style="width:100%">
+          <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:.55rem;color:var(--muted);margin-top:.1rem">
+            <span>n = 50</span><span>n = 5,000</span>
           </div>
+        </div>
+
+        <!-- Stats row -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1rem">
+          <div style="background:#08101e;border:1px solid #1a1d30;border-radius:8px;padding:.8rem 1rem">
+            <div style="font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem">Margin of Error</div>
+            <div id="poll-moe" style="font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:#6ea2e0;line-height:1">+-2.8%</div>
+          </div>
+          <div style="background:#08101e;border:1px solid #1a1d30;border-radius:8px;padding:.8rem 1rem">
+            <div style="font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem">Curves overlap</div>
+            <div id="poll-overlap" style="font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:#c04560;line-height:1">68%</div>
+          </div>
+        </div>
+
+        <!-- Key insight -->
+        <div style="margin-top:1rem;background:rgba(201,167,72,.05);border:1px solid rgba(201,167,72,.15);border-radius:8px;padding:.8rem 1rem;font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.04em;color:var(--muted);line-height:1.7">
+          <span style="color:var(--gold)">&#9733;</span> Population size is irrelevant.<br>
+          n=1,200 of 150M &#8776; n=1,200 of 10,000.
         </div>
       </div>
     </div>
