@@ -10,6 +10,7 @@ for f in files:
         # Replace occurrences
         text = text.replace('한국고등연구원', '고등과학원')
         text = text.replace('고등연구원', '고등과학원')
+        text = text.replace('Korea Institute for Advanced Study<br>AI4Math, KAIST', '고등과학원<br>AI4Math, KAIST')
         text = text.replace('Korea Institute for Advanced Study', '고등과학원')
 
         with open(f, 'w', encoding='utf-8') as file:

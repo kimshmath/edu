@@ -29,7 +29,7 @@ def process_file():
             translated = translate(text.strip())
             # Replace "Korean Institute for Advanced Study" explicitly
             if "Korea Institute for Advanced Study" in text:
-                translated = "고등과학원"
+                translated = "고등과학원<br>AI4Math, KAIST"
             elif "고등연구원" in translated:
                 translated = translated.replace("고등연구원", "고등과학원")
             
