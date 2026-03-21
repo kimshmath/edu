@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>How Does a Machine Understand? — From Linear Algebra to Language</title>
+<title>Does a Machine Understand? — From Linear Algebra to Language</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -115,15 +115,15 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 <body>
 
 <!-- Audio Notice -->
-<div id="audio-notice"><div class="notice-card"><span class="notice-icon">🧠</span><h2>How Does a Machine Understand?</h2><p>This is an interactive exploration with real-time visualizations and audio.<br><strong>Sound enhances the experience.</strong></p><div class="notice-vol"><div class="vol-bars"><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div></div><span>Set volume to a comfortable level</span></div><button class="notice-start" onclick="dismissNotice()">✨ Let's Explore</button></div></div>
+<div id="audio-notice"><div class="notice-card"><span class="notice-icon">🧠</span><h2>Does a Machine Understand?</h2><p>This is an interactive exploration with real-time visualizations and audio.<br><strong>Sound enhances the experience.</strong></p><div class="notice-vol"><div class="vol-bars"><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div></div><span>Set volume to a comfortable level</span></div><button class="notice-start" onclick="dismissNotice()">✨ Let's Explore</button></div></div>
 <nav id="nav-dots"></nav>
 
 <!-- HERO -->
 <section id="hero"><canvas id="hero-canvas"></canvas><div class="content">
-<h3 class="accent-purple">The Mathematics of Intelligence</h3>
-<h1>How Does a Machine<br><span class="accent-purple">Understand</span>?</h1>
-<p class="subtitle">From linear algebra to language — the Transformer, explained</p>
-<p class="tagline">Every time you talk to an AI, trillions of multiplications turn your words into numbers, numbers into meaning, and meaning into a reply. Here is exactly how.</p>
+<h3 class="accent-purple">A Mathematical Inquiry into AI</h3>
+<h1>Does a Machine<br><span class="accent-purple">Understand</span>?</h1>
+<p class="subtitle">Or does it merely compute the perfect illusion of understanding?</p>
+<p class="tagline">A machine has never tasted an apple, felt the rain, or grieved a loss. Yet it can discuss all of these with eerie fluency. How? The answer lies in linear algebra — dot products, matrices, and softmax. This is the story of how mathematics learned to <em>mimic</em> understanding.</p>
 <button class="start-btn" onclick="initAudio();document.getElementById('sec-dot').scrollIntoView({behavior:'smooth'})">✨ Start Exploring</button>
 </div></section>
 
@@ -132,7 +132,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 <div class="reveal">
 <p class="section-num">00 — A WARM-UP PUZZLE</p>
 <h2>The Unreasonable Power of<br><span class="accent-gold">Dot Products</span></h2>
-<p>Before anything about Transformers — the single most important operation in all of deep learning is the <strong>dot product</strong>. It measures how much two vectors "agree."</p>
+<p>How does a machine know that "bank" near "river" means something different from "bank" near "money"? It starts here — with a single operation that measures how much two ideas <strong>point in the same direction</strong>. This is the atom of machine "understanding."</p>
 </div>
 <div class="demo-card reveal">
 <div class="audio-note">Pitch rises as vectors align — listen to similarity</div>
@@ -148,7 +148,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 <span class="accent-gold">a⃗</span> · <span class="accent-sky">b⃗</span> = ‖a⃗‖ ‖b⃗‖ cos θ
 </div>
 <div class="explanation-card reveal">
-<p><strong style="color:#fff;">Why does this matter?</strong> — Inside every Transformer, when the model decides how much attention word A should pay to word B, it computes exactly this: the dot product of their vector representations. High dot product = high relevance. That's it. This one operation is the core of "attention."</p>
+<p><strong style="color:#fff;">The first clue to machine "understanding."</strong> — When you and I understand a sentence, we grasp how words relate to each other. A machine does the same — but through arithmetic. Inside every Transformer, the model computes exactly this dot product between every pair of words to decide their relevance. High dot product = "these two ideas are related." The machine's understanding of context begins with this one multiplication.</p>
 </div>
 </div></section>
 
@@ -157,7 +157,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 <div class="reveal">
 <p class="section-num">01 — HOW MACHINES READ</p>
 <h2>Text Becomes <span class="accent-coral">Tokens</span></h2>
-<p>Language doesn't enter a neural network as letters. It's broken into <strong>sub-word tokens</strong> — pieces that balance vocabulary size with coverage. The word "understanding" might become ["under", "stand", "ing"].</p>
+<p>Before a machine can "understand" anything, it must first learn to <em>read</em> — and it doesn't read like us. Language enters a neural network not as letters or words, but as <strong>sub-word tokens</strong>: fragments that the machine has learned are meaningful. Ironically, the word "understanding" itself gets split into ["under", "stand", "ing"].</p>
 </div>
 <div class="demo-card reveal">
 <div style="margin-bottom:1rem;">
@@ -187,7 +187,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 <div class="reveal">
 <p class="section-num">02 — WORDS AS GEOMETRY</p>
 <h2>The <span class="accent-sky">Embedding</span> Space</h2>
-<p>Each token becomes a <strong>high-dimensional vector</strong> — a point in a space where distance encodes meaning. Words with similar meanings cluster together. Relationships become directions.</p>
+<p>A machine has never petted a cat or proved a theorem. Yet it "knows" that cats and dogs are related, and that theorems and proofs belong together. How? It places every word as a <strong>point in a vast mathematical space</strong>, where distance is meaning and direction is relationship. This is the machine's map of the world — purely geometric, yet strangely effective.</p>
 </div>
 <div class="demo-card reveal">
 <div class="audio-note">Hover over words — a tone reflects their position in semantic space</div>
@@ -202,7 +202,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 W<sub>E</sub> ∈ ℝ<sup>V × d</sup> — each row is a word's "meaning" as <span class="accent-sky">d</span> numbers
 </div>
 <div class="explanation-card reveal" style="border-left-color:var(--sky);">
-<p><strong style="color:#fff;">A dictionary where every definition is a list of numbers.</strong> — GPT-4's embedding dimension is d = 12,288. That means every token is a point in a 12,288-dimensional space. We can't visualize that directly, but the structure is real: "king" and "queen" are near each other, "cat" and "dog" are near each other, and the direction from "man" to "woman" is approximately the same as from "king" to "queen."</p>
+<p><strong style="color:#fff;">Understanding without experience.</strong> — GPT-4's embedding dimension is d = 12,288. That means every token is a point in a 12,288-dimensional space. We can't visualize that directly, but the structure is real: "king" and "queen" are near each other, "cat" and "dog" are near each other, and the direction from "man" to "woman" is approximately the same as from "king" to "queen."</p>
 </div>
 </div></section>
 
@@ -211,7 +211,7 @@ W<sub>E</sub> ∈ ℝ<sup>V × d</sup> — each row is a word's "meaning" as <sp
 <div class="reveal">
 <p class="section-num">03 — TEACHING ORDER</p>
 <h2><span class="accent-mint">Positional</span> Encoding</h2>
-<p>Unlike a human reading left-to-right, a Transformer sees all words at once — it has <strong>no built-in notion of order</strong>. Position must be explicitly injected. The original solution: a unique fingerprint for each position, built from sinusoids at different frequencies.</p>
+<p>Understanding requires knowing that "the dog bit the man" and "the man bit the dog" mean very different things. But a Transformer sees all words simultaneously — it has <strong>no built-in sense of order</strong>. So position must be taught through mathematics: a unique harmonic fingerprint for each position, built from sinusoids.</p>
 </div>
 <div class="demo-card reveal">
 <div class="audio-note">Each position has a unique "chord" — listen to the harmonic fingerprint</div>
@@ -238,7 +238,7 @@ PE<sub>(pos, 2i)</sub> = sin( pos / 10000<sup>2i/d</sup> ) &nbsp;&nbsp;&nbsp; PE
 <div class="reveal">
 <p class="section-num">04 — THE HEART OF THE TRANSFORMER</p>
 <h2>Self-<span class="accent-purple">Attention</span></h2>
-<p>This is the mechanism that changed everything. Each word <strong>looks at every other word</strong> and computes a relevance score. The key question each token asks: <em>"Who should I pay attention to?"</em></p>
+<p>This is the closest a machine comes to "understanding" a sentence. Each word <strong>looks at every other word</strong> and asks: <em>"How much should I care about you?"</em> The answer is computed as a number — a relevance score. When you read "The cat sat on the mat because <strong>it</strong> was tired," you instantly know "it" refers to "the cat." The machine discovers this same connection — not through comprehension, but through the arithmetic of attention.</p>
 </div>
 <div class="demo-card reveal">
 <div class="audio-note">Select a query word — hear the attention distribution as a chord</div>
@@ -267,7 +267,7 @@ Attention(Q, K, V) = softmax( Q K<sup>⊤</sup> / √d<sub>k</sub> ) V
 </div>
 <div class="explanation-card reveal" style="border-left-color:var(--purple);">
 <p><strong style="color:#fff;">Why scale by √d<sub>k</sub>?</strong> — Without scaling, as the dimension d<sub>k</sub> grows, the dot products grow in magnitude, pushing softmax into regions where it has extremely small gradients. Dividing by √d<sub>k</sub> keeps the variance of the logits ≈ 1, ensuring the softmax stays in a regime where the network can actually learn.</p>
-<p style="margin-top:0.8rem;font-family:var(--font-display);font-style:italic;color:var(--purple);font-size:1.05rem;">"Attention is just soft dictionary lookup: the query is what you're looking for, the keys are labels on the shelves, and the values are what's on the shelves."</p>
+<p style="margin-top:0.8rem;font-family:var(--font-display);font-style:italic;color:var(--purple);font-size:1.05rem;">"Understanding, for a machine, is not insight.<br>It is a weighted sum over everything it has seen."</p>
 </div>
 </div></section>
 
@@ -394,7 +394,7 @@ Attention(Q, K, V) = softmax( Q K<sup>⊤</sup> / √d<sub>k</sub> ) V
 <section id="sec-revolution"><div class="section-inner">
 <div class="reveal">
 <p class="section-num">07 — THE REVOLUTION</p>
-<h2><span class="accent-gold">"Attention Is All You Need"</span><br>One Paper That Changed Everything</h2>
+<h2><span class="accent-gold">"Attention Is All You Need"</span><br>The Paper That Taught Machines to "Understand"</h2>
 </div>
 
 <div class="demo-card reveal" style="border-left:3px solid var(--muted);">
@@ -575,9 +575,9 @@ Attention(Q, K, V) = softmax( Q K<sup>⊤</sup> / √d<sub>k</sub> ) V
 <!-- §08 — NEXT-TOKEN PREDICTION -->
 <section id="sec-predict"><div class="section-inner">
 <div class="reveal">
-<p class="section-num">08 — THE TRAINING OBJECTIVE</p>
-<h2>Next-Token <span class="accent-gold">Prediction</span></h2>
-<p>The entire model is trained with one deceptively simple objective: <strong>given all previous tokens, predict the next one.</strong> The output is a probability distribution over the entire vocabulary.</p>
+<p class="section-num">08 — THE ILLUSION OF UNDERSTANDING</p>
+<h2>The Illusion of <span class="accent-gold">Understanding</span></h2>
+<p>Here is the deepest surprise. The entire model — all the attention, all the embeddings, all the layers — is trained with one deceptively simple objective: <strong>given all previous tokens, predict the next one.</strong> Not "understand the text." Not "learn grammar." Just: what word comes next? And yet, from this statistical relay, something that <em>looks exactly like understanding</em> emerges.</p>
 </div>
 <div class="demo-card reveal">
 <div class="audio-note">A "ding" plays each time a token is sampled</div>
@@ -605,7 +605,7 @@ Attention(Q, K, V) = softmax( Q K<sup>⊤</sup> / √d<sub>k</sub> ) V
 P(x<sub>i</sub> | x<sub>&lt;i</sub>) = softmax( W<sub>out</sub> · h<sub>i</sub> / τ )
 </div>
 <div class="explanation-card reveal" style="border-left-color:var(--gold);">
-<p><strong style="color:#fff;">This one equation is the loss function that taught GPT to write.</strong> — Cross-entropy between predicted and actual next token. Nothing more. No explicit grammar rules, no semantic annotations, no hand-crafted features. Just "read text, predict what comes next" — repeated over trillions of tokens. And from this, language understanding emerges.</p>
+<p><strong style="color:#fff;">The statistical parrot — or something more?</strong> — Critics call LLMs "stochastic parrots": they merely predict probable next words without true understanding. And technically, this is correct — the loss function is just cross-entropy between predicted and actual next token. No grammar rules, no semantic annotations. Just "predict what comes next." But when this relay becomes sufficiently precise, over trillions of tokens, something uncanny happens: the machine begins to reason, to analogize, to explain. Is this understanding? Or the most sophisticated illusion of understanding ever created? That question remains open.</p>
 </div>
 </div></section>
 
@@ -613,8 +613,8 @@ P(x<sub>i</sub> | x<sub>&lt;i</sub>) = softmax( W<sub>out</sub> · h<sub>i</sub>
 <section id="sec-emerge"><div class="section-inner">
 <div class="reveal">
 <p class="section-num">09 — THE MYSTERY</p>
-<h2>When Quantity Becomes <span class="accent-purple">Quality</span></h2>
-<p>As models scale — more parameters, more data, more compute — qualitatively new abilities appear that were <strong>completely absent</strong> in smaller models. This is <em>emergence</em>, and it remains one of the deepest mysteries in modern AI.</p>
+<h2>When Prediction Becomes <span class="accent-purple">"Understanding"</span></h2>
+<p>As models scale — more parameters, more data, more compute — something unsettling happens. Abilities appear that were <strong>completely absent</strong> in smaller models: arithmetic, translation, reasoning. Nobody programmed these. They <em>emerged</em> from next-token prediction alone. This is when the question "does a machine understand?" becomes genuinely hard to answer.</p>
 </div>
 <div class="demo-card reveal">
 <div class="audio-note">A rumble builds as the model grows — with chime accents at emergence thresholds</div>
@@ -662,19 +662,21 @@ P(x<sub>i</sub> | x<sub>&lt;i</sub>) = softmax( W<sub>out</sub> · h<sub>i</sub>
 
 <!-- CLOSING -->
 <section id="sec-closing"><div class="section-inner" style="text-align:center;"><div class="reveal">
-<h2>The Transformer Was Born From<br><span class="accent-gold">One Simple Question.</span></h2>
-<p style="color:var(--muted);font-family:var(--font-display);font-style:italic;font-size:1.05rem;max-width:600px;margin:2rem auto;">
-Vaswani was trying to speed up translation.<br>
-Mikolov was trying to find similar words.<br>
-Hinton was trying to model the brain.<br><br>
-Not one was trying to build intelligence.<br>
-Yet their mathematics was exactly what was needed.
+<h2>So — Does a Machine<br><span class="accent-gold">Understand?</span></h2>
+<p style="color:var(--muted);font-family:var(--font-display);font-style:italic;font-size:1.05rem;max-width:640px;margin:2rem auto;">
+It computes dot products where we feel intuition.<br>
+It navigates vector spaces where we hold memories.<br>
+It predicts the next word where we grasp meaning.<br><br>
+Perhaps it does not understand.<br>
+Perhaps it has found something stranger —<br>
+a <span class="accent-gold">mathematical shadow</span> of understanding<br>
+that works just as well.
 </p>
-<p style="color:var(--muted);font-size:0.9rem;max-width:520px;margin:1rem auto 0;">Every simulation on this page is computed in real time — just linear algebra running in your browser.</p>
+<p style="color:var(--muted);font-size:0.9rem;max-width:520px;margin:1rem auto 0;">Every simulation on this page is computed in real time — just linear algebra. The same linear algebra that powers every conversation you have with AI.</p>
 </div></div></section>
 
 <footer>
-<p>How Does a Machine Understand? — The Mathematics of Transformers</p>
+<p>Does a Machine Understand? — The Mathematics of Transformers</p>
 <p style="margin-top:0.3rem;font-size:0.7rem;">Every visualization is computed in real time — just math.</p>
 <div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:.2rem">
 <div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;color:#edeef2;">Sang-hyun Kim</div>

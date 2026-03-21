@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>기계는 어떻게 이해하는가? — 선형대수에서 언어까지</title>
+<title>기계는 이해하는가? — 선형대수에서 언어까지</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -115,15 +115,15 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 <body>
 
 <!-- Audio Notice -->
-<div id="audio-notice"><div class="notice-card"><span class="notice-icon">🧠</span><h2>기계는 어떻게 이해하는가?</h2><p>실시간 시각화와 오디오가 포함된 인터랙티브 탐험입니다.<br><strong>소리가 경험을 더욱 풍부하게 합니다.</strong></p><div class="notice-vol"><div class="vol-bars"><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div></div><span>볼륨을 편안한 수준으로 맞춰주세요</span></div><button class="notice-start" onclick="dismissNotice()">✨ 탐험 시작</button></div></div>
+<div id="audio-notice"><div class="notice-card"><span class="notice-icon">🧠</span><h2>기계는 이해하는가?</h2><p>실시간 시각화와 오디오가 포함된 인터랙티브 탐험입니다.<br><strong>소리가 경험을 더욱 풍부하게 합니다.</strong></p><div class="notice-vol"><div class="vol-bars"><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div></div><span>볼륨을 편안한 수준으로 맞춰주세요</span></div><button class="notice-start" onclick="dismissNotice()">✨ 탐험 시작</button></div></div>
 <nav id="nav-dots"></nav>
 
 <!-- HERO -->
 <section id="hero"><canvas id="hero-canvas"></canvas><div class="content">
-<h3 class="accent-purple">지능의 수학</h3>
-<h1>기계는 어떻게<br><span class="accent-purple">이해</span>하는가?</h1>
-<p class="subtitle">선형대수에서 언어까지 — 트랜스포머의 수학적 원리</p>
-<p class="tagline">AI와 대화할 때마다, 수조 번의 행렬곱이 당신의 말을 숫자로, 숫자를 의미로, 의미를 답변으로 변환합니다. 그 과정을 정확히 보여드립니다.</p>
+<h3 class="accent-purple">AI에 대한 수학적 탐구</h3>
+<h1>기계는<br><span class="accent-purple">이해</span>하는가?</h1>
+<p class="subtitle">아니면 이해의 완벽한 환상을 계산할 뿐인가?</p>
+<p class="tagline">기계는 사과를 먹어본 적도, 비를 맞아본 적도, 누군가를 잃고 슬퍼한 적도 없습니다. 그런데도 이 모든 것에 대해 놀라운 유창함으로 이야기합니다. 어떻게? 답은 선형대수 — 내적, 행렬, softmax — 에 있습니다. 수학이 어떻게 이해를 <em>모방</em>하게 되었는지, 그 이야기입니다.</p>
 <button class="start-btn" onclick="initAudio();document.getElementById('sec-dot').scrollIntoView({behavior:'smooth'})">✨ 탐험 시작</button>
 </div></section>
 
@@ -132,7 +132,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 <div class="reveal">
 <p class="section-num">00 — 워밍업 퍼즐</p>
 <h2><span class="accent-gold">내적</span>의<br>놀라운 힘</h2>
-<p>트랜스포머에 대해 알아보기 전에 — 딥러닝에서 가장 중요한 연산 하나를 소개합니다. <strong>내적(dot product)</strong>입니다. 두 벡터가 얼마나 "같은 방향"인지를 측정합니다.</p>
+<p>기계는 "배를 먹었다"의 배와 "배를 탔다"의 배가 다르다는 것을 어떻게 아는가? 여기서 시작합니다 — 두 아이디어가 <strong>같은 방향을 가리키는지</strong> 측정하는 단일 연산. 이것이 기계 "이해"의 원자입니다.</p>
 </div>
 <div class="demo-card reveal">
 <div class="audio-note">벡터가 정렬될수록 음이 높아집니다 — 유사도를 들어보세요</div>
@@ -148,7 +148,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 <span class="accent-gold">a⃗</span> · <span class="accent-sky">b⃗</span> = ‖a⃗‖ ‖b⃗‖ cos θ
 </div>
 <div class="explanation-card reveal">
-<p><strong style="color:#fff;">이것이 왜 중요한가?</strong> — 트랜스포머 내부에서 모델이 단어 A가 단어 B에 얼마나 주의를 기울여야 하는지 결정할 때, 정확히 이 연산을 수행합니다: 두 벡터 표현의 내적. 높은 내적 = 높은 관련성. 이 하나의 연산이 "어텐션"의 핵심입니다.</p>
+<p><strong style="color:#fff;">기계 "이해"의 첫 번째 단서.</strong> — 우리가 문장을 이해할 때, 단어들이 서로 어떤 관계인지를 파악합니다. 기계도 같은 일을 합니다 — 다만 산술로. 트랜스포머 내부에서 모든 단어 쌍 사이에 이 내적을 계산하여 관련성을 판단합니다. 높은 내적 = "이 두 개념은 관련 있다." 기계의 문맥 이해는 이 하나의 곱셈에서 시작됩니다.</p>
 </div>
 </div></section>
 
@@ -157,7 +157,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 <div class="reveal">
 <p class="section-num">01 — 기계는 어떻게 읽는가</p>
 <h2>텍스트가 <span class="accent-coral">토큰</span>이 되다</h2>
-<p>언어는 글자 그대로 신경망에 입력되지 않습니다. <strong>서브워드 토큰</strong>으로 분해됩니다 — 어휘 크기와 커버리지의 균형을 맞추는 조각들입니다. "understanding"은 ["under", "stand", "ing"]이 될 수 있습니다.</p>
+<p>기계가 무엇이든 "이해"하기 전에, 먼저 <em>읽는 법</em>을 배워야 합니다 — 그런데 우리처럼 읽지 않습니다. 언어는 글자나 단어가 아닌 <strong>서브워드 토큰</strong>으로 신경망에 입력됩니다. 아이러니하게도, "understanding"이라는 단어 자체가 ["under", "stand", "ing"]으로 쪼개집니다.</p>
 </div>
 <div class="demo-card reveal">
 <div style="margin-bottom:1rem;">
@@ -187,7 +187,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 <div class="reveal">
 <p class="section-num">02 — 단어는 기하학이다</p>
 <h2><span class="accent-sky">임베딩</span> 공간</h2>
-<p>각 토큰은 <strong>고차원 벡터</strong>가 됩니다 — 거리가 의미를 담는 공간의 한 점입니다. 비슷한 의미의 단어들은 가까이 모입니다. 관계는 방향이 됩니다.</p>
+<p>기계는 고양이를 쓰다듬어 본 적도, 정리를 증명한 적도 없습니다. 그런데도 고양이와 개가 관련 있고, 정리와 증명이 함께한다는 것을 "압니다." 어떻게? 모든 단어를 <strong>거대한 수학적 공간의 한 점</strong>에 배치하여, 거리가 의미가 되고 방향이 관계가 됩니다. 이것이 기계의 세계 지도 — 순수하게 기하학적이지만, 기이할 만큼 효과적입니다.</p>
 </div>
 <div class="demo-card reveal">
 <div class="audio-note">단어 위에 마우스를 올려보세요 — 의미 공간에서의 위치가 소리로 표현됩니다</div>
@@ -202,7 +202,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 W<sub>E</sub> ∈ ℝ<sup>V × d</sup> — 각 행은 단어의 "의미"를 <span class="accent-sky">d</span>개의 숫자로 표현
 </div>
 <div class="explanation-card reveal" style="border-left-color:var(--sky);">
-<p><strong style="color:#fff;">모든 정의가 숫자 목록인 사전.</strong> — GPT-4의 임베딩 차원은 d = 12,288입니다. 모든 토큰이 12,288차원 공간의 한 점이라는 뜻입니다. 직접 시각화할 수는 없지만 구조는 실재합니다: "king"과 "queen"은 가깝고, "cat"과 "dog"는 가깝고, "man"에서 "woman"으로의 방향은 "king"에서 "queen"으로의 방향과 거의 같습니다.</p>
+<p><strong style="color:#fff;">경험 없는 이해.</strong> — GPT-4의 임베딩 차원은 d = 12,288입니다. 모든 토큰이 12,288차원 공간의 한 점이라는 뜻입니다. 직접 시각화할 수는 없지만 구조는 실재합니다: "king"과 "queen"은 가깝고, "cat"과 "dog"는 가깝고, "man"에서 "woman"으로의 방향은 "king"에서 "queen"으로의 방향과 거의 같습니다.</p>
 </div>
 </div></section>
 
@@ -211,7 +211,7 @@ W<sub>E</sub> ∈ ℝ<sup>V × d</sup> — 각 행은 단어의 "의미"를 <spa
 <div class="reveal">
 <p class="section-num">03 — 순서를 가르치다</p>
 <h2><span class="accent-mint">위치</span> 인코딩</h2>
-<p>사람이 왼쪽에서 오른쪽으로 읽는 것과 달리, 트랜스포머는 모든 단어를 동시에 봅니다 — <strong>순서 개념이 내장되어 있지 않습니다</strong>. 위치 정보를 명시적으로 주입해야 합니다. 원래의 해결책: 서로 다른 주파수의 사인 함수로 만든, 각 위치의 고유한 지문.</p>
+<p>이해에는 순서가 필요합니다 — "개가 사람을 물었다"와 "사람이 개를 물었다"는 전혀 다른 뜻이니까요. 그런데 트랜스포머는 모든 단어를 동시에 봅니다 — <strong>순서 감각이 내장되어 있지 않습니다</strong>. 그래서 위치를 수학으로 가르칩니다: 사인 함수로 만든 각 위치의 고유한 하모닉 지문.</p>
 </div>
 <div class="demo-card reveal">
 <div class="audio-note">각 위치에는 고유한 "화음"이 있습니다 — 하모닉 지문을 들어보세요</div>
@@ -238,7 +238,7 @@ PE<sub>(pos, 2i)</sub> = sin( pos / 10000<sup>2i/d</sup> ) &nbsp;&nbsp;&nbsp; PE
 <div class="reveal">
 <p class="section-num">04 — 트랜스포머의 심장</p>
 <h2>셀프-<span class="accent-purple">어텐션</span></h2>
-<p>모든 것을 바꾼 메커니즘입니다. 각 단어가 <strong>다른 모든 단어를 살펴보고</strong> 관련성 점수를 계산합니다. 각 토큰이 묻는 핵심 질문: <em>"누구에게 주의를 기울여야 하는가?"</em></p>
+<p>기계가 문장을 "이해"하는 데 가장 가까이 다가가는 순간입니다. 각 단어가 <strong>다른 모든 단어를 바라보며</strong> 묻습니다: <em>"나는 너에게 얼마나 관심을 가져야 하는가?"</em> 답은 숫자로 계산됩니다. "고양이가 매트 위에 앉았다. 왜냐하면 <strong>그것이</strong> 피곤했으니까" — 여기서 "그것"이 "고양이"를 가리킨다는 것을, 기계는 이해가 아닌 어텐션의 산술로 발견합니다.</p>
 </div>
 <div class="demo-card reveal">
 <div class="audio-note">쿼리 단어를 선택하세요 — 어텐션 분포가 화음으로 들립니다</div>
@@ -267,7 +267,7 @@ Attention(Q, K, V) = softmax( Q K<sup>⊤</sup> / √d<sub>k</sub> ) V
 </div>
 <div class="explanation-card reveal" style="border-left-color:var(--purple);">
 <p><strong style="color:#fff;">왜 √d<sub>k</sub>로 나누는가?</strong> — 스케일링 없이는, 차원 d<sub>k</sub>가 커질수록 내적의 크기가 커져서 softmax가 기울기가 극히 작은 영역으로 밀려납니다. √d<sub>k</sub>로 나누면 로짓의 분산이 ≈ 1로 유지되어, softmax가 네트워크가 실제로 학습할 수 있는 영역에 머무릅니다.</p>
-<p style="margin-top:0.8rem;font-family:var(--font-display);font-style:italic;color:var(--purple);font-size:1.05rem;">"어텐션은 부드러운 사전 검색입니다: 쿼리는 당신이 찾는 것, 키는 선반의 라벨, 값은 선반 위의 내용물."</p>
+<p style="margin-top:0.8rem;font-family:var(--font-display);font-style:italic;color:var(--purple);font-size:1.05rem;">"기계에게 이해란 통찰이 아닙니다.<br>본 모든 것에 대한 가중 합입니다."</p>
 </div>
 </div></section>
 
@@ -394,7 +394,7 @@ Attention(Q, K, V) = softmax( Q K<sup>⊤</sup> / √d<sub>k</sub> ) V
 <section id="sec-revolution"><div class="section-inner">
 <div class="reveal">
 <p class="section-num">07 — 혁명</p>
-<h2><span class="accent-gold">"Attention Is All You Need"</span><br>하나의 논문이 모든 것을 바꾸다</h2>
+<h2><span class="accent-gold">"Attention Is All You Need"</span><br>기계에게 "이해"를 가르친 논문</h2>
 </div>
 
 <!-- ACT 1: Before -->
@@ -586,9 +586,9 @@ Attention(Q, K, V) = softmax( Q K<sup>⊤</sup> / √d<sub>k</sub> ) V
 <!-- §08 — NEXT-TOKEN PREDICTION -->
 <section id="sec-predict"><div class="section-inner">
 <div class="reveal">
-<p class="section-num">08 — 학습 목표</p>
-<h2>다음 토큰 <span class="accent-gold">예측</span></h2>
-<p>전체 모델은 기만적으로 단순한 하나의 목표로 학습됩니다: <strong>이전의 모든 토큰이 주어졌을 때, 다음 토큰을 예측하라.</strong> 출력은 전체 어휘에 대한 확률 분포입니다.</p>
+<p class="section-num">08 — 이해의 환상</p>
+<h2>이해의 <span class="accent-gold">환상</span></h2>
+<p>여기에 가장 깊은 놀라움이 있습니다. 모든 어텐션, 모든 임베딩, 모든 층 — 이 전부가 기만적으로 단순한 하나의 목표로 학습됩니다: <strong>이전의 모든 토큰이 주어졌을 때, 다음 토큰을 예측하라.</strong> "텍스트를 이해하라"가 아닙니다. "문법을 배워라"도 아닙니다. 그저: 다음에 올 단어는? 그런데 이 통계적 릴레이에서 <em>이해와 정확히 닮은 무언가</em>가 출현합니다.</p>
 </div>
 <div class="demo-card reveal">
 <div class="audio-note">토큰이 샘플링될 때마다 "딩" 소리가 납니다</div>
@@ -616,7 +616,7 @@ Attention(Q, K, V) = softmax( Q K<sup>⊤</sup> / √d<sub>k</sub> ) V
 P(x<sub>i</sub> | x<sub>&lt;i</sub>) = softmax( W<sub>out</sub> · h<sub>i</sub> / τ )
 </div>
 <div class="explanation-card reveal" style="border-left-color:var(--gold);">
-<p><strong style="color:#fff;">이 하나의 방정식이 GPT에게 글쓰기를 가르친 손실 함수입니다.</strong> — 예측된 다음 토큰과 실제 다음 토큰 사이의 교차 엔트로피. 그뿐입니다. 명시적 문법 규칙도, 의미 주석도, 수작업 특성도 없습니다. 그저 "텍스트를 읽고, 다음에 올 것을 예측하라" — 수조 개의 토큰에 걸쳐 반복. 그리고 여기서 언어 이해가 출현합니다.</p>
+<p><strong style="color:#fff;">통계적 앵무새 — 아니면 그 이상?</strong> — 비판자들은 LLM을 "확률적 앵무새"라 부릅니다: 진정한 이해 없이 확률 높은 다음 단어를 예측할 뿐이라고. 기술적으로는 맞습니다 — 손실 함수는 교차 엔트로피일 뿐. 문법 규칙도, 의미 주석도 없습니다. 그저 "다음에 올 것을 예측하라." 하지만 이 릴레이가 수조 개의 토큰에 걸쳐 충분히 정교해지면, 기이한 일이 벌어집니다: 기계가 추론하고, 유추하고, 설명하기 시작합니다. 이것이 이해인가? 아니면 역사상 가장 정교한 이해의 환상인가? 그 질문은 아직 열려 있습니다.</p>
 </div>
 </div></section>
 
@@ -624,8 +624,8 @@ P(x<sub>i</sub> | x<sub>&lt;i</sub>) = softmax( W<sub>out</sub> · h<sub>i</sub>
 <section id="sec-emerge"><div class="section-inner">
 <div class="reveal">
 <p class="section-num">09 — 미스터리</p>
-<h2>양이 <span class="accent-purple">질</span>이 될 때</h2>
-<p>모델의 규모가 커질수록 — 더 많은 매개변수, 더 많은 데이터, 더 많은 연산 — 작은 모델에는 <strong>전혀 없었던</strong> 질적으로 새로운 능력이 나타납니다. 이것이 <em>창발(emergence)</em>이며, 현대 AI에서 가장 깊은 미스터리 중 하나입니다.</p>
+<h2>예측이 <span class="accent-purple">"이해"</span>가 될 때</h2>
+<p>모델의 규모가 커질수록 — 더 많은 매개변수, 더 많은 데이터, 더 많은 연산 — 불안한 일이 벌어집니다. 작은 모델에는 <strong>전혀 없었던</strong> 능력들이 나타납니다: 산술, 번역, 추론. 아무도 이것을 프로그래밍하지 않았습니다. 다음 토큰 예측에서 <em>저절로 출현</em>한 것입니다. "기계는 이해하는가?"라는 질문에 답하기가 진정으로 어려워지는 순간입니다.</p>
 </div>
 <div class="demo-card reveal">
 <div class="audio-note">모델이 커질수록 울림이 쌓이고 — 창발 임계점에서 종소리가 울립니다</div>
@@ -673,19 +673,21 @@ P(x<sub>i</sub> | x<sub>&lt;i</sub>) = softmax( W<sub>out</sub> · h<sub>i</sub>
 
 <!-- CLOSING -->
 <section id="sec-closing"><div class="section-inner" style="text-align:center;"><div class="reveal">
-<h2>트랜스포머는<br><span class="accent-gold">하나의 단순한 질문</span>에서 태어났습니다.</h2>
+<h2>그래서 — 기계는<br><span class="accent-gold">이해하는가?</span></h2>
 <p style="color:var(--muted);font-family:var(--font-display);font-style:italic;font-size:1.05rem;max-width:600px;margin:2rem auto;">
-Vaswani는 번역을 빠르게 하려 했습니다.<br>
-Mikolov는 비슷한 단어를 찾으려 했습니다.<br>
-Hinton은 뇌를 모델링하려 했습니다.<br><br>
-아무도 지능을 만들려 하지 않았습니다.<br>
-그러나 그들의 수학이 정확히 필요한 것이었습니다.
+기계는 직관이 있어야 할 자리에 내적을 계산합니다.<br>
+기억이 있어야 할 자리에 벡터 공간을 탐색합니다.<br>
+의미를 파악해야 할 자리에 다음 단어를 예측합니다.<br><br>
+아마도 기계는 이해하지 못할 것입니다.<br>
+아마도 기계는 더 기이한 무언가를 찾아낸 것입니다 —<br>
+이해의 <span class="accent-gold">수학적 그림자</span>,<br>
+그런데 그것이 똑같이 잘 작동하는.
 </p>
-<p style="color:var(--muted);font-size:0.9rem;max-width:520px;margin:1rem auto 0;">이 페이지의 모든 시뮬레이션은 실시간으로 계산됩니다 — 브라우저에서 실행되는 순수한 선형대수입니다.</p>
+<p style="color:var(--muted);font-size:0.9rem;max-width:520px;margin:1rem auto 0;">이 페이지의 모든 시뮬레이션은 실시간으로 계산됩니다 — 순수한 선형대수. AI와 나누는 모든 대화를 구동하는 바로 그 선형대수입니다.</p>
 </div></div></section>
 
 <footer>
-<p>기계는 어떻게 이해하는가? — 트랜스포머의 수학</p>
+<p>기계는 이해하는가? — 트랜스포머의 수학</p>
 <p style="margin-top:0.3rem;font-size:0.7rem;">모든 시각화는 실시간으로 계산됩니다 — 순수한 수학.</p>
 <div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:.2rem">
 <div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;color:#edeef2;">Sang-hyun Kim</div>
