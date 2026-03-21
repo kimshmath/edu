@@ -492,9 +492,10 @@ Attention(Q, K, V) = softmax( Q K<sup>⊤</sup> / √d<sub>k</sub> ) V
 <tr><td><strong>GPT-3</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2020</td><td style="font-family:var(--font-mono);color:var(--gold);">175B</td><td>570GB</td><td style="color:var(--gold);">맥락 내 학습, 산술, 번역 (학습 없이!)</td></tr>
 <tr><td><strong>PaLM</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2022</td><td style="font-family:var(--font-mono);">540B</td><td>780GB</td><td style="color:var(--gold);">사고의 연쇄, 농담 설명</td></tr>
 <tr><td><strong>ChatGPT</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2022.11</td><td style="font-family:var(--font-mono);">?</td><td>+RLHF</td><td style="color:var(--coral);font-weight:600;">대중화 — 5일 만에 100만 사용자</td></tr>
-<tr><td><strong>GPT-4</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2023</td><td style="font-family:var(--font-mono);color:var(--purple);">~1.8T</td><td>~13T 토큰</td><td style="color:var(--purple);font-weight:600;">변호사 시험 상위 10%, 의사 시험 합격</td></tr>
+<tr><td><strong>GPT-4</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2023</td><td style="font-family:var(--font-mono);color:var(--purple);">~1.8T (추정)</td><td>~13T 토큰</td><td style="color:var(--purple);font-weight:600;">변호사 시험 상위 10%, 의사 시험 합격</td></tr>
 <tr><td><strong>Claude Opus 4.6</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2026.2</td><td style="font-family:var(--font-mono);">비공개</td><td>비공개</td><td style="color:var(--mint);font-weight:600;">1M 문맥, 적응형 사고, 코딩 최강 (Claude Code)</td></tr>
 <tr><td><strong>Gemini 3 Pro</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2025.11</td><td style="font-family:var(--font-mono);">~1.5T (MoE)</td><td>비공개</td><td style="color:var(--mint);font-weight:600;">네이티브 멀티모달, Sparse MoE, 2M 문맥</td></tr>
+<tr><td><strong>GPT-5.4</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2026.3</td><td style="font-family:var(--font-mono);">비공개</td><td>비공개</td><td style="color:var(--mint);font-weight:600;">1M 문맥, 네이티브 컴퓨터 사용, Thinking 모드</td></tr>
 </tbody>
 </table>
 </div>
@@ -520,38 +521,38 @@ Attention(Q, K, V) = softmax( Q K<sup>⊤</sup> / √d<sub>k</sub> ) V
 <tbody>
 <tr>
 <td><strong>기본 구조</strong></td>
-<td>트랜스포머 기반<br><strong style="color:#4285f4;">Sparse MoE</strong><br><span style="color:var(--muted);font-size:0.72rem;">전문가 혼합 — 입력에 따라 일부 전문가만 활성화</span></td>
-<td>디코더 전용 트랜스포머<br><strong style="color:#10a37f;">Dense (추정)</strong><br><span style="color:var(--muted);font-size:0.72rem;">GPT-4는 MoE 사용이 보도되었으나 미확인</span></td>
+<td>트랜스포머 기반<br><strong style="color:#4285f4;">Sparse MoE</strong><br><span style="color:var(--muted);font-size:0.72rem;">~1.5T 파라미터 중 ~200B 활성화 · Deep Think 모드</span></td>
+<td>디코더 전용 트랜스포머<br><strong style="color:#10a37f;">Dense / MoE (미확인)</strong><br><span style="color:var(--muted);font-size:0.72rem;">GPT-5 계열: Thinking 모드 (추론 토큰) · 구조 미공개</span></td>
 <td>디코더 전용 트랜스포머<br><strong style="color:#d4a27f;">Dense</strong><br><span style="color:var(--muted);font-size:0.72rem;">모든 매개변수가 매 토큰마다 활성화 · 적응형 사고(Adaptive Thinking)</span></td>
 </tr>
 <tr>
 <td><strong>멀티모달</strong></td>
-<td style="color:#4285f4;"><strong>네이티브 멀티모달</strong><br><span style="color:var(--muted);font-size:0.72rem;">텍스트·이미지·오디오·비디오를 처음부터 하나의 모델로 학습</span></td>
-<td>텍스트 중심 + 멀티모달 확장<br><span style="color:var(--muted);font-size:0.72rem;">GPT-4V부터 이미지 입력 추가, 별도 모듈을 통한 연결</span></td>
+<td style="color:#4285f4;"><strong>네이티브 멀티모달</strong><br><span style="color:var(--muted);font-size:0.72rem;">텍스트·이미지·오디오·비디오 통합 학습 · 이미지 생성 · 로보틱스</span></td>
+<td>텍스트 + 이미지 + 네이티브 컴퓨터 사용<br><span style="color:var(--muted);font-size:0.72rem;">GPT-5.4: 이미지 입력, 코드 실행, UI 직접 조작 가능</span></td>
 <td>텍스트 중심 + 시각 입력<br><span style="color:var(--muted);font-size:0.72rem;">이미지·PDF 이해, 코드 실행, 파일 생성 · 이미지 생성은 미지원</span></td>
 </tr>
 <tr>
 <td><strong>문맥 창</strong></td>
-<td style="color:#4285f4;font-family:var(--font-mono);"><strong>최대 2M 토큰</strong><br><span style="color:var(--muted);font-size:0.72rem;">MoE의 효율성 + 긴 문맥 연구의 성과</span></td>
-<td style="font-family:var(--font-mono);">128K 토큰<br><span style="color:var(--muted);font-size:0.72rem;">GPT-4 Turbo 기준</span></td>
+<td style="color:#4285f4;font-family:var(--font-mono);"><strong>최대 2M 토큰</strong><br><span style="color:var(--muted);font-size:0.72rem;">Gemini 3 Pro (2025.11) · MoE + 초장문맥</span></td>
+<td style="font-family:var(--font-mono);color:#10a37f;"><strong>1M 토큰</strong><br><span style="color:var(--muted);font-size:0.72rem;">GPT-5.4 (2026.3) · API 기준</span></td>
 <td style="font-family:var(--font-mono);color:#d4a27f;"><strong>1M 토큰</strong><br><span style="color:var(--muted);font-size:0.72rem;">Opus 4.6 / Sonnet 4.6 (2026.2)</span></td>
 </tr>
 <tr>
 <td><strong>정렬 방법</strong></td>
 <td>RLHF + 자체 안전 필터<br><span style="color:var(--muted);font-size:0.72rem;">Google의 AI 원칙 기반</span></td>
-<td style="color:#10a37f;"><strong>RLHF</strong><br><span style="color:var(--muted);font-size:0.72rem;">인간 평가자의 선호도 순위로 보상 모델 학습</span></td>
+<td style="color:#10a37f;"><strong>RLHF + 추론 감독</strong><br><span style="color:var(--muted);font-size:0.72rem;">보상 모델 + Thinking 모드의 추론 과정 모니터링</span></td>
 <td style="color:#d4a27f;"><strong>Constitutional AI (CAI)</strong><br><span style="color:var(--muted);font-size:0.72rem;">AI가 AI를 평가 — 원칙 기반 자기 개선 + RLHF</span></td>
 </tr>
 <tr>
 <td><strong>학습 하드웨어</strong></td>
-<td style="color:#4285f4;">Google TPU v4/v5<br><span style="color:var(--muted);font-size:0.72rem;">자체 설계 칩, 자체 데이터센터</span></td>
-<td>NVIDIA GPU 클러스터<br><span style="color:var(--muted);font-size:0.72rem;">Azure 슈퍼컴퓨터 (Microsoft 파트너십)</span></td>
+<td style="color:#4285f4;">Google TPU v5e/v6<br><span style="color:var(--muted);font-size:0.72rem;">자체 설계 칩 · 자체 데이터센터 · Trillium</span></td>
+<td>NVIDIA GPU + 커스텀 칩<br><span style="color:var(--muted);font-size:0.72rem;">Azure 슈퍼컴퓨터 (Microsoft 파트너십)</span></td>
 <td>NVIDIA/커스텀 GPU<br><span style="color:var(--muted);font-size:0.72rem;">AWS Bedrock · GCP Vertex AI</span></td>
 </tr>
 <tr>
 <td><strong>고유 강점</strong></td>
-<td style="font-size:0.78rem;">멀티모달 통합, 초장문맥, 검색 통합</td>
-<td style="font-size:0.78rem;">생태계 (플러그인, API), 선발주자 이점</td>
+<td style="font-size:0.78rem;">멀티모달 통합, 초장문맥, Google 검색·서비스 통합, TPU 효율성</td>
+<td style="font-size:0.78rem;">생태계 (Codex, 플러그인), 컴퓨터 사용, 선발주자 이점</td>
 <td style="font-size:0.78rem;">코딩 (Claude Code), 긴 문맥 정밀도, 확장 사고(Extended Thinking), 안전성</td>
 </tr>
 </tbody>
@@ -563,8 +564,8 @@ Attention(Q, K, V) = softmax( Q K<sup>⊤</sup> / √d<sub>k</sub> ) V
 <p style="font-size:0.88rem;color:var(--text);margin-bottom:0.8rem;">이 세 모델의 가장 근본적인 아키텍처 차이는 <strong>모든 매개변수를 항상 사용하느냐, 아니면 일부만 선택적으로 활성화하느냐</strong>입니다.</p>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
 <div style="background:var(--bg3);border-radius:10px;padding:1rem;border:1px solid rgba(167,139,250,0.15);">
-<div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--purple);margin-bottom:0.4rem;">DENSE (ChatGPT, Claude)</div>
-<p style="font-size:0.82rem;color:var(--text);margin:0;">매 토큰마다 <strong>모든 매개변수</strong>가 연산에 참여합니다. 1.8T 파라미터 모델이면 매번 1.8T개 전부 계산. 단순하지만 연산 비용이 크고, 모델 크기 = 연산 비용입니다.</p>
+<div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--purple);margin-bottom:0.4rem;">DENSE (Claude 확인 / GPT 추정)</div>
+<p style="font-size:0.82rem;color:var(--text);margin:0;">매 토큰마다 <strong>모든 매개변수</strong>가 연산에 참여합니다. 단순하지만 연산 비용이 크고, 모델 크기 = 연산 비용. GPT-4는 MoE 사용이 보도되었으나, GPT-5 계열의 정확한 구조는 미공개입니다.</p>
 </div>
 <div style="background:var(--bg3);border-radius:10px;padding:1rem;border:1px solid rgba(56,189,248,0.15);">
 <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--sky);margin-bottom:0.4rem;">SPARSE MoE (Gemini)</div>
@@ -814,20 +815,24 @@ function drawDot(){
   requestAnimationFrame(drawDot);
 }
 dotC.addEventListener('pointerdown',e=>{
-  const r=dotC.getBoundingClientRect(),sx=(e.clientX-r.left)/r.width,sy=(e.clientY-r.top)/r.height;
-  const w=dotC.width,h=dotC.height,cx=0.5,cy=0.5,sc=Math.min(1,1)*0.32;
-  // Check distance to each vector tip
-  const asx=0.5+dotA.x*0.32,asy=0.5-dotA.y*(h/w)*0.32;
-  const bsx=0.5+dotB.x*0.32,bsy=0.5-dotB.y*(h/w)*0.32;
-  const da=Math.sqrt((sx-asx)**2+(sy-asy)**2);
-  const db=Math.sqrt((sx-bsx)**2+(sy-bsy)**2);
-  if(da<0.06)dragging='a';else if(db<0.06)dragging='b';
+  const r=dotC.getBoundingClientRect();
+  const px=(e.clientX-r.left)*(dotC.width/r.width);
+  const py=(e.clientY-r.top)*(dotC.height/r.height);
+  const w=dotC.width,h=dotC.height,cx=w/2,cy=h/2,scale=Math.min(w,h)*0.32;
+  const ax=cx+dotA.x*scale,ay=cy-dotA.y*scale;
+  const bx=cx+dotB.x*scale,by=cy-dotB.y*scale;
+  const da=Math.sqrt((px-ax)**2+(py-ay)**2);
+  const db=Math.sqrt((px-bx)**2+(py-by)**2);
+  if(da<30)dragging='a';else if(db<30)dragging='b';
   dotC.setPointerCapture(e.pointerId);
 });
 dotC.addEventListener('pointermove',e=>{
   if(!dragging)return;
-  const r=dotC.getBoundingClientRect(),sx=(e.clientX-r.left)/r.width,sy=(e.clientY-r.top)/r.height;
-  const vx=(sx-0.5)/0.32,vy=-(sy-0.5)/(dotC.height/dotC.width)/0.32;
+  const r=dotC.getBoundingClientRect();
+  const px=(e.clientX-r.left)*(dotC.width/r.width);
+  const py=(e.clientY-r.top)*(dotC.height/r.height);
+  const w=dotC.width,h=dotC.height,cx=w/2,cy=h/2,scale=Math.min(w,h)*0.32;
+  const vx=(px-cx)/scale,vy=-(py-cy)/scale;
   if(dragging==='a'){dotA.x=clamp(vx,-1.4,1.4);dotA.y=clamp(vy,-1.4,1.4);}
   else{dotB.x=clamp(vx,-1.4,1.4);dotB.y=clamp(vy,-1.4,1.4);}
 });
@@ -1950,7 +1955,8 @@ const REV_MODELS=[
   {year:2023,name:'GPT-4',params:'~1.8T',score:0.90,color:'#a78bfa',desc:'변호사 시험 상위 10% · 멀티모달'},
   {year:2024,name:'Claude 3.5 / Gemini 1.5',params:'비공개',score:0.91,color:'#34d399',desc:'100만 토큰 문맥, 코딩 능력 급진적 향상'},
   {year:2025.5,name:'Claude 4 / Gemini 2.5',params:'비공개',score:0.94,color:'#a78bfa',desc:'확장 사고(Extended Thinking), 에이전트 코딩'},
-  {year:2026,name:'Claude 4.6 / Gemini 3',params:'비공개',score:0.97,color:'#f0b429',desc:'1M+ 문맥, 적응형 사고, MoE 초대형화 — 현재'},
+  {year:2025.9,name:'GPT-5.2',params:'비공개',score:0.95,color:'#10a37f',desc:'Thinking 모드, 400K 문맥, GDPval 전문가 수준'},
+  {year:2026,name:'Claude 4.6 / Gemini 3 / GPT-5.4',params:'비공개',score:0.97,color:'#f0b429',desc:'1M+ 문맥, 적응형 사고, 컴퓨터 사용 — 현재'},
 ];
 let revStep=-1,revPlaying=false,revTimer=null;
 

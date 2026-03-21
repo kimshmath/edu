@@ -480,9 +480,10 @@ Attention(Q, K, V) = softmax( Q K<sup>⊤</sup> / √d<sub>k</sub> ) V
 <tr><td><strong>GPT-3</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2020</td><td style="font-family:var(--font-mono);color:var(--gold);">175B</td><td>570GB</td><td style="color:var(--gold);">In-context learning, arithmetic, translation (zero-shot!)</td></tr>
 <tr><td><strong>PaLM</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2022</td><td style="font-family:var(--font-mono);">540B</td><td>780GB</td><td style="color:var(--gold);">Chain-of-thought, joke explanation</td></tr>
 <tr><td><strong>ChatGPT</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2022.11</td><td style="font-family:var(--font-mono);">?</td><td>+RLHF</td><td style="color:var(--coral);font-weight:600;">Mass adoption — 1M users in 5 days</td></tr>
-<tr><td><strong>GPT-4</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2023</td><td style="font-family:var(--font-mono);color:var(--purple);">~1.8T</td><td>~13T tokens</td><td style="color:var(--purple);font-weight:600;">Top 10% on bar exam, passes medical boards</td></tr>
+<tr><td><strong>GPT-4</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2023</td><td style="font-family:var(--font-mono);color:var(--purple);">~1.8T (est.)</td><td>~13T tokens</td><td style="color:var(--purple);font-weight:600;">Top 10% on bar exam, passes medical boards</td></tr>
 <tr><td><strong>Claude Opus 4.6</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2026.2</td><td style="font-family:var(--font-mono);">Undisclosed</td><td>Undisclosed</td><td style="color:var(--mint);font-weight:600;">1M context, adaptive thinking, best-in-class coding (Claude Code)</td></tr>
 <tr><td><strong>Gemini 3 Pro</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2025.11</td><td style="font-family:var(--font-mono);">~1.5T (MoE)</td><td>Undisclosed</td><td style="color:var(--mint);font-weight:600;">Native multimodal, Sparse MoE, 2M context</td></tr>
+<tr><td><strong>GPT-5.4</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2026.3</td><td style="font-family:var(--font-mono);">Undisclosed</td><td>Undisclosed</td><td style="color:var(--mint);font-weight:600;">1M context, native computer use, Thinking mode</td></tr>
 </tbody>
 </table>
 </div>
@@ -508,38 +509,38 @@ Attention(Q, K, V) = softmax( Q K<sup>⊤</sup> / √d<sub>k</sub> ) V
 <tbody>
 <tr>
 <td><strong>Core Structure</strong></td>
-<td>Transformer-based<br><strong style="color:#4285f4;">Sparse MoE</strong><br><span style="color:var(--muted);font-size:0.72rem;">Mixture of Experts — only some experts activate per input</span></td>
-<td>Decoder-only Transformer<br><strong style="color:#10a37f;">Dense (presumed)</strong><br><span style="color:var(--muted);font-size:0.72rem;">GPT-4 reportedly uses MoE, but unconfirmed</span></td>
+<td>Transformer-based<br><strong style="color:#4285f4;">Sparse MoE</strong><br><span style="color:var(--muted);font-size:0.72rem;">~1.5T params, ~200B active per token · Deep Think mode</span></td>
+<td>Decoder-only Transformer<br><strong style="color:#10a37f;">Dense / MoE (unconfirmed)</strong><br><span style="color:var(--muted);font-size:0.72rem;">GPT-5 series: Thinking mode (reasoning tokens) · Architecture undisclosed</span></td>
 <td>Decoder-only Transformer<br><strong style="color:#d4a27f;">Dense</strong><br><span style="color:var(--muted);font-size:0.72rem;">All parameters active for every token · Adaptive Thinking</span></td>
 </tr>
 <tr>
 <td><strong>Multimodal</strong></td>
-<td style="color:#4285f4;"><strong>Natively multimodal</strong><br><span style="color:var(--muted);font-size:0.72rem;">Text, image, audio, video trained together from scratch</span></td>
-<td>Text-first + multimodal extension<br><span style="color:var(--muted);font-size:0.72rem;">Image input added with GPT-4V via separate modules</span></td>
+<td style="color:#4285f4;"><strong>Natively multimodal</strong><br><span style="color:var(--muted);font-size:0.72rem;">Text, image, audio, video unified training · image generation · robotics</span></td>
+<td>Text + image + native computer use<br><span style="color:var(--muted);font-size:0.72rem;">GPT-5.4: image input, code execution, native UI control</span></td>
 <td>Text-first + vision input<br><span style="color:var(--muted);font-size:0.72rem;">Image/PDF understanding, code execution, file creation · No image generation</span></td>
 </tr>
 <tr>
 <td><strong>Context Window</strong></td>
-<td style="color:#4285f4;font-family:var(--font-mono);"><strong>Up to 2M tokens</strong><br><span style="color:var(--muted);font-size:0.72rem;">MoE efficiency + long-context research</span></td>
-<td style="font-family:var(--font-mono);">128K tokens<br><span style="color:var(--muted);font-size:0.72rem;">GPT-4 Turbo</span></td>
+<td style="color:#4285f4;font-family:var(--font-mono);"><strong>Up to 2M tokens</strong><br><span style="color:var(--muted);font-size:0.72rem;">Gemini 3 Pro (Nov 2025) · MoE + ultra-long context</span></td>
+<td style="font-family:var(--font-mono);color:#10a37f;"><strong>1M tokens</strong><br><span style="color:var(--muted);font-size:0.72rem;">GPT-5.4 (Mar 2026) · API</span></td>
 <td style="font-family:var(--font-mono);color:#d4a27f;"><strong>1M tokens</strong><br><span style="color:var(--muted);font-size:0.72rem;">Opus 4.6 / Sonnet 4.6 (Feb 2026)</span></td>
 </tr>
 <tr>
 <td><strong>Alignment</strong></td>
 <td>RLHF + safety filters<br><span style="color:var(--muted);font-size:0.72rem;">Based on Google's AI Principles</span></td>
-<td style="color:#10a37f;"><strong>RLHF</strong><br><span style="color:var(--muted);font-size:0.72rem;">Reward model trained on human preference rankings</span></td>
+<td style="color:#10a37f;"><strong>RLHF + reasoning oversight</strong><br><span style="color:var(--muted);font-size:0.72rem;">Reward model + monitoring of Thinking mode reasoning chains</span></td>
 <td style="color:#d4a27f;"><strong>Constitutional AI (CAI)</strong><br><span style="color:var(--muted);font-size:0.72rem;">AI evaluates AI — principle-based self-improvement + RLHF</span></td>
 </tr>
 <tr>
 <td><strong>Training Hardware</strong></td>
-<td style="color:#4285f4;">Google TPU v4/v5<br><span style="color:var(--muted);font-size:0.72rem;">Custom chips, own datacenters</span></td>
-<td>NVIDIA GPU clusters<br><span style="color:var(--muted);font-size:0.72rem;">Azure supercomputer (Microsoft partnership)</span></td>
+<td style="color:#4285f4;">Google TPU v5e/v6<br><span style="color:var(--muted);font-size:0.72rem;">Custom chips · own datacenters · Trillium</span></td>
+<td>NVIDIA GPU + custom chips<br><span style="color:var(--muted);font-size:0.72rem;">Azure supercomputer (Microsoft partnership)</span></td>
 <td>NVIDIA / custom GPU<br><span style="color:var(--muted);font-size:0.72rem;">AWS Bedrock · GCP Vertex AI</span></td>
 </tr>
 <tr>
 <td><strong>Key Strength</strong></td>
-<td style="font-size:0.78rem;">Multimodal integration, ultra-long context, search integration</td>
-<td style="font-size:0.78rem;">Ecosystem (plugins, API), first-mover advantage</td>
+<td style="font-size:0.78rem;">Multimodal integration, ultra-long context, Google Search/services, TPU efficiency</td>
+<td style="font-size:0.78rem;">Ecosystem (Codex, plugins), computer use, first-mover advantage</td>
 <td style="font-size:0.78rem;">Coding (Claude Code), long-context precision, extended thinking, safety</td>
 </tr>
 </tbody>
@@ -551,8 +552,8 @@ Attention(Q, K, V) = softmax( Q K<sup>⊤</sup> / √d<sub>k</sub> ) V
 <p style="font-size:0.88rem;color:var(--text);margin-bottom:0.8rem;">The most fundamental architectural difference is <strong>whether all parameters are always used, or only a subset is selectively activated</strong>.</p>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
 <div style="background:var(--bg3);border-radius:10px;padding:1rem;border:1px solid rgba(167,139,250,0.15);">
-<div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--purple);margin-bottom:0.4rem;">DENSE (ChatGPT, Claude)</div>
-<p style="font-size:0.82rem;color:var(--text);margin:0;"><strong>All parameters</strong> participate in every token's computation. A 1.8T parameter model computes with all 1.8T every time. Simple, but expensive — model size = compute cost.</p>
+<div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--purple);margin-bottom:0.4rem;">DENSE (Claude confirmed / GPT presumed)</div>
+<p style="font-size:0.82rem;color:var(--text);margin:0;"><strong>All parameters</strong> participate in every token's computation. Simple, but expensive — model size = compute cost. GPT-4 was reported to use MoE, but GPT-5 series architecture is undisclosed.</p>
 </div>
 <div style="background:var(--bg3);border-radius:10px;padding:1rem;border:1px solid rgba(56,189,248,0.15);">
 <div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--sky);margin-bottom:0.4rem;">SPARSE MoE (Gemini)</div>
@@ -803,20 +804,24 @@ function drawDot(){
   requestAnimationFrame(drawDot);
 }
 dotC.addEventListener('pointerdown',e=>{
-  const r=dotC.getBoundingClientRect(),sx=(e.clientX-r.left)/r.width,sy=(e.clientY-r.top)/r.height;
-  const w=dotC.width,h=dotC.height,cx=0.5,cy=0.5,sc=Math.min(1,1)*0.32;
-  // Check distance to each vector tip
-  const asx=0.5+dotA.x*0.32,asy=0.5-dotA.y*(h/w)*0.32;
-  const bsx=0.5+dotB.x*0.32,bsy=0.5-dotB.y*(h/w)*0.32;
-  const da=Math.sqrt((sx-asx)**2+(sy-asy)**2);
-  const db=Math.sqrt((sx-bsx)**2+(sy-bsy)**2);
-  if(da<0.06)dragging='a';else if(db<0.06)dragging='b';
+  const r=dotC.getBoundingClientRect();
+  const px=(e.clientX-r.left)*(dotC.width/r.width);
+  const py=(e.clientY-r.top)*(dotC.height/r.height);
+  const w=dotC.width,h=dotC.height,cx=w/2,cy=h/2,scale=Math.min(w,h)*0.32;
+  const ax=cx+dotA.x*scale,ay=cy-dotA.y*scale;
+  const bx=cx+dotB.x*scale,by=cy-dotB.y*scale;
+  const da=Math.sqrt((px-ax)**2+(py-ay)**2);
+  const db=Math.sqrt((px-bx)**2+(py-by)**2);
+  if(da<30)dragging='a';else if(db<30)dragging='b';
   dotC.setPointerCapture(e.pointerId);
 });
 dotC.addEventListener('pointermove',e=>{
   if(!dragging)return;
-  const r=dotC.getBoundingClientRect(),sx=(e.clientX-r.left)/r.width,sy=(e.clientY-r.top)/r.height;
-  const vx=(sx-0.5)/0.32,vy=-(sy-0.5)/(dotC.height/dotC.width)/0.32;
+  const r=dotC.getBoundingClientRect();
+  const px=(e.clientX-r.left)*(dotC.width/r.width);
+  const py=(e.clientY-r.top)*(dotC.height/r.height);
+  const w=dotC.width,h=dotC.height,cx=w/2,cy=h/2,scale=Math.min(w,h)*0.32;
+  const vx=(px-cx)/scale,vy=-(py-cy)/scale;
   if(dragging==='a'){dotA.x=clamp(vx,-1.4,1.4);dotA.y=clamp(vy,-1.4,1.4);}
   else{dotB.x=clamp(vx,-1.4,1.4);dotB.y=clamp(vy,-1.4,1.4);}
 });
@@ -1939,7 +1944,8 @@ const REV_MODELS=[
   {year:2023,name:'GPT-4',params:'~1.8T',score:0.90,color:'#a78bfa',desc:'Top 10% on bar exam · Multimodal'},
   {year:2024,name:'Claude 3.5 / Gemini 1.5',params:'Undisclosed',score:0.91,color:'#34d399',desc:'1M token context, radical coding ability improvement'},
   {year:2025.5,name:'Claude 4 / Gemini 2.5',params:'Undisclosed',score:0.94,color:'#a78bfa',desc:'Extended thinking, agentic coding'},
-  {year:2026,name:'Claude 4.6 / Gemini 3',params:'Undisclosed',score:0.97,color:'#f0b429',desc:'1M+ context, adaptive thinking, MoE mega-scale — now'},
+  {year:2025.9,name:'GPT-5.2',params:'Undisclosed',score:0.95,color:'#10a37f',desc:'Thinking mode, 400K context, expert-level on GDPval'},
+  {year:2026,name:'Claude 4.6 / Gemini 3 / GPT-5.4',params:'Undisclosed',score:0.97,color:'#f0b429',desc:'1M+ context, adaptive thinking, computer use — now'},
 ];
 let revStep=-1,revPlaying=false,revTimer=null;
 
