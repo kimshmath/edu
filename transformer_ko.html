@@ -1,0 +1,2295 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>기계는 어떻게 이해하는가? — 선형대수에서 언어까지</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #080d1a; --bg2: #0c1326; --bg3: #111b38; --card: #131f42;
+  --gold: #f0b429; --gold-dim: #c4912080; --sky: #38bdf8;
+  --purple: #a78bfa; --coral: #fb7185; --mint: #34d399;
+  --text: #e0e6f0; --muted: #7b8db5;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-weight:300;line-height:1.7;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:3px}
+body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
+section{min-height:100vh;padding:6rem 2rem;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.section-inner{max-width:900px;width:100%}
+h1{font-family:var(--font-display);font-size:clamp(2.8rem,6vw,5rem);font-weight:700;line-height:1.15;letter-spacing:-0.02em;color:#fff}
+h2{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,3rem);font-weight:700;line-height:1.2;color:#fff;margin-bottom:1.5rem}
+h3{font-family:var(--font-body);font-size:1.1rem;font-weight:500;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:0.5rem}
+p{margin-bottom:1rem}
+.accent-gold{color:var(--gold)}.accent-sky{color:var(--sky)}.accent-purple{color:var(--purple)}.accent-coral{color:var(--coral)}.accent-mint{color:var(--mint)}
+.section-num{font-family:var(--font-mono);font-size:0.75rem;color:var(--gold);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.5rem;opacity:0.7}
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;opacity:0.5}
+#hero .content{position:relative;z-index:2}#hero h1{margin-bottom:1rem}
+#hero .subtitle{font-family:var(--font-display);font-size:clamp(1.1rem,2.5vw,1.5rem);color:var(--purple);font-style:italic;margin-bottom:2.5rem}
+#hero .tagline{color:var(--muted);font-size:0.95rem;max-width:580px;margin:0 auto 2.5rem}
+.start-btn{display:inline-flex;align-items:center;gap:0.6rem;padding:0.9rem 2.2rem;background:transparent;border:1.5px solid var(--gold);color:var(--gold);font-family:var(--font-body);font-size:1rem;font-weight:500;border-radius:60px;cursor:pointer;transition:all 0.3s;letter-spacing:0.05em;text-decoration:none}
+.start-btn:hover{background:var(--gold);color:var(--bg);transform:translateY(-2px);box-shadow:0 8px 30px rgba(240,180,41,0.25)}
+#nav-dots{position:fixed;right:1.5rem;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:12px}
+.nav-dot{width:10px;height:10px;border-radius:50%;background:var(--muted);opacity:0.3;cursor:pointer;transition:all 0.3s;border:none}
+.nav-dot.active{opacity:1;background:var(--gold);transform:scale(1.4)}
+.demo-card{background:var(--card);border-radius:16px;padding:2rem;margin:1.5rem 0;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.04)}
+.demo-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--sky),var(--purple));opacity:0.6}
+.explanation-card{background:rgba(0,0,0,0.2);border-radius:14px;padding:1.5rem;margin:1.5rem 0;border-left:3px solid var(--gold);font-size:0.92rem}
+.btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.55rem 1.3rem;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.04);color:var(--text);font-family:var(--font-body);font-size:0.85rem;border-radius:8px;cursor:pointer;transition:all 0.25s;font-weight:400}
+.btn:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.25);transform:translateY(-1px)}
+.btn.active,.btn.playing{border-color:var(--gold);background:rgba(240,180,41,0.12);color:var(--gold)}
+.btn-gold{border-color:var(--gold);color:var(--gold)}.btn-gold:hover{background:var(--gold);color:var(--bg)}
+.btn-group{display:flex;gap:0.5rem;flex-wrap:wrap;margin:1rem 0}
+.slider-row{display:flex;align-items:center;gap:1rem;margin:0.6rem 0}
+.slider-row label{min-width:2rem;font-family:var(--font-mono);font-size:0.85rem;color:var(--gold)}
+.slider-row .val{min-width:4rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--muted);text-align:right}
+input[type="range"]{-webkit-appearance:none;flex:1;height:4px;background:var(--bg3);border-radius:2px;outline:none}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer}
+.canvas-wrap{position:relative;width:100%;background:rgba(0,0,0,0.25);border-radius:12px;overflow:hidden;margin:1rem 0}
+.canvas-wrap canvas{display:block;width:100%}
+.wave-label{position:absolute;top:8px;left:12px;font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);z-index:2}
+.stat-row{display:flex;gap:0.8rem;margin:1rem 0}
+.stat-box{flex:1;background:var(--bg3);border-radius:10px;padding:0.8rem 1rem;border:1px solid rgba(255,255,255,0.03)}
+.stat-box .sl{font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:0.2rem}
+.stat-box .sv{font-family:var(--font-mono);font-size:1.1rem;font-weight:500;color:var(--gold)}
+.stat-box .su{font-size:0.7rem;color:var(--muted)}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.8s ease,transform 0.8s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.audio-note{display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:var(--muted);margin:0.5rem 0}.audio-note::before{content:'🔊'}
+.math-block{font-family:var(--font-mono);font-size:clamp(0.85rem,1.8vw,1.1rem);color:var(--gold);text-align:center;padding:0.8rem 1rem;background:var(--bg3);border-radius:10px;border:1px solid rgba(240,180,41,0.15);margin:1rem 0;line-height:1.8;overflow-x:auto}
+.rosetta-simple{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.82rem}
+.rosetta-simple th{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.7rem 0.6rem;border-bottom:2px solid rgba(255,255,255,0.08);text-align:left;color:var(--muted)}
+.rosetta-simple td{padding:0.6rem;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--text);line-height:1.5;vertical-align:top}
+.rosetta-simple tr:last-child td{border-bottom:none}.rosetta-simple .rs-icon{font-size:1.1rem;text-align:center}
+.ml-milestone-strip{display:flex;gap:0;margin:1.5rem 0;border-radius:12px;overflow:hidden;background:rgba(0,0,0,0.2)}
+.ml-ms{flex:1;padding:1rem 0.6rem;text-align:center;border-right:1px solid rgba(255,255,255,0.03);transition:background 0.3s}
+.ml-ms:last-child{border-right:none}.ml-ms:hover{background:rgba(255,255,255,0.03)}
+.ml-ms .ms-year{font-family:var(--font-mono);font-size:0.7rem;font-weight:500;margin-bottom:0.3rem}
+.ml-ms .ms-who{font-family:var(--font-display);font-size:0.85rem;font-weight:600;color:#fff;margin-bottom:0.2rem}
+.ml-ms .ms-what{font-size:0.68rem;color:var(--muted);line-height:1.5}
+.token-chip{display:inline-flex;align-items:center;padding:0.3rem 0.7rem;border-radius:6px;font-family:var(--font-mono);font-size:0.8rem;margin:0.2rem;animation:chipIn 0.3s ease forwards;opacity:0;transform:translateY(8px)}
+@keyframes chipIn{to{opacity:1;transform:translateY(0)}}
+.token-id{font-size:0.55rem;opacity:0.5;margin-left:0.4rem}
+.head-strip{display:flex;gap:0.5rem;overflow-x:auto;padding:0.5rem 0;margin:1rem 0}
+.head-mini{width:80px;height:80px;border-radius:8px;border:2px solid rgba(255,255,255,0.06);cursor:pointer;transition:all 0.3s;flex-shrink:0;image-rendering:pixelated}
+.head-mini:hover,.head-mini.active{border-color:var(--gold);transform:scale(1.05);box-shadow:0 4px 15px rgba(240,180,41,0.2)}
+.arch-pip{display:flex;flex-direction:column;align-items:center;padding:0.5rem 0.6rem;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);cursor:pointer;transition:all 0.3s;min-width:62px;flex-shrink:0}
+.arch-pip:hover{background:rgba(255,255,255,0.05);border-color:rgba(255,255,255,0.15)}
+.arch-pip.active{background:rgba(56,189,248,0.12);border-color:var(--sky);box-shadow:0 0 15px rgba(56,189,248,0.15)}
+.arch-pip.done{background:rgba(52,211,153,0.08);border-color:rgba(52,211,153,0.3)}
+.arch-pip .pip-num{font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);transition:color 0.3s}
+.arch-pip.active .pip-num{color:var(--sky)}.arch-pip.done .pip-num{color:var(--mint)}
+.arch-pip .pip-label{font-family:var(--font-mono);font-size:0.55rem;color:var(--muted);text-align:center;margin-top:0.15rem;letter-spacing:0.02em;transition:color 0.3s}
+.arch-pip.active .pip-label{color:var(--sky);font-weight:500}.arch-pip.done .pip-label{color:var(--mint)}
+.arch-pip-arrow{display:flex;align-items:center;font-family:var(--font-mono);font-size:0.7rem;color:rgba(255,255,255,0.15);flex-shrink:0;padding:0 1px}
+#audio-notice{position:fixed;inset:0;z-index:10000;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:3vh 0;background:rgba(8,13,26,0.92);backdrop-filter:blur(12px);animation:notice-in 0.4s ease}
+@keyframes notice-in{from{opacity:0}to{opacity:1}}
+.notice-card{max-width:440px;width:90%;background:var(--bg3);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:2rem 1.8rem;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);margin:auto}
+.notice-icon{font-size:3rem;margin-bottom:1rem;display:block}.notice-card h2{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:0.8rem}
+.notice-card p{font-size:0.88rem;color:var(--text);line-height:1.7;margin-bottom:0.6rem}
+.notice-start{display:inline-flex;align-items:center;gap:0.5rem;padding:0.85rem 2.5rem;background:var(--gold);color:var(--bg);border:none;border-radius:60px;font-family:var(--font-body);font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.3s;margin-top:0.8rem}
+.notice-start:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(240,180,41,0.3)}
+.notice-vol{display:flex;align-items:center;justify-content:center;gap:0.5rem;margin:0.8rem 0;font-family:var(--font-mono);font-size:0.8rem;color:var(--gold)}
+.notice-vol .vol-bars{display:flex;gap:2px;align-items:flex-end}
+.notice-vol .vol-bar{width:4px;background:var(--gold);border-radius:2px;animation:vb 0.6s ease-in-out infinite alternate}
+.notice-vol .vol-bar:nth-child(1){height:8px;animation-delay:0s}.notice-vol .vol-bar:nth-child(2){height:14px;animation-delay:0.1s}.notice-vol .vol-bar:nth-child(3){height:20px;animation-delay:0.2s}.notice-vol .vol-bar:nth-child(4){height:14px;animation-delay:0.3s}.notice-vol .vol-bar:nth-child(5){height:8px;animation-delay:0.4s}
+@keyframes vb{from{transform:scaleY(0.5);opacity:0.5}to{transform:scaleY(1);opacity:1}}
+footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
+.floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:lowercase;color:#8db830;background:transparent;padding:.35rem .7rem;text-decoration:none;transition:color .25s,text-shadow .25s,transform .25s;text-shadow:0 0 6px rgba(141,184,48,.4),0 0 16px rgba(141,184,48,.15)}
+.floating-badge:hover{color:#a8d43a;text-shadow:0 0 8px rgba(141,184,48,.65),0 0 22px rgba(141,184,48,.28);transform:translateY(-1px)}
+.use-case-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+.use-case-card{background:var(--bg3);border-radius:14px;padding:1.3rem;border:1px solid rgba(255,255,255,0.04);transition:border-color 0.3s,transform 0.3s}
+.use-case-card:hover{border-color:rgba(255,255,255,0.1);transform:translateY(-2px)}
+.use-case-card .uc-icon{font-size:1.6rem;margin-bottom:0.5rem}.use-case-card .uc-title{font-family:var(--font-display);font-size:1rem;font-weight:600;color:#fff;margin-bottom:0.3rem}
+.use-case-card .uc-desc{font-size:0.82rem;color:var(--muted);line-height:1.7}
+@media(max-width:640px){section{padding:4rem 1.2rem}#nav-dots{display:none}.demo-card{padding:1.2rem}.stat-row{flex-direction:column}.use-case-grid{grid-template-columns:1fr}.head-strip{gap:0.3rem}.ml-milestone-strip{flex-direction:column}.ml-ms{border-right:none;border-bottom:1px solid rgba(255,255,255,0.03)}}
+</style>
+</head>
+<body>
+
+<!-- Audio Notice -->
+<div id="audio-notice"><div class="notice-card"><span class="notice-icon">🧠</span><h2>기계는 어떻게 이해하는가?</h2><p>실시간 시각화와 오디오가 포함된 인터랙티브 탐험입니다.<br><strong>소리가 경험을 더욱 풍부하게 합니다.</strong></p><div class="notice-vol"><div class="vol-bars"><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div></div><span>볼륨을 편안한 수준으로 맞춰주세요</span></div><button class="notice-start" onclick="dismissNotice()">✨ 탐험 시작</button></div></div>
+<nav id="nav-dots"></nav>
+
+<!-- HERO -->
+<section id="hero"><canvas id="hero-canvas"></canvas><div class="content">
+<h3 class="accent-purple">지능의 수학</h3>
+<h1>기계는 어떻게<br><span class="accent-purple">이해</span>하는가?</h1>
+<p class="subtitle">선형대수에서 언어까지 — 트랜스포머의 수학적 원리</p>
+<p class="tagline">AI와 대화할 때마다, 수조 번의 행렬곱이 당신의 말을 숫자로, 숫자를 의미로, 의미를 답변으로 변환합니다. 그 과정을 정확히 보여드립니다.</p>
+<button class="start-btn" onclick="initAudio();document.getElementById('sec-dot').scrollIntoView({behavior:'smooth'})">✨ 탐험 시작</button>
+</div></section>
+
+<!-- §00 — DOT PRODUCTS -->
+<section id="sec-dot"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">00 — 워밍업 퍼즐</p>
+<h2><span class="accent-gold">내적</span>의<br>놀라운 힘</h2>
+<p>트랜스포머에 대해 알아보기 전에 — 딥러닝에서 가장 중요한 연산 하나를 소개합니다. <strong>내적(dot product)</strong>입니다. 두 벡터가 얼마나 "같은 방향"인지를 측정합니다.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">벡터가 정렬될수록 음이 높아집니다 — 유사도를 들어보세요</div>
+<div class="canvas-wrap"><canvas id="dot-canvas" height="320"></canvas></div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">내적</div><div class="sv" id="dot-val">0.00</div></div>
+<div class="stat-box"><div class="sl">코사인 유사도</div><div class="sv" id="dot-cos">0.00</div></div>
+<div class="stat-box"><div class="sl">각도</div><div class="sv" id="dot-angle">90°</div></div>
+</div>
+<p style="font-size:0.8rem;color:var(--muted);text-align:center;">화살표 끝을 드래그하여 벡터를 움직여보세요</p>
+</div>
+<div class="math-block">
+<span class="accent-gold">a⃗</span> · <span class="accent-sky">b⃗</span> = ‖a⃗‖ ‖b⃗‖ cos θ
+</div>
+<div class="explanation-card reveal">
+<p><strong style="color:#fff;">이것이 왜 중요한가?</strong> — 트랜스포머 내부에서 모델이 단어 A가 단어 B에 얼마나 주의를 기울여야 하는지 결정할 때, 정확히 이 연산을 수행합니다: 두 벡터 표현의 내적. 높은 내적 = 높은 관련성. 이 하나의 연산이 "어텐션"의 핵심입니다.</p>
+</div>
+</div></section>
+
+<!-- §01 — TOKENIZATION -->
+<section id="sec-token"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">01 — 기계는 어떻게 읽는가</p>
+<h2>텍스트가 <span class="accent-coral">토큰</span>이 되다</h2>
+<p>언어는 글자 그대로 신경망에 입력되지 않습니다. <strong>서브워드 토큰</strong>으로 분해됩니다 — 어휘 크기와 커버리지의 균형을 맞추는 조각들입니다. "understanding"은 ["under", "stand", "ing"]이 될 수 있습니다.</p>
+</div>
+<div class="demo-card reveal">
+<div style="margin-bottom:1rem;">
+<div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.4rem;">문장을 직접 입력하거나 선택하세요</div>
+<div class="btn-group" style="margin:0 0 0.8rem;">
+<button class="btn active" onclick="setTokenText('The cat sat on the mat because it was tired.',this)">대명사 해소</button>
+<button class="btn" onclick="setTokenText('Attention is all you need.',this)">유명한 논문</button>
+<button class="btn" onclick="setTokenText('수학은 과학의 여왕이다.',this)">한국어</button>
+<button class="btn" onclick="setTokenText('The Banach–Tarski paradox decomposes a sphere into five pieces.',this)">수학</button>
+</div>
+<input type="text" id="token-input" value="The cat sat on the mat because it was tired." style="width:100%;padding:0.7rem 1rem;background:var(--bg3);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--text);font-family:var(--font-body);font-size:0.95rem;outline:none;" oninput="tokenize()">
+</div>
+<div id="token-output" style="min-height:3rem;padding:0.5rem;background:rgba(0,0,0,0.2);border-radius:10px;"></div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">토큰 수</div><div class="sv" id="tok-count">0</div></div>
+<div class="stat-box"><div class="sl">글자 수</div><div class="sv" id="tok-chars">0</div></div>
+<div class="stat-box"><div class="sl">비율</div><div class="sv" id="tok-ratio">—</div></div>
+</div>
+</div>
+<div class="explanation-card reveal">
+<p><strong style="color:#fff;">왜 서브워드인가?</strong> — 글자 단위 모델은 너무 느립니다 (시퀀스가 매우 길어짐). 단어 단위 모델은 새로운 단어를 처리하지 못합니다. 서브워드 토큰화(BPE)가 최적의 균형점입니다: ~50,000–100,000개 토큰의 어휘로 사실상 모든 텍스트를 처리합니다. "the"같은 흔한 단어는 하나의 토큰이고, 드문 단어는 의미 있는 조각들로 분해됩니다.</p>
+</div>
+</div></section>
+
+<!-- §02 — EMBEDDINGS -->
+<section id="sec-embed"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">02 — 단어는 기하학이다</p>
+<h2><span class="accent-sky">임베딩</span> 공간</h2>
+<p>각 토큰은 <strong>고차원 벡터</strong>가 됩니다 — 거리가 의미를 담는 공간의 한 점입니다. 비슷한 의미의 단어들은 가까이 모입니다. 관계는 방향이 됩니다.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">단어 위에 마우스를 올려보세요 — 의미 공간에서의 위치가 소리로 표현됩니다</div>
+<div class="canvas-wrap"><canvas id="embed-canvas" height="440"></canvas></div>
+<div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);text-align:center;margin-top:0.3rem;" id="embed-info">단어 위에 마우스를 올려보세요 · 클릭하면 이웃 단어가 표시됩니다</div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn btn-gold" id="analogy-btn" onclick="toggleAnalogy()">✨ 유추 보기: king − man + woman ≈ queen</button>
+<button class="btn" onclick="rotateEmbed()">🔄 시점 회전</button>
+</div>
+</div>
+<div class="math-block">
+W<sub>E</sub> ∈ ℝ<sup>V × d</sup> — 각 행은 단어의 "의미"를 <span class="accent-sky">d</span>개의 숫자로 표현
+</div>
+<div class="explanation-card reveal" style="border-left-color:var(--sky);">
+<p><strong style="color:#fff;">모든 정의가 숫자 목록인 사전.</strong> — GPT-4의 임베딩 차원은 d = 12,288입니다. 모든 토큰이 12,288차원 공간의 한 점이라는 뜻입니다. 직접 시각화할 수는 없지만 구조는 실재합니다: "king"과 "queen"은 가깝고, "cat"과 "dog"는 가깝고, "man"에서 "woman"으로의 방향은 "king"에서 "queen"으로의 방향과 거의 같습니다.</p>
+</div>
+</div></section>
+
+<!-- §03 — POSITIONAL ENCODING -->
+<section id="sec-pos"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">03 — 순서를 가르치다</p>
+<h2><span class="accent-mint">위치</span> 인코딩</h2>
+<p>사람이 왼쪽에서 오른쪽으로 읽는 것과 달리, 트랜스포머는 모든 단어를 동시에 봅니다 — <strong>순서 개념이 내장되어 있지 않습니다</strong>. 위치 정보를 명시적으로 주입해야 합니다. 원래의 해결책: 서로 다른 주파수의 사인 함수로 만든, 각 위치의 고유한 지문.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">각 위치에는 고유한 "화음"이 있습니다 — 하모닉 지문을 들어보세요</div>
+<div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.3rem;">위치 인코딩 히트맵 — 행 = 위치, 열 = 차원</div>
+<div class="canvas-wrap"><canvas id="pos-canvas" height="300"></canvas></div>
+<div class="slider-row">
+<label>pos</label>
+<input type="range" id="pos-slider" min="0" max="63" value="0" step="1" oninput="updatePos()">
+<span class="val" id="pos-val">위치 0</span>
+</div>
+<div class="canvas-wrap" style="margin-top:0;"><span class="wave-label">선택된 위치의 분해된 파동</span><canvas id="pos-waves" height="120"></canvas></div>
+<button class="btn btn-gold" onclick="playPosChord()" style="margin-top:0.5rem;">🔊 위치 화음 재생</button>
+</div>
+<div class="math-block">
+PE<sub>(pos, 2i)</sub> = sin( pos / 10000<sup>2i/d</sup> ) &nbsp;&nbsp;&nbsp; PE<sub>(pos, 2i+1)</sub> = cos( pos / 10000<sup>2i/d</sup> )
+</div>
+<div class="explanation-card reveal" style="border-left-color:var(--mint);">
+<p><strong style="color:#fff;">왜 사인 함수인가?</strong> — 저주파 성분은 "대략적 위치"를 인코딩합니다 (시작 vs. 끝). 고주파 성분은 "정확한 위치"를 인코딩합니다 (위치 17 vs. 18). 푸리에 분석과 같은 아이디어입니다 — 그리고 상대적 위치는 절대 위치의 선형 변환으로 계산할 수 있습니다.</p>
+</div>
+</div></section>
+
+<!-- §04 — SELF-ATTENTION -->
+<section id="sec-attn"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">04 — 트랜스포머의 심장</p>
+<h2>셀프-<span class="accent-purple">어텐션</span></h2>
+<p>모든 것을 바꾼 메커니즘입니다. 각 단어가 <strong>다른 모든 단어를 살펴보고</strong> 관련성 점수를 계산합니다. 각 토큰이 묻는 핵심 질문: <em>"누구에게 주의를 기울여야 하는가?"</em></p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">쿼리 단어를 선택하세요 — 어텐션 분포가 화음으로 들립니다</div>
+<div style="margin-bottom:1rem;">
+<div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.4rem;">문장을 선택하세요</div>
+<div class="btn-group" style="margin:0 0 0.5rem;">
+<button class="btn active" onclick="setAttnSentence(0,this)">The cat sat on the mat because it was tired</button>
+<button class="btn" onclick="setAttnSentence(1,this)">The key to understanding is attention itself</button>
+<button class="btn" onclick="setAttnSentence(2,this)">Banks along the river had no money</button>
+</div>
+</div>
+<!-- Attention arcs -->
+<div class="canvas-wrap"><span class="wave-label" id="attn-arc-label">아래 행렬에서 단어를 클릭하여 쿼리를 선택하세요</span><canvas id="attn-arcs" height="140"></canvas></div>
+<!-- Attention matrix -->
+<div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin:0.5rem 0 0.3rem;">어텐션 행렬 — 행 = 쿼리, 열 = 키</div>
+<div class="canvas-wrap" style="margin-top:0;"><canvas id="attn-matrix" height="320"></canvas></div>
+<div class="slider-row">
+<label>τ</label>
+<input type="range" id="attn-temp" min="1" max="50" value="10" step="1" oninput="updateAttn()">
+<span class="val" id="attn-temp-val">τ = 1.0</span>
+</div>
+<div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);margin-bottom:0.5rem;">온도: 낮을수록 → 날카로운 어텐션, 높을수록 → 균일한 분포</div>
+</div>
+<div class="math-block">
+Attention(Q, K, V) = softmax( Q K<sup>⊤</sup> / √d<sub>k</sub> ) V
+</div>
+<div class="explanation-card reveal" style="border-left-color:var(--purple);">
+<p><strong style="color:#fff;">왜 √d<sub>k</sub>로 나누는가?</strong> — 스케일링 없이는, 차원 d<sub>k</sub>가 커질수록 내적의 크기가 커져서 softmax가 기울기가 극히 작은 영역으로 밀려납니다. √d<sub>k</sub>로 나누면 로짓의 분산이 ≈ 1로 유지되어, softmax가 네트워크가 실제로 학습할 수 있는 영역에 머무릅니다.</p>
+<p style="margin-top:0.8rem;font-family:var(--font-display);font-style:italic;color:var(--purple);font-size:1.05rem;">"어텐션은 부드러운 사전 검색입니다: 쿼리는 당신이 찾는 것, 키는 선반의 라벨, 값은 선반 위의 내용물."</p>
+</div>
+</div></section>
+
+<!-- §05 — MULTI-HEAD -->
+<section id="sec-heads" style="min-height:auto;padding:4rem 2rem;"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">05 — 다중 관점</p>
+<h2>멀티헤드 <span class="accent-coral">어텐션</span></h2>
+<p>하나의 어텐션 패턴으로는 충분하지 않습니다. 모델은 <strong>8–128개의 헤드를 병렬로</strong> 실행하며, 각각이 서로 다른 언어적 관계를 발견합니다 — 구문, 의미, 위치, 공지시 — 모두 스스로.</p>
+</div>
+<div class="demo-card reveal">
+<div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.5rem;">8개의 어텐션 헤드 — 각각 다른 패턴을 봅니다</div>
+<div class="head-strip" id="head-strip"></div>
+<div class="canvas-wrap"><span class="wave-label" id="head-label">헤드 1 — 구문: 다음 단어 패턴</span><canvas id="head-canvas" height="260"></canvas></div>
+</div>
+<div class="explanation-card reveal" style="border-left-color:var(--coral);">
+<p><strong style="color:#fff;">이 역할을 프로그래밍하는 사람은 없습니다.</strong> — 헤드 1은 문법을 추적하고, 헤드 5는 의미를 추적하고, 헤드 7은 위치를 추적할 수 있습니다. 이러한 전문화는 순수하게 텍스트 예측 학습에서 자연스럽게 나타납니다. 모델은 병렬적이고 다양한 관점이 유용하다는 것을 스스로 발견합니다 — 단일 네트워크 안의 앙상블 학습입니다.</p>
+</div>
+</div></section>
+
+<!-- §06 — ARCHITECTURE -->
+<section id="sec-arch"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">06 — 전체 그림</p>
+<h2><span class="accent-sky">트랜스포머 블록</span> 내부</h2>
+<p>트랜스포머는 동일한 블록을 수십~수백 번 쌓아 만듭니다. <strong>하나의 블록</strong> 내부를 단계별로 들여다보고, 각 단계에서 데이터에 무슨 일이 일어나는지 정확히 살펴봅시다. 세 개의 토큰 — <span class="accent-gold">"cat"</span> <span class="accent-sky">"sat"</span> <span class="accent-purple">"down"</span> — 을 모든 연산을 따라가며 추적합니다.</p>
+</div>
+
+<!-- Pipeline progress bar -->
+<div class="demo-card reveal" id="arch-demo">
+<div class="audio-note">각 단계를 밟아보세요 — 숫자가 실시간으로 변환됩니다</div>
+
+<!-- Stage indicator strip -->
+<div id="arch-pipeline" style="display:flex;gap:2px;margin-bottom:1.5rem;overflow-x:auto;">
+<div class="arch-pip" data-step="0" onclick="goArchStep(0)"><span class="pip-num">①</span><span class="pip-label">입력</span></div>
+<div class="arch-pip-arrow">→</div>
+<div class="arch-pip" data-step="1" onclick="goArchStep(1)"><span class="pip-num">②</span><span class="pip-label">Q, K, V</span></div>
+<div class="arch-pip-arrow">→</div>
+<div class="arch-pip" data-step="2" onclick="goArchStep(2)"><span class="pip-num">③</span><span class="pip-label">점수</span></div>
+<div class="arch-pip-arrow">→</div>
+<div class="arch-pip" data-step="3" onclick="goArchStep(3)"><span class="pip-num">④</span><span class="pip-label">Softmax</span></div>
+<div class="arch-pip-arrow">→</div>
+<div class="arch-pip" data-step="4" onclick="goArchStep(4)"><span class="pip-num">⑤</span><span class="pip-label">값 혼합</span></div>
+<div class="arch-pip-arrow">→</div>
+<div class="arch-pip" data-step="5" onclick="goArchStep(5)"><span class="pip-num">⑥</span><span class="pip-label">잔차+정규화</span></div>
+<div class="arch-pip-arrow">→</div>
+<div class="arch-pip" data-step="6" onclick="goArchStep(6)"><span class="pip-num">⑦</span><span class="pip-label">FFN</span></div>
+<div class="arch-pip-arrow">→</div>
+<div class="arch-pip" data-step="7" onclick="goArchStep(7)"><span class="pip-num">⑧</span><span class="pip-label">출력</span></div>
+</div>
+
+<!-- Main visualization canvas -->
+<div class="canvas-wrap"><canvas id="arch-canvas" height="420"></canvas></div>
+
+<!-- Step explanation panel -->
+<div id="arch-explain" style="background:rgba(0,0,0,0.25);border-radius:12px;padding:1.2rem 1.4rem;margin:1rem 0;min-height:6rem;">
+<div id="arch-explain-title" style="font-family:var(--font-display);font-size:1.15rem;font-weight:600;color:#fff;margin-bottom:0.5rem;">① 입력: 토큰 벡터 도착</div>
+<div id="arch-explain-body" style="font-size:0.9rem;color:var(--text);line-height:1.7;"></div>
+<div id="arch-explain-math" class="math-block" style="margin:0.8rem 0 0;display:none;"></div>
+</div>
+
+<!-- Navigation -->
+<div style="display:flex;justify-content:space-between;align-items:center;margin:1rem 0;">
+<button class="btn" id="arch-prev" onclick="goArchStep(Math.max(0,archStep-1))">← 이전</button>
+<div style="font-family:var(--font-mono);font-size:0.8rem;color:var(--muted);">단계 <span id="arch-step-num">1</span> / 8</div>
+<button class="btn btn-gold" id="arch-next" onclick="goArchStep(Math.min(7,archStep+1))">다음 →</button>
+</div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn btn-gold" id="arch-btn" onclick="autoPlayArch()">▶ 전체 자동 재생</button>
+<button class="btn" onclick="goArchStep(0)">초기화</button>
+</div>
+
+<div class="stat-row">
+<div class="stat-box"><div class="sl">현재 단계</div><div class="sv" id="arch-stage" style="font-size:0.8rem;">입력 벡터</div></div>
+<div class="stat-box"><div class="sl">행렬 연산</div><div class="sv" id="arch-ops">0</div></div>
+<div class="stat-box"><div class="sl">차원</div><div class="sv" id="arch-dims" style="font-size:0.8rem;">3 × 4</div></div>
+</div>
+</div>
+
+<!-- Additional deep-dive cards -->
+<div class="demo-card reveal" style="border-left:3px solid var(--purple);">
+<h3 class="accent-purple" style="margin-bottom:0.8rem;">이 구조가 작동하는 이유 — 세 가지 핵심 아이디어</h3>
+
+<div style="display:grid;grid-template-columns:auto 1fr;gap:0.8rem 1rem;margin:1rem 0;">
+<div style="font-size:1.6rem;text-align:center;padding-top:0.2rem;">🔀</div>
+<div>
+<div style="font-family:var(--font-display);font-weight:600;color:#fff;font-size:0.95rem;margin-bottom:0.2rem;">잔차 연결 (Skip Connection)</div>
+<p style="font-size:0.85rem;color:var(--muted);margin:0;">각 하위층의 출력이 입력에 <em>더해집니다</em>: <span style="color:var(--mint);font-family:var(--font-mono);font-size:0.8rem;">output = x + SubLayer(x)</span>. 네트워크가 전체 표현을 재구축할 필요 없이 <em>보정값</em>만 학습하면 됩니다. 이것 없이는 깊은 네트워크(96+ 층)는 아예 학습이 불가능합니다 — 기울기가 0으로 사라집니다.</p>
+</div>
+
+<div style="font-size:1.6rem;text-align:center;padding-top:0.2rem;">📏</div>
+<div>
+<div style="font-family:var(--font-display);font-weight:600;color:#fff;font-size:0.95rem;margin-bottom:0.2rem;">레이어 정규화</div>
+<p style="font-size:0.85rem;color:var(--muted);margin:0;">각 잔차 덧셈 후 벡터가 정규화됩니다: 평균을 빼고, 표준편차로 나누고, 스케일과 시프트를 적용합니다. 이것이 층을 거치며 활성값을 안정적으로 유지합니다. 이것 없이는 120개 층을 거치며 값이 지수적으로 발산합니다.</p>
+</div>
+
+<div style="font-size:1.6rem;text-align:center;padding-top:0.2rem;">🧠</div>
+<div>
+<div style="font-family:var(--font-display);font-weight:600;color:#fff;font-size:0.95rem;margin-bottom:0.2rem;">FFN은 키-값 메모리</div>
+<p style="font-size:0.85rem;color:var(--muted);margin:0;">피드포워드 네트워크는 각 벡터를 4배로 확장하고, ReLU를 적용한 뒤, 다시 압축합니다. 최근 연구에 따르면 각 FFN 뉴런은 특정 입력 패턴에 활성화됩니다 — 사실상 <em>학습된 지식 저장소</em>로 작동합니다. 하나의 뉴런이 "프랑스에 대한 사실"을, 다른 하나가 "Python 문법"을 인코딩할 수 있습니다.</p>
+</div>
+</div>
+</div>
+
+<div class="demo-card reveal" style="border-left:3px solid var(--gold);">
+<h3 class="accent-gold" style="margin-bottom:0.8rem;">쌓기: 하나의 블록에서 전체 모델로</h3>
+<p style="font-size:0.9rem;">방금 탐험한 블록이 동일하게 반복됩니다 — 하나씩 순서대로. 각 층은 <strong>잔차 스트림</strong>에서 읽고, 보정값을 다시 씁니다.</p>
+<div class="canvas-wrap" style="margin:1rem 0;"><canvas id="arch-stack-canvas" height="200"></canvas></div>
+<div style="display:flex;justify-content:space-around;text-align:center;font-family:var(--font-mono);font-size:0.75rem;color:var(--muted);margin-top:0.3rem;">
+<div><span style="color:var(--sky);font-weight:600;">GPT-2</span><br>12층</div>
+<div><span style="color:var(--purple);font-weight:600;">GPT-3</span><br>96층</div>
+<div><span style="color:var(--gold);font-weight:600;">GPT-4</span><br>~120층</div>
+<div><span style="color:var(--mint);font-weight:600;">Claude</span><br>비공개</div>
+</div>
+</div>
+
+<div class="explanation-card reveal" style="border-left-color:var(--sky);">
+<p><strong style="color:#fff;">각 층은 무엇을 학습하는가?</strong> — 경험적 연구에 따르면 대략적인 패턴이 있습니다: 초기 층은 구문과 지역 패턴(어순, 품사)을 처리합니다. 중간 층은 의미(뜻, 관계, 공지시)를 처리합니다. 후반 층은 과제별 추론과 출력 형식을 처리합니다. 하지만 이는 단순화이며, 실제로 정보는 모든 층에 분산되어 있습니다.</p>
+<p style="margin-top:0.8rem;font-family:var(--font-display);font-style:italic;color:var(--sky);font-size:1.05rem;">"각 층의 질문: 지금까지 알고 있는 것을 바탕으로, 어떤 보정이 가장 도움이 될까?"</p>
+</div>
+</div></section>
+
+<!-- §07 — THE REVOLUTION -->
+<section id="sec-revolution"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">07 — 혁명</p>
+<h2><span class="accent-gold">"Attention Is All You Need"</span><br>하나의 논문이 모든 것을 바꾸다</h2>
+</div>
+
+<!-- ACT 1: Before -->
+<div class="demo-card reveal" style="border-left:3px solid var(--muted);">
+<h3 style="color:var(--muted);margin-bottom:0.8rem;">2017년 이전 — 순환의 시대</h3>
+<p style="font-size:0.92rem;">2017년까지, 기계 번역과 언어 모델의 세계는 <strong>RNN(순환 신경망)</strong>과 그 변종인 <strong>LSTM</strong>이 지배하고 있었습니다. 이들의 작동 원리는 직관적이었습니다 — 사람이 문장을 읽듯이, 단어를 <em>하나씩 순서대로</em> 처리하는 것.</p>
+<p style="font-size:0.92rem;">하지만 치명적인 문제가 있었습니다.</p>
+
+<div style="display:grid;grid-template-columns:auto 1fr;gap:0.6rem 1rem;margin:1rem 0;">
+<div style="font-size:1.3rem;text-align:center;">🐌</div>
+<div><span style="color:var(--coral);font-weight:600;">느린 학습</span><span style="font-size:0.85rem;color:var(--muted);"> — 단어를 순서대로 처리하므로, 100개 단어의 문장은 100번의 순차적 단계가 필요. GPU의 병렬 처리 능력을 전혀 활용하지 못했습니다.</span></div>
+<div style="font-size:1.3rem;text-align:center;">🧠</div>
+<div><span style="color:var(--coral);font-weight:600;">잊혀지는 기억</span><span style="font-size:0.85rem;color:var(--muted);"> — 문장이 길어지면, 앞부분의 정보가 뒷부분에 도달할 때쯤 희미해졌습니다. LSTM이 이를 완화했지만, 수백 단어 이상의 장거리 의존성은 여전히 어려웠습니다.</span></div>
+<div style="font-size:1.3rem;text-align:center;">📏</div>
+<div><span style="color:var(--coral);font-weight:600;">제한된 문맥</span><span style="font-size:0.85rem;color:var(--muted);"> — "The cat that the dog that the boy owned chased ran away" — 이런 중첩된 구조에서 RNN은 "ran"이 "cat"과 연결된다는 것을 파악하기 매우 어려웠습니다.</span></div>
+</div>
+<p style="font-size:0.88rem;color:var(--muted);font-style:italic;">2014년 Bahdanau가 어텐션 메커니즘을 RNN에 <em>보조 장치</em>로 추가하여 큰 성과를 거뒀습니다. 하지만 아무도 더 과격한 질문을 던지지 않았습니다 —</p>
+<p style="font-family:var(--font-display);font-size:1.15rem;font-weight:600;color:var(--coral);text-align:center;margin:1rem 0 0;">"순환을 아예 없애면 어떨까?"</p>
+</div>
+
+<!-- ACT 2: The Paper -->
+<div class="demo-card reveal" style="border-left:3px solid var(--gold);">
+<h3 style="color:var(--gold);margin-bottom:0.8rem;">2017년 6월 12일 — 논문 한 편이 등장하다</h3>
+<p style="font-size:0.92rem;">Google Brain과 Google Research의 연구원 8명 — Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan Gomez, Łukasz Kaiser, Illia Polosukhin — 이 arXiv에 논문 한 편을 올립니다.</p>
+<div style="background:var(--bg);border:1px solid rgba(240,180,41,0.3);border-radius:14px;padding:1.5rem;margin:1.2rem 0;text-align:center;">
+<div style="font-family:var(--font-display);font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:700;color:#fff;line-height:1.3;">"Attention Is All You Need"</div>
+<div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--gold);margin-top:0.5rem;letter-spacing:0.05em;">arXiv:1706.03762 · NeurIPS 2017</div>
+<div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);margin-top:0.3rem;">인용 수: 130,000+ (역사상 가장 많이 인용된 AI 논문 중 하나)</div>
+</div>
+<p style="font-size:0.92rem;">제목부터 도발적이었습니다. 당시 모든 최고 성능 모델이 RNN을 기반으로 했기에, "어텐션만 있으면 된다"는 주장은 거의 이단에 가까웠습니다. 하지만 결과가 그 대담함을 뒷받침했습니다.</p>
+</div>
+
+<!-- ACT 3: What Changed -->
+<div class="demo-card reveal" style="border-left:3px solid var(--mint);">
+<h3 style="color:var(--mint);margin-bottom:0.8rem;">세 가지 혁명적 전환</h3>
+<div style="display:grid;grid-template-columns:1fr;gap:1.2rem;margin:1rem 0;">
+
+<div style="background:rgba(0,0,0,0.2);border-radius:12px;padding:1.2rem;border:1px solid rgba(52,211,153,0.15);">
+<div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:0.6rem;">
+<div style="font-size:1.8rem;">⚡</div>
+<div style="font-family:var(--font-display);font-weight:700;color:#fff;font-size:1.05rem;">순차 → 병렬</div>
+</div>
+<p style="font-size:0.88rem;color:var(--text);margin:0;">RNN은 단어를 하나씩 처리합니다. 트랜스포머는 <strong>모든 단어를 동시에</strong> 처리합니다. 100개 단어의 문장? RNN은 100단계, 트랜스포머는 1단계. 이것만으로도 학습 속도가 <strong>수십 배</strong> 빨라졌고, 이는 곧 훨씬 더 큰 모델과 더 많은 데이터로의 확장을 가능하게 했습니다.</p>
+</div>
+
+<div style="background:rgba(0,0,0,0.2);border-radius:12px;padding:1.2rem;border:1px solid rgba(56,189,248,0.15);">
+<div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:0.6rem;">
+<div style="font-size:1.8rem;">🔭</div>
+<div style="font-family:var(--font-display);font-weight:700;color:#fff;font-size:1.05rem;">제한된 기억 → 완전한 접근</div>
+</div>
+<p style="font-size:0.88rem;color:var(--text);margin:0;">RNN에서 먼 단어의 정보는 수십 번의 순차 단계를 거치며 희석됩니다. 셀프-어텐션에서 <strong>모든 단어는 다른 모든 단어에 직접 접근</strong>합니다 — 거리에 관계없이, 단 한 번의 연산으로. 문장 첫 단어와 마지막 단어 사이의 정보 경로가 O(n)에서 O(1)로 줄었습니다.</p>
+</div>
+
+<div style="background:rgba(0,0,0,0.2);border-radius:12px;padding:1.2rem;border:1px solid rgba(167,139,250,0.15);">
+<div style="display:flex;align-items:center;gap:0.8rem;margin-bottom:0.6rem;">
+<div style="font-size:1.8rem;">📐</div>
+<div style="font-family:var(--font-display);font-weight:700;color:#fff;font-size:1.05rem;">복잡한 구조 → 놀라운 단순성</div>
+</div>
+<p style="font-size:0.88rem;color:var(--text);margin:0;">LSTM 셀 하나에는 forget gate, input gate, output gate, cell state — 복잡하게 얽힌 메커니즘들이 있었습니다. 트랜스포머의 핵심은 <strong>행렬곱, softmax, 덧셈</strong>. 이것이 전부입니다. 당신이 §00에서 §06까지 본 것이 정말로 전부입니다. 이 단순성이 역설적으로 확장성의 열쇠였습니다.</p>
+</div>
+</div>
+</div>
+
+<!-- ACT 4: The Results — Interactive Performance Comparison -->
+<div class="demo-card reveal">
+<div class="audio-note">모델이 등장할 때마다 상승하는 음을 들어보세요</div>
+<div style="font-family:var(--font-mono);font-size:0.65rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.3rem;">RNN에서 트랜스포머로 — 성능 비약의 기록</div>
+<div class="canvas-wrap"><canvas id="rev-timeline" height="420"></canvas></div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn btn-gold" id="rev-play-btn" onclick="playRevolution()">▶ 역사를 재생하다</button>
+<button class="btn" onclick="resetRevolution()">초기화</button>
+</div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">연도</div><div class="sv" id="rev-year">2014</div></div>
+<div class="stat-box"><div class="sl">모델</div><div class="sv" id="rev-model" style="font-size:0.8rem;">Seq2Seq + Attention</div></div>
+<div class="stat-box"><div class="sl">매개변수</div><div class="sv" id="rev-params">~200M</div></div>
+</div>
+</div>
+
+<!-- ACT 5: Scaling explosion -->
+<div class="demo-card reveal" style="border-left:3px solid var(--purple);">
+<h3 style="color:var(--purple);margin-bottom:0.8rem;">비약의 규모 — 숫자로 보는 혁명</h3>
+<p style="font-size:0.92rem;">트랜스포머의 등장 이후 일어난 일은 과학사에서 유례를 찾기 어렵습니다. 하나의 아키텍처가 하나의 학습 목표(다음 토큰 예측)와 결합하여, <strong>규모를 키울수록 질적으로 새로운 능력이 출현</strong>하는 현상을 보였습니다.</p>
+
+<div style="overflow-x:auto;margin:1.5rem 0;">
+<table class="rosetta-simple">
+<thead><tr>
+<th style="color:var(--gold);">모델</th><th>연도</th><th>매개변수</th><th>학습 데이터</th><th style="color:var(--mint);">새로 가능해진 것</th>
+</tr></thead>
+<tbody>
+<tr><td><strong>Original Transformer</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2017</td><td style="font-family:var(--font-mono);">65M</td><td>수백만 문장쌍</td><td style="color:var(--muted);">최고 수준의 번역</td></tr>
+<tr><td><strong>GPT-1</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2018</td><td style="font-family:var(--font-mono);">117M</td><td>책 5GB</td><td style="color:var(--muted);">기초적 텍스트 생성</td></tr>
+<tr><td><strong>BERT</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2018</td><td style="font-family:var(--font-mono);">340M</td><td>위키+책 16GB</td><td style="color:var(--sky);">문맥적 단어 이해</td></tr>
+<tr><td><strong>GPT-2</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2019</td><td style="font-family:var(--font-mono);">1.5B</td><td>웹텍스트 40GB</td><td style="color:var(--sky);">유창한 문단 생성 <span style="font-size:0.7rem;color:var(--coral);">(공개 거부 논란)</span></td></tr>
+<tr><td><strong>GPT-3</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2020</td><td style="font-family:var(--font-mono);color:var(--gold);">175B</td><td>570GB</td><td style="color:var(--gold);">맥락 내 학습, 산술, 번역 (학습 없이!)</td></tr>
+<tr><td><strong>PaLM</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2022</td><td style="font-family:var(--font-mono);">540B</td><td>780GB</td><td style="color:var(--gold);">사고의 연쇄, 농담 설명</td></tr>
+<tr><td><strong>ChatGPT</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2022.11</td><td style="font-family:var(--font-mono);">?</td><td>+RLHF</td><td style="color:var(--coral);font-weight:600;">대중화 — 5일 만에 100만 사용자</td></tr>
+<tr><td><strong>GPT-4</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2023</td><td style="font-family:var(--font-mono);color:var(--purple);">~1.8T</td><td>~13T 토큰</td><td style="color:var(--purple);font-weight:600;">변호사 시험 상위 10%, 의사 시험 합격</td></tr>
+<tr><td><strong>Claude Opus 4.6</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2026.2</td><td style="font-family:var(--font-mono);">비공개</td><td>비공개</td><td style="color:var(--mint);font-weight:600;">1M 문맥, 적응형 사고, 코딩 최강 (Claude Code)</td></tr>
+<tr><td><strong>Gemini 3 Pro</strong></td><td style="font-family:var(--font-mono);font-size:0.8rem;">2025.11</td><td style="font-family:var(--font-mono);">~1.5T (MoE)</td><td>비공개</td><td style="color:var(--mint);font-weight:600;">네이티브 멀티모달, Sparse MoE, 2M 문맥</td></tr>
+</tbody>
+</table>
+</div>
+<p style="font-size:0.85rem;color:var(--muted);text-align:center;">65M → 1.8T: 7년 만에 매개변수 <strong style="color:var(--gold);">27,000배</strong> 증가</p>
+</div>
+
+<!-- ACT 5.5: Architecture comparison -->
+<div class="demo-card reveal" style="border-left:3px solid var(--sky);">
+<h3 style="color:var(--sky);margin-bottom:0.8rem;">세 거인의 해부학 — Gemini · ChatGPT · Claude</h3>
+<p style="font-size:0.92rem;">2024년 현재 AI의 최전선을 이끄는 세 모델은 모두 같은 뿌리에서 태어났지만, 서로 다른 방향으로 진화했습니다. 그 유사점과 차이를 정확히 살펴봅시다.</p>
+
+<div style="font-family:var(--font-display);font-weight:700;color:var(--mint);font-size:1rem;margin:1.2rem 0 0.6rem;">🤝 공통점 — 같은 DNA</div>
+<p style="font-size:0.88rem;color:var(--text);">세 모델 모두 2017년 "Attention Is All You Need"에서 시작된 <strong>트랜스포머 아키텍처</strong> 위에 세워졌습니다. 핵심 구성요소 — 토큰 임베딩, 셀프-어텐션, 피드포워드 네트워크, 잔차 연결, 레이어 정규화 — 이 모든 것이 당신이 §00–§06에서 본 바로 그것입니다. 학습 목표도 동일: <strong>다음 토큰 예측</strong>. 정렬(alignment) 단계에서 인간 피드백(RLHF 또는 그 변형)을 사용한다는 점도 공유합니다.</p>
+
+<div style="overflow-x:auto;margin:1.2rem 0;">
+<table class="rosetta-simple" style="font-size:0.78rem;">
+<thead><tr>
+<th style="width:18%;"></th>
+<th style="color:#4285f4;">🔵 Gemini<br><span style="font-size:0.6rem;font-weight:400;color:var(--muted);">Google DeepMind</span></th>
+<th style="color:#10a37f;">🟢 ChatGPT (GPT 계열)<br><span style="font-size:0.6rem;font-weight:400;color:var(--muted);">OpenAI</span></th>
+<th style="color:#d4a27f;">🟠 Claude<br><span style="font-size:0.6rem;font-weight:400;color:var(--muted);">Anthropic</span></th>
+</tr></thead>
+<tbody>
+<tr>
+<td><strong>기본 구조</strong></td>
+<td>트랜스포머 기반<br><strong style="color:#4285f4;">Sparse MoE</strong><br><span style="color:var(--muted);font-size:0.72rem;">전문가 혼합 — 입력에 따라 일부 전문가만 활성화</span></td>
+<td>디코더 전용 트랜스포머<br><strong style="color:#10a37f;">Dense (추정)</strong><br><span style="color:var(--muted);font-size:0.72rem;">GPT-4는 MoE 사용이 보도되었으나 미확인</span></td>
+<td>디코더 전용 트랜스포머<br><strong style="color:#d4a27f;">Dense</strong><br><span style="color:var(--muted);font-size:0.72rem;">모든 매개변수가 매 토큰마다 활성화 · 적응형 사고(Adaptive Thinking)</span></td>
+</tr>
+<tr>
+<td><strong>멀티모달</strong></td>
+<td style="color:#4285f4;"><strong>네이티브 멀티모달</strong><br><span style="color:var(--muted);font-size:0.72rem;">텍스트·이미지·오디오·비디오를 처음부터 하나의 모델로 학습</span></td>
+<td>텍스트 중심 + 멀티모달 확장<br><span style="color:var(--muted);font-size:0.72rem;">GPT-4V부터 이미지 입력 추가, 별도 모듈을 통한 연결</span></td>
+<td>텍스트 중심 + 시각 입력<br><span style="color:var(--muted);font-size:0.72rem;">이미지·PDF 이해, 코드 실행, 파일 생성 · 이미지 생성은 미지원</span></td>
+</tr>
+<tr>
+<td><strong>문맥 창</strong></td>
+<td style="color:#4285f4;font-family:var(--font-mono);"><strong>최대 2M 토큰</strong><br><span style="color:var(--muted);font-size:0.72rem;">MoE의 효율성 + 긴 문맥 연구의 성과</span></td>
+<td style="font-family:var(--font-mono);">128K 토큰<br><span style="color:var(--muted);font-size:0.72rem;">GPT-4 Turbo 기준</span></td>
+<td style="font-family:var(--font-mono);color:#d4a27f;"><strong>1M 토큰</strong><br><span style="color:var(--muted);font-size:0.72rem;">Opus 4.6 / Sonnet 4.6 (2026.2)</span></td>
+</tr>
+<tr>
+<td><strong>정렬 방법</strong></td>
+<td>RLHF + 자체 안전 필터<br><span style="color:var(--muted);font-size:0.72rem;">Google의 AI 원칙 기반</span></td>
+<td style="color:#10a37f;"><strong>RLHF</strong><br><span style="color:var(--muted);font-size:0.72rem;">인간 평가자의 선호도 순위로 보상 모델 학습</span></td>
+<td style="color:#d4a27f;"><strong>Constitutional AI (CAI)</strong><br><span style="color:var(--muted);font-size:0.72rem;">AI가 AI를 평가 — 원칙 기반 자기 개선 + RLHF</span></td>
+</tr>
+<tr>
+<td><strong>학습 하드웨어</strong></td>
+<td style="color:#4285f4;">Google TPU v4/v5<br><span style="color:var(--muted);font-size:0.72rem;">자체 설계 칩, 자체 데이터센터</span></td>
+<td>NVIDIA GPU 클러스터<br><span style="color:var(--muted);font-size:0.72rem;">Azure 슈퍼컴퓨터 (Microsoft 파트너십)</span></td>
+<td>NVIDIA/커스텀 GPU<br><span style="color:var(--muted);font-size:0.72rem;">AWS Bedrock · GCP Vertex AI</span></td>
+</tr>
+<tr>
+<td><strong>고유 강점</strong></td>
+<td style="font-size:0.78rem;">멀티모달 통합, 초장문맥, 검색 통합</td>
+<td style="font-size:0.78rem;">생태계 (플러그인, API), 선발주자 이점</td>
+<td style="font-size:0.78rem;">코딩 (Claude Code), 긴 문맥 정밀도, 확장 사고(Extended Thinking), 안전성</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div style="background:rgba(0,0,0,0.2);border-radius:12px;padding:1.2rem;margin:1rem 0;border:1px solid rgba(56,189,248,0.12);">
+<div style="font-family:var(--font-display);font-weight:700;color:#fff;font-size:1rem;margin-bottom:0.6rem;">🔑 핵심 구조적 차이: Dense vs. Mixture of Experts</div>
+<p style="font-size:0.88rem;color:var(--text);margin-bottom:0.8rem;">이 세 모델의 가장 근본적인 아키텍처 차이는 <strong>모든 매개변수를 항상 사용하느냐, 아니면 일부만 선택적으로 활성화하느냐</strong>입니다.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+<div style="background:var(--bg3);border-radius:10px;padding:1rem;border:1px solid rgba(167,139,250,0.15);">
+<div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--purple);margin-bottom:0.4rem;">DENSE (ChatGPT, Claude)</div>
+<p style="font-size:0.82rem;color:var(--text);margin:0;">매 토큰마다 <strong>모든 매개변수</strong>가 연산에 참여합니다. 1.8T 파라미터 모델이면 매번 1.8T개 전부 계산. 단순하지만 연산 비용이 크고, 모델 크기 = 연산 비용입니다.</p>
+</div>
+<div style="background:var(--bg3);border-radius:10px;padding:1rem;border:1px solid rgba(56,189,248,0.15);">
+<div style="font-family:var(--font-mono);font-size:0.75rem;color:var(--sky);margin-bottom:0.4rem;">SPARSE MoE (Gemini)</div>
+<p style="font-size:0.82rem;color:var(--text);margin:0;">FFN 층이 여러 "전문가"로 나뉘고, <strong>라우터</strong>가 각 토큰을 소수의 전문가에게만 배정합니다. 전체 1.5T 파라미터 중 ~200B만 활성화. 총 용량은 크지만 연산 비용은 작은 모델 수준 — <strong>용량과 비용의 분리</strong>.</p>
+</div>
+</div>
+<p style="font-size:0.82rem;color:var(--muted);margin:0.8rem 0 0;text-align:center;">하지만 기억하세요 — 셀프-어텐션, 잔차 연결, 레이어 정규화, 다음 토큰 예측이라는<br><strong style="color:var(--gold);">핵심 수학은 세 모델 모두 동일합니다.</strong></p>
+</div>
+</div>
+<div class="explanation-card reveal" style="border-left-color:var(--gold);">
+<p style="font-family:var(--font-display);font-style:italic;color:var(--gold);font-size:1.1rem;margin-bottom:0.8rem;">"핵심은 트랜스포머가 '더 좋은 모델'이었다는 것이 아닙니다.<br>핵심은 트랜스포머가 확장 가능한 모델이었다는 것입니다."</p>
+<p style="font-size:0.92rem;">RNN은 아무리 크게 만들어도 순차적 병목이 학습 시간을 제한했습니다. 트랜스포머는 GPU를 추가하면 추가한 만큼 빨라졌습니다. 이것이 전부입니다.</p>
+<p style="font-size:0.92rem;">트랜스포머가 가능하게 한 것은 단순한 성능 향상이 아니라 <strong>스케일링 법칙</strong>의 발견이었습니다: 모델 크기, 데이터 양, 연산량을 늘리면 손실이 <em>예측 가능한 멱법칙</em>에 따라 계속 감소한다는 것. 천장이 보이지 않았습니다.</p>
+<p style="font-size:0.92rem;margin:0;">2017년, 8명의 연구자가 올린 31페이지짜리 논문. 거기서 시작된 것이 지금 전 세계가 경험하는 AI 혁명입니다. 그 논문의 핵심 내용을 — 당신은 방금 §00부터 §06까지 전부 보았습니다.</p>
+</div>
+</div></section>
+
+<!-- §08 — NEXT-TOKEN PREDICTION -->
+<section id="sec-predict"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">08 — 학습 목표</p>
+<h2>다음 토큰 <span class="accent-gold">예측</span></h2>
+<p>전체 모델은 기만적으로 단순한 하나의 목표로 학습됩니다: <strong>이전의 모든 토큰이 주어졌을 때, 다음 토큰을 예측하라.</strong> 출력은 전체 어휘에 대한 확률 분포입니다.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">토큰이 샘플링될 때마다 "딩" 소리가 납니다</div>
+<div id="predict-context" style="font-family:var(--font-mono);font-size:0.95rem;color:var(--text);background:rgba(0,0,0,0.3);padding:1rem;border-radius:10px;min-height:2.5rem;line-height:1.8;margin-bottom:1rem;"><span style="color:var(--gold);">The meaning of life is</span></div>
+<div style="font-family:var(--font-mono);font-size:0.6rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.3rem;">상위 후보 — 확률 분포</div>
+<div class="canvas-wrap" style="margin-top:0;"><canvas id="predict-bars" height="200"></canvas></div>
+<div class="slider-row">
+<label>τ</label>
+<input type="range" id="pred-temp" min="1" max="30" value="10" step="1" oninput="updatePredTemp()">
+<span class="val" id="pred-temp-val">τ = 1.0</span>
+</div>
+<div class="btn-group">
+<button class="btn btn-gold" onclick="sampleNext()">🎲 다음 토큰 샘플링</button>
+<button class="btn" onclick="resetPredict()">초기화</button>
+<button class="btn" onclick="setPredictPrompt('옛날 옛적에')">옛날 옛적에</button>
+<button class="btn" onclick="setPredictPrompt('The derivative of sin(x) is')">미적분</button>
+</div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">온도</div><div class="sv" id="pred-t-show">1.0</div></div>
+<div class="stat-box"><div class="sl">엔트로피</div><div class="sv" id="pred-entropy">—</div></div>
+<div class="stat-box"><div class="sl">생성된 토큰</div><div class="sv" id="pred-count">0</div></div>
+</div>
+</div>
+<div class="math-block">
+P(x<sub>i</sub> | x<sub>&lt;i</sub>) = softmax( W<sub>out</sub> · h<sub>i</sub> / τ )
+</div>
+<div class="explanation-card reveal" style="border-left-color:var(--gold);">
+<p><strong style="color:#fff;">이 하나의 방정식이 GPT에게 글쓰기를 가르친 손실 함수입니다.</strong> — 예측된 다음 토큰과 실제 다음 토큰 사이의 교차 엔트로피. 그뿐입니다. 명시적 문법 규칙도, 의미 주석도, 수작업 특성도 없습니다. 그저 "텍스트를 읽고, 다음에 올 것을 예측하라" — 수조 개의 토큰에 걸쳐 반복. 그리고 여기서 언어 이해가 출현합니다.</p>
+</div>
+</div></section>
+
+<!-- §08 — EMERGENCE -->
+<section id="sec-emerge"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">09 — 미스터리</p>
+<h2>양이 <span class="accent-purple">질</span>이 될 때</h2>
+<p>모델의 규모가 커질수록 — 더 많은 매개변수, 더 많은 데이터, 더 많은 연산 — 작은 모델에는 <strong>전혀 없었던</strong> 질적으로 새로운 능력이 나타납니다. 이것이 <em>창발(emergence)</em>이며, 현대 AI에서 가장 깊은 미스터리 중 하나입니다.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">모델이 커질수록 울림이 쌓이고 — 창발 임계점에서 종소리가 울립니다</div>
+<div class="canvas-wrap"><span class="wave-label">창발 능력 vs. 모델 규모</span><canvas id="emerge-canvas" height="350"></canvas></div>
+<div class="slider-row">
+<label>N</label>
+<input type="range" id="emerge-slider" min="0" max="100" value="0" step="1" oninput="updateEmerge()">
+<span class="val" id="emerge-val">1M 파라미터</span>
+</div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">매개변수</div><div class="sv" id="em-params">1M</div></div>
+<div class="stat-box"><div class="sl">해금된 능력</div><div class="sv" id="em-abilities">0 <span class="su">/ 6</span></div></div>
+<div class="stat-box"><div class="sl">손실</div><div class="sv" id="em-loss">4.2</div></div>
+</div>
+</div>
+<div class="explanation-card reveal" style="border-left-color:var(--purple);">
+<p style="font-family:var(--font-display);font-style:italic;color:var(--purple);font-size:1.05rem;margin-bottom:0.8rem;">"아무도 모델에게 산술, 번역, 추론을 가르치지 않았습니다. 이 능력들은 단 하나의 목표에서 출현했습니다: 다음 단어를 예측하라."</p>
+<p>이것이 아마도 현대 AI에서 가장 심오한 사실일 것입니다. 텍스트 예측만을 학습한 모델이 수학을 하고, 코드를 쓰고, 물리학을 추론하고, 명시적으로 가르치지 않은 언어들을 번역하는 법을 배웁니다. 이것이 일어나는 메커니즘은 아직 완전히 이해되지 않았습니다.</p>
+</div>
+</div></section>
+
+<!-- §09 — 연결 -->
+<section id="sec-conn" style="min-height:auto;padding:4rem 2rem;"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">10 — 연결</p>
+<h2>이 모든 것은 <span class="accent-gold">선형대수</span>입니다</h2>
+</div>
+<div class="demo-card reveal"><table class="rosetta-simple"><thead><tr><th></th><th style="color:var(--gold);">수학</th><th style="color:var(--purple);">트랜스포머</th></tr></thead><tbody>
+<tr><td class="rs-icon">🔢</td><td><strong>행렬곱</strong></td><td>모든 층의 핵심 연산</td></tr>
+<tr><td class="rs-icon">📐</td><td><strong>내적, 코사인 유사도</strong></td><td>토큰 간 어텐션 점수</td></tr>
+<tr><td class="rs-icon">📊</td><td><strong>Softmax = 정규화된 지수 함수</strong></td><td>원시 점수에서 확률로</td></tr>
+<tr><td class="rs-icon">🔄</td><td><strong>함수의 반복 합성</strong></td><td>트랜스포머 블록 쌓기</td></tr>
+<tr><td class="rs-icon">📉</td><td><strong>교차 엔트로피에 대한 경사 하강법</strong></td><td>전체 학습 알고리즘</td></tr>
+<tr><td class="rs-icon">✨</td><td><strong>고차원 기하학</strong></td><td>창발적 표현</td></tr>
+</tbody></table></div>
+<div class="demo-card reveal"><h3 class="accent-purple" style="margin-bottom:0.5rem;">연대표</h3>
+<div class="ml-milestone-strip">
+<div class="ml-ms"><div class="ms-year" style="color:var(--gold);">1943</div><div class="ms-who">McCulloch–Pitts</div><div class="ms-what">인공 뉴런</div></div>
+<div class="ml-ms"><div class="ms-year" style="color:var(--coral);">1986</div><div class="ms-who">Rumelhart et al.</div><div class="ms-what">역전파</div></div>
+<div class="ml-ms"><div class="ms-year" style="color:var(--sky);">2013</div><div class="ms-who">Mikolov</div><div class="ms-what">Word2Vec</div></div>
+<div class="ml-ms"><div class="ms-year" style="color:var(--purple);">2017</div><div class="ms-who">Vaswani et al.</div><div class="ms-what">"Attention Is All<br>You Need"</div></div>
+<div class="ml-ms"><div class="ms-year" style="color:var(--mint);">2020–</div><div class="ms-who">GPT-3 → GPT-4</div><div class="ms-what">스케일링과 창발</div></div>
+</div></div>
+</div></section>
+
+<!-- CLOSING -->
+<section id="sec-closing"><div class="section-inner" style="text-align:center;"><div class="reveal">
+<h2>트랜스포머는<br><span class="accent-gold">하나의 단순한 질문</span>에서 태어났습니다.</h2>
+<p style="color:var(--muted);font-family:var(--font-display);font-style:italic;font-size:1.05rem;max-width:600px;margin:2rem auto;">
+Vaswani는 번역을 빠르게 하려 했습니다.<br>
+Mikolov는 비슷한 단어를 찾으려 했습니다.<br>
+Hinton은 뇌를 모델링하려 했습니다.<br><br>
+아무도 지능을 만들려 하지 않았습니다.<br>
+그러나 그들의 수학이 정확히 필요한 것이었습니다.
+</p>
+<p style="color:var(--muted);font-size:0.9rem;max-width:520px;margin:1rem auto 0;">이 페이지의 모든 시뮬레이션은 실시간으로 계산됩니다 — 브라우저에서 실행되는 순수한 선형대수입니다.</p>
+</div></div></section>
+
+<footer>
+<p>기계는 어떻게 이해하는가? — 트랜스포머의 수학</p>
+<p style="margin-top:0.3rem;font-size:0.7rem;">모든 시각화는 실시간으로 계산됩니다 — 순수한 수학.</p>
+<div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:.2rem">
+<div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;color:#edeef2;">Sang-hyun Kim</div>
+<div style="font-family:'DM Sans',sans-serif;font-size:.72rem;color:#5c6178;">고등과학원</div>
+<a href="https://kimsh.kr" style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;margin-top:.25rem">kimsh.kr</a>
+</div>
+</footer>
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
+<script>
+// ═══════════════════════════════════════════
+// GLOBALS & AUDIO
+// ═══════════════════════════════════════════
+let actx=null;
+function initAudio(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();}
+function ensureAudio(){initAudio();}
+function dismissNotice(){initAudio();const n=document.getElementById('audio-notice');n.style.transition='opacity 0.3s';n.style.opacity='0';setTimeout(()=>n.remove(),300);}
+function playChime(freq,dur=0.15,vol=0.06,type='triangle'){if(!actx)return;const now=actx.currentTime,o=actx.createOscillator(),g=actx.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(vol,now);g.gain.exponentialRampToValueAtTime(0.0001,now+dur);o.connect(g).connect(actx.destination);o.start(now);o.stop(now+dur+0.05);}
+function playChord(freqs,dur=0.4,vol=0.04){if(!actx)return;const now=actx.currentTime;freqs.forEach((f,i)=>{const o=actx.createOscillator(),g=actx.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(vol,now+i*0.04);g.gain.exponentialRampToValueAtTime(0.0001,now+dur);o.connect(g).connect(actx.destination);o.start(now+i*0.04);o.stop(now+dur+0.05);});}
+function gaussRand(){let u=0,v=0;while(u===0)u=Math.random();while(v===0)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+function softmax(arr,temp=1){const m=Math.max(...arr);const e=arr.map(x=>Math.exp((x-m)/temp));const s=e.reduce((a,b)=>a+b,0);return e.map(x=>x/s);}
+function lerp(a,b,t){return a+(b-a)*t;}
+function clamp(v,mn,mx){return Math.max(mn,Math.min(mx,v));}
+function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
+
+// ═══════════════════════════════════════════
+// HERO CANVAS — Floating token particles
+// ═══════════════════════════════════════════
+const heroCanvas=document.getElementById('hero-canvas'),heroCtx=heroCanvas.getContext('2d');
+const HERO_WORDS=['attention','query','key','value','softmax','embedding','token','layer','gradient','loss','weight','neuron','matrix','vector','transform','predict','encode','decode','learn','meaning'];
+const heroP=[];
+for(let i=0;i<HERO_WORDS.length;i++){
+  const a=Math.random()*6.28,d=0.12+Math.random()*0.35;
+  heroP.push({x:0.5+Math.cos(a)*d,y:0.5+Math.sin(a)*d,vx:(Math.random()-0.5)*0.0003,vy:(Math.random()-0.5)*0.0003,word:HERO_WORDS[i],c:['#a78bfa','#f0b429','#38bdf8','#fb7185','#34d399'][i%5],al:0.2+Math.random()*0.3,ph:Math.random()*6.28});
+}
+function drawHero(){
+  const w=heroCanvas.width=heroCanvas.clientWidth*2,h=heroCanvas.height=heroCanvas.clientHeight*2;
+  heroCtx.clearRect(0,0,w,h);const t=performance.now()/1000;
+  heroP.forEach(p=>{
+    p.x+=p.vx+Math.sin(t*0.3+p.ph)*0.00005;p.y+=p.vy+Math.cos(t*0.25+p.ph)*0.00005;
+    if(p.x<0.05||p.x>0.95)p.vx*=-1;if(p.y<0.05||p.y>0.95)p.vy*=-1;
+    const px=p.x*w,py=p.y*h;
+    heroCtx.globalAlpha=p.al*(0.5+0.5*Math.sin(t*0.7+p.ph));
+    heroCtx.fillStyle=p.c;heroCtx.beginPath();heroCtx.arc(px,py,4,0,6.28);heroCtx.fill();
+    heroCtx.font='600 '+Math.round(11*2)+'px "DM Sans",sans-serif';heroCtx.textAlign='center';heroCtx.fillText(p.word,px,py-12);
+    heroCtx.globalAlpha=1;
+  });
+  // Attention arcs
+  for(let i=0;i<heroP.length;i++){
+    const a=heroP[i];const j=(i+1+Math.floor(Math.sin(t*0.15+i)*3+3))%heroP.length;const b=heroP[j];
+    const ax=a.x*w,ay=a.y*h,bx=b.x*w,by=b.y*h;
+    const d=Math.sqrt((ax-bx)**2+(ay-by)**2);
+    if(d<w*0.35){
+      const osc=0.5+0.5*Math.sin(t*0.5+i*0.7);
+      heroCtx.beginPath();heroCtx.moveTo(ax,ay);
+      heroCtx.quadraticCurveTo((ax+bx)/2,(ay+by)/2-30*osc,bx,by);
+      heroCtx.strokeStyle=`rgba(167,139,250,${0.04*osc})`;heroCtx.lineWidth=1;heroCtx.stroke();
+    }
+  }
+  requestAnimationFrame(drawHero);
+}
+drawHero();
+
+// ═══════════════════════════════════════════
+// §00 — DOT PRODUCT DEMO
+// ═══════════════════════════════════════════
+const dotC=document.getElementById('dot-canvas'),dotX=dotC.getContext('2d');
+let dotA={x:0.7,y:-0.3},dotB={x:0.2,y:0.8};
+let dragging=null,dotHover=null;
+
+function drawDot(){
+  const w=dotC.width=dotC.clientWidth*2,h=dotC.height=640;
+  dotX.clearRect(0,0,w,h);
+  const cx=w/2,cy=h/2,scale=Math.min(w,h)*0.32;
+  // Grid
+  dotX.strokeStyle='rgba(255,255,255,0.04)';dotX.lineWidth=1;
+  for(let i=-3;i<=3;i++){
+    dotX.beginPath();dotX.moveTo(cx+i*scale/2,0);dotX.lineTo(cx+i*scale/2,h);dotX.stroke();
+    dotX.beginPath();dotX.moveTo(0,cy+i*scale/2);dotX.lineTo(w,cy+i*scale/2);dotX.stroke();
+  }
+  // Axes
+  dotX.strokeStyle='rgba(255,255,255,0.1)';dotX.lineWidth=1.5;
+  dotX.beginPath();dotX.moveTo(0,cy);dotX.lineTo(w,cy);dotX.stroke();
+  dotX.beginPath();dotX.moveTo(cx,0);dotX.lineTo(cx,h);dotX.stroke();
+  // Similarity glow
+  const dp=dotA.x*dotB.x+dotA.y*dotB.y;
+  const magA=Math.sqrt(dotA.x**2+dotA.y**2),magB=Math.sqrt(dotB.x**2+dotB.y**2);
+  const cosVal=magA>0.01&&magB>0.01?dp/(magA*magB):0;
+  const glow=Math.max(0,cosVal);
+  if(glow>0.01){
+    const grad=dotX.createRadialGradient(cx,cy,0,cx,cy,scale*1.5);
+    grad.addColorStop(0,`rgba(240,180,41,${glow*0.08})`);grad.addColorStop(1,'rgba(0,0,0,0)');
+    dotX.fillStyle=grad;dotX.fillRect(0,0,w,h);
+  }
+  // Angle arc
+  const angA=Math.atan2(-dotA.y,dotA.x),angB=Math.atan2(-dotB.y,dotB.x);
+  dotX.beginPath();dotX.arc(cx,cy,scale*0.2,Math.min(angA,angB),Math.max(angA,angB));
+  dotX.strokeStyle='rgba(167,139,250,0.3)';dotX.lineWidth=2;dotX.stroke();
+  // Draw vectors
+  function drawVec(v,color,label){
+    const ex=cx+v.x*scale,ey=cy-v.y*scale;
+    dotX.beginPath();dotX.moveTo(cx,cy);dotX.lineTo(ex,ey);
+    dotX.strokeStyle=color;dotX.lineWidth=3;dotX.stroke();
+    // Arrowhead
+    const ang=Math.atan2(cy-ey,ex-cx);
+    dotX.beginPath();dotX.moveTo(ex,ey);
+    dotX.lineTo(ex-14*Math.cos(ang-0.35),ey+14*Math.sin(ang-0.35));
+    dotX.lineTo(ex-14*Math.cos(ang+0.35),ey+14*Math.sin(ang+0.35));
+    dotX.closePath();dotX.fillStyle=color;dotX.fill();
+    // Drag handle
+    dotX.beginPath();dotX.arc(ex,ey,12,0,6.28);
+    dotX.fillStyle=`${color}33`;dotX.fill();
+    dotX.strokeStyle=color;dotX.lineWidth=1.5;dotX.stroke();
+    // Label
+    dotX.font='500 22px "DM Sans",sans-serif';dotX.fillStyle=color;dotX.textAlign='center';
+    dotX.fillText(label,ex+(v.x>0?18:-18),ey+(v.y>0?-18:24));
+  }
+  drawVec(dotA,'#f0b429','a⃗');
+  drawVec(dotB,'#38bdf8','b⃗');
+  // Stats
+  const angle=Math.acos(clamp(cosVal,-1,1))*180/Math.PI;
+  document.getElementById('dot-val').textContent=dp.toFixed(2);
+  document.getElementById('dot-cos').textContent=cosVal.toFixed(3);
+  document.getElementById('dot-angle').textContent=Math.round(angle)+'°';
+  // Audio feedback
+  if(actx&&dragging){playChime(200+cosVal*400,0.08,0.02,'sine');}
+  requestAnimationFrame(drawDot);
+}
+dotC.addEventListener('pointerdown',e=>{
+  const r=dotC.getBoundingClientRect(),sx=(e.clientX-r.left)/r.width,sy=(e.clientY-r.top)/r.height;
+  const w=dotC.width,h=dotC.height,cx=0.5,cy=0.5,sc=Math.min(1,1)*0.32;
+  // Check distance to each vector tip
+  const asx=0.5+dotA.x*0.32,asy=0.5-dotA.y*(h/w)*0.32;
+  const bsx=0.5+dotB.x*0.32,bsy=0.5-dotB.y*(h/w)*0.32;
+  const da=Math.sqrt((sx-asx)**2+(sy-asy)**2);
+  const db=Math.sqrt((sx-bsx)**2+(sy-bsy)**2);
+  if(da<0.06)dragging='a';else if(db<0.06)dragging='b';
+  dotC.setPointerCapture(e.pointerId);
+});
+dotC.addEventListener('pointermove',e=>{
+  if(!dragging)return;
+  const r=dotC.getBoundingClientRect(),sx=(e.clientX-r.left)/r.width,sy=(e.clientY-r.top)/r.height;
+  const vx=(sx-0.5)/0.32,vy=-(sy-0.5)/(dotC.height/dotC.width)/0.32;
+  if(dragging==='a'){dotA.x=clamp(vx,-1.4,1.4);dotA.y=clamp(vy,-1.4,1.4);}
+  else{dotB.x=clamp(vx,-1.4,1.4);dotB.y=clamp(vy,-1.4,1.4);}
+});
+dotC.addEventListener('pointerup',()=>{dragging=null;});
+drawDot();
+
+// ═══════════════════════════════════════════
+// §01 — TOKENIZATION
+// ═══════════════════════════════════════════
+const TOKEN_COLORS=['#f0b429','#38bdf8','#a78bfa','#fb7185','#34d399','#f97316','#06b6d4','#c084fc','#f472b6','#2dd4bf'];
+// Simple BPE-like tokenizer (approximation for demonstration)
+function simpleTokenize(text){
+  const common=['the','is','of','and','to','in','that','was','for','it','on','are','as','with','they','be','at','this','from','or','an','by','not','but','what','all','were','when','we','there','can','had','has','her','his','one','our','out','you','do','no','so','if','up','about','who','my','than','how','each','she','which','their','will','way','its','may','said','did','been'];
+  const suffixes=['tion','sion','ment','ness','able','ible','ful','less','ing','ous','ive','ent','ant','al','ity','er','est','ly','ed','es','s'];
+  const tokens=[];let i=0;
+  while(i<text.length){
+    if(text[i]===' '){tokens.push({t:' ',id:32});i++;continue;}
+    // Try common words
+    let found=false;
+    for(const w of common){
+      const sub=text.substring(i,i+w.length).toLowerCase();
+      if(sub===w&&(i+w.length>=text.length||/[^a-zA-Z]/.test(text[i+w.length]))){
+        tokens.push({t:text.substring(i,i+w.length),id:100+common.indexOf(w)});i+=w.length;found=true;break;
+      }
+    }
+    if(found)continue;
+    // Try splitting at suffix boundaries
+    let wordEnd=i;while(wordEnd<text.length&&/[a-zA-Z가-힣\u0400-\u04FF]/.test(text[wordEnd]))wordEnd++;
+    if(wordEnd>i){
+      const word=text.substring(i,wordEnd);
+      if(word.length>4){
+        let split=false;
+        for(const suf of suffixes){
+          if(word.toLowerCase().endsWith(suf)&&word.length-suf.length>=2){
+            tokens.push({t:word.substring(0,word.length-suf.length),id:(word.charCodeAt(0)*31+word.length*7)%9000+1000});
+            tokens.push({t:suf,id:(suf.charCodeAt(0)*17+suf.length*13)%9000+1000});
+            split=true;break;
+          }
+        }
+        if(!split)tokens.push({t:word,id:(word.charCodeAt(0)*31+word.charCodeAt(Math.min(1,word.length-1))*17+word.length*7)%9000+1000});
+      }else{
+        tokens.push({t:word,id:(word.charCodeAt(0)*31+word.length*7)%9000+1000});
+      }
+      i=wordEnd;
+    }else{
+      tokens.push({t:text[i],id:text.charCodeAt(i)});i++;
+    }
+  }
+  return tokens.filter(t=>t.t!==' ');
+}
+function tokenize(){
+  const text=document.getElementById('token-input').value;
+  const tokens=simpleTokenize(text);
+  const out=document.getElementById('token-output');
+  out.innerHTML='';
+  tokens.forEach((tok,i)=>{
+    const chip=document.createElement('span');
+    chip.className='token-chip';
+    const c=TOKEN_COLORS[i%TOKEN_COLORS.length];
+    chip.style.background=c+'18';chip.style.border='1px solid '+c+'40';chip.style.color=c;
+    chip.style.animationDelay=(i*0.05)+'s';
+    chip.innerHTML=tok.t.replace(/</g,'&lt;')+'<span class="token-id">'+tok.id+'</span>';
+    out.appendChild(chip);
+    // Sound
+    setTimeout(()=>{if(actx)playChime(300+i*40,0.06,0.02,'sine');},i*50);
+  });
+  document.getElementById('tok-count').textContent=tokens.length;
+  document.getElementById('tok-chars').textContent=text.length;
+  document.getElementById('tok-ratio').textContent=text.length>0?(text.length/tokens.length).toFixed(1)+' ch/tok':'—';
+}
+function setTokenText(text,btn){
+  document.getElementById('token-input').value=text;
+  btn.parentElement.querySelectorAll('.btn').forEach(b=>b.classList.remove('활성'));
+  btn.classList.add('active');
+  tokenize();
+}
+tokenize();
+
+// ═══════════════════════════════════════════
+// §02 — EMBEDDING SPACE
+// ═══════════════════════════════════════════
+const embedC=document.getElementById('embed-canvas'),embedX=embedC.getContext('2d');
+const EMBED_WORDS=[
+  // Royalty cluster
+  {w:'king',x:0.72,y:0.25,c:'#f0b429',cat:0},{w:'queen',x:0.78,y:0.38,c:'#f0b429',cat:0},{w:'prince',x:0.68,y:0.32,c:'#f0b429',cat:0},{w:'throne',x:0.82,y:0.30,c:'#f0b429',cat:0},
+  // Gender
+  {w:'man',x:0.45,y:0.22,c:'#38bdf8',cat:1},{w:'woman',x:0.52,y:0.35,c:'#38bdf8',cat:1},{w:'boy',x:0.40,y:0.28,c:'#38bdf8',cat:1},{w:'girl',x:0.47,y:0.40,c:'#38bdf8',cat:1},
+  // Animals
+  {w:'cat',x:0.18,y:0.55,c:'#fb7185',cat:2},{w:'dog',x:0.25,y:0.60,c:'#fb7185',cat:2},{w:'fish',x:0.15,y:0.68,c:'#fb7185',cat:2},{w:'bird',x:0.22,y:0.48,c:'#fb7185',cat:2},
+  // Math
+  {w:'theorem',x:0.70,y:0.72,c:'#34d399',cat:3},{w:'proof',x:0.75,y:0.78,c:'#34d399',cat:3},{w:'lemma',x:0.65,y:0.80,c:'#34d399',cat:3},{w:'equation',x:0.80,y:0.68,c:'#34d399',cat:3},
+  // Emotions
+  {w:'happy',x:0.35,y:0.75,c:'#a78bfa',cat:4},{w:'sad',x:0.30,y:0.82,c:'#a78bfa',cat:4},{w:'angry',x:0.38,y:0.88,c:'#a78bfa',cat:4},{w:'love',x:0.42,y:0.78,c:'#a78bfa',cat:4},
+];
+let embedHover=-1,embedClick=-1,showAnalogy=false,embedRotation=0;
+function rotateEmbed(){embedRotation+=0.3;EMBED_WORDS.forEach(w=>{const ox=w.x-0.5,oy=w.y-0.5;const c=Math.cos(0.3),s=Math.sin(0.3);w.x=0.5+ox*c-oy*s;w.y=0.5+ox*s+oy*c;});}
+function toggleAnalogy(){showAnalogy=!showAnalogy;document.getElementById('analogy-btn').classList.toggle('active',showAnalogy);if(showAnalogy)playChord([261.63,329.63,392.00],0.5,0.03);}
+
+function drawEmbed(){
+  const w=embedC.width=embedC.clientWidth*2,h=embedC.height=880;
+  embedX.clearRect(0,0,w,h);
+  const t=performance.now()/1000;
+  const pad=60;
+  // Cluster halos
+  const cats=[[],[],[],[],[]];
+  EMBED_WORDS.forEach((wd,i)=>cats[wd.cat].push(i));
+  cats.forEach((indices,ci)=>{
+    if(indices.length===0)return;
+    let cx=0,cy=0;indices.forEach(i=>{cx+=EMBED_WORDS[i].x;cy+=EMBED_WORDS[i].y;});
+    cx/=indices.length;cy/=indices.length;
+    const grad=embedX.createRadialGradient(pad+cx*(w-2*pad),pad+cy*(h-2*pad),0,pad+cx*(w-2*pad),pad+cy*(h-2*pad),100);
+    grad.addColorStop(0,EMBED_WORDS[indices[0]].c+'10');grad.addColorStop(1,'transparent');
+    embedX.fillStyle=grad;embedX.fillRect(0,0,w,h);
+  });
+  // Hover lines
+  if(embedClick>=0){
+    const sel=EMBED_WORDS[embedClick];
+    EMBED_WORDS.forEach((wd,i)=>{
+      if(i===embedClick)return;
+      const dx=wd.x-sel.x,dy=wd.y-sel.y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<0.25){
+        const al=1-dist/0.25;
+        embedX.beginPath();
+        embedX.moveTo(pad+sel.x*(w-2*pad),pad+sel.y*(h-2*pad));
+        embedX.lineTo(pad+wd.x*(w-2*pad),pad+wd.y*(h-2*pad));
+        embedX.strokeStyle=`rgba(240,180,41,${al*0.3})`;embedX.lineWidth=al*2;embedX.stroke();
+        // Similarity label
+        const cos=(1-dist/0.5).toFixed(2);
+        embedX.font='500 18px "JetBrains Mono",monospace';embedX.fillStyle=`rgba(240,180,41,${al*0.5})`;
+        embedX.textAlign='center';
+        embedX.fillText(cos,(pad+sel.x*(w-2*pad)+pad+wd.x*(w-2*pad))/2,(pad+sel.y*(h-2*pad)+pad+wd.y*(h-2*pad))/2-8);
+      }
+    });
+  }
+  // Analogy arrows
+  if(showAnalogy){
+    const king=EMBED_WORDS[0],queen=EMBED_WORDS[1],man=EMBED_WORDS[4],woman=EMBED_WORDS[5];
+    function px(wd){return pad+wd.x*(w-2*pad);}
+    function py(wd){return pad+wd.y*(h-2*pad);}
+    function drawArrow(a,b,color,label){
+      embedX.beginPath();embedX.moveTo(px(a),py(a));embedX.lineTo(px(b),py(b));
+      embedX.strokeStyle=color;embedX.lineWidth=2.5;embedX.setLineDash([6,4]);embedX.stroke();embedX.setLineDash([]);
+      const mx=(px(a)+px(b))/2,my=(py(a)+py(b))/2;
+      embedX.font='600 20px "DM Sans",sans-serif';embedX.fillStyle=color;embedX.textAlign='center';
+      embedX.fillText(label,mx,my-10);
+    }
+    drawArrow(man,woman,'#38bdf8','+ gender');
+    drawArrow(king,queen,'#f0b429','+ gender');
+    drawArrow(man,king,'#a78bfa','+ royalty');
+    drawArrow(woman,queen,'#a78bfa','+ royalty');
+  }
+  // Words
+  EMBED_WORDS.forEach((wd,i)=>{
+    const px2=pad+wd.x*(w-2*pad)+Math.sin(t*0.5+i)*3;
+    const py2=pad+wd.y*(h-2*pad)+Math.cos(t*0.4+i*1.1)*3;
+    const isHov=i===embedHover||i===embedClick;
+    // Dot
+    embedX.beginPath();embedX.arc(px2,py2,isHov?8:5,0,6.28);
+    embedX.fillStyle=isHov?'#fff':wd.c;embedX.fill();
+    // Label
+    embedX.font=(isHov?'600 24':'500 20')+'px "DM Sans",sans-serif';
+    embedX.fillStyle=isHov?'#fff':wd.c;embedX.textAlign='center';
+    embedX.fillText(wd.w,px2,py2-14);
+  });
+  requestAnimationFrame(drawEmbed);
+}
+embedC.addEventListener('pointermove',e=>{
+  const r=embedC.getBoundingClientRect(),sx=(e.clientX-r.left)/r.width,sy=(e.clientY-r.top)/r.height;
+  const w=embedC.width,h=embedC.height,pad=60/w;
+  let closest=-1,minD=0.04;
+  EMBED_WORDS.forEach((wd,i)=>{
+    const dx=sx-(pad+wd.x*(1-2*pad));const dy=sy-(pad+wd.y*(1-2*pad));
+    const d=Math.sqrt(dx*dx+dy*dy);
+    if(d<minD){minD=d;closest=i;}
+  });
+  if(closest!==embedHover){
+    embedHover=closest;
+    if(closest>=0){
+      document.getElementById('embed-info').textContent=EMBED_WORDS[closest].w+' — 클릭하여 이웃 표시';
+      if(actx)playChime(200+EMBED_WORDS[closest].x*300+EMBED_WORDS[closest].y*200,0.1,0.02,'sine');
+    }else{
+      document.getElementById('embed-info').textContent='단어 위에 마우스를 올려보세요 · 클릭하면 이웃이 표시됩니다';
+    }
+  }
+});
+embedC.addEventListener('click',()=>{embedClick=embedHover;});
+drawEmbed();
+
+// ═══════════════════════════════════════════
+// §03 — POSITIONAL ENCODING
+// ═══════════════════════════════════════════
+const posC=document.getElementById('pos-canvas'),posX=posC.getContext('2d');
+const posW=document.getElementById('pos-waves'),posWX=posW.getContext('2d');
+const POS_MAX=64,POS_DIM=128;
+
+function posEnc(pos,dim){
+  const d=POS_DIM;
+  const i=Math.floor(dim/2);
+  const freq=1/Math.pow(10000,2*i/d);
+  return dim%2===0?Math.sin(pos*freq):Math.cos(pos*freq);
+}
+
+function drawPos(){
+  const w=posC.width=posC.clientWidth*2,h=posC.height=600;
+  posX.clearRect(0,0,w,h);
+  const selPos=+document.getElementById('pos-slider').value;
+  document.getElementById('pos-val').textContent='위치 '+selPos;
+  const cellW=w/POS_DIM,cellH=h/POS_MAX;
+  for(let p=0;p<POS_MAX;p++){
+    for(let d=0;d<POS_DIM;d++){
+      const v=posEnc(p,d);
+      const r=v>0?Math.round(v*167):0;
+      const g=v>0?Math.round(v*139):0;
+      const b=v>0?Math.round(v*250):Math.round(-v*56);
+      const bg=v<0?Math.round(-v*189):0;
+      const bb=v<0?Math.round(-v*248):0;
+      posX.fillStyle=`rgb(${r+bg},${g},${b+bb})`;
+      posX.fillRect(d*cellW,p*cellH,cellW+1,cellH+1);
+    }
+    // Highlight selected row
+    if(p===selPos){
+      posX.fillStyle='rgba(240,180,41,0.15)';posX.fillRect(0,p*cellH,w,cellH);
+      posX.strokeStyle='var(--gold)';posX.lineWidth=2;posX.strokeRect(0,p*cellH,w,cellH);
+    }
+  }
+  // Wave decomposition
+  const ww=posW.width=posW.clientWidth*2,wh=posW.height=240;
+  posWX.clearRect(0,0,ww,wh);
+  const freqs=[0,2,8,32];const fColors=['#f0b429','#38bdf8','#a78bfa','#fb7185'];
+  freqs.forEach((fi,idx)=>{
+    posWX.beginPath();
+    for(let x=0;x<=ww;x++){
+      const p=selPos;const v=posEnc(p,fi)*0.8;
+      // Draw the wave pattern across positions for this dimension
+      const px2=(x/ww)*POS_MAX;
+      const wv=posEnc(px2,fi);
+      const py2=wh/2-wv*(wh*0.35)/(freqs.length)*1.5+idx*(wh/freqs.length/2)-wh*0.1;
+      x===0?posWX.moveTo(x,py2):posWX.lineTo(x,py2);
+    }
+    posWX.strokeStyle=fColors[idx];posWX.lineWidth=2;posWX.globalAlpha=0.6;posWX.stroke();posWX.globalAlpha=1;
+    // Label
+    posWX.font='500 18px "JetBrains Mono",monospace';posWX.fillStyle=fColors[idx];posWX.textAlign='left';
+    posWX.fillText('dim '+fi,8,wh*0.15+idx*(wh/freqs.length/2));
+  });
+  // Cursor
+  const curX=(selPos/POS_MAX)*ww;
+  posWX.beginPath();posWX.moveTo(curX,0);posWX.lineTo(curX,wh);
+  posWX.strokeStyle='rgba(240,180,41,0.5)';posWX.lineWidth=2;posWX.setLineDash([4,4]);posWX.stroke();posWX.setLineDash([]);
+}
+function updatePos(){drawPos();}
+function playPosChord(){
+  ensureAudio();if(!actx)return;
+  const pos=+document.getElementById('pos-slider').value;
+  const freqs=[];
+  for(let d=0;d<8;d++){
+    const v=posEnc(pos,d*2);
+    freqs.push(200+d*80+(v+1)*40);
+  }
+  playChord(freqs.slice(0,5),0.6,0.025);
+}
+drawPos();
+
+// ═══════════════════════════════════════════
+// §04 — SELF-ATTENTION
+// ═══════════════════════════════════════════
+const attnArcC=document.getElementById('attn-arcs'),attnArcX=attnArcC.getContext('2d');
+const attnMatC=document.getElementById('attn-matrix'),attnMatX=attnMatC.getContext('2d');
+
+const ATTN_SENTENCES=[
+  {words:['The','cat','sat','on','the','mat','because','it','was','tired'],
+   // Simulated embeddings (small 4D vectors for computing real dot products)
+   emb:[[1,0.3,0.5,0.1],[0.2,1,0.1,0.3],[0.1,0.4,1,0.2],[0.5,0.1,0.2,0.8],[1,0.3,0.5,0.1],[0.3,0.9,0.15,0.4],[0.6,0.2,0.7,0.3],[0.25,0.95,0.12,0.35],[0.4,0.3,0.8,0.5],[0.15,0.8,0.6,0.2]]},
+  {words:['The','key','to','understand','ing','is','attention','itself'],
+   emb:[[1,0.3,0.5,0.1],[0.8,0.5,0.9,0.7],[0.5,0.1,0.2,0.8],[0.3,0.7,0.8,0.4],[0.2,0.6,0.7,0.3],[0.5,0.1,0.3,0.2],[0.9,0.8,0.95,0.85],[0.4,0.5,0.4,0.5]]},
+  {words:['Banks','along','the','river','had','no','money'],
+   emb:[[0.8,0.7,0.3,0.9],[0.3,0.5,0.2,0.4],[1,0.3,0.5,0.1],[0.2,0.8,0.1,0.6],[0.4,0.2,0.6,0.3],[0.1,0.1,0.1,0.1],[0.7,0.6,0.4,0.8]]}
+];
+let attnIdx=0,attnSelRow=-1;
+
+function computeAttnWeights(sentIdx){
+  const sent=ATTN_SENTENCES[sentIdx];
+  const n=sent.words.length;const d=sent.emb[0].length;
+  const temp=+document.getElementById('attn-temp').value/10;
+  document.getElementById('attn-temp-val').textContent='τ = '+temp.toFixed(1);
+  const weights=[];
+  for(let i=0;i<n;i++){
+    const scores=[];
+    for(let j=0;j<n;j++){
+      let dp=0;for(let k=0;k<d;k++)dp+=sent.emb[i][k]*sent.emb[j][k];
+      scores.push(dp/Math.sqrt(d));
+    }
+    weights.push(softmax(scores,temp));
+  }
+  return weights;
+}
+
+function drawAttn(){
+  const sent=ATTN_SENTENCES[attnIdx];
+  const n=sent.words.length;
+  const weights=computeAttnWeights(attnIdx);
+  // --- Matrix ---
+  const mw=attnMatC.width=attnMatC.clientWidth*2,mh=attnMatC.height=640;
+  attnMatX.clearRect(0,0,mw,mh);
+  const pad=80,cellSize=Math.min((mw-pad*2)/n,(mh-pad*2)/n);
+  const gridW=cellSize*n,gridH=cellSize*n;
+  const ox=(mw-gridW)/2,oy=pad;
+  // Column headers (keys)
+  attnMatX.font='500 20px "DM Sans",sans-serif';attnMatX.textAlign='center';
+  for(let j=0;j<n;j++){
+    attnMatX.fillStyle=j===attnSelRow?'#f0b429':'#7b8db5';
+    attnMatX.save();attnMatX.translate(ox+j*cellSize+cellSize/2,oy-8);
+    attnMatX.rotate(-0.5);attnMatX.fillText(sent.words[j],0,0);attnMatX.restore();
+  }
+  // Row headers (queries) + cells
+  for(let i=0;i<n;i++){
+    // Row label
+    attnMatX.font='500 20px "DM Sans",sans-serif';attnMatX.textAlign='right';
+    attnMatX.fillStyle=i===attnSelRow?'#f0b429':'#7b8db5';
+    attnMatX.fillText(sent.words[i],ox-12,oy+i*cellSize+cellSize/2+6);
+    for(let j=0;j<n;j++){
+      const w=weights[i][j];
+      // Cell color
+      const r=Math.round(167*w+56*(1-w)*0.3);
+      const g=Math.round(139*w+189*(1-w)*0.1);
+      const b=Math.round(250*w+248*(1-w)*0.15);
+      attnMatX.fillStyle=`rgba(${r},${g},${b},${0.1+w*0.8})`;
+      attnMatX.fillRect(ox+j*cellSize+1,oy+i*cellSize+1,cellSize-2,cellSize-2);
+      // Weight text
+      if(w>0.05){
+        attnMatX.font='500 16px "JetBrains Mono",monospace';
+        attnMatX.fillStyle=w>0.3?'#fff':'rgba(255,255,255,0.5)';
+        attnMatX.textAlign='center';
+        attnMatX.fillText(w.toFixed(2),ox+j*cellSize+cellSize/2,oy+i*cellSize+cellSize/2+5);
+      }
+    }
+    // Row highlight
+    if(i===attnSelRow){
+      attnMatX.strokeStyle='var(--gold)';attnMatX.lineWidth=2;
+      attnMatX.strokeRect(ox,oy+i*cellSize,gridW,cellSize);
+    }
+  }
+  // Clickable word bar below matrix
+  const barY=oy+gridH+20;
+  attnMatX.font='600 22px "DM Sans",sans-serif';attnMatX.textAlign='center';
+  for(let i=0;i<n;i++){
+    const bx=ox+i*cellSize+cellSize/2;
+    attnMatX.fillStyle=i===attnSelRow?'#f0b429':'#38bdf8';
+    attnMatX.fillText(sent.words[i],bx,barY+20);
+    if(i===attnSelRow){
+      attnMatX.fillStyle='rgba(240,180,41,0.15)';
+      attnMatX.fillRect(ox+i*cellSize,barY-5,cellSize,35);
+    }
+  }
+  // --- Arcs ---
+  const aw=attnArcC.width=attnArcC.clientWidth*2,ah=attnArcC.height=280;
+  attnArcX.clearRect(0,0,aw,ah);
+  if(attnSelRow>=0){
+    const row=weights[attnSelRow];
+    const arcPad=50;
+    const spacing=(aw-2*arcPad)/Math.max(n-1,1);
+    // Words
+    attnArcX.font='600 22px "DM Sans",sans-serif';attnArcX.textAlign='center';
+    for(let i=0;i<n;i++){
+      const x=arcPad+i*spacing;
+      attnArcX.fillStyle=i===attnSelRow?'#f0b429':'#e0e6f0';
+      attnArcX.fillText(sent.words[i],x,ah-20);
+      // Dot
+      attnArcX.beginPath();attnArcX.arc(x,ah-40,4,0,6.28);
+      attnArcX.fillStyle=i===attnSelRow?'#f0b429':'#7b8db5';attnArcX.fill();
+    }
+    // Arcs from selected word
+    const sx=arcPad+attnSelRow*spacing;
+    for(let j=0;j<n;j++){
+      if(j===attnSelRow)continue;
+      const w=row[j];if(w<0.01)continue;
+      const tx=arcPad+j*spacing;
+      const cpY=ah-40-Math.abs(j-attnSelRow)*28-w*60;
+      attnArcX.beginPath();
+      attnArcX.moveTo(sx,ah-40);
+      attnArcX.quadraticCurveTo((sx+tx)/2,cpY,tx,ah-40);
+      attnArcX.strokeStyle=`rgba(167,139,250,${0.2+w*0.7})`;
+      attnArcX.lineWidth=1+w*5;attnArcX.stroke();
+      // Weight label
+      if(w>0.08){
+        attnArcX.font='500 16px "JetBrains Mono",monospace';
+        attnArcX.fillStyle=`rgba(167,139,250,${0.5+w*0.5})`;
+        attnArcX.fillText(w.toFixed(2),(sx+tx)/2,cpY-5);
+      }
+    }
+    document.getElementById('attn-arc-label').textContent='쿼리: "'+sent.words[attnSelRow]+'" — 모든 키에 대한 어텐션';
+  }else{
+    document.getElementById('attn-arc-label').textContent='아래에서 쿼리 단어를 선택하세요';
+    attnArcX.font='400 24px "DM Sans",sans-serif';attnArcX.fillStyle='#7b8db5';
+    attnArcX.textAlign='center';attnArcX.fillText('아래에서 쿼리 단어를 선택하세요',aw/2,ah/2);
+  }
+}
+// Click handler for selecting query word
+attnMatC.addEventListener('click',e=>{
+  const sent=ATTN_SENTENCES[attnIdx];
+  const n=sent.words.length;
+  const r=attnMatC.getBoundingClientRect();
+  const sx=(e.clientX-r.left)/r.width*attnMatC.width;
+  const sy=(e.clientY-r.top)/r.height*attnMatC.height;
+  const pad=80,cellSize=Math.min((attnMatC.width-pad*2)/n,(attnMatC.height-pad*2)/n);
+  const gridW=cellSize*n,gridH=cellSize*n;
+  const ox=(attnMatC.width-gridW)/2,oy=pad;
+  // Check word bar
+  const barY=oy+gridH+20;
+  if(sy>barY-10&&sy<barY+30){
+    const col=Math.floor((sx-ox)/cellSize);
+    if(col>=0&&col<n){
+      attnSelRow=col;
+      drawAttn();
+      // Play attention chord
+      ensureAudio();
+      if(actx){
+        const w=computeAttnWeights(attnIdx)[col];
+        w.forEach((wt,i)=>{if(wt>0.05)playChime(200+i*80,0.2,wt*0.04,'sine');});
+      }
+    }
+  }
+  // Check matrix rows
+  if(sy>oy&&sy<oy+gridH&&sx>ox&&sx<ox+gridW){
+    const row=Math.floor((sy-oy)/cellSize);
+    if(row>=0&&row<n){
+      attnSelRow=row;drawAttn();
+      ensureAudio();
+      if(actx){
+        const w=computeAttnWeights(attnIdx)[row];
+        w.forEach((wt,i)=>{if(wt>0.05)playChime(200+i*80,0.2,wt*0.04,'sine');});
+      }
+    }
+  }
+});
+function setAttnSentence(idx,btn){
+  attnIdx=idx;attnSelRow=-1;
+  btn.parentElement.querySelectorAll('.btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');drawAttn();
+}
+function updateAttn(){drawAttn();}
+drawAttn();
+
+// ═══════════════════════════════════════════
+// §05 — MULTI-HEAD ATTENTION
+// ═══════════════════════════════════════════
+const headC=document.getElementById('head-canvas'),headX=headC.getContext('2d');
+const headStrip=document.getElementById('head-strip');
+const HEAD_LABELS=['구문: 다음 단어','의미: 관련 의미','위치: 가까운 토큰','공지시: 대명사 연결','경계: 문장 구분','주어-동사: 일치','수식어: 형용사→명사','전역: 넓은 문맥'];
+let activeHead=0;
+
+// Generate 8 different attention patterns
+function genHeadWeights(headIdx){
+  const sent=ATTN_SENTENCES[attnIdx];
+  const n=sent.words.length;
+  const weights=[];
+  for(let i=0;i<n;i++){
+    const row=new Array(n).fill(0);
+    switch(headIdx){
+      case 0: // Next word
+        if(i+1<n)row[i+1]=0.7;row[i]=0.3;break;
+      case 1: // Semantic similarity (use dot product)
+        for(let j=0;j<n;j++){let dp=0;for(let k=0;k<4;k++)dp+=sent.emb[i][k]*sent.emb[j][k];row[j]=dp;}
+        break;
+      case 2: // Positional (nearby)
+        for(let j=0;j<n;j++)row[j]=Math.exp(-Math.abs(i-j)*0.8);break;
+      case 3: // Coreference (pronouns attend to nouns)
+        const pronouns=['it','its','they','them','this','that','he','she'];
+        if(pronouns.includes(sent.words[i].toLowerCase())){
+          for(let j=0;j<n;j++){const w=sent.words[j].toLowerCase();if(!pronouns.includes(w)&&w!=='the'&&w!=='on'&&w!=='was'&&w!=='because')row[j]=0.5+Math.random()*0.3;}
+        }else{row[i]=1;}
+        break;
+      case 4: // Delimiter/boundary
+        row[0]=0.4;row[n-1]=0.4;row[i]=0.2;break;
+      case 5: // Subject-verb
+        for(let j=0;j<n;j++)row[j]=Math.abs(i-j)===2?0.6:Math.abs(i-j)===1?0.3:j===i?0.1:0;break;
+      case 6: // Modifier
+        if(i>0)row[i-1]=0.6;row[i]=0.4;break;
+      case 7: // Global uniform
+        for(let j=0;j<n;j++)row[j]=1/n;break;
+    }
+    // Normalize
+    const s=row.reduce((a,b)=>a+Math.max(0,b),0)||1;
+    weights.push(row.map(v=>Math.max(0,v)/s));
+  }
+  return weights;
+}
+
+function createHeadMinis(){
+  headStrip.innerHTML='';
+  for(let h=0;h<8;h++){
+    const c=document.createElement('canvas');
+    c.className='head-mini'+(h===activeHead?' active':'');
+    c.width=80;c.height=80;
+    c.onclick=()=>{activeHead=h;createHeadMinis();drawHeadDetail();};
+    const ctx=c.getContext('2d');
+    const wts=genHeadWeights(h);
+    const n=wts.length;const cs=80/n;
+    for(let i=0;i<n;i++)for(let j=0;j<n;j++){
+      const v=wts[i][j];
+      ctx.fillStyle=`rgba(167,139,250,${v})`;
+      ctx.fillRect(j*cs,i*cs,cs+1,cs+1);
+    }
+    headStrip.appendChild(c);
+  }
+}
+function drawHeadDetail(){
+  const w=headC.width=headC.clientWidth*2,h=headC.height=520;
+  headX.clearRect(0,0,w,h);
+  const sent=ATTN_SENTENCES[attnIdx];
+  const n=sent.words.length;
+  const wts=genHeadWeights(activeHead);
+  document.getElementById('head-label').textContent='헤드 '+(activeHead+1)+' — '+HEAD_LABELS[activeHead];
+  // Draw arc diagram
+  const arcPad=60,spacing=(w-2*arcPad)/Math.max(n-1,1);
+  // Words
+  headX.font='600 24px "DM Sans",sans-serif';headX.textAlign='center';
+  for(let i=0;i<n;i++){
+    headX.fillStyle='#e0e6f0';headX.fillText(sent.words[i],arcPad+i*spacing,h-30);
+    headX.beginPath();headX.arc(arcPad+i*spacing,h-55,5,0,6.28);headX.fillStyle='#7b8db5';headX.fill();
+  }
+  // Arcs for all pairs
+  for(let i=0;i<n;i++){
+    for(let j=0;j<n;j++){
+      if(i===j)continue;
+      const wt=wts[i][j];if(wt<0.05)continue;
+      const sx=arcPad+i*spacing,tx=arcPad+j*spacing;
+      const cpY=h-55-Math.abs(j-i)*22-wt*50;
+      headX.beginPath();headX.moveTo(sx,h-55);
+      headX.quadraticCurveTo((sx+tx)/2,cpY,tx,h-55);
+      const colors=['#f0b429','#38bdf8','#a78bfa','#fb7185','#34d399','#f97316','#06b6d4','#c084fc'];
+      headX.strokeStyle=colors[activeHead]+(Math.round((0.2+wt*0.6)*255)).toString(16).padStart(2,'0');
+      headX.lineWidth=1+wt*4;headX.stroke();
+    }
+  }
+}
+createHeadMinis();drawHeadDetail();
+
+// ═══════════════════════════════════════════
+// §06 — ARCHITECTURE — INTERACTIVE STEP-BY-STEP
+// ═══════════════════════════════════════════
+const archC=document.getElementById('arch-canvas'),archX=archC.getContext('2d');
+let archStep=0,archAutoTimer=null,archAutoPlaying=false;
+
+// Token data — 3 tokens, each a 4D vector (simplified for visualization)
+const ARCH_TOKENS=[
+  {name:'cat', color:'#f0b429', vec:[0.8, -0.3, 0.5, 0.1]},
+  {name:'sat', color:'#38bdf8', vec:[0.1, 0.7, -0.2, 0.6]},
+  {name:'down',color:'#a78bfa', vec:[-0.4, 0.2, 0.9, -0.5]}
+];
+// Weight matrices (4×4 for demo — in reality d_model × d_k)
+const W_Q=[[0.5,0.3,-0.2,0.1],[0.1,0.7,0.4,-0.3],[-0.3,0.2,0.6,0.5],[0.4,-0.1,0.3,0.8]];
+const W_K=[[0.6,-0.2,0.3,0.4],[0.2,0.5,-0.1,0.3],[0.1,0.3,0.7,-0.2],[-0.4,0.6,0.2,0.5]];
+const W_V=[[0.3,0.4,0.1,-0.2],[0.5,-0.1,0.6,0.3],[-0.2,0.7,0.3,0.4],[0.1,0.2,-0.3,0.8]];
+// FFN weights (4→8→4)
+const W_FFN1=[[0.5,0.3,-0.2,0.4,0.1,-0.3,0.6,0.2],[-0.1,0.7,0.4,0.2,-0.5,0.3,0.1,0.8],[0.3,-0.2,0.6,-0.1,0.4,0.5,-0.3,0.2],[0.2,0.4,-0.1,0.7,0.3,-0.2,0.5,0.1]];
+
+function matVecMul(M,v){return M.map(row=>row.reduce((s,w,i)=>s+w*(v[i]||0),0));}
+function vecAdd(a,b){return a.map((v,i)=>v+(b[i]||0));}
+function layerNorm(v){const m=v.reduce((s,x)=>s+x,0)/v.length;const va=v.reduce((s,x)=>s+(x-m)**2,0)/v.length;const std=Math.sqrt(va+1e-5);return v.map(x=>(x-m)/std);}
+function relu(v){return v.map(x=>Math.max(0,x));}
+
+// Precompute all intermediate states
+function computeArch(){
+  const n=3,d=4;
+  const input=ARCH_TOKENS.map(t=>[...t.vec]);
+  // Q, K, V projections
+  const Q=input.map(v=>matVecMul(W_Q,v));
+  const K=input.map(v=>matVecMul(W_K,v));
+  const V=input.map(v=>matVecMul(W_V,v));
+  // Attention scores: Q·K^T / sqrt(d_k)
+  const scores=[];
+  for(let i=0;i<n;i++){const row=[];for(let j=0;j<n;j++){let dp=0;for(let k=0;k<d;k++)dp+=Q[i][k]*K[j][k];row.push(dp/Math.sqrt(d));}scores.push(row);}
+  // Softmax
+  const attnW=scores.map(row=>softmax(row,1));
+  // Weighted values
+  const attnOut=[];
+  for(let i=0;i<n;i++){const o=new Array(d).fill(0);for(let j=0;j<n;j++)for(let k=0;k<d;k++)o[k]+=attnW[i][j]*V[j][k];attnOut.push(o);}
+  // Add & Norm (residual)
+  const addNorm1=input.map((v,i)=>layerNorm(vecAdd(v,attnOut[i])));
+  // FFN
+  const ffnMid=addNorm1.map(v=>{const expanded=W_FFN1.map((_,j)=>W_FFN1.reduce((s,_2,i)=>s+(v[i]||0)*(W_FFN1[i]?W_FFN1[i][j]||0:0),0));return relu(expanded);});
+  const ffnOut=addNorm1.map((v,idx)=>{const mid=ffnMid[idx];return v.map((_,i)=>mid.reduce((s,m,j)=>s+m*(j%d===i?0.3:0.05),0));});
+  // Final Add & Norm
+  const output=addNorm1.map((v,i)=>layerNorm(vecAdd(v,ffnOut[i])));
+  return {input,Q,K,V,scores,attnW,attnOut,addNorm1,ffnMid,ffnOut,output};
+}
+const archData=computeArch();
+
+const ARCH_STEP_INFO=[
+  {title:'① 입력: 토큰 벡터 도착',
+   body:'각 토큰은 <strong>d차원 벡터</strong>로 입력됩니다 — 임베딩과 위치 인코딩의 합입니다. GPT-4에서 d = 12,288입니다. 여기서는 시각화를 위해 d = 4를 사용합니다. 이 벡터가 모델이 각 단어에 대해 아는 전부입니다.',
+   math:'x = Embedding(토큰) + PE(위치)',
+   stage:'입력 벡터',ops:0,dims:'3 × 4'},
+  {title:'② 선형 사영: Q, K, V',
+   body:'각 입력 벡터에 세 개의 가중치 행렬을 곱하여 <strong>쿼리(Query)</strong>, <strong>키(Key)</strong>, <strong>값(Value)</strong> 벡터를 만듭니다. 쿼리는 "내가 찾는 것은?", 키는 "내가 담고 있는 것은?", 값은 "내가 전달하는 정보는?"입니다. 이 가중치 행렬은 학습 중에 <em>학습됩니다</em>.',
+   math:'Q = x · W<sub>Q</sub> &nbsp;&nbsp; K = x · W<sub>K</sub> &nbsp;&nbsp; V = x · W<sub>V</sub>',
+   stage:'Q, K, V 사영',ops:3,dims:'3 × (4→4) × 3'},
+  {title:'③ 어텐션 점수: 누구의 말을 들어야 하나?',
+   body:'핵심 연산입니다: 각 쿼리 벡터가 모든 키 벡터와 <strong>내적</strong>을 계산한 후 √d<sub>k</sub>로 나눕니다. 3×3 원시 점수 행렬이 만들어집니다. 높은 점수 = 두 토큰이 서로 관련 있음. §00에서 본 바로 그 내적입니다!',
+   math:'score(i,j) = Q<sub>i</sub> · K<sub>j</sub><sup>⊤</sup> / √d<sub>k</sub>',
+   stage:'점수 계산',ops:4,dims:'3 × 3 점수'},
+  {title:'④ Softmax: 점수 → 확률',
+   body:'원시 점수가 softmax를 통해 <strong>확률</strong>로 변환됩니다 — 지수 함수를 적용한 뒤 각 행의 합이 1이 되도록 정규화합니다. 각 토큰이 자신의 "어텐션 예산" 100%를 모든 토큰(자기 자신 포함)에 분배한다는 뜻입니다. Softmax는 날카롭습니다: 점수의 작은 차이가 가중치의 큰 차이가 됩니다.',
+   math:'α<sub>ij</sub> = exp(score<sub>ij</sub>) / Σ<sub>k</sub> exp(score<sub>ik</sub>)',
+   stage:'Softmax 가중치',ops:5,dims:'3 × 3 확률'},
+  {title:'⑤ 값 혼합: 가중 합',
+   body:'각 토큰의 새 표현은 <strong>모든 값 벡터의 가중 합</strong>입니다. 가중치는 softmax에서 옵니다. "cat"이 "sat"에 70%, 자기 자신에 30% 주의를 기울이면, 출력은 0.7 × V<sub>sat</sub> + 0.3 × V<sub>cat</sub>입니다. 이것이 토큰 간 정보 흐름의 방식이며, 토큰이 "소통"하는 유일한 장소입니다.',
+   math:'output<sub>i</sub> = Σ<sub>j</sub> α<sub>ij</sub> · V<sub>j</sub>',
+   stage:'값 혼합',ops:6,dims:'3 × 4 출력'},
+  {title:'⑥ 잔차 덧셈 & 정규화: 잔차 고속도로',
+   body:'어텐션 출력이 <strong>원래 입력에 다시 더해지고</strong>(잔차 연결), 레이어 정규화됩니다. 이것이 핵심입니다: 건너뛰기 연결 덕분에 네트워크가 원래 신호를 "잊을" 수 없습니다. 각 하위층은 유용한 <em>보정값</em>만 학습하면 됩니다. 이것 없이는 ~10층 이상의 네트워크는 학습에 실패합니다.',
+   math:'h = LayerNorm(x + Attention(x))',
+   stage:'잔차+정규화',ops:7,dims:'3 × 4 정규화'},
+  {title:'⑦ 피드포워드 네트워크: 개별 처리',
+   body:'이제 각 토큰이 2층 MLP를 통해 <strong>독립적으로</strong> 처리됩니다: 4배 너비로 확장, ReLU 적용(음수를 0으로), 다시 압축. 어텐션은 토큰끼리 대화하게 하고, FFN은 각 토큰이 혼자 생각하게 합니다. 연구에 따르면 FFN 뉴런은 사실적 지식을 저장합니다 — 개별 뉴런이 "유럽의 수도" 또는 "화학 관련"을 인코딩할 수 있습니다.',
+   math:'FFN(h) = ReLU(h · W<sub>1</sub> + b<sub>1</sub>) · W<sub>2</sub> + b<sub>2</sub>',
+   stage:'피드포워드',ops:8,dims:'4 → 16 → 4'},
+  {title:'⑧ 출력: 다음 층으로',
+   body:'마지막 잔차 연결과 정규화가 <strong>출력 벡터</strong>를 만듭니다 — 각 토큰당 하나, 입력과 같은 차원입니다. 이것이 다음 트랜스포머 블록의 입력이 됩니다. 모든 층을 통과한 후(GPT-2는 12층, GPT-4는 ~120층), 최종 출력이 예측 헤드로 갑니다. 벡터가 입력에서 어떻게 변했는지 보세요 — 이제 문맥적 의미를 인코딩합니다.',
+   math:'output = LayerNorm(h + FFN(h))',
+   stage:'블록 출력',ops:9,dims:'3 × 4 문맥적'}
+];
+
+function goArchStep(step){
+  archStep=step;
+  // Update pipeline indicators
+  document.querySelectorAll('.arch-pip').forEach(el=>{
+    const s=+el.dataset.step;
+    el.classList.toggle('active',s===step);
+    el.classList.toggle('done',s<step);
+  });
+  // Update explanation
+  const info=ARCH_STEP_INFO[step];
+  document.getElementById('arch-explain-title').textContent=info.title;
+  document.getElementById('arch-explain-body').innerHTML=info.body;
+  const mathEl=document.getElementById('arch-explain-math');
+  mathEl.innerHTML=info.math;mathEl.style.display='block';
+  document.getElementById('arch-step-num').textContent=(step+1);
+  document.getElementById('arch-stage').textContent=info.stage;
+  document.getElementById('arch-ops').textContent=info.ops;
+  document.getElementById('arch-dims').textContent=info.dims;
+  // Sound
+  ensureAudio();if(actx)playChime(250+step*60,0.2,0.04,'triangle');
+  // Draw
+  drawArchStep();
+}
+
+function drawArchStep(){
+  const w=archC.width=archC.clientWidth*2,h=archC.height=840;
+  const ctx=archX;ctx.clearRect(0,0,w,h);
+  const t=performance.now()/1000;
+  const pad=30;
+
+  // Helper: draw a small vector bar chart
+  function drawVec(x,y,vec,color,label,maxW,barH){
+    maxW=maxW||120;barH=barH||14;
+    const maxVal=Math.max(...vec.map(Math.abs),0.01);
+    ctx.font='500 17px "JetBrains Mono",monospace';ctx.fillStyle=color;ctx.textAlign='left';
+    if(label)ctx.fillText(label,x,y-6);
+    vec.forEach((v,i)=>{
+      const bw=(Math.abs(v)/maxVal)*maxW;
+      const bx=v>=0?x:x-bw;
+      const by=y+i*(barH+3);
+      // Bar
+      ctx.fillStyle=v>=0?color+'99':color+'55';
+      ctx.fillRect(bx,by,bw,barH);
+      // Zero line
+      ctx.fillStyle='rgba(255,255,255,0.08)';ctx.fillRect(x-1,by,2,barH);
+      // Value
+      ctx.font='400 12px "JetBrains Mono",monospace';ctx.fillStyle='rgba(255,255,255,0.5)';
+      ctx.textAlign=v>=0?'left':'right';
+      ctx.fillText(v.toFixed(2),v>=0?x+bw+5:x-bw-5,by+barH-2);
+    });
+  }
+
+  // Helper: draw a matrix heatmap
+  function drawMatrix(x,y,mat,cellSize,rowLabels,colLabels,colorFn){
+    cellSize=cellSize||36;
+    const rows=mat.length,cols=mat[0].length;
+    // Column labels
+    if(colLabels){
+      ctx.font='500 14px "DM Sans",sans-serif';ctx.textAlign='center';
+      colLabels.forEach((l,j)=>{ctx.fillStyle=ARCH_TOKENS[j]?ARCH_TOKENS[j].color:'#7b8db5';ctx.fillText(l,x+j*cellSize+cellSize/2,y-6);});
+    }
+    // Row labels
+    if(rowLabels){
+      ctx.font='500 14px "DM Sans",sans-serif';ctx.textAlign='right';
+      rowLabels.forEach((l,i)=>{ctx.fillStyle=ARCH_TOKENS[i]?ARCH_TOKENS[i].color:'#7b8db5';ctx.fillText(l,x-8,y+i*cellSize+cellSize/2+5);});
+    }
+    // Cells
+    for(let i=0;i<rows;i++){
+      for(let j=0;j<cols;j++){
+        const v=mat[i][j];
+        const cf=colorFn?colorFn(v):null;
+        if(!cf){
+          const intensity=Math.min(Math.abs(v)/1.5,1);
+          ctx.fillStyle=v>=0?`rgba(167,139,250,${intensity*0.7})`:`rgba(251,113,133,${intensity*0.7})`;
+        }else{ctx.fillStyle=cf;}
+        ctx.fillRect(x+j*cellSize+1,y+i*cellSize+1,cellSize-2,cellSize-2);
+        // Value text
+        ctx.font='500 13px "JetBrains Mono",monospace';
+        ctx.fillStyle=Math.abs(v)>0.3?'rgba(255,255,255,0.8)':'rgba(255,255,255,0.35)';
+        ctx.textAlign='center';ctx.fillText(v.toFixed(2),x+j*cellSize+cellSize/2,y+i*cellSize+cellSize/2+4);
+      }
+    }
+  }
+
+  // Helper: draw token chips at top
+  function drawTokenBar(y){
+    const chipW=110,chipH=32,gap=20;
+    const totalW=ARCH_TOKENS.length*(chipW+gap)-gap;
+    const sx=(w-totalW)/2;
+    ARCH_TOKENS.forEach((tok,i)=>{
+      const cx=sx+i*(chipW+gap);
+      ctx.fillStyle=tok.color+'20';ctx.strokeStyle=tok.color+'60';ctx.lineWidth=1.5;
+      roundRect(ctx,cx,y,chipW,chipH,6);ctx.fill();ctx.stroke();
+      ctx.font='600 18px "DM Sans",sans-serif';ctx.fillStyle=tok.color;ctx.textAlign='center';
+      ctx.fillText('"'+tok.name+'"',cx+chipW/2,y+chipH/2+6);
+    });
+  }
+
+  const step=archStep;
+  const D=archData;
+  const names=ARCH_TOKENS.map(t=>t.name);
+
+  if(step===0){
+    // INPUT — Show 3 token vectors
+    drawTokenBar(20);
+    ctx.font='500 20px "DM Sans",sans-serif';ctx.fillStyle='#7b8db5';ctx.textAlign='center';
+    ctx.fillText('각 토큰은 숫자들의 벡터입니다:',w/2,90);
+    const vY=120;const spacing=w/3;
+    ARCH_TOKENS.forEach((tok,i)=>{
+      const vx=spacing*i+spacing/2-40;
+      drawVec(vx,vY,tok.vec,tok.color,tok.name+' =',130,22);
+    });
+    // Animated glow
+    ctx.font='italic 400 22px "Fraunces",serif';ctx.fillStyle='rgba(56,189,248,0.5)';ctx.textAlign='center';
+    ctx.fillText('차원 0           차원 1           차원 2           차원 3',w/2,vY+130);
+    // Visual: floating points
+    ARCH_TOKENS.forEach((tok,i)=>{
+      const cx=w*(0.2+i*0.3),cy=h*0.55;
+      tok.vec.forEach((v,d)=>{
+        const ang=d*(Math.PI*2/4)+t*0.5;
+        const r=60+v*40;
+        const px=cx+Math.cos(ang)*r,py=cy+Math.sin(ang)*r;
+        ctx.beginPath();ctx.arc(px,py,5+Math.abs(v)*8,0,6.28);
+        ctx.fillStyle=tok.color+(Math.round(40+Math.abs(v)*60)).toString(16).padStart(2,'0');
+        ctx.fill();
+        // Line to center
+        ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(px,py);
+        ctx.strokeStyle=tok.color+'25';ctx.lineWidth=1.5;ctx.stroke();
+      });
+      // Center label
+      ctx.font='600 20px "DM Sans",sans-serif';ctx.fillStyle=tok.color;ctx.textAlign='center';
+      ctx.fillText(tok.name,cx,cy+5);
+    });
+  }
+  else if(step===1){
+    // Q, K, V PROJECTIONS
+    drawTokenBar(10);
+    const secW=w/3;
+    const labels=[['Q','쿼리(Query)','내가 찾는 것은?','#fb7185'],['K','키(Key)','내가 담는 것은?','#34d399'],['V','값(Value)','전달하는 정보는?','#38bdf8']];
+    const matrices=[D.Q,D.K,D.V];
+    labels.forEach((lbl,li)=>{
+      const bx=li*secW+20;
+      // Section header
+      ctx.font='700 22px "DM Sans",sans-serif';ctx.fillStyle=lbl[3];ctx.textAlign='left';
+      ctx.fillText(lbl[1]+' ('+lbl[0]+')',bx,70);
+      ctx.font='italic 400 15px "DM Sans",sans-serif';ctx.fillStyle='#7b8db5';
+      ctx.fillText(lbl[2],bx,90);
+      // Show projected vectors for each token
+      ARCH_TOKENS.forEach((tok,ti)=>{
+        const vy=115+ti*110;
+        drawVec(bx+10,vy,matrices[li][ti],tok.color,tok.name+' →',secW*0.5,16);
+      });
+    });
+    // Weight matrix label
+    ctx.font='400 18px "JetBrains Mono",monospace';ctx.fillStyle='rgba(255,255,255,0.2)';ctx.textAlign='center';
+    ctx.fillText('× W_Q (학습됨)',secW*0.5,h-20);
+    ctx.fillText('× W_K (학습됨)',secW*1.5,h-20);
+    ctx.fillText('× W_V (학습됨)',secW*2.5,h-20);
+  }
+  else if(step===2){
+    // ATTENTION SCORES (raw dot products)
+    drawTokenBar(10);
+    ctx.font='500 20px "DM Sans",sans-serif';ctx.fillStyle='#7b8db5';ctx.textAlign='center';
+    ctx.fillText('각 쿼리가 모든 키와 내적한 뒤 √d_k = √4 = 2로 나눕니다:',w/2,75);
+    // Score matrix
+    const matX=(w-3*56)/2,matY=110;
+    drawMatrix(matX,matY,D.scores,56,names,names);
+    // Annotation
+    ctx.font='italic 400 18px "DM Sans",sans-serif';ctx.fillStyle='#7b8db5';ctx.textAlign='center';
+    ctx.fillText('← 키 (사용 가능한 것)',w/2,matY-20);
+    ctx.save();ctx.translate(matX-35,matY+56*1.5);ctx.rotate(-Math.PI/2);
+    ctx.fillText('쿼리 (내가 원하는 것) →',0,0);ctx.restore();
+    // Show one computation in detail
+    const detY=matY+56*3+50;
+    ctx.font='500 18px "JetBrains Mono",monospace';ctx.fillStyle='#f0b429';ctx.textAlign='left';
+    ctx.fillText('예시: score("cat" → "sat") =',pad,detY);
+    ctx.font='400 16px "JetBrains Mono",monospace';ctx.fillStyle='var(--text)';
+    const q0=D.Q[0],k1=D.K[1];
+    let dotStr='( '+q0.map((v,i)=>v.toFixed(2)+' × '+k1[i].toFixed(2)).join(' + ')+' ) / 2';
+    ctx.fillText(dotStr,pad,detY+28);
+    ctx.fillText('= '+D.scores[0][1].toFixed(3),pad,detY+52);
+    // Visual: highlight the cell
+    const cellX=matX+1*56,cellY=matY+0*56;
+    ctx.strokeStyle='#f0b429';ctx.lineWidth=3;ctx.strokeRect(cellX-2,cellY-2,60,60);
+  }
+  else if(step===3){
+    // SOFTMAX
+    drawTokenBar(10);
+    ctx.font='500 20px "DM Sans",sans-serif';ctx.fillStyle='#7b8db5';ctx.textAlign='center';
+    ctx.fillText('Softmax가 원시 점수를 확률로 변환합니다 (각 행의 합 = 1.00):',w/2,75);
+    // Side by side: scores → softmax weights
+    const halfW=w/2-40;
+    // Raw scores
+    ctx.font='600 18px "DM Sans",sans-serif';ctx.fillStyle='#fb7185';ctx.textAlign='center';
+    ctx.fillText('원시 점수',halfW/2+20,105);
+    drawMatrix(halfW/2+20-3*40/2,120,D.scores,40,names,names);
+    // Arrow
+    const arrowX=w/2;
+    ctx.font='500 36px "DM Sans",sans-serif';ctx.fillStyle='#f0b429';ctx.textAlign='center';
+    ctx.fillText('→',arrowX,120+60);
+    ctx.font='italic 400 14px "JetBrains Mono",monospace';ctx.fillStyle='#f0b429';
+    ctx.fillText('소프트맥스',arrowX,120+85);
+    // Attention weights
+    ctx.font='600 18px "DM Sans",sans-serif';ctx.fillStyle='#34d399';ctx.textAlign='center';
+    ctx.fillText('어텐션 가중치',w/2+halfW/2+20,105);
+    drawMatrix(w/2+halfW/2+20-3*44/2,120,D.attnW,44,names,names,v=>{
+      const intensity=Math.min(v*1.5,1);
+      return `rgba(52,211,153,${intensity*0.7+0.05})`;
+    });
+    // Show row sums
+    ctx.font='400 16px "JetBrains Mono",monospace';ctx.fillStyle='#34d399';ctx.textAlign='left';
+    const sumX=w/2+halfW/2+20+3*44/2+12;
+    D.attnW.forEach((row,i)=>{
+      const sum=row.reduce((a,b)=>a+b,0);
+      ctx.fillText('Σ = '+sum.toFixed(2),sumX,120+i*44+28);
+    });
+    // Softmax curve illustration
+    const curveY=120+44*3+50;
+    ctx.font='500 16px "DM Sans",sans-serif';ctx.fillStyle='#7b8db5';ctx.textAlign='center';
+    ctx.fillText('Softmax는 차이를 증폭합니다: 높은 점수가 거의 모든 가중치를 가져갑니다',w/2,curveY);
+    // Draw small softmax curve
+    const curveW=300,curveH=100,cx2=w/2-curveW/2,cy2=curveY+15;
+    ctx.beginPath();
+    for(let i=0;i<=curveW;i++){
+      const x=(i/curveW)*6-3;
+      const y=1/(1+Math.exp(-x*1.5));
+      const px=cx2+i,py=cy2+curveH-y*curveH;
+      i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+    }
+    ctx.strokeStyle='#f0b429';ctx.lineWidth=2;ctx.stroke();
+    ctx.font='400 12px "JetBrains Mono",monospace';ctx.fillStyle='#7b8db5';
+    ctx.textAlign='left';ctx.fillText('낮은 점수',cx2,cy2+curveH+15);
+    ctx.textAlign='right';ctx.fillText('높은 점수',cx2+curveW,cy2+curveH+15);
+  }
+  else if(step===4){
+    // VALUE MIXING
+    drawTokenBar(10);
+    ctx.font='500 20px "DM Sans",sans-serif';ctx.fillStyle='#7b8db5';ctx.textAlign='center';
+    ctx.fillText('각 토큰의 출력 = 모든 값 벡터의 가중 합:',w/2,70);
+    // For each output token, show the mixing
+    const secH=(h-120)/3;
+    ARCH_TOKENS.forEach((tok,i)=>{
+      const sy=95+i*secH;
+      ctx.font='600 18px "DM Sans",sans-serif';ctx.fillStyle=tok.color;ctx.textAlign='left';
+      ctx.fillText('"'+tok.name+'"의 출력 =',pad,sy);
+      // Show weighted combination
+      let formula='';
+      const weights=D.attnW[i];
+      weights.forEach((wt,j)=>{
+        if(j>0)formula+=' + ';
+        formula+=wt.toFixed(2)+' × V_'+ARCH_TOKENS[j].name;
+      });
+      ctx.font='400 15px "JetBrains Mono",monospace';ctx.fillStyle='var(--text)';
+      ctx.fillText(formula,pad,sy+26);
+      // Show result vector
+      drawVec(pad,sy+50,D.attnOut[i],tok.color,'=',150,16);
+      // Visual: blending circles
+      const blendX=w-200;
+      weights.forEach((wt,j)=>{
+        const angle=-Math.PI/2+j*(Math.PI*2/3);
+        const r=40;
+        const px=blendX+Math.cos(angle)*r,py=sy+50+Math.sin(angle)*r;
+        ctx.beginPath();ctx.arc(px,py,8+wt*25,0,6.28);
+        ctx.fillStyle=ARCH_TOKENS[j].color+(Math.round(wt*200+30)).toString(16).padStart(2,'0');
+        ctx.fill();
+        ctx.font='500 12px "JetBrains Mono",monospace';ctx.fillStyle=ARCH_TOKENS[j].color;ctx.textAlign='center';
+        ctx.fillText((wt*100).toFixed(0)+'%',px,py+4);
+      });
+      // Center = output
+      ctx.beginPath();ctx.arc(blendX,sy+50,12,0,6.28);ctx.fillStyle=tok.color+'60';ctx.fill();
+    });
+  }
+  else if(step===5){
+    // ADD & LAYERNORM
+    drawTokenBar(10);
+    ctx.font='500 20px "DM Sans",sans-serif';ctx.fillStyle='#7b8db5';ctx.textAlign='center';
+    ctx.fillText('잔차 연결이 입력을 다시 더하고, 정규화가 안정화합니다:',w/2,70);
+    const secH=(h-120)/3;
+    ARCH_TOKENS.forEach((tok,i)=>{
+      const sy=100+i*secH;
+      const colW=(w-80)/5;
+      // Input
+      ctx.font='600 14px "DM Sans",sans-serif';ctx.fillStyle='#7b8db5';ctx.textAlign='center';
+      ctx.fillText('입력 x',pad+colW*0.5,sy-8);
+      drawVec(pad+colW*0.2,sy,D.input[i],tok.color,'',colW*0.5,14);
+      // Plus sign
+      ctx.font='700 28px "DM Sans",sans-serif';ctx.fillStyle='#34d399';
+      ctx.fillText('+',pad+colW*1.15,sy+35);
+      // Attn output
+      ctx.font='600 14px "DM Sans",sans-serif';ctx.fillStyle='#a78bfa';ctx.textAlign='center';
+      ctx.fillText('어텐션(x)',pad+colW*1.7,sy-8);
+      drawVec(pad+colW*1.4,sy,D.attnOut[i],'#a78bfa','',colW*0.5,14);
+      // Arrow
+      ctx.font='700 28px "DM Sans",sans-serif';ctx.fillStyle='#f0b429';
+      ctx.fillText('→',pad+colW*2.4,sy+35);
+      // Sum
+      const sum=vecAdd(D.input[i],D.attnOut[i]);
+      ctx.font='600 14px "DM Sans",sans-serif';ctx.fillStyle='#f0b429';ctx.textAlign='center';
+      ctx.fillText('합',pad+colW*2.9,sy-8);
+      drawVec(pad+colW*2.65,sy,sum,'#f0b429','',colW*0.5,14);
+      // Arrow
+      ctx.font='700 28px "DM Sans",sans-serif';ctx.fillStyle='#34d399';
+      ctx.fillText('→',pad+colW*3.5,sy+35);
+      ctx.font='italic 400 12px "JetBrains Mono",monospace';ctx.fillStyle='#34d399';
+      ctx.fillText('norm',pad+colW*3.5,sy+55);
+      // LayerNorm output
+      ctx.font='600 14px "DM Sans",sans-serif';ctx.fillStyle='#34d399';ctx.textAlign='center';
+      ctx.fillText('출력',pad+colW*4.2,sy-8);
+      drawVec(pad+colW*3.9,sy,D.addNorm1[i],'#34d399','',colW*0.5,14);
+      // Token label
+      ctx.font='600 16px "DM Sans",sans-serif';ctx.fillStyle=tok.color;ctx.textAlign='right';
+      ctx.fillText(tok.name,pad-5,sy+35);
+    });
+  }
+  else if(step===6){
+    // FFN
+    drawTokenBar(10);
+    ctx.font='500 20px "DM Sans",sans-serif';ctx.fillStyle='#7b8db5';ctx.textAlign='center';
+    ctx.fillText('각 토큰이 독립적으로 처리됩니다: 확장 → ReLU → 압축:',w/2,70);
+    // Show for first token
+    const tok=ARCH_TOKENS[0];
+    const sy=100;
+    // Input (4D)
+    ctx.font='600 16px "DM Sans",sans-serif';ctx.fillStyle='#34d399';ctx.textAlign='center';
+    ctx.fillText('입력 (d=4)',w*0.12,sy);
+    drawVec(w*0.05,sy+15,D.addNorm1[0],'#34d399','',100,20);
+    // Arrow + W1
+    ctx.font='700 24px "DM Sans",sans-serif';ctx.fillStyle='#7b8db5';
+    ctx.fillText('→',w*0.24,sy+55);
+    ctx.font='italic 400 12px "JetBrains Mono",monospace';
+    ctx.fillText('× W₁',w*0.24,sy+75);
+    // Expanded (8D) with ReLU
+    const expanded=D.ffnMid[0];
+    ctx.font='600 16px "DM Sans",sans-serif';ctx.fillStyle='#f0b429';ctx.textAlign='center';
+    ctx.fillText('은닉 (4d=16)',w*0.43,sy);
+    ctx.font='italic 400 13px "DM Sans",sans-serif';ctx.fillStyle='#fb7185';
+    ctx.fillText('ReLU 후 — 음수가 0으로',w*0.43,sy+18);
+    // Draw expanded neurons
+    expanded.slice(0,8).forEach((v,i)=>{
+      const nx=w*0.32+i*22,ny=sy+40;
+      const nh=Math.max(2,Math.abs(v)*30);
+      const active=v>0;
+      ctx.fillStyle=active?'rgba(240,180,41,'+(0.2+v*0.3)+')':'rgba(251,113,133,0.15)';
+      ctx.fillRect(nx,ny+40-nh,18,nh);
+      ctx.font='400 10px "JetBrains Mono",monospace';ctx.fillStyle=active?'#f0b429':'#fb7185';ctx.textAlign='center';
+      ctx.fillText(v.toFixed(1),nx+9,ny+95);
+      if(!active){
+        ctx.font='600 14px "DM Sans",sans-serif';ctx.fillStyle='#fb7185';
+        ctx.fillText('×',nx+9,ny+50-nh+12);
+      }
+    });
+    // Arrow + W2
+    ctx.font='700 24px "DM Sans",sans-serif';ctx.fillStyle='#7b8db5';
+    ctx.fillText('→',w*0.62,sy+55);
+    ctx.font='italic 400 12px "JetBrains Mono",monospace';
+    ctx.fillText('× W₂',w*0.62,sy+75);
+    // Output (4D)
+    ctx.font='600 16px "DM Sans",sans-serif';ctx.fillStyle='#38bdf8';ctx.textAlign='center';
+    ctx.fillText('출력 (d=4)',w*0.78,sy);
+    drawVec(w*0.72,sy+15,D.ffnOut[0],'#38bdf8','',100,20);
+    // ReLU explanation
+    const reluY=sy+160;
+    ctx.font='500 16px "DM Sans",sans-serif';ctx.fillStyle='#7b8db5';ctx.textAlign='center';
+    ctx.fillText('ReLU(x) = max(0, x) — 가장 간단한 비선형 함수',w/2,reluY);
+    // Draw ReLU curve
+    const rw=180,rh=80,rx=w/2-rw/2,ry=reluY+15;
+    ctx.beginPath();ctx.moveTo(rx,ry+rh/2);ctx.lineTo(rx+rw/2,ry+rh/2);ctx.lineTo(rx+rw,ry);
+    ctx.strokeStyle='#fb7185';ctx.lineWidth=3;ctx.stroke();
+    ctx.beginPath();ctx.moveTo(rx+rw/2,0+ry);ctx.lineTo(rx+rw/2,ry+rh);
+    ctx.strokeStyle='rgba(255,255,255,0.08)';ctx.lineWidth=1;ctx.stroke();
+    ctx.font='400 12px "JetBrains Mono",monospace';ctx.fillStyle='#fb7185';
+    ctx.textAlign='left';ctx.fillText('제거됨',rx+10,ry+rh/2-8);
+    ctx.fillStyle='#34d399';ctx.fillText('active',rx+rw-40,ry+15);
+    // Other tokens
+    const otherY=reluY+120;
+    ctx.font='500 16px "DM Sans",sans-serif';ctx.fillStyle='#7b8db5';ctx.textAlign='center';
+    ctx.fillText('모든 토큰에 동일한 연산 (독립적, 병렬):',w/2,otherY);
+    ARCH_TOKENS.forEach((tk,i)=>{
+      const tx=w*(0.15+i*0.3);
+      ctx.font='600 15px "DM Sans",sans-serif';ctx.fillStyle=tk.color;ctx.textAlign='center';
+      ctx.fillText('"'+tk.name+'"',tx,otherY+25);
+      drawVec(tx-40,otherY+35,D.ffnOut[i],tk.color,'',90,14);
+    });
+  }
+  else if(step===7){
+    // OUTPUT — Compare input vs. output
+    drawTokenBar(10);
+    ctx.font='500 20px "DM Sans",sans-serif';ctx.fillStyle='#7b8db5';ctx.textAlign='center';
+    ctx.fillText('벡터가 변환되었습니다 — 이제 문맥적 의미를 담고 있습니다:',w/2,70);
+    const secH=(h-140)/3;
+    ARCH_TOKENS.forEach((tok,i)=>{
+      const sy=110+i*secH;
+      const colW=(w-60)/3;
+      // Input vector
+      ctx.font='600 16px "DM Sans",sans-serif';ctx.fillStyle='#7b8db5';ctx.textAlign='center';
+      ctx.fillText('변환 전 (원시 임베딩)',pad+colW*0.5,sy-5);
+      drawVec(pad+colW*0.15,sy+12,D.input[i],tok.color+'80','',colW*0.55,18);
+      // Arrow
+      ctx.font='700 30px "DM Sans",sans-serif';ctx.fillStyle='#f0b429';ctx.textAlign='center';
+      ctx.fillText('→',pad+colW*1.15,sy+50);
+      ctx.font='italic 400 13px "JetBrains Mono",monospace';ctx.fillStyle='#f0b429';
+      ctx.fillText('1 블록',pad+colW*1.15,sy+72);
+      // Output vector
+      ctx.font='600 16px "DM Sans",sans-serif';ctx.fillStyle='#fff';ctx.textAlign='center';
+      ctx.fillText('변환 후 (문맥적)',pad+colW*2.0,sy-5);
+      drawVec(pad+colW*1.65,sy+12,D.output[i],tok.color,'',colW*0.55,18);
+      // Token label
+      ctx.font='700 18px "DM Sans",sans-serif';ctx.fillStyle=tok.color;ctx.textAlign='left';
+      ctx.fillText(tok.name,pad-5,sy+50);
+      // Change magnitude
+      const diff=D.output[i].map((v,j)=>v-D.input[i][j]);
+      const mag=Math.sqrt(diff.reduce((s,v)=>s+v*v,0));
+      ctx.font='400 13px "JetBrains Mono",monospace';ctx.fillStyle='#f0b429';ctx.textAlign='center';
+      ctx.fillText('Δ = '+mag.toFixed(2),pad+colW*1.15,sy+92);
+    });
+    // Summary
+    ctx.font='italic 500 20px "Fraunces",serif';ctx.fillStyle='rgba(56,189,248,0.6)';ctx.textAlign='center';
+    ctx.fillText('"cat"은 이제 "sat"과 "down"이 가까이 있다는 것을 압니다.',w/2,h-50);
+    ctx.fillText('이것이 문맥을 이해한다는 것의 의미입니다.',w/2,h-22);
+  }
+}
+
+function autoPlayArch(){
+  if(archAutoPlaying){archAutoPlaying=false;clearInterval(archAutoTimer);
+    document.getElementById('arch-btn').textContent='▶ 전체 자동 재생';document.getElementById('arch-btn').classList.remove('playing');return;}
+  goArchStep(0);
+  archAutoPlaying=true;document.getElementById('arch-btn').textContent='⏸ 일시정지';document.getElementById('arch-btn').classList.add('playing');
+  archAutoTimer=setInterval(()=>{
+    if(archStep>=7){clearInterval(archAutoTimer);archAutoPlaying=false;
+      document.getElementById('arch-btn').textContent='▶ 전체 자동 재생';document.getElementById('arch-btn').classList.remove('playing');
+      if(actx)playChord([523.25,659.25,783.99],0.5,0.04);return;}
+    goArchStep(archStep+1);
+  },3000);
+}
+function resetArch(){goArchStep(0);}
+goArchStep(0);
+
+// Stacking visualization
+const stackC=document.getElementById('arch-stack-canvas'),stackX=stackC.getContext('2d');
+function drawStack(){
+  const w=stackC.width=stackC.clientWidth*2,h=stackC.height=400;
+  stackX.clearRect(0,0,w,h);
+  const t=performance.now()/1000;
+  const numLayers=12;const layerH=28;const boxW=200;
+  const cx=w/2;const startY=(h-numLayers*layerH)/2;
+  // Residual stream
+  stackX.beginPath();stackX.moveTo(cx,10);stackX.lineTo(cx,h-10);
+  stackX.strokeStyle='rgba(240,180,41,0.15)';stackX.lineWidth=3;stackX.stroke();
+  for(let i=0;i<numLayers;i++){
+    const y=startY+i*layerH;
+    const attnW2=boxW*0.45,ffnW=boxW*0.45;
+    // Attention mini-block
+    stackX.fillStyle=`rgba(167,139,250,${0.06+0.04*Math.sin(t+i*0.3)})`;
+    stackX.fillRect(cx-attnW2-5,y+2,attnW2,layerH-4);
+    stackX.strokeStyle='rgba(167,139,250,0.2)';stackX.lineWidth=1;stackX.strokeRect(cx-attnW2-5,y+2,attnW2,layerH-4);
+    // FFN mini-block
+    stackX.fillStyle=`rgba(56,189,248,${0.06+0.04*Math.sin(t+i*0.3+1)})`;
+    stackX.fillRect(cx+5,y+2,ffnW,layerH-4);
+    stackX.strokeStyle='rgba(56,189,248,0.2)';stackX.lineWidth=1;stackX.strokeRect(cx+5,y+2,ffnW,layerH-4);
+    // Layer number
+    stackX.font='400 14px "JetBrains Mono",monospace';stackX.fillStyle='#7b8db5';stackX.textAlign='right';
+    stackX.fillText((i+1),cx-attnW2-15,y+layerH/2+5);
+  }
+  // Labels
+  stackX.font='500 14px "DM Sans",sans-serif';stackX.textAlign='center';
+  stackX.fillStyle='#a78bfa';stackX.fillText('어텐션',cx-boxW*0.25,startY-8);
+  stackX.fillStyle='#38bdf8';stackX.fillText('피드포워드',cx+boxW*0.25+5,startY-8);
+  // Animated dot
+  const dotY=startY+(((t*0.3)%1)*numLayers)*layerH;
+  const glow=stackX.createRadialGradient(cx,dotY,0,cx,dotY,20);
+  glow.addColorStop(0,'rgba(240,180,41,0.5)');glow.addColorStop(1,'rgba(240,180,41,0)');
+  stackX.fillStyle=glow;stackX.fillRect(cx-20,dotY-20,40,40);
+  stackX.beginPath();stackX.arc(cx,dotY,4,0,6.28);stackX.fillStyle='#f0b429';stackX.fill();
+  // Input/output labels
+  stackX.font='500 16px "DM Sans",sans-serif';
+  stackX.fillStyle='#34d399';stackX.fillText('토큰 임베딩 ↓',cx,startY-25);
+  stackX.fillStyle='#f0b429';stackX.fillText('↓ 다음 토큰 예측',cx,startY+numLayers*layerH+22);
+  requestAnimationFrame(drawStack);
+}
+drawStack();
+
+// ═══════════════════════════════════════════
+// §07 — REVOLUTION TIMELINE
+// ═══════════════════════════════════════════
+const revTlC=document.getElementById('rev-timeline'),revTlX=revTlC.getContext('2d');
+const REV_MODELS=[
+  {year:2014,name:'Seq2Seq+Attn',params:'200M',score:0.26,color:'#7b8db5',desc:'Bahdanau 어텐션 (RNN 보조 장치)'},
+  {year:2015,name:'Attention (Luong)',params:'250M',score:0.30,color:'#7b8db5',desc:'어텐션 변형 — 여전히 RNN 기반'},
+  {year:2017,name:'Transformer',params:'65M',score:0.41,color:'#f0b429',desc:'★ "Attention Is All You Need" — RNN을 완전히 제거'},
+  {year:2018,name:'GPT-1',params:'117M',score:0.47,color:'#38bdf8',desc:'트랜스포머 디코더 + 비지도 사전학습'},
+  {year:2018.5,name:'BERT',params:'340M',score:0.52,color:'#38bdf8',desc:'트랜스포머 인코더 — 양방향 문맥 이해'},
+  {year:2019,name:'GPT-2',params:'1.5B',score:0.60,color:'#a78bfa',desc:'공개 거부 논란 — "너무 위험하다"'},
+  {year:2020,name:'GPT-3',params:'175B',score:0.72,color:'#fb7185',desc:'맥락 내 학습의 발견 — few-shot 능력 출현'},
+  {year:2022,name:'PaLM',params:'540B',score:0.78,color:'#f97316',desc:'사고의 연쇄(CoT) — 추론 능력 출현'},
+  {year:2022.9,name:'ChatGPT',params:'?',score:0.82,color:'#fb7185',desc:'RLHF — 5일 만에 100만 사용자'},
+  {year:2023,name:'GPT-4',params:'~1.8T',score:0.90,color:'#a78bfa',desc:'변호사 시험 상위 10% · 멀티모달'},
+  {year:2024,name:'Claude 3.5 / Gemini 1.5',params:'비공개',score:0.91,color:'#34d399',desc:'100만 토큰 문맥, 코딩 능력 급진적 향상'},
+  {year:2025.5,name:'Claude 4 / Gemini 2.5',params:'비공개',score:0.94,color:'#a78bfa',desc:'확장 사고(Extended Thinking), 에이전트 코딩'},
+  {year:2026,name:'Claude 4.6 / Gemini 3',params:'비공개',score:0.97,color:'#f0b429',desc:'1M+ 문맥, 적응형 사고, MoE 초대형화 — 현재'},
+];
+let revStep=-1,revPlaying=false,revTimer=null;
+
+function drawRevTimeline(){
+  const w=revTlC.width=revTlC.clientWidth*2,h=revTlC.height=840;
+  const ctx=revTlX;ctx.clearRect(0,0,w,h);
+  const pad={l:70,r:50,t:50,b:70};
+  const gw=w-pad.l-pad.r,gh=h-pad.t-pad.b;
+  const t=performance.now()/1000;
+  // Background grid
+  ctx.strokeStyle='rgba(255,255,255,0.03)';ctx.lineWidth=1;
+  for(let i=0;i<=5;i++){
+    const y=pad.t+i*(gh/5);
+    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(w-pad.r,y);ctx.stroke();
+  }
+  // Axes
+  ctx.strokeStyle='rgba(255,255,255,0.08)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(pad.l,h-pad.b);ctx.lineTo(w-pad.r,h-pad.b);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(pad.l,pad.t);ctx.lineTo(pad.l,h-pad.b);ctx.stroke();
+  // X axis labels (years)
+  ctx.font='400 18px "JetBrains Mono",monospace';ctx.fillStyle='#7b8db5';ctx.textAlign='center';
+  for(let y=2014;y<=2024;y+=2){
+    const x=pad.l+((y-2013.5)/(2025-2013.5))*gw;
+    ctx.fillText(y,x,h-pad.b+25);
+  }
+  // Y axis label
+  ctx.save();ctx.translate(22,h/2);ctx.rotate(-Math.PI/2);
+  ctx.font='400 16px "DM Sans",sans-serif';ctx.fillStyle='#7b8db5';ctx.textAlign='center';
+  ctx.fillText('벤치마크 성능 (정규화)',0,0);ctx.restore();
+  // The "Transformer moment" vertical line
+  const txLine=pad.l+((2017-2013.5)/(2025-2013.5))*gw;
+  ctx.beginPath();ctx.moveTo(txLine,pad.t);ctx.lineTo(txLine,h-pad.b);
+  ctx.strokeStyle='rgba(240,180,41,0.15)';ctx.lineWidth=1;ctx.setLineDash([6,4]);ctx.stroke();ctx.setLineDash([]);
+  ctx.font='italic 500 16px "Fraunces",serif';ctx.fillStyle='rgba(240,180,41,0.4)';ctx.textAlign='center';
+  ctx.fillText('Transformer 등장',txLine,pad.t-10);
+  // RNN zone shading
+  ctx.fillStyle='rgba(123,141,181,0.04)';
+  ctx.fillRect(pad.l,pad.t,txLine-pad.l,gh);
+  ctx.font='500 16px "DM Sans",sans-serif';ctx.fillStyle='rgba(123,141,181,0.2)';ctx.textAlign='center';
+  ctx.fillText('RNN / LSTM 시대',pad.l+(txLine-pad.l)/2,pad.t+25);
+  // Transformer zone
+  ctx.fillStyle='rgba(240,180,41,0.02)';
+  ctx.fillRect(txLine,pad.t,w-pad.r-txLine,gh);
+  ctx.fillStyle='rgba(240,180,41,0.15)';
+  ctx.fillText('트랜스포머 시대',txLine+(w-pad.r-txLine)/2,pad.t+25);
+  // Draw models up to current step
+  const visCount=revStep<0?0:Math.min(revStep+1,REV_MODELS.length);
+  // Connecting line
+  if(visCount>0){
+    ctx.beginPath();
+    for(let i=0;i<visCount;i++){
+      const m=REV_MODELS[i];
+      const mx=pad.l+((m.year-2013.5)/(2025-2013.5))*gw;
+      const my=pad.t+(1-m.score)*gh;
+      i===0?ctx.moveTo(mx,my):ctx.lineTo(mx,my);
+    }
+    ctx.strokeStyle='rgba(240,180,41,0.3)';ctx.lineWidth=2;ctx.stroke();
+  }
+  // Dots and labels
+  for(let i=0;i<visCount;i++){
+    const m=REV_MODELS[i];
+    const mx=pad.l+((m.year-2013.5)/(2025-2013.5))*gw;
+    const my=pad.t+(1-m.score)*gh;
+    const isCurrent=i===revStep;
+    const isTransformer=m.year>=2017;
+    // Glow for current
+    if(isCurrent){
+      const glow=ctx.createRadialGradient(mx,my,0,mx,my,35);
+      glow.addColorStop(0,m.color+'40');glow.addColorStop(1,'transparent');
+      ctx.fillStyle=glow;ctx.fillRect(mx-35,my-35,70,70);
+    }
+    // Dot
+    ctx.beginPath();ctx.arc(mx,my,isCurrent?8:5,0,6.28);
+    ctx.fillStyle=m.color;ctx.fill();
+    if(isTransformer&&m.year===2017){
+      ctx.strokeStyle='#f0b429';ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(mx,my,14+Math.sin(t*3)*3,0,6.28);ctx.stroke();
+    }
+    // Name label
+    const labelAbove=i%2===0||m.year===2017;
+    ctx.font=(isCurrent?'600':'500')+' '+(isCurrent?'20':'16')+'px "DM Sans",sans-serif';
+    ctx.fillStyle=isCurrent?'#fff':m.color;ctx.textAlign='center';
+    ctx.fillText(m.name,mx,labelAbove?my-16:my+24);
+    // Params
+    if(isCurrent){
+      ctx.font='400 14px "JetBrains Mono",monospace';ctx.fillStyle=m.color+'aa';
+      ctx.fillText(m.params,mx,labelAbove?my-34:my+42);
+    }
+  }
+  // Description box for current
+  if(revStep>=0&&revStep<REV_MODELS.length){
+    const m=REV_MODELS[revStep];
+    const boxW=Math.min(500,w*0.6),boxH=36;
+    const bx=(w-boxW)/2,by=h-pad.b+40;
+    ctx.fillStyle='rgba(0,0,0,0.4)';
+    roundRect(ctx,bx,by,boxW,boxH,8);ctx.fill();
+    ctx.font='500 18px "DM Sans",sans-serif';ctx.fillStyle=m.color;ctx.textAlign='center';
+    ctx.fillText(m.desc,w/2,by+boxH/2+6);
+    // Update stat boxes
+    document.getElementById('rev-year').textContent=Math.floor(m.year);
+    document.getElementById('rev-model').textContent=m.name;
+    document.getElementById('rev-params').textContent=m.params;
+  }
+  requestAnimationFrame(drawRevTimeline);
+}
+function playRevolution(){
+  if(revPlaying){revPlaying=false;clearInterval(revTimer);
+    document.getElementById('rev-play-btn').textContent='▶ 역사를 재생하다';
+    document.getElementById('rev-play-btn').classList.remove('playing');return;}
+  if(revStep>=REV_MODELS.length-1)resetRevolution();
+  revPlaying=true;
+  document.getElementById('rev-play-btn').textContent='⏸ 일시정지';
+  document.getElementById('rev-play-btn').classList.add('playing');
+  ensureAudio();
+  function advanceStep(){
+    revStep++;
+    if(revStep>=REV_MODELS.length){
+      revPlaying=false;clearInterval(revTimer);
+      document.getElementById('rev-play-btn').textContent='▶ 역사를 재생하다';
+      document.getElementById('rev-play-btn').classList.remove('playing');
+      if(actx)playChord([523.25,659.25,783.99,1046.5],0.6,0.04);
+      return;
+    }
+    const m=REV_MODELS[revStep];
+    // Sound: rising pitch for each model, special for Transformer
+    if(actx){
+      const freq=200+revStep*60;
+      if(m.year===2017){
+        // Special dramatic sound for Transformer
+        playChord([261.63,329.63,392.00,523.25],0.5,0.05);
+      }else{
+        playChime(freq,0.25,0.04,'triangle');
+      }
+    }
+  }
+  advanceStep();
+  revTimer=setInterval(advanceStep,1200);
+}
+function resetRevolution(){
+  revStep=-1;revPlaying=false;clearInterval(revTimer);
+  document.getElementById('rev-play-btn').textContent='▶ 역사를 재생하다';
+  document.getElementById('rev-play-btn').classList.remove('playing');
+  document.getElementById('rev-year').textContent='2014';
+  document.getElementById('rev-model').textContent='Seq2Seq + Attention';
+  document.getElementById('rev-params').textContent='~200M';
+}
+drawRevTimeline();
+
+// ═══════════════════════════════════════════
+// §08 — NEXT-TOKEN PREDICTION
+// ═══════════════════════════════════════════
+const predBarsC=document.getElementById('predict-bars'),predBarsX=predBarsC.getContext('2d');
+const PRED_VOCAB={
+  'The meaning of life is':[{t:'to',p:0.25},{t:'a',p:0.15},{t:'found',p:0.12},{t:'not',p:0.10},{t:'something',p:0.08},{t:'love',p:0.06},{t:'about',p:0.05},{t:'the',p:0.04},{t:'what',p:0.04},{t:'beyond',p:0.03}],
+  'Once upon a time':[{t:'there',p:0.35},{t:',',p:0.20},{t:'in',p:0.12},{t:'a',p:0.08},{t:'the',p:0.05},{t:'long',p:0.04},{t:'when',p:0.03},{t:'I',p:0.03},{t:'we',p:0.02},{t:'it',p:0.02}],
+  'The derivative of sin(x) is':[{t:'cos',p:0.45},{t:'equal',p:0.12},{t:'−',p:0.08},{t:'the',p:0.06},{t:'sin',p:0.05},{t:'given',p:0.04},{t:'a',p:0.03},{t:'not',p:0.03},{t:'defined',p:0.02},{t:'cos(x)',p:0.10}]
+};
+let predPrompt='The meaning of life is';
+let predGenerated=[];let predCount=0;
+
+function getCurrentPredDist(){
+  // Find the base distribution for the current prompt
+  let base=PRED_VOCAB[predPrompt];
+  if(!base){
+    // Generate plausible distribution for extended prompts
+    const allWords=['the','is','a','of','and','to','in','that','it','was','for','not','on','with','as','but','be','they','this','from'];
+    base=allWords.map((w,i)=>({t:w,p:0.15*Math.exp(-i*0.25)}));
+  }
+  // Apply temperature
+  const temp=+document.getElementById('pred-temp').value/10;
+  const logits=base.map(b=>Math.log(b.p+1e-10));
+  const probs=softmax(logits,temp);
+  return base.map((b,i)=>({t:b.t,p:probs[i]}));
+}
+
+function drawPredBars(){
+  const w=predBarsC.width=predBarsC.clientWidth*2,h=predBarsC.height=400;
+  predBarsX.clearRect(0,0,w,h);
+  const dist=getCurrentPredDist();
+  const barH=h/dist.length,pad=120,maxBarW=w-pad-60;
+  // Sort by probability
+  dist.sort((a,b)=>b.p-a.p);
+  for(let i=0;i<dist.length;i++){
+    const y=i*barH+barH*0.15;
+    const bh=barH*0.7;
+    const bw=dist[i].p*maxBarW;
+    // Bar
+    const grad=predBarsX.createLinearGradient(pad,0,pad+bw,0);
+    const colors=['#f0b429','#38bdf8','#a78bfa','#fb7185','#34d399'];
+    const c=colors[i%colors.length];
+    grad.addColorStop(0,c+'cc');grad.addColorStop(1,c+'44');
+    predBarsX.fillStyle=grad;
+    predBarsX.beginPath();
+    predBarsX.moveTo(pad+6,y);predBarsX.lineTo(pad+bw,y);
+    predBarsX.quadraticCurveTo(pad+bw+6,y+bh/2,pad+bw,y+bh);
+    predBarsX.lineTo(pad+6,y+bh);predBarsX.quadraticCurveTo(pad,y+bh/2,pad+6,y);
+    predBarsX.fill();
+    // Token label
+    predBarsX.font='600 22px "JetBrains Mono",monospace';predBarsX.fillStyle='#e0e6f0';predBarsX.textAlign='right';
+    predBarsX.fillText('"'+dist[i].t+'"',pad-12,y+bh/2+7);
+    // Probability
+    predBarsX.font='500 18px "JetBrains Mono",monospace';predBarsX.fillStyle='rgba(255,255,255,0.6)';predBarsX.textAlign='left';
+    predBarsX.fillText((dist[i].p*100).toFixed(1)+'%',pad+bw+10,y+bh/2+6);
+  }
+  // Entropy
+  let entropy=0;dist.forEach(d=>{if(d.p>0)entropy-=d.p*Math.log2(d.p);});
+  document.getElementById('pred-entropy').textContent=entropy.toFixed(2)+' bits';
+}
+function updatePredTemp(){
+  const t=+document.getElementById('pred-temp').value/10;
+  document.getElementById('pred-temp-val').textContent='τ = '+t.toFixed(1);
+  document.getElementById('pred-t-show').textContent=t.toFixed(1);
+  drawPredBars();
+}
+function sampleNext(){
+  ensureAudio();
+  const dist=getCurrentPredDist();
+  dist.sort((a,b)=>b.p-a.p);
+  // Weighted random sample
+  const r=Math.random();let cum=0;let chosen=dist[0].t;
+  for(const d of dist){cum+=d.p;if(r<cum){chosen=d.t;break;}}
+  predGenerated.push(chosen);predCount++;
+  document.getElementById('predict-context').innerHTML='<span style="color:var(--gold);">'+predPrompt+'</span> <span style="color:var(--mint);">'+predGenerated.join(' ')+'</span>';
+  document.getElementById('pred-count').textContent=predCount;
+  if(actx)playChime(400+Math.random()*300,0.15,0.05,'sine');
+  drawPredBars();
+}
+function resetPredict(){
+  predGenerated=[];predCount=0;
+  document.getElementById('predict-context').innerHTML='<span style="color:var(--gold);">'+predPrompt+'</span>';
+  document.getElementById('pred-count').textContent='0';drawPredBars();
+}
+function setPredictPrompt(p){predPrompt=p;resetPredict();}
+drawPredBars();
+
+// ═══════════════════════════════════════════
+// §08 — EMERGENCE
+// ═══════════════════════════════════════════
+const emergeC=document.getElementById('emerge-canvas'),emergeX=emergeC.getContext('2d');
+const EMERGE_ABILITIES=[
+  {name:'기본 문법',threshold:10,color:'#38bdf8'},
+  {name:'산술 (두 자리)',threshold:28,color:'#34d399'},
+  {name:'번역',threshold:42,color:'#a78bfa'},
+  {name:'맥락 내 학습',threshold:58,color:'#f0b429'},
+  {name:'사고의 연쇄',threshold:72,color:'#fb7185'},
+  {name:'추상적 추론',threshold:88,color:'#c084fc'}
+];
+let emergeAudioPlayed=new Set();
+
+function drawEmerge(){
+  const w=emergeC.width=emergeC.clientWidth*2,h=emergeC.height=700;
+  emergeX.clearRect(0,0,w,h);
+  const val=+document.getElementById('emerge-slider').value;
+  const pad={l:80,r:40,t:40,b:60};
+  const gw=w-pad.l-pad.r,gh=h-pad.t-pad.b;
+  // Axes
+  emergeX.strokeStyle='rgba(255,255,255,0.08)';emergeX.lineWidth=1;
+  emergeX.beginPath();emergeX.moveTo(pad.l,h-pad.b);emergeX.lineTo(w-pad.r,h-pad.b);emergeX.stroke();
+  emergeX.beginPath();emergeX.moveTo(pad.l,pad.t);emergeX.lineTo(pad.l,h-pad.b);emergeX.stroke();
+  // X labels
+  emergeX.font='400 18px "JetBrains Mono",monospace';emergeX.fillStyle='#7b8db5';emergeX.textAlign='center';
+  ['1M','10M','100M','1B','10B','100B','1T'].forEach((lbl,i)=>{
+    const x=pad.l+i*(gw/6);
+    emergeX.fillText(lbl,x,h-pad.b+25);
+    emergeX.beginPath();emergeX.moveTo(x,pad.t);emergeX.lineTo(x,h-pad.b);
+    emergeX.strokeStyle='rgba(255,255,255,0.03)';emergeX.stroke();
+  });
+  emergeX.fillText('매개변수 (로그 스케일)',w/2,h-10);
+  // Y label
+  emergeX.save();emergeX.translate(20,h/2);emergeX.rotate(-Math.PI/2);
+  emergeX.fillText('성능',0,0);emergeX.restore();
+  // Loss curve (smooth descent)
+  emergeX.beginPath();
+  for(let x=0;x<=100;x++){
+    const px=pad.l+(x/100)*gw;
+    const loss=0.9-0.7*(1-Math.exp(-x/30));
+    const py=pad.t+(1-loss)*gh;
+    x===0?emergeX.moveTo(px,py):emergeX.lineTo(px,py);
+  }
+  emergeX.strokeStyle='rgba(255,255,255,0.15)';emergeX.lineWidth=2;emergeX.stroke();
+  // Emergence step functions
+  EMERGE_ABILITIES.forEach((ab,i)=>{
+    emergeX.beginPath();
+    for(let x=0;x<=100;x++){
+      const px=pad.l+(x/100)*gw;
+      const sigmoid=1/(1+Math.exp(-(x-ab.threshold)*0.4));
+      const py=pad.t+(1-sigmoid*0.85-0.05)*gh;
+      x===0?emergeX.moveTo(px,py):emergeX.lineTo(px,py);
+    }
+    const past=val>=ab.threshold;
+    emergeX.strokeStyle=past?ab.color:ab.color+'40';
+    emergeX.lineWidth=past?2.5:1.5;emergeX.stroke();
+    // Label
+    const labelX=pad.l+(ab.threshold/100)*gw;
+    const sigmoid=1/(1+Math.exp(-(100-ab.threshold)*0.4));
+    const labelY=pad.t+(1-sigmoid*0.85-0.05)*gh;
+    emergeX.font=(past?'600':'400')+' 18px "DM Sans",sans-serif';
+    emergeX.fillStyle=past?ab.color:ab.color+'60';emergeX.textAlign='left';
+    emergeX.fillText(ab.name,labelX+10,labelY-8);
+    // Threshold marker
+    if(past&&!emergeAudioPlayed.has(i)){
+      emergeAudioPlayed.add(i);
+      if(actx)playChime(300+i*100,0.3,0.04,'sine');
+    }
+  });
+  // Current position cursor
+  const curX=pad.l+(val/100)*gw;
+  emergeX.beginPath();emergeX.moveTo(curX,pad.t);emergeX.lineTo(curX,h-pad.b);
+  emergeX.strokeStyle='rgba(240,180,41,0.4)';emergeX.lineWidth=2;emergeX.setLineDash([4,4]);emergeX.stroke();emergeX.setLineDash([]);
+  // Glow at cursor
+  const glow=emergeX.createRadialGradient(curX,h/2,0,curX,h/2,80);
+  glow.addColorStop(0,'rgba(240,180,41,0.06)');glow.addColorStop(1,'transparent');
+  emergeX.fillStyle=glow;emergeX.fillRect(curX-80,0,160,h);
+  // Stats
+  const paramLabels=['1M','3M','10M','30M','100M','300M','1B','3B','10B','30B','100B','300B','1T'];
+  const pIdx=Math.round(val/100*12);
+  document.getElementById('emerge-val').textContent=paramLabels[pIdx]+' 파라미터';
+  document.getElementById('em-params').textContent=paramLabels[pIdx];
+  const unlocked=EMERGE_ABILITIES.filter(a=>val>=a.threshold).length;
+  document.getElementById('em-abilities').innerHTML=unlocked+' <span class="su">/ 6</span>';
+  const loss=(4.2-3.5*(1-Math.exp(-val/30))).toFixed(2);
+  document.getElementById('em-loss').textContent=loss;
+}
+function updateEmerge(){
+  const prev=emergeAudioPlayed.size;
+  drawEmerge();
+}
+drawEmerge();
+
+// ═══════════════════════════════════════════
+// NAV DOTS & SCROLL REVEALS
+// ═══════════════════════════════════════════
+const obs=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+const secs=['hero','sec-dot','sec-token','sec-embed','sec-pos','sec-attn','sec-heads','sec-arch','sec-revolution','sec-predict','sec-emerge','sec-conn','sec-closing'];
+const nd=document.getElementById('nav-dots');
+secs.forEach(id=>{const d=document.createElement('button');d.className='nav-dot';d.onclick=()=>document.getElementById(id).scrollIntoView({behavior:'smooth'});nd.appendChild(d);});
+const sO=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){const i=secs.indexOf(e.target.id);document.querySelectorAll('.nav-dot').forEach((d,j)=>d.classList.toggle('active',j===i));}});},{threshold:0.3});
+secs.forEach(id=>{const el=document.getElementById(id);if(el)sO.observe(el);});
+</script>
+</body>
+</html>
