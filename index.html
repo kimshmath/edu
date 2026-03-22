@@ -138,22 +138,121 @@ header h1 em {
   margin: 0 0 3rem;
 }
 
+/* ─── Menu sections ─── */
+.menu-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 6rem;
+}
+
+.menu-section {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+.menu-section:hover {
+  border-color: var(--border-hover);
+}
+
+.menu-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.8rem 2rem;
+  cursor: pointer;
+  user-select: none;
+  background: var(--card);
+  transition: background 0.3s;
+  -webkit-tap-highlight-color: transparent;
+}
+.menu-header:hover {
+  background: var(--card-hover);
+}
+
+.menu-header-left {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.menu-label {
+  font-family: var(--f-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.menu-title {
+  font-family: var(--f-display);
+  font-size: clamp(1.4rem, 3vw, 1.8rem);
+  font-weight: 300;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+
+.menu-count {
+  font-family: var(--f-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.menu-chevron {
+  width: 18px;
+  height: 18px;
+  color: var(--muted);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), color 0.3s;
+  flex-shrink: 0;
+  margin-left: 1rem;
+}
+
+.menu-section.open .menu-chevron {
+  transform: rotate(180deg);
+  color: var(--gold);
+}
+
+.menu-section.open .menu-title {
+  color: var(--gold);
+}
+
+/* ─── Collapsible content ─── */
+.menu-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.menu-section.open .menu-content {
+  grid-template-rows: 1fr;
+}
+
+.menu-content-inner {
+  overflow: hidden;
+}
+
 /* ─── Project list ─── */
 .projects {
   display: flex;
   flex-direction: column;
   gap: 1px;
-  margin-bottom: 6rem;
 }
 
 .project-entry {
   display: block;
-  padding: 2rem 0;
+  padding: 1.8rem 2rem;
   border-top: 1px solid var(--border);
   position: relative;
+  transition: background 0.25s;
 }
-.project-entry:last-child {
-  border-bottom: 1px solid var(--border);
+.project-entry:hover {
+  background: var(--card);
 }
 
 .proj-top {
@@ -175,10 +274,15 @@ header h1 em {
 
 .proj-title {
   font-family: var(--f-display);
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: 400;
   color: var(--white);
   flex: 1;
+  transition: color 0.2s;
+}
+
+.project-entry:hover .proj-title {
+  color: var(--gold);
 }
 
 /* ─── Language selectors ─── */
@@ -212,7 +316,7 @@ header h1 em {
 }
 
 .proj-desc {
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: var(--muted);
   line-height: 1.7;
   max-width: 500px;
@@ -292,10 +396,13 @@ footer {
 /* ─── Responsive ─── */
 @media (max-width: 600px) {
   header { padding: 5rem 0 3rem; }
+  .menu-header { padding: 1.4rem 1.2rem; }
+  .project-entry { padding: 1.4rem 1.2rem; }
   .proj-desc, .proj-tags { padding-left: 0; }
-  .proj-title { font-size: 1.15rem; }
+  .proj-title { font-size: 1.1rem; }
   .proj-top { flex-wrap: wrap; }
   .proj-langs { margin-left: 2.5rem; margin-top: 0.4rem; }
+  .menu-header-left { flex-direction: column; gap: 0.3rem; }
 }
 
 /* ─── Entry animation ─── */
@@ -304,54 +411,8 @@ footer {
   to { opacity: 1; transform: translateY(0); }
 }
 header { animation: fadeIn 0.8s ease both; }
-.project-entry:nth-child(1) { animation: fadeIn 0.6s 0.15s ease both; }
-.project-entry:nth-child(2) { animation: fadeIn 0.6s 0.25s ease both; }
-.project-entry:nth-child(3) { animation: fadeIn 0.6s 0.35s ease both; }
-.project-entry:nth-child(4) { animation: fadeIn 0.6s 0.45s ease both; }
-.project-entry:nth-child(5) { animation: fadeIn 0.6s 0.55s ease both; }
-.project-entry:nth-child(6) { animation: fadeIn 0.6s 0.65s ease both; }
-.project-entry:nth-child(7) { animation: fadeIn 0.6s 0.75s ease both; }
-.project-entry:nth-child(8) { animation: fadeIn 0.6s 0.85s ease both; }
-
-.lang-select {
-  background: transparent;
-  color: var(--teal);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 0.2rem 0.5rem;
-  font-family: 'Space Mono', monospace;
-  font-size: 0.65rem;
-  cursor: pointer;
-  outline: none;
-  appearance: none;
-  -webkit-appearance: none;
-  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2322b5aa%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-  background-repeat: no-repeat;
-  background-position: right .5rem top 50%;
-  background-size: .45rem auto;
-  padding-right: 1.4rem;
-}
-.lang-select:hover {
-  border-color: var(--teal);
-}
-.lang-select option {
-  background: var(--surface);
-  color: var(--cream);
-}
-
-.proj-title-link {
-  text-decoration: none;
-  color: inherit;
-  transition: all 0.2s;
-  display: inline-block;
-}
-.proj-title-link:hover .proj-title {
-  color: var(--gold);
-  text-shadow: 0 0 12px var(--glow-gold);
-}
-.proj-title-link .proj-title {
-  transition: color 0.2s, text-shadow 0.2s;
-}
+.menu-section:nth-child(1) { animation: fadeIn 0.6s 0.2s ease both; }
+.menu-section:nth-child(2) { animation: fadeIn 0.6s 0.35s ease both; }
 </style>
 </head>
 <body>
@@ -365,146 +426,188 @@ header { animation: fadeIn 0.8s ease both; }
 
   <div class="divider"></div>
 
-  <div class="projects">
+  <div class="menu-sections">
 
-    <div class="project-entry">
-      <div class="proj-top">
-        <span class="proj-number">01</span>
-        <span class="proj-title">Banach–Tarski: F₂ on S²</span>
-        <div class="proj-langs">
-          <a href="banach.html" class="lang-btn">EN</a>
-          <a href="banach_ko.html" class="lang-btn">한국어</a>
+    <!-- ═══ MATH ═══ -->
+    <div class="menu-section open" id="menu-math">
+      <div class="menu-header" onclick="toggleMenu('menu-math')">
+        <div class="menu-header-left">
+          <span class="menu-label">I</span>
+          <span class="menu-title">Mathematics</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <span class="menu-count">5 chapters</span>
+          <svg class="menu-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
       </div>
-      <p class="proj-desc">The most counterintuitive theorem in mathematics, visualized. Watch the free group F₂ act on the sphere via rotations, and see how a ball can be decomposed and reassembled into two identical copies of itself.</p>
-      <div class="proj-tags">
-        <span class="proj-tag">Free Groups</span>
-        <span class="proj-tag">Paradoxical Decomposition</span>
-        <span class="proj-tag">3D Visualization</span>
+      <div class="menu-content">
+        <div class="menu-content-inner">
+          <div class="projects">
+
+            <div class="project-entry">
+              <div class="proj-top">
+                <span class="proj-number">01</span>
+                <span class="proj-title">Banach–Tarski: F₂ on S²</span>
+                <div class="proj-langs">
+                  <a href="banach.html" class="lang-btn">EN</a>
+                  <a href="banach_ko.html" class="lang-btn">한국어</a>
+                </div>
+              </div>
+              <p class="proj-desc">The most counterintuitive theorem in mathematics, visualized. Watch the free group F₂ act on the sphere via rotations, and see how a ball can be decomposed and reassembled into two identical copies of itself.</p>
+              <div class="proj-tags">
+                <span class="proj-tag">Free Groups</span>
+                <span class="proj-tag">Paradoxical Decomposition</span>
+                <span class="proj-tag">3D Visualization</span>
+              </div>
+            </div>
+
+            <div class="project-entry">
+              <div class="proj-top">
+                <span class="proj-number">02</span>
+                <span class="proj-title">Can You Hear the Shape of a Drum?</span>
+                <div class="proj-langs">
+                  <a href="drum.html" class="lang-btn">EN</a>
+                  <a href="drum_ko.html" class="lang-btn">한국어</a>
+                </div>
+              </div>
+              <p class="proj-desc">Mark Kac's famous 1966 question, made audible. Strike virtual drums, see their vibrational modes as Bessel-function eigenstates, and hear why two differently shaped drums can produce identical spectra.</p>
+              <div class="proj-tags">
+                <span class="proj-tag">Spectral Geometry</span>
+                <span class="proj-tag">Bessel Functions</span>
+                <span class="proj-tag">Eigenvalues</span>
+                <span class="proj-tag">Modal Synthesis</span>
+              </div>
+            </div>
+
+            <div class="project-entry">
+              <div class="proj-top">
+                <span class="proj-number">03</span>
+                <span class="proj-title">The Mathematics of Sound</span>
+                <div class="proj-langs">
+                  <a href="sound.html" class="lang-btn">EN</a>
+                  <a href="sound_ko.html" class="lang-btn">한국어</a>
+                </div>
+              </div>
+              <p class="proj-desc">From Pythagoras to Fourier to your smartphone. Build waveforms from harmonics, compare tuning systems across instruments, and explore how the cochlea performs frequency analysis — all with live-synthesized audio.</p>
+              <div class="proj-tags">
+                <span class="proj-tag">Fourier Analysis</span>
+                <span class="proj-tag">Temperament</span>
+                <span class="proj-tag">Acoustics</span>
+                <span class="proj-tag">Web Audio</span>
+              </div>
+            </div>
+
+            <div class="project-entry">
+              <div class="proj-top">
+                <span class="proj-number">04</span>
+                <span class="proj-title">Living in a Hyperbolic Space</span>
+                <div class="proj-langs">
+                  <a href="hyperbolic.html" class="lang-btn">EN</a>
+                  <a href="hyperbolic_ko.html" class="lang-btn">한국어</a>
+                </div>
+              </div>
+              <p class="proj-desc">Where the parallel postulate fails and triangles contain less than 180°. Walk through hyperbolic 3-space, tile the infinite plane, explore Teichmüller space, and follow Mirzakhani's path from geodesics to the Witten conjecture.</p>
+              <div class="proj-tags">
+                <span class="proj-tag">Hyperbolic Geometry</span>
+                <span class="proj-tag">Tessellations</span>
+                <span class="proj-tag">Teichmüller Space</span>
+                <span class="proj-tag">Mirzakhani</span>
+              </div>
+            </div>
+
+            <div class="project-entry">
+              <div class="proj-top">
+                <span class="proj-number">05</span>
+                <span class="proj-title">Why do the polls look the same??</span>
+                <div class="proj-langs">
+                  <a href="clt.html" class="lang-btn">EN</a>
+                </div>
+              </div>
+              <p class="proj-desc">A visual exploration of the Central Limit Theorem and modern probability. Draw your own bizarre distribution and watch the inevitable rise of the Gaussian Bell Curve. Featuring Stein's method, the Berry-Esseen bound, and Wigner's Semicircle Law.</p>
+              <div class="proj-tags">
+                <span class="proj-tag">Central Limit Theorem</span>
+                <span class="proj-tag">Random Matrices</span>
+                <span class="proj-tag">Probability</span>
+                <span class="proj-tag">Universality</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="project-entry">
-      <div class="proj-top">
-        <span class="proj-number">02</span>
-        <span class="proj-title">Can You Hear the Shape of a Drum?</span>
-        <div class="proj-langs">
-          <a href="drum.html" class="lang-btn">EN</a>
-          <a href="drum_ko.html" class="lang-btn">한국어</a>
+    <!-- ═══ MACHINE LEARNING ═══ -->
+    <div class="menu-section" id="menu-ml">
+      <div class="menu-header" onclick="toggleMenu('menu-ml')">
+        <div class="menu-header-left">
+          <span class="menu-label">II</span>
+          <span class="menu-title">Machine Learning</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <span class="menu-count">3 chapters</span>
+          <svg class="menu-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
       </div>
-      <p class="proj-desc">Mark Kac's famous 1966 question, made audible. Strike virtual drums, see their vibrational modes as Bessel-function eigenstates, and hear why two differently shaped drums can produce identical spectra.</p>
-      <div class="proj-tags">
-        <span class="proj-tag">Spectral Geometry</span>
-        <span class="proj-tag">Bessel Functions</span>
-        <span class="proj-tag">Eigenvalues</span>
-        <span class="proj-tag">Modal Synthesis</span>
-      </div>
-    </div>
+      <div class="menu-content">
+        <div class="menu-content-inner">
+          <div class="projects">
 
-    <div class="project-entry">
-      <div class="proj-top">
-        <span class="proj-number">03</span>
-        <span class="proj-title">The Mathematics of Sound</span>
-        <div class="proj-langs">
-          <a href="sound.html" class="lang-btn">EN</a>
-          <a href="sound_ko.html" class="lang-btn">한국어</a>
-        </div>
-      </div>
-      <p class="proj-desc">From Pythagoras to Fourier to your smartphone. Build waveforms from harmonics, compare tuning systems across instruments, and explore how the cochlea performs frequency analysis — all with live-synthesized audio.</p>
-      <div class="proj-tags">
-        <span class="proj-tag">Fourier Analysis</span>
-        <span class="proj-tag">Temperament</span>
-        <span class="proj-tag">Acoustics</span>
-        <span class="proj-tag">Web Audio</span>
-      </div>
-    </div>
+            <div class="project-entry">
+              <div class="proj-top">
+                <span class="proj-number">06</span>
+                <span class="proj-title">How Does Information Spread?<br><span style="font-size:0.7em;color:var(--muted);font-weight:300;">Diffusion Part 1/2</span></span>
+                <div class="proj-langs">
+                  <a href="diffusion-1.html" class="lang-btn">EN</a>
+                  <a href="diffusion-1-ko.html" class="lang-btn">한국어</a>
+                </div>
+              </div>
+              <p class="proj-desc">The physics of diffusion — from a stone dropped in still water to the one equation that governs heat, probability, and the spread of information across every medium.</p>
+              <div class="proj-tags">
+                <span class="proj-tag">Diffusion Equation</span>
+                <span class="proj-tag">Heat Equation</span>
+                <span class="proj-tag">Physics</span>
+              </div>
+            </div>
 
-    <div class="project-entry">
-      <div class="proj-top">
-        <span class="proj-number">04</span>
-        <span class="proj-title">Living in a Hyperbolic Space</span>
-        <div class="proj-langs">
-          <a href="hyperbolic.html" class="lang-btn">EN</a>
-          <a href="hyperbolic_ko.html" class="lang-btn">한국어</a>
-        </div>
-      </div>
-      <p class="proj-desc">Where the parallel postulate fails and triangles contain less than 180°. Walk through hyperbolic 3-space, tile the infinite plane, explore Teichmüller space, and follow Mirzakhani's path from geodesics to the Witten conjecture.</p>
-      <div class="proj-tags">
-        <span class="proj-tag">Hyperbolic Geometry</span>
-        <span class="proj-tag">Tessellations</span>
-        <span class="proj-tag">Teichmüller Space</span>
-        <span class="proj-tag">Mirzakhani</span>
-      </div>
-    </div>
+            <div class="project-entry">
+              <div class="proj-top">
+                <span class="proj-number">07</span>
+                <span class="proj-title">Does a Machine Dream?<br><span style="font-size:0.7em;color:var(--muted);font-weight:300;">Diffusion Part 2/2</span></span>
+                <div class="proj-langs">
+                  <a href="diffusion-2.html" class="lang-btn">EN</a>
+                  <a href="diffusion-2-ko.html" class="lang-btn">한국어</a>
+                </div>
+              </div>
+              <p class="proj-desc">Noise, latent space, and the imagination of AI — watch images emerge from pure noise, understand how score functions guide denoising, and see the mathematics behind Stable Diffusion and generative models.</p>
+              <div class="proj-tags">
+                <span class="proj-tag">Diffusion Models</span>
+                <span class="proj-tag">Generative AI</span>
+                <span class="proj-tag">Score Matching</span>
+                <span class="proj-tag">Denoising</span>
+              </div>
+            </div>
 
-    <div class="project-entry">
-      <div class="proj-top">
-        <span class="proj-number">05</span>
-        <span class="proj-title">Why do the polls look the same??</span>
-        <div class="proj-langs">
-          <a href="clt.html" class="lang-btn">EN</a>
-        </div>
-      </div>
-      <p class="proj-desc">A visual exploration of the Central Limit Theorem and modern probability. Draw your own bizarre distribution and watch the inevitable rise of the Gaussian Bell Curve. Featuring Stein's method, the Berry-Esseen bound, and Wigner's Semicircle Law.</p>
-      <div class="proj-tags">
-        <span class="proj-tag">Central Limit Theorem</span>
-        <span class="proj-tag">Random Matrices</span>
-        <span class="proj-tag">Probability</span>
-        <span class="proj-tag">Universality</span>
-      </div>
-    </div>
+            <div class="project-entry">
+              <div class="proj-top">
+                <span class="proj-number">08</span>
+                <span class="proj-title">Does a Machine Understand?</span>
+                <div class="proj-langs">
+                  <a href="transformer.html" class="lang-btn">EN</a>
+                  <a href="transformer_ko.html" class="lang-btn">한국어</a>
+                </div>
+              </div>
+              <p class="proj-desc">From linear algebra to language — see how dot products become attention, tokens become embeddings, and a single architecture learned to read, write, and reason. The mathematics inside the Transformer, made visible.</p>
+              <div class="proj-tags">
+                <span class="proj-tag">Transformers</span>
+                <span class="proj-tag">Self-Attention</span>
+                <span class="proj-tag">Linear Algebra</span>
+                <span class="proj-tag">NLP</span>
+              </div>
+            </div>
 
-    <div class="project-entry">
-      <div class="proj-top">
-        <span class="proj-number">06</span>
-        <span class="proj-title">How Does Information Spread?<br><span style="font-size:0.7em;color:var(--muted);font-weight:300;">Diffusion Part 1/2</span></span>
-        <div class="proj-langs">
-          <a href="diffusion-1.html" class="lang-btn">EN</a>
-          <a href="diffusion-1-ko.html" class="lang-btn">한국어</a>
+          </div>
         </div>
-      </div>
-      <p class="proj-desc">The physics of diffusion — from a stone dropped in still water to the one equation that governs heat, probability, and the spread of information across every medium.</p>
-      <div class="proj-tags">
-        <span class="proj-tag">Diffusion Equation</span>
-        <span class="proj-tag">Heat Equation</span>
-        <span class="proj-tag">Physics</span>
-      </div>
-    </div>
-
-    <div class="project-entry">
-      <div class="proj-top">
-        <span class="proj-number">07</span>
-        <span class="proj-title">Does a Machine Dream?<br><span style="font-size:0.7em;color:var(--muted);font-weight:300;">Diffusion Part 2/2</span></span>
-        <div class="proj-langs">
-          <a href="diffusion-2.html" class="lang-btn">EN</a>
-          <a href="diffusion-2-ko.html" class="lang-btn">한국어</a>
-        </div>
-      </div>
-      <p class="proj-desc">Noise, latent space, and the imagination of AI — watch images emerge from pure noise, understand how score functions guide denoising, and see the mathematics behind Stable Diffusion and generative models.</p>
-      <div class="proj-tags">
-        <span class="proj-tag">Diffusion Models</span>
-        <span class="proj-tag">Generative AI</span>
-        <span class="proj-tag">Score Matching</span>
-        <span class="proj-tag">Denoising</span>
-      </div>
-    </div>
-
-    <div class="project-entry">
-      <div class="proj-top">
-        <span class="proj-number">08</span>
-        <span class="proj-title">Does a Machine Understand?</span>
-        <div class="proj-langs">
-          <a href="transformer.html" class="lang-btn">EN</a>
-          <a href="transformer_ko.html" class="lang-btn">한국어</a>
-        </div>
-      </div>
-      <p class="proj-desc">From linear algebra to language — see how dot products become attention, tokens become embeddings, and a single architecture learned to read, write, and reason. The mathematics inside the Transformer, made visible.</p>
-      <div class="proj-tags">
-        <span class="proj-tag">Transformers</span>
-        <span class="proj-tag">Self-Attention</span>
-        <span class="proj-tag">Linear Algebra</span>
-        <span class="proj-tag">NLP</span>
       </div>
     </div>
 
@@ -522,6 +625,13 @@ header { animation: fadeIn 0.8s ease both; }
 </div>
 
 <a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
+<script>
+function toggleMenu(id) {
+  const section = document.getElementById(id);
+  section.classList.toggle('open');
+}
+</script>
 
 </body>
 </html>
