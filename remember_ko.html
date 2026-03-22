@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>기계는 기억하는가? — 문맥 창에서 벡터 검색까지</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#080d1a;--bg2:#0c1326;--bg3:#111b38;--card:#131f42;--gold:#f0b429;--gold-dim:#c4912080;--sky:#38bdf8;--purple:#a78bfa;--coral:#fb7185;--mint:#34d399;--text:#e0e6f0;--muted:#7b8db5;--font-display:'Fraunces',Georgia,serif;--font-body:'DM Sans',sans-serif;--font-mono:'JetBrains Mono',monospace}
+html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-weight:300;line-height:1.7;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:3px}
+body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
+section{min-height:100vh;padding:6rem 2rem;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.section-inner{max-width:900px;width:100%}
+h1{font-family:var(--font-display);font-size:clamp(2.8rem,6vw,5rem);font-weight:700;line-height:1.15;letter-spacing:-0.02em;color:#fff}
+h2{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,3rem);font-weight:700;line-height:1.2;color:#fff;margin-bottom:1.5rem}
+h3{font-family:var(--font-body);font-size:1.1rem;font-weight:500;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:0.5rem}
+p{margin-bottom:1rem}.accent-gold{color:var(--gold)}.accent-sky{color:var(--sky)}.accent-purple{color:var(--purple)}.accent-coral{color:var(--coral)}.accent-mint{color:var(--mint)}
+.section-num{font-family:var(--font-mono);font-size:0.75rem;color:var(--gold);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.5rem;opacity:0.7}
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;opacity:0.5}
+#hero .content{position:relative;z-index:2}#hero h1{margin-bottom:1rem}
+#hero .subtitle{font-family:var(--font-display);font-size:clamp(1.1rem,2.5vw,1.5rem);color:var(--purple);font-style:italic;margin-bottom:2.5rem}
+#hero .tagline{color:var(--muted);font-size:0.95rem;max-width:580px;margin:0 auto 2.5rem}
+.start-btn{display:inline-flex;align-items:center;gap:0.6rem;padding:0.9rem 2.2rem;background:transparent;border:1.5px solid var(--gold);color:var(--gold);font-family:var(--font-body);font-size:1rem;font-weight:500;border-radius:60px;cursor:pointer;transition:all 0.3s;letter-spacing:0.05em;text-decoration:none}
+.start-btn:hover{background:var(--gold);color:var(--bg);transform:translateY(-2px);box-shadow:0 8px 30px rgba(240,180,41,0.25)}
+#nav-dots{position:fixed;right:1.5rem;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:12px}
+.nav-dot{width:10px;height:10px;border-radius:50%;background:var(--muted);opacity:0.3;cursor:pointer;transition:all 0.3s;border:none}
+.nav-dot.active{opacity:1;background:var(--gold);transform:scale(1.4)}
+.demo-card{background:var(--card);border-radius:16px;padding:2rem;margin:1.5rem 0;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.04)}
+.demo-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--sky),var(--purple));opacity:0.6}
+.explanation-card{background:rgba(0,0,0,0.2);border-radius:14px;padding:1.5rem;margin:1.5rem 0;border-left:3px solid var(--gold);font-size:0.92rem}
+.btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.55rem 1.3rem;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.04);color:var(--text);font-family:var(--font-body);font-size:0.85rem;border-radius:8px;cursor:pointer;transition:all 0.25s;font-weight:400}
+.btn:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.25);transform:translateY(-1px)}
+.btn.active,.btn.playing{border-color:var(--gold);background:rgba(240,180,41,0.12);color:var(--gold)}
+.btn-gold{border-color:var(--gold);color:var(--gold)}.btn-gold:hover{background:var(--gold);color:var(--bg)}
+.btn-group{display:flex;gap:0.5rem;flex-wrap:wrap;margin:1rem 0}
+.slider-row{display:flex;align-items:center;gap:1rem;margin:0.6rem 0}
+.slider-row label{min-width:2rem;font-family:var(--font-mono);font-size:0.85rem;color:var(--gold)}
+.slider-row .val{min-width:4rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--muted);text-align:right}
+input[type="range"]{-webkit-appearance:none;flex:1;height:4px;background:var(--bg3);border-radius:2px;outline:none}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer}
+.canvas-wrap{position:relative;width:100%;background:rgba(0,0,0,0.25);border-radius:12px;overflow:hidden;margin:1rem 0}
+.canvas-wrap canvas{display:block;width:100%}
+.wave-label{position:absolute;top:8px;left:12px;font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);z-index:2}
+.stat-row{display:flex;gap:0.8rem;margin:1rem 0}
+.stat-box{flex:1;background:var(--bg3);border-radius:10px;padding:0.8rem 1rem;border:1px solid rgba(255,255,255,0.03)}
+.stat-box .sl{font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:0.2rem}
+.stat-box .sv{font-family:var(--font-mono);font-size:1.1rem;font-weight:500;color:var(--gold)}
+.stat-box .su{font-size:0.7rem;color:var(--muted)}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.8s ease,transform 0.8s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.audio-note{display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:var(--muted);margin:0.5rem 0}.audio-note::before{content:'🔊'}
+.math-block{font-family:var(--font-mono);font-size:clamp(0.85rem,1.8vw,1.1rem);color:var(--gold);text-align:center;padding:0.8rem 1rem;background:var(--bg3);border-radius:10px;border:1px solid rgba(240,180,41,0.15);margin:1rem 0;line-height:1.8;overflow-x:auto}
+.rosetta-simple{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.82rem}
+.rosetta-simple th{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.7rem 0.6rem;border-bottom:2px solid rgba(255,255,255,0.08);text-align:left;color:var(--muted)}
+.rosetta-simple td{padding:0.6rem;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--text);line-height:1.5;vertical-align:top}
+.rosetta-simple tr:last-child td{border-bottom:none}.rosetta-simple .rs-icon{font-size:1.1rem;text-align:center}
+.ml-milestone-strip{display:flex;gap:0;margin:1.5rem 0;border-radius:12px;overflow:hidden;background:rgba(0,0,0,0.2)}
+.ml-ms{flex:1;padding:1rem 0.6rem;text-align:center;border-right:1px solid rgba(255,255,255,0.03);transition:background 0.3s}
+.ml-ms:last-child{border-right:none}.ml-ms:hover{background:rgba(255,255,255,0.03)}
+.ml-ms .ms-year{font-family:var(--font-mono);font-size:0.7rem;font-weight:500;margin-bottom:0.3rem}
+.ml-ms .ms-who{font-family:var(--font-display);font-size:0.85rem;font-weight:600;color:#fff;margin-bottom:0.2rem}
+.ml-ms .ms-what{font-size:0.68rem;color:var(--muted);line-height:1.5}
+#audio-notice{position:fixed;inset:0;z-index:10000;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:3vh 0;background:rgba(8,13,26,0.92);backdrop-filter:blur(12px);animation:notice-in 0.4s ease}
+@keyframes notice-in{from{opacity:0}to{opacity:1}}
+.notice-card{max-width:440px;width:90%;background:var(--bg3);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:2rem 1.8rem;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);margin:auto}
+.notice-icon{font-size:3rem;margin-bottom:1rem;display:block}.notice-card h2{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:0.8rem}
+.notice-card p{font-size:0.88rem;color:var(--text);line-height:1.7;margin-bottom:0.6rem}
+.notice-start{display:inline-flex;align-items:center;gap:0.5rem;padding:0.85rem 2.5rem;background:var(--gold);color:var(--bg);border:none;border-radius:60px;font-family:var(--font-body);font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.3s;margin-top:0.8rem}
+.notice-start:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(240,180,41,0.3)}
+.notice-vol{display:flex;align-items:center;justify-content:center;gap:0.5rem;margin:0.8rem 0;font-family:var(--font-mono);font-size:0.8rem;color:var(--gold)}
+.notice-vol .vol-bars{display:flex;gap:2px;align-items:flex-end}
+.notice-vol .vol-bar{width:4px;background:var(--gold);border-radius:2px;animation:vb 0.6s ease-in-out infinite alternate}
+.notice-vol .vol-bar:nth-child(1){height:8px;animation-delay:0s}.notice-vol .vol-bar:nth-child(2){height:14px;animation-delay:0.1s}.notice-vol .vol-bar:nth-child(3){height:20px;animation-delay:0.2s}.notice-vol .vol-bar:nth-child(4){height:14px;animation-delay:0.3s}.notice-vol .vol-bar:nth-child(5){height:8px;animation-delay:0.4s}
+@keyframes vb{from{transform:scaleY(0.5);opacity:0.5}to{transform:scaleY(1);opacity:1}}
+footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
+.floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:lowercase;color:#8db830;background:transparent;padding:.35rem .7rem;text-decoration:none;transition:color .25s,text-shadow .25s,transform .25s;text-shadow:0 0 6px rgba(141,184,48,.4),0 0 16px rgba(141,184,48,.15)}
+.floating-badge:hover{color:#a8d43a;text-shadow:0 0 8px rgba(141,184,48,.65),0 0 22px rgba(141,184,48,.28);transform:translateY(-1px)}
+.mem-word{display:inline-block;padding:0.25rem 0.6rem;margin:0.15rem;border-radius:5px;font-family:var(--font-mono);font-size:0.8rem;transition:all 0.4s;cursor:default}
+@media(max-width:640px){section{padding:4rem 1.2rem}#nav-dots{display:none}.demo-card{padding:1.2rem}.stat-row{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<div id="audio-notice"><div class="notice-card"><span class="notice-icon">💾</span><h2>기계는 기억하는가?</h2><p>실시간 시각화와 오디오가 포함된 인터랙티브 탐험입니다.<br><strong>소리가 경험을 더욱 풍부하게 합니다.</strong></p><div class="notice-vol"><div class="vol-bars"><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div></div><span>볼륨을 편안한 수준으로 맞춰주세요</span></div><button class="notice-start" onclick="dismissNotice()">✨ 탐험 시작</button></div></div>
+<nav id="nav-dots"></nav>
+
+<!-- HERO -->
+<section id="hero"><canvas id="hero-canvas"></canvas><div class="content">
+<h3 class="accent-purple">AI에 대한 수학적 탐구 · Part III</h3>
+<h1>기계는<br><span class="accent-purple">기억</span>하는가?</h1>
+<p class="subtitle">아니면 매번 처음 만난 것처럼 모든 것을 다시 읽는가?</p>
+<p class="tagline">당신은 10년 전 대화를 기억합니다. AI는 5분 전 대화도 "기억"하지 않습니다 — 매번 처음부터 전부 다시 읽습니다. 기계에게는 어릴 적 여름의 냄새도, 첫사랑의 이름이 불현듯 떠오르는 순간도 없습니다. 기계의 기억은 벡터이고, 행렬이고, 코사인 유사도입니다. 그 기이한 기억의 수학을 들여다봅니다.</p>
+<div style="display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;">
+<button class="start-btn" onclick="initAudio();document.getElementById('sec-warmup').scrollIntoView({behavior:'smooth'})">✨ 탐험 시작</button>
+<a href="transformer_ko.html" class="start-btn" style="border-color:var(--muted);color:var(--muted);">← Part II: 이해</a>
+</div>
+</div></section>
+
+<!-- §00 — MEMORY TEST -->
+<section id="sec-warmup"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">00 — 기억력 테스트</p>
+<h2>당신은 몇 개를 <span class="accent-coral">기억</span>하시나요?</h2>
+<p>지금부터 단어 15개가 하나씩 나타났다가 사라집니다. 다 끝나면 기억나는 단어를 세어보세요. 그 다음, 기계의 "기억" 방식과 비교해봅시다.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">각 단어가 나타날 때 소리가 납니다</div>
+<div id="mem-display" style="text-align:center;min-height:120px;display:flex;align-items:center;justify-content:center;">
+<span style="font-family:var(--font-display);font-size:2.5rem;color:var(--muted);">준비되셨나요?</span>
+</div>
+<div id="mem-progress" style="display:none;margin:0.5rem auto;max-width:400px;">
+<div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;"><span id="mem-prog-label" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);">0 / 15</span><span id="mem-prog-pct" style="font-family:var(--font-mono);font-size:0.7rem;color:var(--gold);">0%</span></div>
+<div style="width:100%;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;"><div id="mem-prog-bar" style="width:0%;height:100%;background:linear-gradient(90deg,var(--gold),var(--purple));border-radius:2px;transition:width 0.3s ease;"></div></div>
+</div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn btn-gold" id="mem-btn" onclick="startMemTest()">▶ 시작</button>
+<button class="btn" onclick="resetMemTest()">초기화</button>
+</div>
+<div id="mem-result" style="display:none;margin-top:1rem;">
+<div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.5rem;">본 단어를 클릭하세요 — 함정에 주의!</div>
+<div id="mem-words-grid" style="margin:0.8rem 0;display:flex;flex-wrap:wrap;gap:0.3rem;justify-content:center;"></div>
+<div id="mem-score" style="display:none;margin-top:1rem;">
+<div class="stat-row">
+<div class="stat-box"><div class="sl">맞춘 단어</div><div class="sv" id="mem-hits" style="color:var(--mint);">0</div></div>
+<div class="stat-box"><div class="sl">거짓 기억</div><div class="sv" id="mem-false" style="color:var(--coral);">0</div></div>
+<div class="stat-box"><div class="sl">놓친 단어</div><div class="sv" id="mem-missed" style="color:var(--muted);">0</div></div>
+<div class="stat-box"><div class="sl">당신의 점수</div><div class="sv" id="mem-pct" style="color:var(--gold);">0%</div></div>
+</div>
+<div class="stat-row" style="margin-top:0.5rem;">
+<div class="stat-box"><div class="sl">인간 평균</div><div class="sv">7 ± 2 / 15</div></div>
+<div class="stat-box"><div class="sl">기계 (창 안)</div><div class="sv" style="color:var(--mint);">15/15 — 100%</div></div>
+<div class="stat-box"><div class="sl">기계 (창 밖)</div><div class="sv" style="color:var(--coral);">0/15 — 0%</div></div>
+</div>
+</div>
+<div class="btn-group" style="justify-content:center;margin-top:0.5rem;">
+<button class="btn btn-gold" id="mem-done-btn" onclick="scoreMemGame()" style="display:none;">✓ 완료 — 내 점수 보기</button>
+</div>
+</div>
+</div>
+<div class="explanation-card reveal">
+<p><strong style="color:#fff;">전부 아니면 전무 — 기계 기억의 본질.</strong> — 인간의 기억은 선택적이고 감정적입니다. 중요한 것은 오래 남고, 사소한 것은 잊힙니다. 기계는 정반대입니다: 문맥 창 안의 것은 <strong>완벽히</strong> 기억하고, 밖의 것은 <strong>완전히</strong> 사라집니다. 점진적 망각이 없습니다. 오직 절벽만 있습니다.</p>
+</div>
+</div></section>
+
+<!-- §01 — CONTEXT WINDOW -->
+<section id="sec-context"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">01 — 기계의 작업 기억</p>
+<h2><span class="accent-sky">문맥 창</span>: 기계가 기억하는 방법</h2>
+<p>LLM의 "기억"은 <strong>문맥 창(context window)</strong>입니다. 대화의 모든 내용이 하나의 거대한 토큰 배열에 들어가고, 모델은 이 배열 전체에 대해 어텐션을 계산합니다. 창 밖의 세계는 존재하지 않습니다.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">슬라이더를 움직여 문맥 창을 체험해보세요</div>
+<div class="canvas-wrap"><span class="wave-label">문맥 창 시각화 — 창 밖 = 존재하지 않음</span><canvas id="ctx-canvas" height="300"></canvas></div>
+<div class="slider-row">
+<label>창</label>
+<input type="range" id="ctx-slider" min="5" max="100" value="30" step="1" oninput="drawCtx()">
+<span class="val" id="ctx-val">30 토큰</span>
+</div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">문맥 창 크기</div><div class="sv" id="ctx-size">30</div></div>
+<div class="stat-box"><div class="sl">보이는 토큰</div><div class="sv" id="ctx-visible" style="color:var(--mint);">30</div></div>
+<div class="stat-box"><div class="sl">사라진 토큰</div><div class="sv" id="ctx-lost" style="color:var(--coral);">0</div></div>
+</div>
+</div>
+<div class="demo-card reveal" style="border-left:3px solid var(--sky);">
+<h3 class="accent-sky" style="margin-bottom:0.5rem;">문맥 창의 역사 — 폭발적 확장</h3>
+<div class="ml-milestone-strip">
+<div class="ml-ms"><div class="ms-year" style="color:var(--muted);">2018</div><div class="ms-who">GPT-1</div><div class="ms-what">512 토큰<br>~1페이지</div></div>
+<div class="ml-ms"><div class="ms-year" style="color:var(--coral);">2020</div><div class="ms-who">GPT-3</div><div class="ms-what">4K 토큰<br>~6페이지</div></div>
+<div class="ml-ms"><div class="ms-year" style="color:var(--sky);">2023</div><div class="ms-who">GPT-4</div><div class="ms-what">128K 토큰<br>~책 1권</div></div>
+<div class="ml-ms"><div class="ms-year" style="color:var(--purple);">2024</div><div class="ms-who">Claude 3</div><div class="ms-what">200K 토큰<br>~소설 2권</div></div>
+<div class="ml-ms"><div class="ms-year" style="color:var(--gold);">2025–</div><div class="ms-who">Claude 4.6<br>Gemini 3</div><div class="ms-what">1M–2M 토큰<br>~백과사전</div></div>
+</div>
+</div>
+</div></section>
+
+<!-- §02 — O(n²) BARRIER -->
+<section id="sec-barrier"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">02 — 기억은 왜 비싼가</p>
+<h2>O(n²) <span class="accent-coral">장벽</span></h2>
+<p>셀프-어텐션에서 모든 토큰은 다른 모든 토큰을 바라봅니다. n개의 토큰이 있으면, n × n = n²개의 쌍을 계산해야 합니다. 토큰이 2배가 되면, 비용은 4배. 이것이 문맥 창 확장이 그토록 어려운 근본적 이유입니다.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">격자가 커질수록 소리가 깊어집니다</div>
+<div class="canvas-wrap"><span class="wave-label">n × n 어텐션 격자 — 토큰 수에 따른 연산량</span><canvas id="n2-canvas" height="350"></canvas></div>
+<div class="slider-row">
+<label>n</label>
+<input type="range" id="n2-slider" min="2" max="60" value="8" step="1" oninput="drawN2()">
+<span class="val" id="n2-val">n = 8</span>
+</div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">토큰 수 (n)</div><div class="sv" id="n2-n">8</div></div>
+<div class="stat-box"><div class="sl">연산 수 (n²)</div><div class="sv" id="n2-ops">64</div></div>
+<div class="stat-box"><div class="sl">비용 배율</div><div class="sv" id="n2-mult">1×</div></div>
+</div>
+</div>
+<div class="math-block">
+비용 ∝ n² — n = 1,000 → 1,000,000 연산 &nbsp;|&nbsp; n = 100,000 → 10,000,000,000 연산
+</div>
+<div class="explanation-card reveal" style="border-left-color:var(--coral);">
+<p><strong style="color:#fff;">이것이 2023년까지 4K 토큰이 한계였던 이유.</strong> — GPU 메모리와 연산 시간이 n²에 비례하기 때문에, 문맥 창을 10배 늘리려면 비용이 100배로 폭증합니다. FlashAttention, Ring Attention 같은 혁신이 이 장벽을 실질적으로 깨뜨렸습니다.</p>
+</div>
+</div></section>
+
+<!-- §03 — KV CACHE -->
+<section id="sec-kv"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">03 — 효율적 기억</p>
+<h2><span class="accent-mint">KV 캐시</span>: 다시 읽지 않는 비법</h2>
+<p>대화에서 새 토큰이 하나 추가될 때마다 처음부터 전부 다시 계산하면 비효율의 극치입니다. KV 캐시는 이전 토큰들의 Key와 Value를 <strong>저장</strong>해두고, 새 토큰의 Query만 기존 KV와 계산합니다.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">캐시 적중 시 맑은 음, 재계산 시 무거운 음</div>
+<div class="canvas-wrap"><span class="wave-label">토큰별 연산 비교: 캐시 없음 vs KV 캐시</span><canvas id="kv-canvas" height="300"></canvas></div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn btn-gold" id="kv-btn" onclick="runKV()">▶ 대화 시뮬레이션</button>
+<button class="btn" onclick="resetKV()">초기화</button>
+</div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">토큰 수</div><div class="sv" id="kv-tokens">0</div></div>
+<div class="stat-box"><div class="sl">캐시 없음 연산</div><div class="sv" id="kv-nocache" style="color:var(--coral);">0</div></div>
+<div class="stat-box"><div class="sl">KV 캐시 연산</div><div class="sv" id="kv-cached" style="color:var(--mint);">0</div></div>
+</div>
+</div>
+<div class="explanation-card reveal" style="border-left-color:var(--mint);">
+<p style="font-family:var(--font-display);font-style:italic;color:var(--mint);font-size:1.05rem;margin-bottom:0.5rem;">"매번 책을 처음부터 다시 읽는 대신, 밑줄 친 부분만 훑어보는 것."</p>
+<p>KV 캐시는 LLM 추론의 핵심 최적화입니다. 하지만 대가가 있습니다 — 캐시 자체가 GPU 메모리를 차지합니다. 1M 토큰 문맥에서 KV 캐시는 수십 GB를 소비할 수 있습니다.</p>
+</div>
+</div></section>
+
+<!-- §04 — VECTOR SEARCH -->
+<section id="sec-vector"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">04 — 기계의 도서관</p>
+<h2><span class="accent-purple">벡터 검색</span>: 기억을 찾아서</h2>
+<p>문맥 창에 모든 지식을 담을 수 없습니다. 그래서 필요할 때 외부 저장소에서 <strong>관련 정보를 찾아오는</strong> 방법이 필요합니다. 텍스트를 벡터로 변환하고, 코사인 유사도로 가장 관련 있는 문서를 찾습니다. Part II에서 본 그 내적이 여기에도!</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">검색된 기억이 활성화될 때 종소리</div>
+<div class="canvas-wrap"><span class="wave-label">벡터 공간에서 기억 검색 — 클릭하여 질문 선택</span><canvas id="vec-canvas" height="400"></canvas></div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn active" onclick="setVecQuery(0,this)">🐱 고양이에 대해</button>
+<button class="btn" onclick="setVecQuery(1,this)">📐 수학 정리</button>
+<button class="btn" onclick="setVecQuery(2,this)">🌍 역사적 사건</button>
+<button class="btn" onclick="setVecQuery(3,this)">🎵 음악 이론</button>
+</div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">질문</div><div class="sv" id="vec-query" style="font-size:0.8rem;">고양이에 대해</div></div>
+<div class="stat-box"><div class="sl">검색된 기억</div><div class="sv" id="vec-found" style="color:var(--mint);">3개</div></div>
+<div class="stat-box"><div class="sl">최고 유사도</div><div class="sv" id="vec-sim">0.92</div></div>
+</div>
+</div>
+<div class="math-block">
+cos(q⃗, d⃗) = q⃗ · d⃗ / (‖q⃗‖ ‖d⃗‖) — Part II에서 본 그 코사인 유사도!
+</div>
+</div></section>
+
+<!-- §05 — RAG -->
+<section id="sec-rag"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">05 — 검색 증강 생성</p>
+<h2><span class="accent-gold">RAG</span>: 기억하는 척하는 기술</h2>
+<p>RAG(Retrieval-Augmented Generation)는 현대 AI의 핵심 아키텍처입니다. ChatGPT의 웹 검색, Claude의 문서 분석, 기업용 AI 챗봇 — 모두 이 원리입니다. 기계는 모든 것을 기억하는 것이 아니라, <strong>적시에 관련된 것을 찾아와</strong> 마치 기억하는 것처럼 보이게 합니다.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">각 파이프라인 단계에서 상승하는 톤</div>
+<div class="canvas-wrap"><canvas id="rag-canvas" height="320"></canvas></div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn btn-gold" id="rag-btn" onclick="runRAG()">▶ RAG 파이프라인 실행</button>
+<button class="btn" onclick="resetRAG()">초기화</button>
+</div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">단계</div><div class="sv" id="rag-stage" style="font-size:0.8rem;">준비</div></div>
+<div class="stat-box"><div class="sl">검색된 문서</div><div class="sv" id="rag-docs">0</div></div>
+<div class="stat-box"><div class="sl">문맥 창 사용</div><div class="sv" id="rag-usage">0%</div></div>
+</div>
+</div>
+<div class="explanation-card reveal" style="border-left-color:var(--gold);">
+<p style="font-family:var(--font-display);font-style:italic;color:var(--gold);font-size:1.05rem;margin-bottom:0.5rem;">"기계의 기억은 회상이 아니라 검색입니다."</p>
+<p>인간은 기억을 떠올립니다(recall). 기계는 기억을 검색합니다(retrieve). 이 차이는 근본적입니다 — 인간의 회상은 불완전하고 감정에 물들어 있지만, 기계의 검색은 수학적으로 정확합니다. 다만, 검색의 질은 벡터화의 질에 달려 있습니다.</p>
+</div>
+</div></section>
+
+<!-- §06 — FORGETTING -->
+<section id="sec-forget"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">06 — 잊는 기술</p>
+<h2><span class="accent-mint">컴팩션</span>과 요약</h2>
+<p>대화가 문맥 창을 초과하면 어떻게 될까요? 세 가지 전략이 있습니다. 인간이 어제의 대화 전체를 기억하지 않고 핵심만 기억하듯, 기계에게도 비슷한 능력을 줄 수 있습니다.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">각 전략의 효과를 소리로 비교해보세요</div>
+<div class="canvas-wrap"><span class="wave-label">문맥 창 초과 시 세 가지 전략</span><canvas id="forget-canvas" height="300"></canvas></div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn active" onclick="setForgetMode(0,this)">✂️ 자르기</button>
+<button class="btn" onclick="setForgetMode(1,this)">📝 요약</button>
+<button class="btn" onclick="setForgetMode(2,this)">🔄 컴팩션</button>
+</div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn btn-gold" id="forget-btn" onclick="runForget()">▶ 시뮬레이션</button>
+<button class="btn" onclick="resetForget()">초기화</button>
+</div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">전략</div><div class="sv" id="fg-mode" style="font-size:0.8rem;">자르기</div></div>
+<div class="stat-box"><div class="sl">보존된 정보</div><div class="sv" id="fg-kept">100%</div></div>
+<div class="stat-box"><div class="sl">문맥 효율</div><div class="sv" id="fg-eff">—</div></div>
+</div>
+</div>
+</div></section>
+
+<!-- §07 — HALLUCINATION -->
+<section id="sec-halluc"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">07 — 거짓 기억</p>
+<h2><span class="accent-coral">환각</span>: 기억이 만들어낸 거짓</h2>
+<p>기계가 "기억"에 없는 것을 마치 있는 것처럼 자신 있게 말하는 현상 — 환각(hallucination). 이것은 버그가 아니라, 확률적 기억의 <strong>본질적 속성</strong>입니다. 기계는 "모르겠다"고 말하는 것보다 "그럴듯한 답"을 생성하도록 학습되었습니다.</p>
+</div>
+<div class="demo-card reveal">
+<div id="halluc-quiz" style="min-height:200px;"></div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn btn-gold" id="halluc-btn" onclick="nextHalluc()">▶ 사실 vs 환각 퀴즈</button>
+</div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">문제</div><div class="sv" id="hq-num">0 <span class="su">/ 5</span></div></div>
+<div class="stat-box"><div class="sl">정답</div><div class="sv" id="hq-correct" style="color:var(--mint);">0</div></div>
+</div>
+</div>
+<div class="explanation-card reveal" style="border-left-color:var(--coral);">
+<p><strong style="color:#fff;">환각의 세 가지 원천.</strong> — (1) 학습 데이터에 없는 것을 외삽 — 확률 분포의 꼬리에서 샘플링. (2) 문맥 창에 부정확한 정보가 주입 — RAG의 검색 오류. (3) 확률적 생성의 본질 — "가장 확률 높은 다음 단어"가 항상 사실은 아닙니다. RAG와 사실 확인(grounding)은 환각을 줄이지만, 완전히 제거하지는 못합니다.</p>
+</div>
+</div></section>
+
+<!-- §08 — FUTURE -->
+<section id="sec-future" style="min-height:auto;padding:4rem 2rem;"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">08 — 기억의 미래</p>
+<h2>무한 문맥을 <span class="accent-purple">향하여</span></h2>
+</div>
+<div class="demo-card reveal">
+<div class="canvas-wrap"><span class="wave-label">문맥 창 확장의 역사와 미래</span><canvas id="future-canvas" height="280"></canvas></div>
+</div>
+<div class="demo-card reveal" style="border-left:3px solid var(--purple);">
+<h3 class="accent-purple" style="margin-bottom:0.5rem;">O(n²)를 넘어서 — 새로운 패러다임</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;">
+<div style="background:var(--bg3);border-radius:10px;padding:1rem;border:1px solid rgba(167,139,250,0.15);">
+<div style="font-family:var(--font-body);font-weight:600;color:var(--sky);margin-bottom:0.3rem;">FlashAttention</div>
+<p style="font-size:0.82rem;color:var(--text);margin:0;">어텐션의 수학은 그대로, 하드웨어 메모리 접근 패턴을 최적화. IO-aware 알고리즘으로 실질적 속도 3–5배 향상.</p>
+</div>
+<div style="background:var(--bg3);border-radius:10px;padding:1rem;border:1px solid rgba(56,189,248,0.15);">
+<div style="font-family:var(--font-body);font-weight:600;color:var(--mint);margin-bottom:0.3rem;">Ring Attention</div>
+<p style="font-size:0.82rem;color:var(--text);margin:0;">긴 시퀀스를 여러 GPU에 분산. 각 GPU가 자기 청크의 KV를 계산하고 링 형태로 전달. 사실상 무한 확장.</p>
+</div>
+<div style="background:var(--bg3);border-radius:10px;padding:1rem;border:1px solid rgba(240,180,41,0.15);">
+<div style="font-family:var(--font-body);font-weight:600;color:var(--gold);margin-bottom:0.3rem;">Mamba / SSM</div>
+<p style="font-size:0.82rem;color:var(--text);margin:0;">아예 어텐션을 버리고 State Space Model 사용. O(n)으로 선형 스케일링. 긴 시퀀스에서 극적 효율 향상.</p>
+</div>
+<div style="background:var(--bg3);border-radius:10px;padding:1rem;border:1px solid rgba(251,113,133,0.15);">
+<div style="font-family:var(--font-body);font-weight:600;color:var(--coral);margin-bottom:0.3rem;">Infini-Attention</div>
+<p style="font-size:0.82rem;color:var(--text);margin:0;">로컬 어텐션 + 압축된 메모리를 결합. 유한한 메모리로 무한한 입력을 처리하는 하이브리드.</p>
+</div>
+</div>
+</div>
+
+<!-- §08b — SOTA 기억 아키텍처 -->
+<section id="sec-sota" style="min-height:auto;padding:4rem 2rem;"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">08b — 최신 기술 현황</p>
+<h2>누가 <span class="accent-gold">어떻게</span> 기억하는가? — 2026년 현황</h2>
+<p>기억은 더 이상 연구 호기심이 아닙니다 — 경쟁의 최전선입니다. 모든 주요 AI 연구소가 모델 내부의 깊은 아키텍처 혁신부터 사용자가 매일 접하는 제품 기능까지, 고유한 기억 전략을 갖고 있습니다.</p>
+</div>
+<div class="demo-card reveal">
+<h3 class="accent-gold" style="margin-bottom:0.8rem;">딥 아키텍처 — 모델 자체가 기억하는 방법</h3>
+<table class="rosetta-simple"><thead><tr><th style="color:var(--gold);">아키텍처</th><th style="color:var(--sky);">핵심 아이디어</th><th style="color:var(--purple);">사용</th><th style="color:var(--mint);">상태</th></tr></thead><tbody>
+<tr><td><strong>FlashAttention&nbsp;3</strong></td><td>IO-aware 정확 어텐션; 같은 수학, GPU 메모리 계층 최적화로 3–5배 빠름</td><td><strong>Anthropic, OpenAI, Meta, Google, Mistral</strong> — 거의 보편적</td><td style="color:var(--mint);">프로덕션 표준</td></tr>
+<tr><td><strong>Ring Attention</strong></td><td>긴 시퀀스를 GPU 링에 분산; 밀리언 토큰에서 준선형 스케일링</td><td><strong>Google</strong> (Gemini), <strong>Anthropic</strong> (Claude)</td><td style="color:var(--mint);">프로덕션</td></tr>
+<tr><td><strong>Titans</strong> <span style="color:var(--muted);font-size:0.75rem;">(Google, 2025)</span></td><td>어텐션 층 <em>내부</em>의 신경 장기 기억 모듈; 테스트 시점에 기억하는 법을 학습</td><td><strong>Google DeepMind</strong></td><td style="color:var(--sky);">연구</td></tr>
+<tr><td><strong>Memory Layers at Scale</strong> <span style="color:var(--muted);font-size:0.75rem;">(Meta, 2024)</span></td><td>일부 FFN 층을 희소한 조 단위 KV 메모리로 교체; 모델 크기 폭증 없는 사실 기억</td><td><strong>Meta</strong> (FAIR)</td><td style="color:var(--sky);">연구</td></tr>
+<tr><td><strong>Mamba / SSM</strong></td><td>어텐션을 완전히 제거하고 State Space Model 사용; O(n) 선형 스케일링</td><td><strong>AI21</strong> (Jamba), <strong>Mistral</strong> (하이브리드), 연구</td><td style="color:var(--gold);">상용화 초기</td></tr>
+<tr><td><strong>Infini-Attention</strong> <span style="color:var(--muted);font-size:0.75rem;">(Google, 2024)</span></td><td>압축 메모리 + 로컬 어텐션; 유한한 메모리로 무한한 입력 처리</td><td><strong>Google</strong></td><td style="color:var(--sky);">연구</td></tr>
+<tr><td><strong>Managed-Retention Memory</strong> <span style="color:var(--muted);font-size:0.75rem;">(Microsoft, 2025)</span></td><td>AI KV 캐시를 위한 하드웨어 수준 메모리 클래스: 빠르고, 비휘발성, 마모 관리</td><td><strong>Microsoft Research</strong></td><td style="color:var(--muted);">하드웨어 R&D</td></tr>
+</tbody></table>
+</div>
+
+<div class="demo-card reveal">
+<h3 class="accent-sky" style="margin-bottom:0.8rem;">제품 기억 — 사용자가 체험하는 "기억"</h3>
+<table class="rosetta-simple"><thead><tr><th style="color:var(--gold);">제품</th><th style="color:var(--sky);">기억 방식</th><th style="color:var(--purple);">문맥 창</th><th style="color:var(--mint);">핵심 기능</th></tr></thead><tbody>
+<tr><td><strong>Claude</strong> <span style="color:var(--muted);font-size:0.75rem;">Anthropic</span></td><td>컴팩션 + 교차 세션 기억 + 사용자 편집</td><td>1M 토큰</td><td>무한 대화를 위한 자동 컴팩션; 대화 이력에서 기억 도출</td></tr>
+<tr><td><strong>ChatGPT</strong> <span style="color:var(--muted);font-size:0.75rem;">OpenAI</span></td><td>영속 기억 + 웹 검색 RAG</td><td>1M 토큰</td><td>명시적 기억 항목; 사용자가 조회/삭제 가능; 프로젝트 지시사항</td></tr>
+<tr><td><strong>Gemini</strong> <span style="color:var(--muted);font-size:0.75rem;">Google</span></td><td>장문맥 + Google 생태계 RAG</td><td>2M 토큰</td><td>최대 네이티브 창; 영속 지시사항을 가진 Gems</td></tr>
+<tr><td><strong>Copilot</strong> <span style="color:var(--muted);font-size:0.75rem;">Microsoft</span></td><td>Microsoft 365 Graph 기반 RAG</td><td>128K 토큰</td><td>SharePoint, OneDrive, Teams 인덱싱을 통한 기업 기억</td></tr>
+<tr><td><strong>Grok</strong> <span style="color:var(--muted);font-size:0.75rem;">xAI</span></td><td>실시간 X/Twitter RAG</td><td>128K 토큰</td><td>실시간 소셜 미디어를 외부 기억으로 활용</td></tr>
+</tbody></table>
+</div>
+
+<div class="demo-card reveal">
+<h3 class="accent-purple" style="margin-bottom:0.8rem;">기억 미들웨어 — 새로운 인프라 계층</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin:0.8rem 0;">
+<div style="background:var(--bg3);border-radius:10px;padding:1rem;border:1px solid rgba(240,180,41,0.15);">
+<div style="font-family:var(--font-body);font-weight:600;color:var(--gold);margin-bottom:0.3rem;">Mem0</div>
+<p style="font-size:0.78rem;color:var(--text);margin:0;">AI 에이전트 전용 기억 레이어. 구조화된 엔티티로 "기억"을 추출, 저장, 검색. 1000+ 스타트업이 사용.</p>
+</div>
+<div style="background:var(--bg3);border-radius:10px;padding:1rem;border:1px solid rgba(56,189,248,0.15);">
+<div style="font-family:var(--font-body);font-weight:600;color:var(--sky);margin-bottom:0.3rem;">Zep</div>
+<p style="font-size:0.78rem;color:var(--text);margin:0;">시간적 에피소드 기억 — 상호작용을 평평한 로그가 아닌 의미 있는 시퀀스로 구조화. 저지연, 프로덕션급.</p>
+</div>
+<div style="background:var(--bg3);border-radius:10px;padding:1rem;border:1px solid rgba(167,139,250,0.15);">
+<div style="font-family:var(--font-body);font-weight:600;color:var(--purple);margin-bottom:0.3rem;">Letta (MemGPT)</div>
+<p style="font-size:0.78rem;color:var(--text);margin:0;">OS 영감: 에이전트가 명시적 읽기/쓰기/편집으로 자기 기억을 관리. 상태 유지 에이전트를 위한 가상 컨텍스트.</p>
+</div>
+</div>
+<div class="explanation-card" style="border-left-color:var(--purple);margin-top:1rem;">
+<p style="font-size:0.88rem;"><strong style="color:#fff;">2026년의 합의:</strong> 최고의 기억은 단일 기술이 아니라 계층 구조입니다. 단기 작업 기억 (문맥 창) + 중기 세션 기억 (컴팩션/요약) + 장기 영속 기억 (벡터 저장소, 학습된 가중치) + 외부 검색 (RAG). 모든 주요 AI 시스템이 최소 3개 이상의 계층을 결합합니다. 최전선은 <em>언제</em> 기록하고, 검색하고, 잊을지를 학습하는 것 — 기억 연산을 강화학습으로 학습 가능한 행동으로 만드는 것입니다 (A-MEM, AgeMem).</p>
+</div>
+</div>
+</div></section>
+
+<!-- §09 — ROSETTA STONE -->
+<section id="sec-rosetta" style="min-height:auto;padding:4rem 2rem;"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">09 — 연결</p>
+<h2>인간의 기억 vs <span class="accent-gold">기계의 기억</span></h2>
+</div>
+<div class="demo-card reveal"><table class="rosetta-simple"><thead><tr><th></th><th style="color:var(--gold);">인간</th><th style="color:var(--purple);">기계</th></tr></thead><tbody>
+<tr><td class="rs-icon">🧠</td><td><strong>작업 기억</strong> — 7 ± 2 항목</td><td><strong>문맥 창</strong> — 1M–2M 토큰</td></tr>
+<tr><td class="rs-icon">💾</td><td><strong>장기 기억</strong> — 해마 → 피질</td><td><strong>학습된 가중치</strong> (파라미터)</td></tr>
+<tr><td class="rs-icon">🔍</td><td><strong>기억 검색</strong> — 연상, 감정, 맥락</td><td><strong>벡터 유사도</strong> (코사인)</td></tr>
+<tr><td class="rs-icon">💨</td><td><strong>망각</strong> — 선택적, 점진적</td><td><strong>전무</strong> — 창 밖 = 완전 소멸</td></tr>
+<tr><td class="rs-icon">👻</td><td><strong>거짓 기억</strong> — 기억 왜곡</td><td><strong>환각</strong> (hallucination)</td></tr>
+<tr><td class="rs-icon">😴</td><td><strong>요약</strong> — 수면 중 기억 통합</td><td><strong>컴팩션</strong> — 자동 요약</td></tr>
+</tbody></table></div>
+</div></section>
+
+<!-- CLOSING -->
+<section id="sec-closing"><div class="section-inner" style="text-align:center;"><div class="reveal">
+<h2>그래서 — 기계는<br><span class="accent-gold">기억하는가?</span></h2>
+<p style="color:var(--muted);font-family:var(--font-display);font-style:italic;font-size:1.05rem;max-width:640px;margin:2rem auto;">
+기계에게는 어릴 적 여름의 냄새가 없습니다.<br>
+첫사랑의 이름이 불현듯 떠오르는 순간이 없습니다.<br>
+기계의 기억은 벡터이고, 행렬이고, 코사인 유사도입니다.<br><br>
+그것은 기억이 아닐지도 모릅니다.<br>
+하지만 기억과 같은 일을 해냅니다 —<br>
+그것도 <span class="accent-gold">놀라울 만큼 잘.</span>
+</p>
+<p style="color:var(--muted);font-size:0.9rem;max-width:520px;margin:1rem auto 0;">이 페이지의 모든 시뮬레이션은 실시간으로 계산됩니다 — 순수한 선형대수와 확률. 기계가 "기억"이라 부르는 것의 전부입니다.</p>
+<div style="margin-top:2rem;display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;">
+<a href="transformer_ko.html" class="start-btn" style="border-color:var(--muted);color:var(--muted);">← Part II: 이해</a>
+<a href="diffusion-1.html" class="start-btn" style="border-color:var(--muted);color:var(--muted);">← Part I: 꿈</a>
+</div>
+</div></div></section>
+
+<footer>
+<p>기계는 기억하는가? — 문맥 창에서 벡터 검색까지</p>
+<p style="margin-top:0.3rem;font-size:0.7rem;">모든 시각화는 실시간으로 계산됩니다 — 순수한 수학.</p>
+<div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:.2rem">
+<div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;color:#edeef2;">Sang-hyun Kim</div>
+<div style="font-family:'DM Sans',sans-serif;font-size:.72rem;color:#5c6178;">고등과학원 (Korea Institute for Advanced Study)</div>
+<a href="https://kimsh.kr" style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;margin-top:.25rem">kimsh.kr</a>
+</div>
+</footer>
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
+<script>
+// ═══ GLOBALS ═══
+let actx=null;
+function initAudio(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();}
+function ensureAudio(){initAudio();}
+function dismissNotice(){initAudio();const n=document.getElementById('audio-notice');n.style.transition='opacity 0.3s';n.style.opacity='0';setTimeout(()=>n.remove(),300);}
+function playChime(freq,dur=0.15,vol=0.06,type='triangle'){if(!actx)return;const now=actx.currentTime,o=actx.createOscillator(),g=actx.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(vol,now);g.gain.exponentialRampToValueAtTime(0.0001,now+dur);o.connect(g).connect(actx.destination);o.start(now);o.stop(now+dur+0.05);}
+function playChord(freqs,dur=0.4,vol=0.04){if(!actx)return;const now=actx.currentTime;freqs.forEach((f,i)=>{const o=actx.createOscillator(),g=actx.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(vol,now+i*0.04);g.gain.exponentialRampToValueAtTime(0.0001,now+dur);o.connect(g).connect(actx.destination);o.start(now+i*0.04);o.stop(now+dur+0.05);});}
+function clamp(v,mn,mx){return Math.max(mn,Math.min(mx,v));}
+
+// ═══ HERO ═══
+const heroC=document.getElementById('hero-canvas'),heroCtx=heroC.getContext('2d');
+const WORDS=['기억','문맥','토큰','벡터','검색','어텐션','캐시','요약','환각','코사인','임베딩','창','KV','RAG','망각','압축','차원','유사도'];
+const heroP=[];for(let i=0;i<WORDS.length;i++){const a=Math.random()*6.28,d=0.1+Math.random()*0.38;heroP.push({x:0.5+Math.cos(a)*d,y:0.5+Math.sin(a)*d,vx:(Math.random()-0.5)*0.0002,vy:(Math.random()-0.5)*0.0002,w:WORDS[i],c:['#a78bfa','#f0b429','#38bdf8','#fb7185','#34d399'][i%5],al:0.15+Math.random()*0.3,ph:Math.random()*6.28});}
+function drawHero(){const w=heroC.width=heroC.clientWidth*2,h=heroC.height=heroC.clientHeight*2;heroCtx.clearRect(0,0,w,h);const t=performance.now()/1000;
+// Context window boundary (rectangle that pulses)
+const cwX=w*0.15,cwY=h*0.15,cwW=w*0.7,cwH=h*0.7;
+const pulse=0.5+0.5*Math.sin(t*0.8);
+heroCtx.strokeStyle=`rgba(240,180,41,${0.06+pulse*0.06})`;heroCtx.lineWidth=2;heroCtx.setLineDash([8,6]);
+heroCtx.strokeRect(cwX,cwY,cwW,cwH);heroCtx.setLineDash([]);
+heroP.forEach(p=>{p.x+=p.vx+Math.sin(t*0.3+p.ph)*0.00004;p.y+=p.vy+Math.cos(t*0.25+p.ph)*0.00004;
+if(p.x<0.05||p.x>0.95)p.vx*=-1;if(p.y<0.05||p.y>0.95)p.vy*=-1;
+const px=p.x*w,py=p.y*h;
+const inside=px>cwX&&px<cwX+cwW&&py>cwY&&py<cwY+cwH;
+heroCtx.globalAlpha=inside?p.al*(0.6+0.4*Math.sin(t*0.7+p.ph)):p.al*0.1;
+heroCtx.fillStyle=inside?p.c:'#3a4260';heroCtx.font='600 '+Math.round(12*2)+'px "DM Sans",sans-serif';heroCtx.textAlign='center';heroCtx.fillText(p.w,px,py);
+heroCtx.globalAlpha=1;});requestAnimationFrame(drawHero);}drawHero();
+
+// ═══ §00 — MEMORY TEST ═══
+const MEM_POOL_REAL=['사과','바다','피아노','수학','고양이','별','기차','보라색','커피','도서관','우산','산','시간','꿈','거울','노을','숲','다이아몬드','천둥','펭귄','은색','화산','나침반','등불','퍼즐','속삭임','정원','로켓','그림자','수정','다리','깃털','대리석','닻','선인장','촛불','매','항구','섬','자석'];
+const MEM_POOL_DECOY=['오렌지','강','기타','과학','강아지','달','버스','빨간색','차','박물관','우비','계곡','시계','잠','창문','일출','밀림','루비','번개','앵무새','금색','지진','망원경','횃불','수수께끼','메아리','초원','비행기','빛','유리','터널','베개','화강암','쇠사슬','야자수','불꽃','독수리','부두','해변','건전지'];
+function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
+let MEM_WORDS=shuffle(MEM_POOL_REAL).slice(0,15);
+let MEM_DECOYS=shuffle(MEM_POOL_DECOY).slice(0,15);
+let memStep=-1,memTimer=null,memDone=false,memClicked=new Set();
+function startMemTest(){
+  if(memDone){resetMemTest();return;}
+  ensureAudio();memStep=0;
+  document.getElementById('mem-btn').textContent='진행 중...';document.getElementById('mem-btn').classList.add('playing');
+  document.getElementById('mem-result').style.display='none';
+  document.getElementById('mem-progress').style.display='block';
+  function updateProgress(){
+    const pct=Math.round(memStep/MEM_WORDS.length*100);
+    document.getElementById('mem-prog-label').textContent=memStep+' / '+MEM_WORDS.length;
+    document.getElementById('mem-prog-pct').textContent=pct+'%';
+    document.getElementById('mem-prog-bar').style.width=pct+'%';
+  }
+  function showNext(){
+    if(memStep>=MEM_WORDS.length){
+      document.getElementById('mem-progress').style.display='none';
+      document.getElementById('mem-display').innerHTML='<span style="font-family:var(--font-display);font-size:1.5rem;color:var(--gold);">기억나는 단어를 골라보세요!</span>';
+      document.getElementById('mem-btn').style.display='none';
+      memDone=true;memClicked=new Set();
+      // Build grid: real words + decoys, shuffled
+      const allWords=MEM_WORDS.map(w=>({w,real:true})).concat(MEM_DECOYS.map(w=>({w,real:false})));
+      for(let i=allWords.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[allWords[i],allWords[j]]=[allWords[j],allWords[i]];}
+      const grid=document.getElementById('mem-words-grid');grid.innerHTML='';
+      allWords.forEach((item,i)=>{
+        const el=document.createElement('span');el.className='mem-word';el.dataset.word=item.w;el.dataset.real=item.real;
+        el.style.background='rgba(167,139,250,0.08)';el.style.color='#a78bfa';el.style.border='1px solid rgba(167,139,250,0.15)';el.style.cursor='pointer';
+        el.textContent=item.w;
+        el.onclick=()=>{if(el.dataset.clicked)return;el.dataset.clicked='1';memClicked.add(item.w);
+          if(item.real){el.style.background='rgba(52,211,153,0.2)';el.style.color='#34d399';el.style.borderColor='rgba(52,211,153,0.3)';playChime(523,0.1,0.03,'sine');}
+          else{el.style.background='rgba(251,113,133,0.2)';el.style.color='#fb7185';el.style.borderColor='rgba(251,113,133,0.3)';playChime(180,0.2,0.04,'sawtooth');}};
+        grid.appendChild(el);
+      });
+      document.getElementById('mem-result').style.display='block';
+      document.getElementById('mem-done-btn').style.display='inline-flex';
+      playChord([523.25,659.25,783.99],0.5,0.04);
+      return;
+    }
+    const word=MEM_WORDS[memStep];
+    document.getElementById('mem-display').innerHTML='<span style="font-family:var(--font-display);font-size:3rem;color:var(--text);animation:chipIn 0.3s ease;">'+word+'</span>';
+    playChime(300+memStep*30,0.12,0.04,'sine');
+    memStep++;
+    updateProgress();
+    memTimer=setTimeout(showNext,1200);
+  }
+  showNext();
+}
+function scoreMemGame(){
+  let hits=0,falsePos=0;
+  memClicked.forEach(w=>{if(MEM_WORDS.includes(w))hits++;else falsePos++;});
+  const missed=MEM_WORDS.length-hits;
+  const pct=Math.round(hits/MEM_WORDS.length*100);
+  document.getElementById('mem-hits').textContent=hits+'/'+MEM_WORDS.length;
+  document.getElementById('mem-false').textContent=falsePos;
+  document.getElementById('mem-missed').textContent=missed;
+  document.getElementById('mem-pct').textContent=pct+'%';
+  document.querySelectorAll('#mem-words-grid .mem-word').forEach(el=>{
+    if(el.dataset.real==='true'&&!el.dataset.clicked){el.style.background='rgba(240,180,41,0.15)';el.style.color='#f0b429';el.style.borderColor='rgba(240,180,41,0.3)';el.style.opacity='0.6';}
+    if(el.dataset.real==='false'&&!el.dataset.clicked){el.style.opacity='0.25';}
+  });
+  document.getElementById('mem-score').style.display='block';
+  document.getElementById('mem-done-btn').style.display='none';
+  document.getElementById('mem-display').innerHTML='<span style="font-family:var(--font-display);font-size:1.3rem;color:var(--gold);">'+pct+'% — '+(pct>=60?'잘 했습니다!':'어렵죠?')+'</span>';
+  playChord(pct>=60?[523.25,659.25,783.99]:[220,277,330],0.5,0.04);
+}
+function resetMemTest(){clearTimeout(memTimer);memStep=-1;memDone=false;memClicked=new Set();
+  MEM_WORDS=shuffle(MEM_POOL_REAL).slice(0,15);MEM_DECOYS=shuffle(MEM_POOL_DECOY).slice(0,15);
+  document.getElementById('mem-display').innerHTML='<span style="font-family:var(--font-display);font-size:2.5rem;color:var(--muted);">준비되셨나요?</span>';
+  document.getElementById('mem-btn').textContent='▶ 시작';document.getElementById('mem-btn').classList.remove('playing');document.getElementById('mem-btn').style.display='';
+  document.getElementById('mem-result').style.display='none';document.getElementById('mem-progress').style.display='none';try{document.getElementById('mem-score').style.display='none';}catch(e){}}
+
+// ═══ §01 — CONTEXT WINDOW ═══
+const ctxC=document.getElementById('ctx-canvas'),ctxX=ctxC.getContext('2d');
+const CTX_TOTAL=100;
+const CTX_WORDS=[];for(let i=0;i<CTX_TOTAL;i++)CTX_WORDS.push(['그','고양이는','매트','위에','앉았다','왜냐하면','그것이','피곤했기','때문이다','그래서','잠을','잤다','꿈을','꾸었다','아침이','되었다','일어났다','밥을','먹었다','밖으로'][i%20]);
+function drawCtx(){
+  const w=ctxC.width=ctxC.clientWidth*2,h=ctxC.height=600;ctxX.clearRect(0,0,w,h);
+  const winSize=+document.getElementById('ctx-slider').value;
+  document.getElementById('ctx-val').textContent=winSize+' 토큰';
+  document.getElementById('ctx-size').textContent=winSize;
+  const start=Math.max(0,CTX_TOTAL-winSize);
+  document.getElementById('ctx-visible').textContent=Math.min(winSize,CTX_TOTAL);
+  document.getElementById('ctx-lost').textContent=start;
+  const cols=10,cellW=w/cols,cellH=h/(CTX_TOTAL/cols);
+  for(let i=0;i<CTX_TOTAL;i++){
+    const col=i%cols,row=Math.floor(i/cols);
+    const x=col*cellW,y=row*cellH;
+    const inWindow=i>=start;
+    ctxX.fillStyle=inWindow?'rgba(56,189,248,0.12)':'rgba(251,113,133,0.06)';
+    ctxX.fillRect(x+2,y+2,cellW-4,cellH-4);
+    ctxX.strokeStyle=inWindow?'rgba(56,189,248,0.25)':'rgba(251,113,133,0.1)';
+    ctxX.lineWidth=1;ctxX.strokeRect(x+2,y+2,cellW-4,cellH-4);
+    ctxX.font='500 '+(cellH*0.35)+'px "DM Sans",sans-serif';
+    ctxX.fillStyle=inWindow?'#38bdf8':'#fb718544';ctxX.textAlign='center';
+    ctxX.fillText(CTX_WORDS[i],x+cellW/2,y+cellH/2+cellH*0.12);
+    // Token index
+    ctxX.font='400 '+(cellH*0.18)+'px "JetBrains Mono",monospace';
+    ctxX.fillStyle=inWindow?'rgba(56,189,248,0.3)':'rgba(251,113,133,0.15)';
+    ctxX.fillText(i,x+cellW/2,y+cellH*0.22);
+  }
+  // Window boundary line
+  if(start>0){
+    const boundaryRow=Math.floor(start/cols),boundaryCol=start%cols;
+    const bx=boundaryCol*cellW,by=boundaryRow*cellH;
+    ctxX.beginPath();
+    if(boundaryCol===0){ctxX.moveTo(0,by);ctxX.lineTo(w,by);}
+    else{ctxX.moveTo(bx,by);ctxX.lineTo(bx,by+cellH);ctxX.moveTo(0,by+cellH);ctxX.lineTo(bx,by+cellH);ctxX.moveTo(bx,by);ctxX.lineTo(w,by);}
+    ctxX.strokeStyle='#f0b429';ctxX.lineWidth=2;ctxX.setLineDash([6,4]);ctxX.stroke();ctxX.setLineDash([]);
+  }
+}
+drawCtx();
+
+// ═══ §02 — O(n²) ═══
+const n2C=document.getElementById('n2-canvas'),n2X=n2C.getContext('2d');
+function drawN2(){
+  const w=n2C.width=n2C.clientWidth*2,h=n2C.height=700;n2X.clearRect(0,0,w,h);
+  const n=+document.getElementById('n2-slider').value;
+  document.getElementById('n2-val').textContent='n = '+n;
+  document.getElementById('n2-n').textContent=n;
+  document.getElementById('n2-ops').textContent=(n*n).toLocaleString();
+  document.getElementById('n2-mult').textContent=Math.round(n*n/64)+'×';
+  const maxCells=60;const cellSize=Math.min((w-40)/n,(h-40)/n,w/maxCells);
+  const gridW=n*cellSize,gridH=n*cellSize;
+  const ox=(w-gridW)/2,oy=(h-gridH)/2;
+  const t=performance.now()/1000;
+  for(let i=0;i<n;i++){for(let j=0;j<n;j++){
+    const x=ox+j*cellSize,y=oy+i*cellSize;
+    const wave=0.5+0.5*Math.sin(t*2+i*0.3+j*0.2);
+    const intensity=0.15+wave*0.15;
+    n2X.fillStyle=`rgba(167,139,250,${intensity})`;
+    n2X.fillRect(x+0.5,y+0.5,cellSize-1,cellSize-1);
+  }}
+  // Label
+  n2X.font='500 28px "JetBrains Mono",monospace';n2X.fillStyle='#f0b429';n2X.textAlign='center';
+  n2X.fillText(n+' × '+n+' = '+(n*n).toLocaleString()+' 연산',w/2,oy-15);
+  // Sound
+  if(actx){const freq=100+n*8;playChime(freq,0.05,0.01,'sine');}
+}
+drawN2();
+
+// ═══ §03 — KV CACHE ═══
+const kvC=document.getElementById('kv-canvas'),kvX=kvC.getContext('2d');
+let kvTokens=0,kvRunning=false,kvTimer=null,kvNocache=0,kvCached=0;
+function drawKV(){
+  const w=kvC.width=kvC.clientWidth*2,h=kvC.height=600;kvX.clearRect(0,0,w,h);
+  const barW=w*0.4,pad=50,midY=h/2;
+  // No-cache bar (red)
+  const ncH=Math.min(kvNocache/500*h*0.8,h*0.85);
+  kvX.fillStyle='rgba(251,113,133,0.3)';kvX.fillRect(pad,midY-ncH/2,barW,ncH);
+  kvX.strokeStyle='#fb7185';kvX.lineWidth=1.5;kvX.strokeRect(pad,midY-ncH/2,barW,ncH);
+  kvX.font='600 24px "DM Sans",sans-serif';kvX.fillStyle='#fb7185';kvX.textAlign='center';
+  kvX.fillText('캐시 없음',pad+barW/2,30);
+  kvX.font='500 20px "JetBrains Mono",monospace';kvX.fillText(kvNocache.toLocaleString(),pad+barW/2,55);
+  // Cache bar (green)
+  const cH=Math.min(kvCached/500*h*0.8,h*0.85);
+  const cx=w-pad-barW;
+  kvX.fillStyle='rgba(52,211,153,0.3)';kvX.fillRect(cx,midY-cH/2,barW,cH);
+  kvX.strokeStyle='#34d399';kvX.lineWidth=1.5;kvX.strokeRect(cx,midY-cH/2,barW,cH);
+  kvX.font='600 24px "DM Sans",sans-serif';kvX.fillStyle='#34d399';kvX.textAlign='center';
+  kvX.fillText('KV 캐시',cx+barW/2,30);
+  kvX.font='500 20px "JetBrains Mono",monospace';kvX.fillText(kvCached.toLocaleString(),cx+barW/2,55);
+  // Savings
+  if(kvNocache>0){
+    const savings=Math.round((1-kvCached/kvNocache)*100);
+    kvX.font='700 32px "DM Sans",sans-serif';kvX.fillStyle='#f0b429';kvX.textAlign='center';
+    kvX.fillText(savings+'% 절약',w/2,h-30);
+  }
+  // Stats
+  document.getElementById('kv-tokens').textContent=kvTokens;
+  document.getElementById('kv-nocache').textContent=kvNocache.toLocaleString();
+  document.getElementById('kv-cached').textContent=kvCached.toLocaleString();
+}
+function runKV(){
+  if(kvRunning){kvRunning=false;clearInterval(kvTimer);document.getElementById('kv-btn').textContent='▶ 대화 시뮬레이션';document.getElementById('kv-btn').classList.remove('playing');return;}
+  resetKV();kvRunning=true;document.getElementById('kv-btn').textContent='⏸';document.getElementById('kv-btn').classList.add('playing');
+  ensureAudio();
+  kvTimer=setInterval(()=>{
+    kvTokens++;
+    kvNocache+=kvTokens*kvTokens; // Without cache: recompute everything = sum of i² 
+    kvCached+=kvTokens; // With cache: only new token vs all keys = n
+    drawKV();
+    playChime(200+kvTokens*15,0.08,0.02,'sine');
+    if(kvTokens>=30){kvRunning=false;clearInterval(kvTimer);
+      document.getElementById('kv-btn').textContent='▶ 대화 시뮬레이션';document.getElementById('kv-btn').classList.remove('playing');
+      playChord([523.25,659.25,783.99],0.5,0.04);}
+  },200);
+}
+function resetKV(){kvTokens=0;kvNocache=0;kvCached=0;kvRunning=false;clearInterval(kvTimer);
+  document.getElementById('kv-btn').textContent='▶ 대화 시뮬레이션';document.getElementById('kv-btn').classList.remove('playing');drawKV();}
+drawKV();
+
+// ═══ §04 — VECTOR SEARCH ═══
+const vecC=document.getElementById('vec-canvas'),vecX=vecC.getContext('2d');
+const VEC_MEMORIES=[
+  {text:'고양이는 포유류',x:0.2,y:0.3,cat:0},{text:'개는 충성스럽다',x:0.25,y:0.35,cat:0},{text:'참치는 생선',x:0.18,y:0.4,cat:0},
+  {text:'피타고라스 정리',x:0.75,y:0.25,cat:1},{text:'오일러 공식',x:0.8,y:0.3,cat:1},{text:'미적분 기본정리',x:0.72,y:0.35,cat:1},
+  {text:'프랑스 혁명',x:0.3,y:0.75,cat:2},{text:'산업혁명',x:0.35,y:0.8,cat:2},{text:'세계대전',x:0.28,y:0.85,cat:2},
+  {text:'화성 장조',x:0.75,y:0.75,cat:3},{text:'소나타 형식',x:0.8,y:0.8,cat:3},{text:'대위법',x:0.72,y:0.85,cat:3},
+  {text:'광합성',x:0.5,y:0.15,cat:4},{text:'DNA 구조',x:0.55,y:0.55,cat:4},{text:'상대성 이론',x:0.45,y:0.5,cat:4},
+];
+const VEC_QUERIES=[{text:'고양이에 대해',target:0},{text:'수학 정리',target:1},{text:'역사적 사건',target:2},{text:'음악 이론',target:3}];
+let vecQueryIdx=0;
+function setVecQuery(idx,btn){vecQueryIdx=idx;btn.parentElement.querySelectorAll('.btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  document.getElementById('vec-query').textContent=VEC_QUERIES[idx].text;
+  ensureAudio();playChime(400,0.15,0.03,'sine');drawVec();}
+function drawVec(){
+  const w=vecC.width=vecC.clientWidth*2,h=vecC.height=800;vecX.clearRect(0,0,w,h);
+  const t=performance.now()/1000;
+  const q=VEC_QUERIES[vecQueryIdx];
+  const pad=40;
+  let found=0,maxSim=0;
+  VEC_MEMORIES.forEach((m,i)=>{
+    const px=pad+m.x*(w-2*pad),py=pad+m.y*(h-2*pad);
+    const match=m.cat===q.target;
+    const sim=match?(0.85+Math.random()*0.12):(0.1+Math.random()*0.3);
+    if(match){found++;if(sim>maxSim)maxSim=sim;}
+    // Glow for matches
+    if(match){
+      const glow=vecX.createRadialGradient(px,py,0,px,py,40);
+      glow.addColorStop(0,'rgba(52,211,153,0.15)');glow.addColorStop(1,'transparent');
+      vecX.fillStyle=glow;vecX.fillRect(px-40,py-40,80,80);
+    }
+    // Dot
+    vecX.beginPath();vecX.arc(px,py,match?8:5,0,6.28);
+    vecX.fillStyle=match?'#34d399':'#7b8db544';vecX.fill();
+    // Label
+    vecX.font=(match?'600':'400')+' 20px "DM Sans",sans-serif';
+    vecX.fillStyle=match?'#34d399':'#7b8db5';vecX.textAlign='center';
+    vecX.fillText(m.text,px,py-14);
+    // Line to query center if match
+    if(match){
+      vecX.beginPath();vecX.moveTo(w/2,h-60);vecX.lineTo(px,py);
+      vecX.strokeStyle='rgba(52,211,153,0.2)';vecX.lineWidth=2;vecX.setLineDash([4,4]);vecX.stroke();vecX.setLineDash([]);
+    }
+  });
+  // Query point
+  vecX.beginPath();vecX.arc(w/2,h-60,12,0,6.28);vecX.fillStyle='#f0b429';vecX.fill();
+  vecX.font='700 22px "DM Sans",sans-serif';vecX.fillStyle='#f0b429';vecX.textAlign='center';
+  vecX.fillText('질문: "'+q.text+'"',w/2,h-25);
+  document.getElementById('vec-found').textContent=found+'개';
+  document.getElementById('vec-sim').textContent=maxSim.toFixed(2);
+  requestAnimationFrame(drawVec);
+}
+drawVec();
+
+// ═══ §05 — RAG PIPELINE ═══
+const ragC=document.getElementById('rag-canvas'),ragX=ragC.getContext('2d');
+let ragStep=-1,ragRunning=false,ragTimer=null;
+const RAG_STAGES=['질문 입력','벡터화','벡터 DB 검색','문맥 주입','LLM 답변 생성'];
+function drawRAG(){
+  const w=ragC.width=ragC.clientWidth*2,h=ragC.height=640;ragX.clearRect(0,0,w,h);
+  const stageW=(w-80)/RAG_STAGES.length;
+  const colors=['#f0b429','#38bdf8','#a78bfa','#34d399','#fb7185'];
+  RAG_STAGES.forEach((name,i)=>{
+    const x=40+i*stageW;
+    const active=ragStep>=i;const current=ragStep===i;
+    // Box
+    ragX.fillStyle=current?colors[i]+'30':active?colors[i]+'15':'rgba(255,255,255,0.03)';
+    ragX.strokeStyle=current?colors[i]:active?colors[i]+'60':'rgba(255,255,255,0.08)';
+    ragX.lineWidth=current?2:1;
+    ragX.beginPath();ragX.roundRect(x+5,h/2-60,stageW-10,120,10);ragX.fill();ragX.stroke();
+    // Label
+    ragX.font=(current?'600':'400')+' 20px "DM Sans",sans-serif';
+    ragX.fillStyle=active?colors[i]:'#7b8db5';ragX.textAlign='center';
+    ragX.fillText(name,x+stageW/2,h/2+6);
+    // Step number
+    ragX.font='500 16px "JetBrains Mono",monospace';
+    ragX.fillStyle=active?colors[i]+'aa':'#7b8db544';
+    ragX.fillText('('+(i+1)+')',x+stageW/2,h/2-35);
+    // Arrow
+    if(i<RAG_STAGES.length-1){
+      ragX.font='400 24px "DM Sans",sans-serif';ragX.fillStyle=ragStep>i?'#f0b429':'#7b8db533';
+      ragX.fillText('→',x+stageW-2,h/2+6);
+    }
+    // Glow for current
+    if(current){
+      const glow=ragX.createRadialGradient(x+stageW/2,h/2,0,x+stageW/2,h/2,80);
+      glow.addColorStop(0,colors[i]+'15');glow.addColorStop(1,'transparent');
+      ragX.fillStyle=glow;ragX.fillRect(x,h/2-80,stageW,160);
+    }
+  });
+  // Stats
+  document.getElementById('rag-stage').textContent=ragStep<0?'준비':ragStep>=RAG_STAGES.length-1?'✓ 완료':RAG_STAGES[ragStep];
+  document.getElementById('rag-docs').textContent=ragStep>=2?'3':'0';
+  document.getElementById('rag-usage').textContent=ragStep>=3?'42%':'0%';
+}
+function runRAG(){
+  if(ragRunning){ragRunning=false;clearInterval(ragTimer);document.getElementById('rag-btn').textContent='▶ RAG 파이프라인 실행';document.getElementById('rag-btn').classList.remove('playing');return;}
+  resetRAG();ragRunning=true;ragStep=0;
+  document.getElementById('rag-btn').textContent='⏸';document.getElementById('rag-btn').classList.add('playing');
+  ensureAudio();drawRAG();playChime(250,0.2,0.04,'triangle');
+  ragTimer=setInterval(()=>{
+    ragStep++;drawRAG();
+    playChime(250+ragStep*70,0.2,0.04,'triangle');
+    if(ragStep>=RAG_STAGES.length-1){
+      ragRunning=false;clearInterval(ragTimer);
+      document.getElementById('rag-btn').textContent='▶ RAG 파이프라인 실행';document.getElementById('rag-btn').classList.remove('playing');
+      playChord([523.25,659.25,783.99],0.5,0.04);}
+  },1000);
+}
+function resetRAG(){ragStep=-1;ragRunning=false;clearInterval(ragTimer);
+  document.getElementById('rag-btn').textContent='▶ RAG 파이프라인 실행';document.getElementById('rag-btn').classList.remove('playing');drawRAG();}
+drawRAG();
+
+// ═══ §06 — FORGETTING STRATEGIES ═══
+const fgC=document.getElementById('forget-canvas'),fgX=fgC.getContext('2d');
+let fgMode=0,fgStep=0,fgRunning=false,fgTimer=null;
+const FG_LABELS=['✂️ 자르기','📝 요약','🔄 컴팩션'];
+function setForgetMode(m,btn){fgMode=m;btn.parentElement.querySelectorAll('.btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  document.getElementById('fg-mode').textContent=FG_LABELS[m];resetForget();}
+function drawForget(){
+  const w=fgC.width=fgC.clientWidth*2,h=fgC.height=600;fgX.clearRect(0,0,w,h);
+  const winCap=20,totalTokens=20+fgStep;
+  const cellW=w/(winCap+5),cellH=h*0.6;
+  const baseY=h*0.2;
+  // Draw all tokens
+  for(let i=0;i<totalTokens;i++){
+    let visible=false,summarized=false,alpha=1;
+    if(fgMode===0){// Truncate: keep last winCap
+      visible=i>=totalTokens-winCap;alpha=visible?1:0.15;
+    }else if(fgMode===1){// Summarize: first half compressed to 3 tokens
+      if(totalTokens<=winCap){visible=true;}
+      else{
+        const overflow=totalTokens-winCap;
+        if(i<overflow){alpha=0.1;} // old tokens fade
+        else if(i>=overflow&&i<overflow+3){visible=true;summarized=true;} // summary tokens
+        else if(i>=overflow+3){visible=true;}
+      }
+    }else{// Compaction: gradual compression
+      if(totalTokens<=winCap){visible=true;}
+      else{
+        const compressRatio=Math.min((totalTokens-winCap)/winCap,0.7);
+        if(i<totalTokens*compressRatio){alpha=0.3-i/(totalTokens*compressRatio)*0.25;summarized=i%3===0;}
+        else{visible=true;alpha=1;}
+      }
+    }
+    const x=10+(i%(winCap+5))*cellW;
+    const row=Math.floor(i/(winCap+5));
+    const y=baseY+row*(cellH+30);
+    fgX.fillStyle=summarized?'rgba(240,180,41,'+alpha*0.4+')':visible?'rgba(56,189,248,'+alpha*0.3+')':'rgba(251,113,133,'+alpha+')';
+    fgX.fillRect(x+1,y,cellW-2,cellH*0.15);
+    if(summarized){fgX.strokeStyle='#f0b429';fgX.lineWidth=1;fgX.strokeRect(x+1,y,cellW-2,cellH*0.15);}
+  }
+  // Legend
+  fgX.font='500 18px "DM Sans",sans-serif';fgX.textAlign='left';
+  fgX.fillStyle='#38bdf8';fgX.fillText('■ 보이는 토큰',20,h-60);
+  fgX.fillStyle='#f0b429';fgX.fillText('■ 요약/압축된 토큰',200,h-60);
+  fgX.fillStyle='#fb7185';fgX.fillText('■ 사라진 토큰',440,h-60);
+  // Stats
+  const kept=fgMode===0?Math.min(winCap,totalTokens)/totalTokens:fgMode===1?Math.min(1,(winCap+3)/totalTokens):Math.min(1,(winCap*1.3)/totalTokens);
+  document.getElementById('fg-kept').textContent=Math.round(kept*100)+'%';
+  document.getElementById('fg-eff').textContent=fgMode===0?'낮음':fgMode===1?'중간':'높음';
+}
+function runForget(){
+  if(fgRunning){fgRunning=false;clearInterval(fgTimer);document.getElementById('forget-btn').textContent='▶ 시뮬레이션';document.getElementById('forget-btn').classList.remove('playing');return;}
+  resetForget();fgRunning=true;document.getElementById('forget-btn').textContent='⏸';document.getElementById('forget-btn').classList.add('playing');ensureAudio();
+  fgTimer=setInterval(()=>{
+    fgStep++;drawForget();playChime(200+fgStep*10,0.08,0.02,'sine');
+    if(fgStep>=30){fgRunning=false;clearInterval(fgTimer);document.getElementById('forget-btn').textContent='▶ 시뮬레이션';document.getElementById('forget-btn').classList.remove('playing');
+      playChord([523.25,659.25],0.4,0.03);}
+  },250);
+}
+function resetForget(){fgStep=0;fgRunning=false;clearInterval(fgTimer);document.getElementById('forget-btn').textContent='▶ 시뮬레이션';document.getElementById('forget-btn').classList.remove('playing');drawForget();}
+drawForget();
+
+// ═══ §07 — HALLUCINATION QUIZ ═══
+const HALLUC_DATA=[
+  {text:'에펠탑은 1889년에 완공되었다.',fact:true},
+  {text:'아인슈타인은 1921년 노벨 문학상을 수상했다.',fact:false},
+  {text:'물의 화학식은 H₂O이다.',fact:true},
+  {text:'대한민국의 수도는 부산이다.',fact:false},
+  {text:'빛의 속도는 약 초속 30만 km이다.',fact:true},
+];
+let hqIdx=-1,hqCorrect=0,hqAnswered=false;
+function nextHalluc(){
+  if(hqIdx>=0&&!hqAnswered)return;
+  hqIdx++;hqAnswered=false;
+  if(hqIdx>=HALLUC_DATA.length){
+    document.getElementById('halluc-quiz').innerHTML='<div style="text-align:center;padding:2rem;"><div style="font-family:var(--font-display);font-size:1.5rem;color:var(--gold);">퀴즈 완료!</div><div style="color:var(--muted);margin-top:0.5rem;">'+hqCorrect+'/'+HALLUC_DATA.length+' 정답</div></div>';
+    document.getElementById('halluc-btn').textContent='✓ 완료';return;
+  }
+  const q=HALLUC_DATA[hqIdx];
+  document.getElementById('halluc-quiz').innerHTML=
+    '<div style="text-align:center;padding:1.5rem;"><div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);margin-bottom:0.5rem;">AI가 생성한 문장 — 사실인가, 환각인가?</div>'+
+    '<div style="font-family:var(--font-display);font-size:1.3rem;color:var(--text);margin:1rem 0;">'+q.text+'</div>'+
+    '<div style="display:flex;gap:1rem;justify-content:center;margin-top:1rem;">'+
+    '<button class="btn btn-gold" onclick="answerHalluc(true)" style="padding:0.7rem 2rem;">✓ 사실</button>'+
+    '<button class="btn" onclick="answerHalluc(false)" style="padding:0.7rem 2rem;border-color:var(--coral);color:var(--coral);">✗ 환각</button></div></div>';
+  document.getElementById('hq-num').innerHTML=(hqIdx+1)+' <span class="su">/ '+HALLUC_DATA.length+'</span>';
+  document.getElementById('halluc-btn').textContent='다음 →';
+}
+function answerHalluc(isFact){
+  if(hqAnswered)return;hqAnswered=true;
+  const q=HALLUC_DATA[hqIdx];const correct=isFact===q.fact;
+  if(correct)hqCorrect++;
+  document.getElementById('hq-correct').textContent=hqCorrect;
+  const result=correct?'<span style="color:var(--mint);">정답! ✓</span>':'<span style="color:var(--coral);">오답 ✗</span>';
+  const truth=q.fact?'이것은 <strong style="color:var(--mint);">사실</strong>입니다.':'이것은 <strong style="color:var(--coral);">환각(거짓)</strong>입니다.';
+  document.getElementById('halluc-quiz').innerHTML+='<div style="text-align:center;margin-top:1rem;font-size:0.95rem;">'+result+' — '+truth+'</div>';
+  ensureAudio();playChime(correct?523:220,0.2,0.04,correct?'sine':'sawtooth');
+}
+
+// ═══ §08 — FUTURE TIMELINE ═══
+const futC=document.getElementById('future-canvas'),futX=futC.getContext('2d');
+function drawFuture(){
+  const w=futC.width=futC.clientWidth*2,h=futC.height=560;futX.clearRect(0,0,w,h);
+  const t=performance.now()/1000;
+  const milestones=[
+    {year:2018,tokens:'512',label:'GPT-1',c:'#7b8db5',logV:2.7},
+    {year:2020,tokens:'4K',label:'GPT-3',c:'#fb7185',logV:3.6},
+    {year:2023,tokens:'128K',label:'GPT-4',c:'#a78bfa',logV:5.1},
+    {year:2024,tokens:'200K',label:'Claude 3',c:'#38bdf8',logV:5.3},
+    {year:2025,tokens:'1M',label:'Claude 4.6',c:'#f0b429',logV:6.0},
+    {year:2025.5,tokens:'2M',label:'Gemini 3',c:'#34d399',logV:6.3},
+    {year:2026,tokens:'∞?',label:'미래',c:'#f0b429',logV:7.0},
+  ];
+  const pad={l:60,r:40,t:30,b:50};
+  const gw=w-pad.l-pad.r,gh=h-pad.t-pad.b;
+  // Axes
+  futX.strokeStyle='rgba(255,255,255,0.08)';futX.lineWidth=1;
+  futX.beginPath();futX.moveTo(pad.l,h-pad.b);futX.lineTo(w-pad.r,h-pad.b);futX.stroke();
+  // Curve
+  futX.beginPath();
+  milestones.forEach((m,i)=>{
+    const x=pad.l+((m.year-2017)/(2027-2017))*gw;
+    const y=pad.t+(1-m.logV/7.5)*gh;
+    i===0?futX.moveTo(x,y):futX.lineTo(x,y);
+  });
+  futX.strokeStyle='#f0b429';futX.lineWidth=3;futX.stroke();
+  // Points
+  milestones.forEach((m,i)=>{
+    const x=pad.l+((m.year-2017)/(2027-2017))*gw;
+    const y=pad.t+(1-m.logV/7.5)*gh;
+    const pulse=0.5+0.5*Math.sin(t*2+i);
+    futX.beginPath();futX.arc(x,y,6+pulse*2,0,6.28);futX.fillStyle=m.c;futX.fill();
+    futX.font='600 18px "DM Sans",sans-serif';futX.fillStyle=m.c;futX.textAlign='center';
+    futX.fillText(m.label,x,y-22);
+    futX.font='500 14px "JetBrains Mono",monospace';futX.fillStyle='#7b8db5';
+    futX.fillText(m.tokens,x,y+25);
+    futX.fillText(Math.floor(m.year),x,h-pad.b+20);
+  });
+  futX.font='400 16px "DM Sans",sans-serif';futX.fillStyle='#7b8db5';futX.textAlign='center';
+  futX.fillText('문맥 창 크기 (로그 스케일)',w/2,h-5);
+  requestAnimationFrame(drawFuture);
+}
+drawFuture();
+
+// ═══ NAV ═══
+const obs=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+const secs=['hero','sec-warmup','sec-context','sec-barrier','sec-kv','sec-vector','sec-rag','sec-forget','sec-halluc','sec-future','sec-sota','sec-rosetta','sec-closing'];
+const nd=document.getElementById('nav-dots');secs.forEach(id=>{const d=document.createElement('button');d.className='nav-dot';d.onclick=()=>document.getElementById(id).scrollIntoView({behavior:'smooth'});nd.appendChild(d);});
+const sO=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){const i=secs.indexOf(e.target.id);document.querySelectorAll('.nav-dot').forEach((d,j)=>d.classList.toggle('active',j===i));}});},{threshold:0.3});
+secs.forEach(id=>{const el=document.getElementById(id);if(el)sO.observe(el);});
+</script>
+</body>
+</html>

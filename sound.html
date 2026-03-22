@@ -1037,6 +1037,167 @@ footer {
   .key-color-grid { grid-template-columns: repeat(6, 1fr); }
   .extreme-presets { grid-template-columns: repeat(2, 1fr); }
 }
+/* ─── Wolf Fifth ─── */
+.wolf-circle-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 1.5rem auto;
+}
+.wolf-circle-wrap canvas { display: block; width: 100%; }
+.wolf-interval-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.8rem;
+  margin: 1.2rem 0;
+}
+.wolf-card {
+  background: rgba(0,0,0,0.2);
+  border-radius: 12px;
+  padding: 1.2rem;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.03);
+  position: relative;
+  overflow: hidden;
+}
+.wolf-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+}
+.wolf-card.pure-c::before { background: linear-gradient(90deg, transparent, #5db8a3, transparent); }
+.wolf-card.pyth-c::before { background: linear-gradient(90deg, transparent, var(--coral), transparent); }
+.wolf-card.mean-c::before { background: linear-gradient(90deg, transparent, var(--purple), transparent); }
+.wolf-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+}
+.wolf-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.15rem;
+}
+.wolf-cents {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 0.7rem;
+}
+.wolf-play {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+}
+.wolf-play.pure-p { background: rgba(93,184,163,0.1); color: #5db8a3; border: 1px solid rgba(93,184,163,0.2); }
+.wolf-play.pyth-p { background: rgba(251,113,133,0.1); color: var(--coral); border: 1px solid rgba(251,113,133,0.2); }
+.wolf-play.mean-p { background: rgba(167,139,250,0.1); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
+.wolf-play:hover { filter: brightness(1.2); transform: translateY(-1px); }
+.wolf-play.playing { animation: pulse-btn 0.8s ease-in-out infinite alternate; }
+
+.wolf-comma-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 36px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1.2rem 0;
+}
+.wolf-comma-bar .seg {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.9);
+  transition: all 0.3s;
+  white-space: nowrap;
+  overflow: hidden;
+  min-width: 0;
+}
+
+@media(max-width:640px) {
+  .wolf-interval-grid { grid-template-columns: 1fr; }
+}
+
+/* ─── Digital Audio Demos ─── */
+.bitdepth-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0.6rem 0;
+}
+.bitdepth-row label {
+  min-width: 2.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--mint);
+}
+.bitdepth-row .val {
+  min-width: 3.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: right;
+}
+
+.alias-freq-display {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.alias-freq-card {
+  flex: 1;
+  background: var(--bg3);
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(255,255,255,0.03);
+  text-align: center;
+}
+.alias-freq-card .afl {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.2rem;
+}
+.alias-freq-card .afv {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+.alias-freq-card .afv.ok { color: var(--mint); }
+.alias-freq-card .afv.warn { color: var(--gold); }
+.alias-freq-card .afv.bad { color: var(--coral); }
+
+.alias-status {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  padding: 0.6rem;
+  border-radius: 8px;
+  margin: 0.5rem 0 1rem;
+}
+.alias-status.ok { background: rgba(52,211,153,0.08); color: var(--mint); border: 1px solid rgba(52,211,153,0.15); }
+.alias-status.bad { background: rgba(251,113,133,0.08); color: var(--coral); border: 1px solid rgba(251,113,133,0.15); }
+
+@media(max-width:640px) {
+  .alias-freq-display { flex-direction: column; }
+}
+
 /* ─── Floating badge ─── */
 .floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:lowercase;color:#8db830;background:transparent;padding:.35rem .7rem;text-decoration:none;transition:color .25s,text-shadow .25s,transform .25s;text-shadow:0 0 6px rgba(141,184,48,.4),0 0 16px rgba(141,184,48,.15)}
 .floating-badge:hover{color:#a8d43a;text-shadow:0 0 8px rgba(141,184,48,.65),0 0 22px rgba(141,184,48,.28);transform:translateY(-1px)}
@@ -1285,6 +1446,66 @@ footer {
   </div>
 </section>
 
+<!-- ═══════════════════ WOLF FIFTH ═══════════════════ -->
+<section id="sec-wolf">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">THE PYTHAGOREAN COMMA</p>
+      <h2>The <span class="accent-coral">Wolf</span> at the End of the Circle</h2>
+      <p>Pythagoras's beloved 3:2 ratio has a dark secret. If you stack twelve perfect fifths — C→G→D→A→E→B→F#→C#→G#→D#→A#→F→C — you <em>should</em> land back where you started, seven octaves up. But you don't.</p>
+      <div class="fourier-eq">
+        (3/2)<sup>12</sup> = 531441/4096 ≈ 129.746 &nbsp;&nbsp;≠&nbsp;&nbsp; 2<sup>7</sup> = 128
+      </div>
+      <p>The overshoot — a ratio of <span class="accent-gold">531441 : 524288</span>, about <strong>23.46 cents</strong> — is the <strong>Pythagorean comma</strong>. It means the circle of fifths doesn't actually close. Somewhere, a single interval must absorb the entire error. That cursed interval is called the <strong class="accent-coral">wolf fifth</strong>: a "fifth" so out of tune that medieval musicians said it <em>howled like a wolf</em>.</p>
+    </div>
+
+    <div class="demo-card reveal">
+      <h3 class="accent-gold" style="margin-bottom:0.5rem;">The Circle That Doesn't Close</h3>
+      <p style="font-size:0.8rem;color:var(--muted);margin-bottom:0.5rem;">Click any segment to hear that fifth. Eleven pure fifths sound consonant — the last one <em>howls</em>.</p>
+
+      <div class="wolf-circle-wrap">
+        <canvas id="wolf-circle-canvas" width="500" height="500"></canvas>
+      </div>
+
+      <div class="wolf-comma-bar" id="wolf-comma-bar">
+        <!-- filled by JS -->
+      </div>
+
+      <div class="audio-note" style="margin-top:0.5rem;">Compare three versions of the "fifth" that closes the circle</div>
+
+      <div class="wolf-interval-grid">
+        <div class="wolf-card pure-c">
+          <div class="wolf-label" style="color:#5db8a3;">Pure Fifth</div>
+          <div class="wolf-title" style="color:#5db8a3;">3 : 2</div>
+          <div class="wolf-cents">701.96 cents</div>
+          <button class="wolf-play pure-p" id="wolf-pure-btn" onclick="wolfPlay('pure')">▶ Pure Fifth</button>
+        </div>
+        <div class="wolf-card pyth-c">
+          <div class="wolf-label" style="color:var(--coral);">Pythagorean Wolf</div>
+          <div class="wolf-title" style="color:var(--coral);">678.49¢</div>
+          <div class="wolf-cents">−23.5¢ from pure</div>
+          <button class="wolf-play pyth-p" id="wolf-pyth-btn" onclick="wolfPlay('pyth')">▶ Wolf Fifth</button>
+        </div>
+        <div class="wolf-card mean-c">
+          <div class="wolf-label" style="color:var(--purple);">Meantone Wolf</div>
+          <div class="wolf-title" style="color:var(--purple);">737.64¢</div>
+          <div class="wolf-cents">+35.7¢ from pure</div>
+          <button class="wolf-play mean-p" id="wolf-mean-btn" onclick="wolfPlay('mean')">▶ Meantone Wolf</button>
+        </div>
+      </div>
+
+      <div class="compare-row">
+        <button class="compare-btn" onclick="wolfPlayAll()">▶ Sequential: Pure → Pythagorean Wolf → Meantone Wolf</button>
+      </div>
+    </div>
+
+    <div class="inst-explanation reveal" style="border-left-color:var(--coral);">
+      <p><strong style="color:var(--text);">Two Wolves, Two Eras</strong> — In Pythagorean tuning, the wolf fifth is <em>narrow</em> (678¢): eleven 3:2 fifths overshoot seven octaves, so the twelfth fifth must be squeezed. In quarter-comma meantone — the Renaissance standard — each fifth is narrowed to purify major thirds, and the accumulated slack makes the leftover "fifth" grotesquely <em>wide</em> (738¢). Both howl; one from tightness, the other from bloat.</p>
+      <p style="margin-top:0.8rem;"><strong style="color:var(--text);">Why Keyboards Couldn't Escape</strong> — A violinist or singer can adjust pitch on the fly. A harpsichord is locked into its tuning. That's why the wolf was a keyboard problem: organists and harpsichordists simply <em>avoided the bad keys</em>. The desire to play in <em>all</em> keys without a wolf is exactly what drove the invention of well-temperament — and eventually, equal temperament.</p>
+    </div>
+  </div>
+</section>
+
 <!-- ═══════════════════ BACH & WELL-TEMPERAMENT ═══════════════════ -->
 <section id="sec-bach">
   <div class="section-inner">
@@ -1496,7 +1717,7 @@ footer {
 
     <div class="demo-card reveal">
       <h3 class="accent-mint" style="margin-bottom: 1rem;">Sampling Simulator</h3>
-      <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem;">Lower the sampling rate and watch fidelity degrade. Red dots = digital samples. Blue curve = the original analog signal.</p>
+      <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem;">Lower the sampling rate and watch fidelity degrade. Red dots = digital samples. Blue curve = the original analog signal. <strong>Press Play to hear the difference.</strong></p>
       <div class="canvas-wrap">
         <span class="wave-label" id="sampling-label">Samples: 44 / cycle</span>
         <canvas id="sampling-canvas" height="200"></canvas>
@@ -1506,6 +1727,72 @@ footer {
         <input type="range" id="sample-rate-slider" min="4" max="80" value="44" step="1">
         <span class="val" id="sr-val">44 / cycle</span>
       </div>
+      <div class="slider-row">
+        <label style="color:var(--mint);">Bits</label>
+        <input type="range" id="bitdepth-slider" min="2" max="16" value="16" step="1">
+        <span class="val" id="bitdepth-val">16-bit</span>
+      </div>
+      <div class="btn-group" style="margin-top:0.8rem;">
+        <button class="btn btn-gold" id="play-crushed-btn" onclick="toggleCrushed()">▶ Play Degraded</button>
+        <button class="btn" onclick="setCrushPreset(44,16)">CD Quality</button>
+        <button class="btn" onclick="setCrushPreset(20,12)">Decent</button>
+        <button class="btn" onclick="setCrushPreset(10,8)">Lo-fi</button>
+        <button class="btn" onclick="setCrushPreset(6,4)">NES-era</button>
+        <button class="btn" onclick="setCrushPreset(4,2)">Extreme</button>
+      </div>
+      <div class="audio-note">The same 440 Hz tone with harmonics, crushed by sample rate and bit depth</div>
+    </div>
+
+    <div class="demo-card reveal">
+      <h3 class="accent-coral" style="margin-bottom: 1rem;">Aliasing — The Ghost Frequency</h3>
+      <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem;">When the signal frequency exceeds half the sampling rate (the <strong>Nyquist limit</strong>), the digitized signal doesn't just lose quality — it turns into a <em>completely wrong frequency</em>. This phantom tone is called an <strong>alias</strong>.</p>
+
+      <div class="canvas-wrap">
+        <span class="wave-label" id="alias-canvas-label">Signal vs Reconstructed</span>
+        <canvas id="alias-canvas" height="200"></canvas>
+      </div>
+
+      <div class="slider-row">
+        <label style="color:var(--sky);">f</label>
+        <input type="range" id="alias-freq-slider" min="100" max="4000" value="440" step="10">
+        <span class="val" id="alias-freq-val">440 Hz</span>
+      </div>
+      <div class="slider-row">
+        <label style="color:var(--coral);">f<sub>s</sub></label>
+        <input type="range" id="alias-sr-slider" min="500" max="8000" value="4000" step="100">
+        <span class="val" id="alias-sr-val">4000 Hz</span>
+      </div>
+
+      <div class="alias-freq-display">
+        <div class="alias-freq-card">
+          <div class="afl">Signal Frequency</div>
+          <div class="afv ok" id="alias-sig-display">440 Hz</div>
+        </div>
+        <div class="alias-freq-card">
+          <div class="afl">Nyquist Limit (f<sub>s</sub>/2)</div>
+          <div class="afv" id="alias-nyq-display" style="color:var(--gold);">2000 Hz</div>
+        </div>
+        <div class="alias-freq-card">
+          <div class="afl">You Actually Hear</div>
+          <div class="afv" id="alias-heard-display">440 Hz</div>
+        </div>
+      </div>
+
+      <div class="alias-status ok" id="alias-status">✓ Below Nyquist — faithful reproduction</div>
+
+      <div class="btn-group">
+        <button class="btn btn-gold" id="play-alias-btn" onclick="toggleAlias()">▶ Play</button>
+        <button class="btn" onclick="setAliasPreset(440,4000)">Safe (440 Hz)</button>
+        <button class="btn" onclick="setAliasPreset(1800,4000)">Near limit</button>
+        <button class="btn" onclick="setAliasPreset(2500,4000)">Aliased!</button>
+        <button class="btn" onclick="setAliasPreset(3500,4000)">Ghost tone</button>
+      </div>
+      <div class="audio-note">The "Play" button plays what you'd actually hear after sampling — including the alias when above Nyquist</div>
+    </div>
+
+    <div class="inst-explanation reveal" style="border-left-color:var(--mint);">
+      <p><strong style="color:var(--text);">Why 44,100?</strong> — Human hearing tops out near 20,000 Hz. By Nyquist, the sampling rate must be at least 40,000. The extra 4,100 provides headroom for the analog anti-aliasing filter that must cut off before Nyquist. The number 44,100 was also chosen for compatibility with early digital video equipment.</p>
+      <p style="margin-top:0.8rem;"><strong style="color:var(--text);">Aliasing in the Wild</strong> — Ever seen helicopter blades appear to spin backward in a video? That's temporal aliasing: the camera's frame rate (sampling rate) is too low for the blade's rotation speed, so you perceive a false, lower frequency. The mathematics is identical to audio aliasing.</p>
     </div>
   </div>
 </section>
@@ -1533,7 +1820,7 @@ footer {
   <p style="margin-top: 0.3rem; font-size: 0.7rem;">Every sound on this page is generated in real time via the Web Audio API. No recordings — just math.</p>
   <div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:.2rem">
     <div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;font-weight:400;color:#edeef2;letter-spacing:-.01em">Sang-hyun Kim</div>
-    <div style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:300;color:#5c6178;letter-spacing:.01em">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+    <div style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:300;color:#5c6178;letter-spacing:.01em">Korea Institute for Advanced Study</div>
     <a href="https://kimsh.kr" style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;display:inline-block;margin-top:.25rem">kimsh.kr</a>
   </div>
 </footer>
@@ -2320,6 +2607,276 @@ function drawSampling() {
 document.getElementById('sample-rate-slider').addEventListener('input', drawSampling);
 drawSampling();
 
+// Bit depth slider update
+document.getElementById('bitdepth-slider').addEventListener('input', function() {
+  document.getElementById('bitdepth-val').textContent = this.value + '-bit';
+});
+
+// ═══════════════════════════════════════════════
+//  BITCRUSHER — Hear sampling degradation
+// ═══════════════════════════════════════════════
+let crushedSource = null, crushedActive = false;
+
+function generateCrushedBuffer() {
+  const sr = +document.getElementById('sample-rate-slider').value;
+  const bits = +document.getElementById('bitdepth-slider').value;
+  const sampleRate = 44100;
+  const duration = 3;
+  const totalSamples = sampleRate * duration;
+  const buffer = actx.createBuffer(1, totalSamples, sampleRate);
+  const data = buffer.getChannelData(0);
+
+  // Generate a rich tone (440Hz with harmonics like a piano)
+  const baseFreq = 440;
+  const harmonics = [1, 0.6, 0.35, 0.22, 0.15, 0.1, 0.06, 0.03];
+  const harmSum = harmonics.reduce((a,b) => a+b, 0);
+
+  // The "sr" slider represents samples per cycle at 440Hz
+  // Effective sample rate = sr * 440
+  const effectiveSR = sr * baseFreq;
+  const holdSamples = Math.max(1, Math.round(sampleRate / effectiveSR));
+
+  // Bit depth quantization levels
+  const levels = Math.pow(2, bits);
+
+  let lastSample = 0;
+  for(let i = 0; i < totalSamples; i++) {
+    const t = i / sampleRate;
+    // Envelope: fade in/out
+    let env = 1;
+    if(t < 0.05) env = t / 0.05;
+    if(t > duration - 0.3) env = (duration - t) / 0.3;
+
+    if(i % holdSamples === 0) {
+      let sample = 0;
+      for(let h = 0; h < harmonics.length; h++) {
+        const hf = baseFreq * (h + 1);
+        if(hf > effectiveSR / 2 && effectiveSR < sampleRate) continue; // simulate Nyquist
+        sample += harmonics[h] * Math.sin(2 * Math.PI * hf * t);
+      }
+      sample /= harmSum;
+      // Quantize
+      sample = Math.round(sample * (levels / 2)) / (levels / 2);
+      lastSample = sample * env * 0.4;
+    }
+    data[i] = lastSample;
+  }
+  return buffer;
+}
+
+function toggleCrushed() {
+  ensureAudio();
+  const btn = document.getElementById('play-crushed-btn');
+  if(crushedActive) {
+    try { crushedSource.stop(); } catch(e) {}
+    crushedActive = false;
+    btn.textContent = '▶ Play Degraded';
+    btn.classList.remove('playing');
+    return;
+  }
+  const buf = generateCrushedBuffer();
+  crushedSource = actx.createBufferSource();
+  crushedSource.buffer = buf;
+  crushedSource.connect(actx.destination);
+  crushedSource.start();
+  crushedActive = true;
+  btn.textContent = '⏸ Stop';
+  btn.classList.add('playing');
+  crushedSource.onended = () => {
+    crushedActive = false;
+    btn.textContent = '▶ Play Degraded';
+    btn.classList.remove('playing');
+  };
+}
+
+function setCrushPreset(sr, bits) {
+  document.getElementById('sample-rate-slider').value = sr;
+  document.getElementById('bitdepth-slider').value = bits;
+  document.getElementById('sr-val').textContent = sr + ' / cycle';
+  document.getElementById('bitdepth-val').textContent = bits + '-bit';
+  document.getElementById('sampling-label').textContent = 'Samples: ' + sr + ' / cycle';
+  drawSampling();
+  // If already playing, restart with new settings
+  if(crushedActive) {
+    try { crushedSource.stop(); } catch(e) {}
+    crushedActive = false;
+    setTimeout(() => toggleCrushed(), 50);
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  ALIASING DEMO
+// ═══════════════════════════════════════════════
+let aliasOsc = null, aliasGain = null, aliasActive = false;
+
+const aliasCanvas = document.getElementById('alias-canvas');
+const aliasCtx = aliasCanvas.getContext('2d');
+
+function computeAlias(freq, sr) {
+  const nyquist = sr / 2;
+  if(freq <= nyquist) return freq;
+  // Fold: alias = |freq mod sr - sr/2| reflected
+  let f = freq % sr;
+  if(f > nyquist) f = sr - f;
+  return f;
+}
+
+function updateAliasUI() {
+  const freq = +document.getElementById('alias-freq-slider').value;
+  const sr = +document.getElementById('alias-sr-slider').value;
+  const nyquist = sr / 2;
+  const aliasFreq = computeAlias(freq, sr);
+  const isAliased = freq > nyquist;
+
+  document.getElementById('alias-freq-val').textContent = freq + ' Hz';
+  document.getElementById('alias-sr-val').textContent = sr + ' Hz';
+
+  document.getElementById('alias-sig-display').textContent = freq + ' Hz';
+  document.getElementById('alias-sig-display').className = 'afv ' + (isAliased ? 'bad' : 'ok');
+
+  document.getElementById('alias-nyq-display').textContent = nyquist + ' Hz';
+
+  document.getElementById('alias-heard-display').textContent = Math.round(aliasFreq) + ' Hz';
+  document.getElementById('alias-heard-display').className = 'afv ' + (isAliased ? 'bad' : 'ok');
+
+  const statusEl = document.getElementById('alias-status');
+  if(isAliased) {
+    statusEl.className = 'alias-status bad';
+    statusEl.textContent = '✗ Above Nyquist — alias at ' + Math.round(aliasFreq) + ' Hz (wrong pitch!)';
+  } else {
+    statusEl.className = 'alias-status ok';
+    statusEl.textContent = '✓ Below Nyquist — faithful reproduction at ' + Math.round(aliasFreq) + ' Hz';
+  }
+
+  // Update playing oscillator frequency
+  if(aliasActive && aliasOsc) {
+    aliasOsc.frequency.setValueAtTime(aliasFreq, actx.currentTime);
+  }
+}
+
+function drawAliasCanvas() {
+  const w = aliasCanvas.width = aliasCanvas.clientWidth * 2;
+  const h = aliasCanvas.height = 400;
+  aliasCtx.clearRect(0, 0, w, h);
+
+  const freq = +document.getElementById('alias-freq-slider').value;
+  const sr = +document.getElementById('alias-sr-slider').value;
+  const nyquist = sr / 2;
+  const aliasFreq = computeAlias(freq, sr);
+  const isAliased = freq > nyquist;
+  const t = performance.now() / 1000;
+
+  // Normalize display: show ~4 cycles of the original signal
+  const displayFreq = Math.max(freq, 200);
+  const cycles = 4;
+  const timeSpan = cycles / displayFreq;
+
+  // Original analog signal (blue)
+  aliasCtx.beginPath();
+  for(let i = 0; i <= w; i++) {
+    const tt = (i / w) * timeSpan;
+    const y = h / 2 - (h / 3) * Math.sin(2 * Math.PI * freq * tt);
+    i === 0 ? aliasCtx.moveTo(i, y) : aliasCtx.lineTo(i, y);
+  }
+  aliasCtx.strokeStyle = 'rgba(56,189,248,0.35)';
+  aliasCtx.lineWidth = 2;
+  aliasCtx.stroke();
+
+  // Sample points
+  const sampleInterval = 1 / sr;
+  const numSamples = Math.floor(timeSpan / sampleInterval);
+  const samplePoints = [];
+  for(let s = 0; s <= numSamples; s++) {
+    const tt = s * sampleInterval;
+    const x = (tt / timeSpan) * w;
+    const y = h / 2 - (h / 3) * Math.sin(2 * Math.PI * freq * tt);
+    if(x <= w) {
+      samplePoints.push({x, y});
+      aliasCtx.beginPath();
+      aliasCtx.moveTo(x, h/2);
+      aliasCtx.lineTo(x, y);
+      aliasCtx.strokeStyle = 'rgba(251,113,133,0.2)';
+      aliasCtx.lineWidth = 1;
+      aliasCtx.stroke();
+      aliasCtx.beginPath();
+      aliasCtx.arc(x, y, 4, 0, Math.PI * 2);
+      aliasCtx.fillStyle = '#fb7185';
+      aliasCtx.fill();
+    }
+  }
+
+  // Reconstructed alias frequency (green or red)
+  aliasCtx.beginPath();
+  for(let i = 0; i <= w; i++) {
+    const tt = (i / w) * timeSpan;
+    const y = h / 2 - (h / 3) * Math.sin(2 * Math.PI * aliasFreq * tt);
+    i === 0 ? aliasCtx.moveTo(i, y) : aliasCtx.lineTo(i, y);
+  }
+  aliasCtx.strokeStyle = isAliased ? 'rgba(251,113,133,0.7)' : 'rgba(52,211,153,0.6)';
+  aliasCtx.lineWidth = 2;
+  aliasCtx.setLineDash(isAliased ? [8, 6] : []);
+  aliasCtx.stroke();
+  aliasCtx.setLineDash([]);
+
+  // Zero line
+  aliasCtx.beginPath();
+  aliasCtx.moveTo(0, h/2); aliasCtx.lineTo(w, h/2);
+  aliasCtx.strokeStyle = 'rgba(255,255,255,0.06)';
+  aliasCtx.lineWidth = 1;
+  aliasCtx.stroke();
+
+  // Labels
+  aliasCtx.font = '20px "JetBrains Mono", monospace';
+  aliasCtx.textAlign = 'left';
+  aliasCtx.fillStyle = 'rgba(56,189,248,0.5)';
+  aliasCtx.fillText('Original ' + freq + ' Hz', 10, 24);
+  aliasCtx.fillStyle = isAliased ? 'rgba(251,113,133,0.7)' : 'rgba(52,211,153,0.5)';
+  aliasCtx.fillText((isAliased ? 'Alias ' : 'Reproduced ') + Math.round(aliasFreq) + ' Hz', 10, 48);
+
+  requestAnimationFrame(drawAliasCanvas);
+}
+
+document.getElementById('alias-freq-slider').addEventListener('input', updateAliasUI);
+document.getElementById('alias-sr-slider').addEventListener('input', updateAliasUI);
+updateAliasUI();
+drawAliasCanvas();
+
+function toggleAlias() {
+  ensureAudio();
+  const btn = document.getElementById('play-alias-btn');
+  if(aliasActive) {
+    aliasGain.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + 0.08);
+    setTimeout(() => { try { aliasOsc.stop(); } catch(e) {} aliasOsc = null; aliasActive = false; }, 100);
+    btn.textContent = '▶ Play';
+    btn.classList.remove('playing');
+    return;
+  }
+  const freq = +document.getElementById('alias-freq-slider').value;
+  const sr = +document.getElementById('alias-sr-slider').value;
+  const aliasFreq = computeAlias(freq, sr);
+
+  aliasOsc = actx.createOscillator();
+  aliasGain = actx.createGain();
+  aliasOsc.type = 'sine';
+  aliasOsc.frequency.value = aliasFreq;
+  aliasGain.gain.value = 0.2;
+  aliasOsc.connect(aliasGain).connect(actx.destination);
+  aliasOsc.start();
+  aliasActive = true;
+  btn.textContent = '⏸ Stop';
+  btn.classList.add('playing');
+}
+
+function setAliasPreset(freq, sr) {
+  document.getElementById('alias-freq-slider').value = freq;
+  document.getElementById('alias-sr-slider').value = sr;
+  updateAliasUI();
+  if(aliasActive && aliasOsc) {
+    const aliasFreq = computeAlias(freq, sr);
+    aliasOsc.frequency.setValueAtTime(aliasFreq, actx.currentTime);
+  }
+}
+
 // ═══════════════════════════════════════════════
 //  HERO CANVAS — ambient waves
 // ═══════════════════════════════════════════════
@@ -2361,7 +2918,7 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
 // ─── Nav dots ───
-const sections = ['hero','sec-wave','sec-pythagoras','sec-temperament','sec-instruments','sec-extreme','sec-bach','sec-fourier','sec-timbre','sec-brain','sec-digital','sec-closing'];
+const sections = ['hero','sec-wave','sec-pythagoras','sec-temperament','sec-instruments','sec-extreme','sec-wolf','sec-bach','sec-fourier','sec-timbre','sec-brain','sec-digital','sec-closing'];
 const navDots = document.getElementById('nav-dots');
 sections.forEach((id, i) => {
   const dot = document.createElement('button');
@@ -2802,6 +3359,233 @@ function drawBeat() {
   requestAnimationFrame(drawBeat);
 }
 drawBeat();
+
+// ═══════════════════════════════════════════════
+//  WOLF FIFTH — Circle of Fifths & Wolf Interval
+// ═══════════════════════════════════════════════
+const WOLF_NOTES = ['C','G','D','A','E','B','F#','C#','G#','D#','A#','F'];
+const PURE_FIFTH_CENTS = 701.955;
+const PYTH_COMMA = 23.460; // cents
+const PYTH_WOLF = PURE_FIFTH_CENTS - PYTH_COMMA; // ~678.49
+const MEANTONE_FIFTH = 696.578; // 1/4 comma meantone
+const MEANTONE_WOLF = 1200*7 - 11*MEANTONE_FIFTH; // ~737.64
+
+// Build comma bar
+(function() {
+  const bar = document.getElementById('wolf-comma-bar');
+  const pureW = PURE_FIFTH_CENTS / (12 * PURE_FIFTH_CENTS) * 100;
+  const wolfW = PYTH_WOLF / (11 * PURE_FIFTH_CENTS + PYTH_WOLF) * 100;
+  const normalW = (100 - wolfW) / 11;
+  for(let i = 0; i < 12; i++) {
+    const seg = document.createElement('div');
+    seg.className = 'seg';
+    if(i < 11) {
+      seg.style.flex = '1';
+      seg.style.background = 'rgba(93,184,163,0.25)';
+      seg.style.borderRight = '1px solid rgba(0,0,0,0.3)';
+      seg.textContent = WOLF_NOTES[i] + '→' + WOLF_NOTES[i+1];
+    } else {
+      seg.style.flex = '1';
+      seg.style.background = 'rgba(251,113,133,0.35)';
+      seg.style.color = 'var(--coral)';
+      seg.textContent = 'F→C 🐺';
+    }
+    bar.appendChild(seg);
+  }
+})();
+
+// Wolf circle canvas
+const wolfCanvas = document.getElementById('wolf-circle-canvas');
+const wolfCtx = wolfCanvas.getContext('2d');
+let wolfHover = -1;
+let wolfPlaying = -1;
+
+function drawWolfCircle() {
+  const dpr = window.devicePixelRatio || 1;
+  const size = wolfCanvas.clientWidth;
+  wolfCanvas.width = size * dpr;
+  wolfCanvas.height = size * dpr;
+  const ctx = wolfCtx;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, size, size);
+
+  const cx = size / 2, cy = size / 2;
+  const R = size * 0.38;
+  const r2 = size * 0.30; // inner ring for lines
+
+  // Draw arcs for each fifth
+  for(let i = 0; i < 12; i++) {
+    const a1 = (i / 12) * Math.PI * 2 - Math.PI / 2;
+    const a2 = ((i + 1) / 12) * Math.PI * 2 - Math.PI / 2;
+    const aMid = (a1 + a2) / 2;
+
+    // Arc
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, a1 + 0.04, a2 - 0.04);
+    const isWolf = (i === 11);
+    const isHovered = (wolfHover === i);
+    const isPlay = (wolfPlaying === i);
+
+    if(isWolf) {
+      ctx.strokeStyle = isHovered || isPlay ? 'rgba(251,113,133,0.9)' : 'rgba(251,113,133,0.55)';
+      ctx.lineWidth = isHovered || isPlay ? 6 : 4;
+    } else {
+      ctx.strokeStyle = isHovered || isPlay ? 'rgba(93,184,163,0.9)' : 'rgba(93,184,163,0.3)';
+      ctx.lineWidth = isHovered || isPlay ? 5 : 2.5;
+    }
+    ctx.stroke();
+
+    // Glow on hover
+    if(isHovered || isPlay) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, a1 + 0.04, a2 - 0.04);
+      ctx.strokeStyle = isWolf ? 'rgba(251,113,133,0.2)' : 'rgba(93,184,163,0.15)';
+      ctx.lineWidth = 14;
+      ctx.stroke();
+    }
+  }
+
+  // Draw note labels
+  for(let i = 0; i < 12; i++) {
+    const a = (i / 12) * Math.PI * 2 - Math.PI / 2;
+    const lx = cx + Math.cos(a) * (R + 22);
+    const ly = cy + Math.sin(a) * (R + 22);
+
+    ctx.font = '500 13px "JetBrains Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = (i === 11 || i === 0) ? 'rgba(251,113,133,0.9)' :
+                    wolfHover === i || wolfHover === (i-1+12)%12 ? '#fff' : 'rgba(224,230,240,0.6)';
+    ctx.fillText(WOLF_NOTES[i], lx, ly);
+  }
+
+  // Center info
+  ctx.textAlign = 'center';
+  ctx.font = '600 14px "Fraunces", Georgia, serif';
+  ctx.fillStyle = 'rgba(240,180,41,0.8)';
+  ctx.fillText('Circle of Fifths', cx, cy - 18);
+  ctx.font = '400 11px "JetBrains Mono", monospace';
+  ctx.fillStyle = 'rgba(123,141,181,0.7)';
+  ctx.fillText('(3/2)¹² ≠ 2⁷', cx, cy + 4);
+  ctx.fillText('Δ = 23.46¢', cx, cy + 22);
+
+  // Wolf indicator
+  const wa1 = (11 / 12) * Math.PI * 2 - Math.PI / 2;
+  const wa2 = (12 / 12) * Math.PI * 2 - Math.PI / 2;
+  const wMid = (wa1 + wa2) / 2;
+  const wx = cx + Math.cos(wMid) * (R - 28);
+  const wy = cy + Math.sin(wMid) * (R - 28);
+  ctx.font = '16px sans-serif';
+  ctx.fillText('🐺', wx, wy);
+
+  requestAnimationFrame(drawWolfCircle);
+}
+
+wolfCanvas.addEventListener('mousemove', function(e) {
+  const rect = wolfCanvas.getBoundingClientRect();
+  const x = e.clientX - rect.left - rect.width/2;
+  const y = e.clientY - rect.top - rect.height/2;
+  let angle = Math.atan2(y, x) + Math.PI/2;
+  if(angle < 0) angle += Math.PI * 2;
+  wolfHover = Math.floor(angle / (Math.PI * 2) * 12) % 12;
+  wolfCanvas.style.cursor = 'pointer';
+});
+wolfCanvas.addEventListener('mouseleave', function() { wolfHover = -1; });
+wolfCanvas.addEventListener('click', function() {
+  if(wolfHover >= 0) wolfPlayFifth(wolfHover);
+});
+
+drawWolfCircle();
+
+// Wolf audio
+const wolfNodes = {};
+function wolfSynthFifth(id, baseCents, intervalCents, dur=2.5) {
+  ensureAudio();
+  if(wolfNodes[id]) { wolfStopNode(id); return; }
+  const baseFreq = 261.63 * Math.pow(2, baseCents/1200);
+  const topFreq = baseFreq * Math.pow(2, intervalCents/1200);
+  const freqs = [baseFreq, topFreq];
+  const harms = [1, .6, .35, .2, .12, .07];
+  const harmSum = harms.reduce((a,b)=>a+b,0);
+  const perOsc = 0.4 / (harmSum * freqs.length);
+
+  const limiter = createLimiter(actx);
+  const comp = actx.createDynamicsCompressor();
+  comp.threshold.value=-12;comp.knee.value=6;comp.ratio.value=20;comp.attack.value=0.001;comp.release.value=0.05;
+  limiter.connect(comp); comp.connect(actx.destination);
+
+  const master=actx.createGain(); master.gain.value=0; master.connect(limiter);
+  const nodes=[];
+  freqs.forEach(f=>{
+    harms.forEach((amp,i)=>{
+      if(amp<0.01)return;
+      const hf=f*(i+1); if(hf>12000)return;
+      const osc=actx.createOscillator(); const g=actx.createGain();
+      osc.type='sine'; osc.frequency.value=hf; g.gain.value=amp*perOsc;
+      osc.connect(g).connect(master); osc.start(); nodes.push({osc,gain:g});
+    });
+  });
+  const now=actx.currentTime;
+  master.gain.setValueAtTime(0,now);
+  master.gain.linearRampToValueAtTime(1,now+0.1);
+  master.gain.setValueAtTime(1,now+dur-0.4);
+  master.gain.exponentialRampToValueAtTime(0.0001,now+dur);
+  const timer=setTimeout(()=>{nodes.forEach(n=>{try{n.osc.stop();}catch(e){}});try{comp.disconnect();limiter.disconnect();}catch(e){}delete wolfNodes[id];},dur*1000+100);
+  wolfNodes[id]={master,nodes,timer,comp,limiter};
+}
+function wolfStopNode(id) {
+  if(!wolfNodes[id]) return;
+  const a=wolfNodes[id]; clearTimeout(a.timer);
+  try{a.master.gain.cancelScheduledValues(actx.currentTime);a.master.gain.setValueAtTime(a.master.gain.value,actx.currentTime);a.master.gain.exponentialRampToValueAtTime(0.0001,actx.currentTime+0.08);}catch(e){}
+  setTimeout(()=>{a.nodes.forEach(n=>{try{n.osc.stop();}catch(e){}}); try{a.comp.disconnect();a.limiter.disconnect();}catch(e){}},100);
+  delete wolfNodes[id];
+}
+
+function wolfPlayFifth(idx) {
+  ensureAudio();
+  // Base note in cents from C
+  const baseCents = idx * PURE_FIFTH_CENTS % 1200;
+  // If this is the wolf (idx=11), use the wolf interval; else pure
+  const intervalCents = (idx === 11) ? PYTH_WOLF : PURE_FIFTH_CENTS;
+  wolfPlaying = idx;
+  wolfSynthFifth('circle_'+idx, (idx === 0 ? 0 : idx * 701.955 % 1200), intervalCents, 2);
+  setTimeout(()=>{ wolfPlaying = -1; }, 2000);
+}
+
+function wolfPlay(type) {
+  ensureAudio();
+  let intervalCents, btnId, label;
+  if(type === 'pure') { intervalCents = PURE_FIFTH_CENTS; btnId = 'wolf-pure-btn'; label = 'Pure Fifth'; }
+  else if(type === 'pyth') { intervalCents = PYTH_WOLF; btnId = 'wolf-pyth-btn'; label = 'Wolf Fifth'; }
+  else { intervalCents = MEANTONE_WOLF; btnId = 'wolf-mean-btn'; label = 'Meantone Wolf'; }
+
+  wolfSynthFifth('wolf_'+type, 0, intervalCents, 3);
+  const btn = document.getElementById(btnId);
+  btn.classList.add('playing'); btn.textContent = '⏸ Playing…';
+  setTimeout(()=>{ btn.classList.remove('playing'); btn.textContent = '▶ ' + label; }, 3000);
+}
+
+function wolfPlayAll() {
+  ensureAudio();
+  wolfSynthFifth('wolf_pure', 0, PURE_FIFTH_CENTS, 2);
+  const b1 = document.getElementById('wolf-pure-btn');
+  b1.classList.add('playing'); b1.textContent = '⏸ Playing…';
+  setTimeout(()=>{ b1.classList.remove('playing'); b1.textContent = '▶ Pure Fifth'; }, 2000);
+
+  setTimeout(()=>{
+    wolfSynthFifth('wolf_pyth', 0, PYTH_WOLF, 2);
+    const b2 = document.getElementById('wolf-pyth-btn');
+    b2.classList.add('playing'); b2.textContent = '⏸ Playing…';
+    setTimeout(()=>{ b2.classList.remove('playing'); b2.textContent = '▶ Wolf Fifth'; }, 2000);
+  }, 2200);
+
+  setTimeout(()=>{
+    wolfSynthFifth('wolf_mean', 0, MEANTONE_WOLF, 2);
+    const b3 = document.getElementById('wolf-mean-btn');
+    b3.classList.add('playing'); b3.textContent = '⏸ Playing…';
+    setTimeout(()=>{ b3.classList.remove('playing'); b3.textContent = '▶ Meantone Wolf'; }, 2000);
+  }, 4400);
+}
 
 // ═══════════════════════════════════════════════
 //  BACH — WERCKMEISTER III

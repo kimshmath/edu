@@ -1037,6 +1037,167 @@ footer {
   .key-color-grid { grid-template-columns: repeat(6, 1fr); }
   .extreme-presets { grid-template-columns: repeat(2, 1fr); }
 }
+/* ─── Wolf Fifth ─── */
+.wolf-circle-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 1.5rem auto;
+}
+.wolf-circle-wrap canvas { display: block; width: 100%; }
+.wolf-interval-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.8rem;
+  margin: 1.2rem 0;
+}
+.wolf-card {
+  background: rgba(0,0,0,0.2);
+  border-radius: 12px;
+  padding: 1.2rem;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.03);
+  position: relative;
+  overflow: hidden;
+}
+.wolf-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+}
+.wolf-card.pure-c::before { background: linear-gradient(90deg, transparent, #5db8a3, transparent); }
+.wolf-card.pyth-c::before { background: linear-gradient(90deg, transparent, var(--coral), transparent); }
+.wolf-card.mean-c::before { background: linear-gradient(90deg, transparent, var(--purple), transparent); }
+.wolf-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+}
+.wolf-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.15rem;
+}
+.wolf-cents {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 0.7rem;
+}
+.wolf-play {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+}
+.wolf-play.pure-p { background: rgba(93,184,163,0.1); color: #5db8a3; border: 1px solid rgba(93,184,163,0.2); }
+.wolf-play.pyth-p { background: rgba(251,113,133,0.1); color: var(--coral); border: 1px solid rgba(251,113,133,0.2); }
+.wolf-play.mean-p { background: rgba(167,139,250,0.1); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
+.wolf-play:hover { filter: brightness(1.2); transform: translateY(-1px); }
+.wolf-play.playing { animation: pulse-btn 0.8s ease-in-out infinite alternate; }
+
+.wolf-comma-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 36px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 1.2rem 0;
+}
+.wolf-comma-bar .seg {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.9);
+  transition: all 0.3s;
+  white-space: nowrap;
+  overflow: hidden;
+  min-width: 0;
+}
+
+@media(max-width:640px) {
+  .wolf-interval-grid { grid-template-columns: 1fr; }
+}
+
+/* ─── Digital Audio Demos ─── */
+.bitdepth-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0.6rem 0;
+}
+.bitdepth-row label {
+  min-width: 2.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--mint);
+}
+.bitdepth-row .val {
+  min-width: 3.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: right;
+}
+
+.alias-freq-display {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.alias-freq-card {
+  flex: 1;
+  background: var(--bg3);
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(255,255,255,0.03);
+  text-align: center;
+}
+.alias-freq-card .afl {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.2rem;
+}
+.alias-freq-card .afv {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+.alias-freq-card .afv.ok { color: var(--mint); }
+.alias-freq-card .afv.warn { color: var(--gold); }
+.alias-freq-card .afv.bad { color: var(--coral); }
+
+.alias-status {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  padding: 0.6rem;
+  border-radius: 8px;
+  margin: 0.5rem 0 1rem;
+}
+.alias-status.ok { background: rgba(52,211,153,0.08); color: var(--mint); border: 1px solid rgba(52,211,153,0.15); }
+.alias-status.bad { background: rgba(251,113,133,0.08); color: var(--coral); border: 1px solid rgba(251,113,133,0.15); }
+
+@media(max-width:640px) {
+  .alias-freq-display { flex-direction: column; }
+}
+
 /* ─── Floating badge ─── */
 .floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:lowercase;color:#8db830;background:transparent;padding:.35rem .7rem;text-decoration:none;transition:color .25s,text-shadow .25s,transform .25s;text-shadow:0 0 6px rgba(141,184,48,.4),0 0 16px rgba(141,184,48,.15)}
 .floating-badge:hover{color:#a8d43a;text-shadow:0 0 8px rgba(141,184,48,.65),0 0 22px rgba(141,184,48,.28);transform:translateY(-1px)}
@@ -1285,6 +1446,66 @@ footer {
   </div>
 </section>
 
+<!-- ═══════════════════ WOLF FIFTH ═══════════════════ -->
+<section id="sec-wolf">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">피타고라스 콤마</p>
+      <h2>5도권의 끝에 선 <span class="accent-coral">늑대</span></h2>
+      <p>피타고라스가 사랑한 3:2 비율에는 어두운 비밀이 숨어 있습니다. 완전5도를 열두 번 쌓으면 — C→G→D→A→E→B→F#→C#→G#→D#→A#→F→C — 7옥타브 위의 원래 음으로 돌아와야 합니다. 그런데 <em>돌아오지 않습니다</em>.</p>
+      <div class="fourier-eq">
+        (3/2)<sup>12</sup> = 531441/4096 ≈ 129.746 &nbsp;&nbsp;≠&nbsp;&nbsp; 2<sup>7</sup> = 128
+      </div>
+      <p>이 초과분 — <span class="accent-gold">531441 : 524288</span>이라는 비율, 약 <strong>23.46센트</strong> — 이 바로 <strong>피타고라스 콤마</strong>입니다. 5도권은 실제로 닫히지 않으며, 어딘가에서 하나의 음정이 오차 전체를 떠안아야 합니다. 그 저주받은 음정을 <strong class="accent-coral">울프 5도(wolf fifth)</strong>라 부릅니다: 중세 음악가들이 <em>늑대가 울부짖는 소리</em>에 비유할 만큼 불협화스러운 "5도"입니다.</p>
+    </div>
+
+    <div class="demo-card reveal">
+      <h3 class="accent-gold" style="margin-bottom:0.5rem;">닫히지 않는 원</h3>
+      <p style="font-size:0.8rem;color:var(--muted);margin-bottom:0.5rem;">각 구간을 클릭하면 해당 5도를 들을 수 있습니다. 11개의 순정 5도는 협화음이지만, 마지막 하나는 <em>울부짖습니다</em>.</p>
+
+      <div class="wolf-circle-wrap">
+        <canvas id="wolf-circle-canvas" width="500" height="500"></canvas>
+      </div>
+
+      <div class="wolf-comma-bar" id="wolf-comma-bar">
+        <!-- filled by JS -->
+      </div>
+
+      <div class="audio-note" style="margin-top:0.5rem;">5도권을 닫는 세 가지 "5도"를 비교합니다</div>
+
+      <div class="wolf-interval-grid">
+        <div class="wolf-card pure-c">
+          <div class="wolf-label" style="color:#5db8a3;">순정 5도</div>
+          <div class="wolf-title" style="color:#5db8a3;">3 : 2</div>
+          <div class="wolf-cents">701.96센트</div>
+          <button class="wolf-play pure-p" id="wolf-pure-btn" onclick="wolfPlay('pure')">▶ 순정 5도</button>
+        </div>
+        <div class="wolf-card pyth-c">
+          <div class="wolf-label" style="color:var(--coral);">피타고라스 울프</div>
+          <div class="wolf-title" style="color:var(--coral);">678.49¢</div>
+          <div class="wolf-cents">순정보다 −23.5¢</div>
+          <button class="wolf-play pyth-p" id="wolf-pyth-btn" onclick="wolfPlay('pyth')">▶ 울프 5도</button>
+        </div>
+        <div class="wolf-card mean-c">
+          <div class="wolf-label" style="color:var(--purple);">중전율 울프</div>
+          <div class="wolf-title" style="color:var(--purple);">737.64¢</div>
+          <div class="wolf-cents">순정보다 +35.7¢</div>
+          <button class="wolf-play mean-p" id="wolf-mean-btn" onclick="wolfPlay('mean')">▶ 중전율 울프</button>
+        </div>
+      </div>
+
+      <div class="compare-row">
+        <button class="compare-btn" onclick="wolfPlayAll()">▶ 순정 5도 → 피타고라스 울프 → 중전율 울프 순차 비교</button>
+      </div>
+    </div>
+
+    <div class="inst-explanation reveal" style="border-left-color:var(--coral);">
+      <p><strong style="color:var(--text);">두 마리의 늑대, 두 시대</strong> — 피타고라스 조율에서 울프 5도는 <em>좁습니다</em>(678¢): 11개의 순정 3:2 5도가 7옥타브를 초과하므로, 마지막 5도가 압축됩니다. 반면 1/4 콤마 중전율(르네상스 표준)에서는 각 5도를 좁혀 장3도를 순정에 맞추므로, 누적된 여분이 마지막 "5도"를 기괴할 만큼 <em>넓게</em>(738¢) 만듭니다. 하나는 조여서, 다른 하나는 부풀어서 — 둘 다 울부짖습니다.</p>
+      <p style="margin-top:0.8rem;"><strong style="color:var(--text);">건반 악기의 숙명</strong> — 바이올리니스트나 성악가는 실시간으로 음높이를 조절할 수 있습니다. 하프시코드는 그럴 수 없습니다. 울프가 건반 악기의 문제였던 이유입니다: 오르가니스트와 하프시코드 연주자는 <em>나쁜 조를 피해서</em> 연주해야 했습니다. <em>모든 조</em>에서 울프 없이 연주하고 싶다는 열망이 바로 Well-Temperament의 발명을, 그리고 결국 평균율의 등장을 이끌었습니다.</p>
+    </div>
+  </div>
+</section>
+
 <!-- ═══════════════════ BACH & WELL-TEMPERAMENT ═══════════════════ -->
 <section id="sec-bach">
   <div class="section-inner">
@@ -1496,7 +1717,7 @@ footer {
 
     <div class="demo-card reveal">
       <h3 class="accent-mint" style="margin-bottom: 1rem;">샘플링 시뮬레이터</h3>
-      <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem;">샘플링 레이트를 낮추면 소리가 어떻게 변하는지 눈으로 확인하세요. 빨간 점이 디지털 샘플, 파란 곡선이 원래 아날로그 신호입니다.</p>
+      <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem;">샘플링 레이트를 낮추면 소리가 어떻게 변하는지 눈으로 확인하세요. 빨간 점이 디지털 샘플, 파란 곡선이 원래 아날로그 신호입니다. <strong>재생을 눌러 귀로도 확인해 보세요.</strong></p>
       <div class="canvas-wrap">
         <span class="wave-label" id="sampling-label">Samples: 44 / 주기</span>
         <canvas id="sampling-canvas" height="200"></canvas>
@@ -1506,6 +1727,72 @@ footer {
         <input type="range" id="sample-rate-slider" min="4" max="80" value="44" step="1">
         <span class="val" id="sr-val">44 / 주기</span>
       </div>
+      <div class="slider-row">
+        <label style="color:var(--mint);">Bits</label>
+        <input type="range" id="bitdepth-slider" min="2" max="16" value="16" step="1">
+        <span class="val" id="bitdepth-val">16비트</span>
+      </div>
+      <div class="btn-group" style="margin-top:0.8rem;">
+        <button class="btn btn-gold" id="play-crushed-btn" onclick="toggleCrushed()">▶ 열화된 소리 재생</button>
+        <button class="btn" onclick="setCrushPreset(44,16)">CD 음질</button>
+        <button class="btn" onclick="setCrushPreset(20,12)">적정 수준</button>
+        <button class="btn" onclick="setCrushPreset(10,8)">Lo-fi</button>
+        <button class="btn" onclick="setCrushPreset(6,4)">NES 시대</button>
+        <button class="btn" onclick="setCrushPreset(4,2)">극한</button>
+      </div>
+      <div class="audio-note">배음이 포함된 440 Hz 음을 샘플링 레이트와 비트 심도에 따라 열화시킨 결과</div>
+    </div>
+
+    <div class="demo-card reveal">
+      <h3 class="accent-coral" style="margin-bottom: 1rem;">에일리어싱 — 유령 주파수</h3>
+      <p style="font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem;">신호 주파수가 샘플링 레이트의 절반(<strong>나이퀴스트 한계</strong>)을 넘으면, 디지털 신호는 단순히 음질이 떨어지는 것이 아니라 <em>완전히 다른 주파수</em>로 변합니다. 이 유령 음을 <strong>에일리어스(alias)</strong>라 부릅니다.</p>
+
+      <div class="canvas-wrap">
+        <span class="wave-label" id="alias-canvas-label">원래 신호 vs 복원 신호</span>
+        <canvas id="alias-canvas" height="200"></canvas>
+      </div>
+
+      <div class="slider-row">
+        <label style="color:var(--sky);">f</label>
+        <input type="range" id="alias-freq-slider" min="100" max="4000" value="440" step="10">
+        <span class="val" id="alias-freq-val">440 Hz</span>
+      </div>
+      <div class="slider-row">
+        <label style="color:var(--coral);">f<sub>s</sub></label>
+        <input type="range" id="alias-sr-slider" min="500" max="8000" value="4000" step="100">
+        <span class="val" id="alias-sr-val">4000 Hz</span>
+      </div>
+
+      <div class="alias-freq-display">
+        <div class="alias-freq-card">
+          <div class="afl">신호 주파수</div>
+          <div class="afv ok" id="alias-sig-display">440 Hz</div>
+        </div>
+        <div class="alias-freq-card">
+          <div class="afl">나이퀴스트 한계 (f<sub>s</sub>/2)</div>
+          <div class="afv" id="alias-nyq-display" style="color:var(--gold);">2000 Hz</div>
+        </div>
+        <div class="alias-freq-card">
+          <div class="afl">실제로 들리는 음</div>
+          <div class="afv" id="alias-heard-display">440 Hz</div>
+        </div>
+      </div>
+
+      <div class="alias-status ok" id="alias-status">✓ 나이퀴스트 이하 — 원음 충실 재현</div>
+
+      <div class="btn-group">
+        <button class="btn btn-gold" id="play-alias-btn" onclick="toggleAlias()">▶ 재생</button>
+        <button class="btn" onclick="setAliasPreset(440,4000)">안전 (440 Hz)</button>
+        <button class="btn" onclick="setAliasPreset(1800,4000)">한계 근처</button>
+        <button class="btn" onclick="setAliasPreset(2500,4000)">에일리어싱!</button>
+        <button class="btn" onclick="setAliasPreset(3500,4000)">유령 음</button>
+      </div>
+      <div class="audio-note">"재생" 버튼은 샘플링 후 실제로 들리는 소리를 재생합니다 — 나이퀴스트를 초과하면 에일리어스가 들립니다</div>
+    </div>
+
+    <div class="inst-explanation reveal" style="border-left-color:var(--mint);">
+      <p><strong style="color:var(--text);">왜 44,100인가?</strong> — 사람의 청각은 약 20,000 Hz까지 감지합니다. 나이퀴스트 정리에 의해 샘플링 레이트는 최소 40,000이어야 합니다. 추가 4,100은 나이퀴스트 직전에 작동하는 아날로그 안티에일리어싱 필터를 위한 여유분입니다. 44,100이라는 숫자는 초기 디지털 비디오 장비와의 호환성도 고려한 것입니다.</p>
+      <p style="margin-top:0.8rem;"><strong style="color:var(--text);">일상 속 에일리어싱</strong> — 영상에서 헬리콥터 날개가 거꾸로 도는 것처럼 보인 적 있으신가요? 이것이 시간적 에일리어싱입니다: 카메라의 프레임레이트(샘플링 레이트)가 날개의 회전 속도에 비해 너무 낮아, 실제와 다른 낮은 주파수로 인식하게 됩니다. 수학적으로 오디오 에일리어싱과 완전히 동일한 원리입니다.</p>
     </div>
   </div>
 </section>
@@ -2320,6 +2607,264 @@ function drawSampling() {
 document.getElementById('sample-rate-slider').addEventListener('input', drawSampling);
 drawSampling();
 
+// Bit depth slider update
+document.getElementById('bitdepth-slider').addEventListener('input', function() {
+  document.getElementById('bitdepth-val').textContent = this.value + '비트';
+});
+
+// ═══════════════════════════════════════════════
+//  BITCRUSHER — Hear sampling degradation
+// ═══════════════════════════════════════════════
+let crushedSource = null, crushedActive = false;
+
+function generateCrushedBuffer() {
+  const sr = +document.getElementById('sample-rate-slider').value;
+  const bits = +document.getElementById('bitdepth-slider').value;
+  const sampleRate = 44100;
+  const duration = 3;
+  const totalSamples = sampleRate * duration;
+  const buffer = actx.createBuffer(1, totalSamples, sampleRate);
+  const data = buffer.getChannelData(0);
+
+  const baseFreq = 440;
+  const harmonics = [1, 0.6, 0.35, 0.22, 0.15, 0.1, 0.06, 0.03];
+  const harmSum = harmonics.reduce((a,b) => a+b, 0);
+
+  const effectiveSR = sr * baseFreq;
+  const holdSamples = Math.max(1, Math.round(sampleRate / effectiveSR));
+  const levels = Math.pow(2, bits);
+
+  let lastSample = 0;
+  for(let i = 0; i < totalSamples; i++) {
+    const t = i / sampleRate;
+    let env = 1;
+    if(t < 0.05) env = t / 0.05;
+    if(t > duration - 0.3) env = (duration - t) / 0.3;
+
+    if(i % holdSamples === 0) {
+      let sample = 0;
+      for(let h = 0; h < harmonics.length; h++) {
+        const hf = baseFreq * (h + 1);
+        if(hf > effectiveSR / 2 && effectiveSR < sampleRate) continue;
+        sample += harmonics[h] * Math.sin(2 * Math.PI * hf * t);
+      }
+      sample /= harmSum;
+      sample = Math.round(sample * (levels / 2)) / (levels / 2);
+      lastSample = sample * env * 0.4;
+    }
+    data[i] = lastSample;
+  }
+  return buffer;
+}
+
+function toggleCrushed() {
+  ensureAudio();
+  const btn = document.getElementById('play-crushed-btn');
+  if(crushedActive) {
+    try { crushedSource.stop(); } catch(e) {}
+    crushedActive = false;
+    btn.textContent = '▶ 열화된 소리 재생';
+    btn.classList.remove('playing');
+    return;
+  }
+  const buf = generateCrushedBuffer();
+  crushedSource = actx.createBufferSource();
+  crushedSource.buffer = buf;
+  crushedSource.connect(actx.destination);
+  crushedSource.start();
+  crushedActive = true;
+  btn.textContent = '⏸ 정지';
+  btn.classList.add('playing');
+  crushedSource.onended = () => {
+    crushedActive = false;
+    btn.textContent = '▶ 열화된 소리 재생';
+    btn.classList.remove('playing');
+  };
+}
+
+function setCrushPreset(sr, bits) {
+  document.getElementById('sample-rate-slider').value = sr;
+  document.getElementById('bitdepth-slider').value = bits;
+  document.getElementById('sr-val').textContent = sr + ' / 주기';
+  document.getElementById('bitdepth-val').textContent = bits + '비트';
+  document.getElementById('sampling-label').textContent = '샘플: ' + sr + ' / 주기';
+  drawSampling();
+  if(crushedActive) {
+    try { crushedSource.stop(); } catch(e) {}
+    crushedActive = false;
+    setTimeout(() => toggleCrushed(), 50);
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  ALIASING DEMO
+// ═══════════════════════════════════════════════
+let aliasOsc = null, aliasGain = null, aliasActive = false;
+
+const aliasCanvas = document.getElementById('alias-canvas');
+const aliasCtx = aliasCanvas.getContext('2d');
+
+function computeAlias(freq, sr) {
+  const nyquist = sr / 2;
+  if(freq <= nyquist) return freq;
+  let f = freq % sr;
+  if(f > nyquist) f = sr - f;
+  return f;
+}
+
+function updateAliasUI() {
+  const freq = +document.getElementById('alias-freq-slider').value;
+  const sr = +document.getElementById('alias-sr-slider').value;
+  const nyquist = sr / 2;
+  const aliasFreq = computeAlias(freq, sr);
+  const isAliased = freq > nyquist;
+
+  document.getElementById('alias-freq-val').textContent = freq + ' Hz';
+  document.getElementById('alias-sr-val').textContent = sr + ' Hz';
+
+  document.getElementById('alias-sig-display').textContent = freq + ' Hz';
+  document.getElementById('alias-sig-display').className = 'afv ' + (isAliased ? 'bad' : 'ok');
+
+  document.getElementById('alias-nyq-display').textContent = nyquist + ' Hz';
+
+  document.getElementById('alias-heard-display').textContent = Math.round(aliasFreq) + ' Hz';
+  document.getElementById('alias-heard-display').className = 'afv ' + (isAliased ? 'bad' : 'ok');
+
+  const statusEl = document.getElementById('alias-status');
+  if(isAliased) {
+    statusEl.className = 'alias-status bad';
+    statusEl.textContent = '✗ 나이퀴스트 초과 — ' + Math.round(aliasFreq) + ' Hz 에일리어스 발생 (잘못된 음!)';
+  } else {
+    statusEl.className = 'alias-status ok';
+    statusEl.textContent = '✓ 나이퀴스트 이하 — ' + Math.round(aliasFreq) + ' Hz 원음 충실 재현';
+  }
+
+  if(aliasActive && aliasOsc) {
+    aliasOsc.frequency.setValueAtTime(aliasFreq, actx.currentTime);
+  }
+}
+
+function drawAliasCanvas() {
+  const w = aliasCanvas.width = aliasCanvas.clientWidth * 2;
+  const h = aliasCanvas.height = 400;
+  aliasCtx.clearRect(0, 0, w, h);
+
+  const freq = +document.getElementById('alias-freq-slider').value;
+  const sr = +document.getElementById('alias-sr-slider').value;
+  const nyquist = sr / 2;
+  const aliasFreq = computeAlias(freq, sr);
+  const isAliased = freq > nyquist;
+
+  const displayFreq = Math.max(freq, 200);
+  const cycles = 4;
+  const timeSpan = cycles / displayFreq;
+
+  // Original analog signal (blue)
+  aliasCtx.beginPath();
+  for(let i = 0; i <= w; i++) {
+    const tt = (i / w) * timeSpan;
+    const y = h / 2 - (h / 3) * Math.sin(2 * Math.PI * freq * tt);
+    i === 0 ? aliasCtx.moveTo(i, y) : aliasCtx.lineTo(i, y);
+  }
+  aliasCtx.strokeStyle = 'rgba(56,189,248,0.35)';
+  aliasCtx.lineWidth = 2;
+  aliasCtx.stroke();
+
+  // Sample points
+  const sampleInterval = 1 / sr;
+  const numSamples = Math.floor(timeSpan / sampleInterval);
+  const samplePoints = [];
+  for(let s = 0; s <= numSamples; s++) {
+    const tt = s * sampleInterval;
+    const x = (tt / timeSpan) * w;
+    const y = h / 2 - (h / 3) * Math.sin(2 * Math.PI * freq * tt);
+    if(x <= w) {
+      samplePoints.push({x, y});
+      aliasCtx.beginPath();
+      aliasCtx.moveTo(x, h/2);
+      aliasCtx.lineTo(x, y);
+      aliasCtx.strokeStyle = 'rgba(251,113,133,0.2)';
+      aliasCtx.lineWidth = 1;
+      aliasCtx.stroke();
+      aliasCtx.beginPath();
+      aliasCtx.arc(x, y, 4, 0, Math.PI * 2);
+      aliasCtx.fillStyle = '#fb7185';
+      aliasCtx.fill();
+    }
+  }
+
+  // Reconstructed alias frequency
+  aliasCtx.beginPath();
+  for(let i = 0; i <= w; i++) {
+    const tt = (i / w) * timeSpan;
+    const y = h / 2 - (h / 3) * Math.sin(2 * Math.PI * aliasFreq * tt);
+    i === 0 ? aliasCtx.moveTo(i, y) : aliasCtx.lineTo(i, y);
+  }
+  aliasCtx.strokeStyle = isAliased ? 'rgba(251,113,133,0.7)' : 'rgba(52,211,153,0.6)';
+  aliasCtx.lineWidth = 2;
+  aliasCtx.setLineDash(isAliased ? [8, 6] : []);
+  aliasCtx.stroke();
+  aliasCtx.setLineDash([]);
+
+  // Zero line
+  aliasCtx.beginPath();
+  aliasCtx.moveTo(0, h/2); aliasCtx.lineTo(w, h/2);
+  aliasCtx.strokeStyle = 'rgba(255,255,255,0.06)';
+  aliasCtx.lineWidth = 1;
+  aliasCtx.stroke();
+
+  // Labels
+  aliasCtx.font = '20px "JetBrains Mono", monospace';
+  aliasCtx.textAlign = 'left';
+  aliasCtx.fillStyle = 'rgba(56,189,248,0.5)';
+  aliasCtx.fillText('원래 ' + freq + ' Hz', 10, 24);
+  aliasCtx.fillStyle = isAliased ? 'rgba(251,113,133,0.7)' : 'rgba(52,211,153,0.5)';
+  aliasCtx.fillText((isAliased ? '에일리어스 ' : '복원 ') + Math.round(aliasFreq) + ' Hz', 10, 48);
+
+  requestAnimationFrame(drawAliasCanvas);
+}
+
+document.getElementById('alias-freq-slider').addEventListener('input', updateAliasUI);
+document.getElementById('alias-sr-slider').addEventListener('input', updateAliasUI);
+updateAliasUI();
+drawAliasCanvas();
+
+function toggleAlias() {
+  ensureAudio();
+  const btn = document.getElementById('play-alias-btn');
+  if(aliasActive) {
+    aliasGain.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + 0.08);
+    setTimeout(() => { try { aliasOsc.stop(); } catch(e) {} aliasOsc = null; aliasActive = false; }, 100);
+    btn.textContent = '▶ 재생';
+    btn.classList.remove('playing');
+    return;
+  }
+  const freq = +document.getElementById('alias-freq-slider').value;
+  const sr = +document.getElementById('alias-sr-slider').value;
+  const aliasFreq = computeAlias(freq, sr);
+
+  aliasOsc = actx.createOscillator();
+  aliasGain = actx.createGain();
+  aliasOsc.type = 'sine';
+  aliasOsc.frequency.value = aliasFreq;
+  aliasGain.gain.value = 0.2;
+  aliasOsc.connect(aliasGain).connect(actx.destination);
+  aliasOsc.start();
+  aliasActive = true;
+  btn.textContent = '⏸ 정지';
+  btn.classList.add('playing');
+}
+
+function setAliasPreset(freq, sr) {
+  document.getElementById('alias-freq-slider').value = freq;
+  document.getElementById('alias-sr-slider').value = sr;
+  updateAliasUI();
+  if(aliasActive && aliasOsc) {
+    const aliasFreq = computeAlias(freq, sr);
+    aliasOsc.frequency.setValueAtTime(aliasFreq, actx.currentTime);
+  }
+}
+
 // ═══════════════════════════════════════════════
 //  HERO CANVAS — ambient waves
 // ═══════════════════════════════════════════════
@@ -2361,7 +2906,7 @@ const observer = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
 // ─── Nav dots ───
-const sections = ['hero','sec-wave','sec-pythagoras','sec-temperament','sec-instruments','sec-extreme','sec-bach','sec-fourier','sec-timbre','sec-brain','sec-digital','sec-closing'];
+const sections = ['hero','sec-wave','sec-pythagoras','sec-temperament','sec-instruments','sec-extreme','sec-wolf','sec-bach','sec-fourier','sec-timbre','sec-brain','sec-digital','sec-closing'];
 const navDots = document.getElementById('nav-dots');
 sections.forEach((id, i) => {
   const dot = document.createElement('button');
@@ -2802,6 +3347,221 @@ function drawBeat() {
   requestAnimationFrame(drawBeat);
 }
 drawBeat();
+
+// ═══════════════════════════════════════════════
+//  WOLF FIFTH — Circle of Fifths & Wolf Interval
+// ═══════════════════════════════════════════════
+const WOLF_NOTES = ['C','G','D','A','E','B','F#','C#','G#','D#','A#','F'];
+const PURE_FIFTH_CENTS = 701.955;
+const PYTH_COMMA = 23.460;
+const PYTH_WOLF = PURE_FIFTH_CENTS - PYTH_COMMA;
+const MEANTONE_FIFTH = 696.578;
+const MEANTONE_WOLF = 1200*7 - 11*MEANTONE_FIFTH;
+
+// Build comma bar
+(function() {
+  const bar = document.getElementById('wolf-comma-bar');
+  for(let i = 0; i < 12; i++) {
+    const seg = document.createElement('div');
+    seg.className = 'seg';
+    if(i < 11) {
+      seg.style.flex = '1';
+      seg.style.background = 'rgba(93,184,163,0.25)';
+      seg.style.borderRight = '1px solid rgba(0,0,0,0.3)';
+      seg.textContent = WOLF_NOTES[i] + '→' + WOLF_NOTES[i+1];
+    } else {
+      seg.style.flex = '1';
+      seg.style.background = 'rgba(251,113,133,0.35)';
+      seg.style.color = 'var(--coral)';
+      seg.textContent = 'F→C 🐺';
+    }
+    bar.appendChild(seg);
+  }
+})();
+
+// Wolf circle canvas
+const wolfCanvas = document.getElementById('wolf-circle-canvas');
+const wolfCtx = wolfCanvas.getContext('2d');
+let wolfHover = -1;
+let wolfPlaying = -1;
+
+function drawWolfCircle() {
+  const dpr = window.devicePixelRatio || 1;
+  const size = wolfCanvas.clientWidth;
+  wolfCanvas.width = size * dpr;
+  wolfCanvas.height = size * dpr;
+  const ctx = wolfCtx;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, size, size);
+
+  const cx = size / 2, cy = size / 2;
+  const R = size * 0.38;
+
+  for(let i = 0; i < 12; i++) {
+    const a1 = (i / 12) * Math.PI * 2 - Math.PI / 2;
+    const a2 = ((i + 1) / 12) * Math.PI * 2 - Math.PI / 2;
+    const aMid = (a1 + a2) / 2;
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, a1 + 0.04, a2 - 0.04);
+    const isWolf = (i === 11);
+    const isHovered = (wolfHover === i);
+    const isPlay = (wolfPlaying === i);
+
+    if(isWolf) {
+      ctx.strokeStyle = isHovered || isPlay ? 'rgba(251,113,133,0.9)' : 'rgba(251,113,133,0.55)';
+      ctx.lineWidth = isHovered || isPlay ? 6 : 4;
+    } else {
+      ctx.strokeStyle = isHovered || isPlay ? 'rgba(93,184,163,0.9)' : 'rgba(93,184,163,0.3)';
+      ctx.lineWidth = isHovered || isPlay ? 5 : 2.5;
+    }
+    ctx.stroke();
+
+    if(isHovered || isPlay) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, a1 + 0.04, a2 - 0.04);
+      ctx.strokeStyle = isWolf ? 'rgba(251,113,133,0.2)' : 'rgba(93,184,163,0.15)';
+      ctx.lineWidth = 14;
+      ctx.stroke();
+    }
+  }
+
+  for(let i = 0; i < 12; i++) {
+    const a = (i / 12) * Math.PI * 2 - Math.PI / 2;
+    const lx = cx + Math.cos(a) * (R + 22);
+    const ly = cy + Math.sin(a) * (R + 22);
+
+    ctx.font = '500 13px "JetBrains Mono", monospace';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = (i === 11 || i === 0) ? 'rgba(251,113,133,0.9)' :
+                    wolfHover === i || wolfHover === (i-1+12)%12 ? '#fff' : 'rgba(224,230,240,0.6)';
+    ctx.fillText(WOLF_NOTES[i], lx, ly);
+  }
+
+  ctx.textAlign = 'center';
+  ctx.font = '600 14px "Fraunces", Georgia, serif';
+  ctx.fillStyle = 'rgba(240,180,41,0.8)';
+  ctx.fillText('5도권', cx, cy - 18);
+  ctx.font = '400 11px "JetBrains Mono", monospace';
+  ctx.fillStyle = 'rgba(123,141,181,0.7)';
+  ctx.fillText('(3/2)¹² ≠ 2⁷', cx, cy + 4);
+  ctx.fillText('Δ = 23.46¢', cx, cy + 22);
+
+  const wa1 = (11 / 12) * Math.PI * 2 - Math.PI / 2;
+  const wa2 = (12 / 12) * Math.PI * 2 - Math.PI / 2;
+  const wMid = (wa1 + wa2) / 2;
+  const wx = cx + Math.cos(wMid) * (R - 28);
+  const wy = cy + Math.sin(wMid) * (R - 28);
+  ctx.font = '16px sans-serif';
+  ctx.fillText('🐺', wx, wy);
+
+  requestAnimationFrame(drawWolfCircle);
+}
+
+wolfCanvas.addEventListener('mousemove', function(e) {
+  const rect = wolfCanvas.getBoundingClientRect();
+  const x = e.clientX - rect.left - rect.width/2;
+  const y = e.clientY - rect.top - rect.height/2;
+  let angle = Math.atan2(y, x) + Math.PI/2;
+  if(angle < 0) angle += Math.PI * 2;
+  wolfHover = Math.floor(angle / (Math.PI * 2) * 12) % 12;
+  wolfCanvas.style.cursor = 'pointer';
+});
+wolfCanvas.addEventListener('mouseleave', function() { wolfHover = -1; });
+wolfCanvas.addEventListener('click', function() {
+  if(wolfHover >= 0) wolfPlayFifth(wolfHover);
+});
+
+drawWolfCircle();
+
+// Wolf audio
+const wolfNodes = {};
+function wolfSynthFifth(id, baseCents, intervalCents, dur=2.5) {
+  ensureAudio();
+  if(wolfNodes[id]) { wolfStopNode(id); return; }
+  const baseFreq = 261.63 * Math.pow(2, baseCents/1200);
+  const topFreq = baseFreq * Math.pow(2, intervalCents/1200);
+  const freqs = [baseFreq, topFreq];
+  const harms = [1, .6, .35, .2, .12, .07];
+  const harmSum = harms.reduce((a,b)=>a+b,0);
+  const perOsc = 0.4 / (harmSum * freqs.length);
+
+  const limiter = createLimiter(actx);
+  const comp = actx.createDynamicsCompressor();
+  comp.threshold.value=-12;comp.knee.value=6;comp.ratio.value=20;comp.attack.value=0.001;comp.release.value=0.05;
+  limiter.connect(comp); comp.connect(actx.destination);
+
+  const master=actx.createGain(); master.gain.value=0; master.connect(limiter);
+  const nodes=[];
+  freqs.forEach(f=>{
+    harms.forEach((amp,i)=>{
+      if(amp<0.01)return;
+      const hf=f*(i+1); if(hf>12000)return;
+      const osc=actx.createOscillator(); const g=actx.createGain();
+      osc.type='sine'; osc.frequency.value=hf; g.gain.value=amp*perOsc;
+      osc.connect(g).connect(master); osc.start(); nodes.push({osc,gain:g});
+    });
+  });
+  const now=actx.currentTime;
+  master.gain.setValueAtTime(0,now);
+  master.gain.linearRampToValueAtTime(1,now+0.1);
+  master.gain.setValueAtTime(1,now+dur-0.4);
+  master.gain.exponentialRampToValueAtTime(0.0001,now+dur);
+  const timer=setTimeout(()=>{nodes.forEach(n=>{try{n.osc.stop();}catch(e){}});try{comp.disconnect();limiter.disconnect();}catch(e){}delete wolfNodes[id];},dur*1000+100);
+  wolfNodes[id]={master,nodes,timer,comp,limiter};
+}
+function wolfStopNode(id) {
+  if(!wolfNodes[id]) return;
+  const a=wolfNodes[id]; clearTimeout(a.timer);
+  try{a.master.gain.cancelScheduledValues(actx.currentTime);a.master.gain.setValueAtTime(a.master.gain.value,actx.currentTime);a.master.gain.exponentialRampToValueAtTime(0.0001,actx.currentTime+0.08);}catch(e){}
+  setTimeout(()=>{a.nodes.forEach(n=>{try{n.osc.stop();}catch(e){}}); try{a.comp.disconnect();a.limiter.disconnect();}catch(e){}},100);
+  delete wolfNodes[id];
+}
+
+function wolfPlayFifth(idx) {
+  ensureAudio();
+  const baseCents = idx * PURE_FIFTH_CENTS % 1200;
+  const intervalCents = (idx === 11) ? PYTH_WOLF : PURE_FIFTH_CENTS;
+  wolfPlaying = idx;
+  wolfSynthFifth('circle_'+idx, (idx === 0 ? 0 : idx * 701.955 % 1200), intervalCents, 2);
+  setTimeout(()=>{ wolfPlaying = -1; }, 2000);
+}
+
+function wolfPlay(type) {
+  ensureAudio();
+  let intervalCents, btnId, label;
+  if(type === 'pure') { intervalCents = PURE_FIFTH_CENTS; btnId = 'wolf-pure-btn'; label = '순정 5도'; }
+  else if(type === 'pyth') { intervalCents = PYTH_WOLF; btnId = 'wolf-pyth-btn'; label = '울프 5도'; }
+  else { intervalCents = MEANTONE_WOLF; btnId = 'wolf-mean-btn'; label = '중전율 울프'; }
+
+  wolfSynthFifth('wolf_'+type, 0, intervalCents, 3);
+  const btn = document.getElementById(btnId);
+  btn.classList.add('playing'); btn.textContent = '⏸ 재생 중…';
+  setTimeout(()=>{ btn.classList.remove('playing'); btn.textContent = '▶ ' + label; }, 3000);
+}
+
+function wolfPlayAll() {
+  ensureAudio();
+  wolfSynthFifth('wolf_pure', 0, PURE_FIFTH_CENTS, 2);
+  const b1 = document.getElementById('wolf-pure-btn');
+  b1.classList.add('playing'); b1.textContent = '⏸ 재생 중…';
+  setTimeout(()=>{ b1.classList.remove('playing'); b1.textContent = '▶ 순정 5도'; }, 2000);
+
+  setTimeout(()=>{
+    wolfSynthFifth('wolf_pyth', 0, PYTH_WOLF, 2);
+    const b2 = document.getElementById('wolf-pyth-btn');
+    b2.classList.add('playing'); b2.textContent = '⏸ 재생 중…';
+    setTimeout(()=>{ b2.classList.remove('playing'); b2.textContent = '▶ 울프 5도'; }, 2000);
+  }, 2200);
+
+  setTimeout(()=>{
+    wolfSynthFifth('wolf_mean', 0, MEANTONE_WOLF, 2);
+    const b3 = document.getElementById('wolf-mean-btn');
+    b3.classList.add('playing'); b3.textContent = '⏸ 재생 중…';
+    setTimeout(()=>{ b3.classList.remove('playing'); b3.textContent = '▶ 중전율 울프'; }, 2000);
+  }, 4400);
+}
 
 // ═══════════════════════════════════════════════
 //  BACH — WERCKMEISTER III
