@@ -347,7 +347,7 @@
       <span class="bar-label">Radius</span>
       <button class="cbtn" id="btn-dec" onclick="setRadius(globalR-1)" disabled>&#8722;</button>
       <span id="rval">0</span>
-      <input type="range" id="rslider" min="0" max="6" value="0" step="1"
+      <input type="range" id="rslider" min="0" max="4" value="0" step="1"
              oninput="setRadius(+this.value)">
       <button class="cbtn" id="btn-inc" onclick="setRadius(globalR+1)">&#43;</button>
     </div>
@@ -386,7 +386,7 @@ katex.render(
 // ═══════════════════════════════════════════════════
 let globalR  = 0;
 let showArcs = true;
-const MAX_R  = 6;
+const MAX_R  = 4;
 
 // ═══════════════════════════════════════════════════
 // THREE.JS TREE  (left panel)
