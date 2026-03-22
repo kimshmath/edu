@@ -775,6 +775,117 @@ footer .name{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(-
   </div>
 </section>
 
+<!-- ═══════════════════════════ §11 ═══════════════════════════ -->
+<section class="wrap reveal">
+  <span class="sec-label">§ 11 — 기나긴 그림자</span>
+  <h2><em>모든 것을 바꾼</em> 네 개의 정리</h2>
+  <div class="rule"></div>
+
+  <p style="max-width:860px">푸앵카레 쌍대성은 끝이 아니라 씨앗이었습니다. 이후 한 세기에 걸쳐 같은 토양에서 네 개의 위대한 정리가 자라났습니다: <strong>위상이 해석학을 지배한다</strong>는 사상, 즉 공간의 형태가 그 위에서 일어날 수 있는 일을 결정한다는 사상입니다. 각 정리는 본질적으로, 전역적 위상 불변량이 국소적 기하/해석적 양과 같다는 진술입니다. 이 넷이 합쳐져 현대 기하학의 척추를 이룹니다.</p>
+
+  <div class="dual-panel" style="margin:2.5rem 0">
+    <canvas id="fourTheoremsCanvas" width="900" height="380"></canvas>
+  </div>
+
+  <!-- ① GAUSS–BONNET -->
+  <div style="margin-top:3rem">
+    <h3 style="color:var(--gold2);font-size:1.6rem;margin-bottom:.3rem">① 가우스-보네 정리 <span style="font-size:.85rem;color:var(--muted);font-weight:300">(1848)</span></h3>
+    <div class="rule" style="margin:.8rem 0"></div>
+    <div class="two-col" style="gap:2.5rem">
+      <div>
+        <p>가장 오래되고 가장 구체적인 후손입니다. 가우스 곡률 \(K\)를 가진 닫힌 곡면 \(M\)에 대해,</p>
+        <div class="theorem-box">
+          <span>\(\displaystyle \int_M K \, dA \;=\; 2\pi\,\chi(M)\)</span>
+        </div>
+        <p>좌변은 <strong>국소적</strong>입니다: 점마다 변하는 양인 곡률을 적분합니다. 우변은 <strong>전역적</strong>입니다: 구멍의 개수에만 의존하는 위상 불변량인 오일러 표수 \(\chi\). 곡면을 아무리 구기고, 늘이고, 주름잡아도 — 전체 곡률은 변하지 않습니다.</p>
+        <p>이것이 모든 지표 정리의 원형입니다. 곡률은 기하학이고, \(\chi\)는 위상수학입니다. 가우스-보네는 이 둘이 <em>혼인했다</em>고 말합니다.</p>
+      </div>
+      <div>
+        <div class="info-box">
+          <p>푸앵카레 쌍대성과의 연결: 오일러 표수 \(\chi = \sum(-1)^k \beta_k\)는 쌍대성으로 연결된 호몰로지 군의 랭크인 베티 수로 구성됩니다. 가우스-보네는 이 위상적 양이 순수하게 기하학적인 표현을 가진다고 말합니다. 고차원에서는 <strong>천-가우스-보네 정리</strong>가 \(K\)를 곡률 형식의 Pfaffian으로 대체합니다 — 천-바일 이론의 후손입니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② RIEMANN–ROCH–GROTHENDIECK -->
+  <div style="margin-top:3rem">
+    <h3 style="color:var(--cyan);font-size:1.6rem;margin-bottom:.3rem">② 히르체브루흐-리만-로흐 <span style="font-size:.85rem;color:var(--muted);font-weight:300">(1954 / 1957)</span></h3>
+    <div class="rule" style="margin:.8rem 0"></div>
+    <div class="two-col" style="gap:2.5rem">
+      <div>
+        <p>리만(1857)이 물었습니다: 종수 \(g\)의 컴팩트 리만 곡면 위에서, 지정된 극을 가진 독립적인 유리형 함수가 몇 개인가? 로흐가 정제한 그의 답은</p>
+        <div class="theorem-box" style="font-size:1.15rem">
+          <span>\(\ell(D) - \ell(K - D) = \deg(D) - g + 1\)</span>
+        </div>
+        <p>좌변은 <strong>해석적</strong> 대상(유리형 단면의 공간 차원)을 셉니다. 우변은 <strong>위상적</strong>(인자의 차수와 종수)입니다. 항 \(\ell(K-D)\)는 <strong>세르 쌍대성</strong>의 발현입니다 — 푸앵카레 쌍대성의 대수기하학적 쌍둥이.</p>
+        <p>히르체브루흐(1954)는 <strong>특성류</strong>(토드류, 천 지표)를 사용하여 이를 임의의 차원으로 일반화했습니다. 그리고 그로텐디크(1957)는 놀라운 도약을 했습니다: 정리를 단일 다양체에 대한 진술이 아니라, 다양체 사이의 사상의 함자적 성질로 — K-이론에서 전방 사상을 계산하는 <strong>그로텐디크-리만-로흐 정리</strong>로 재정식화한 것입니다.</p>
+      </div>
+      <div>
+        <div class="info-box">
+          <p>푸앵카레에서 이어지는 실: 세르 쌍대성 \(H^k(X, \mathcal{F}) \cong H^{n-k}(X, \mathcal{F}^\vee \otimes \omega_X)^\vee\)은 푸앵카레 쌍대성의 층-이론적 일반화입니다. 단체 호몰로지를 층 코호몰로지로, 방향류를 표준 다발 \(\omega_X\)로 대체합니다. 리만-로흐 공식은 층의 오일러 표수 — 교대합 \(\sum(-1)^k \dim H^k\) — 를 특성류의 적분으로 계산합니다. 바로 그 패턴입니다: 위상(오일러 표수) = 기하(곡률 데이터).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ ATIYAH–SINGER -->
+  <div style="margin-top:3rem">
+    <h3 style="color:var(--rose);font-size:1.6rem;margin-bottom:.3rem">③ 아티야-싱어 지표 정리 <span style="font-size:.85rem;color:var(--muted);font-weight:300">(1963)</span></h3>
+    <div class="rule" style="margin:.8rem 0"></div>
+    <div class="two-col" style="gap:2.5rem">
+      <div>
+        <p>대통일입니다. \(D\)가 닫힌 다양체 \(M\) 위의 타원 미분 작용소일 때, <strong>해석적 지표</strong>는</p>
+        <div class="theorem-box" style="font-size:1.15rem">
+          <span>\(\mathrm{ind}(D) = \dim\ker D - \dim\ker D^* = \int_M \mathrm{ch}(E)\,\mathrm{td}(TM)\)</span>
+        </div>
+        <p>좌변은 <strong>해석적</strong>입니다: 미분 작용소의 핵과 여핵의 차원 차이를 셉니다 — "해의 수 빼기 장애물의 수." 우변은 <strong>위상적</strong>입니다: 벡터 다발과 다양체의 위상에만 의존하는 특성류(천 지표, 토드류)의 적분입니다.</p>
+        <p>가우스-보네는 \(D = d + d^*\)(드람 작용소)인 특수한 경우입니다. 리만-로흐는 \(D = \bar{\partial} + \bar{\partial}^*\)(돌보 작용소)인 특수한 경우입니다. 아티야-싱어 정리는 둘 다를 포섭하며, 이것들이 하나의 현상의 그림자임을 드러냅니다.</p>
+      </div>
+      <div>
+        <div class="info-box">
+          <p>쌍대성의 역할: 지표의 정의 자체 — \(\dim\ker D - \dim\ker D^*\) — 가 수반 \(D^*\)에 의존하며, 이는 다양체 위의 \(L^2\) 내적으로부터 존재합니다. 닫힌 방향 가능 다양체에서 이 내적은 방향류와 호지 별 연산자로 구성됩니다 — 미분 형식 언어로 표현한 푸앵카레 쌍대성입니다. 호지 정리는 \(H^k_{\mathrm{dR}}(M) \cong \ker \Delta_k\)(조화 형식)이라 말하고, 푸앵카레 쌍대성 \(H^k \cong H^{n-k}\)는 호지 별 동형사상 \(*: \ker\Delta_k \to \ker\Delta_{n-k}\)가 됩니다. 전체 구조물이 쌍대성 위에 서 있습니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ CHERN–SIMONS -->
+  <div style="margin-top:3rem">
+    <h3 style="color:#7ec8a4;font-size:1.6rem;margin-bottom:.3rem">④ 천-사이먼스 이론 <span style="font-size:.85rem;color:var(--muted);font-weight:300">(1974 / 1989)</span></h3>
+    <div class="rule" style="margin:.8rem 0"></div>
+    <div class="two-col" style="gap:2.5rem">
+      <div>
+        <p>놀라운 반전: 천-바일 피적분 함수를 적분하기 <em>전에</em> 무슨 일이 일어날까요? 주 \(G\)-다발 위의 접속 \(A\)를 가진 닫힌 3-다양체 \(M\)에서, <strong>천-사이먼스 불변량</strong>은</p>
+        <div class="theorem-box" style="font-size:1.15rem">
+          <span>\(\displaystyle \mathrm{CS}(A) = \frac{1}{8\pi^2}\int_M \mathrm{tr}\!\left(A \wedge dA + \tfrac{2}{3} A \wedge A \wedge A\right)\)</span>
+        </div>
+        <p>가우스-보네와 달리 이것은 정수가 아닙니다 — 1을 법으로 한 실수(또는 \(\mathbb{Z}\)를 법으로)입니다. 이것은 <strong>이차 특성류</strong>입니다: 3-다양체가 4-다양체의 경계일 수 있기 때문에 나타나는 경계 항이며, 4-다양체 위의 천-바일 적분이 경계에서 천-사이먼스로 환원됩니다.</p>
+        <p>1989년, 에드워드 위튼은 모든 접속에 대한 \(e^{2\pi i k \cdot \mathrm{CS}(A)}\)의 <strong>경로 적분</strong>이 매듭의 <strong>존스 다항식</strong>과 3-다양체 불변량을 생산하는 위상적 양자 장론(TQFT)을 정의함을 보였습니다. 이것은 계시였습니다: 고전적 위상수학(매듭, 3-다양체)은 양자 게이지 이론과 같은 수학에 의해 지배됩니다.</p>
+      </div>
+      <div>
+        <div class="info-box">
+          <p>푸앵카레에서 이어지는 실: 천-사이먼스 이론은 <strong>홀수 차원</strong> 다양체에서 살아갑니다. \((2n-1)\)-다양체 위의 푸앵카레 쌍대성이 \(H^{n-1} \to H^n\)을 사상하여 — "중간 차원" 코호몰로지의 자기 쌍을 만들기 때문입니다. 3-다양체에서 이는 \(H^1\) 위의 반대칭 쌍을 주는데, 이것이 정확히 천-사이먼스가 계산하는 연결 형식입니다. 위튼의 TQFT는 곡면 \(\Sigma\)에 벡터 공간(등각 블록의 공간)을, \(\Sigma\)를 경계로 하는 3-다양체에 그 공간의 벡터를 대응시킵니다 — 양자 장론으로 승격된 푸앵카레 쌍대성의 함자적 구조입니다.</p>
+        </div>
+        <div class="info-box" style="margin-top:1rem;border-left-color:rgba(126,200,164,.6)">
+          <p style="font-size:.9rem">위튼은 이 업적으로 1990년 필즈상을 수상했습니다. 천-사이먼스/존스 다항식 연결은 가장 깊은 위상적 불변량이 조합론이나 대수만이 아니라, 게이지 장의 기하학 — 자연의 근본적 힘을 기술하는 바로 그 장 — 에서 나타남을 보여주었습니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Closing -->
+  <div class="drama-quote" style="margin-top:3.5rem">
+    하나의 등식이 모든 것을 연결합니다: <em>위상 = 해석</em>.
+  </div>
+  <div class="drama-attrib">가우스-보네에서 천-사이먼스까지를 관통하는 공통 실</div>
+
+  <p style="max-width:860px;margin:1.5rem auto 0;text-align:center">각 정리에서, 곡률이나 편미분방정식의 해, 게이지 장처럼 기하학을 어디서나 알아야 하는 것처럼 보이는 양이, 결국 공간의 위상에만 의존함이 드러납니다. 다리는 항상 같습니다: <strong>푸앵카레 쌍대성</strong>으로부터 구축된 <strong>특성류</strong>. 이것이 지난 2세기 기하학의 가장 깊은 교훈입니다: 공간의 형태는 우리가 생각했던 것보다 더 많은 것을 기억하며, 정확히 푸앵카레가 처음 보여준 방식으로 — 구멍의 쌍대 쌍을 통해 — 기억합니다.</p>
+
+</section>
+
+<hr class="sep">
+
 <!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
 <footer>
   <p>단체 호몰로지 · 푸앵카레 쌍대성 · 오일러 표수 · 심플렉틱 교차 형식 · 쌍대 세포 분해</p>
@@ -1063,24 +1174,48 @@ function genTorusMesh(R1, R2, Nu, Nv) {
 }
 
 function genGenus2Mesh(Nu, Nv) {
-  // Two tori merged — figure-eight cross-section
+  // Genus-2 surface: sweep a tube along a 2-lobed (peanut-shaped) spine curve
   const lines = [];
-  const sep = 0.75;
-  function g2pt(u, v) {
-    // parametric genus-2: two torus handles sharing a body
-    const R1 = 0.5, R2 = 0.22;
-    const offset = (Math.cos(u) > 0 ? 1 : -1) * sep * 0.5;
-    const localR1 = R1;
-    const x = (localR1 + R2*Math.cos(v)) * Math.cos(u) + offset * (0.5 + 0.5*Math.cos(u));
-    const y = (localR1 + R2*Math.cos(v)) * Math.sin(u);
-    const z = R2 * Math.sin(v);
-    return [x, y, z];
+  const R0 = 0.45; // base radius of spine
+  const A = 0.28;   // amplitude of lobes (must be < R0 to avoid self-intersection)
+  const R2 = 0.16;  // tube radius
+
+  // Spine curve: r(u) = R0 + A*cos(2u), a 2-lobed curve in the xy-plane
+  function spine(u) {
+    const r = R0 + A * Math.cos(2 * u);
+    return [r * Math.cos(u), r * Math.sin(u), 0];
   }
+  // Numerical tangent
+  function spineTan(u) {
+    const eps = 0.0005;
+    const a = spine(u - eps), b = spine(u + eps);
+    const dx = b[0]-a[0], dy = b[1]-a[1], dz = b[2]-a[2];
+    const len = Math.hypot(dx, dy, dz) || 1;
+    return [dx/len, dy/len, dz/len];
+  }
+  // Surface point: spine(u) + R2 * (normal frame)(v)
+  function g2pt(u, v) {
+    const s = spine(u);
+    const t = spineTan(u);
+    // Normal: perpendicular to tangent in the xy-plane
+    let n1 = [-t[1], t[0], 0];
+    const n1len = Math.hypot(n1[0], n1[1]) || 1;
+    n1 = [n1[0]/n1len, n1[1]/n1len, 0];
+    // Binormal = t × n1 (points in z-direction)
+    const bn = [t[1]*n1[2]-t[2]*n1[1], t[2]*n1[0]-t[0]*n1[2], t[0]*n1[1]-t[1]*n1[0]];
+    return [
+      s[0] + R2*(Math.cos(v)*n1[0] + Math.sin(v)*bn[0]),
+      s[1] + R2*(Math.cos(v)*n1[1] + Math.sin(v)*bn[1]),
+      s[2] + R2*(Math.cos(v)*n1[2] + Math.sin(v)*bn[2])
+    ];
+  }
+  // u-lines (along spine)
   for (let i = 0; i <= Nu; i++) {
     const pts = [];
     for (let j = 0; j <= Nv; j++) pts.push(g2pt((i/Nu)*TAU, (j/Nv)*TAU));
     lines.push(pts);
   }
+  // v-lines (cross-sections)
   for (let j = 0; j <= Nv; j++) {
     const pts = [];
     for (let i = 0; i <= Nu; i++) pts.push(g2pt((i/Nu)*TAU, (j/Nv)*TAU));
@@ -1121,7 +1256,7 @@ let svT = 0;
     const lines = genTorusMesh(0.7, 0.3, 32, 16);
     drawWireframe(svCtx, lines, ry, rx, scale, cx, cy, `rgba(60,184,195,ALPHA)`, 0.2);
   } else if (s.type === 'genus2') {
-    const lines = genGenus2Mesh(40, 16);
+    const lines = genGenus2Mesh(60, 20);
     drawWireframe(svCtx, lines, ry, rx, scale, cx, cy, `rgba(196,122,138,ALPHA)`, 0.2);
   } else if (s.type === 'circle') {
     svCtx.strokeStyle = 'rgba(126,200,164,0.7)'; svCtx.lineWidth = 2.5;
@@ -3254,6 +3389,96 @@ updateGenus(1);
       grad.addColorStop(1,'rgba(201,168,76,0)');
       ctx.fillStyle=grad;
       ctx.beginPath();ctx.arc(sx,sy,sr*3,0,TAU);ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+// §11 — FOUR THEOREMS CANVAS
+// ═══════════════════════════════════════════════════
+(function initFourTheorems() {
+  const c = document.getElementById('fourTheoremsCanvas');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  let t = 0;
+
+  const nodes = [
+    { x: 450, y: 55, label: '푸앵카레 쌍대성', sub: '1895', color: '#e8cc80', r: 38 },
+    { x: 130, y: 180, label: '가우스–보네', sub: '∫K dA = 2πχ', color: '#c9a84c', r: 30 },
+    { x: 370, y: 260, label: '리만–로흐', sub: 'χ(E) = ∫ ch·td', color: '#3cb8c3', r: 30 },
+    { x: 590, y: 310, label: '아티야–싱어', sub: 'ind(D) = ∫ ch·td', color: '#c47a8a', r: 30 },
+    { x: 790, y: 195, label: '천–사이먼스', sub: 'CS(A) mod ℤ', color: '#7ec8a4', r: 30 },
+  ];
+
+  const edges = [
+    { from: 0, to: 1, label: 'χ = Σ(-1)ᵏβₖ' },
+    { from: 0, to: 2, label: '세르 쌍대성' },
+    { from: 0, to: 3, label: '호지 ★' },
+    { from: 0, to: 4, label: '연결 형식' },
+    { from: 1, to: 3, label: '특수한 경우' },
+    { from: 2, to: 3, label: '특수한 경우' },
+  ];
+
+  function draw() {
+    t += 0.008;
+    const w = c.width, h = c.height;
+    ctx.clearRect(0, 0, w, h);
+
+    edges.forEach(e => {
+      const a = nodes[e.from], b = nodes[e.to];
+      const isPrimary = e.from === 0;
+      ctx.strokeStyle = isPrimary ? 'rgba(201,168,76,0.25)' : 'rgba(124,118,147,0.12)';
+      ctx.lineWidth = isPrimary ? 1.5 : 1;
+      if (!isPrimary) ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      ctx.setLineDash([]);
+      const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      const ang = Math.atan2(b.y - a.y, b.x - a.x);
+      const ox = -Math.sin(ang) * 10, oy = Math.cos(ang) * 10;
+      ctx.fillStyle = isPrimary ? 'rgba(201,168,76,0.45)' : 'rgba(124,118,147,0.3)';
+      ctx.font = '9px "JetBrains Mono"';
+      ctx.textAlign = 'center';
+      ctx.fillText(e.label, mx + ox, my + oy);
+    });
+
+    nodes.forEach((n, i) => {
+      const pulse = 1 + 0.05 * Math.sin(t * 2 + i * 1.5);
+      const r = n.r * pulse;
+      const grd = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r * 2.5);
+      grd.addColorStop(0, n.color.replace(')', ',0.12)').replace('rgb', 'rgba'));
+      grd.addColorStop(1, 'rgba(5,6,15,0)');
+      ctx.fillStyle = grd;
+      ctx.beginPath(); ctx.arc(n.x, n.y, r * 2.5, 0, TAU); ctx.fill();
+      ctx.strokeStyle = n.color; ctx.lineWidth = i === 0 ? 2 : 1.2;
+      ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, TAU); ctx.stroke();
+      ctx.fillStyle = 'rgba(5,6,15,0.85)';
+      ctx.beginPath(); ctx.arc(n.x, n.y, r - 1, 0, TAU); ctx.fill();
+      ctx.fillStyle = n.color;
+      ctx.font = i === 0 ? '13px "Noto Sans KR"' : '11px "Noto Sans KR"';
+      ctx.textAlign = 'center';
+      ctx.fillText(n.label, n.x, n.y - 3);
+      ctx.fillStyle = 'rgba(124,118,147,0.7)';
+      ctx.font = '9px "JetBrains Mono"';
+      ctx.fillText(n.sub, n.x, n.y + 12);
+    });
+    ctx.textAlign = 'start';
+
+    edges.forEach(e => {
+      if (e.from !== 0) return;
+      const a = nodes[e.from], b = nodes[e.to];
+      const progress = ((t * 0.3 + e.to * 0.7) % 1);
+      const px = a.x + (b.x - a.x) * progress;
+      const py = a.y + (b.y - a.y) * progress;
+      const alpha = Math.sin(progress * PI) * 0.7;
+      const grd = ctx.createRadialGradient(px, py, 0, px, py, 4);
+      grd.addColorStop(0, `rgba(232,204,128,${alpha})`);
+      grd.addColorStop(1, 'rgba(232,204,128,0)');
+      ctx.fillStyle = grd;
+      ctx.beginPath(); ctx.arc(px, py, 4, 0, TAU); ctx.fill();
     });
 
     requestAnimationFrame(draw);

@@ -775,6 +775,117 @@ footer .name{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(-
   </div>
 </section>
 
+<!-- ═══════════════════════════ §11 ═══════════════════════════ -->
+<section class="wrap reveal">
+  <span class="sec-label">§ 11 — The Long Shadow</span>
+  <h2>Four theorems that <em>changed everything</em></h2>
+  <div class="rule"></div>
+
+  <p style="max-width:860px">Poincaré duality was not an ending — it was a seed. Over the next century, four great theorems grew from the same soil: the idea that <strong>topology constrains analysis</strong>, that the shape of a space dictates what can happen on it. Each theorem is, at heart, a statement that a global topological invariant equals a local geometric or analytic quantity. Together, they form the backbone of modern geometry.</p>
+
+  <div class="dual-panel" style="margin:2.5rem 0">
+    <canvas id="fourTheoremsCanvas" width="900" height="380"></canvas>
+  </div>
+
+  <!-- ① GAUSS–BONNET -->
+  <div style="margin-top:3rem">
+    <h3 style="color:var(--gold2);font-size:1.6rem;margin-bottom:.3rem">① Gauss–Bonnet <span style="font-size:.85rem;color:var(--muted);font-weight:300">(1848)</span></h3>
+    <div class="rule" style="margin:.8rem 0"></div>
+    <div class="two-col" style="gap:2.5rem">
+      <div>
+        <p>The oldest and most concrete descendant. For a closed surface \(M\) with Gaussian curvature \(K\),</p>
+        <div class="theorem-box">
+          <span>\(\displaystyle \int_M K \, dA \;=\; 2\pi\,\chi(M)\)</span>
+        </div>
+        <p>The left side is <strong>local</strong>: it integrates the curvature, a quantity that varies point-to-point. The right side is <strong>global</strong>: the Euler characteristic \(\chi\), a topological invariant that depends only on the number of holes. No matter how you bend the surface — crumple it, stretch it, wrinkle it — the total curvature stays the same.</p>
+        <p>This is the prototype of every index theorem. Curvature is the geometry; \(\chi\) is the topology. Gauss–Bonnet says they are <em>married</em>.</p>
+      </div>
+      <div>
+        <div class="info-box">
+          <p>The connection to Poincaré duality: the Euler characteristic \(\chi = \sum(-1)^k \beta_k\) is built from the Betti numbers, which are the ranks of the homology groups related by duality. Gauss–Bonnet tells us this topological quantity has a purely geometric expression. In higher dimensions, the <strong>Chern–Gauss–Bonnet theorem</strong> replaces \(K\) with the Pfaffian of the curvature form — a descendant of Chern–Weil theory.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② RIEMANN–ROCH–GROTHENDIECK -->
+  <div style="margin-top:3rem">
+    <h3 style="color:var(--cyan);font-size:1.6rem;margin-bottom:.3rem">② Hirzebruch–Riemann–Roch <span style="font-size:.85rem;color:var(--muted);font-weight:300">(1954 / 1957)</span></h3>
+    <div class="rule" style="margin:.8rem 0"></div>
+    <div class="two-col" style="gap:2.5rem">
+      <div>
+        <p>Riemann (1857) asked: on a compact Riemann surface of genus \(g\), how many independent meromorphic functions have prescribed poles? His answer, refined by Roch, was</p>
+        <div class="theorem-box" style="font-size:1.15rem">
+          <span>\(\ell(D) - \ell(K - D) = \deg(D) - g + 1\)</span>
+        </div>
+        <p>The left side counts <strong>analytic</strong> objects (dimensions of spaces of meromorphic sections). The right side is <strong>topological</strong> (the degree of a divisor and the genus). The term \(\ell(K-D)\) is a manifestation of <strong>Serre duality</strong> — the algebraic-geometric twin of Poincaré duality.</p>
+        <p>Hirzebruch (1954) generalized this to arbitrary dimensions using <strong>characteristic classes</strong> (Todd class, Chern character). Then Grothendieck (1957) performed an astonishing leap: he reformulated the theorem not as a statement about a single variety, but as a functorial property of morphisms between varieties — the <strong>Grothendieck–Riemann–Roch theorem</strong>, which computes pushforwards in K-theory.</p>
+      </div>
+      <div>
+        <div class="info-box">
+          <p>The thread from Poincaré: Serre duality \(H^k(X, \mathcal{F}) \cong H^{n-k}(X, \mathcal{F}^\vee \otimes \omega_X)^\vee\) is the sheaf-theoretic generalization of Poincaré duality, replacing simplicial homology with sheaf cohomology and the orientation class with the canonical bundle \(\omega_X\). The Riemann–Roch formula computes the Euler characteristic of a sheaf — the alternating sum \(\sum(-1)^k \dim H^k\) — as an integral of characteristic classes. This is exactly the pattern: topology (Euler characteristic) = geometry (curvature data).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ ATIYAH–SINGER -->
+  <div style="margin-top:3rem">
+    <h3 style="color:var(--rose);font-size:1.6rem;margin-bottom:.3rem">③ Atiyah–Singer Index Theorem <span style="font-size:.85rem;color:var(--muted);font-weight:300">(1963)</span></h3>
+    <div class="rule" style="margin:.8rem 0"></div>
+    <div class="two-col" style="gap:2.5rem">
+      <div>
+        <p>The grand unification. Let \(D\) be an elliptic differential operator on a closed manifold \(M\). The <strong>analytic index</strong> is</p>
+        <div class="theorem-box" style="font-size:1.15rem">
+          <span>\(\mathrm{ind}(D) = \dim\ker D - \dim\ker D^* = \int_M \mathrm{ch}(E)\,\mathrm{td}(TM)\)</span>
+        </div>
+        <p>The left side is <strong>analytic</strong>: it counts the difference between the dimensions of the kernel and cokernel of a differential operator — the "number of solutions minus the number of obstructions." The right side is <strong>topological</strong>: an integral of characteristic classes (Chern character, Todd class) that depend only on the topology of the vector bundle and manifold.</p>
+        <p>Gauss–Bonnet is the special case where \(D = d + d^*\) (the de Rham operator). Riemann–Roch is the special case where \(D = \bar{\partial} + \bar{\partial}^*\) (the Dolbeault operator). The Atiyah–Singer theorem subsumes both, and reveals them as shadows of a single phenomenon.</p>
+      </div>
+      <div>
+        <div class="info-box">
+          <p>The role of duality: the very definition of the index — \(\dim\ker D - \dim\ker D^*\) — relies on the adjoint \(D^*\), which exists because of the \(L^2\) inner product on the manifold. On a closed oriented manifold, this inner product is built from the orientation class and the Hodge star operator — which is Poincaré duality in the language of differential forms. The Hodge theorem says \(H^k_{\mathrm{dR}}(M) \cong \ker \Delta_k\) (harmonic forms), and Poincaré duality \(H^k \cong H^{n-k}\) becomes the Hodge star isomorphism \(*: \ker\Delta_k \to \ker\Delta_{n-k}\). The entire edifice rests on duality.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ CHERN–SIMONS -->
+  <div style="margin-top:3rem">
+    <h3 style="color:#7ec8a4;font-size:1.6rem;margin-bottom:.3rem">④ Chern–Simons Theory <span style="font-size:.85rem;color:var(--muted);font-weight:300">(1974 / 1989)</span></h3>
+    <div class="rule" style="margin:.8rem 0"></div>
+    <div class="two-col" style="gap:2.5rem">
+      <div>
+        <p>A startling twist: what happens to the Chern–Weil integrands <em>before</em> you integrate? On a closed 3-manifold \(M\) with a connection \(A\) on a principal \(G\)-bundle, the <strong>Chern–Simons invariant</strong> is</p>
+        <div class="theorem-box" style="font-size:1.15rem">
+          <span>\(\displaystyle \mathrm{CS}(A) = \frac{1}{8\pi^2}\int_M \mathrm{tr}\!\left(A \wedge dA + \tfrac{2}{3} A \wedge A \wedge A\right)\)</span>
+        </div>
+        <p>Unlike Gauss–Bonnet, this is not an integer — it is a real number defined modulo 1 (or modulo \(\mathbb{Z}\)). It is a <strong>secondary characteristic class</strong>: a boundary term that arises because a 3-manifold can be the boundary of a 4-manifold, and the Chern–Weil integral on the 4-manifold reduces to Chern–Simons on the boundary.</p>
+        <p>In 1989, Edward Witten showed that the <strong>path integral</strong> of \(e^{2\pi i k \cdot \mathrm{CS}(A)}\) over all connections defines a topological quantum field theory (TQFT) that produces the <strong>Jones polynomial</strong> of knots and 3-manifold invariants. This was a revelation: classical topology (knots, 3-manifolds) is governed by the same mathematics as quantum gauge theory.</p>
+      </div>
+      <div>
+        <div class="info-box">
+          <p>The thread from Poincaré: Chern–Simons theory lives on <strong>odd-dimensional</strong> manifolds because Poincaré duality on a \((2n-1)\)-manifold maps \(H^{n-1} \to H^n\) — a self-pairing on the "middle-dimensional" cohomology. For 3-manifolds, this gives a skew-symmetric pairing on \(H^1\), which is precisely the linking form that Chern–Simons computes. Witten's TQFT assigns to a surface \(\Sigma\) a vector space (the space of conformal blocks), and to a 3-manifold bounded by \(\Sigma\) a vector in that space — this is the functorial structure of Poincaré duality elevated to quantum field theory.</p>
+        </div>
+        <div class="info-box" style="margin-top:1rem;border-left-color:rgba(126,200,164,.6)">
+          <p style="font-size:.9rem">Witten was awarded the Fields Medal in 1990 in part for this work. The Chern–Simons/Jones polynomial connection showed that the deepest topological invariants arise not from combinatorics or algebra alone, but from the geometry of gauge fields — the same fields that describe the fundamental forces of nature.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Closing -->
+  <div class="drama-quote" style="margin-top:3.5rem">
+    One equation binds them all: <em>topology = analysis</em>.
+  </div>
+  <div class="drama-attrib">The common thread from Gauss–Bonnet to Chern–Simons</div>
+
+  <p style="max-width:860px;margin:1.5rem auto 0;text-align:center">In each theorem, a quantity that seems to require knowing the geometry everywhere — curvature, solutions to PDEs, gauge fields — turns out to depend only on the shape's topology. The bridge is always the same: <strong>characteristic classes</strong> built from <strong>Poincaré duality</strong>. This is the deepest lesson of the last two centuries of geometry: the shape of a space remembers more than we thought, and it remembers it in exactly the way Poincaré first showed us — through the dual pairing of holes.</p>
+
+</section>
+
+<hr class="sep">
+
 <!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
 <footer>
   <p>Simplicial homology · Poincaré duality · Euler characteristic · Symplectic intersection form · Dual cell decomposition</p>
@@ -1063,24 +1174,48 @@ function genTorusMesh(R1, R2, Nu, Nv) {
 }
 
 function genGenus2Mesh(Nu, Nv) {
-  // Two tori merged — figure-eight cross-section
+  // Genus-2 surface: sweep a tube along a 2-lobed (peanut-shaped) spine curve
   const lines = [];
-  const sep = 0.75;
-  function g2pt(u, v) {
-    // parametric genus-2: two torus handles sharing a body
-    const R1 = 0.5, R2 = 0.22;
-    const offset = (Math.cos(u) > 0 ? 1 : -1) * sep * 0.5;
-    const localR1 = R1;
-    const x = (localR1 + R2*Math.cos(v)) * Math.cos(u) + offset * (0.5 + 0.5*Math.cos(u));
-    const y = (localR1 + R2*Math.cos(v)) * Math.sin(u);
-    const z = R2 * Math.sin(v);
-    return [x, y, z];
+  const R0 = 0.45; // base radius of spine
+  const A = 0.28;   // amplitude of lobes (must be < R0 to avoid self-intersection)
+  const R2 = 0.16;  // tube radius
+
+  // Spine curve: r(u) = R0 + A*cos(2u), a 2-lobed curve in the xy-plane
+  function spine(u) {
+    const r = R0 + A * Math.cos(2 * u);
+    return [r * Math.cos(u), r * Math.sin(u), 0];
   }
+  // Numerical tangent
+  function spineTan(u) {
+    const eps = 0.0005;
+    const a = spine(u - eps), b = spine(u + eps);
+    const dx = b[0]-a[0], dy = b[1]-a[1], dz = b[2]-a[2];
+    const len = Math.hypot(dx, dy, dz) || 1;
+    return [dx/len, dy/len, dz/len];
+  }
+  // Surface point: spine(u) + R2 * (normal frame)(v)
+  function g2pt(u, v) {
+    const s = spine(u);
+    const t = spineTan(u);
+    // Normal: perpendicular to tangent in the xy-plane
+    let n1 = [-t[1], t[0], 0];
+    const n1len = Math.hypot(n1[0], n1[1]) || 1;
+    n1 = [n1[0]/n1len, n1[1]/n1len, 0];
+    // Binormal = t × n1 (points in z-direction)
+    const bn = [t[1]*n1[2]-t[2]*n1[1], t[2]*n1[0]-t[0]*n1[2], t[0]*n1[1]-t[1]*n1[0]];
+    return [
+      s[0] + R2*(Math.cos(v)*n1[0] + Math.sin(v)*bn[0]),
+      s[1] + R2*(Math.cos(v)*n1[1] + Math.sin(v)*bn[1]),
+      s[2] + R2*(Math.cos(v)*n1[2] + Math.sin(v)*bn[2])
+    ];
+  }
+  // u-lines (along spine)
   for (let i = 0; i <= Nu; i++) {
     const pts = [];
     for (let j = 0; j <= Nv; j++) pts.push(g2pt((i/Nu)*TAU, (j/Nv)*TAU));
     lines.push(pts);
   }
+  // v-lines (cross-sections)
   for (let j = 0; j <= Nv; j++) {
     const pts = [];
     for (let i = 0; i <= Nu; i++) pts.push(g2pt((i/Nu)*TAU, (j/Nv)*TAU));
@@ -1121,7 +1256,7 @@ let svT = 0;
     const lines = genTorusMesh(0.7, 0.3, 32, 16);
     drawWireframe(svCtx, lines, ry, rx, scale, cx, cy, `rgba(60,184,195,ALPHA)`, 0.2);
   } else if (s.type === 'genus2') {
-    const lines = genGenus2Mesh(40, 16);
+    const lines = genGenus2Mesh(60, 20);
     drawWireframe(svCtx, lines, ry, rx, scale, cx, cy, `rgba(196,122,138,ALPHA)`, 0.2);
   } else if (s.type === 'circle') {
     svCtx.strokeStyle = 'rgba(126,200,164,0.7)'; svCtx.lineWidth = 2.5;
@@ -3254,6 +3389,113 @@ updateGenus(1);
       grad.addColorStop(1,'rgba(201,168,76,0)');
       ctx.fillStyle=grad;
       ctx.beginPath();ctx.arc(sx,sy,sr*3,0,TAU);ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+// §11 — FOUR THEOREMS CANVAS
+// ═══════════════════════════════════════════════════
+(function initFourTheorems() {
+  const c = document.getElementById('fourTheoremsCanvas');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  let t = 0;
+
+  const nodes = [
+    { x: 450, y: 55, label: 'Poincaré Duality', sub: '1895', color: '#e8cc80', r: 38 },
+    { x: 130, y: 180, label: 'Gauss–Bonnet', sub: '∫K dA = 2πχ', color: '#c9a84c', r: 30 },
+    { x: 370, y: 260, label: 'Riemann–Roch', sub: 'χ(E) = ∫ ch·td', color: '#3cb8c3', r: 30 },
+    { x: 590, y: 310, label: 'Atiyah–Singer', sub: 'ind(D) = ∫ ch·td', color: '#c47a8a', r: 30 },
+    { x: 790, y: 195, label: 'Chern–Simons', sub: 'CS(A) mod ℤ', color: '#7ec8a4', r: 30 },
+  ];
+
+  const edges = [
+    { from: 0, to: 1, label: 'χ = Σ(-1)ᵏβₖ' },
+    { from: 0, to: 2, label: 'Serre duality' },
+    { from: 0, to: 3, label: 'Hodge ★' },
+    { from: 0, to: 4, label: 'linking form' },
+    { from: 1, to: 3, label: 'special case' },
+    { from: 2, to: 3, label: 'special case' },
+  ];
+
+  function draw() {
+    t += 0.008;
+    const w = c.width, h = c.height;
+    ctx.clearRect(0, 0, w, h);
+
+    // Draw edges
+    edges.forEach(e => {
+      const a = nodes[e.from], b = nodes[e.to];
+      const isPrimary = e.from === 0;
+      ctx.strokeStyle = isPrimary ? 'rgba(201,168,76,0.25)' : 'rgba(124,118,147,0.12)';
+      ctx.lineWidth = isPrimary ? 1.5 : 1;
+      if (!isPrimary) ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Edge label
+      const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      const ang = Math.atan2(b.y - a.y, b.x - a.x);
+      const ox = -Math.sin(ang) * 10, oy = Math.cos(ang) * 10;
+      ctx.fillStyle = isPrimary ? 'rgba(201,168,76,0.45)' : 'rgba(124,118,147,0.3)';
+      ctx.font = '9px "JetBrains Mono"';
+      ctx.textAlign = 'center';
+      ctx.fillText(e.label, mx + ox, my + oy);
+    });
+
+    // Draw nodes
+    nodes.forEach((n, i) => {
+      const pulse = 1 + 0.05 * Math.sin(t * 2 + i * 1.5);
+      const r = n.r * pulse;
+
+      // Glow
+      const grd = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r * 2.5);
+      grd.addColorStop(0, n.color.replace(')', ',0.12)').replace('rgb', 'rgba'));
+      grd.addColorStop(1, 'rgba(5,6,15,0)');
+      ctx.fillStyle = grd;
+      ctx.beginPath(); ctx.arc(n.x, n.y, r * 2.5, 0, TAU); ctx.fill();
+
+      // Circle
+      ctx.strokeStyle = n.color;
+      ctx.lineWidth = i === 0 ? 2 : 1.2;
+      ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, TAU); ctx.stroke();
+
+      // Fill
+      ctx.fillStyle = 'rgba(5,6,15,0.85)';
+      ctx.beginPath(); ctx.arc(n.x, n.y, r - 1, 0, TAU); ctx.fill();
+
+      // Label
+      ctx.fillStyle = n.color;
+      ctx.font = i === 0 ? 'italic 13px "Cormorant Garamond"' : 'italic 11px "Cormorant Garamond"';
+      ctx.textAlign = 'center';
+      ctx.fillText(n.label, n.x, n.y - 3);
+
+      // Sub
+      ctx.fillStyle = 'rgba(124,118,147,0.7)';
+      ctx.font = '9px "JetBrains Mono"';
+      ctx.fillText(n.sub, n.x, n.y + 12);
+    });
+
+    ctx.textAlign = 'start';
+
+    // Flowing particles along primary edges
+    edges.forEach(e => {
+      if (e.from !== 0) return;
+      const a = nodes[e.from], b = nodes[e.to];
+      const progress = ((t * 0.3 + e.to * 0.7) % 1);
+      const px = a.x + (b.x - a.x) * progress;
+      const py = a.y + (b.y - a.y) * progress;
+      const alpha = Math.sin(progress * PI) * 0.7;
+      const grd = ctx.createRadialGradient(px, py, 0, px, py, 4);
+      grd.addColorStop(0, `rgba(232,204,128,${alpha})`);
+      grd.addColorStop(1, 'rgba(232,204,128,0)');
+      ctx.fillStyle = grd;
+      ctx.beginPath(); ctx.arc(px, py, 4, 0, TAU); ctx.fill();
     });
 
     requestAnimationFrame(draw);
