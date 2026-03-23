@@ -15,6 +15,7 @@
 <title>The Mathematics of Sound — An Interactive Exploration</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="sound_ios.css">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -2605,11 +2606,25 @@ function drawSampling() {
   sampCtx.stroke();
 }
 document.getElementById('sample-rate-slider').addEventListener('input', drawSampling);
+document.getElementById('sample-rate-slider').addEventListener('change', function() {
+  if(crushedActive) {
+    try { crushedSource.stop(); } catch(e) {}
+    crushedActive = false;
+    setTimeout(() => toggleCrushed(), 50);
+  }
+});
 drawSampling();
 
 // Bit depth slider update
 document.getElementById('bitdepth-slider').addEventListener('input', function() {
   document.getElementById('bitdepth-val').textContent = this.value + '-bit';
+});
+document.getElementById('bitdepth-slider').addEventListener('change', function() {
+  if(crushedActive) {
+    try { crushedSource.stop(); } catch(e) {}
+    crushedActive = false;
+    setTimeout(() => toggleCrushed(), 50);
+  }
 });
 
 // ═══════════════════════════════════════════════
@@ -3744,5 +3759,6 @@ function bachPlayAll() {
     async>
   </script>
 </div>
+<script src="sound_ios_bridge.js"></script>
 </body>
 </html>

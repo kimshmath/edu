@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RQVK6SF2E6');
+    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Does a Machine Imagine? — The Mathematics of Adversarial Creation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#080d1a;--bg2:#0c1326;--bg3:#111b38;--card:#131f42;--gold:#f0b429;--gold-dim:#c4912080;--sky:#38bdf8;--purple:#a78bfa;--coral:#fb7185;--mint:#34d399;--text:#e0e6f0;--muted:#7b8db5;--font-display:'Fraunces',Georgia,serif;--font-body:'DM Sans',sans-serif;--font-mono:'JetBrains Mono',monospace}
+html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-weight:300;line-height:1.7;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:3px}
+body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
+section{min-height:100vh;padding:6rem 2rem;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.section-inner{max-width:900px;width:100%}
+h1{font-family:var(--font-display);font-size:clamp(2.8rem,6vw,5rem);font-weight:700;line-height:1.15;letter-spacing:-0.02em;color:#fff}
+h2{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,3rem);font-weight:700;line-height:1.2;color:#fff;margin-bottom:1.5rem}
+h3{font-family:var(--font-body);font-size:1.1rem;font-weight:500;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:0.5rem}
+p{margin-bottom:1rem}.accent-gold{color:var(--gold)}.accent-sky{color:var(--sky)}.accent-purple{color:var(--purple)}.accent-coral{color:var(--coral)}.accent-mint{color:var(--mint)}
+.section-num{font-family:var(--font-mono);font-size:0.75rem;color:var(--gold);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.5rem;opacity:0.7}
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;opacity:0.5}
+#hero .content{position:relative;z-index:2}#hero h1{margin-bottom:1rem}
+#hero .subtitle{font-family:var(--font-display);font-size:clamp(1.1rem,2.5vw,1.5rem);color:var(--coral);font-style:italic;margin-bottom:2.5rem}
+#hero .tagline{color:var(--muted);font-size:0.95rem;max-width:600px;margin:0 auto 2.5rem}
+.start-btn{display:inline-flex;align-items:center;gap:0.6rem;padding:0.9rem 2.2rem;background:transparent;border:1.5px solid var(--gold);color:var(--gold);font-family:var(--font-body);font-size:1rem;font-weight:500;border-radius:60px;cursor:pointer;transition:all 0.3s;letter-spacing:0.05em;text-decoration:none}
+.start-btn:hover{background:var(--gold);color:var(--bg);transform:translateY(-2px);box-shadow:0 8px 30px rgba(240,180,41,0.25)}
+#nav-dots{position:fixed;right:1.5rem;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:12px}
+.nav-dot{width:10px;height:10px;border-radius:50%;background:var(--muted);opacity:0.3;cursor:pointer;transition:all 0.3s;border:none}
+.nav-dot.active{opacity:1;background:var(--gold);transform:scale(1.4)}
+.demo-card{background:var(--card);border-radius:16px;padding:2rem;margin:1.5rem 0;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.04)}
+.demo-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--coral),var(--purple),var(--gold));opacity:0.6}
+.explanation-card{background:rgba(0,0,0,0.2);border-radius:14px;padding:1.5rem;margin:1.5rem 0;border-left:3px solid var(--gold);font-size:0.92rem}
+.btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.55rem 1.3rem;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.04);color:var(--text);font-family:var(--font-body);font-size:0.85rem;border-radius:8px;cursor:pointer;transition:all 0.25s;font-weight:400}
+.btn:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.25);transform:translateY(-1px)}
+.btn.active{border-color:var(--gold);background:rgba(240,180,41,0.12);color:var(--gold)}
+.btn-gold{border-color:var(--gold);color:var(--gold)}.btn-gold:hover{background:var(--gold);color:var(--bg)}
+.btn-group{display:flex;gap:0.5rem;flex-wrap:wrap;margin:1rem 0}
+.slider-row{display:flex;align-items:center;gap:1rem;margin:0.6rem 0}
+.slider-row label{min-width:2rem;font-family:var(--font-mono);font-size:0.85rem;color:var(--gold)}
+.slider-row .val{min-width:4rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--muted);text-align:right}
+input[type="range"]{-webkit-appearance:none;flex:1;height:4px;background:var(--bg3);border-radius:2px;outline:none}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer}
+.canvas-wrap{position:relative;width:100%;background:rgba(0,0,0,0.25);border-radius:12px;overflow:hidden;margin:1rem 0}
+.canvas-wrap canvas{display:block;width:100%}
+.wave-label{position:absolute;top:8px;left:12px;font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);z-index:2}
+.stat-row{display:flex;gap:0.8rem;margin:1rem 0}
+.stat-box{flex:1;background:var(--bg3);border-radius:10px;padding:0.8rem 1rem;border:1px solid rgba(255,255,255,0.03)}
+.stat-box .sl{font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:0.2rem}
+.stat-box .sv{font-family:var(--font-mono);font-size:1.1rem;font-weight:500;color:var(--gold)}
+.math-block{font-family:var(--font-mono);font-size:clamp(0.85rem,1.8vw,1.1rem);color:var(--gold);text-align:center;padding:0.8rem 1rem;background:var(--bg3);border-radius:10px;border:1px solid rgba(240,180,41,0.15);margin:1rem 0;line-height:1.8;overflow-x:auto}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.8s ease,transform 0.8s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.audio-note{display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:var(--muted);margin:0.5rem 0}.audio-note::before{content:'🔊'}
+.rosetta-simple{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.82rem}
+.rosetta-simple th{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.7rem 0.6rem;border-bottom:2px solid rgba(255,255,255,0.08);text-align:left;color:var(--muted)}
+.rosetta-simple td{padding:0.6rem;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--text);line-height:1.5;vertical-align:top}
+.rosetta-simple .rs-icon{font-size:1.1rem;text-align:center}
+#audio-notice{position:fixed;inset:0;z-index:10000;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:3vh 0;background:rgba(8,13,26,0.92);backdrop-filter:blur(12px);animation:notice-in 0.4s ease}
+@keyframes notice-in{from{opacity:0}to{opacity:1}}
+.notice-card{max-width:440px;width:90%;background:var(--bg3);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:2rem 1.8rem;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);margin:auto}
+.notice-icon{font-size:3rem;margin-bottom:1rem;display:block}.notice-card h2{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:0.8rem}
+.notice-card p{font-size:0.88rem;color:var(--text);line-height:1.7;margin-bottom:0.6rem}
+.notice-start{display:inline-flex;align-items:center;gap:0.5rem;padding:0.85rem 2.5rem;background:var(--gold);color:var(--bg);border:none;border-radius:60px;font-family:var(--font-body);font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.3s;margin-top:0.8rem}
+.notice-start:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(240,180,41,0.3)}
+.notice-vol{display:flex;align-items:center;justify-content:center;gap:0.5rem;margin:0.8rem 0;font-family:var(--font-mono);font-size:0.8rem;color:var(--gold)}
+.notice-vol .vol-bars{display:flex;gap:2px;align-items:flex-end}
+.notice-vol .vol-bar{width:4px;background:var(--gold);border-radius:2px;animation:vb 0.6s ease-in-out infinite alternate}
+.notice-vol .vol-bar:nth-child(1){height:8px;animation-delay:0s}.notice-vol .vol-bar:nth-child(2){height:14px;animation-delay:0.1s}.notice-vol .vol-bar:nth-child(3){height:20px;animation-delay:0.2s}.notice-vol .vol-bar:nth-child(4){height:14px;animation-delay:0.3s}.notice-vol .vol-bar:nth-child(5){height:8px;animation-delay:0.4s}
+@keyframes vb{from{transform:scaleY(0.5);opacity:0.5}to{transform:scaleY(1);opacity:1}}
+footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
+.floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:lowercase;color:#8db830;background:transparent;padding:.35rem .7rem;text-decoration:none;transition:color .25s,text-shadow .25s,transform .25s;text-shadow:0 0 6px rgba(141,184,48,.4),0 0 16px rgba(141,184,48,.15)}
+.floating-badge:hover{color:#a8d43a;text-shadow:0 0 8px rgba(141,184,48,.65),0 0 22px rgba(141,184,48,.28);transform:translateY(-1px)}
+.vs-badge{display:inline-block;font-family:var(--font-mono);font-size:0.65rem;padding:0.15rem 0.5rem;border-radius:4px;letter-spacing:0.08em;vertical-align:middle}
+@media(max-width:640px){section{padding:4rem 1.2rem}#nav-dots{display:none}.demo-card{padding:1.2rem}.stat-row{flex-direction:column}}
+</style>
+</head>
+<body>
+
+<div id="audio-notice"><div class="notice-card"><span class="notice-icon">🎭</span><h2>Does a Machine Imagine?</h2><p>Watch the duel between forger and detective unfold in real time.<br><strong>Sound enriches the experience.</strong></p><div class="notice-vol"><div class="vol-bars"><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div></div><span>Set volume to a comfortable level</span></div><button class="notice-start" onclick="dismissNotice()">✨ Begin</button></div></div>
+<nav id="nav-dots"></nav>
+
+<!-- HERO -->
+<section id="hero"><canvas id="hero-canvas"></canvas><div class="content">
+<h3 class="accent-coral">A Mathematical Inquiry into AI · Part IV</h3>
+<h1>Does a Machine<br><span class="accent-coral">Imagine</span>?</h1>
+<p class="subtitle">Or does the duel of two neural networks produce the illusion of imagination?</p>
+<p class="tagline">Human imagination is born from experience. Machine imagination is born from <em>conflict</em>. A forger creates what never existed; a detective tries to see through it. In this adversarial game — unintended by anyone — creation happens.</p>
+<div style="display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;">
+<button class="start-btn" onclick="initAudio();document.getElementById('sec-forger').scrollIntoView({behavior:'smooth'})">✨ Start Exploring</button>
+<a href="remember.html" class="start-btn" style="border-color:var(--muted);color:var(--muted);">← Part III: Memory</a>
+</div>
+</div></section>
+
+<!-- §00 — THE FORGER'S GAME -->
+<section id="sec-forger"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">00 — THE FORGER'S GAME</p>
+<h2>Real or Fake — Can You <span class="accent-coral">Tell?</span></h2>
+<p>Try to distinguish GAN-generated patterns from real data. What you're doing right now is exactly what a Discriminator does.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">Different tones for right and wrong</div>
+<div id="forger-quiz" style="min-height:200px;display:flex;align-items:center;justify-content:center;">
+<div style="text-align:center;">
+<div style="font-family:var(--font-display);font-size:1.2rem;color:var(--muted);margin-bottom:1rem;">One pattern is regular — the other is a GAN's imitation</div>
+<canvas id="forger-canvas" width="700" height="250" style="width:100%;max-width:700px;background:rgba(0,0,0,0.2);border-radius:10px;"></canvas>
+<div class="btn-group" style="justify-content:center;margin-top:1rem;">
+<button class="btn" onclick="answerForger('L')" id="forger-L">◀ Left is real</button>
+<button class="btn" onclick="answerForger('R')" id="forger-R">Right is real ▶</button>
+</div>
+</div>
+</div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">Round</div><div class="sv" id="fg-round">0 <span style="font-size:0.7rem;color:var(--muted);">/ 6</span></div></div>
+<div class="stat-box"><div class="sl">Correct</div><div class="sv" id="fg-score" style="color:var(--mint);">0</div></div>
+<div class="stat-box"><div class="sl">Your accuracy</div><div class="sv" id="fg-acc">—</div></div>
+</div>
+</div>
+<div class="explanation-card reveal" style="border-left-color:var(--coral);">
+<p><strong style="color:#fff;">This is the core idea behind GANs.</strong> — In 2014, Ian Goodfellow conceived the idea during an argument at a bar: what if you pit two neural networks against each other? One forges (Generator), the other detects (Discriminator). The moment the forger perfectly fools the detective — that's when "imagination" becomes indistinguishable from reality.</p>
+</div>
+</div></section>
+
+<!-- §01 — THE GENERATOR -->
+<section id="sec-gen"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">01 — FROM NOISE TO FORM</p>
+<h2>The <span class="accent-purple">Generator</span>: Creating Something from Nothing</h2>
+<p>The Generator takes a <strong>random noise vector</strong> and produces data. At first, pure garbage. But guided by the Discriminator's feedback, it grows steadily more refined.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">A rising tone as noise becomes form</div>
+<div class="canvas-wrap"><span class="wave-label">z vector → Generator → output shape</span><canvas id="gen-canvas" height="350"></canvas></div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn btn-gold" onclick="newGenSample()">🎲 New noise sample</button>
+</div>
+<div class="slider-row">
+<label>train</label>
+<input type="range" id="gen-epoch" min="0" max="100" value="0" step="1" oninput="drawGen()">
+<span class="val" id="gen-epoch-val">Epoch 0</span>
+</div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">Input (z)</div><div class="sv" id="gen-z" style="font-size:0.7rem;color:var(--purple);">Random vector</div></div>
+<div class="stat-box"><div class="sl">Output quality</div><div class="sv" id="gen-quality">0%</div></div>
+</div>
+</div>
+<div class="math-block">G(z) : ℝ^d → ℝ^n — Maps noise z to a point in data space</div>
+</div></section>
+
+<!-- §02 — THE DISCRIMINATOR -->
+<section id="sec-disc"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">02 — THE DETECTIVE'S EYE</p>
+<h2>The <span class="accent-sky">Discriminator</span>: Drawing the Line</h2>
+<p>The Discriminator receives data and decides: "Is this real, or did the Generator make it?" Its output is a probability from 0 (fake) to 1 (real).</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">Higher pitch as the decision boundary sharpens</div>
+<div class="canvas-wrap"><span class="wave-label">Discriminator's decision boundary — blue = real, red = fake</span><canvas id="disc-canvas" height="350"></canvas></div>
+<div class="slider-row">
+<label>train</label>
+<input type="range" id="disc-epoch" min="0" max="100" value="0" step="1" oninput="drawDisc()">
+<span class="val" id="disc-epoch-val">Epoch 0</span>
+</div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">Real detection</div><div class="sv" id="disc-real" style="color:var(--mint);">50%</div></div>
+<div class="stat-box"><div class="sl">Fake detection</div><div class="sv" id="disc-fake" style="color:var(--coral);">50%</div></div>
+</div>
+</div>
+<div class="math-block">D(x) : ℝ^n → [0, 1] — "P(this is real)"</div>
+</div></section>
+
+<!-- §03 — THE MINIMAX GAME -->
+<section id="sec-minimax"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">03 — THE CORE MATH</p>
+<h2>The <span class="accent-gold">Minimax</span> Game</h2>
+<p>The math of GANs is strikingly concise. Everything fits in one equation. The Generator tries to <strong>minimize</strong> this value; the Discriminator tries to <strong>maximize</strong> it.</p>
+</div>
+<div class="math-block" style="font-size:clamp(0.7rem,1.5vw,0.95rem);">
+min_G max_D &nbsp; V(D, G) = 𝔼[log D(x)] + 𝔼[log(1 − D(G(z)))]
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">A chord when the two curves cross</div>
+<div class="canvas-wrap"><span class="wave-label">G loss vs D loss — as training progresses</span><canvas id="minimax-canvas" height="300"></canvas></div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn btn-gold" id="mm-btn" onclick="runMinimax()"> ▶ Start Training</button>
+<button class="btn" onclick="resetMinimax()"> Reset</button>
+</div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">Epoch</div><div class="sv" id="mm-epoch">0</div></div>
+<div class="stat-box"><div class="sl">G loss</div><div class="sv" id="mm-gloss" style="color:var(--purple);">—</div></div>
+<div class="stat-box"><div class="sl">D loss</div><div class="sv" id="mm-dloss" style="color:var(--sky);">—</div></div>
+</div>
+</div>
+<div class="explanation-card reveal" style="border-left-color:var(--gold);">
+<p><strong style="color:#fff;">Toward Nash equilibrium.</strong> — The ideal endpoint of GAN training is a <em>Nash equilibrium</em>: the Generator's output has exactly the same distribution as real data, and the Discriminator answers "50% chance it's real" no matter what it sees. When the detective can do no better than a coin flip — that is perfect imagination.</p>
+</div>
+</div></section>
+
+<!-- §04 — TRAINING DANCE -->
+<section id="sec-train"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">04 — THE TRAINING DANCE</p>
+<h2>The <span class="accent-purple">Dance</span> of Two Networks</h2>
+<p>A simplified simulation of GAN training. Watch the Generator's distribution (purple hill) gradually converge toward the real data distribution (blue hill). The Discriminator's confidence (gold line) flattens as it loses the ability to tell them apart.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">Harmony builds as the distributions converge</div>
+<div class="canvas-wrap"><span class="wave-label">Blue = real | Purple = generated | Gold = D(x)</span><canvas id="train-canvas" height="350"></canvas></div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn btn-gold" id="train-btn" onclick="runTrain()">▶ Start Training</button>
+<button class="btn" onclick="resetTrain()">Reset</button>
+</div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">Epoch</div><div class="sv" id="tr-epoch">0</div></div>
+<div class="stat-box"><div class="sl">Distribution gap (JS)</div><div class="sv" id="tr-js">1.00</div></div>
+<div class="stat-box"><div class="sl">D confidence</div><div class="sv" id="tr-dconf">100%</div></div>
+</div>
+</div>
+</div></section>
+
+<!-- §05 — LATENT SPACE -->
+<section id="sec-latent"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">05 — A MAP OF IMAGINATION</p>
+<h2>Walking the <span class="accent-mint">Latent Space</span></h2>
+<p>The Generator's input space — the latent space — has a remarkable structure. Nearby points produce similar outputs; distant points produce different ones. Walking through this space creates smooth, dreamlike transformations.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">Drag to explore — the tone changes with position</div>
+<div class="canvas-wrap"><span class="wave-label">Latent space — drag to explore</span><canvas id="latent-canvas" height="400"></canvas></div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">z₁</div><div class="sv" id="lat-z1">0.00</div></div>
+<div class="stat-box"><div class="sl">z₂</div><div class="sv" id="lat-z2">0.00</div></div>
+<div class="stat-box"><div class="sl">Output character</div><div class="sv" id="lat-out" style="font-size:0.8rem;">center</div></div>
+</div>
+</div>
+<div class="explanation-card reveal" style="border-left-color:var(--mint);">
+<p style="font-family:var(--font-display);font-style:italic;color:var(--mint);font-size:1.05rem;margin-bottom:0.5rem;">"Walking the latent space is a machine's daydream."</p>
+<p>In StyleGAN, one axis of the latent space controls "smile" and another controls "age." Nobody taught it this. Adversarial training discovered meaningful dimensions on its own.</p>
+</div>
+</div></section>
+
+<!-- §06 — MODE COLLAPSE -->
+<section id="sec-collapse"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">06 — WHEN IMAGINATION FAILS</p>
+<h2><span class="accent-coral">Mode Collapse</span>: A Painter Who Only Paints One Thing</h2>
+<p>The most common failure in GAN training: the Generator discovers <em>one</em> pattern that fools the Discriminator and never deviates from it. A trap of repetition without diversity — imagination frozen into a single thought.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">Monotone sounds as collapse progresses</div>
+<div class="canvas-wrap"><span class="wave-label">Normal training vs. mode collapse</span><canvas id="collapse-canvas" height="300"></canvas></div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn active" onclick="setCollapseMode(0,this)">Normal</button>
+<button class="btn" onclick="setCollapseMode(1,this)">Mode Collapse!</button>
+</div>
+</div>
+</div></section>
+
+<!-- §07 — GAN ZOO & DIFFUSION -->
+<section id="sec-zoo"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">07 — EVOLUTION AND REVOLUTION</p>
+<h2>From the GAN Zoo to the <span class="accent-gold">Diffusion Revolution</span></h2>
+<p>From 2014 to 2022, GANs were the undisputed king of AI image generation. Then diffusion models dethroned them. The very technology explored in Part I.</p>
+</div>
+<div class="demo-card reveal">
+<div class="canvas-wrap"><canvas id="zoo-canvas" height="280"></canvas></div>
+</div>
+<div class="demo-card reveal" style="border-left:3px solid var(--gold);">
+<h3 class="accent-gold" style="margin-bottom:0.5rem;">GAN vs. Diffusion Models</h3>
+<table class="rosetta-simple"><thead><tr><th></th><th style="color:var(--coral);">GAN</th><th style="color:var(--sky);">Diffusion</th></tr></thead><tbody>
+<tr><td class="rs-icon">⚙️</td><td><strong>Principle</strong> — Adversarial game (G vs D)</td><td><strong>Principle</strong> — Add noise → reverse removal</td></tr>
+<tr><td class="rs-icon">⚡</td><td><strong>Speed</strong> — Fast (single forward pass)</td><td><strong>Speed</strong> — Slow (tens to hundreds of steps)</td></tr>
+<tr><td class="rs-icon">🎨</td><td><strong>Diversity</strong> — Risk of mode collapse</td><td><strong>Diversity</strong> — Natural variety</td></tr>
+<tr><td class="rs-icon">📐</td><td><strong>Training</strong> — Unstable (hard to reach Nash equilibrium)</td><td><strong>Training</strong> — Stable (simple MSE loss)</td></tr>
+<tr><td class="rs-icon">🏆</td><td><strong>Golden era</strong> — 2014–2022</td><td><strong>Golden era</strong> — 2022–present</td></tr>
+<tr><td class="rs-icon">📱</td><td><strong>Landmark</strong> — StyleGAN, Pix2Pix, CycleGAN</td><td><strong>Landmark</strong> — DALL·E, Midjourney, Stable Diffusion</td></tr>
+</tbody></table>
+</div>
+</div></section>
+
+<!-- §08 — ROSETTA STONE -->
+<section id="sec-rosetta" style="min-height:auto;padding:4rem 2rem;"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">08 — THE CONNECTION</p>
+<h2>Human Imagination vs. <span class="accent-gold">Machine Imagination</span></h2>
+</div>
+<div class="demo-card reveal"><table class="rosetta-simple"><thead><tr><th></th><th style="color:var(--gold);">Human</th><th style="color:var(--coral);">GAN</th></tr></thead><tbody>
+<tr><td class="rs-icon">💡</td><td><strong>Inspiration</strong> — Experience, emotion, memory</td><td><strong>Inspiration</strong> — Random noise vector z</td></tr>
+<tr><td class="rs-icon">🎨</td><td><strong>Creation</strong> — Conscious choice</td><td><strong>Creation</strong> — G(z) forward pass</td></tr>
+<tr><td class="rs-icon">👁️</td><td><strong>Critique</strong> — Aesthetic judgment, social feedback</td><td><strong>Critique</strong> — D(x)'s gradient</td></tr>
+<tr><td class="rs-icon">🔄</td><td><strong>Refinement</strong> — Repetition, mastery</td><td><strong>Refinement</strong> — Backpropagation, weight update</td></tr>
+<tr><td class="rs-icon">💫</td><td><strong>Imagination</strong> — Envisioning what doesn't exist</td><td><strong>Imagination</strong> — New samples beyond training data</td></tr>
+<tr><td class="rs-icon">😰</td><td><strong>Failure</strong> — Stereotypes, repetition</td><td><strong>Failure</strong> — Mode collapse</td></tr>
+</tbody></table></div>
+</div></section>
+
+<!-- CLOSING -->
+<section id="sec-closing"><div class="section-inner" style="text-align:center;"><div class="reveal">
+<h2>So — Does a Machine<br><span class="accent-coral">Imagine?</span></h2>
+<p style="color:var(--muted);font-family:var(--font-display);font-style:italic;font-size:1.05rem;max-width:640px;margin:2rem auto;">
+A machine's imagination has no inspiration.<br>
+No landscape glimpsed in a dream, no trembling of first love.<br>
+Only the endless duel of two neural networks —<br>
+in the mathematical tension of forgery and detection,<br>
+something that never existed is born.<br><br>
+Can we call that imagination?<br>
+Probably not.<br>
+But what it produces is<br>
+<span class="accent-coral">beautiful enough to astonish us.</span>
+</p>
+<p style="color:var(--muted);font-size:0.9rem;max-width:520px;margin:1rem auto 0;">Every simulation on this page is computed in real time — gradient descent and probability distributions. That's all there is to what machines call "imagination."</p>
+<div style="margin-top:2rem;display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;">
+<a href="remember_ko.html" class="start-btn" style="border-color:var(--muted);color:var(--muted);">← Part III: Memory</a>
+<a href="transformer.html" class="start-btn" style="border-color:var(--muted);color:var(--muted);">← Part II: Understanding</a>
+</div>
+</div></div></section>
+
+<footer>
+<p>Does a Machine Imagine? — The Mathematics of Adversarial Creation</p>
+<p style="margin-top:0.3rem;font-size:0.7rem;">Every visualization is computed in real time — pure mathematics.</p>
+<div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:.2rem">
+<div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;color:#edeef2;">Sang-hyun Kim</div>
+<div style="font-family:'DM Sans',sans-serif;font-size:.72rem;color:#5c6178;">Korea Institute for Advanced Study</div>
+<a href="https://kimsh.kr" style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;margin-top:.25rem">kimsh.kr</a>
+</div>
+</footer>
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
+<script>
+// ═══ AUDIO ═══
+let actx=null;
+function initAudio(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();}
+function ensureAudio(){initAudio();}
+function dismissNotice(){initAudio();const n=document.getElementById('audio-notice');n.style.transition='opacity 0.3s';n.style.opacity='0';setTimeout(()=>n.remove(),300);}
+function playChime(freq,dur=0.15,vol=0.06,type='triangle'){if(!actx)return;const now=actx.currentTime,o=actx.createOscillator(),g=actx.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(vol,now);g.gain.exponentialRampToValueAtTime(0.0001,now+dur);o.connect(g).connect(actx.destination);o.start(now);o.stop(now+dur+0.05);}
+function playChord(freqs,dur=0.4,vol=0.04){freqs.forEach((f,i)=>{setTimeout(()=>playChime(f,dur,vol,'sine'),i*40);});}
+function clamp(v,mn,mx){return Math.max(mn,Math.min(mx,v));}
+function gaussRand(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
+
+// ═══ HERO CANVAS ═══
+const heroC=document.getElementById('hero-canvas'),hCtx=heroC.getContext('2d');
+const HP=[];for(let i=0;i<80;i++)HP.push({x:Math.random(),y:Math.random(),vx:(Math.random()-0.5)*0.0004,vy:(Math.random()-0.5)*0.0004,r:1+Math.random()*3,c:['#fb7185','#a78bfa','#f0b429','#38bdf8','#34d399'][i%5],ph:Math.random()*6.28});
+function drawHero(){const w=heroC.width=heroC.clientWidth*2,h=heroC.height=heroC.clientHeight*2;hCtx.clearRect(0,0,w,h);const t=performance.now()/1000;
+HP.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>1)p.vx*=-1;if(p.y<0||p.y>1)p.vy*=-1;
+const px=p.x*w,py=p.y*h;hCtx.beginPath();hCtx.arc(px,py,p.r*(1+0.3*Math.sin(t+p.ph)),0,6.28);
+hCtx.fillStyle=p.c;hCtx.globalAlpha=0.15+0.1*Math.sin(t*0.5+p.ph);hCtx.fill();hCtx.globalAlpha=1;});
+// Connecting lines (adversarial tension)
+for(let i=0;i<HP.length;i+=2){if(i+1<HP.length){const a=HP[i],b=HP[i+1];const d=Math.sqrt((a.x-b.x)**2+(a.y-b.y)**2);
+if(d<0.2){hCtx.beginPath();hCtx.moveTo(a.x*w,a.y*h);hCtx.lineTo(b.x*w,b.y*h);hCtx.strokeStyle='rgba(251,113,133,0.06)';hCtx.lineWidth=1;hCtx.stroke();}}}
+requestAnimationFrame(drawHero);}drawHero();
+
+// ═══ §00 — FORGER QUIZ ═══
+const fgC2=document.getElementById('forger-canvas'),fgX=fgC2.getContext('2d');
+let fgRound=0,fgScore=0,fgAnswer='',fgAnswered=false;
+function genPattern(real){
+  const pts=[];
+  if(real){// Regular pattern: sine wave with noise
+    for(let i=0;i<30;i++){pts.push({x:i/29,y:0.5+0.3*Math.sin(i/29*Math.PI*4)+gaussRand()*0.03});}
+  }else{// Fake: tries to mimic but imperfect
+    const phase=Math.random()*2;const freq=3+Math.random()*2;
+    for(let i=0;i<30;i++){pts.push({x:i/29,y:0.5+0.3*Math.sin(i/29*Math.PI*freq+phase)+gaussRand()*0.08});}
+  }
+  return pts;
+}
+function drawForgerRound(){
+  const w=fgC2.width,h=fgC2.height;fgX.clearRect(0,0,w,h);
+  fgAnswer=Math.random()<0.5?'L':'R';
+  const leftReal=fgAnswer==='L';
+  const leftPts=genPattern(leftReal),rightPts=genPattern(!leftReal);
+  // Draw left
+  fgX.beginPath();leftPts.forEach((p,i)=>{const x=20+p.x*(w/2-40),y=20+p.y*(h-40);i?fgX.lineTo(x,y):fgX.moveTo(x,y);});
+  fgX.strokeStyle='#a78bfa';fgX.lineWidth=2.5;fgX.stroke();
+  // Draw right
+  fgX.beginPath();rightPts.forEach((p,i)=>{const x=w/2+20+p.x*(w/2-40),y=20+p.y*(h-40);i?fgX.lineTo(x,y):fgX.moveTo(x,y);});
+  fgX.strokeStyle='#fb7185';fgX.lineWidth=2.5;fgX.stroke();
+  // Divider
+  fgX.beginPath();fgX.moveTo(w/2,10);fgX.lineTo(w/2,h-10);fgX.strokeStyle='rgba(255,255,255,0.1)';fgX.lineWidth=1;fgX.setLineDash([4,4]);fgX.stroke();fgX.setLineDash([]);
+  // Labels
+  fgX.font='500 14px "DM Sans",sans-serif';fgX.fillStyle='#a78bfa';fgX.textAlign='center';fgX.fillText('A',w/4,20);
+  fgX.fillStyle='#fb7185';fgX.fillText('B',w*3/4,20);
+  fgAnswered=false;
+}
+function answerForger(side){
+  if(fgAnswered||fgRound>=6)return;fgAnswered=true;fgRound++;
+  const correct=side===fgAnswer;if(correct)fgScore++;
+  ensureAudio();playChime(correct?523:220,0.2,0.04,correct?'sine':'sawtooth');
+  document.getElementById('fg-round').innerHTML=fgRound+' <span style="font-size:0.7rem;color:var(--muted);">/ 6</span>';
+  document.getElementById('fg-score').textContent=fgScore;
+  document.getElementById('fg-acc').textContent=Math.round(fgScore/fgRound*100)+'%';
+  if(fgRound<6){setTimeout(drawForgerRound,800);}
+  else{document.getElementById('forger-quiz').innerHTML='<div style="text-align:center;padding:2rem;"><div style="font-family:var(--font-display);font-size:1.3rem;color:var(--gold);">'+fgScore+'/6 correct!</div><div style="color:var(--muted);margin-top:0.5rem;">'+(fgScore>=4?'You\'re a sharp detective!':'The GAN fooled you!')+'</div></div>';}
+}
+drawForgerRound();
+
+// ═══ §01 — GENERATOR ═══
+const genC=document.getElementById('gen-canvas'),genX=genC.getContext('2d');
+let genZ=Array.from({length:8},()=>gaussRand());
+function newGenSample(){genZ=Array.from({length:8},()=>gaussRand());ensureAudio();playChime(300,0.15,0.04,'triangle');drawGen();}
+function drawGen(){
+  const w=genC.width=genC.clientWidth*2,h=genC.height=700;genX.clearRect(0,0,w,h);
+  const epoch=+document.getElementById('gen-epoch').value;
+  document.getElementById('gen-epoch-val').textContent='Epoch '+epoch;
+  const quality=Math.min(100,Math.round(epoch*1.1));
+  document.getElementById('gen-quality').textContent=quality+'%';
+  document.getElementById('gen-z').textContent=genZ.slice(0,4).map(v=>v.toFixed(1)).join(', ')+'...';
+  const cx=w/2,cy=h/2;const t=performance.now()/1000;
+  // Generate shape from z vector, quality depends on epoch
+  const noise=1-epoch/100;const nPts=64;
+  genX.beginPath();
+  for(let i=0;i<nPts;i++){
+    const a=i/nPts*Math.PI*2;
+    let r=80+genZ[0]*20+genZ[1]*15*Math.cos(a*2)+genZ[2]*10*Math.sin(a*3)+genZ[3]*8*Math.cos(a*5);
+    r=r*(0.5+epoch/200)+gaussRand()*40*noise;
+    r=Math.max(20,r);
+    const x=cx+Math.cos(a)*r,y=cy+Math.sin(a)*r;
+    i?genX.lineTo(x,y):genX.moveTo(x,y);
+  }
+  genX.closePath();
+  genX.fillStyle=`rgba(167,139,250,${0.05+epoch/500})`;genX.fill();
+  genX.strokeStyle=`rgba(167,139,250,${0.3+epoch/200})`;genX.lineWidth=2;genX.stroke();
+  // Z vector visualization (left side)
+  genX.font='500 18px "JetBrains Mono",monospace';genX.fillStyle='#7b8db5';genX.textAlign='left';
+  genX.fillText('z =',30,40);
+  genZ.forEach((v,i)=>{
+    const bx=30,by=60+i*30;
+    const bw=Math.abs(v)*40;
+    genX.fillStyle=v>0?'rgba(167,139,250,0.3)':'rgba(251,113,133,0.3)';
+    genX.fillRect(bx,by,bw*(v>0?1:-1)+60,16);
+    genX.fillStyle='#7b8db5';genX.font='400 14px "JetBrains Mono",monospace';
+    genX.fillText(v.toFixed(2),bx+70,by+13);
+  });
+}
+drawGen();
+
+// ═══ §02 — DISCRIMINATOR ═══
+const discC=document.getElementById('disc-canvas'),discX=discC.getContext('2d');
+const DISC_REAL=Array.from({length:30},()=>({x:0.3+gaussRand()*0.12,y:0.4+gaussRand()*0.12}));
+const DISC_FAKE=Array.from({length:30},()=>({x:0.7+gaussRand()*0.12,y:0.6+gaussRand()*0.12}));
+function drawDisc(){
+  const w=discC.width=discC.clientWidth*2,h=discC.height=700;discX.clearRect(0,0,w,h);
+  const epoch=+document.getElementById('disc-epoch').value;
+  document.getElementById('disc-epoch-val').textContent='Epoch '+epoch;
+  const sep=epoch/100;// 0=no separation, 1=perfect
+  const pad=40;
+  // Decision boundary (diagonal line that sharpens)
+  const bx1=pad,by1=h-pad-sep*(h-2*pad)*0.8;
+  const bx2=w-pad,by2=pad+sep*(h-2*pad)*0.2;
+  // Gradient background
+  for(let x=0;x<w;x+=4){for(let y=0;y<h;y+=4){
+    const nx=(x-pad)/(w-2*pad),ny=(y-pad)/(h-2*pad);
+    const side=ny-(1-nx)*(1-sep)-0.5*(1-sep);
+    const conf=Math.min(1,Math.abs(side)*3*sep);
+    discX.fillStyle=side<0?`rgba(52,211,153,${conf*0.06})`:`rgba(251,113,133,${conf*0.06})`;
+    discX.fillRect(x,y,4,4);
+  }}
+  // Boundary line
+  discX.beginPath();discX.moveTo(bx1,by1);discX.lineTo(bx2,by2);
+  discX.strokeStyle='#f0b429';discX.lineWidth=2;discX.setLineDash([6,4]);discX.stroke();discX.setLineDash([]);
+  // Points
+  DISC_REAL.forEach(p=>{const x=pad+p.x*(w-2*pad),y=pad+p.y*(h-2*pad);
+    discX.beginPath();discX.arc(x,y,5,0,6.28);discX.fillStyle='#38bdf8';discX.fill();});
+  DISC_FAKE.forEach(p=>{const x=pad+p.x*(w-2*pad),y=pad+p.y*(h-2*pad);
+    discX.beginPath();discX.arc(x,y,5,0,6.28);discX.fillStyle='#fb7185';discX.fill();});
+  // Stats
+  const realAcc=Math.round(50+sep*48);const fakeAcc=Math.round(50+sep*45);
+  document.getElementById('disc-real').textContent=realAcc+'%';
+  document.getElementById('disc-fake').textContent=fakeAcc+'%';
+}
+drawDisc();
+
+// ═══ §03 — MINIMAX ═══
+const mmC=document.getElementById('minimax-canvas'),mmX=mmC.getContext('2d');
+let mmEpoch=0,mmRunning=false,mmTimer=null,mmGdata=[],mmDdata=[];
+function drawMinimax(){
+  const w=mmC.width=mmC.clientWidth*2,h=mmC.height=600;mmX.clearRect(0,0,w,h);
+  const pad={l:50,r:20,t:20,b:40};const gw=w-pad.l-pad.r,gh=h-pad.t-pad.b;
+  // Axes
+  mmX.strokeStyle='rgba(255,255,255,0.08)';mmX.lineWidth=1;
+  mmX.beginPath();mmX.moveTo(pad.l,h-pad.b);mmX.lineTo(w-pad.r,h-pad.b);mmX.stroke();
+  mmX.beginPath();mmX.moveTo(pad.l,pad.t);mmX.lineTo(pad.l,h-pad.b);mmX.stroke();
+  if(mmGdata.length<2)return;
+  const maxEp=mmGdata.length;
+  // G loss line
+  mmX.beginPath();mmGdata.forEach((v,i)=>{const x=pad.l+i/maxEp*gw,y=pad.t+(1-v)*gh;i?mmX.lineTo(x,y):mmX.moveTo(x,y);});
+  mmX.strokeStyle='#a78bfa';mmX.lineWidth=2;mmX.stroke();
+  // D loss line
+  mmX.beginPath();mmDdata.forEach((v,i)=>{const x=pad.l+i/maxEp*gw,y=pad.t+(1-v)*gh;i?mmX.lineTo(x,y):mmX.moveTo(x,y);});
+  mmX.strokeStyle='#38bdf8';mmX.lineWidth=2;mmX.stroke();
+  // Labels
+  mmX.font='500 18px "DM Sans",sans-serif';mmX.textAlign='left';
+  mmX.fillStyle='#a78bfa';mmX.fillText('G loss',pad.l+10,pad.t+20);
+  mmX.fillStyle='#38bdf8';mmX.fillText('D loss',pad.l+10,pad.t+40);
+  // Equilibrium line
+  mmX.beginPath();mmX.moveTo(pad.l,pad.t+gh*0.5);mmX.lineTo(w-pad.r,pad.t+gh*0.5);
+  mmX.strokeStyle='rgba(240,180,41,0.2)';mmX.lineWidth=1;mmX.setLineDash([4,4]);mmX.stroke();mmX.setLineDash([]);
+  mmX.fillStyle='#f0b42966';mmX.font='400 14px "DM Sans",sans-serif';mmX.fillText('Nash eq.',w-pad.r-80,pad.t+gh*0.5-8);
+}
+function runMinimax(){
+  if(mmRunning){mmRunning=false;clearInterval(mmTimer);document.getElementById('mm-btn').textContent='▶ Start Training';return;}
+  resetMinimax();mmRunning=true;document.getElementById('mm-btn').textContent='⏸';ensureAudio();
+  mmTimer=setInterval(()=>{
+    mmEpoch++;
+    const t=mmEpoch/200;
+    const gLoss=0.8*Math.exp(-t*2)+0.5+gaussRand()*0.03*Math.exp(-t);
+    const dLoss=0.2*(1-Math.exp(-t*3))+0.5+gaussRand()*0.03*Math.exp(-t);
+    mmGdata.push(clamp(gLoss,0,1));mmDdata.push(clamp(dLoss,0,1));
+    drawMinimax();
+    document.getElementById('mm-epoch').textContent=mmEpoch;
+    document.getElementById('mm-gloss').textContent=gLoss.toFixed(2);
+    document.getElementById('mm-dloss').textContent=dLoss.toFixed(2);
+    playChime(200+mmEpoch*2,0.05,0.01,'sine');
+    if(mmEpoch>=200){mmRunning=false;clearInterval(mmTimer);document.getElementById('mm-btn').textContent='▶ Start Training';playChord([523.25,659.25,783.99],0.5,0.04);}
+  },50);
+}
+function resetMinimax(){mmEpoch=0;mmGdata=[];mmDdata=[];mmRunning=false;clearInterval(mmTimer);
+  document.getElementById('mm-btn').textContent='▶ Start Training';document.getElementById('mm-epoch').textContent='0';
+  document.getElementById('mm-gloss').textContent='—';document.getElementById('mm-dloss').textContent='—';drawMinimax();}
+
+// ═══ §04 — TRAINING DANCE ═══
+const trC=document.getElementById('train-canvas'),trX=trC.getContext('2d');
+let trEpoch=0,trRunning=false,trTimer=null,trGenMu=0,trGenSig=0.5;
+function gauss(x,mu,sig){return Math.exp(-0.5*((x-mu)/sig)**2)/(sig*Math.sqrt(2*Math.PI));}
+function drawTrain(){
+  const w=trC.width=trC.clientWidth*2,h=trC.height=700;trX.clearRect(0,0,w,h);
+  const pad={l:40,r:20,t:20,b:40};const gw=w-pad.l-pad.r,gh=h-pad.t-pad.b;
+  const realMu=0.5,realSig=0.12;
+  // Draw distributions
+  const n=200;
+  // Real distribution (blue)
+  trX.beginPath();
+  for(let i=0;i<=n;i++){const x=i/n;const px=pad.l+x*gw;const v=gauss(x,realMu,realSig);const py=h-pad.b-v*gh*0.3;i?trX.lineTo(px,py):trX.moveTo(px,py);}
+  trX.lineTo(w-pad.r,h-pad.b);trX.lineTo(pad.l,h-pad.b);trX.closePath();
+  trX.fillStyle='rgba(56,189,248,0.15)';trX.fill();trX.strokeStyle='#38bdf8';trX.lineWidth=2;trX.stroke();
+  // Generated distribution (purple)
+  trX.beginPath();
+  for(let i=0;i<=n;i++){const x=i/n;const px=pad.l+x*gw;const v=gauss(x,trGenMu,trGenSig);const py=h-pad.b-v*gh*0.3;i?trX.lineTo(px,py):trX.moveTo(px,py);}
+  trX.lineTo(w-pad.r,h-pad.b);trX.lineTo(pad.l,h-pad.b);trX.closePath();
+  trX.fillStyle='rgba(167,139,250,0.15)';trX.fill();trX.strokeStyle='#a78bfa';trX.lineWidth=2;trX.stroke();
+  // Discriminator curve (gold) — confidence
+  const dConf=Math.abs(trGenMu-realMu)*3+Math.abs(trGenSig-realSig)*2;
+  trX.beginPath();
+  for(let i=0;i<=n;i++){const x=i/n;const px=pad.l+x*gw;
+    const pReal=gauss(x,realMu,realSig);const pFake=gauss(x,trGenMu,trGenSig);
+    const d=pReal/(pReal+pFake+0.001);const py=pad.t+(1-d)*gh;
+    i?trX.lineTo(px,py):trX.moveTo(px,py);}
+  trX.strokeStyle='#f0b429';trX.lineWidth=1.5;trX.setLineDash([4,3]);trX.stroke();trX.setLineDash([]);
+  // Labels
+  trX.font='500 18px "DM Sans",sans-serif';trX.textAlign='left';
+  trX.fillStyle='#38bdf8';trX.fillText('Real dist.',pad.l+10,pad.t+20);
+  trX.fillStyle='#a78bfa';trX.fillText('Generated dist.',pad.l+10,pad.t+42);
+  trX.fillStyle='#f0b429';trX.fillText('D(x)',pad.l+10,pad.t+64);
+  // Stats
+  const js=clamp(dConf,0,1);
+  document.getElementById('tr-epoch').textContent=trEpoch;
+  document.getElementById('tr-js').textContent=js.toFixed(2);
+  document.getElementById('tr-dconf').textContent=Math.round(50+js*50)+'%';
+}
+function runTrain(){
+  if(trRunning){trRunning=false;clearInterval(trTimer);document.getElementById('train-btn').textContent='▶ Start Training';return;}
+  resetTrain();trRunning=true;document.getElementById('train-btn').textContent='⏸';ensureAudio();
+  trTimer=setInterval(()=>{
+    trEpoch++;
+    const lr=0.01;
+    trGenMu+=(0.5-trGenMu)*lr*3;trGenSig+=(0.12-trGenSig)*lr*2;
+    trGenMu+=gaussRand()*0.003;trGenSig+=gaussRand()*0.001;
+    trGenSig=Math.max(0.03,trGenSig);
+    drawTrain();
+    if(trEpoch%10===0)playChime(300+trEpoch,0.05,0.01,'sine');
+    if(trEpoch>=300){trRunning=false;clearInterval(trTimer);document.getElementById('train-btn').textContent='▶ Start Training';playChord([523.25,659.25,783.99],0.5,0.04);}
+  },30);
+}
+function resetTrain(){trEpoch=0;trGenMu=0.15+Math.random()*0.2;trGenSig=0.3+Math.random()*0.2;trRunning=false;clearInterval(trTimer);
+  document.getElementById('train-btn').textContent='▶ Start Training';drawTrain();}
+resetTrain();
+
+// ═══ §05 — LATENT SPACE ═══
+const latC=document.getElementById('latent-canvas'),latX=latC.getContext('2d');
+let latZ=[0,0],latDragging=false;
+function drawLatent(){
+  const w=latC.width=latC.clientWidth*2,h=latC.height=800;latX.clearRect(0,0,w,h);
+  const cx=w/2,cy=h/2;const t=performance.now()/1000;
+  // Grid
+  for(let i=-3;i<=3;i++){for(let j=-3;j<=3;j++){
+    const gx=cx+i*w/7,gy=cy+j*h/7;
+    const z1=i/3,z2=j/3;
+    const hue=(z1+1)*60+(z2+1)*30;const sat=40+Math.abs(z1)*30;
+    const r=20+z1*8+z2*5+Math.sin(t+i+j)*3;
+    latX.beginPath();
+    const nPts=32;for(let k=0;k<nPts;k++){const a=k/nPts*Math.PI*2;
+      let rad=r+z1*6*Math.cos(a*2)+z2*4*Math.sin(a*3);
+      const x=gx+Math.cos(a)*rad,y=gy+Math.sin(a)*rad;
+      k?latX.lineTo(x,y):latX.moveTo(x,y);}
+    latX.closePath();
+    const dist=Math.sqrt((latZ[0]-z1)**2+(latZ[1]-z2)**2);
+    latX.fillStyle=`hsla(${hue},${sat}%,60%,${0.03+0.12*Math.max(0,1-dist)})`;
+    latX.strokeStyle=`hsla(${hue},${sat}%,60%,${0.15+0.4*Math.max(0,1-dist)})`;
+    latX.lineWidth=1;latX.fill();latX.stroke();
+  }}
+  // Current point (larger)
+  const cpx=cx+latZ[0]*w/7,cpy=cy+latZ[1]*h/7;
+  latX.beginPath();
+  const nPts=48;for(let k=0;k<nPts;k++){const a=k/nPts*Math.PI*2;
+    let r2=50+latZ[0]*15*Math.cos(a*2)+latZ[1]*10*Math.sin(a*3)+5*Math.sin(t*2+a*4);
+    const x=cpx+Math.cos(a)*r2,y=cpy+Math.sin(a)*r2;
+    k?latX.lineTo(x,y):latX.moveTo(x,y);}
+  latX.closePath();
+  const hue2=(latZ[0]+1)*60+(latZ[1]+1)*30;
+  latX.fillStyle=`hsla(${hue2},50%,60%,0.15)`;latX.strokeStyle=`hsla(${hue2},50%,60%,0.7)`;latX.lineWidth=2.5;latX.fill();latX.stroke();
+  // Cursor dot
+  latX.beginPath();latX.arc(cpx,cpy,6,0,6.28);latX.fillStyle='#f0b429';latX.fill();
+  // Stats
+  document.getElementById('lat-z1').textContent=latZ[0].toFixed(2);
+  document.getElementById('lat-z2').textContent=latZ[1].toFixed(2);
+  const labels=['round','spiky','wide','narrow','complex'];
+  document.getElementById('lat-out').textContent=labels[Math.floor((latZ[0]+1.5)/3*labels.length)%labels.length];
+  requestAnimationFrame(drawLatent);
+}
+latC.addEventListener('pointerdown',e=>{latDragging=true;updateLatZ(e);});
+latC.addEventListener('pointermove',e=>{if(latDragging)updateLatZ(e);});
+latC.addEventListener('pointerup',()=>latDragging=false);
+latC.addEventListener('pointerleave',()=>latDragging=false);
+function updateLatZ(e){
+  const r=latC.getBoundingClientRect();
+  latZ[0]=clamp(((e.clientX-r.left)/r.width-0.5)*6,-3,3);
+  latZ[1]=clamp(((e.clientY-r.top)/r.height-0.5)*6,-3,3);
+  if(actx)playChime(300+latZ[0]*50+latZ[1]*30,0.05,0.01,'sine');
+}
+drawLatent();
+
+// ═══ §06 — MODE COLLAPSE ═══
+const colC=document.getElementById('collapse-canvas'),colX=colC.getContext('2d');
+let colMode=0;
+function setCollapseMode(m,btn){colMode=m;btn.parentElement.querySelectorAll('.btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');ensureAudio();drawCollapse();}
+function drawCollapse(){
+  const w=colC.width=colC.clientWidth*2,h=colC.height=600;colX.clearRect(0,0,w,h);
+  const t=performance.now()/1000;const pad=40;
+  if(colMode===0){// Normal: diverse samples
+    for(let i=0;i<25;i++){
+      const cx2=pad+Math.random()*(w-2*pad),cy2=pad+Math.random()*(h-2*pad);
+      const r=15+Math.random()*20;const nPts=24;
+      const hue=Math.random()*360;
+      colX.beginPath();
+      for(let k=0;k<nPts;k++){const a=k/nPts*Math.PI*2;
+        const rad=r+gaussRand()*5+3*Math.sin(t+i+a*3);
+        const x=cx2+Math.cos(a)*rad,y=cy2+Math.sin(a)*rad;
+        k?colX.lineTo(x,y):colX.moveTo(x,y);}
+      colX.closePath();colX.fillStyle=`hsla(${hue},50%,60%,0.1)`;colX.strokeStyle=`hsla(${hue},50%,60%,0.4)`;colX.lineWidth=1.5;colX.fill();colX.stroke();
+    }
+    colX.font='500 20px "DM Sans",sans-serif';colX.fillStyle='#34d399';colX.textAlign='center';colX.fillText('✓ Diverse outputs',w/2,h-15);
+  }else{// Mode collapse: all same
+    for(let i=0;i<25;i++){
+      const cx2=w/2+gaussRand()*15,cy2=h/2+gaussRand()*15;
+      const r=25;const nPts=24;
+      colX.beginPath();
+      for(let k=0;k<nPts;k++){const a=k/nPts*Math.PI*2;
+        const rad=r+2*Math.sin(a*3+t);
+        const x=cx2+Math.cos(a)*rad,y=cy2+Math.sin(a)*rad;
+        k?colX.lineTo(x,y):colX.moveTo(x,y);}
+      colX.closePath();colX.fillStyle='rgba(251,113,133,0.08)';colX.strokeStyle='rgba(251,113,133,0.35)';colX.lineWidth=1.5;colX.fill();colX.stroke();
+    }
+    colX.font='500 20px "DM Sans",sans-serif';colX.fillStyle='#fb7185';colX.textAlign='center';colX.fillText('✗ Mode collapse — all identical!',w/2,h-15);
+  }
+  requestAnimationFrame(drawCollapse);
+}
+drawCollapse();
+
+// ═══ §07 — GAN ZOO TIMELINE ═══
+const zooC=document.getElementById('zoo-canvas'),zooX=zooC.getContext('2d');
+function drawZoo(){
+  const w=zooC.width=zooC.clientWidth*2,h=zooC.height=560;zooX.clearRect(0,0,w,h);
+  const t=performance.now()/1000;
+  const milestones=[
+    {year:2014,label:'GAN',sub:'Goodfellow',c:'#fb7185'},
+    {year:2015,label:'DCGAN',sub:'Conv-based',c:'#fb7185'},
+    {year:2017,label:'WGAN',sub:'Stable training',c:'#a78bfa'},
+    {year:2018,label:'StyleGAN',sub:'NVIDIA',c:'#a78bfa'},
+    {year:2019,label:'StyleGAN2',sub:'HD faces',c:'#f0b429'},
+    {year:2020,label:'StyleGAN3',sub:'Anti-aliasing',c:'#f0b429'},
+    {year:2021,label:'DALL·E',sub:'Text→Image',c:'#38bdf8'},
+    {year:2022,label:'Diffusion revolution',sub:'Stable Diffusion',c:'#34d399'},
+  ];
+  const pad={l:50,r:30,t:30,b:40};const gw=w-pad.l-pad.r;
+  // Timeline line
+  zooX.beginPath();zooX.moveTo(pad.l,h/2);zooX.lineTo(w-pad.r,h/2);zooX.strokeStyle='rgba(255,255,255,0.1)';zooX.lineWidth=2;zooX.stroke();
+  // GAN era / Diffusion era
+  const splitX=pad.l+((2021.5-2013.5)/(2023-2013.5))*gw;
+  zooX.fillStyle='rgba(251,113,133,0.03)';zooX.fillRect(pad.l,pad.t,splitX-pad.l,h-pad.t-pad.b);
+  zooX.fillStyle='rgba(52,211,153,0.03)';zooX.fillRect(splitX,pad.t,w-pad.r-splitX,h-pad.t-pad.b);
+  zooX.font='400 16px "DM Sans",sans-serif';
+  zooX.fillStyle='#fb718544';zooX.textAlign='center';zooX.fillText('GAN era',pad.l+(splitX-pad.l)/2,pad.t+20);
+  zooX.fillStyle='#34d39944';zooX.fillText('Diffusion era',splitX+(w-pad.r-splitX)/2,pad.t+20);
+  milestones.forEach((m,i)=>{
+    const x=pad.l+((m.year-2013.5)/(2023-2013.5))*gw;
+    const above=i%2===0;const y=above?h/2-50:h/2+50;
+    const pulse=0.5+0.5*Math.sin(t*2+i);
+    zooX.beginPath();zooX.arc(x,h/2,5+pulse*2,0,6.28);zooX.fillStyle=m.c;zooX.fill();
+    zooX.beginPath();zooX.moveTo(x,h/2);zooX.lineTo(x,y);zooX.strokeStyle=m.c+'66';zooX.lineWidth=1;zooX.stroke();
+    zooX.font='600 16px "DM Sans",sans-serif';zooX.fillStyle=m.c;zooX.textAlign='center';
+    zooX.fillText(m.label,x,above?y-20:y+25);
+    zooX.font='400 12px "DM Sans",sans-serif';zooX.fillStyle='#7b8db5';
+    zooX.fillText(m.sub,x,above?y-5:y+42);
+    zooX.font='400 14px "JetBrains Mono",monospace';zooX.fillStyle='#7b8db566';
+    zooX.fillText(m.year,x,h/2+(above?15:-10));
+  });
+  requestAnimationFrame(drawZoo);
+}
+drawZoo();
+
+// ═══ NAV ═══
+const obs=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+const secs=['hero','sec-forger','sec-gen','sec-disc','sec-minimax','sec-train','sec-latent','sec-collapse','sec-zoo','sec-rosetta','sec-closing'];
+const nd=document.getElementById('nav-dots');secs.forEach(id=>{const d=document.createElement('button');d.className='nav-dot';d.onclick=()=>document.getElementById(id).scrollIntoView({behavior:'smooth'});nd.appendChild(d);});
+const sO=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){const i=secs.indexOf(e.target.id);document.querySelectorAll('.nav-dot').forEach((d,j)=>d.classList.toggle('active',j===i));}});},{threshold:0.3});
+secs.forEach(id=>{const el=document.getElementById(id);if(el)sO.observe(el);});
+</script>
+</body>
+</html>

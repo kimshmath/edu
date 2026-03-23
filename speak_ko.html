@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RQVK6SF2E6');
+    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>기계는 말하는가? — 푸리에 변환에서 음성 합성까지</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#080d1a;--bg2:#0c1326;--bg3:#111b38;--card:#131f42;--gold:#f0b429;--gold-dim:#c4912080;--sky:#38bdf8;--purple:#a78bfa;--coral:#fb7185;--mint:#34d399;--text:#e0e6f0;--muted:#7b8db5;--font-display:'Fraunces',Georgia,serif;--font-body:'DM Sans',sans-serif;--font-mono:'JetBrains Mono',monospace}
+html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-weight:300;line-height:1.7;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:3px}
+body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
+section{min-height:100vh;padding:6rem 2rem;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.section-inner{max-width:900px;width:100%}
+h1{font-family:var(--font-display);font-size:clamp(2.8rem,6vw,5rem);font-weight:700;line-height:1.15;letter-spacing:-0.02em;color:#fff}
+h2{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,3rem);font-weight:700;line-height:1.2;color:#fff;margin-bottom:1.5rem}
+h3{font-family:var(--font-body);font-size:1.1rem;font-weight:500;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:0.5rem}
+p{margin-bottom:1rem}.accent-gold{color:var(--gold)}.accent-sky{color:var(--sky)}.accent-purple{color:var(--purple)}.accent-coral{color:var(--coral)}.accent-mint{color:var(--mint)}
+.section-num{font-family:var(--font-mono);font-size:0.75rem;color:var(--gold);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.5rem;opacity:0.7}
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;opacity:0.5}
+#hero .content{position:relative;z-index:2}#hero h1{margin-bottom:1rem}
+#hero .subtitle{font-family:var(--font-display);font-size:clamp(1.1rem,2.5vw,1.5rem);color:var(--sky);font-style:italic;margin-bottom:2.5rem}
+#hero .tagline{color:var(--muted);font-size:0.95rem;max-width:600px;margin:0 auto 2.5rem}
+.start-btn{display:inline-flex;align-items:center;gap:0.6rem;padding:0.9rem 2.2rem;background:transparent;border:1.5px solid var(--gold);color:var(--gold);font-family:var(--font-body);font-size:1rem;font-weight:500;border-radius:60px;cursor:pointer;transition:all 0.3s;letter-spacing:0.05em;text-decoration:none}
+.start-btn:hover{background:var(--gold);color:var(--bg);transform:translateY(-2px);box-shadow:0 8px 30px rgba(240,180,41,0.25)}
+#nav-dots{position:fixed;right:1.5rem;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:12px}
+.nav-dot{width:10px;height:10px;border-radius:50%;background:var(--muted);opacity:0.3;cursor:pointer;transition:all 0.3s;border:none}
+.nav-dot.active{opacity:1;background:var(--gold);transform:scale(1.4)}
+.demo-card{background:var(--card);border-radius:16px;padding:2rem;margin:1.5rem 0;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.04)}
+.demo-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--sky),var(--gold),var(--purple));opacity:0.6}
+.explanation-card{background:rgba(0,0,0,0.2);border-radius:14px;padding:1.5rem;margin:1.5rem 0;border-left:3px solid var(--gold);font-size:0.92rem}
+.btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.55rem 1.3rem;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.04);color:var(--text);font-family:var(--font-body);font-size:0.85rem;border-radius:8px;cursor:pointer;transition:all 0.25s}
+.btn:hover{background:rgba(255,255,255,0.1);transform:translateY(-1px)}
+.btn.active{border-color:var(--gold);background:rgba(240,180,41,0.12);color:var(--gold)}
+.btn-gold{border-color:var(--gold);color:var(--gold)}.btn-gold:hover{background:var(--gold);color:var(--bg)}
+.btn-group{display:flex;gap:0.5rem;flex-wrap:wrap;margin:1rem 0}
+.slider-row{display:flex;align-items:center;gap:1rem;margin:0.6rem 0}
+.slider-row label{min-width:2.5rem;font-family:var(--font-mono);font-size:0.85rem;color:var(--gold)}
+.slider-row .val{min-width:5rem;font-family:var(--font-mono);font-size:0.8rem;color:var(--muted);text-align:right}
+input[type="range"]{-webkit-appearance:none;flex:1;height:4px;background:var(--bg3);border-radius:2px;outline:none}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--gold);cursor:pointer}
+.canvas-wrap{position:relative;width:100%;background:rgba(0,0,0,0.25);border-radius:12px;overflow:hidden;margin:1rem 0}
+.canvas-wrap canvas{display:block;width:100%}
+.wave-label{position:absolute;top:8px;left:12px;font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);z-index:2}
+.stat-row{display:flex;gap:0.8rem;margin:1rem 0}
+.stat-box{flex:1;background:var(--bg3);border-radius:10px;padding:0.8rem 1rem;border:1px solid rgba(255,255,255,0.03)}
+.stat-box .sl{font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:0.2rem}
+.stat-box .sv{font-family:var(--font-mono);font-size:1.1rem;font-weight:500;color:var(--gold)}
+.math-block{font-family:var(--font-mono);font-size:clamp(0.8rem,1.5vw,1rem);color:var(--gold);text-align:center;padding:0.8rem;background:var(--bg3);border-radius:10px;border:1px solid rgba(240,180,41,0.15);margin:1rem 0;line-height:1.8;overflow-x:auto}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.8s ease,transform 0.8s ease}.reveal.visible{opacity:1;transform:translateY(0)}
+.audio-note{display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:var(--muted);margin:0.5rem 0}.audio-note::before{content:'🔊'}
+.rosetta-simple{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.82rem}
+.rosetta-simple th{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.7rem 0.6rem;border-bottom:2px solid rgba(255,255,255,0.08);text-align:left;color:var(--muted)}
+.rosetta-simple td{padding:0.6rem;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--text);line-height:1.5;vertical-align:top}
+.rosetta-simple .rs-icon{font-size:1.1rem;text-align:center}
+.piano-key{display:inline-flex;align-items:flex-end;justify-content:center;cursor:pointer;border-radius:0 0 6px 6px;transition:all 0.15s;font-family:var(--font-mono);font-size:0.6rem;padding-bottom:6px;user-select:none}
+.piano-key.white{width:40px;height:120px;background:#e8e8e8;color:#333;border:1px solid #ccc;margin:0 1px}
+.piano-key.white:active,.piano-key.white.pressed{background:var(--sky);color:#fff;border-color:var(--sky)}
+.piano-key.black{width:28px;height:75px;background:#222;color:#888;border:1px solid #444;margin:0 -14px;z-index:2;position:relative}
+.piano-key.black:active,.piano-key.black.pressed{background:var(--purple);color:#fff}
+#audio-notice{position:fixed;inset:0;z-index:10000;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:3vh 0;background:rgba(8,13,26,0.92);backdrop-filter:blur(12px);animation:notice-in 0.4s ease}
+@keyframes notice-in{from{opacity:0}to{opacity:1}}
+.notice-card{max-width:440px;width:90%;background:var(--bg3);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:2rem 1.8rem;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);margin:auto}
+.notice-icon{font-size:3rem;margin-bottom:1rem;display:block}.notice-card h2{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:0.8rem}
+.notice-card p{font-size:0.88rem;color:var(--text);line-height:1.7;margin-bottom:0.6rem}
+.notice-start{display:inline-flex;align-items:center;gap:0.5rem;padding:0.85rem 2.5rem;background:var(--gold);color:var(--bg);border:none;border-radius:60px;font-family:var(--font-body);font-size:0.95rem;font-weight:600;cursor:pointer;transition:all 0.3s;margin-top:0.8rem}
+.notice-start:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(240,180,41,0.3)}
+.notice-vol{display:flex;align-items:center;justify-content:center;gap:0.5rem;margin:0.8rem 0;font-family:var(--font-mono);font-size:0.8rem;color:var(--gold)}
+.notice-vol .vol-bars{display:flex;gap:2px;align-items:flex-end}
+.notice-vol .vol-bar{width:4px;background:var(--gold);border-radius:2px;animation:vb 0.6s ease-in-out infinite alternate}
+.notice-vol .vol-bar:nth-child(1){height:8px;animation-delay:0s}.notice-vol .vol-bar:nth-child(2){height:14px;animation-delay:0.1s}.notice-vol .vol-bar:nth-child(3){height:20px;animation-delay:0.2s}.notice-vol .vol-bar:nth-child(4){height:14px;animation-delay:0.3s}.notice-vol .vol-bar:nth-child(5){height:8px;animation-delay:0.4s}
+@keyframes vb{from{transform:scaleY(0.5);opacity:0.5}to{transform:scaleY(1);opacity:1}}
+footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
+.floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:lowercase;color:#8db830;background:transparent;padding:.35rem .7rem;text-decoration:none;transition:color .25s,text-shadow .25s,transform .25s;text-shadow:0 0 6px rgba(141,184,48,.4),0 0 16px rgba(141,184,48,.15)}
+.floating-badge:hover{color:#a8d43a;text-shadow:0 0 8px rgba(141,184,48,.65),0 0 22px rgba(141,184,48,.28);transform:translateY(-1px)}
+@media(max-width:640px){section{padding:4rem 1.2rem}#nav-dots{display:none}.demo-card{padding:1.2rem}.stat-row{flex-direction:column}.piano-key.white{width:30px;height:90px}.piano-key.black{width:20px;height:55px;margin:0 -10px}}
+</style>
+</head>
+<body>
+
+<div id="audio-notice"><div class="notice-card"><span class="notice-icon">🎵</span><h2>기계는 말하는가?</h2><p>이 페이지는 <strong>소리가 핵심</strong>인 인터랙티브 탐험입니다.<br>볼륨을 꼭 켜주세요!</p><div class="notice-vol"><div class="vol-bars"><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div><div class="vol-bar"></div></div><span>볼륨을 편안한 수준으로</span></div><button class="notice-start" onclick="dismissNotice()">🎵 소리와 함께 시작</button></div></div>
+<nav id="nav-dots"></nav>
+
+<!-- HERO -->
+<section id="hero"><canvas id="hero-canvas"></canvas><div class="content">
+<h3 class="accent-sky">AI에 대한 수학적 탐구 · Part V</h3>
+<h1>기계는<br><span class="accent-sky">말하는가</span>?</h1>
+<p class="subtitle">아니면 진동의 패턴을 계산하여 말하는 척하는가?</p>
+<p class="tagline">당신의 목소리는 성대의 진동, 혀의 움직임, 폐의 공기가 만들어낸 기적입니다. 기계의 "목소리"는 사인 함수의 합, 스펙트로그램의 패턴, 그리고 신경망의 예측입니다. 같은 소리, 완전히 다른 기원. 그 수학을 들어봅니다.</p>
+<button class="start-btn" onclick="initAudio();document.getElementById('sec-wave').scrollIntoView({behavior:'smooth'})">🎵 탐험 시작</button>
+</div></section>
+
+<!-- §00 — WHAT IS SOUND? -->
+<section id="sec-wave"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">00 — 소리란 무엇인가</p>
+<h2>공기의 <span class="accent-gold">진동</span></h2>
+<p>소리는 공기 분자의 압력 변화 — 빠르게 진동하면 높은 음, 느리게 진동하면 낮은 음. 모든 소리는 결국 <strong>파동</strong>입니다. 아래 슬라이더로 주파수와 진폭을 조절하고 직접 들어보세요.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">슬라이더를 움직이면 실시간으로 소리가 납니다</div>
+<div class="canvas-wrap"><span class="wave-label">사인파 — 가장 순수한 소리</span><canvas id="wave-canvas" height="200"></canvas></div>
+<div class="slider-row"><label>주파수</label><input type="range" id="wave-freq" min="60" max="2000" value="440" oninput="updateWave()"><span class="val" id="wave-freq-val">440 Hz</span></div>
+<div class="slider-row"><label>진폭</label><input type="range" id="wave-amp" min="0" max="100" value="50" oninput="updateWave()"><span class="val" id="wave-amp-val">50%</span></div>
+<div class="slider-row"><label>파형</label>
+<div class="btn-group" style="margin:0;"><button class="btn active" onclick="setWaveType('sine',this)">사인</button><button class="btn" onclick="setWaveType('square',this)">사각</button><button class="btn" onclick="setWaveType('sawtooth',this)">톱니</button><button class="btn" onclick="setWaveType('triangle',this)">삼각</button></div>
+</div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">주파수</div><div class="sv" id="w-freq">440 Hz</div></div>
+<div class="stat-box"><div class="sl">음이름</div><div class="sv" id="w-note">A4</div></div>
+<div class="stat-box"><div class="sl">파장</div><div class="sv" id="w-wlen">0.78 m</div></div>
+</div>
+</div>
+<div class="math-block">f(t) = A · sin(2π · freq · t) — 이 하나의 방정식이 순수한 소리</div>
+</div></section>
+
+<!-- §01 — FOURIER TRANSFORM -->
+<section id="sec-fourier"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">01 — 소리의 해부학</p>
+<h2><span class="accent-purple">푸리에</span> 변환: 소리를 분해하다</h2>
+<p>1822년, 조제프 푸리에는 혁명적 사실을 증명했습니다: <strong>어떤 복잡한 파동이든 단순한 사인파들의 합으로 분해할 수 있다.</strong> 피아노의 "도" 소리는 하나의 주파수가 아닙니다 — 기본 주파수와 수십 개의 배음(harmonics)의 합입니다.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">배음을 추가/제거하며 소리의 변화를 들어보세요</div>
+<div class="canvas-wrap"><span class="wave-label">배음 합성 — 사인파들을 더해 복잡한 소리 만들기</span><canvas id="fourier-canvas" height="300"></canvas></div>
+<div id="harmonic-sliders"></div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn btn-gold" id="fourier-play-btn" onclick="toggleFourierSound()">▶ 소리 듣기</button>
+<button class="btn" onclick="resetHarmonics()">초기화</button>
+</div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">기본 주파수</div><div class="sv">220 Hz (A3)</div></div>
+<div class="stat-box"><div class="sl">활성 배음</div><div class="sv" id="f-active">1</div></div>
+<div class="stat-box"><div class="sl">음색</div><div class="sv" id="f-timbre" style="font-size:0.8rem;">순수</div></div>
+</div>
+</div>
+<div class="math-block">f(t) = Σ aₙ · sin(2π · n · f₀ · t) — 모든 소리 = 사인파들의 합</div>
+<div class="explanation-card reveal" style="border-left-color:var(--purple);">
+<p><strong style="color:#fff;">푸리에 변환이 AI에게 중요한 이유.</strong> — 음성 인식, 음악 생성, TTS — 모든 오디오 AI의 첫 단계는 소리를 주파수 성분으로 분해하는 것입니다. 시간 영역의 복잡한 파형을 주파수 영역의 깔끔한 스펙트럼으로 변환합니다. 이것이 <em>기계가 소리를 "보는" 방법</em>입니다.</p>
+</div>
+</div></section>
+
+<!-- §02 — SPECTROGRAM -->
+<section id="sec-spec"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">02 — 소리의 지문</p>
+<h2><span class="accent-mint">스펙트로그램</span>: 소리를 눈으로 보다</h2>
+<p>스펙트로그램은 시간(가로)×주파수(세로)×강도(밝기)의 3차원 지도입니다. 같은 음절이라도 화자마다, 감정마다 스펙트로그램이 다릅니다. AI는 이 "소리의 사진"을 읽고 처리합니다.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">피아노 건반을 누르면 실시간 스펙트로그램이 그려집니다</div>
+<div class="canvas-wrap"><span class="wave-label">실시간 스펙트로그램 — 건반을 연주해보세요</span><canvas id="spec-canvas" height="200"></canvas></div>
+<div style="display:flex;justify-content:center;margin:1rem 0;overflow-x:auto;padding:0.5rem 0;" id="piano-container"></div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">연주 중인 음</div><div class="sv" id="spec-note">—</div></div>
+<div class="stat-box"><div class="sl">주파수</div><div class="sv" id="spec-freq">—</div></div>
+</div>
+</div>
+<div class="explanation-card reveal" style="border-left-color:var(--mint);">
+<p style="font-family:var(--font-display);font-style:italic;color:var(--mint);font-size:1.05rem;margin-bottom:0.5rem;">"인간은 소리를 듣습니다. 기계는 소리를 봅니다."</p>
+<p>Mel 스펙트로그램은 인간의 청각 특성에 맞춰 주파수 축을 비선형으로 스케일합니다. 저음역은 넓게, 고음역은 좁게 — 인간의 귀가 주파수를 인지하는 방식과 동일합니다. 이것이 음성 AI의 표준 입력 형식입니다.</p>
+</div>
+</div></section>
+
+<!-- §03 — VOICE AS NUMBERS -->
+<section id="sec-voice"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">03 — 목소리를 숫자로</p>
+<h2>아날로그에서 <span class="accent-coral">디지털</span>로</h2>
+<p>연속적인 공기의 진동을 컴퓨터가 다루려면 <strong>샘플링</strong>해야 합니다 — 초당 수만 번 진폭을 측정하여 숫자의 배열로 변환합니다. CD 품질은 44,100 Hz. 전화는 8,000 Hz.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">샘플링 레이트를 낮추면 음질 저하를 직접 들을 수 있습니다</div>
+<div class="canvas-wrap"><span class="wave-label">샘플링: 연속 파형 → 이산 점들</span><canvas id="sample-canvas" height="250"></canvas></div>
+<div class="slider-row"><label>SR</label><input type="range" id="sr-slider" min="4" max="100" value="60" oninput="drawSample()"><span class="val" id="sr-val">60 샘플</span></div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn btn-gold" onclick="playSampled()">▶ 소리 듣기</button>
+</div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">샘플 수</div><div class="sv" id="sr-count">60</div></div>
+<div class="stat-box"><div class="sl">정보 손실</div><div class="sv" id="sr-loss" style="color:var(--coral);">4%</div></div>
+</div>
+</div>
+<div class="math-block">나이퀴스트 정리: f_s ≥ 2 · f_max — 최고 주파수의 2배로 샘플링해야 원음 복원 가능</div>
+</div></section>
+
+<!-- §04 — HOW TTS WORKS -->
+<section id="sec-tts"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">04 — 기계가 말하는 법</p>
+<h2><span class="accent-gold">TTS</span>: 텍스트에서 목소리로</h2>
+<p>현대 TTS(Text-to-Speech)는 세 단계로 작동합니다: 텍스트 분석 → 스펙트로그램 생성 → 파형 복원. 각 단계에 신경망이 사용됩니다.</p>
+</div>
+<div class="demo-card reveal">
+<div class="canvas-wrap"><canvas id="tts-canvas" height="300"></canvas></div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn btn-gold" id="tts-btn" onclick="runTTS()">▶ TTS 파이프라인</button>
+<button class="btn" onclick="resetTTS()">초기화</button>
+</div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">단계</div><div class="sv" id="tts-stage" style="font-size:0.8rem;">준비</div></div>
+<div class="stat-box"><div class="sl">모델</div><div class="sv" id="tts-model" style="font-size:0.7rem;">—</div></div>
+</div>
+</div>
+<div class="demo-card reveal" style="border-left:3px solid var(--gold);">
+<h3 class="accent-gold" style="margin-bottom:0.5rem;">TTS의 역사</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin:0.8rem 0;">
+<div style="background:var(--bg3);border-radius:10px;padding:1rem;border:1px solid rgba(240,180,41,0.15);">
+<div style="font-family:var(--font-body);font-weight:600;color:var(--coral);margin-bottom:0.3rem;">1세대: 이어붙이기</div>
+<p style="font-size:0.78rem;color:var(--text);margin:0;">녹음된 음소 조각을 이어붙임. 로봇 같은 소리. 내비게이션 안내 등에 사용.</p>
+</div>
+<div style="background:var(--bg3);border-radius:10px;padding:1rem;border:1px solid rgba(56,189,248,0.15);">
+<div style="font-family:var(--font-body);font-weight:600;color:var(--sky);margin-bottom:0.3rem;">2세대: WaveNet (2016)</div>
+<p style="font-size:0.78rem;color:var(--text);margin:0;">Google DeepMind. 오디오 샘플을 하나씩 예측. 최초로 자연스러운 AI 음성. 하지만 매우 느림.</p>
+</div>
+<div style="background:var(--bg3);border-radius:10px;padding:1rem;border:1px solid rgba(167,139,250,0.15);">
+<div style="font-family:var(--font-body);font-weight:600;color:var(--purple);margin-bottom:0.3rem;">3세대: 트랜스포머 TTS</div>
+<p style="font-size:0.78rem;color:var(--text);margin:0;">VALL-E, Bark, ElevenLabs. 3초 음성 샘플로 누구든 복제. 실시간 합성. 구별 거의 불가능.</p>
+</div>
+</div>
+</div>
+</div></section>
+
+<!-- §05 — VOICE CLONING -->
+<section id="sec-clone"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">05 — 목소리의 복제</p>
+<h2><span class="accent-coral">음성 복제</span>: 3초면 충분합니다</h2>
+<p>현대 음성 복제 기술은 3초의 음성 샘플만으로 화자의 특성을 포착합니다. 음색, 속도, 억양, 감정까지. 기술적으로는 화자의 음성을 <strong>임베딩 벡터</strong>로 압축하여 TTS 모델에 조건으로 주입합니다.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">각 "화자"의 특성이 다른 파형으로 나타납니다</div>
+<div class="canvas-wrap"><span class="wave-label">화자 임베딩: 같은 텍스트, 다른 목소리</span><canvas id="clone-canvas" height="250"></canvas></div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn active" onclick="setVoice(0,this)">🎙️ 화자 A (낮은)</button>
+<button class="btn" onclick="setVoice(1,this)">🎤 화자 B (높은)</button>
+<button class="btn" onclick="setVoice(2,this)">🎶 화자 C (따뜻한)</button>
+</div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">기본 주파수</div><div class="sv" id="cl-f0">110 Hz</div></div>
+<div class="stat-box"><div class="sl">음색</div><div class="sv" id="cl-timbre" style="font-size:0.8rem;">깊은</div></div>
+<div class="stat-box"><div class="sl">임베딩 차원</div><div class="sv">256-d</div></div>
+</div>
+</div>
+</div></section>
+
+<!-- §06 — MUSIC GENERATION -->
+<section id="sec-music"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">06 — 기계의 작곡</p>
+<h2>음악을 <span class="accent-purple">생성</span>하다</h2>
+<p>음악 생성 AI — Suno, Udio, MusicGen — 는 텍스트 프롬프트에서 음악을 만듭니다. 내부적으로는 오디오를 토큰으로 변환(코덱)하고, 트랜스포머로 다음 토큰을 예측합니다. Part II에서 본 것과 정확히 같은 원리가 소리에 적용됩니다.</p>
+</div>
+<div class="demo-card reveal">
+<div class="audio-note">각 장르 버튼을 눌러 알고리즘 작곡을 들어보세요</div>
+<div class="canvas-wrap"><span class="wave-label">알고리즘 작곡 — 확률적 멜로디 생성</span><canvas id="music-canvas" height="200"></canvas></div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn btn-gold" onclick="playAlgoMusic(0)">🎹 고전적</button>
+<button class="btn" onclick="playAlgoMusic(1)">🎸 블루스</button>
+<button class="btn" onclick="playAlgoMusic(2)">🌸 동양적</button>
+<button class="btn" onclick="stopAlgoMusic()">⏹ 정지</button>
+</div>
+</div>
+<div class="explanation-card reveal" style="border-left-color:var(--purple);">
+<p><strong style="color:#fff;">음악 AI의 핵심 통찰.</strong> — 텍스트의 다음 토큰 예측(Part II)과 음악의 다음 토큰 예측은 수학적으로 동일합니다. 차이는 토큰의 종류뿐 — 텍스트 AI는 단어를 예측하고, 음악 AI는 오디오 코덱 토큰을 예측합니다. <em>같은 트랜스포머, 다른 언어.</em></p>
+</div>
+</div></section>
+
+<!-- §07 — ROSETTA STONE -->
+<section id="sec-rosetta" style="min-height:auto;padding:4rem 2rem;"><div class="section-inner">
+<div class="reveal">
+<p class="section-num">07 — 연결</p>
+<h2>인간의 목소리 vs <span class="accent-gold">기계의 목소리</span></h2>
+</div>
+<div class="demo-card reveal"><table class="rosetta-simple"><thead><tr><th></th><th style="color:var(--gold);">인간</th><th style="color:var(--sky);">기계</th></tr></thead><tbody>
+<tr><td class="rs-icon">🫁</td><td><strong>음원</strong> — 성대 진동 + 폐의 공기</td><td><strong>음원</strong> — 사인파 합성 / 신경 보코더</td></tr>
+<tr><td class="rs-icon">👅</td><td><strong>조음</strong> — 혀, 입술, 구강 형태</td><td><strong>조음</strong> — 필터 계수 / mel 스펙트로그램</td></tr>
+<tr><td class="rs-icon">🧠</td><td><strong>언어 처리</strong> — 브로카 영역, 베르니케 영역</td><td><strong>언어 처리</strong> — 트랜스포머 인코더</td></tr>
+<tr><td class="rs-icon">🎭</td><td><strong>감정</strong> — 자율신경계, 호르몬</td><td><strong>감정</strong> — 프로소디 임베딩 벡터</td></tr>
+<tr><td class="rs-icon">👶</td><td><strong>학습</strong> — 수년간의 모방과 피드백</td><td><strong>학습</strong> — 수만 시간의 음성 데이터</td></tr>
+<tr><td class="rs-icon">🎵</td><td><strong>노래</strong> — 감정 + 음악적 훈련</td><td><strong>노래</strong> — 오디오 코덱 토큰 예측</td></tr>
+</tbody></table></div>
+</div></section>
+
+<!-- CLOSING -->
+<section id="sec-closing"><div class="section-inner" style="text-align:center;"><div class="reveal">
+<h2>그래서 — 기계는<br><span class="accent-sky">말하는가?</span></h2>
+<p style="color:var(--muted);font-family:var(--font-display);font-style:italic;font-size:1.05rem;max-width:640px;margin:2rem auto;">
+기계의 목소리에는 숨결이 없습니다.<br>
+떨림도, 갈라짐도, 웃음이 섞인 말도 없습니다.<br>
+오직 사인파의 합, 스펙트로그램의 패턴,<br>
+그리고 놀라울 만큼 정교한 확률적 예측.<br><br>
+그것은 말하기가 아닐지도 모릅니다.<br>
+하지만 당신의 귀는 그 차이를<br>
+<span class="accent-sky">더 이상 구별하지 못합니다.</span>
+</p>
+<div style="margin-top:2rem;display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;">
+<a href="imagine_ko.html" class="start-btn" style="border-color:var(--muted);color:var(--muted);">← Part IV: 상상</a>
+</div>
+</div></div></section>
+
+<footer>
+<p>기계는 말하는가? — 푸리에 변환에서 음성 합성까지</p>
+<div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:.2rem">
+<div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;color:#edeef2;">Sang-hyun Kim</div>
+<div style="font-family:'DM Sans',sans-serif;font-size:.72rem;color:#5c6178;">고등과학원 (Korea Institute for Advanced Study)</div>
+<a href="https://kimsh.kr" style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;margin-top:.25rem">kimsh.kr</a>
+</div>
+</footer>
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
+<script>
+// ═══ AUDIO CORE ═══
+let actx=null,liveOsc=null,liveGain=null;
+function initAudio(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();}
+function dismissNotice(){initAudio();const n=document.getElementById('audio-notice');n.style.transition='opacity 0.3s';n.style.opacity='0';setTimeout(()=>n.remove(),300);}
+function playChime(freq,dur=0.15,vol=0.06,type='triangle'){if(!actx)return;const now=actx.currentTime,o=actx.createOscillator(),g=actx.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(vol,now);g.gain.exponentialRampToValueAtTime(0.0001,now+dur);o.connect(g).connect(actx.destination);o.start(now);o.stop(now+dur+0.05);}
+function playChord(freqs,dur=0.4,vol=0.03){freqs.forEach((f,i)=>{setTimeout(()=>playChime(f,dur,vol,'sine'),i*40);});}
+
+// ═══ HERO ═══
+const heroC=document.getElementById('hero-canvas'),hCtx=heroC.getContext('2d');
+function drawHero(){const w=heroC.width=heroC.clientWidth*2,h=heroC.height=heroC.clientHeight*2;hCtx.clearRect(0,0,w,h);
+const t=performance.now()/1000;const cy=h/2;
+for(let i=0;i<5;i++){hCtx.beginPath();const freq=0.5+i*0.3,amp=h*0.08/(i+1),phase=i*0.8;
+for(let x=0;x<w;x+=2){const y=cy+amp*Math.sin(freq*x/50+t*(1+i*0.3)+phase);x?hCtx.lineTo(x,y):hCtx.moveTo(x,y);}
+hCtx.strokeStyle=['#38bdf822','#a78bfa22','#f0b42922','#fb718522','#34d39922'][i];hCtx.lineWidth=2;hCtx.stroke();}
+requestAnimationFrame(drawHero);}drawHero();
+
+// ═══ §00 — WAVEFORM ═══
+const waveC=document.getElementById('wave-canvas'),wCtx=waveC.getContext('2d');
+let waveType='sine';
+function setWaveType(type,btn){waveType=type;btn.parentElement.querySelectorAll('.btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updateWave();}
+function noteFromFreq(f){const n=12*Math.log2(f/440)+69;const names=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];return names[Math.round(n)%12]+(Math.floor((Math.round(n)-12)/12));}
+function updateWave(){
+  initAudio();const freq=+document.getElementById('wave-freq').value;const amp=+document.getElementById('wave-amp').value/100;
+  document.getElementById('wave-freq-val').textContent=freq+' Hz';document.getElementById('wave-amp-val').textContent=Math.round(amp*100)+'%';
+  document.getElementById('w-freq').textContent=freq+' Hz';document.getElementById('w-note').textContent=noteFromFreq(freq);
+  document.getElementById('w-wlen').textContent=(343/freq).toFixed(2)+' m';
+  // Live sound
+  if(!liveOsc){liveOsc=actx.createOscillator();liveGain=actx.createGain();liveOsc.connect(liveGain).connect(actx.destination);liveOsc.start();}
+  liveOsc.type=waveType;liveOsc.frequency.setValueAtTime(freq,actx.currentTime);liveGain.gain.setValueAtTime(amp*0.08,actx.currentTime);
+  clearTimeout(window._waveTimeout);window._waveTimeout=setTimeout(()=>{if(liveGain)liveGain.gain.setValueAtTime(0,actx.currentTime);},600);
+  drawWave(freq,amp);
+}
+function drawWave(freq,amp){
+  const w=waveC.width=waveC.clientWidth*2,h=waveC.height=400;wCtx.clearRect(0,0,w,h);
+  const cy=h/2;wCtx.beginPath();
+  for(let x=0;x<w;x++){
+    const t=x/w*4;let y;
+    if(waveType==='sine')y=Math.sin(2*Math.PI*t*2);
+    else if(waveType==='square')y=Math.sin(2*Math.PI*t*2)>0?1:-1;
+    else if(waveType==='sawtooth')y=2*(t*2%1)-1;
+    else y=4*Math.abs((t*2%1)-0.5)-1;
+    wCtx.lineTo(x,cy-y*amp*cy*0.8);
+  }
+  wCtx.strokeStyle='#38bdf8';wCtx.lineWidth=2.5;wCtx.stroke();
+  wCtx.beginPath();wCtx.moveTo(0,cy);wCtx.lineTo(w,cy);wCtx.strokeStyle='rgba(255,255,255,0.06)';wCtx.lineWidth=1;wCtx.stroke();
+}
+drawWave(440,0.5);
+
+// ═══ §01 — FOURIER / HARMONICS ═══
+const fourC=document.getElementById('fourier-canvas'),fourX=fourC.getContext('2d');
+const HARM_COUNT=8;let harmonics=new Float32Array(HARM_COUNT);harmonics[0]=1;
+let fourierOscs=null,fourierGain=null,fourierPlaying=false;
+// Build sliders
+const hsCont=document.getElementById('harmonic-sliders');
+for(let i=0;i<HARM_COUNT;i++){
+  const row=document.createElement('div');row.className='slider-row';
+  row.innerHTML=`<label style="min-width:2rem;font-size:0.75rem;">${i+1}×</label><input type="range" min="0" max="100" value="${i===0?100:0}" oninput="setHarmonic(${i},this.value)"><span class="val" id="h-val-${i}">${i===0?'100':'0'}%</span>`;
+  hsCont.appendChild(row);
+}
+function setHarmonic(i,v){harmonics[i]=v/100;document.getElementById('h-val-'+i).textContent=v+'%';drawFourier();updateFourierSound();}
+function resetHarmonics(){harmonics.fill(0);harmonics[0]=1;
+  for(let i=0;i<HARM_COUNT;i++){hsCont.querySelectorAll('input[type=range]')[i].value=i===0?100:0;document.getElementById('h-val-'+i).textContent=i===0?'100':'0'+'%';}
+  drawFourier();updateFourierSound();}
+function drawFourier(){
+  const w=fourC.width=fourC.clientWidth*2,h=fourC.height=600;fourX.clearRect(0,0,w,h);
+  const cy=h/2,colors=['#f0b429','#38bdf8','#a78bfa','#fb7185','#34d399','#f97316','#06b6d4','#c084fc'];
+  // Individual harmonics (faint)
+  for(let n=0;n<HARM_COUNT;n++){if(harmonics[n]<0.01)continue;
+    fourX.beginPath();for(let x=0;x<w;x++){const t=x/w*4;const y=harmonics[n]*Math.sin(2*Math.PI*(n+1)*t);fourX.lineTo(x,cy-y*cy*0.35);}
+    fourX.strokeStyle=colors[n]+'44';fourX.lineWidth=1;fourX.stroke();
+  }
+  // Combined waveform
+  fourX.beginPath();
+  for(let x=0;x<w;x++){const t=x/w*4;let y=0;for(let n=0;n<HARM_COUNT;n++)y+=harmonics[n]*Math.sin(2*Math.PI*(n+1)*t);
+    const maxA=harmonics.reduce((a,b)=>a+b,0)||1;fourX.lineTo(x,cy-y/maxA*cy*0.7);}
+  fourX.strokeStyle='#fff';fourX.lineWidth=2.5;fourX.stroke();
+  // Axis
+  fourX.beginPath();fourX.moveTo(0,cy);fourX.lineTo(w,cy);fourX.strokeStyle='rgba(255,255,255,0.06)';fourX.lineWidth=1;fourX.stroke();
+  // Stats
+  const active=harmonics.reduce((a,v)=>a+(v>0.01?1:0),0);
+  document.getElementById('f-active').textContent=active;
+  document.getElementById('f-timbre').textContent=active<=1?'순수':active<=3?'밝은':active<=5?'풍부한':'복잡한';
+  // Bar chart (right side)
+  const barW=w*0.15,barX=w-barW-20;
+  for(let n=0;n<HARM_COUNT;n++){
+    const bh=harmonics[n]*h*0.08;const by=h-30-n*(h*0.08+8);
+    fourX.fillStyle=colors[n]+'66';fourX.fillRect(barX,by-bh,barW*harmonics[n],bh);
+    fourX.font='400 16px "JetBrains Mono"';fourX.fillStyle=colors[n];fourX.textAlign='right';
+    fourX.fillText((n+1)+'×',barX-8,by-bh/2+5);
+  }
+}
+drawFourier();
+function toggleFourierSound(){
+  initAudio();
+  if(fourierPlaying){stopFourierSound();return;}
+  fourierPlaying=true;document.getElementById('fourier-play-btn').textContent='⏹ 정지';
+  fourierOscs=[];fourierGain=actx.createGain();fourierGain.gain.value=0.04;fourierGain.connect(actx.destination);
+  for(let i=0;i<HARM_COUNT;i++){const o=actx.createOscillator();const g=actx.createGain();o.type='sine';o.frequency.value=220*(i+1);g.gain.value=harmonics[i]*0.15;o.connect(g).connect(fourierGain);o.start();fourierOscs.push({o,g});}
+}
+function stopFourierSound(){if(!fourierOscs)return;fourierOscs.forEach(({o})=>{try{o.stop();}catch(e){}});fourierOscs=null;fourierPlaying=false;document.getElementById('fourier-play-btn').textContent='▶ 소리 듣기';}
+function updateFourierSound(){if(!fourierOscs)return;fourierOscs.forEach(({g},i)=>{g.gain.value=harmonics[i]*0.15;});}
+
+// ═══ §02 — SPECTROGRAM + PIANO ═══
+const specC=document.getElementById('spec-canvas'),specX=specC.getContext('2d');
+const specData=[];let specW=0;
+const NOTES=[{n:'C4',f:261.63},{n:'D4',f:293.66},{n:'E4',f:329.63},{n:'F4',f:349.23},{n:'G4',f:392.00},{n:'A4',f:440.00},{n:'B4',f:493.88},{n:'C5',f:523.25},{n:'D5',f:587.33},{n:'E5',f:659.25}];
+const BLACKS=[{n:'C#4',f:277.18,after:0},{n:'D#4',f:311.13,after:1},{n:'F#4',f:369.99,after:3},{n:'G#4',f:415.30,after:4},{n:'A#4',f:466.16,after:5}];
+// Build piano
+const pianoEl=document.getElementById('piano-container');
+NOTES.forEach((note,i)=>{
+  const k=document.createElement('div');k.className='piano-key white';k.textContent=note.n;
+  k.onpointerdown=()=>{initAudio();playPianoNote(note.f,note.n);k.classList.add('pressed');setTimeout(()=>k.classList.remove('pressed'),300);};
+  pianoEl.appendChild(k);
+});
+BLACKS.forEach(b=>{
+  const whites=pianoEl.querySelectorAll('.white');const ref=whites[b.after+1];
+  if(ref){const k=document.createElement('div');k.className='piano-key black';k.textContent=b.n.replace('4','').replace('5','');
+    k.onpointerdown=()=>{initAudio();playPianoNote(b.f,b.n);k.classList.add('pressed');setTimeout(()=>k.classList.remove('pressed'),300);};
+    pianoEl.insertBefore(k,ref);}
+});
+function playPianoNote(freq,name){
+  playChime(freq,0.5,0.08,'sine');playChime(freq*2,0.3,0.02,'sine');playChime(freq*3,0.2,0.01,'sine');
+  document.getElementById('spec-note').textContent=name;document.getElementById('spec-freq').textContent=Math.round(freq)+' Hz';
+  // Add to spectrogram
+  const col=new Float32Array(32);for(let i=0;i<32;i++){const binFreq=100+i*50;const dist=Math.abs(binFreq-freq);
+    col[i]=Math.max(0,1-dist/200);if(dist<10)col[i]=1;
+    const h2=Math.abs(binFreq-freq*2);col[i]+=Math.max(0,0.5-h2/200);
+    const h3=Math.abs(binFreq-freq*3);col[i]+=Math.max(0,0.3-h3/200);}
+  specData.push(col);if(specData.length>100)specData.shift();
+  drawSpec();
+}
+function drawSpec(){
+  const w=specC.width=specC.clientWidth*2,h=specC.height=400;specX.clearRect(0,0,w,h);
+  if(!specData.length)return;
+  const colW=w/100;
+  specData.forEach((col,ci)=>{
+    for(let fi=0;fi<col.length;fi++){const v=col[fi];if(v<0.01)continue;
+      const x=(100-specData.length+ci)*colW;const y=h-fi*(h/32)-h/32;
+      const hue=180+v*80;specX.fillStyle=`hsla(${hue},70%,${30+v*40}%,${v*0.8})`;
+      specX.fillRect(x,y,colW+1,h/32+1);
+    }
+  });
+}
+
+// ═══ §03 — SAMPLING ═══
+const smpC=document.getElementById('sample-canvas'),smpX=smpC.getContext('2d');
+function drawSample(){
+  const w=smpC.width=smpC.clientWidth*2,h=smpC.height=500;smpX.clearRect(0,0,w,h);
+  const n=+document.getElementById('sr-slider').value;const cy=h/2;
+  document.getElementById('sr-val').textContent=n+' 샘플';document.getElementById('sr-count').textContent=n;
+  document.getElementById('sr-loss').textContent=Math.max(0,Math.round((1-n/100)*100))+'%';
+  // Continuous wave
+  smpX.beginPath();
+  for(let x=0;x<w;x++){const t=x/w*4;const y=Math.sin(2*Math.PI*t*2)+0.3*Math.sin(2*Math.PI*t*5);smpX.lineTo(x,cy-y*cy*0.35);}
+  smpX.strokeStyle='rgba(56,189,248,0.2)';smpX.lineWidth=2;smpX.stroke();
+  // Sampled points
+  for(let i=0;i<n;i++){
+    const x=i/n*w;const t=(i/n)*4;const y=Math.sin(2*Math.PI*t*2)+0.3*Math.sin(2*Math.PI*t*5);
+    const py=cy-y*cy*0.35;
+    smpX.beginPath();smpX.arc(x,py,4,0,6.28);smpX.fillStyle='#f0b429';smpX.fill();
+    // Stem
+    smpX.beginPath();smpX.moveTo(x,cy);smpX.lineTo(x,py);smpX.strokeStyle='#f0b42944';smpX.lineWidth=1;smpX.stroke();
+  }
+  // Reconstructed (connect dots)
+  smpX.beginPath();
+  for(let i=0;i<n;i++){const x=i/n*w;const t=(i/n)*4;const y=Math.sin(2*Math.PI*t*2)+0.3*Math.sin(2*Math.PI*t*5);
+    const py=cy-y*cy*0.35;i?smpX.lineTo(x,py):smpX.moveTo(x,py);}
+  smpX.strokeStyle='#f0b429';smpX.lineWidth=1.5;smpX.stroke();
+  // Axis
+  smpX.beginPath();smpX.moveTo(0,cy);smpX.lineTo(w,cy);smpX.strokeStyle='rgba(255,255,255,0.06)';smpX.lineWidth=1;smpX.stroke();
+}
+drawSample();
+function playSampled(){initAudio();const n=+document.getElementById('sr-slider').value;
+  const freq=n<20?200:n<50?350:440;playChime(freq,0.4,0.06,'sine');if(n<30)playChime(freq*0.99,0.4,0.03,'sawtooth');}
+
+// ═══ §04 — TTS PIPELINE ═══
+const ttsC=document.getElementById('tts-canvas'),ttsX=ttsC.getContext('2d');
+let ttsStep=-1,ttsRunning=false,ttsTimer=null;
+const TTS_STAGES=['텍스트 입력','음소 변환','스펙트로그램 생성','보코더 (파형 복원)','음성 출력'];
+const TTS_MODELS=['—','G2P 모델','Tacotron / VITS','HiFi-GAN / WaveNet','✓ 완료'];
+function drawTTS(){
+  const w=ttsC.width=ttsC.clientWidth*2,h=ttsC.height=600;ttsX.clearRect(0,0,w,h);
+  const stW=(w-80)/TTS_STAGES.length;const colors=['#f0b429','#38bdf8','#a78bfa','#fb7185','#34d399'];
+  TTS_STAGES.forEach((name,i)=>{
+    const x=40+i*stW;const active=ttsStep>=i;const cur=ttsStep===i;
+    ttsX.fillStyle=cur?colors[i]+'30':active?colors[i]+'15':'rgba(255,255,255,0.03)';
+    ttsX.strokeStyle=cur?colors[i]:active?colors[i]+'60':'rgba(255,255,255,0.08)';
+    ttsX.lineWidth=cur?2:1;ttsX.beginPath();ttsX.roundRect(x+5,h/2-55,stW-10,110,10);ttsX.fill();ttsX.stroke();
+    ttsX.font=(cur?'600':'400')+' 18px "DM Sans"';ttsX.fillStyle=active?colors[i]:'#7b8db5';ttsX.textAlign='center';ttsX.fillText(name,x+stW/2,h/2+5);
+    ttsX.font='400 14px "JetBrains Mono"';ttsX.fillStyle=active?colors[i]+'aa':'#7b8db544';ttsX.fillText('('+(i+1)+')',x+stW/2,h/2-30);
+    if(i<TTS_STAGES.length-1){ttsX.font='400 22px "DM Sans"';ttsX.fillStyle=ttsStep>i?'#f0b429':'#7b8db533';ttsX.fillText('→',x+stW-2,h/2+5);}
+  });
+  document.getElementById('tts-stage').textContent=ttsStep<0?'준비':TTS_STAGES[Math.min(ttsStep,4)];
+  document.getElementById('tts-model').textContent=ttsStep<0?'—':TTS_MODELS[Math.min(ttsStep,4)];
+}
+function runTTS(){if(ttsRunning)return;resetTTS();ttsRunning=true;ttsStep=0;initAudio();drawTTS();playChime(250,0.2,0.03,'triangle');
+  ttsTimer=setInterval(()=>{ttsStep++;drawTTS();playChime(250+ttsStep*80,0.2,0.03,'triangle');
+    if(ttsStep>=4){ttsRunning=false;clearInterval(ttsTimer);playChord([523.25,659.25,783.99]);}},1200);}
+function resetTTS(){ttsStep=-1;ttsRunning=false;clearInterval(ttsTimer);drawTTS();}
+drawTTS();
+
+// ═══ §05 — VOICE CLONING ═══
+const clC=document.getElementById('clone-canvas'),clX=clC.getContext('2d');
+const VOICES=[{f0:110,color:'#fb7185',name:'깊은',label:'A'},{f0:280,color:'#38bdf8',name:'밝은',label:'B'},{f0:190,color:'#f0b429',name:'따뜻한',label:'C'}];
+let curVoice=0;
+function setVoice(v,btn){curVoice=v;btn.parentElement.querySelectorAll('.btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  document.getElementById('cl-f0').textContent=VOICES[v].f0+' Hz';document.getElementById('cl-timbre').textContent=VOICES[v].name;
+  initAudio();playChime(VOICES[v].f0,0.3,0.05,'sine');playChime(VOICES[v].f0*2,0.2,0.02,'sine');drawClone();}
+function drawClone(){
+  const w=clC.width=clC.clientWidth*2,h=clC.height=500;clX.clearRect(0,0,w,h);
+  const cy=h/2;const v=VOICES[curVoice];const t=performance.now()/1000;
+  clX.beginPath();
+  for(let x=0;x<w;x++){const tt=x/w*6;
+    let y=Math.sin(2*Math.PI*tt*2)+0.5*Math.sin(2*Math.PI*tt*(v.f0/110))+0.2*Math.sin(2*Math.PI*tt*7+t);
+    clX.lineTo(x,cy-y*cy*0.25);}
+  clX.strokeStyle=v.color;clX.lineWidth=2.5;clX.stroke();
+  clX.font='600 20px "DM Sans"';clX.fillStyle=v.color;clX.textAlign='left';clX.fillText('화자 '+v.label+' — '+v.name,20,30);
+  requestAnimationFrame(drawClone);
+}
+drawClone();
+
+// ═══ §06 — ALGORITHMIC MUSIC ═══
+const musC=document.getElementById('music-canvas'),musX=musC.getContext('2d');
+let musicTimer=null,musicNotes=[];
+const SCALES={0:[261.63,293.66,329.63,349.23,392,440,493.88,523.25],1:[220,261.63,277.18,329.63,349.23,415.30,440],2:[261.63,293.66,349.23,392,440,523.25,587.33]};
+function playAlgoMusic(genre){stopAlgoMusic();initAudio();musicNotes=[];let i=0;const scale=SCALES[genre];
+  musicTimer=setInterval(()=>{
+    const note=scale[Math.floor(Math.random()*scale.length)];const oct=Math.random()>0.3?1:2;
+    playChime(note*oct,0.25,0.04,'sine');musicNotes.push({f:note*oct,t:performance.now()});
+    if(musicNotes.length>30)musicNotes.shift();drawMusic();i++;if(i>40)stopAlgoMusic();
+  },250);}
+function stopAlgoMusic(){clearInterval(musicTimer);musicTimer=null;}
+function drawMusic(){
+  const w=musC.width=musC.clientWidth*2,h=musC.height=400;musX.clearRect(0,0,w,h);
+  const now=performance.now();
+  musicNotes.forEach((n,i)=>{
+    const age=(now-n.t)/8000;const x=age*w;const y=h-(n.f-200)/(600)*h;
+    musX.beginPath();musX.arc(x,y,4+Math.sin(age*10)*2,0,6.28);
+    const hue=180+(n.f-200);musX.fillStyle=`hsla(${hue},60%,60%,${1-age})`;musX.fill();
+  });
+}
+
+// ═══ NAV ═══
+const obs=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+const secs=['hero','sec-wave','sec-fourier','sec-spec','sec-voice','sec-tts','sec-clone','sec-music','sec-rosetta','sec-closing'];
+const nd=document.getElementById('nav-dots');secs.forEach(id=>{const d=document.createElement('button');d.className='nav-dot';d.onclick=()=>document.getElementById(id).scrollIntoView({behavior:'smooth'});nd.appendChild(d);});
+const sO=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){const i=secs.indexOf(e.target.id);document.querySelectorAll('.nav-dot').forEach((d,j)=>d.classList.toggle('active',j===i));}});},{threshold:0.3});
+secs.forEach(id=>{const el=document.getElementById(id);if(el)sO.observe(el);});
+</script>
+</body>
+</html>

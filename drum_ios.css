@@ -1,0 +1,71 @@
+/* 
+  drum_ios.css 
+  iOS-specific overrides for Mellow Math "Shape of a Drum" Chapter.
+  Loaded ONLY when displayed within the iOS App's WKWebView.
+*/
+
+/* 1. Hide Web-Specific UI */
+#hud,               /* Mute, Pitch adjustments */
+.nav-dots,          /* Right-side navigation dots */
+#badge,             /* bottom-left badge */
+footer {            /* global footer */
+  display: none !important;
+}
+
+/* 2. Safe Area Padding (Notches, dynamic island, home indicator) */
+.wrap {
+  padding-top: max(7rem, env(safe-area-inset-top) + 4rem) !important;
+  padding-bottom: max(5rem, env(safe-area-inset-bottom) + 3rem) !important;
+  padding-left: max(2.5rem, env(safe-area-inset-left) + 1rem) !important;
+  padding-right: max(2.5rem, env(safe-area-inset-right) + 1rem) !important;
+}
+
+/* 3. Hero Section Tweaks */
+#hero {
+  /* Prevent hero from hiding narration toolbar */
+  height: calc(100vh - 120px) !important;
+  min-height: 500px;
+}
+
+/* 4. Touch Targets (Minimum 44x44pt) */
+.action-btn,
+.beat-play-btn,
+.phasor-toggle {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.4rem;
+}
+
+/* Mode grid cards */
+.mode-card {
+  min-height: 80px; 
+}
+
+/* Beat picker */
+.beat-picker {
+  gap: 0.8rem !important; /* more breathing room */
+}
+
+.bp {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.8rem;
+}
+
+/* 5. Disable Web Callouts that App Handles */
+/* E.g. "Use headphones" might still be okay, but disable interaction on canvases we don't want zooming */
+canvas {
+  touch-action: none; /* prevent pinch zoom / panning on interactive canvases */
+}
+
+@media (prefers-color-scheme: dark) {
+  /* Ensure background matches the app's native dark mode perfectly */
+  body {
+    background: #05060c !important;
+  }
+}

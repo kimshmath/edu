@@ -1,0 +1,76 @@
+/* 
+  clt_ios.css 
+  iOS-specific overrides for Mellow Math "The Bell Curve" (CLT) Chapter.
+  Loaded ONLY when displayed within the iOS App's WKWebView.
+*/
+
+/* 1. Hide Web-Specific UI */
+#badge,             /* bottom-left badge */
+.floating-badge,    /* bottom-left floating badge */
+.ticker-bar,        /* moving ticker at top */
+footer {            /* global footer */
+  display: none !important;
+}
+
+/* 2. Safe Area Padding (Notches, dynamic island, home indicator) */
+.wrap {
+  padding-top: max(7rem, env(safe-area-inset-top) + 4rem) !important;
+  padding-bottom: max(5rem, env(safe-area-inset-bottom) + 3rem) !important;
+  padding-left: max(2.5rem, env(safe-area-inset-left) + 1rem) !important;
+  padding-right: max(2.5rem, env(safe-area-inset-right) + 1rem) !important;
+}
+
+/* 3. Hero Section Tweaks */
+#hero {
+  /* Prevent hero from hiding narration toolbar */
+  height: calc(100vh - 120px) !important;
+  min-height: 500px;
+}
+
+/* 4. Touch Targets (Minimum 44x44pt) */
+.btn {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem 1.6rem;
+  font-size: 0.7rem; /* slightly larger for readability */
+}
+
+/* Portfolio Toggles */
+.ptoggle-btn {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.2rem;
+}
+
+/* Slider */
+.poll-slider {
+  height: 24px !important; /* larger touch area for the track */
+}
+.poll-slider::-webkit-slider-thumb {
+  width: 28px !important;
+  height: 28px !important;
+}
+.poll-slider::-moz-range-thumb {
+  width: 28px !important;
+  height: 28px !important;
+}
+
+/* 5. Disable Web Callouts that App Handles */
+canvas {
+  touch-action: none; /* prevent pinch zoom / panning on interactive canvases */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  /* Ensure background matches the app's native dark mode perfectly */
+  body {
+    background: #05060c !important;
+  }
+}

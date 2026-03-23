@@ -13,8 +13,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#05060c">
-<meta name="description" content="Why do the polls look the same? A beautiful visual exploration of the Central Limit Theorem.">
-<title>The Bell Curve — Central Limit Theorem</title>
+<meta name="description" content="왜 여론조사 결과는 비슷할까? 중심극한정리에 대한 아름다운 시각적 탐험입니다.">
+<title>종형 곡선 — 중심극한정리</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Space+Mono:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
@@ -186,15 +186,15 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.8rem}
   <canvas id="hero-canvas"></canvas>
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <div class="hero-kicker">Probability · Statistics · Universality</div>
+    <div class="hero-kicker">확률 · 통계 · 보편성</div>
     <h1 class="hero-title">
-      <span class="title-line"><span class="title-word tl1">Why do the</span></span>
-      <span class="title-line"><span class="title-word tl2 hero-italic">polls look</span></span>
-      <span class="title-line"><span class="title-word tl3">the same??</span></span>
+      <span class="title-line"><span class="title-word tl1">왜 여론조사</span></span>
+      <span class="title-line"><span class="title-word tl2 hero-italic">결과는 항상</span></span>
+      <span class="title-line"><span class="title-word tl3">비슷할까?</span></span>
     </h1>
-    <div class="hero-sub">The hidden fingerprint of the universe — how independent chaos inevitably sculpts the beautiful, eternal Bell Curve.</div>
+    <div class="hero-sub">우주의 숨겨진 패턴 — 독립적인 혼돈이 어떻게 가장 안정적이고 아름다운 종형 곡선을 만들어내는지 탐구합니다.</div>
   </div>
-  <div class="scroll-hint">scroll</div>
+  <div class="scroll-hint">스크롤</div>
 </section>
 
 <!-- ===== LIVE TICKER ===== -->
@@ -206,25 +206,25 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.8rem}
 
 <!-- ===== § 01 — ORDER OUT OF CHAOS ===== -->
 <div class="wrap fi" id="sec-intro">
-  <div class="s-num">§ 01 — Assembling the Crowd</div>
-  <h2 class="s-title">Order Out of<br>Chaos</h2>
+  <div class="s-num">§ 01 — 군중 모으기</div>
+  <h2 class="s-title">혼돈 속에서 피어나는<br>질서</h2>
   <div class="grid-layout">
     <div class="prose">
-      <p class="dropcap">If you flip a fair coin a thousand times, the result is wildly unpredictable. If millions of people are asked to guess the weight of an ox, their individual answers will be hilariously wrong. Yet in both scenarios, if you plot everyone's results on a graph, a magical shape emerges from the complete irregularity.</p>
-      <p>This shape is the <em>Normal Distribution</em> — the <strong>Bell Curve</strong>. It is nature's ultimate garbage disposal for randomness. The governing principle is the <strong>Central Limit Theorem (CLT)</strong>: whenever you add up a large number of independent random events — no matter how strange or biased their original behavior — their collective sum will fiercely converge into a smooth, predictable Gaussian curve.</p>
-      <p>It does not matter if each individual is wildly irrational. It does not matter if the original distribution is jagged, bimodal, or heavily skewed. The mathematics is merciless and universal: add enough independent things together, and the Bell Curve emerges from the wreckage.</p>
+      <p class="dropcap">동전을 천 번 던진다면 그 결과는 무작위적이고 예측하기 어렵습니다. 수백만 명의 사람들에게 소의 몸무게를 추측하게 한다면, 개개인의 답변은 어이없을 정도로 틀릴지도 모릅니다. 하지만 놀랍게도 이 두 상황 모두에서, 모든 사람의 결과를 그래프로 그리면 복잡한 불규칙성 속에서 아주 마법 같은 형태가 나타납니다.</p>
+      <p>이 형태가 바로 정규 분포(Normal Distribution) — <strong>종형 곡선(Bell Curve)</strong>입니다. 종형 곡선은 자연이 무작위성을 처리하는 방식입니다. 이를 지배하는 원리가 바로 <strong>중심극한정리(Central Limit Theorem, CLT)</strong>입니다. 제아무리 이상하거나 편향된 행동을 하는 독립적인 확률 사건이라도, 그것들을 아주 많이 더하면 그 총합은 반드시 매끄럽고 예측 가능한 가우스 곡선으로 수렴합니다.</p>
+      <p>각각의 개인이 얼마나 비합리적인지는 중요하지 않습니다. 원래의 분포 모양이 울퉁불퉁하거나 한쪽으로 심하게 치우쳐 있어도 상관없습니다. 수학은 냉혹하고 보편적입니다. 충분히 많은 독립적인 사건들을 더하면, 혼란 속에서 반드시 종형 곡선이 나타납니다.</p>
       <div class="callout">
-        "I know of scarcely anything so apt to impress the imagination as the wonderful form of cosmic order expressed by the Law of Frequency of Error. The law would have been personified by the Greeks and deified, if they had known of it."
-        <cite>— Sir Francis Galton, <em>Natural Inheritance</em>, 1889</cite>
+        "제가 아는 한 우주적인 질서의 경이로움을 이토록 잘 표현하는 법칙은 없습니다. 만약 고대 그리스인들이 이 '오차 빈도의 법칙'을 알았다면, 그들은 이 법칙을 의인화하고 신격화했을 것입니다."
+        <cite>— 프랜시스 골턴(Sir Francis Galton), <em>자연 유전</em>, 1889</cite>
       </div>
-      <p>The Galton Board (Quincunx) illustrates this perfectly. Balls fall through a grid of pegs. At every peg, a ball makes an independent, memoryless 50/50 choice: bounce left or bounce right. There is no coordination. No master plan. Yet watch what inevitably builds at the bottom.</p>
+      <p>골턴 보드(Galton Board)는 이를 완벽하게 보여줍니다. 수많은 공들이 격자 모양의 못을 통과해 떨어집니다. 각 못에 부딪힐 때마다 공은 완전히 독립적이고 과거에 얽매이지 않는 50대 50의 선택을 합니다: 왼쪽으로 갈지, 오른쪽으로 갈지. 여기에는 그 어떤 조율이나 계획도 없습니다. 하지만 공이 바닥에 쌓이면서 어떤 형태가 나타나는지 지켜보세요.</p>
     </div>
     <div>
       <div class="panel" style="text-align:center">
-        <h3>The Galton Board</h3>
-        <p style="font-size:.85rem;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:1rem">Each ball's final position is the sum of 20 independent random choices.</p>
+        <h3>골턴 보드 (수직 낙하 실험)</h3>
+        <p style="font-size:.85rem;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:1rem">각 공이 떨어지는 최종 위치는 20번의 독립적인 선택이 합쳐진 결과입니다.</p>
         <canvas id="galton-canvas" class="galton-canvas" width="420" height="440" style="margin-top:0"></canvas>
-        <button class="btn" id="btn-galton" style="margin-top:1.5rem">Drop 1000 Balls</button>
+        <button class="btn" id="btn-galton" style="margin-top:1.5rem">공 1000개 떨어뜨리기</button>
       </div>
     </div>
   </div>
@@ -232,19 +232,19 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.8rem}
   <div class="fact-row" style="margin-top:5rem">
     <div class="fact-cell">
       <div class="fact-number">∞</div>
-      <div class="fact-label">Distributions that all<br>converge to the Bell Curve</div>
+      <div class="fact-label">모두 종형 곡선으로<br>수렴하는 분포의 개수</div>
     </div>
     <div class="fact-cell">
       <div class="fact-number">1733</div>
-      <div class="fact-label">Year de Moivre first<br>discovered the Gaussian</div>
+      <div class="fact-label">드무아브르가 가우시안을<br>처음 발견한 연도</div>
     </div>
     <div class="fact-cell">
       <div class="fact-number">1/√n</div>
-      <div class="fact-label">Rate at which error<br>shrinks as sample grows</div>
+      <div class="fact-label">오차가 줄어드는<br>수학적 감소 속도</div>
     </div>
     <div class="fact-cell">
-      <div class="fact-number">$1Q</div>
-      <div class="fact-label">Global derivatives market<br>built on CLT assumptions</div>
+      <div class="fact-number">100경원</div>
+      <div class="fact-label">CLT에 기반해 계산되는<br>파생상품의 전 세계 규모</div>
     </div>
   </div>
 </div>
@@ -254,21 +254,21 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.8rem}
 <!-- ===== § 02 — THE MARKET NEVER LIES ===== -->
 <div class="stock-section" id="sec-market">
 <div class="wrap fi">
-  <div class="s-num">§ 02 — The Market Never Lies</div>
-  <h2 class="s-title">Every Trade is<br>a Coin Flip</h2>
+  <div class="s-num">§ 02 — 시장은 거짓말을 하지 않는다</div>
+  <h2 class="s-title">모든 거래는<br>동전 던지기와 같다</h2>
 
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;margin-bottom:3rem">
     <div class="prose">
-      <p class="dropcap">Every morning on Wall Street, roughly 10 billion shares change hands. Each trade is a vote — a buyer believes the price will rise, a seller believes it will fall. These individual decisions are as chaotic as the weather: driven by earnings reports, geopolitical crises, CEO tweets, supply chain disruptions, and pure human panic.</p>
-      <p>Yet the Central Limit Theorem whispers a secret. If you look not at the price itself, but at the <em>daily returns</em> — the percentage change from one close to the next — something remarkable emerges. Each daily return is the aggregate effect of millions of independent decisions, nudging the market up or down by tiny fractions of a percent.</p>
-      <p>By the CLT, their sum should approach a normal distribution. Not because any individual trader is rational. Not because markets are efficient. But because <em>addition is addition</em>, and enough independent additions always converge to the same shape.</p>
+      <p class="dropcap">매일 아침 월스트리트에서는 약 100억 주가 거래됩니다. 각각의 거래는 투표와 같습니다 — 가격이 오를 것이라 믿는 매수자와 내릴 것이라 믿는 매도자의 투표입니다. 실적 발표, 지정학적 위기, CEO의 트윗, 공급망 문제, 그리고 인간의 순수한 혼란과 공포까지 모든 것이 이 결정들을 날씨만큼이나 예측 불가능하게 만듭니다.</p>
+      <p>하지만 중심극한정리는 우리에게 한 가지 비밀을 속삭입니다. 주가 그 자체가 아니라, 전날 종가 대비 변동률인 <em>일일 수익률</em>을 살펴보면 놀라운 사실이 드러납니다. 각각의 일일 수익률은 수백만 개의 독립적인 결정이 모여 시장을 아주 작은 소수점 단위로 움직인 총합입니다.</p>
+      <p>중심극한정리에 의해 그 총합은 정규 분포에 가까워집니다. 개별 트레이더가 합리적이어서도 아니고 시장이 효율적이어서도 아닙니다. 단지 <em>덧셈은 덧셈일 뿐</em>이며, 충분히 많은 독립적인 덧셈은 항상 같은 모양으로 수렴하기 때문입니다.</p>
     </div>
     <div class="prose">
-      <p>This is not a metaphor. It is the mathematical foundation of modern finance — the hidden theorem behind every derivative contract, every risk model, every option price calculated in every bank on Earth.</p>
-      <p><strong>Portfolio diversification is literally the CLT.</strong> When you hold one stock, you experience its full, chaotic volatility. When you hold 20 uncorrelated stocks, you experience the <em>average</em> of their volatilities. By the CLT, that average is dramatically more predictable and less extreme than any individual stock — and it becomes more Gaussian the more positions you add.</p>
+      <p>이것은 비유가 아닙니다. 지구상의 모든 은행에서 계산되는 모든 파생 상품 계약, 모든 위험 모델, 모든 옵션 가격 뒤에 숨겨진 정리이자 현대 금융의 수학적 토대입니다.</p>
+      <p><strong>포트폴리오 다각화는 말 그대로 중심극한정리입니다.</strong> 한 주식만 보유하면 그 주식의 변동성을 고스란히 겪습니다. 하지만 상관관계가 없는 20개의 주식을 보유하면, 그 변동성들의 <em>평균</em>을 경험하게 됩니다. 중심극한정리에 의해 그 평균은 어떤 개별 주식보다 훨씬 덜 극단적이고 훨씬 더 예측 가능해집니다 — 보유 주식을 늘릴수록 점점 더 가우스 형태의 종형 곡선에 가까워집니다.</p>
       <div class="callout gold" style="margin-top:1.5rem">
-        "The stock market is a device for transferring money from the impatient to the patient. But mathematics is what makes patience profitable."
-        <cite>— adapted from Warren Buffett</cite>
+        "주식 시장은 조급한 사람의 돈을 인내심 있는 사람에게 이동시키는 도구다. 그리고 그 인내심을 수익으로 만들어주는 것은 바로 수학이다."
+        <cite>— 워런 버핏(Warren Buffett)의 명언에서 각색함</cite>
       </div>
     </div>
   </div>
@@ -277,63 +277,63 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.8rem}
   <div style="background:#060a14;border:1px solid #131b2e;border-radius:16px;padding:2rem;margin:2rem 0">
     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem">
       <div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--cream)">Live Stock Return Simulator</div>
-        <div style="font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:.3rem">Geometric Brownian Motion · μ = 7% annual · σ = 19% annual</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--cream)">라이브 주식 수익률 시뮬레이터</div>
+        <div style="font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:.3rem">기하 브라운 운동 · 연평균 μ = 7% · 연 변동성 σ = 19%</div>
       </div>
       <div class="controls" style="margin:0">
-        <button class="btn" id="btn-stock-run">▶ Simulate</button>
-        <button class="btn danger" id="btn-stock-reset">Reset</button>
+        <button class="btn" id="btn-stock-run">▶ 시뮬레이션 시작</button>
+        <button class="btn danger" id="btn-stock-reset">초기화</button>
       </div>
     </div>
 
     <div class="stock-grid">
       <div>
         <div class="stock-canvas-wrap">
-          <div class="stock-canvas-label">Price Path</div>
+          <div class="stock-canvas-label">주가 변동 (Price Path)</div>
           <canvas id="stock-price-canvas" class="stock-canvas"></canvas>
         </div>
       </div>
       <div>
         <div class="stock-canvas-wrap">
-          <div class="stock-canvas-label">Distribution of Daily Returns</div>
+          <div class="stock-canvas-label">일일 수익률 분포</div>
           <canvas id="stock-return-canvas" class="stock-canvas"></canvas>
         </div>
       </div>
     </div>
 
     <div class="stock-stats" style="margin-top:1rem;border-radius:12px;border:1px solid #131b2e">
-      <div class="stat-cell"><span class="stat-label">Current Price</span><span class="stat-val" id="stat-price">$100.00</span></div>
-      <div class="stat-cell"><span class="stat-label">Trading Days</span><span class="stat-val" id="stat-days">0</span></div>
-      <div class="stat-cell"><span class="stat-label">Annualised Vol</span><span class="stat-val" id="stat-vol">—</span></div>
-      <div class="stat-cell"><span class="stat-label">Annual Return</span><span class="stat-val" id="stat-mean">—</span></div>
+      <div class="stat-cell"><span class="stat-label">현재 가격</span><span class="stat-val" id="stat-price">$100.00</span></div>
+      <div class="stat-cell"><span class="stat-label">거래일 수</span><span class="stat-val" id="stat-days">0</span></div>
+      <div class="stat-cell"><span class="stat-label">연환산 변동성</span><span class="stat-val" id="stat-vol">—</span></div>
+      <div class="stat-cell"><span class="stat-label">연환산 수익률</span><span class="stat-val" id="stat-mean">—</span></div>
     </div>
 
     <div class="portfolio-toggle" style="margin-top:1.5rem">
-      <span class="ptoggle-label">Portfolio size:</span>
-      <button class="ptoggle-btn active" data-n="1">1 Stock</button>
-      <button class="ptoggle-btn" data-n="5">5 Stocks</button>
-      <button class="ptoggle-btn" data-n="20">20 Stocks</button>
-      <button class="ptoggle-btn" data-n="100">100 Stocks</button>
-      <span style="font-family:'Space Mono',monospace;font-size:.6rem;color:var(--muted);margin-left:.5rem">← More stocks = smoother returns (CLT!)</span>
+      <span class="ptoggle-label">포트폴리오 크기:</span>
+      <button class="ptoggle-btn active" data-n="1">1개 종목</button>
+      <button class="ptoggle-btn" data-n="5">5개 종목</button>
+      <button class="ptoggle-btn" data-n="20">20개 종목</button>
+      <button class="ptoggle-btn" data-n="100">100개 종목</button>
+      <span style="font-family:'Space Mono',monospace;font-size:.6rem;color:var(--muted);margin-left:.5rem">← 더 많은 종목 = 더 안정적인 수익 (중심극한정리)</span>
     </div>
   </div>
 
   <!-- Black-Scholes -->
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;margin:4rem 0 3rem">
     <div class="prose">
-      <h3 style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--cream);margin-bottom:1.5rem;font-weight:300">The Nobel Prize<br>Inside the Bell Curve</h3>
-      <p>In 1973, Fischer Black and Myron Scholes published a paper that changed the world. Their equation — the Black-Scholes formula — allowed banks, for the first time, to precisely <em>price</em> financial options: contracts giving the right (but not obligation) to buy a stock at a future price.</p>
-      <p>At its heart, Black-Scholes assumes that log-returns are independently normally distributed — exactly what the CLT guarantees. The entire derivation collapses into an integral of the Bell Curve:</p>
+      <h3 style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--cream);margin-bottom:1.5rem;font-weight:300">종형 곡선 안에 숨겨진<br>노벨상</h3>
+      <p>1973년, 피셔 블랙과 마이런 숄즈는 세상을 바꾼 논문을 발표했습니다. 그들의 방정식인 블랙-숄즈 모형(Black-Scholes formula)은 역사상 처음으로 은행들이 미래 특정 실물 가격으로 주식을 살 수 있는 권리인 파생 옵션을 정확하게 <em>가격 책정</em>할 수 있게 해주었습니다.</p>
+      <p>블랙-숄즈의 핵심 가정은 로그 수익률이 독립적인 정규 분포를 따른다는 것이며, 이는 정확히 중심극한정리가 보장하는 것입니다. 유도된 모든 과정은 종형 곡선의 적분으로 귀결됩니다:</p>
     </div>
     <div>
       <div class="panel" style="background:linear-gradient(135deg,#070a14,#060810)">
-        <h3 style="color:var(--teal);margin-bottom:1.2rem">Black-Scholes Option Price</h3>
+        <h3 style="color:var(--teal);margin-bottom:1.2rem">블랙-숄즈 옵션 가격 모형</h3>
         <div style="font-size:.9rem;line-height:2.2;margin-bottom:1.5rem">$$C = S_0\,\Phi(d_1) - Ke^{-rT}\Phi(d_2)$$</div>
         <div style="font-size:.9rem;line-height:2">$$d_1 = \frac{\ln(S_0/K) + (r+\tfrac{\sigma^2}{2})T}{\sigma\sqrt{T}}, \quad d_2 = d_1 - \sigma\sqrt{T}$$</div>
         <div style="margin-top:1.5rem;font-family:'Space Mono',monospace;font-size:.65rem;color:var(--muted);line-height:1.8">
-          Φ = cumulative normal distribution (= integral of Bell Curve)<br>
-          σ = volatility (the standard deviation of log-returns)<br>
-          <span style="color:var(--gold)">Every option price on Earth depends on Φ — the CLT made financial.</span>
+          Φ = 누적 정규 분포 (종형 곡선의 적분)<br>
+          σ = 변동성 (로그 수익률의 표준 편차)<br>
+          <span style="color:var(--gold)">지구상의 모든 옵션 가격은 Φ에 의존합니다. 금융이 된 중심극한정리입니다.</span>
         </div>
       </div>
     </div>
@@ -341,21 +341,21 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.8rem}
 
   <!-- Fat Tails Warning -->
   <div class="fat-tails-callout">
-    <h3 style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--rose);margin-bottom:1.2rem;font-weight:300">But the Market Can Lie</h3>
+    <h3 style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--rose);margin-bottom:1.2rem;font-weight:300">하지만 시장은 가끔 거짓말을 합니다</h3>
     <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:3rem">
       <div>
-        <p style="font-size:1.05rem;line-height:1.8;color:var(--text);margin-bottom:1rem">On October 19, 1987 — <strong>Black Monday</strong> — the Dow Jones fell 22.6% in a single day. Under the Gaussian model that Black-Scholes assumes, this was a <strong>23-sigma event</strong>. The probability? One in $10^{135}$. The expected waiting time? Far, far longer than the age of the universe.</p>
-        <p style="font-size:1.05rem;line-height:1.8;color:var(--text);margin-bottom:1rem">Yet it happened. And then it happened again: the 1997 Asian crisis, the 1998 LTCM collapse, the 2008 financial crisis, the 2020 COVID crash.</p>
-        <p style="font-size:1.05rem;line-height:1.8;color:var(--muted)">The mathematician Benoit Mandelbrot spent his career documenting this: market returns have <em>fat tails</em>. Extreme events occur far more often than any Gaussian model predicts — because panics cascade, fear is contagious, and algorithms amplify each other. The conditions the CLT requires (independence) are violated at precisely the moments of greatest consequence.</p>
+        <p style="font-size:1.05rem;line-height:1.8;color:var(--text);margin-bottom:1rem">1987년 10월 19일 — <strong>블랙 먼데이</strong> — 다우존스 지수는 하루 만에 22.6% 하락했습니다. 블랙-숄즈가 가정하는 가우시안 모델에 따르면, 이것은 <strong>23-시그마 사건</strong>이었습니다. 그 확률은? $10^{135}$분의 1입니다. 기대되는 대기 시간은 우주의 나이보다 아득히 깁니다.</p>
+        <p style="font-size:1.05rem;line-height:1.8;color:var(--text);margin-bottom:1rem">하지만 그것은 일어났습니다. 그리고 또 일어났죠. 1997년 아시아 외환 위기, 1998년 LTCM 파산, 2008년 세계 금융 위기, 2020년 코로나19 폭락까지.</p>
+        <p style="font-size:1.05rem;line-height:1.8;color:var(--muted)">수학자 브누아 망들브로(Benoit Mandelbrot)는 평생을 바쳐 이 현상을 기록했습니다. 시장 수익률은 <em>두꺼운 꼬리(Fat tails)</em>를 가지고 있습니다. 공황은 연쇄적으로 일어나고 공포는 전염되며 알고리즘은 서로를 증폭시키기 때문에 극단적 사건들은 가우시안 모델이 예측하는 것보다 훨씬 더 자주 발생합니다. 중심극한정리가 요구하는 독립성이라는 조건은, 가장 중요한 결정적인 순간에 정확히 무너집니다.</p>
       </div>
       <div>
         <canvas id="fat-tails-canvas" width="400" height="260" style="width:100%;height:auto;background:#060810;border-radius:8px;border:1px solid rgba(192,69,96,.2)"></canvas>
-        <p style="font-family:'Space Mono',monospace;font-size:.6rem;color:var(--muted);margin-top:.8rem;text-align:center">Gaussian model (teal) vs fat-tailed reality (rose). The tails tell the whole story.</p>
+        <p style="font-family:'Space Mono',monospace;font-size:.6rem;color:var(--muted);margin-top:.8rem;text-align:center">가우시안 모델(청록색) vs 꼬리가 두꺼운 현실(장미색). 꼬리가 모든 이야기를 말해줍니다.</p>
       </div>
     </div>
     <div class="callout danger" style="margin-top:2rem;margin-bottom:0">
-      "The bell curve fits reality poorly. In 1900, markets in Paris had daily moves that, under Gaussian assumptions, should happen once in 100,000 years. In fact, they happened every few years."
-      <cite>— Benoit Mandelbrot, <em>The Misbehavior of Markets</em></cite>
+      "종형 곡선은 현실에 잘 맞지 않는다. 1900년 파리의 주식시장에서는 가우시안 가정 하에서라면 10만 년에 한 번 일어날 법한 일일 변동이 일어났다. 사실, 그러한 변동은 몇 년마다 일어났다."
+      <cite>— 브누아 망들브로, <em>시장의 이단아(The Misbehavior of Markets)</em></cite>
     </div>
   </div>
 </div>
@@ -365,11 +365,11 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.8rem}
 
 <!-- ===== § 03 — EVERYDAY MIRACLES ===== -->
 <div class="wrap fi" id="sec-everyday">
-  <div class="s-num">§ 03 — The Universal Blueprint</div>
-  <h2 class="s-title">Everyday Miracles<br>of the Bell Curve</h2>
+  <div class="s-num">§ 03 — 우주의 설계도</div>
+  <h2 class="s-title">종형 곡선이 그리는<br>일상의 기적</h2>
 
   <div class="prose" style="max-width:900px">
-    <p>You interact with the Central Limit Theorem every single day. Almost everything we observe is the macroscopic sum of countless microscopic, independent forces. The Bell Curve becomes the default geometry of nature and human society — not because anyone designed it that way, but because mathematics leaves no alternative.</p>
+    <p>우리는 매일 중심극한정리와 상호작용합니다. 우리가 관찰하는 거의 모든 것은 무수히 많은 미시적이고 독립적인 힘들의 거시적인 합입니다. 누군가가 그렇게 설계해서가 아니라, 수학이 다른 대안을 허용하지 않기 때문에 종형 곡선은 자연과 인간 사회의 기본 기하학이 됩니다.</p>
   </div>
 
   <div class="miracle-stack">
@@ -377,11 +377,11 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.8rem}
     <!-- Biology -->
     <div class="m-row fi">
       <div class="m-col-text">
-        <div class="m-badge" style="background:#e9859f">Biology</div>
-        <h3 style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:#e9859f;line-height:1.1;margin-bottom:1.5rem">The Blueprint of Life</h3>
-        <p style="font-size:1.1rem;line-height:1.8;color:var(--text);margin-bottom:1rem">A baby's birth weight is not determined by a single gene or a single environmental choice. It is the cumulative result of thousands of independent micro-factors: rare genetic markers, subtle altitude variations, maternal nutrition, epigenetic cascades, uterine conditions, and dozens of hormonal signals.</p>
-        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted);margin-bottom:1rem">Each factor contributes a virtually invisible nudge. Yet when nature adds these countless independent variables together, the resulting weights rigorously organize themselves into a flawless Bell Curve. Human height, blood pressure, IQ scores, bone density, lung capacity — the same mathematics molds them all.</p>
-        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted)">This is why doctors define "normal" as within two standard deviations of the mean. The CLT <em>guarantees</em> that 95.4% of any population will fall within that range — not because of empirical observation, but because the theorem demands it.</p>
+        <div class="m-badge" style="background:#e9859f">생물학</div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:#e9859f;line-height:1.1;margin-bottom:1.5rem">생명의 청사진</h3>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--text);margin-bottom:1rem">아기의 출생 체중은 단일 유전자나 하나의 환경적 요인에 의해 결정되지 않습니다. 그것은 희귀한 유전자 지표, 미묘한 고도 변화, 산모의 영양 상태, 후성유전학적 연쇄 반응, 자궁의 조건, 수십 가지의 호르몬 신호 등 수천 개의 독립적인 미시적 요인들이 누적된 결과입니다.</p>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted);margin-bottom:1rem">각 요인은 사실상 눈에 띄지 않는 미세한 영향을 미칩니다. 하지만 자연이 이 셀 수 없이 많은 독립 변수들을 하나로 합칠 때, 그 결과는 결점 없는 완벽한 종형 곡선을 그립니다. 인간의 키, 혈압, IQ 점수, 골밀도, 폐활량 — 이 모든 것을 빚어내는 것은 똑같은 수학입니다.</p>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted)">이것이 의사들이 "정상"을 평균의 두 표준편차 이내로 정의하는 이유입니다. 중심극한정리는 어떤 인구집단이든 그중 95.4%가 이 범위에 속할 것이라고 <em>보장합니다</em> — 이는 경험적인 관찰 때문이 아니라 수학 법칙이 그것을 요구하기 때문입니다.</p>
       </div>
       <div class="m-col-vis">
         <canvas id="bio-canvas" style="width:100%;height:100%;display:block"></canvas>
@@ -391,11 +391,11 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.8rem}
     <!-- Polling -->
     <div class="m-row fi">
       <div class="m-col-text">
-        <div class="m-badge" style="background:#6ea2e0">Politics & Polling</div>
-        <h3 style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:#6ea2e0;line-height:1.1;margin-bottom:1.5rem">How 1,200 People<br>Predict 150 Million</h3>
-        <p style="font-size:1.1rem;line-height:1.8;color:var(--text);margin-bottom:1rem">A presidential election involves 150 million voters. Yet a properly conducted poll of just 1,200 randomly selected people can predict the outcome to within ±3%. This seems magical. It is mathematics.</p>
-        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted);margin-bottom:1rem">The CLT guarantees that the distribution of sample proportions (all possible polls we could have taken) follows a Bell Curve centered on the true population proportion. The margin of error is exactly $1.96 \cdot \sigma/\sqrt{n}$ — it has nothing to do with the population size, only with the sample size.</p>
-        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted)">This is why the math is the same whether you're polling 150 million Americans or 1.4 billion Indians. The population is irrelevant. What matters is $n$.</p>
+        <div class="m-badge" style="background:#6ea2e0">정치 & 여론조사</div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:#6ea2e0;line-height:1.1;margin-bottom:1.5rem">1,200명이 1억 5천만 명을 예측하는 법</h3>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--text);margin-bottom:1rem">미국 대통령 선거에는 1억 5천만 명의 유권자가 참여합니다. 그러나 무작위로 추출한 1,200명만 제대로 조사하면 그 결과를 오차범위 3% 이내로 예측할 수 있습니다. 마법처럼 보이지만 이는 수학입니다.</p>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted);margin-bottom:1rem">중심극한정리는 표본 비율의 분포(우리가 수행할 수 있는 모든 여론조사의 결과)가 실제 모집단 비율을 중심으로 하는 종형 곡선을 따른다는 것을 증명합니다. 오차범위는 정확히 $1.96 \cdot \sigma/\sqrt{n}$입니다 — 전체 인구수는 여기 끼어들 자리가 없으며, 오직 표본의 크기 $n$에만 의존합니다.</p>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted)">미국인 1억 5천만 명을 상대로 조사하든 인도인 14억 명을 상대로 조사하든 수학 공식이 똑같은 이유가 바로 이것입니다. 전체 크기는 상관없습니다. 중요한 건 $n$입니다.</p>
       </div>
       <div class="m-col-vis" style="flex-direction:column;padding:1.5rem 1.5rem 1.8rem;align-items:stretch;justify-content:flex-start;gap:0">
 
@@ -410,7 +410,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.8rem}
         <!-- Slider -->
         <div style="margin-top:1.1rem">
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.3rem">
-            <span style="font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Sample size  n =</span>
+            <span style="font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">표본 크기  n =</span>
             <span id="poll-n-display" style="font-family:'Cormorant Garamond',serif;font-size:1.7rem;color:var(--cream);line-height:1">1,200</span>
           </div>
           <input type="range" min="50" max="5000" value="1200" id="poll-slider" class="poll-slider" style="width:100%">
@@ -422,19 +422,19 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.8rem}
         <!-- Stats row -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:1rem">
           <div style="background:#08101e;border:1px solid #1a1d30;border-radius:8px;padding:.8rem 1rem">
-            <div style="font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem">Margin of Error</div>
+            <div style="font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem">오차 범위</div>
             <div id="poll-moe" style="font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:#6ea2e0;line-height:1">+-2.8%</div>
           </div>
           <div style="background:#08101e;border:1px solid #1a1d30;border-radius:8px;padding:.8rem 1rem">
-            <div style="font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem">Curves overlap</div>
+            <div style="font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem">분포 곡선 중첩</div>
             <div id="poll-overlap" style="font-family:'Cormorant Garamond',serif;font-size:1.9rem;color:#c04560;line-height:1">68%</div>
           </div>
         </div>
 
         <!-- Key insight -->
         <div style="margin-top:1rem;background:rgba(201,167,72,.05);border:1px solid rgba(201,167,72,.15);border-radius:8px;padding:.8rem 1rem;font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.04em;color:var(--muted);line-height:1.7">
-          <span style="color:var(--gold)">&#9733;</span> Population size is irrelevant.<br>
-          n=1,200 of 150M &#8776; n=1,200 of 10,000.
+          <span style="color:var(--gold)">&#9733;</span> 모집단 크기는 무관함.<br>
+          1.5억 명 중 n=1,200 &#8776; 1만 명 중 n=1,200.
         </div>
       </div>
     </div>
@@ -442,11 +442,11 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.8rem}
     <!-- Insurance -->
     <div class="m-row fi">
       <div class="m-col-text">
-        <div class="m-badge" style="background:#5ec47a">Insurance & Risk</div>
-        <h3 style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:#5ec47a;line-height:1.1;margin-bottom:1.5rem">The Actuary's Secret Weapon</h3>
-        <p style="font-size:1.1rem;line-height:1.8;color:var(--text);margin-bottom:1rem">No one can predict whether a specific 45-year-old will have a heart attack next year. The uncertainty of a single life is irreducible. Yet insurance companies make these bets on millions of lives simultaneously — and profit reliably, year after year.</p>
-        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted);margin-bottom:1rem">The CLT is the reason. While individual outcomes are completely unpredictable, the <em>average</em> outcome across thousands of policyholders converges to a highly predictable value. The standard deviation of the average shrinks as $1/\sqrt{n}$ — so a pool of 1,000,000 lives has 1,000 times less variance per-capita than a pool of 1,000.</p>
-        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted)">Every insurance premium you pay is set by an actuary who has implicitly invoked the CLT: the chaos of individual human mortality, when pooled across millions, becomes a predictable, priceable mathematical quantity.</p>
+        <div class="m-badge" style="background:#5ec47a">보험 & 리스크</div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:#5ec47a;line-height:1.1;margin-bottom:1.5rem">계리사의 비밀 무기</h3>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--text);margin-bottom:1rem">특정 45세 남성이 내년에 심장마비에 걸릴지 예측할 수 있는 사람은 아무도 없습니다. 단일 생명의 불확실성은 줄일 수 없습니다. 하지만 보험 회사는 수백만 명의 생명에 대해 동시에 이 베팅을 하고, 매년 확실하게 이익을 냅니다.</p>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted);margin-bottom:1rem">이유는 바로 중심극한정리에 있습니다. 개개인의 결과는 완전히 예측 불가능하지만, 수천 명의 보험 가입자 전체의 <em>평균</em> 결과는 고도로 예측 가능한 값으로 수렴합니다. 이 평균의 표준 편차는 $1/\sqrt{n}$의 속도로 줄어들기 때문에, 1,000만 명이 모인 풀(pool)은 천 명 규모일 때보다 개인당 1,000배나 적은 분산을 가집니다.</p>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted)">우리가 내는 모든 보험료는 중심극한정리를 활용하는 계리사가 암묵적으로 정한 것입니다: 수백만 명이 모일 때, 개개인의 불확실하고 혼란스러운 사망 확률은 예측 가능하고 가격 책정이 가능한 수학적 수량으로 변합니다.</p>
       </div>
       <div class="m-col-vis" style="flex-direction:column;gap:1rem;padding:2rem">
         <canvas id="insurance-canvas" style="width:100%;flex:1;min-height:200px;display:block"></canvas>
@@ -456,11 +456,11 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.8rem}
     <!-- Manufacturing -->
     <div class="m-row fi">
       <div class="m-col-text">
-        <div class="m-badge" style="background:#e6c76a">Manufacturing</div>
-        <h3 style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:#e6c76a;line-height:1.1;margin-bottom:1.5rem">Six Sigma and<br>the Bell Curve Factory</h3>
-        <p style="font-size:1.1rem;line-height:1.8;color:var(--text);margin-bottom:1rem">When Boeing manufactures a wing bolt, it must be within 0.001 mm of specification. No machining process is perfect — temperature fluctuations, tool wear, material variability, and vibration all introduce tiny independent errors into every component.</p>
-        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted);margin-bottom:1rem">By the CLT, these accumulated independent manufacturing errors distribute perfectly normally. This is the foundation of <strong>Statistical Process Control</strong> — the system that allowed Toyota, Motorola, and Boeing to engineer quality at scale. The "Six Sigma" target means tolerating defects only 6 standard deviations from the mean: a defect rate of 3.4 parts per million.</p>
-        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted)">Every iPhone, car engine, and medical device you touch was built with a Bell Curve as its quality standard. The CLT is the foundation of modern manufacturing precision.</p>
+        <div class="m-badge" style="background:#e6c76a">제조 공정</div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;color:#e6c76a;line-height:1.1;margin-bottom:1.5rem">식스 시그마(6σ)와<br>종형 곡선 공장</h3>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--text);margin-bottom:1rem">보잉(Boeing)사가 날개 볼트를 제조할 때, 규격 오차는 0.001mm 이내여야 합니다. 완벽한 기계 가공 과정은 없습니다 — 미세한 온도 변화, 공구의 마모 수준, 재료의 불균일, 그리고 미세 진동이 모든 부품에 독립적인 작은 오차를 유발합니다.</p>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted);margin-bottom:1rem">중심극한정리에 의해, 누적된 독립적인 제조 오차는 정확하게 정규 분포를 이룹니다. 이것이 현대 제조업에서 통계적 공정 관리의 토대이며, 도요타, 모토로라, 그리고 보잉이 대규모 산업에서 품질 관리를 할 수 있게 한 핵심 원리입니다. "식스 시그마" 목표는 평균에서 표준 편차의 6배($6\sigma$) 이상 벗어난 결함만 불량으로 간주하겠다는 뜻으로, 백만 개당 3.4개의 매우 낮은 불량률을 의미합니다.</p>
+        <p style="font-size:1.1rem;line-height:1.8;color:var(--muted)">당신이 사용하는 모든 자동차 엔진과 의료 기기는 품질 기준으로 종형 곡선을 염두에 두고 만들어졌습니다.</p>
       </div>
       <div class="m-col-vis">
         <canvas id="mfg-canvas" style="width:100%;height:100%;display:block"></canvas>
@@ -473,37 +473,37 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.8rem}
 
 <!-- ===== § 04 — DRAW YOUR OWN ===== -->
 <div class="wrap fi" id="sec-interactive">
-  <div class="s-num">§ 04 — The Ultimate Test</div>
-  <h2 class="s-title">Draw Your Own<br>Chaos</h2>
+  <div class="s-num">§ 04 — 궁극의 테스트</div>
+  <h2 class="s-title">당신만의 혼돈을<br>그려보세요</h2>
   <div class="grid-layout">
     <div>
       <div class="prose">
-        <p>You might believe the Bell Curve only appears if the underlying distribution is somewhat "normal" to begin with. The true, terrifying power of the CLT is its <strong>absolute lack of assumptions</strong>.</p>
-        <p>The original distribution does not need to be symmetric, smooth, or bell-shaped. It can be completely deformed — skewed to one side, jagged, multimodal, nearly flat. As long as it has a finite variance, the average of enough samples will ruthlessly iron out the wrinkles and reconstruct a Gaussian through the mathematical process of <em>convolution</em>.</p>
-        <p>Prove it to yourself. Draw literally any continuous shape on the canvas below. Make it absurd: heavily biased, twin-peaked, wildly asymmetric. Then drop 2,000 samples. Watch how quickly the sum forgets your bizarre input and magically rebuilds the eternal Bell Curve.</p>
-        <p style="font-size:.95rem;color:var(--muted)">This is the most confronting demonstration of the CLT: no matter how hard you try to break it, the Bell Curve always wins.</p>
+        <p>종형 곡선은 어차피 원래 분포가 어느 정도 "정상적인" 모양일 때만 나타나는 것 아니냐고 의심할 수도 있습니다. 중심극한정리의 진정으로 경이로운 힘은 바로 <strong>가정이 전혀 필요 없다</strong>는 데 있습니다.</p>
+        <p>원래의 분포는 대칭적이거나 매끄러울 필요가 전혀 없습니다. 한쪽으로 심하게 치우쳐 있거나, 들쭉날쭉하거나, 봉우리가 여러 개이거나, 거의 평평하게 완전히 일그러져 있어도 상관없습니다. 분산(variance)이 유한하기만 하다면, 충분히 많은 표본을 뽑아 평균을 낼 때마다 수학은 자비 없이 모든 주름을 다림질하여 아름다운 가우스 곡선으로 재구성합니다. 이것이 바로 <em>합성곱(convolution)</em>의 힘입니다.</p>
+        <p>직접 증명해 보세요. 아래 캔버스에 어떤 모양이든 연속적인 도형을 자유롭게 그려보세요. 터무니없이 만들어도 좋습니다: 압도적으로 편향되게 하거나, 비대칭적으로 만들어 보세요. 그런 다음 2,000개의 샘플을 떨어뜨려 보세요. 여러분이 입력한 기괴한 분포가 어떻게 그 형태를 잃어버리고 마법처럼 영원한 종형 곡선을 다시 만들어내는지 지켜보세요.</p>
+        <p style="font-size:.95rem;color:var(--muted)">이것이 중심극한정리의 가장 직관적인 증명입니다: 당신이 아무리 수학을 망가뜨리려 해도, 종형 곡선은 언제나 승리합니다.</p>
       </div>
 
       <div class="eq">$$\lim_{N \to \infty}\, P\!\left(\frac{S_N - N\mu}{\sigma\sqrt{N}} \le z\right) = \Phi(z) = \frac{1}{\sqrt{2\pi}}\int_{-\infty}^{z}e^{-x^2/2}\,dx$$</div>
 
       <div class="panel" style="margin-top:2.5rem">
-        <h3>1. Draw your original distribution</h3>
-        <p style="font-size:.85rem;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:1rem">Click and drag to sculpt any shape. Wilder = more impressive result.</p>
+        <h3>1. 원본 확률 분포 그리기</h3>
+        <p style="font-size:.85rem;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:1rem">클릭하고 드래그하여 어떤 모양이든 조각해 보세요. 기괴할수록 결과는 더 놀랍습니다.</p>
         <canvas id="draw-pdf" class="draw-canvas"></canvas>
         <div class="controls">
-          <button class="btn danger" id="btn-clear">Clear Shape</button>
-          <button class="btn" id="btn-drop">Drop 2000 Samples</button>
+          <button class="btn danger" id="btn-clear">모양 지우기</button>
+          <button class="btn" id="btn-drop">샘플 2000개 추출</button>
         </div>
       </div>
     </div>
     <div>
       <div class="panel">
-        <h3>2. Distribution of Averages (N=12)</h3>
-        <p style="font-size:.85rem;color:var(--muted);margin-bottom:1rem;font-family:'Space Mono',monospace">Each bar = average of 12 samples. Teal curve = theoretical Gaussian fit.</p>
+        <h3>2. 표본 평균들의 분포 (N=12)</h3>
+        <p style="font-size:.85rem;color:var(--muted);margin-bottom:1rem;font-family:'Space Mono',monospace">각 막대 = 12개 샘플의 평균. 청록색 선 = 이론적인 가우시안 곡선.</p>
         <canvas id="sim-canvas" class="sim-canvas"></canvas>
       </div>
       <div class="callout" style="margin-top:2rem">
-        "The Central Limit Theorem is the unofficial sovereign of probability theory. It tells us that whenever you add independent variables — no matter how wild — they surrender, inevitably, to the Bell Curve."
+        "중심극한정리는 확률론의 비공식적인 통치자나 다름없다. 이 법칙은 독립 변수들을 더하기만 하면 — 그것들이 제아무리 제멋대로인 모양이어도 — 모두가 구제 불능일 정도로 완벽하게 종형 곡선에 항복한다는 것을 말해준다."
       </div>
     </div>
   </div>
@@ -513,41 +513,41 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.8rem}
 
 <!-- ===== § 05 — MODERN MASTERPIECES ===== -->
 <div class="wrap fi" id="sec-modern">
-  <div class="s-num">§ 05 — Modern Masterpieces</div>
-  <h2 class="s-title">Beyond the<br>Classical Limit</h2>
+  <div class="s-num">§ 05 — 현대 수학의 걸작들</div>
+  <h2 class="s-title">고전적 한계를<br>넘어서</h2>
   <div class="prose" style="margin-bottom:2rem;max-width:900px">
-    <p>The classical CLT states <em>what</em> happens, but not <em>how fast</em> it happens, nor does it easily generalize to interacting, non-independent systems. The 20th and 21st centuries saw spectacular mathematical breakthroughs expanding the horizon of universality — proving that the Bell Curve is just one member of a larger family of universal attractors.</p>
+    <p>고전적인 중심극한정리는 <em>무엇이</em> 일어나는지 말해주지만, <em>얼마나 빨리</em> 일어나는지는 말해주지 않으며, 서로 상호작용하는 종속적인 시스템으로 일반화하기도 어렵습니다. 20세기와 21세기에 걸쳐 일어난 경이로운 수학적 발전은 보편성의 지평을 넓혔고, 종형 곡선이 보편적인 끌개(universal attractor) 가문 중 하나의 구성원일 뿐이라는 것을 증명해 냈습니다.</p>
   </div>
 
   <div class="theory-grid">
     <div class="theory-card" style="border-color:rgba(201,167,72,.3)">
-      <div class="theory-year">Berry-Esseen (1941)</div>
-      <h4 style="color:var(--gold)">The Speed of Convergence</h4>
-      <p style="font-size:.95rem;line-height:1.6;color:var(--text)">The Berry-Esseen theorem bounds the maximum difference between the true distribution of sums and the perfect Gaussian. It proves that the error decays at precisely <strong>1/√N</strong>. For variables with third moment ρ:</p>
+      <div class="theory-year">베리-에센 정리 (1941)</div>
+      <h4 style="color:var(--gold)">수렴의 속도</h4>
+      <p style="font-size:.95rem;line-height:1.6;color:var(--text)">베리-에센(Berry-Esseen) 정리는 무작위 변수 합의 실제 분포와 완벽한 가우스 분포 사이의 최대 오차 한계를 설정했습니다. 이는 오차가 정확히 <strong>1/√N</strong>의 속도로 감소한다는 것을 증명합니다. 3차 모멘트(왜도)가 ρ인 변수의 경우:</p>
       <div style="margin:1rem 0;padding:1rem;background:rgba(0,0,0,.5);border-radius:6px;font-size:.9rem">$$\sup_x |F_n(x) - \Phi(x)| \le \frac{C\cdot\rho}{\sigma^3\sqrt{n}}$$</div>
-      <p style="font-size:.9rem;line-height:1.6;color:var(--muted)">This reveals a penalty for chaos: highly skewed distributions (massive third moment ρ) converge agonizingly slower. But eventually, all inevitably submit to the 1/√N speed limit.</p>
+      <p style="font-size:.9rem;line-height:1.6;color:var(--muted)">이 수식은 혼돈에 대한 수학적 벌금(penalty)을 보여줍니다: 심하게 치우친 분포(압도적인 3차 모멘트 ρ)는 고통스러울 정도로 느리게 수렴합니다. 하지만 결국에는 모두 1/√N이라는 우주의 속도 제한에 무릎을 꿇게 됩니다.</p>
     </div>
 
     <div class="theory-card" style="border-color:rgba(34,181,170,.3)">
-      <div class="theory-year">Charles Stein (1972)</div>
-      <h4 style="color:var(--teal)">Stein's Method</h4>
-      <p style="font-size:.95rem;line-height:1.6;color:var(--text)">Instead of Fourier transforms, Stein discovered an elegant differential equation characterizing the normal distribution: $Z$ is standard normal if and only if</p>
+      <div class="theory-year">찰스 스타인 (1972)</div>
+      <h4 style="color:var(--teal)">스타인 방법론</h4>
+      <p style="font-size:.95rem;line-height:1.6;color:var(--text)">미국 수학자 스타인(Charles Stein)은 푸리에 변환(Fourier Transform)을 우회하여, 정규 분포를 특징짓는 아주 우아한 미분 방정식을 발견했습니다. 확률 변수 $Z$가 표준 정규 분포일 필요충분조건은 다음과 같습니다:</p>
       <div style="margin:1rem 0;padding:1rem;background:rgba(0,0,0,.5);border-radius:6px;font-size:.9rem">$$\mathbb{E}[Z f(Z)] = \mathbb{E}[f'(Z)]$$</div>
-      <p style="font-size:.9rem;line-height:1.6;color:var(--muted)">This revolutionized modern probability. By testing variables against this equation, mathematicians could quantify distance to the normal curve for highly complex, <em>dependent</em> structures — like social networks, random graphs, and card shuffling.</p>
+      <p style="font-size:.9rem;line-height:1.6;color:var(--muted)">이 발견은 현대 확률론에 혁명을 일으켰습니다. 이 방정식을 통해 수학자들은 소셜 네트워크, 무작위 그래프 생성, 카드 섞기처럼 변수들이 서로 <em>상호작용(종속적)</em>하는 복잡한 구조가 얼마나 정규 분포에 가까운가를 정량적으로 수학 모델링할 수 있게 되었습니다.</p>
     </div>
 
     <div class="theory-card" style="border-color:rgba(192,69,96,.5);grid-column:1/-1;padding:2.5rem">
-      <div class="theory-year">Wigner (1955) & Tracy-Widom (1994)</div>
-      <h4 style="color:var(--rose);font-size:2rem;margin-bottom:1.5rem">Random Matrices & A New Universality</h4>
+      <div class="theory-year">위그너 (1955) & 트레이시-위덤 (1994)</div>
+      <h4 style="color:var(--rose);font-size:2rem;margin-bottom:1.5rem">랜덤 행렬과 새로운 보편성</h4>
       <div style="display:grid;grid-template-columns:1.2fr 1fr;gap:3rem;align-items:center">
         <div>
-          <p style="font-size:1.05rem;line-height:1.7;color:var(--text)">In quantum physics, heavy atomic nuclei (like Uranium) are modeled as enormous matrices filled with random numbers. When tracking the eigenvalues of these massive random matrices, the Central Limit Theorem transforms.</p>
-          <p style="font-size:1.05rem;line-height:1.7;color:var(--text);margin-top:1rem">Because matrix entries interact (they are not independent), the bulk eigenvalues obey <strong>Wigner's Semicircle Law</strong> — a perfect half-circle, utterly unlike the Bell Curve.</p>
-          <p style="font-size:1.05rem;line-height:1.7;color:var(--text);margin-top:1rem">Meanwhile, the <em>maximum</em> eigenvalue fluctuates according to the <strong>Tracy-Widom distribution</strong> — an asymmetric, new universality class governing everything from bus arrivals in Mexico City to the longest increasing subsequence of a shuffled deck of cards.</p>
+          <p style="font-size:1.05rem;line-height:1.7;color:var(--text)">양자 물리학에서 우라늄과 같은 무거운 원자핵은 난수로 꽉 찬 거대한 행렬(Random Matrix)로 모델링됩니다. 수학자들이 이 거대한 무작위 행렬의 고유값(eigenvalues)을 추적했을 때, 중심극한정리는 그 모습을 완전히 바꿉니다.</p>
+          <p style="font-size:1.05rem;line-height:1.7;color:var(--text);margin-top:1rem">행렬의 항목들은 서로 상호작용하기 때문(독립적이지 않음)에, 고유값들의 밀도 분포는 <strong>위그너의 반원 법칙(Wigner's Semicircle Law)</strong>을 따릅니다. 이는 종형 곡선과는 전혀 다른, 완벽한 반원 형태입니다.</p>
+          <p style="font-size:1.05rem;line-height:1.7;color:var(--text);margin-top:1rem">동시에, <em>가장 큰</em> 고유값의 요동침은 <strong>트레이시-위덤 분포(Tracy-Widom distribution)</strong>를 따릅니다. 이 비대칭적인 새로운 보편성 법칙은 멕시코시티의 버스 도착 시간부터 섞인 카드 덱의 가장 긴 증가 부분수열의 길이까지, 세상의 모든 상호작용 시스템을 지배합니다.</p>
         </div>
         <div style="text-align:center;background:rgba(0,0,0,.4);padding:1.5rem;border-radius:12px;border:1px solid rgba(255,255,255,.05)">
           <canvas id="wigner-canvas" width="450" height="280" style="background:#0a0c14;border:1px solid #1a1d30;border-radius:8px;width:100%;object-fit:contain"></canvas>
-          <p style="font-size:.72rem;color:var(--muted);font-family:'Space Mono',monospace;margin-top:1rem">Live simulation: eigenvalue density of 50×50 symmetric random matrices forming Wigner's Semicircle Law.</p>
+          <p style="font-size:.72rem;color:var(--muted);font-family:'Space Mono',monospace;margin-top:1rem">라이브 시뮬레이션: 위그너의 반원 법칙을 따르는 50×50 대칭 랜덤 행렬의 고유값 밀도 분포.</p>
         </div>
       </div>
     </div>
@@ -555,7 +555,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:.8rem}
 </div>
 
 <footer>
-  <p>Why Do the Polls Look the Same? — The Central Limit Theorem</p>
+  <p>왜 여론조사 결과는 비슷할까? — 중심극한정리</p>
   <div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:.2rem">
     <div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;font-weight:400;color:#edeef2;letter-spacing:-.01em">Sang-hyun Kim</div>
     <div style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:300;color:#5c6178;letter-spacing:.01em">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>

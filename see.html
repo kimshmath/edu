@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RQVK6SF2E6');
+    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Does a Machine See? — The Mathematics of Convolution and Computer Vision</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#080d1a;--bg2:#0c1326;--bg3:#111b38;--card:#131f42;--gold:#f0b429;--gold-dim:#c4912080;--sky:#38bdf8;--purple:#a78bfa;--coral:#fb7185;--mint:#34d399;--text:#e0e6f0;--muted:#7b8db5;--font-display:'Fraunces',Georgia,serif;--font-body:'DM Sans',sans-serif;--font-mono:'JetBrains Mono',monospace}
+html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-weight:300;line-height:1.7;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--gold-dim);border-radius:3px}
+body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999}
+section{min-height:100vh;padding:6rem 2rem;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.section-inner{max-width:900px;width:100%}
+h1{font-family:var(--font-display);font-size:clamp(2.8rem,6vw,5rem);font-weight:700;line-height:1.15;letter-spacing:-0.02em;color:#fff}
+h2{font-family:var(--font-display);font-size:clamp(1.8rem,4vw,3rem);font-weight:700;line-height:1.2;color:#fff;margin-bottom:1.5rem}
+h3{font-family:var(--font-body);font-size:1.1rem;font-weight:500;text-transform:uppercase;letter-spacing:0.15em;margin-bottom:0.5rem}
+p{margin-bottom:1rem}.accent-gold{color:var(--gold)}.accent-sky{color:var(--sky)}.accent-purple{color:var(--purple)}.accent-coral{color:var(--coral)}.accent-mint{color:var(--mint)}
+.section-num{font-family:var(--font-mono);font-size:0.75rem;color:var(--gold);letter-spacing:0.3em;text-transform:uppercase;margin-bottom:0.5rem;opacity:0.7}
+#hero{min-height:100vh;text-align:center;position:relative;overflow:hidden}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;opacity:0.5}
+#hero .content{position:relative;z-index:2}#hero h1{margin-bottom:1rem}
+#hero .subtitle{font-family:var(--font-display);font-size:clamp(1.1rem,2.5vw,1.5rem);color:var(--mint);font-style:italic;margin-bottom:2.5rem}
+#hero .tagline{color:var(--muted);font-size:0.95rem;max-width:600px;margin:0 auto 2.5rem}
+.start-btn{display:inline-flex;align-items:center;gap:0.6rem;padding:0.9rem 2.2rem;background:transparent;border:1.5px solid var(--gold);color:var(--gold);font-family:var(--font-body);font-size:1rem;font-weight:500;border-radius:60px;cursor:pointer;transition:all 0.3s;text-decoration:none}
+.start-btn:hover{background:var(--gold);color:var(--bg);transform:translateY(-2px);box-shadow:0 8px 30px rgba(240,180,41,0.25)}
+#nav-dots{position:fixed;right:1.5rem;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:12px}
+.nav-dot{width:10px;height:10px;border-radius:50%;background:var(--muted);opacity:0.3;cursor:pointer;transition:all 0.3s;border:none}.nav-dot.active{opacity:1;background:var(--gold);transform:scale(1.4)}
+.demo-card{background:var(--card);border-radius:16px;padding:2rem;margin:1.5rem 0;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,0.04)}
+.demo-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--mint),var(--sky),var(--gold));opacity:0.6}
+.explanation-card{background:rgba(0,0,0,0.2);border-radius:14px;padding:1.5rem;margin:1.5rem 0;border-left:3px solid var(--gold);font-size:0.92rem}
+.btn{display:inline-flex;align-items:center;gap:0.4rem;padding:0.55rem 1.3rem;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.04);color:var(--text);font-family:var(--font-body);font-size:0.85rem;border-radius:8px;cursor:pointer;transition:all 0.25s}
+.btn:hover{background:rgba(255,255,255,0.1);transform:translateY(-1px)}.btn.active{border-color:var(--gold);background:rgba(240,180,41,0.12);color:var(--gold)}
+.btn-gold{border-color:var(--gold);color:var(--gold)}.btn-gold:hover{background:var(--gold);color:var(--bg)}
+.btn-group{display:flex;gap:0.5rem;flex-wrap:wrap;margin:1rem 0}
+.canvas-wrap{position:relative;width:100%;background:rgba(0,0,0,0.25);border-radius:12px;overflow:hidden;margin:1rem 0}
+.canvas-wrap canvas{display:block;width:100%}
+.wave-label{position:absolute;top:8px;left:12px;font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);z-index:2}
+.stat-row{display:flex;gap:0.8rem;margin:1rem 0}
+.stat-box{flex:1;background:var(--bg3);border-radius:10px;padding:0.8rem 1rem;border:1px solid rgba(255,255,255,0.03)}
+.stat-box .sl{font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:0.2rem}
+.stat-box .sv{font-family:var(--font-mono);font-size:1.1rem;font-weight:500;color:var(--gold)}
+.math-block{font-family:var(--font-mono);font-size:clamp(0.8rem,1.5vw,1rem);color:var(--gold);text-align:center;padding:0.8rem;background:var(--bg3);border-radius:10px;border:1px solid rgba(240,180,41,0.15);margin:1rem 0;line-height:1.8;overflow-x:auto}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.8s ease,transform 0.8s ease}.reveal.visible{opacity:1;transform:translateY(0)}
+.audio-note{display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:var(--muted);margin:0.5rem 0}.audio-note::before{content:'🔊'}
+.rosetta-simple{width:100%;border-collapse:collapse;margin:1.5rem 0;font-size:0.82rem}
+.rosetta-simple th{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.7rem 0.6rem;border-bottom:2px solid rgba(255,255,255,0.08);text-align:left;color:var(--muted)}
+.rosetta-simple td{padding:0.6rem;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--text);line-height:1.5;vertical-align:top}
+.rosetta-simple .rs-icon{font-size:1.1rem;text-align:center}
+#audio-notice{position:fixed;inset:0;z-index:10000;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:3vh 0;background:rgba(8,13,26,0.92);backdrop-filter:blur(12px)}
+.notice-card{max-width:440px;width:90%;background:var(--bg3);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:2rem 1.8rem;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);margin:auto}
+.notice-icon{font-size:3rem;margin-bottom:1rem;display:block}
+.notice-start{display:inline-flex;padding:0.85rem 2.5rem;background:var(--gold);color:var(--bg);border:none;border-radius:60px;font-family:var(--font-body);font-size:0.95rem;font-weight:600;cursor:pointer;margin-top:0.8rem}
+footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
+.floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:lowercase;color:#8db830;background:transparent;padding:.35rem .7rem;text-decoration:none;text-shadow:0 0 6px rgba(141,184,48,.4)}
+@media(max-width:640px){section{padding:4rem 1.2rem}#nav-dots{display:none}.demo-card{padding:1.2rem}.stat-row{flex-direction:column}}
+</style>
+</head>
+<body>
+<div id="audio-notice"><div class="notice-card"><span class="notice-icon">👁️</span><h2>Does a Machine See?</h2><p>An interactive exploration of images and filters in real time.</p><button class="notice-start" onclick="dismissNotice()">👁️ Begin</button></div></div>
+<nav id="nav-dots"></nav>
+
+<section id="hero"><canvas id="hero-canvas"></canvas><div class="content">
+<h3 class="accent-mint">A Mathematical Inquiry into AI · Part VI</h3>
+<h1>Does a Machine<br><span class="accent-mint">See</span>?</h1>
+<p class="subtitle">Or does it merely compute patterns in a grid of numbers?</p>
+<p class="tagline">You open your eyes and see the world — instantly, effortlessly, without conscious thought. To a machine, an image is a grid of numbers. Each pixel is a value from 0 to 255. Finding a "cat" in that array of numbers — that is the mathematics of Convolutional Neural Networks.</p>
+<button class="start-btn" onclick="initAudio();document.getElementById('sec-pixel').scrollIntoView({behavior:'smooth'})">👁️ Start Exploring</button>
+</div></section>
+
+<section id="sec-pixel"><div class="section-inner"><div class="reveal">
+<p class="section-num">00 — WHAT A MACHINE SEES</p>
+<h2>An Image Is <span class="accent-gold">Numbers</span></h2>
+<p>When you see a photo, your brain interprets patterns of light. When a machine sees the same photo, all it sees is a matrix of numbers — each cell a brightness value from 0 (black) to 255 (white).</p></div>
+<div class="demo-card reveal">
+<div class="audio-note">Hover over the image to see pixel values</div>
+<div style="display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;">
+<div><div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);margin-bottom:0.3rem;">What you see</div><canvas id="pixel-img" width="256" height="256" style="border-radius:8px;cursor:crosshair;image-rendering:pixelated;width:256px;height:256px;"></canvas></div>
+<div><div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);margin-bottom:0.3rem;">What the machine sees</div><canvas id="pixel-nums" width="256" height="256" style="border-radius:8px;width:256px;height:256px;"></canvas></div></div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">Pixel pos.</div><div class="sv" id="px-pos">(—, —)</div></div>
+<div class="stat-box"><div class="sl">Brightness</div><div class="sv" id="px-val">—</div></div>
+<div class="stat-box"><div class="sl">Resolution</div><div class="sv">16 × 16</div></div></div></div>
+<div class="explanation-card reveal"><p><strong style="color:#fff;">The meaning of "seeing" is entirely different.</strong> — Human vision grasps meaning intuitively. To a machine, everything is a 2D array of numbers.</p></div>
+</div></section>
+
+<section id="sec-conv"><div class="section-inner"><div class="reveal">
+<p class="section-num">01 — THE CORE OPERATION</p>
+<h2><span class="accent-sky">Convolution</span>: How a Machine's Eye Moves</h2>
+<p>A small filter (kernel) slides over the image. At each position, it computes the <strong>sum of element-wise products</strong> between the filter and the image patch.</p></div>
+<div class="demo-card reveal">
+<div class="audio-note">The tone changes with activation intensity as the kernel moves</div>
+<div class="canvas-wrap"><span class="wave-label">3×3 kernel sliding — input → kernel → output</span><canvas id="conv-canvas" height="350"></canvas></div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn active" onclick="setKernel(0,this)">→ Horizontal edges</button>
+<button class="btn" onclick="setKernel(1,this)">↓ Vertical edges</button>
+<button class="btn" onclick="setKernel(2,this)">🔲 Sharpen</button>
+<button class="btn" onclick="setKernel(3,this)">〰️ Blur</button></div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn btn-gold" id="conv-btn" onclick="runConv()">▶ Run Convolution</button>
+<button class="btn" onclick="resetConv()">Reset</button></div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">Kernel</div><div class="sv" id="conv-name" style="font-size:0.8rem;">Horiz. edge</div></div>
+<div class="stat-box"><div class="sl">Position</div><div class="sv" id="conv-pos">(0,0)</div></div>
+<div class="stat-box"><div class="sl">Output</div><div class="sv" id="conv-val">—</div></div></div></div>
+<div class="math-block">(f * g)[i,j] = ΣΣ f[m,n] · g[i-m, j-n] — The dot product extended to 2D!</div>
+<div class="explanation-card reveal" style="border-left-color:var(--sky);"><p><strong style="color:#fff;">Convolution is the 2D extension of the dot product.</strong> — Just as the dot product in Part II measured similarity between two vectors, convolution measures similarity between an image patch and a filter template.</p></div>
+</div></section>
+
+<section id="sec-feature"><div class="section-inner"><div class="reveal">
+<p class="section-num">02 — THE MACHINE'S VISUAL CORTEX</p>
+<h2><span class="accent-purple">Feature Maps</span>: Deeper and Deeper</h2>
+<p>First layers find edges, next layers textures, deeper layers object parts, final layers whole concepts. This hierarchy is strikingly similar to the human visual cortex (V1→V2→V4→IT).</p></div>
+<div class="demo-card reveal">
+<div class="canvas-wrap"><span class="wave-label">CNN visual hierarchy — edges → textures → parts → objects</span><canvas id="feat-canvas" height="300"></canvas></div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn btn-gold" id="feat-btn" onclick="runFeatures()">▶ Layer Activations</button>
+<button class="btn" onclick="resetFeatures()">Reset</button></div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">Current layer</div><div class="sv" id="feat-layer">—</div></div>
+<div class="stat-box"><div class="sl">Detects</div><div class="sv" id="feat-what" style="font-size:0.8rem;">—</div></div>
+<div class="stat-box"><div class="sl">Filters</div><div class="sv" id="feat-filters">—</div></div></div></div>
+</div></section>
+
+<section id="sec-pool"><div class="section-inner"><div class="reveal">
+<p class="section-num">03 — THE ART OF COMPRESSION</p>
+<h2><span class="accent-coral">Pooling</span>: Keeping Only What Matters</h2>
+<p>Take only the maximum from each 2×2 region, halving the size. This is the secret to recognizing a cat wherever it is — translation invariance.</p></div>
+<div class="demo-card reveal">
+<div class="canvas-wrap"><span class="wave-label">Max Pooling: 2×2 → maximum</span><canvas id="pool-canvas" height="280"></canvas></div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn active" onclick="setPoolType(0,this)">Max Pooling</button>
+<button class="btn" onclick="setPoolType(1,this)">Average Pooling</button></div>
+<div class="btn-group" style="justify-content:center;">
+<button class="btn btn-gold" onclick="runPool()">▶ Run Pooling</button>
+<button class="btn" onclick="resetPool()">Reset</button></div>
+<div class="stat-row">
+<div class="stat-box"><div class="sl">Input</div><div class="sv" id="pool-in">8×8</div></div>
+<div class="stat-box"><div class="sl">Output</div><div class="sv" id="pool-out">8×8</div></div>
+<div class="stat-box"><div class="sl">Compression</div><div class="sv" id="pool-ratio">1×</div></div></div></div>
+</div></section>
+
+<section id="sec-draw"><div class="section-inner"><div class="reveal">
+<p class="section-num">04 — DRAW IT YOURSELF</p>
+<h2>What Does a <span class="accent-gold">CNN See</span> in Your Drawing?</h2>
+<p>Draw freely below. On the right, a CNN edge detection filter runs in real time.</p></div>
+<div class="demo-card reveal">
+<div style="display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;">
+<div><div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);margin-bottom:0.3rem;">Draw here</div>
+<canvas id="draw-canvas" width="280" height="280" style="border-radius:8px;cursor:crosshair;background:#111;width:280px;height:280px;touch-action:none;"></canvas></div>
+<div><div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);margin-bottom:0.3rem;">Edges the CNN sees</div>
+<canvas id="draw-edge" width="280" height="280" style="border-radius:8px;width:280px;height:280px;"></canvas></div></div>
+<div class="btn-group" style="justify-content:center;"><button class="btn" onclick="clearDraw()">🗑️ Clear</button></div></div>
+</div></section>
+
+<section id="sec-imagenet"><div class="section-inner"><div class="reveal">
+<p class="section-num">05 — THE REVOLUTION</p>
+<h2>The <span class="accent-mint">ImageNet</span> Moment</h2>
+<p>In 2012, AlexNet won ImageNet by a crushing margin. Then VGGNet, GoogLeNet, and ResNet followed — eventually surpassing even human error rates (5%).</p></div>
+<div class="demo-card reveal">
+<div class="canvas-wrap"><canvas id="inet-canvas" height="280"></canvas></div></div>
+<div class="demo-card reveal" style="border-left:3px solid var(--mint);">
+<h3 class="accent-mint" style="margin-bottom:0.5rem;">CNN → Vision Transformer</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:0.8rem 0;">
+<div style="background:var(--bg3);border-radius:10px;padding:1rem;border:1px solid rgba(52,211,153,0.15);">
+<div style="font-family:var(--font-body);font-weight:600;color:var(--mint);">LeNet-5 → AlexNet → ResNet</div>
+<p style="font-size:0.78rem;color:var(--text);margin:0;">1998–2015. The convolution era. Deeper, wider. Residual connections broke through 152 layers.</p></div>
+<div style="background:var(--bg3);border-radius:10px;padding:1rem;border:1px solid rgba(167,139,250,0.15);">
+<div style="font-family:var(--font-body);font-weight:600;color:var(--purple);">ViT (2020) → Present</div>
+<p style="font-size:0.78rem;color:var(--text);margin:0;">Attention only, no convolutions. The Transformer from Part II applied to vision. Challenging CNN's throne.</p></div></div></div>
+</div></section>
+
+<section id="sec-rosetta" style="min-height:auto;padding:4rem 2rem;"><div class="section-inner"><div class="reveal">
+<p class="section-num">06 — THE CONNECTION</p>
+<h2>Human Vision vs. <span class="accent-gold">Machine Vision</span></h2></div>
+<div class="demo-card reveal"><table class="rosetta-simple"><thead><tr><th></th><th style="color:var(--gold);">Human</th><th style="color:var(--mint);">CNN</th></tr></thead><tbody>
+<tr><td class="rs-icon">👁️</td><td><strong>Sensor</strong> — 130 million photoreceptors</td><td><strong>Sensor</strong> — Pixels (RGB values)</td></tr>
+<tr><td class="rs-icon">🧠</td><td><strong>Processing</strong> — V1→V2→V4→IT</td><td><strong>Processing</strong> — Conv→Pool→Conv→...</td></tr>
+<tr><td class="rs-icon">🔍</td><td><strong>Attention</strong> — Fovea + peripheral</td><td><strong>Attention</strong> — Kernel sliding</td></tr>
+<tr><td class="rs-icon">💫</td><td><strong>Illusions</strong> — Optical illusions, pareidolia</td><td><strong>Illusions</strong> — Adversarial patches, DeepDream</td></tr>
+<tr><td class="rs-icon">👶</td><td><strong>Learning</strong> — Generalizes from few exposures</td><td><strong>Learning</strong> — Needs millions of images</td></tr>
+</tbody></table></div>
+</div></section>
+
+<section id="sec-closing"><div class="section-inner" style="text-align:center;"><div class="reveal">
+<h2>So — Does a Machine<br><span class="accent-mint">See?</span></h2>
+<p style="color:var(--muted);font-family:var(--font-display);font-style:italic;font-size:1.05rem;max-width:640px;margin:2rem auto;">
+A machine's eye holds no sense of beauty.<br>
+No awe at a sunset, no warmth in recognizing a loved one's face.<br>
+Only grids of numbers, sliding kernels, and stacked feature maps.<br><br>
+Perhaps that is not seeing.<br>
+But machines find tumors, classify stars, and recognize your face —<br>
+<span class="accent-mint">sometimes more accurately than we can.</span></p>
+<div style="margin-top:2rem;"><a href="speak.html" class="start-btn" style="border-color:var(--muted);color:var(--muted);">← Part V: Speak</a></div>
+</div></div></section>
+
+<footer><p>Does a Machine See? — The Mathematics of Convolution and Computer Vision</p>
+<div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:.2rem">
+<div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;color:#edeef2;">Sang-hyun Kim</div>
+<div style="font-family:'DM Sans',sans-serif;font-size:.72rem;color:#5c6178;">Korea Institute for Advanced Study</div>
+<a href="https://kimsh.kr" style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;margin-top:.25rem">kimsh.kr</a></div></footer>
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
+<script>
+let actx=null;
+function initAudio(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();}
+function dismissNotice(){initAudio();const n=document.getElementById('audio-notice');n.style.transition='opacity 0.3s';n.style.opacity='0';setTimeout(()=>n.remove(),300);}
+function playChime(f,d=0.15,v=0.06,t='triangle'){if(!actx)return;const now=actx.currentTime,o=actx.createOscillator(),g=actx.createGain();o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,now);g.gain.exponentialRampToValueAtTime(0.0001,now+d);o.connect(g).connect(actx.destination);o.start(now);o.stop(now+d+0.05);}
+function playChord(fr,d=0.4,v=0.03){fr.forEach((f,i)=>{setTimeout(()=>playChime(f,d,v,'sine'),i*40);});}
+
+// HERO
+const heroC=document.getElementById('hero-canvas'),hCtx=heroC.getContext('2d');
+function drawHero(){const w=heroC.width=heroC.clientWidth*2,h=heroC.height=heroC.clientHeight*2;hCtx.clearRect(0,0,w,h);
+const t=performance.now()/1000,gs=40;
+for(let x=0;x<w;x+=gs){for(let y=0;y<h;y+=gs){const v=0.5+0.5*Math.sin(x/200+t)+0.5*Math.cos(y/150+t*0.7);hCtx.fillStyle=`rgba(52,211,153,${0.02+v*0.03})`;hCtx.fillRect(x,y,gs-1,gs-1);}}
+requestAnimationFrame(drawHero);}drawHero();
+
+// §00 PIXELS
+const PX=16,pixD=[];
+for(let y=0;y<PX;y++){pixD[y]=[];for(let x=0;x<PX;x++){const d=Math.sqrt((x-PX/2)**2+(y-PX/2)**2);let v=d<5?200+Math.random()*55:20+Math.random()*30;if(y===PX/2&&x>2&&x<PX-2)v=Math.max(v,180);pixD[y][x]=Math.round(v);}}
+const pIC=document.getElementById('pixel-img'),pIX=pIC.getContext('2d'),pNC=document.getElementById('pixel-nums'),pNX=pNC.getContext('2d');
+function drawPx(){const cs=pIC.width/PX;
+for(let y=0;y<PX;y++)for(let x=0;x<PX;x++){const v=pixD[y][x];pIX.fillStyle=`rgb(${v},${v},${v})`;pIX.fillRect(x*cs,y*cs,cs,cs);}
+const ns=pNC.width/PX;pNX.clearRect(0,0,pNC.width,pNC.height);pNX.font='9px "JetBrains Mono"';pNX.textAlign='center';
+for(let y=0;y<PX;y++)for(let x=0;x<PX;x++){const v=pixD[y][x],a=v/255;pNX.fillStyle=`rgba(56,189,248,${0.1+a*0.2})`;pNX.fillRect(x*ns,y*ns,ns-0.5,ns-0.5);pNX.fillStyle=`rgba(255,255,255,${0.3+a*0.5})`;pNX.fillText(v,x*ns+ns/2,y*ns+ns/2+3);}}
+drawPx();
+pIC.addEventListener('pointermove',e=>{const r=pIC.getBoundingClientRect(),x=Math.floor((e.clientX-r.left)/r.width*PX),y=Math.floor((e.clientY-r.top)/r.height*PX);if(x>=0&&x<PX&&y>=0&&y<PX){document.getElementById('px-pos').textContent=`(${x},${y})`;document.getElementById('px-val').textContent=pixD[y][x];}});
+
+// §01 CONVOLUTION
+const convC=document.getElementById('conv-canvas'),convX=convC.getContext('2d');
+const KS=[{n:'Horiz. edge',k:[[-1,-1,-1],[0,0,0],[1,1,1]]},{n:'Vert. edge',k:[[-1,0,1],[-1,0,1],[-1,0,1]]},{n:'Sharpen',k:[[0,-1,0],[-1,5,-1],[0,-1,0]]},{n:'Blur',k:[[1/9,1/9,1/9],[1/9,1/9,1/9],[1/9,1/9,1/9]]}];
+let cK=0,cP=0,cR=false,cT=null;
+function setKernel(i,b){cK=i;b.parentElement.querySelectorAll('.btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById('conv-name').textContent=KS[i].n;resetConv();}
+function drawConv(){const w=convC.width=convC.clientWidth*2,h=convC.height=700;convX.clearRect(0,0,w,h);
+const sz=8,cs=Math.min(w*0.055,36),p=30,k=KS[cK].k;const iX=p,iY=p+40,oSz=sz-2;
+convX.font='500 18px "DM Sans"';convX.fillStyle='#7b8db5';convX.textAlign='left';convX.fillText('Input',iX,iY-10);
+for(let y=0;y<sz;y++)for(let x=0;x<sz;x++){const v=pixD[y+4]?pixD[y+4][x+4]||100:100;convX.fillStyle=`rgb(${v},${v},${v})`;convX.fillRect(iX+x*cs,iY+y*cs,cs-1,cs-1);}
+const kX=iX+sz*cs+50,kY=iY+cs*2;convX.fillText('Kernel',kX,kY-10);
+for(let y=0;y<3;y++)for(let x=0;x<3;x++){const v=k[y][x];convX.fillStyle=v>0?`rgba(52,211,153,${Math.abs(v)*0.3})`:`rgba(251,113,133,${Math.abs(v)*0.3})`;convX.fillRect(kX+x*cs,kY+y*cs,cs-1,cs-1);convX.fillStyle='#fff';convX.font='500 13px "JetBrains Mono"';convX.textAlign='center';convX.fillText(v===Math.round(v)?v:v.toFixed(1),kX+x*cs+cs/2,kY+y*cs+cs/2+5);}
+const cy=Math.floor(cP/oSz),cx=cP%oSz;
+if(cP<oSz*oSz){convX.strokeStyle='#f0b429';convX.lineWidth=2;convX.strokeRect(iX+cx*cs-1,iY+cy*cs-1,cs*3+2,cs*3+2);document.getElementById('conv-pos').textContent=`(${cx},${cy})`;
+let s=0;for(let dy=0;dy<3;dy++)for(let dx=0;dx<3;dx++){const pv=pixD[cy+dy+4]?pixD[cy+dy+4][cx+dx+4]||0:0;s+=pv*k[dy][dx];}document.getElementById('conv-val').textContent=Math.round(s);}
+const oX=kX+4*cs+30,oY=iY;convX.font='500 18px "DM Sans"';convX.fillStyle='#7b8db5';convX.textAlign='left';convX.fillText('Output',oX,oY-10);
+for(let oy=0;oy<oSz;oy++)for(let ox=0;ox<oSz;ox++){if(oy*oSz+ox<=cP){let s=0;for(let dy=0;dy<3;dy++)for(let dx=0;dx<3;dx++){const pv=pixD[oy+dy+4]?pixD[oy+dy+4][ox+dx+4]||0:0;s+=pv*KS[cK].k[dy][dx];}const nv=Math.max(0,Math.min(255,Math.abs(s)));convX.fillStyle=`rgb(${nv},${nv},${nv})`;convX.fillRect(oX+ox*cs,oY+oy*cs,cs-1,cs-1);}else{convX.fillStyle='rgba(255,255,255,0.02)';convX.fillRect(oX+ox*cs,oY+oy*cs,cs-1,cs-1);}}}
+function runConv(){if(cR){cR=false;clearInterval(cT);document.getElementById('conv-btn').textContent='▶ Run Convolution';return;}resetConv();cR=true;document.getElementById('conv-btn').textContent='⏸';initAudio();
+cT=setInterval(()=>{cP++;drawConv();const v=+document.getElementById('conv-val').textContent||0;playChime(200+Math.abs(v)*2,0.05,0.015,'sine');if(cP>=(PX-2-6)**2){cR=false;clearInterval(cT);document.getElementById('conv-btn').textContent='▶ Run Convolution';playChord([523.25,659.25,783.99]);}},120);}
+function resetConv(){cP=0;cR=false;clearInterval(cT);document.getElementById('conv-btn').textContent='▶ Run Convolution';document.getElementById('conv-pos').textContent='(0,0)';document.getElementById('conv-val').textContent='—';drawConv();}
+drawConv();
+
+// §02 FEATURES
+const featC=document.getElementById('feat-canvas'),featX=featC.getContext('2d');
+let fS=-1,fR=false,fT=null;
+const LS=[{n:'Conv1',w:'Edges, lines',f:64,c:'#34d399'},{n:'Conv2',w:'Textures, corners',f:128,c:'#38bdf8'},{n:'Conv3',w:'Patterns',f:256,c:'#a78bfa'},{n:'Conv4',w:'Object parts',f:512,c:'#f0b429'},{n:'FC',w:'Whole objects!',f:1000,c:'#fb7185'}];
+function drawFeat(){const w=featC.width=featC.clientWidth*2,h=featC.height=600;featX.clearRect(0,0,w,h);const sW=w/LS.length,p=20;
+LS.forEach((L,i)=>{const x=i*sW+p,bw=sW-p*2,a=fS>=i,cur=fS===i,ms=Math.max(2,8-i*1.5),cs2=Math.min(bw/ms,40),mx=x+(bw-ms*cs2)/2,my=h/2-ms*cs2/2;
+for(let ry=0;ry<ms;ry++)for(let rx=0;rx<ms;rx++){const v=a?0.3+Math.random()*0.5:0;const rgb=parseInt(L.c.slice(1),16);featX.fillStyle=a?`rgba(${(rgb>>16)&255},${(rgb>>8)&255},${rgb&255},${v})`:'rgba(255,255,255,0.02)';featX.fillRect(mx+rx*cs2,my+ry*cs2,cs2-1,cs2-1);}
+if(cur){featX.strokeStyle=L.c;featX.lineWidth=2;featX.strokeRect(mx-2,my-2,ms*cs2+4,ms*cs2+4);}
+featX.font=(cur?'600':'400')+' 18px "DM Sans"';featX.fillStyle=a?L.c:'#7b8db544';featX.textAlign='center';featX.fillText(L.n,x+bw/2,my+ms*cs2+30);
+featX.font='400 14px "DM Sans"';featX.fillStyle=a?'#e0e6f0':'#7b8db533';featX.fillText(L.w,x+bw/2,my+ms*cs2+52);
+if(i<LS.length-1){featX.font='400 24px "DM Sans"';featX.fillStyle=fS>i?'#f0b429':'#7b8db533';featX.fillText('→',x+bw+p/2,h/2+6);}});
+document.getElementById('feat-layer').textContent=fS<0?'—':LS[Math.min(fS,4)].n;document.getElementById('feat-what').textContent=fS<0?'—':LS[Math.min(fS,4)].w;document.getElementById('feat-filters').textContent=fS<0?'—':LS[Math.min(fS,4)].f;}
+function runFeatures(){if(fR)return;resetFeatures();fR=true;fS=0;initAudio();drawFeat();playChime(250,0.2,0.03);fT=setInterval(()=>{fS++;drawFeat();playChime(250+fS*80,0.2,0.03);if(fS>=4){fR=false;clearInterval(fT);playChord([523.25,659.25,783.99]);}},1200);}
+function resetFeatures(){fS=-1;fR=false;clearInterval(fT);drawFeat();}
+drawFeat();
+
+// §03 POOLING
+const poolC=document.getElementById('pool-canvas'),poolX=poolC.getContext('2d');
+let pT=0,pD=false;const pData=[];for(let y=0;y<8;y++){pData[y]=[];for(let x=0;x<8;x++)pData[y][x]=Math.round(Math.random()*255);}
+function setPoolType(t,b){pT=t;b.parentElement.querySelectorAll('.btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');resetPool();}
+function drawPool(){const w=poolC.width=poolC.clientWidth*2,h=poolC.height=560;poolX.clearRect(0,0,w,h);const cs=36,pad=40,ix=pad,iy=60;
+poolX.font='500 18px "DM Sans"';poolX.fillStyle='#7b8db5';poolX.textAlign='center';poolX.fillText('Input (8×8)',ix+4*cs,iy-15);
+for(let y=0;y<8;y++)for(let x=0;x<8;x++){const v=pData[y][x];poolX.fillStyle=`rgba(56,189,248,${v/255*0.4+0.05})`;poolX.fillRect(ix+x*cs,iy+y*cs,cs-1,cs-1);poolX.fillStyle='#fff';poolX.font='500 12px "JetBrains Mono"';poolX.textAlign='center';poolX.fillText(v,ix+x*cs+cs/2,iy+y*cs+cs/2+4);}
+const ax=ix+8*cs+25;poolX.font='400 28px "DM Sans"';poolX.fillStyle=pD?'#f0b429':'#7b8db533';poolX.textAlign='center';poolX.fillText('→',ax,iy+4*cs);
+if(pD){const ox=ax+25,oy=iy+2*cs;poolX.font='500 18px "DM Sans"';poolX.fillStyle='#f0b429';poolX.fillText('Output (4×4)',ox+2*cs,oy-15);
+for(let y=0;y<4;y++)for(let x=0;x<4;x++){const vs=[pData[y*2][x*2],pData[y*2][x*2+1],pData[y*2+1][x*2],pData[y*2+1][x*2+1]];const v=pT===0?Math.max(...vs):Math.round(vs.reduce((a,b)=>a+b)/4);
+poolX.fillStyle=`rgba(240,180,41,${v/255*0.4+0.1})`;poolX.fillRect(ox+x*cs,oy+y*cs,cs-1,cs-1);poolX.fillStyle='#fff';poolX.font='600 12px "JetBrains Mono"';poolX.fillText(v,ox+x*cs+cs/2,oy+y*cs+cs/2+4);}
+for(let y=0;y<4;y++)for(let x=0;x<4;x++){poolX.strokeStyle=['#34d399','#a78bfa','#fb7185','#38bdf8'][(y*4+x)%4]+'44';poolX.lineWidth=1.5;poolX.strokeRect(ix+x*2*cs,iy+y*2*cs,cs*2,cs*2);}
+document.getElementById('pool-out').textContent='4×4';document.getElementById('pool-ratio').textContent='4×';}}
+function runPool(){pD=true;drawPool();initAudio();playChime(400,0.2,0.04);}
+function resetPool(){pD=false;document.getElementById('pool-out').textContent='8×8';document.getElementById('pool-ratio').textContent='1×';drawPool();}
+drawPool();
+
+// §04 DRAWING + EDGE
+const dC=document.getElementById('draw-canvas'),dX=dC.getContext('2d'),eC=document.getElementById('draw-edge'),eX=eC.getContext('2d');
+let dr=false;dX.fillStyle='#111';dX.fillRect(0,0,280,280);dX.strokeStyle='#fff';dX.lineWidth=12;dX.lineCap='round';dX.lineJoin='round';
+dC.addEventListener('pointerdown',e=>{dr=true;const r=dC.getBoundingClientRect();dX.beginPath();dX.moveTo(e.clientX-r.left,e.clientY-r.top);});
+dC.addEventListener('pointermove',e=>{if(!dr)return;const r=dC.getBoundingClientRect();dX.lineTo(e.clientX-r.left,e.clientY-r.top);dX.stroke();compEdge();});
+dC.addEventListener('pointerup',()=>{dr=false;compEdge();});dC.addEventListener('pointerleave',()=>{dr=false;});
+function clearDraw(){dX.fillStyle='#111';dX.fillRect(0,0,280,280);eX.clearRect(0,0,280,280);dX.strokeStyle='#fff';dX.lineWidth=12;dX.lineCap='round';dX.lineJoin='round';}
+function compEdge(){const id=dX.getImageData(0,0,280,280).data,out=eX.createImageData(280,280);
+for(let y=1;y<279;y++)for(let x=1;x<279;x++){const idx=(y*280+x)*4;
+const tl=id[((y-1)*280+(x-1))*4],tc=id[((y-1)*280+x)*4],tr=id[((y-1)*280+(x+1))*4],ml=id[(y*280+(x-1))*4],mr=id[(y*280+(x+1))*4],bl=id[((y+1)*280+(x-1))*4],bc=id[((y+1)*280+x)*4],br=id[((y+1)*280+(x+1))*4];
+const gx=-tl+tr-2*ml+2*mr-bl+br,gy=-tl-2*tc-tr+bl+2*bc+br,m=Math.min(255,Math.sqrt(gx*gx+gy*gy));
+out.data[idx]=0;out.data[idx+1]=Math.round(m*0.8);out.data[idx+2]=Math.round(m);out.data[idx+3]=255;}
+eX.putImageData(out,0,0);}
+
+// §05 IMAGENET TIMELINE
+const iC=document.getElementById('inet-canvas'),iX=iC.getContext('2d');
+function drawInet(){const w=iC.width=iC.clientWidth*2,h=iC.height=560;iX.clearRect(0,0,w,h);const t=performance.now()/1000;
+const ms=[{y:1998,e:40,l:'LeNet',c:'#7b8db5'},{y:2012,e:16.4,l:'AlexNet',c:'#34d399'},{y:2014,e:7.3,l:'VGGNet',c:'#38bdf8'},{y:2014.5,e:6.7,l:'GoogLeNet',c:'#a78bfa'},{y:2015,e:3.6,l:'ResNet',c:'#f0b429'},{y:2020,e:1.5,l:'ViT',c:'#fb7185'}];
+const pd={l:60,r:30,t:40,b:50},gw=w-pd.l-pd.r,gh=h-pd.t-pd.b;
+const hY=pd.t+(1-5/45)*gh;iX.beginPath();iX.moveTo(pd.l,hY);iX.lineTo(w-pd.r,hY);iX.strokeStyle='#fb718533';iX.lineWidth=1;iX.setLineDash([6,4]);iX.stroke();iX.setLineDash([]);
+iX.font='400 16px "DM Sans"';iX.fillStyle='#fb718566';iX.textAlign='left';iX.fillText('Human error ~5%',pd.l+10,hY-8);
+iX.beginPath();ms.forEach((m,i)=>{const x=pd.l+((m.y-1996)/(2022-1996))*gw,y2=pd.t+(1-m.e/45)*gh;i?iX.lineTo(x,y2):iX.moveTo(x,y2);});iX.strokeStyle='#34d399';iX.lineWidth=3;iX.stroke();
+ms.forEach((m,i)=>{const x=pd.l+((m.y-1996)/(2022-1996))*gw,y2=pd.t+(1-m.e/45)*gh,p2=0.5+0.5*Math.sin(t*2+i);
+iX.beginPath();iX.arc(x,y2,5+p2*2,0,6.28);iX.fillStyle=m.c;iX.fill();
+iX.font='600 16px "DM Sans"';iX.fillStyle=m.c;iX.textAlign='center';iX.fillText(m.l,x,y2-22);
+iX.font='400 14px "JetBrains Mono"';iX.fillStyle='#7b8db5';iX.fillText(m.e+'%',x,y2+25);iX.fillText(Math.floor(m.y),x,h-pd.b+20);});
+iX.font='400 16px "DM Sans"';iX.fillStyle='#7b8db5';iX.textAlign='center';iX.fillText('ImageNet Top-5 error rate',w/2,pd.t-15);
+requestAnimationFrame(drawInet);}drawInet();
+
+// NAV
+const obs=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.15});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+const secs=['hero','sec-pixel','sec-conv','sec-feature','sec-pool','sec-draw','sec-imagenet','sec-rosetta','sec-closing'];
+const nd=document.getElementById('nav-dots');secs.forEach(id=>{const d=document.createElement('button');d.className='nav-dot';d.onclick=()=>document.getElementById(id).scrollIntoView({behavior:'smooth'});nd.appendChild(d);});
+const sO=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){const i=secs.indexOf(e.target.id);document.querySelectorAll('.nav-dot').forEach((d,j)=>d.classList.toggle('active',j===i));}});},{threshold:0.3});
+secs.forEach(id=>{const el=document.getElementById(id);if(el)sO.observe(el);});
+</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-HTML
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
@@ -10,12 +10,12 @@ HTML
 
       gtag('config', 'G-RQVK6SF2E6');
     </script>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-<title>Banach–Tarski · S²의 F₂</title>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,400&amp;family=DM+Sans:wght@300;400&amp;family=JetBrains+Mono:wght@300;400&amp;display=swap" rel="stylesheet"/>
-<style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Banach–Tarski · F₂ on S²</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,400&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
       width: 100%; height: 100%;
@@ -319,43 +319,50 @@ HTML
   </style>
 </head>
 <body>
+
 <div id="app">
-<div id="panels">
- 왼쪽: 4-일반 트리(Three.js) 
-<div id="left-panel">
-<canvas id="tree-canvas"></canvas>
-<div class="panel-hint">드래그 · 회전  |  Shift-드래그 · 팬  |  스크롤 · 확대/축소</div>
-<div class="panel-subtitle">모서리 길이가 동일한 3D의 4가 트리</div>
+  <div id="panels">
+
+    <!-- LEFT: 4-Regular Tree (Three.js) -->
+    <div id="left-panel">
+      <canvas id="tree-canvas"></canvas>
+      <div class="panel-hint">drag · rotate &nbsp;|&nbsp; shift-drag · pan &nbsp;|&nbsp; scroll · zoom</div>
+      <div class="panel-subtitle">4-valent tree in 3D, with equal edge lengths</div>
+    </div>
+
+    <!-- RIGHT: Globe -->
+    <div id="right-panel">
+      <div id="globe-container"></div>
+      <div id="city-labels"></div>
+      <div class="panel-hint">drag · rotate &nbsp;|&nbsp; shift-drag · pan &nbsp;|&nbsp; scroll · zoom</div>
+      <div class="panel-subtitle" id="right-subtitle"></div>
+      <div id="loading"><div class="spinner"></div><p>loading atlas…</p></div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM BAR -->
+  <div id="bottom-bar">
+    <div class="ctrl-group">
+      <span class="bar-label">Radius</span>
+      <button class="cbtn" id="btn-dec" onclick="setRadius(globalR-1)" disabled>&#8722;</button>
+      <span id="rval">0</span>
+      <input type="range" id="rslider" min="0" max="4" value="0" step="1"
+             oninput="setRadius(+this.value)">
+      <button class="cbtn" id="btn-inc" onclick="setRadius(globalR+1)">&#43;</button>
+    </div>
+    <div class="bar-sep"></div>
+    <button class="arc-toggle" id="arc-toggle-btn" onclick="toggleArcs()">
+      <span>⌇</span><span id="arc-label">geodesics on</span>
+    </button>
+    <div class="bar-sep"></div>
+    <button class="arc-toggle" onclick="shuffleColors()" title="Randomise colours">
+      <span>⟳</span><span>shuffle colours</span>
+    </button>
+  </div>
 </div>
- 오른쪽: 지구본 
-<div id="right-panel">
-<div id="globe-container"></div>
-<div id="city-labels"></div>
-<div class="panel-hint">드래그 · 회전  |  Shift-드래그 · 팬  |  스크롤 · 확대/축소</div>
-<div class="panel-subtitle" id="right-subtitle"></div>
-<div id="loading"><div class="spinner"></div><p>아틀라스 로드 중…</p></div>
-</div>
-</div>
- 하단 바 
-<div id="bottom-bar">
-<div class="ctrl-group">
-<span class="bar-label">반지름</span>
-<button class="cbtn" disabled="" id="btn-dec" onclick="setRadius(globalR-1)">−</button>
-<span id="rval">0</span>
-<input id="rslider" max="4" min="0" oninput="setRadius(+this.value)" step="1" type="range" value="0"/>
-<button class="cbtn" id="btn-inc" onclick="setRadius(globalR+1)">+</button>
-</div>
-<div class="bar-sep"></div>
-<button class="arc-toggle" id="arc-toggle-btn" onclick="toggleArcs()">
-<span>⌇</span><span id="arc-label">측지선</span>
-</button>
-<div class="bar-sep"></div>
-<button class="arc-toggle" onclick="shuffleColors()" title="색상을 무작위로 지정">
-<span>⟳</span><span>색상 섞기</span>
-</button>
-</div>
-</div>
-<link href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" rel="stylesheet"/>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://unpkg.com/three@0.128.0/examples/js/lines/LineSegmentsGeometry.js"></script>
@@ -363,6 +370,7 @@ HTML
 <script src="https://unpkg.com/three@0.128.0/examples/js/lines/LineSegments2.js"></script>
 <script src="https://unpkg.com/globe.gl@2.30.0/dist/globe.gl.min.js"></script>
 <script src="https://unpkg.com/topojson-client@3/dist/topojson-client.min.js"></script>
+
 <script>
 'use strict';
 
@@ -1001,11 +1009,13 @@ resizeTree();
 initGlobe();
 </script>
 <a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
 <div class="attr-overlay">
-<span class="attr-name">김상현</span>
-<span class="attr-inst">고등과학원</span>
-<a class="attr-url" href="https://kimsh.kr">kimsh.kr</a>
+  <span class="attr-name">Sang-hyun Kim</span>
+  <span class="attr-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</span>
+  <a class="attr-url" href="https://kimsh.kr">kimsh.kr</a>
 </div>
+
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"
     data-repo="kimshmath/edu"
@@ -1018,7 +1028,7 @@ initGlobe();
     data-emit-metadata="0"
     data-input-position="top"
     data-theme="dark"
-    data-lang="ko"
+    data-lang="en"
     crossorigin="anonymous"
     async>
   </script>

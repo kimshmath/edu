@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <!-- Background gradient -->
+    <radialGradient id="bg" cx="50%" cy="50%" r="72%">
+      <stop offset="0%" stop-color="#0a0c18"/>
+      <stop offset="100%" stop-color="#05060c"/>
+    </radialGradient>
+
+    <!-- Membrane warm glow (positive displacement) -->
+    <radialGradient id="warm-center" cx="50%" cy="42%" r="38%">
+      <stop offset="0%" stop-color="#dc9b08" stop-opacity="0.95"/>
+      <stop offset="45%" stop-color="#c9a748" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#05060c" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Membrane cool glow (negative displacement — ring) -->
+    <radialGradient id="cool-ring" cx="50%" cy="55%" r="45%">
+      <stop offset="0%" stop-color="#05060c" stop-opacity="0"/>
+      <stop offset="40%" stop-color="#05060c" stop-opacity="0"/>
+      <stop offset="58%" stop-color="#22b5aa" stop-opacity="0.5"/>
+      <stop offset="72%" stop-color="#1a8a82" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#05060c" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Outer vignette -->
+    <radialGradient id="vignette" cx="50%" cy="50%" r="50%">
+      <stop offset="55%" stop-color="#05060c" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#05060c" stop-opacity="0.85"/>
+    </radialGradient>
+
+    <!-- Membrane clipping circle -->
+    <clipPath id="drum-clip">
+      <circle cx="512" cy="512" r="380"/>
+    </clipPath>
+
+    <!-- Gold ripple ring blur -->
+    <filter id="ripple-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Central glow filter -->
+    <filter id="center-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="28"/>
+    </filter>
+
+    <!-- Soft glow for nodal pattern -->
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+  </defs>
+
+  <!-- iOS rounded rect background -->
+  <rect width="1024" height="1024" rx="224" fill="url(#bg)"/>
+
+  <!-- Subtle grain texture overlay -->
+  <rect width="1024" height="1024" rx="224" fill="url(#bg)" opacity="0.5"/>
+
+  <!-- === DRUM MEMBRANE === -->
+  <g clip-path="url(#drum-clip)">
+
+    <!-- Base membrane dark circle -->
+    <circle cx="512" cy="512" r="380" fill="#080a14"/>
+
+    <!-- Bessel mode (0,1) — warm center dome -->
+    <circle cx="512" cy="490" r="220" fill="url(#warm-center)" filter="url(#center-glow)" opacity="0.7"/>
+    <circle cx="512" cy="490" r="200" fill="url(#warm-center)" opacity="0.9"/>
+
+    <!-- Bessel mode (1,0) — teal ring (negative region) -->
+    <circle cx="512" cy="512" r="380" fill="url(#cool-ring)"/>
+
+    <!-- Additional warm inner glow -->
+    <ellipse cx="512" cy="475" rx="140" ry="130" fill="#c9a748" opacity="0.15" filter="url(#soft)"/>
+
+    <!-- Nodal circle — the zero line between positive and negative -->
+    <circle cx="512" cy="512" r="248" fill="none" stroke="#c9a748" stroke-width="1.2" opacity="0.18"/>
+
+    <!-- Secondary inner nodal ring hint -->
+    <circle cx="512" cy="512" r="120" fill="none" stroke="#c9a748" stroke-width="0.8" opacity="0.12"/>
+
+  </g>
+
+  <!-- Membrane boundary ring -->
+  <circle cx="512" cy="512" r="380" fill="none" stroke="#c9a748" stroke-width="2.5" opacity="0.5"/>
+  <circle cx="512" cy="512" r="382" fill="none" stroke="#c9a748" stroke-width="0.8" opacity="0.2"/>
+
+  <!-- === RIPPLE RINGS (strike effect) === -->
+  <g filter="url(#ripple-glow)">
+    <circle cx="480" cy="470" r="60" fill="none" stroke="#c9a748" stroke-width="1.8" opacity="0.55"/>
+    <circle cx="480" cy="470" r="110" fill="none" stroke="#c9a748" stroke-width="1.4" opacity="0.35"/>
+    <circle cx="480" cy="470" r="170" fill="none" stroke="#c9a748" stroke-width="1.0" opacity="0.18"/>
+    <circle cx="480" cy="470" r="240" fill="none" stroke="#c9a748" stroke-width="0.7" opacity="0.08"/>
+  </g>
+
+  <!-- === STRIKE POINT (impact dot) === -->
+  <circle cx="480" cy="470" r="6" fill="#f0e8d8" opacity="0.9"/>
+  <circle cx="480" cy="470" r="14" fill="#c9a748" opacity="0.15" filter="url(#soft)"/>
+
+  <!-- Vignette overlay -->
+  <rect width="1024" height="1024" rx="224" fill="url(#vignette)"/>
+
+</svg>

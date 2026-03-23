@@ -1,0 +1,2203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RQVK6SF2E6');
+    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Making the Sun from a Single Bean — Banach–Tarski Paradox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #080d1a;
+  --bg2: #0c1326;
+  --bg3: #111b38;
+  --card: #131f42;
+  --gold: #f0b429;
+  --gold-dim: #c4912080;
+  --sky: #38bdf8;
+  --purple: #a78bfa;
+  --coral: #fb7185;
+  --mint: #34d399;
+  --amber: #fbbf24;
+  --text: #e0e6f0;
+  --muted: #7b8db5;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999;
+}
+
+section {
+  min-height: 100vh;
+  padding: 6rem 2rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.section-inner { max-width: 900px; width: 100%; }
+
+h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+  margin-bottom: 1.5rem;
+}
+h3 {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.5rem;
+}
+p { margin-bottom: 1rem; }
+.accent-gold { color: var(--gold); }
+.accent-sky { color: var(--sky); }
+.accent-purple { color: var(--purple); }
+.accent-coral { color: var(--coral); }
+.accent-mint { color: var(--mint); }
+
+.formula {
+  font-family: var(--font-mono);
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  color: var(--gold);
+  background: var(--bg3);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  border-left: 3px solid var(--gold);
+  display: block;
+  margin: 1.2rem 0;
+  line-height: 2;
+  overflow-x: auto;
+}
+
+/* Hero */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+#hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.5;
+}
+#hero .content {
+  position: relative;
+  z-index: 2;
+}
+#hero h1 { margin-bottom: 1rem; }
+#hero .subtitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  color: var(--gold);
+  font-style: italic;
+  margin-bottom: 2.5rem;
+}
+#hero .tagline {
+  color: var(--muted);
+  font-size: 0.95rem;
+  max-width: 560px;
+  margin: 0 auto 2.5rem;
+}
+
+.start-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 2.2rem;
+  background: transparent;
+  border: 1.5px solid var(--gold);
+  color: var(--gold);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 60px;
+  cursor: pointer;
+  transition: all 0.3s;
+  letter-spacing: 0.05em;
+}
+.start-btn:hover {
+  background: var(--gold);
+  color: var(--bg);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(240, 180, 41, 0.25);
+}
+
+/* Nav dots */
+#nav-dots {
+  position: fixed;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.nav-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--muted);
+  opacity: 0.3;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+}
+.nav-dot.active {
+  opacity: 1;
+  background: var(--gold);
+  transform: scale(1.4);
+}
+
+/* Cards */
+.demo-card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 1.5rem 0;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+.demo-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--sky), var(--purple));
+  opacity: 0.6;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.3rem;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s;
+  font-weight: 400;
+}
+.btn:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.25);
+  transform: translateY(-1px);
+}
+.btn.active, .btn.playing {
+  border-color: var(--gold);
+  background: rgba(240, 180, 41, 0.12);
+  color: var(--gold);
+}
+.btn-gold { border-color: var(--gold); color: var(--gold); }
+.btn-gold:hover { background: var(--gold); color: var(--bg); }
+.btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; }
+
+/* Canvas */
+.canvas-wrap {
+  position: relative;
+  width: 100%;
+  background: rgba(0,0,0,0.25);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+.canvas-wrap canvas { display: block; width: 100%; }
+
+/* Reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.section-num {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--gold);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  opacity: 0.7;
+}
+
+/* Floating badge */
+.floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:lowercase;color:#8db830;background:transparent;padding:.35rem .7rem;text-decoration:none;transition:color .25s,text-shadow .25s,transform .25s;text-shadow:0 0 6px rgba(141,184,48,.4),0 0 16px rgba(141,184,48,.15)}
+.floating-badge:hover{color:#a8d43a;text-shadow:0 0 8px rgba(141,184,48,.65),0 0 22px rgba(141,184,48,.28);transform:translateY(-1px)}
+
+/* Attribution */
+.attr-overlay {
+  position: fixed;
+  bottom: 1.75rem;
+  right: 1.75rem;
+  z-index: 10000;
+  text-align: right;
+  pointer-events: none;
+}
+.attr-name {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #edeef2;
+  letter-spacing: -0.01em;
+  display: block;
+}
+.attr-inst {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 300;
+  color: #5c6178;
+  letter-spacing: 0.01em;
+  display: block;
+  margin-top: 0.2rem;
+}
+.attr-url {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  color: #d4a853;
+  display: inline-block;
+  margin-top: 0.25rem;
+  text-decoration: none;
+  pointer-events: all;
+}
+.attr-url:hover { text-decoration: underline; }
+
+footer {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+/* ── Bean-Sun Demo ── */
+#bean-sun-canvas { display: block; width: 100%; border-radius: 12px; }
+
+.phase-indicator {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  margin: 1rem 0 0.5rem;
+}
+.phase-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  transition: all 0.4s;
+}
+.phase-dot.active {
+  background: var(--gold);
+  box-shadow: 0 0 10px rgba(240,180,41,0.5);
+  transform: scale(1.3);
+}
+
+.phase-label {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 1rem;
+  min-height: 1.2em;
+}
+
+/* ── Cayley Tree ── */
+#cayley-canvas { display: block; position: absolute; inset: 0; border-radius: 12px; cursor: grab; touch-action: none; }
+#cayley-canvas:active { cursor: grabbing; }
+
+.radius-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 1rem 0;
+}
+.radius-control .cbtn {
+  background: rgba(80,120,210,.13);
+  border: 0.5px solid rgba(100,150,255,.30);
+  color: rgba(190,215,255,.90);
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.radius-control .cbtn:hover { background: rgba(80,120,210,.28); }
+.radius-control .cbtn:disabled { opacity: 0.22; cursor: not-allowed; }
+.radius-control .rval {
+  font-size: 28px;
+  font-family: var(--font-mono);
+  color: rgba(225,238,255,.95);
+  min-width: 32px;
+  text-align: center;
+}
+.radius-control input[type=range] {
+  width: 140px;
+}
+
+/* ── Socks & Shoes ── */
+.drawer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+  gap: 10px;
+  margin: 1rem 0;
+}
+.drawer-box {
+  aspect-ratio: 1;
+  background: var(--bg3);
+  border: 1.5px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.drawer-box:hover {
+  border-color: var(--gold);
+  transform: translateY(-3px);
+}
+.drawer-box.chosen {
+  border-color: var(--gold);
+  background: rgba(240,180,41,0.08);
+  box-shadow: 0 0 16px rgba(240,180,41,0.15);
+}
+.drawer-box .item-icon { font-size: 1.8rem; line-height: 1; }
+.drawer-box .item-label {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+.drawer-box .chosen-mark {
+  position: absolute;
+  top: 4px; right: 6px;
+  font-size: 0.7rem;
+  color: var(--gold);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.drawer-box.chosen .chosen-mark { opacity: 1; }
+
+/* ── Quote block ── */
+.quote-block {
+  border-left: 3px solid var(--purple);
+  padding: 1.2rem 1.5rem;
+  background: rgba(167,139,250,0.05);
+  border-radius: 0 12px 12px 0;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: var(--text);
+}
+.quote-block .quote-author {
+  display: block;
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--purple);
+  margin-top: 0.6rem;
+  letter-spacing: 0.05em;
+}
+
+/* ── Timeline ── */
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+  margin: 1.5rem 0;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--gold), var(--purple), var(--sky));
+  border-radius: 2px;
+}
+.tl-item {
+  position: relative;
+  margin-bottom: 1.5rem;
+  padding-left: 1rem;
+}
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: -2rem;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  background: var(--bg);
+}
+.tl-year {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--gold);
+  letter-spacing: 0.08em;
+  margin-bottom: 0.2rem;
+}
+.tl-title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.3rem;
+}
+.tl-desc {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* ── Globe section ── */
+.globe-wrapper {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #06101e;
+  margin: 1rem 0;
+}
+#globe-container {
+  position: absolute;
+  inset: 0;
+}
+#city-labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+.city-label {
+  position: absolute;
+  transform: translate(-50%, -180%);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: .06em;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+.city-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+/* ── Debate cards ── */
+.debate-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.debate-card {
+  background: var(--bg3);
+  border-radius: 12px;
+  padding: 1.3rem;
+  border: 1px solid rgba(255,255,255,0.04);
+  transition: all 0.3s;
+}
+.debate-card:hover {
+  border-color: rgba(255,255,255,0.1);
+  transform: translateY(-2px);
+}
+.debate-card h4 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.4rem;
+}
+.debate-card .tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+.debate-card .tag.pro { background: rgba(52,211,153,0.12); color: var(--mint); }
+.debate-card .tag.con { background: rgba(251,113,133,0.12); color: var(--coral); }
+.debate-card p { font-size: 0.82rem; color: var(--muted); margin-bottom: 0; line-height: 1.7; }
+
+/* ── KaTeX in flow ── */
+.math-inline { display: inline; }
+.katex { font-size: 1em; }
+
+/* ── Photo card ── */
+.photo-card {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  background: var(--bg3);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+.photo-placeholder {
+  width: 120px;
+  height: 140px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--bg2), rgba(167,139,250,0.15));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  flex-shrink: 0;
+  border: 1px solid rgba(167,139,250,0.2);
+}
+.photo-info h4 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.2rem;
+}
+.photo-info .sub {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--purple);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
+}
+.photo-info p {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  section { padding: 4rem 1.2rem; }
+  #nav-dots { display: none; }
+  .demo-card { padding: 1.2rem; }
+  .debate-grid { grid-template-columns: 1fr; }
+  .photo-card { flex-direction: column; text-align: center; }
+  .globe-wrapper { height: 360px; }
+  .drawer-grid { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(240,180,41,0.2); }
+  50% { box-shadow: 0 0 24px rgba(240,180,41,0.5); }
+}
+
+/* ── Loading overlay for globe ── */
+#globe-loading {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: #06101e; z-index: 20; gap: 14px;
+  transition: opacity 0.6s;
+  border-radius: 12px;
+}
+#globe-loading.hide { opacity: 0; pointer-events: none; }
+.spinner {
+  width: 28px; height: 28px;
+  border: 2px solid rgba(80,120,210,.22);
+  border-top-color: #6670c8;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+#globe-loading p {
+  font-size: 0.68rem;
+  color: rgba(150,185,240,.38);
+  font-family: var(--font-mono);
+  letter-spacing: .05em;
+}
+
+/* ── Orbit info bar ── */
+.orbit-info {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 0.5rem 0;
+}
+.orbit-stat {
+  background: var(--bg3);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(255,255,255,0.03);
+  text-align: center;
+}
+.orbit-stat .osl {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.15rem;
+}
+.orbit-stat .osv {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--gold);
+}
+.orbit-stat .osu { font-size: 0.7rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- Navigation dots -->
+<nav id="nav-dots"></nav>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="content">
+    <h3 class="accent-gold">The Banach–Tarski Paradox</h3>
+    <h1>Making the Sun<br>from a Single Bean</h1>
+    <p class="subtitle">A mathematical magic trick with infinite pieces</p>
+    <p class="tagline">What if you could take a ball the size of a bean, break it into just five pieces, rearrange them using only rotations and translations — and reassemble them into a ball the size of the Sun? Mathematics says you can.</p>
+    <button class="start-btn" onclick="document.getElementById('sec-paradox').scrollIntoView({behavior:'smooth'})">
+      ▶ Start Exploring
+    </button>
+  </div>
+</section>
+
+<!-- ═══════════════════ 1. THE PARADOX ═══════════════════ -->
+<section id="sec-paradox">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">01 — THE IMPOSSIBLE THEOREM</p>
+      <h2>One Ball Becomes <span class="accent-coral">Two</span></h2>
+      <p>In 1924, Stefan Banach and Alfred Tarski proved one of the most shocking results in all of mathematics: a solid ball in three-dimensional space can be decomposed into a <strong>finite number of pieces</strong> — just five will do — and those pieces can be rearranged, using only rigid motions, to form <strong>two complete balls identical to the original</strong>.</p>
+      <p>This isn't a conjecture or a thought experiment. It's a <em>theorem</em>, proved with absolute rigor. And once you can duplicate one ball, you can do it again and again — making the Sun from a bean is just a matter of patience.</p>
+    </div>
+
+    <div class="demo-card reveal">
+      <h3 class="accent-gold" style="margin-bottom:0.5rem;">Watch It Happen</h3>
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.5rem;">Click <strong>Decompose</strong> to split a bean into five pieces, then watch them reassemble into the Sun. Sound on for the full experience.</p>
+      <canvas id="bean-sun-canvas" width="900" height="400"></canvas>
+      <div class="phase-indicator" id="phase-indicator">
+        <div class="phase-dot active" data-phase="0"></div>
+        <div class="phase-dot" data-phase="1"></div>
+        <div class="phase-dot" data-phase="2"></div>
+        <div class="phase-dot" data-phase="3"></div>
+        <div class="phase-dot" data-phase="4"></div>
+      </div>
+      <div class="phase-label" id="phase-label">The bean — one ordinary solid ball</div>
+      <div class="btn-group" style="justify-content:center;">
+        <button class="btn btn-gold" id="bean-start-btn" onclick="startBeanAnimation()">▶ Decompose & Reassemble</button>
+        <button class="btn" onclick="resetBeanAnimation()">↺ Reset</button>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:1.5rem;">
+      <p>The key insight: the pieces are not ordinary geometric shapes. They are infinitely complex, fractal-like "clouds" of points that cannot be assigned any meaningful volume. They exist only because of a powerful axiom in set theory — the <strong class="accent-purple">Axiom of Choice</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 2. ROTATION GROUP ═══════════════════ -->
+<section id="sec-rotations">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">02 — THE FREE GROUP F₂</p>
+      <h2>Rotations That <span class="accent-sky">Never Repeat</span></h2>
+      <p>The paradox hinges on a remarkable algebraic fact. Consider two specific rotations of the sphere:</p>
+      <div class="formula" id="rotation-formula"></div>
+      <p>The angle <span class="math-inline" id="math-arccos"></span> is special: it makes the cosine equal to exactly 1/3. At this precise angle, the two rotations <strong>generate a free group</strong> — meaning that no non-trivial combination of these rotations and their inverses ever gives back the identity.</p>
+      <p>This algebraic structure is called <span class="math-inline" id="math-f2-label"></span>, the free group on two generators. Its <strong>Cayley graph</strong> is an infinite 4-regular tree — every node branches into exactly 4 children (since each rotation has an inverse, and we never immediately undo a step).</p>
+    </div>
+
+    <div class="demo-card reveal">
+      <h3 class="accent-gold" style="margin-bottom:0.5rem;">The Cayley Graph of F₂ in 3D</h3>
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.5rem;">At first, this looks flat — a 2D tree with shrinking edges. <strong>Drag to rotate it.</strong> You'll discover it's actually a 3D structure where <em>every edge has the same length</em>. The "shrinking" was just perspective.</p>
+      <div class="canvas-wrap" style="position:relative;touch-action:none;height:420px;">
+        <canvas id="cayley-canvas" style="touch-action:none;position:absolute;inset:0;"></canvas>
+        <div style="position:absolute;top:8px;left:0;right:0;text-align:center;font-size:9px;letter-spacing:.07em;color:rgba(150,185,240,.22);pointer-events:none;user-select:none;font-family:'JetBrains Mono',monospace;">drag · rotate &nbsp;|&nbsp; shift-drag · pan &nbsp;|&nbsp; scroll · zoom</div>
+        <div style="position:absolute;bottom:12px;left:0;right:0;text-align:center;font-family:'Fraunces',Georgia,serif;font-size:12px;font-style:italic;color:rgba(180,200,255,0.45);pointer-events:none;user-select:none;" id="cayley-subtitle">all edges have equal length in 3-space</div>
+      </div>
+      <div class="radius-control">
+        <button class="cbtn" id="cay-dec" onclick="setCayleyR(cayleyR-1)" disabled>−</button>
+        <span class="rval" id="cay-rval">0</span>
+        <input type="range" id="cay-slider" min="0" max="5" value="0" step="1" oninput="setCayleyR(+this.value)">
+        <button class="cbtn" id="cay-inc" onclick="setCayleyR(cayleyR+1)">+</button>
+      </div>
+      <div class="orbit-info">
+        <div class="orbit-stat"><div class="osl">Depth</div><div class="osv" id="cay-depth">0</div></div>
+        <div class="orbit-stat"><div class="osl">Nodes</div><div class="osv" id="cay-nodes">1</div></div>
+        <div class="orbit-stat"><div class="osl">Branches</div><div class="osv" id="cay-edges">0</div></div>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:1rem;">
+      <p>The tree's exponential growth is the engine of the paradox. The set of "words" beginning with the letter <em>E</em> (east rotation) is missing one-quarter of all words — but after applying the inverse rotation <em>W</em>, it magically becomes <em>all</em> words. A single quarter becomes the whole. This paradoxical self-similarity of the free group is what Banach and Tarski exploited.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 3. ORBITS ON S² ═══════════════════ -->
+<section id="sec-orbits">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">03 — ORBITS ON THE SPHERE</p>
+      <h2><span class="accent-gold">F₂</span> Acts on <span class="accent-sky">S²</span></h2>
+      <p>Pick any point on the sphere. Apply every element of F₂ — that is, every possible sequence of the four rotations. The resulting cloud of points is called the <strong>orbit</strong> of that point. Because F₂ is free, these orbits are dense: they cover the sphere without ever exactly revisiting the same point.</p>
+      <p>Below, cities from around the world serve as starting points. Watch their orbits spread across the globe as the depth of the tree grows. The rotations are by <span class="math-inline" id="math-angle"></span> about the x- and z-axes — exactly the generators of the free group.</p>
+    </div>
+
+    <div class="demo-card reveal">
+      <h3 class="accent-gold" style="margin-bottom:0.5rem;">Orbit Propagation on the Globe</h3>
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.5rem;">Increase depth to propagate F₂ orbits from seven cities. Drag the globe to explore. Each color represents one starting city's orbit.</p>
+      <div class="globe-wrapper">
+        <div id="globe-container"></div>
+        <div id="city-labels"></div>
+        <div id="globe-loading"><div class="spinner"></div><p>loading atlas…</p></div>
+      </div>
+      <div class="radius-control">
+        <button class="cbtn" id="globe-dec" onclick="setGlobeR(globeR-1)" disabled>−</button>
+        <span class="rval" id="globe-rval">0</span>
+        <input type="range" id="globe-slider" min="0" max="4" value="0" step="1" oninput="setGlobeR(+this.value)">
+        <button class="cbtn" id="globe-inc" onclick="setGlobeR(globeR+1)">+</button>
+      </div>
+      <div class="orbit-info">
+        <div class="orbit-stat"><div class="osl">Orbit Depth</div><div class="osv" id="globe-depth">0</div></div>
+        <div class="orbit-stat"><div class="osl">Points per City</div><div class="osv" id="globe-pts">1</div></div>
+        <div class="orbit-stat"><div class="osl">Total Points</div><div class="osv" id="globe-total">7</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 4. AXIOM OF CHOICE ═══════════════════ -->
+<section id="sec-axiom">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">04 — THE AXIOM OF CHOICE</p>
+      <h2><span class="accent-purple">Shoes</span> and <span class="accent-coral">Socks</span></h2>
+      <p>The paradox doesn't work without a crucial ingredient: the <strong>Axiom of Choice (AC)</strong>. To decompose the sphere, we need to choose one representative from each of uncountably many orbits — a task that requires an infinitely powerful selection principle.</p>
+      <p>Bertrand Russell gave the most famous analogy in 1906:</p>
+      <div class="quote-block">
+        "To choose one from each of infinitely many pairs of <strong>shoes</strong>, we need no axiom — always pick the left one. But to choose one from each of infinitely many pairs of <strong>socks</strong>, which are indistinguishable, requires the Axiom of Choice."
+        <span class="quote-author">— Bertrand Russell, 1906</span>
+      </div>
+    </div>
+
+    <div class="demo-card reveal">
+      <h3 class="accent-gold" style="margin-bottom:0.5rem;">Russell's Drawer Experiment</h3>
+      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;">Click the shoe drawers — you can always pick the left shoe. But for the sock drawers? You need to <em>make a choice</em>. Click a sock from each pair to select a representative.</p>
+      <p style="font-size:0.7rem;font-family:var(--font-mono);color:var(--gold);letter-spacing:0.1em;margin-bottom:0.5rem;">SHOES — No Choice Needed (always pick left)</p>
+      <div class="drawer-grid" id="shoe-drawers"></div>
+      <p style="font-size:0.7rem;font-family:var(--font-mono);color:var(--coral);letter-spacing:0.1em;margin-bottom:0.5rem;margin-top:1.5rem;">SOCKS — Choice Required!</p>
+      <div class="drawer-grid" id="sock-drawers"></div>
+      <div style="text-align:center;margin-top:1rem;">
+        <span class="btn" id="sock-progress" style="cursor:default;pointer-events:none;">0 / 8 pairs chosen</span>
+        <button class="btn btn-gold" id="ac-auto-btn" onclick="autoChooseSocks()" style="margin-left:0.5rem;">⚡ Invoke Axiom of Choice</button>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:1.5rem;">
+      <p>In the Banach–Tarski proof, we face exactly the sock problem — but with <em>uncountably many drawers</em>. Each orbit of F₂ on S² is a "drawer" containing indistinguishable points, and we must pick one representative from each. Only the Axiom of Choice guarantees we can do this for all orbits simultaneously.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 5. THE GREAT DEBATE ═══════════════════ -->
+<section id="sec-debate">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">05 — A CENTURY OF CONTROVERSY</p>
+      <h2>Should We <span class="accent-coral">Accept</span> It?</h2>
+      <p>The Axiom of Choice drags mathematics away from physical reality — it produces sets with no meaningful volume, objects that cannot be constructed, and paradoxes that defy intuition. And yet, without it, vast portions of modern mathematics collapse. This tension has fueled one of the longest debates in the history of the subject.</p>
+    </div>
+
+    <div class="debate-grid reveal">
+      <div class="debate-card">
+        <span class="tag pro">AC REQUIRED</span>
+        <h4>Tychonoff's Theorem</h4>
+        <p>Any product of compact spaces is compact. This cornerstone of topology is equivalent to AC.</p>
+      </div>
+      <div class="debate-card">
+        <span class="tag pro">AC REQUIRED</span>
+        <h4>Every Vector Space Has a Basis</h4>
+        <p>Even infinite-dimensional ones. Without AC, some vector spaces have no basis at all.</p>
+      </div>
+      <div class="debate-card">
+        <span class="tag con">AC IMPLIES</span>
+        <h4>Non-Measurable Sets</h4>
+        <p>AC produces sets that cannot be assigned a consistent volume — the engine of Banach–Tarski.</p>
+      </div>
+      <div class="debate-card">
+        <span class="tag con">AC IMPLIES</span>
+        <h4>Well-Ordering of ℝ</h4>
+        <p>Every set can be well-ordered — including the real numbers. Nobody has ever exhibited such an ordering.</p>
+      </div>
+      <div class="debate-card">
+        <span class="tag pro">AC REQUIRED</span>
+        <h4>Zorn's Lemma</h4>
+        <p>Maximal elements exist in inductively ordered sets. Equivalent to AC, used constantly in algebra.</p>
+      </div>
+      <div class="debate-card">
+        <span class="tag con">AC IMPLIES</span>
+        <h4>Paradoxical Decompositions</h4>
+        <p>The Banach–Tarski paradox itself. One ball becomes two — with no change in "volume."</p>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:1.5rem;">
+      <div class="quote-block" style="border-left-color:var(--coral);">
+        "God made the integers; all the rest is the work of man."
+        <span class="quote-author" style="color:var(--coral);">— Leopold Kronecker, 1886</span>
+      </div>
+      <p>The <strong class="accent-sky">intuitionists</strong> — Kronecker, Brouwer, and their intellectual descendants — argued that mathematics should only deal with objects that can be explicitly constructed. If you cannot write down a procedure to build it, it doesn't exist. From their perspective, the Axiom of Choice is illegitimate: it asserts the existence of a selection without ever telling you <em>how</em> to select.</p>
+      <p>The mainstream, led by <strong class="accent-gold">Hilbert</strong> and most working mathematicians, took the opposite view: AC is a powerful tool that lets us prove deep theorems, and its strange consequences are the price of admission. Like Cantor's infinity before it, AC expands the landscape of what mathematics can reach.</p>
+    </div>
+
+    <div class="demo-card reveal" style="border-left:3px solid var(--mint);margin-top:1.5rem;">
+      <h3 class="accent-mint" style="margin-bottom:0.5rem;">🤖 The Return of Constructivism: AI Enters the Debate</h3>
+      <p style="font-size:0.88rem;">The intuitionists lost the 20th-century debate — but their ideas are making a dramatic comeback in the age of <strong>AI-assisted mathematics</strong>.</p>
+      <p style="font-size:0.85rem;color:var(--muted);">Formal proof assistants (Lean, Coq, Isabelle) and AI systems that verify mathematical proofs can only work with mathematics that is <em>computationally grounded</em>. When a proof invokes the Axiom of Choice — even a tiny amount — the formal verification system flags it with a <strong style="color:var(--coral);">red marker</strong>: "Warning: this step is non-constructive." It remains quarantined, forever separate from the parts of mathematics that a computer can verify end-to-end.</p>
+      <p style="font-size:0.85rem;color:var(--muted);">In this sense, the question Kronecker raised in the 1880s — <em>should "existence" require a recipe?</em> — has become a practical engineering question for the mathematics of the 21st century.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 6. PAUL COHEN ═══════════════════ -->
+<section id="sec-cohen">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">06 — THE INDEPENDENCE</p>
+      <h2><span class="accent-purple">Paul Cohen</span> and Forcing</h2>
+      <p>Is the Axiom of Choice <em>true</em> or <em>false</em>? The stunning answer, established over two decades, is: <strong>it's neither</strong> — or rather, it's <em>independent</em>.</p>
+    </div>
+
+    <div class="photo-card reveal">
+      <div class="photo-placeholder">🧠</div>
+      <div class="photo-info">
+        <h4>Paul Joseph Cohen</h4>
+        <div class="sub">1934 — 2007 · Stanford University</div>
+        <p>Cohen invented the revolutionary technique of <strong>forcing</strong> — a method to construct new mathematical universes in which specific statements change their truth value. It earned him the Fields Medal in 1966, making him the only Fields Medalist for work in mathematical logic.</p>
+      </div>
+    </div>
+
+    <div class="timeline reveal">
+      <div class="tl-item">
+        <div class="tl-year">1908</div>
+        <div class="tl-title">Zermelo formalizes AC</div>
+        <div class="tl-desc">Ernst Zermelo states the Axiom of Choice explicitly and uses it to prove that every set can be well-ordered — sparking intense controversy.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1924</div>
+        <div class="tl-title">Banach–Tarski paradox</div>
+        <div class="tl-desc">Stefan Banach and Alfred Tarski show that AC allows a ball to be decomposed and reassembled into two balls of the same size.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1938</div>
+        <div class="tl-title">Gödel's constructible universe L</div>
+        <div class="tl-desc">Kurt Gödel shows that AC is <strong>consistent</strong> with the other axioms of set theory (ZF). You cannot disprove AC from ZF.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1963</div>
+        <div class="tl-title" style="color:var(--gold);">Cohen's forcing</div>
+        <div class="tl-desc">Paul Cohen invents <strong>forcing</strong> and proves that AC is also <em>independent</em> — you cannot prove AC from ZF either. Together with Gödel's result, this means <strong>AC is undecidable</strong>: ZF can neither prove nor disprove it.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1966</div>
+        <div class="tl-title">Fields Medal</div>
+        <div class="tl-desc">Cohen receives the Fields Medal for his forcing technique — the first and only time the prize was awarded for work in mathematical logic.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1970s–Today</div>
+        <div class="tl-title">The axiom becomes standard</div>
+        <div class="tl-desc">ZFC (ZF + Choice) becomes the default foundation. Forcing evolves into a vast industry: hundreds of independence results across set theory, measure theory, and combinatorics.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">2017</div>
+        <div class="tl-title" style="color:var(--mint);">Measurable Banach–Tarski</div>
+        <div class="tl-desc">A stunning twist: can you decompose a ball into pieces <em>that do have volume</em> and reassemble them into two balls, each of half the original volume? <strong style="color:var(--mint);">Yes</strong> — but you need an astronomically large number of pieces (more than 10<sup>200</sup>, dwarfing the number of atoms in the observable universe). Published in the <em>Annals of Mathematics</em>.</div>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:1rem;">
+      <div class="formula" id="forcing-formula"></div>
+      <p>Cohen's insight was that you can "add" new sets to a mathematical universe by carefully approximating them with finite conditions. This technique — forcing — gave mathematicians a systematic way to show that certain questions have <strong>no answer</strong> within the standard axioms. The Axiom of Choice is the most famous example, but the method has since been used to establish hundreds of independence results.</p>
+      <p>The Banach–Tarski paradox lives in a strange liminal space: it is <em>provable</em> in ZFC, but in a universe without AC, the decomposition is impossible. The paradox doesn't tell us something is wrong with mathematics — it tells us that <strong>our choice of axioms shapes what is possible</strong>.</p>
+    </div>
+
+    <div class="demo-card reveal" style="border-left:3px solid var(--gold);margin-top:1.5rem;">
+      <h3 class="accent-gold" style="margin-bottom:0.5rem;">The Paradox Is Still Alive</h3>
+      <p style="font-size:0.85rem;color:var(--muted);">Variations of Banach–Tarski remain at the frontier of mathematics. Fields Medalists and Abel Prize laureates continue to work on questions that descend from it: Can any two shapes of equal volume be cut and rearranged into each other? (If the pieces are allowed to be arbitrarily wild — <strong>yes</strong>.) Can it be done with "nice" (measurable) pieces? (Sometimes yes, sometimes open.) The 1924 paradox is not a curiosity from the past — it is a living, evolving research program that still produces surprises a century later.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer>
+  <p style="color:var(--gold);font-family:var(--font-display);font-size:1.1rem;font-style:italic;margin-bottom:0.5rem;">
+    "The essence of mathematics lies in its freedom."
+  </p>
+  <p style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);letter-spacing:0.08em;">— Georg Cantor</p>
+  <p style="margin-top:1.5rem;">A mathematical demonstration by Sang-hyun Kim · KIAS</p>
+</footer>
+
+<!-- ═══ Scripts ═══ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/lines/LineSegmentsGeometry.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/lines/LineMaterial.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/lines/LineSegments2.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/globe.gl@2.30.0/dist/globe.gl.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+
+<script>
+'use strict';
+
+// ═══════════════════════════════════════════════════
+// DEPENDENCY LOADER — wait for CDN scripts
+// ═══════════════════════════════════════════════════
+function waitForGlobeDeps(timeout) {
+  timeout = timeout || 8000;
+  return new Promise(function(resolve, reject) {
+    // If already available, resolve immediately
+    if (typeof Globe !== 'undefined' && typeof topojson !== 'undefined') {
+      resolve(); return;
+    }
+    var start = Date.now();
+    function check() {
+      if (typeof Globe !== 'undefined' && typeof topojson !== 'undefined') {
+        resolve();
+      } else if (Date.now() - start > timeout) {
+        reject(new Error('CDN libraries not available'));
+      } else {
+        setTimeout(check, 150);
+      }
+    }
+    check();
+  });
+}
+
+// ═══════════════════════════════════════════════════
+// AUDIO CONTEXT
+// ═══════════════════════════════════════════════════
+let actx = null;
+function ensureAudio() {
+  if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+  if (actx.state === 'suspended') actx.resume();
+}
+
+function playSfx(type) {
+  ensureAudio();
+  const now = actx.currentTime;
+  const osc = actx.createOscillator();
+  const gain = actx.createGain();
+  osc.connect(gain).connect(actx.destination);
+
+  if (type === 'crack') {
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(200, now);
+    osc.frequency.exponentialRampToValueAtTime(60, now + 0.3);
+    gain.gain.setValueAtTime(0.15, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+    osc.start(now); osc.stop(now + 0.35);
+  } else if (type === 'scatter') {
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(800, now);
+    osc.frequency.exponentialRampToValueAtTime(200, now + 0.6);
+    gain.gain.setValueAtTime(0.08, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
+    osc.start(now); osc.stop(now + 0.6);
+  } else if (type === 'whoosh') {
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(150, now);
+    osc.frequency.exponentialRampToValueAtTime(600, now + 0.8);
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.1, now + 0.2);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+    osc.start(now); osc.stop(now + 0.8);
+  } else if (type === 'chime') {
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(1200, now);
+    gain.gain.setValueAtTime(0.12, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+    osc.start(now); osc.stop(now + 1.2);
+    // add overtone
+    const osc2 = actx.createOscillator();
+    const g2 = actx.createGain();
+    osc2.connect(g2).connect(actx.destination);
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(1800, now);
+    g2.gain.setValueAtTime(0.06, now);
+    g2.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+    osc2.start(now); osc2.stop(now + 0.8);
+  } else if (type === 'click') {
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(1000, now);
+    gain.gain.setValueAtTime(0.06, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+    osc.start(now); osc.stop(now + 0.05);
+  } else if (type === 'grow') {
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(300, now);
+    osc.frequency.exponentialRampToValueAtTime(900, now + 0.25);
+    gain.gain.setValueAtTime(0.1, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+    osc.start(now); osc.stop(now + 0.3);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// KATEX RENDER
+// ═══════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  if (typeof katex === 'undefined') { console.warn('KaTeX not loaded'); return; }
+  try {
+    katex.render(String.raw`\sigma_x: \text{rotation by } \theta = \arccos(1/3) \text{ about the } x\text{-axis} \qquad \sigma_z: \text{rotation by } \theta \text{ about the } z\text{-axis}`, document.getElementById('rotation-formula'), {throwOnError:false, displayMode:true});
+    katex.render(String.raw`\arccos(1/3) \approx 70.53°`, document.getElementById('math-arccos'), {throwOnError:false});
+    katex.render(String.raw`F_2 = \langle \sigma_x, \sigma_z \rangle`, document.getElementById('math-f2-label'), {throwOnError:false});
+    katex.render(String.raw`\arccos(1/3)`, document.getElementById('math-angle'), {throwOnError:false});
+    katex.render(String.raw`\text{Con}(\text{ZF}) \;\Longrightarrow\; \text{Con}(\text{ZF} + \text{AC}) \;\;\text{and}\;\; \text{Con}(\text{ZF} + \lnot\text{AC})`, document.getElementById('forcing-formula'), {throwOnError:false, displayMode:true});
+  } catch(e) { console.warn('KaTeX render error:', e); }
+});
+
+// ═══════════════════════════════════════════════════
+// HERO CANVAS — floating particles
+// ═══════════════════════════════════════════════════
+(() => {
+  const canvas = document.getElementById('hero-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  const particles = [];
+
+  function resize() {
+    W = canvas.width = canvas.offsetWidth * devicePixelRatio;
+    H = canvas.height = canvas.offsetHeight * devicePixelRatio;
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Create particles: small golden dots drifting
+  for (let i = 0; i < 120; i++) {
+    particles.push({
+      x: Math.random() * (W/devicePixelRatio),
+      y: Math.random() * (H/devicePixelRatio),
+      r: 0.5 + Math.random() * 2,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: (Math.random() - 0.5) * 0.3,
+      alpha: 0.1 + Math.random() * 0.4,
+      hue: 30 + Math.random() * 30,
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W/devicePixelRatio, H/devicePixelRatio);
+    const w = W/devicePixelRatio, h = H/devicePixelRatio;
+    for (const p of particles) {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
+      if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${p.hue}, 80%, 65%, ${p.alpha})`;
+      ctx.fill();
+    }
+    // Draw connecting lines for nearby particles
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const d = Math.sqrt(dx*dx + dy*dy);
+        if (d < 100) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(240,180,41,${0.06 * (1 - d/100)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ═══════════════════════════════════════════════════
+// BEAN→SUN ANIMATION
+// ═══════════════════════════════════════════════════
+const beanCanvas = document.getElementById('bean-sun-canvas');
+const bctx = beanCanvas.getContext('2d');
+let beanPhase = 0; // 0=bean, 1=crack, 2=5pieces, 3=rearrange, 4=sun
+let beanAnim = null;
+let beanT = 0;
+const BEAN_COLORS = ['#f0b429','#38bdf8','#a78bfa','#fb7185','#34d399'];
+
+function drawBean(cx, cy, rx, ry, phase, t) {
+  const dpr = devicePixelRatio;
+  const w = beanCanvas.offsetWidth;
+  const h = beanCanvas.offsetHeight;
+  beanCanvas.width = w * dpr;
+  beanCanvas.height = h * dpr;
+  bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  bctx.clearRect(0, 0, w, h);
+
+  if (phase === 0) {
+    // Draw bean (ellipse)
+    const bx = w * 0.25, by = h * 0.5;
+    const brx = 40, bry = 28;
+    bctx.beginPath();
+    bctx.ellipse(bx, by, brx, bry, 0, 0, Math.PI*2);
+    const grad = bctx.createRadialGradient(bx-10, by-8, 2, bx, by, brx);
+    grad.addColorStop(0, '#f7d774');
+    grad.addColorStop(0.6, '#c89420');
+    grad.addColorStop(1, '#8b6914');
+    bctx.fillStyle = grad;
+    bctx.fill();
+    bctx.strokeStyle = 'rgba(255,255,255,0.15)';
+    bctx.lineWidth = 1;
+    bctx.stroke();
+
+    // Label
+    bctx.font = '13px "DM Sans", sans-serif';
+    bctx.fillStyle = 'rgba(255,255,255,0.5)';
+    bctx.textAlign = 'center';
+    bctx.fillText('a bean', bx, by + bry + 22);
+  }
+  else if (phase === 1) {
+    // Cracking animation
+    const bx = w * 0.25, by = h * 0.5;
+    const brx = 40 + t*8, bry = 28 + t*5;
+    for (let i = 0; i < 5; i++) {
+      const angle = (i / 5) * Math.PI * 2 + t * 0.3;
+      const spread = t * 20;
+      const px = bx + Math.cos(angle) * spread;
+      const py = by + Math.sin(angle) * spread;
+      bctx.beginPath();
+      bctx.arc(px, py, 12 - t*2, 0, Math.PI*2);
+      bctx.fillStyle = BEAN_COLORS[i] + '90';
+      bctx.fill();
+    }
+    // crack lines
+    for (let i = 0; i < 5; i++) {
+      const angle = (i / 5) * Math.PI * 2;
+      bctx.beginPath();
+      bctx.moveTo(bx, by);
+      bctx.lineTo(bx + Math.cos(angle) * t * 30, by + Math.sin(angle) * t * 30);
+      bctx.strokeStyle = `rgba(255,255,255,${0.4 * (1-t)})`;
+      bctx.lineWidth = 1.5;
+      bctx.stroke();
+    }
+  }
+  else if (phase === 2) {
+    // 5 pieces scattered
+    for (let i = 0; i < 5; i++) {
+      const angle = (i / 5) * Math.PI * 2 + 0.3;
+      const dist = 50 + 30 * Math.sin(i * 1.7);
+      const px = w * 0.35 + Math.cos(angle) * dist * (0.5 + t*0.5);
+      const py = h * 0.5 + Math.sin(angle) * dist * (0.5 + t*0.5);
+      // Draw fractal-ish cloud
+      for (let j = 0; j < 20; j++) {
+        const jx = px + (Math.random()-0.5) * 30;
+        const jy = py + (Math.random()-0.5) * 30;
+        bctx.beginPath();
+        bctx.arc(jx, jy, 1 + Math.random()*3, 0, Math.PI*2);
+        bctx.fillStyle = BEAN_COLORS[i] + '60';
+        bctx.fill();
+      }
+      bctx.beginPath();
+      bctx.arc(px, py, 14, 0, Math.PI*2);
+      bctx.fillStyle = BEAN_COLORS[i] + 'aa';
+      bctx.fill();
+
+      // Label
+      bctx.font = '10px "JetBrains Mono", monospace';
+      bctx.fillStyle = BEAN_COLORS[i];
+      bctx.textAlign = 'center';
+      bctx.fillText('S' + (i+1), px, py + 24);
+    }
+  }
+  else if (phase === 3) {
+    // Rearranging — pieces move toward right side
+    const sunX = w * 0.75, sunY = h * 0.5;
+    for (let i = 0; i < 5; i++) {
+      const angle = (i / 5) * Math.PI * 2 + 0.3;
+      const fromDist = 50 + 30 * Math.sin(i * 1.7);
+      const fromX = w * 0.35 + Math.cos(angle) * fromDist;
+      const fromY = h * 0.5 + Math.sin(angle) * fromDist;
+      const px = fromX + (sunX - fromX) * t;
+      const py = fromY + (sunY - fromY) * t;
+      const r = 14 + t * (70 - 14) / 5;
+      // particles trailing
+      for (let j = 0; j < 12; j++) {
+        const tt = Math.max(0, t - j * 0.02);
+        const tx = fromX + (sunX - fromX) * tt + (Math.random()-0.5)*20*(1-t);
+        const ty = fromY + (sunY - fromY) * tt + (Math.random()-0.5)*20*(1-t);
+        bctx.beginPath();
+        bctx.arc(tx, ty, 1 + Math.random()*2, 0, Math.PI*2);
+        bctx.fillStyle = BEAN_COLORS[i] + '30';
+        bctx.fill();
+      }
+      bctx.beginPath();
+      bctx.arc(px, py, r * (1-t*0.5), 0, Math.PI*2);
+      bctx.fillStyle = BEAN_COLORS[i] + Math.round(170 * (1-t*0.6)).toString(16).padStart(2,'0');
+      bctx.fill();
+    }
+    // Growing sun outline
+    if (t > 0.5) {
+      const st = (t - 0.5) * 2;
+      bctx.beginPath();
+      bctx.arc(sunX, sunY, 70 * st, 0, Math.PI*2);
+      const sg = bctx.createRadialGradient(sunX - 20, sunY - 20, 5, sunX, sunY, 70*st);
+      sg.addColorStop(0, `rgba(255,240,180,${0.6*st})`);
+      sg.addColorStop(0.7, `rgba(240,180,41,${0.4*st})`);
+      sg.addColorStop(1, `rgba(200,100,20,${0.2*st})`);
+      bctx.fillStyle = sg;
+      bctx.fill();
+    }
+  }
+  else if (phase === 4) {
+    // Sun!
+    const sunX = w * 0.75, sunY = h * 0.5;
+    const R = 70 + Math.sin(Date.now() * 0.002) * 3;
+    // Glow
+    bctx.beginPath();
+    bctx.arc(sunX, sunY, R + 30, 0, Math.PI*2);
+    const gg = bctx.createRadialGradient(sunX, sunY, R * 0.5, sunX, sunY, R + 30);
+    gg.addColorStop(0, 'rgba(255,240,180,0.15)');
+    gg.addColorStop(1, 'rgba(255,200,50,0)');
+    bctx.fillStyle = gg;
+    bctx.fill();
+    // Sun body
+    bctx.beginPath();
+    bctx.arc(sunX, sunY, R, 0, Math.PI*2);
+    const sg = bctx.createRadialGradient(sunX - 20, sunY - 20, 5, sunX, sunY, R);
+    sg.addColorStop(0, '#fff8e0');
+    sg.addColorStop(0.3, '#ffd54f');
+    sg.addColorStop(0.7, '#f0a020');
+    sg.addColorStop(1, '#c06000');
+    bctx.fillStyle = sg;
+    bctx.fill();
+    // Surface detail
+    for (let i = 0; i < 12; i++) {
+      const a = i * Math.PI * 2 / 12 + Date.now() * 0.0003;
+      const d = R * 0.4 + Math.sin(Date.now() * 0.001 + i) * R * 0.15;
+      bctx.beginPath();
+      bctx.arc(sunX + Math.cos(a)*d, sunY + Math.sin(a)*d, 3 + Math.random()*4, 0, Math.PI*2);
+      bctx.fillStyle = 'rgba(255,240,200,0.2)';
+      bctx.fill();
+    }
+    bctx.font = '13px "DM Sans", sans-serif';
+    bctx.fillStyle = 'rgba(255,255,255,0.5)';
+    bctx.textAlign = 'center';
+    bctx.fillText('the Sun ☀', sunX, sunY + R + 25);
+
+    // ghost bean
+    const bx = w * 0.15, by = h * 0.5;
+    bctx.beginPath();
+    bctx.ellipse(bx, by, 20, 14, 0, 0, Math.PI*2);
+    bctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    bctx.lineWidth = 1;
+    bctx.setLineDash([4,4]);
+    bctx.stroke();
+    bctx.setLineDash([]);
+    bctx.font = '11px "DM Sans", sans-serif';
+    bctx.fillStyle = 'rgba(255,255,255,0.2)';
+    bctx.fillText('original bean', bx, by + 28);
+
+    // Arrow
+    bctx.beginPath();
+    bctx.moveTo(bx + 30, by);
+    bctx.lineTo(sunX - R - 15, by);
+    bctx.strokeStyle = 'rgba(240,180,41,0.2)';
+    bctx.lineWidth = 1;
+    bctx.stroke();
+    bctx.beginPath();
+    bctx.moveTo(sunX - R - 15, by);
+    bctx.lineTo(sunX - R - 25, by - 5);
+    bctx.moveTo(sunX - R - 15, by);
+    bctx.lineTo(sunX - R - 25, by + 5);
+    bctx.stroke();
+  }
+}
+
+function updatePhaseUI(phase) {
+  document.querySelectorAll('.phase-dot').forEach((d, i) => d.classList.toggle('active', i === phase));
+  const labels = [
+    'The bean — one ordinary solid ball',
+    'Cracking into five non-measurable pieces…',
+    'Five fractal pieces, scattered in space',
+    'Rigid motions only — rotations & translations…',
+    'Two identical balls — or a sun! ☀'
+  ];
+  document.getElementById('phase-label').textContent = labels[phase];
+}
+
+function startBeanAnimation() {
+  ensureAudio();
+  if (beanAnim) return;
+  beanPhase = 0;
+  beanT = 0;
+  const btn = document.getElementById('bean-start-btn');
+  btn.classList.add('active');
+  btn.textContent = '⏸ Running…';
+
+  const phases = [
+    { dur: 500, sfx: null },        // hold bean
+    { dur: 800, sfx: 'crack' },     // crack
+    { dur: 800, sfx: 'scatter' },   // scatter
+    { dur: 1500, sfx: 'whoosh' },   // rearrange
+    { dur: 100, sfx: 'chime' },     // sun reveal
+  ];
+
+  let phaseIdx = 0;
+  let phaseStart = performance.now();
+  beanPhase = 0;
+  updatePhaseUI(0);
+
+  function tick(now) {
+    const elapsed = now - phaseStart;
+    const dur = phases[phaseIdx].dur;
+    beanT = Math.min(1, elapsed / dur);
+    beanPhase = phaseIdx;
+    drawBean(0, 0, 0, 0, beanPhase, beanT);
+
+    if (elapsed >= dur) {
+      phaseIdx++;
+      if (phaseIdx >= phases.length) {
+        beanPhase = 4;
+        updatePhaseUI(4);
+        drawBean(0, 0, 0, 0, 4, 1);
+        // Continue animating the sun
+        function sunLoop() {
+          drawBean(0, 0, 0, 0, 4, 1);
+          beanAnim = requestAnimationFrame(sunLoop);
+        }
+        sunLoop();
+        btn.classList.remove('active');
+        btn.textContent = '▶ Decompose & Reassemble';
+        return;
+      }
+      phaseStart = now;
+      updatePhaseUI(phaseIdx);
+      if (phases[phaseIdx].sfx) playSfx(phases[phaseIdx].sfx);
+    }
+    beanAnim = requestAnimationFrame(tick);
+  }
+  playSfx('click');
+  beanAnim = requestAnimationFrame(tick);
+}
+
+function resetBeanAnimation() {
+  if (beanAnim) { cancelAnimationFrame(beanAnim); beanAnim = null; }
+  beanPhase = 0; beanT = 0;
+  updatePhaseUI(0);
+  drawBean(0, 0, 0, 0, 0, 0);
+  const btn = document.getElementById('bean-start-btn');
+  btn.classList.remove('active');
+  btn.textContent = '▶ Decompose & Reassemble';
+}
+
+// Initial draw
+setTimeout(() => drawBean(0,0,0,0,0,0), 100);
+
+// ═══════════════════════════════════════════════════
+// CAYLEY TREE — Three.js 3D (matching banach.html)
+// ═══════════════════════════════════════════════════
+let cayleyR = 0;
+const CAY_MAX_R = 5;
+
+if (typeof THREE === 'undefined') {
+  // THREE didn't load — show fallback
+  const _cc = document.getElementById('cayley-canvas');
+  if (_cc) {
+    const _wrap = _cc.parentElement;
+    _wrap.style.display = 'flex';
+    _wrap.style.alignItems = 'center';
+    _wrap.style.justifyContent = 'center';
+    _cc.style.display = 'none';
+    const _msg = document.createElement('div');
+    _msg.style.cssText = 'text-align:center;padding:2rem;';
+    _msg.innerHTML = '<p style="color:rgba(240,180,41,0.6);font-family:var(--font-mono);font-size:0.8rem;margin-bottom:0.5rem;">⚠ Three.js could not load</p><p style="color:var(--muted);font-size:0.78rem;">Open this file in a browser with internet access<br>to see the interactive 3D Cayley graph.</p>';
+    _wrap.appendChild(_msg);
+  }
+  window.setCayleyR = function() {};
+} else {
+// ── THREE.js is available ──
+
+// --- Tree geometry params (same as banach.html) ---
+// S0 = edge length in 3D space. BRAT > 1 means the xy-projection
+// of edges shrinks each level, while z drops so that the 3D
+// Euclidean edge length stays exactly S0 for every edge.
+const S0   = 0.88;
+const BRAT = 2.2;
+
+function computeZlevels(maxR) {
+  // Each edge has xy-projection Lk = S0/BRAT^k and z-drop dz = sqrt(1 - Lk²).
+  // So the 3D edge length = sqrt(Lk² + dz²) = sqrt(Lk² + 1 - Lk²) = 1.
+  // ALL edges in 3-space have equal unit length!
+  const z = [0];
+  for (let k = 0; k < maxR; k++) {
+    const Lk = S0 / Math.pow(BRAT, k);
+    const dz = Math.sqrt(Math.max(0, 1 - Lk * Lk));
+    z.push(z[k] - dz);
+  }
+  return z;
+}
+
+function hslToRgb(h, s, l) {
+  let r, g, b;
+  if (s === 0) { r = g = b = l; }
+  else {
+    const q = l < 0.5 ? l*(1+s) : l+s-l*s, p = 2*l - q;
+    const hue2rgb = (p,q,t) => {
+      if(t<0) t+=1; if(t>1) t-=1;
+      if(t<1/6) return p+(q-p)*6*t;
+      if(t<1/2) return q;
+      if(t<2/3) return p+(q-p)*(2/3-t)*6;
+      return p;
+    };
+    r=hue2rgb(p,q,h+1/3); g=hue2rgb(p,q,h); b=hue2rgb(p,q,h-1/3);
+  }
+  return [r,g,b];
+}
+
+let treeHueOffset = 0;
+function nodeColor3(d, maxD) {
+  if (d === 0) return new THREE.Color(1, 1, 1);
+  const hue = ((d * 137.508 + treeHueOffset) % 360) / 360;
+  const sat = 0.92;
+  const lit = 0.62 - Math.min(d, maxD) / maxD * 0.22;
+  return new THREE.Color().setHSL(hue, sat, lit);
+}
+
+function ptRadius3(k) {
+  const n = k === 0 ? 1 : 4 * Math.pow(3, k - 1);
+  return Math.max(7, 22 / Math.sqrt(n));
+}
+
+const DIR3 = [[1,0],[0,1],[-1,0],[0,-1]];
+const rotL3 = d => (d + 1) & 3;
+const rotR3 = d => (d + 3) & 3;
+
+function buildTreeData3(R) {
+  const zL = computeZlevels(R);
+  const edgePos = [], edgeCol = [];
+  const levelVtx = [];
+  for (let k = 0; k <= R; k++) levelVtx.push({ pos:[], col:[] });
+  const maxD = Math.max(1, R);
+  const C = d => nodeColor3(d, maxD);
+
+  function addV(k, x, y) {
+    const c = C(k);
+    levelVtx[k].pos.push(x, y, zL[k]);
+    levelVtx[k].col.push(c.r, c.g, c.b);
+  }
+  function addE(x1,y1,z1,x2,y2,z2,d1,d2) {
+    const c1=C(d1), c2=C(d2);
+    edgePos.push(x1,y1,z1,x2,y2,z2);
+    edgeCol.push(c1.r,c1.g,c1.b,c2.r,c2.g,c2.b);
+  }
+
+  addV(0, 0, 0);
+  if (R === 0) return { edgePos, edgeCol, levelVtx, zL, nodeCount: 1, edgeCount: 0 };
+
+  let nodeCount = 1, edgeCount = 0;
+  const queue = [];
+  for (let dir = 0; dir < 4; dir++) {
+    const [dx,dy] = DIR3[dir];
+    const cx = S0*dx, cy = S0*dy;
+    addV(1, cx, cy);
+    addE(0,0,zL[0], cx,cy,zL[1], 0,1);
+    nodeCount++; edgeCount++;
+    if (R > 1) queue.push({ d:1, x:cx, y:cy, dir });
+  }
+  while (queue.length) {
+    const { d, x, y, dir } = queue.shift();
+    if (d >= R) continue;
+    const cd = d + 1;
+    const Ld = S0 / Math.pow(BRAT, d);
+    for (const cdir of [dir, rotL3(dir), rotR3(dir)]) {
+      const [dx,dy] = DIR3[cdir];
+      const cx = x + Ld*dx, cy = y + Ld*dy;
+      addV(cd, cx, cy);
+      addE(x,y,zL[d], cx,cy,zL[cd], d,cd);
+      nodeCount++; edgeCount++;
+      if (cd < R) queue.push({ d:cd, x:cx, y:cy, dir:cdir });
+    }
+  }
+  return { edgePos, edgeCol, levelVtx, zL, nodeCount, edgeCount };
+}
+
+// --- Three.js setup for Cayley tree ---
+const cayleyCanvas = document.getElementById('cayley-canvas');
+const cayleyRenderer = new THREE.WebGLRenderer({ canvas: cayleyCanvas, antialias: true });
+cayleyRenderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+cayleyRenderer.setClearColor(0x080d1a, 1);
+
+const cayleyScene  = new THREE.Scene();
+const cayleyCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.001, 3000);
+cayleyCamera.position.set(0, 0, 10);
+let cayOrthoH = 1.6;
+
+// Stars
+(() => {
+  const geo = new THREE.BufferGeometry();
+  const pos = [];
+  for (let i = 0; i < 600; i++) {
+    const r  = 800 + Math.random() * 1200;
+    const th = Math.random() * Math.PI * 2;
+    const ph = Math.acos(2 * Math.random() - 1);
+    pos.push(r*Math.sin(ph)*Math.cos(th), r*Math.sin(ph)*Math.sin(th), r*Math.cos(ph));
+  }
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  cayleyScene.add(new THREE.Points(geo, new THREE.PointsMaterial({
+    color: 0x2a4060, size: 2.0, transparent: true, opacity: 0.45,
+    blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true,
+  })));
+})();
+
+const cayGroup = new THREE.Group();
+cayleyScene.add(cayGroup);
+
+let cayEdgeMesh = null, cayAxisMesh = null;
+let cayPtMeshes = [];
+
+function disposeCayTree() {
+  const rm = m => { cayGroup.remove(m); m.geometry.dispose(); m.material.dispose(); };
+  if (cayEdgeMesh) { rm(cayEdgeMesh); cayEdgeMesh = null; }
+  if (cayAxisMesh) { rm(cayAxisMesh); cayAxisMesh = null; }
+  cayPtMeshes.forEach(rm); cayPtMeshes = [];
+}
+
+function rebuildCayTree(R) {
+  disposeCayTree();
+  const { edgePos, edgeCol, levelVtx, zL, nodeCount, edgeCount } = buildTreeData3(R);
+
+  // Fit view
+  const xyMax = S0 * BRAT / (BRAT - 1);
+  cayOrthoH = xyMax * 1.2;
+  resizeCayTree();
+
+  // Detect whether fat-line extensions loaded
+  const hasFatLines = typeof THREE.LineSegmentsGeometry === 'function'
+                   && typeof THREE.LineMaterial === 'function'
+                   && typeof THREE.LineSegments2 === 'function';
+
+  // Edges
+  if (edgePos.length) {
+    if (hasFatLines) {
+      // Fat lines (pixel-width, looks great)
+      const geo = new THREE.LineSegmentsGeometry();
+      geo.setPositions(edgePos);
+      geo.setColors(edgeCol);
+      const wrap = cayleyCanvas.parentElement;
+      const mat = new THREE.LineMaterial({
+        vertexColors: true,
+        linewidth: 3.5,
+        transparent: true,
+        opacity: 0.92,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        resolution: new THREE.Vector2(wrap.clientWidth || 800, wrap.clientHeight || 600),
+      });
+      cayEdgeMesh = new THREE.LineSegments2(geo, mat);
+    } else {
+      // Fallback: basic thin lines (still 3D, still rotatable)
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(edgePos, 3));
+      geo.setAttribute('color', new THREE.Float32BufferAttribute(edgeCol, 3));
+      cayEdgeMesh = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.85,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      }));
+    }
+    cayGroup.add(cayEdgeMesh);
+  }
+
+  // Nodes per level
+  for (let k = 0; k <= R; k++) {
+    const lv = levelVtx[k];
+    if (!lv.pos.length) continue;
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(lv.pos, 3));
+    g.setAttribute('color',    new THREE.Float32BufferAttribute(lv.col, 3));
+    const m = new THREE.Points(g, new THREE.PointsMaterial({
+      vertexColors: true, size: ptRadius3(k),
+      transparent: true, opacity: 1.0,
+      blending: THREE.AdditiveBlending, depthWrite: false,
+      sizeAttenuation: false,
+    }));
+    cayGroup.add(m);
+    cayPtMeshes.push(m);
+  }
+
+  // Vertical axis hint
+  if (R > 0) {
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute([0,0,zL[0],0,0,zL[R]], 3));
+    cayAxisMesh = new THREE.Line(g, new THREE.LineBasicMaterial({
+      color: 0x1a3055, transparent: true, opacity: 0.45,
+      blending: THREE.AdditiveBlending, depthWrite: false,
+    }));
+    cayGroup.add(cayAxisMesh);
+  }
+
+  // Update stats
+  document.getElementById('cay-depth').textContent = R;
+  document.getElementById('cay-nodes').textContent = nodeCount;
+  document.getElementById('cay-edges').textContent = edgeCount;
+}
+
+function resizeCayTree() {
+  const wrap = cayleyCanvas.parentElement;
+  const w = wrap.clientWidth, h = wrap.clientHeight;
+  if (w < 1 || h < 1) return;
+  cayleyRenderer.setSize(w, h);
+  const aspect = w / h;
+  const cx = cayleyCamera.position.x, cy = cayleyCamera.position.y;
+  cayleyCamera.left   = cx - cayOrthoH * aspect;
+  cayleyCamera.right  = cx + cayOrthoH * aspect;
+  cayleyCamera.top    = cy + cayOrthoH;
+  cayleyCamera.bottom = cy - cayOrthoH;
+  cayleyCamera.near   = 0.001;
+  cayleyCamera.far    = 3000;
+  cayleyCamera.updateProjectionMatrix();
+  if (cayEdgeMesh && cayEdgeMesh.material && cayEdgeMesh.material.resolution) {
+    cayEdgeMesh.material.resolution.set(w, h);
+  }
+}
+
+// --- Interaction: drag=rotate, shift-drag=pan, scroll=zoom ---
+let cRotDrag=false, crlx=0, crly=0, crvx=0, crvy=0;
+let cPanDrag=false, cplx=0, cply=0, cpvx=0, cpvy=0;
+
+function cStartRot(x,y) { cRotDrag=true; crlx=x; crly=y; crvx=crvy=0; }
+function cMoveRot(x,y) {
+  if(!cRotDrag) return;
+  crvx=(y-crly)*0.014; crvy=(x-crlx)*0.014;
+  cayGroup.rotation.x+=crvx; cayGroup.rotation.y+=crvy;
+  crlx=x; crly=y;
+}
+function cStartPan(x,y) { cPanDrag=true; cplx=x; cply=y; cpvx=cpvy=0; }
+function cMovePan(x,y) {
+  if(!cPanDrag) return;
+  const s = cayOrthoH * 0.003;
+  cpvx=-(x-cplx)*s; cpvy=(y-cply)*s;
+  cayleyCamera.position.x-=(x-cplx)*s;
+  cayleyCamera.position.y+=(y-cply)*s;
+  resizeCayTree();
+  cplx=x; cply=y;
+}
+function cEndAll() { cRotDrag=false; cPanDrag=false; }
+
+cayleyCanvas.addEventListener('mousedown', e=>{
+  e.preventDefault();
+  if(e.button===2||e.shiftKey) cStartPan(e.clientX,e.clientY);
+  else                          cStartRot(e.clientX,e.clientY);
+});
+window.addEventListener('mousemove', e=>{
+  if(cPanDrag) cMovePan(e.clientX,e.clientY);
+  else if(cRotDrag) cMoveRot(e.clientX,e.clientY);
+});
+window.addEventListener('mouseup',    cEndAll);
+cayleyCanvas.addEventListener('contextmenu', e=>e.preventDefault());
+
+// Touch: 1 finger = rotate, 2 fingers = pan
+cayleyCanvas.addEventListener('touchstart', e=>{
+  e.preventDefault();
+  if(e.touches.length===1) cStartRot(e.touches[0].clientX, e.touches[0].clientY);
+  else { cEndAll(); cStartPan(e.touches[0].clientX, e.touches[0].clientY); }
+}, {passive:false});
+cayleyCanvas.addEventListener('touchmove', e=>{
+  e.preventDefault();
+  if(e.touches.length===1&&cRotDrag) cMoveRot(e.touches[0].clientX,e.touches[0].clientY);
+  else if(cPanDrag) cMovePan(e.touches[0].clientX,e.touches[0].clientY);
+}, {passive:false});
+cayleyCanvas.addEventListener('touchend', cEndAll);
+
+cayleyCanvas.addEventListener('wheel', e=>{
+  e.preventDefault();
+  cayOrthoH *= (1 + e.deltaY * 0.001);
+  cayOrthoH = Math.max(0.2, Math.min(20, cayOrthoH));
+  resizeCayTree();
+}, {passive:false});
+
+// Render loop with inertia
+(function cayAnimate() {
+  requestAnimationFrame(cayAnimate);
+  if(!cRotDrag&&(Math.abs(crvx)>4e-5||Math.abs(crvy)>4e-5)){
+    cayGroup.rotation.x+=crvx; cayGroup.rotation.y+=crvy; crvx*=0.90; crvy*=0.90;
+  }
+  if(!cPanDrag&&(Math.abs(cpvx)>2e-5||Math.abs(cpvy)>2e-5)){
+    cayleyCamera.position.x+=cpvx; cayleyCamera.position.y+=cpvy; cpvx*=0.88; cpvy*=0.88;
+  }
+  cayleyRenderer.render(cayleyScene, cayleyCamera);
+})();
+
+window.setCayleyR = function(r) {
+  cayleyR = Math.max(0, Math.min(CAY_MAX_R, r));
+  document.getElementById('cay-rval').textContent = cayleyR;
+  document.getElementById('cay-slider').value = cayleyR;
+  document.getElementById('cay-dec').disabled = cayleyR === 0;
+  document.getElementById('cay-inc').disabled = cayleyR === CAY_MAX_R;
+  playSfx('grow');
+  rebuildCayTree(cayleyR);
+};
+
+// Initial build & resize
+rebuildCayTree(0);
+resizeCayTree();
+window.addEventListener('resize', resizeCayTree);
+
+} // end THREE guard for Cayley tree
+
+// ═══════════════════════════════════════════════════
+// GLOBE (from banach.html, adapted)
+// ═══════════════════════════════════════════════════
+let globeR = 0;
+let globe = null;
+
+const CITIES = [
+  { name:'Seoul',    lat:37.5665,  lng:126.978,  color:'#FF2040' },
+  { name:'Warsaw',   lat:52.2297,  lng:21.0122,  color:'#FF8000' },
+  { name:'London',   lat:51.5074,  lng:-0.1278,  color:'#00FF88' },
+  { name:'Tokyo',    lat:35.6762,  lng:139.6503, color:'#FFE600' },
+  { name:'Beijing',  lat:39.9042,  lng:116.4074, color:'#00CFFF' },
+  { name:'Baghdad',  lat:33.3152,  lng:44.3661,  color:'#CC00FF' },
+  { name:'Honolulu', lat:21.3069,  lng:-157.858, color:'#FF0080' },
+];
+
+const GCOS=1/3, GSIN=Math.sqrt(8/9);
+const MAT_E=[[GCOS,-GSIN,0],[GSIN,GCOS,0],[0,0,1]];
+const MAT_W=[[GCOS, GSIN,0],[-GSIN,GCOS,0],[0,0,1]];
+const MAT_N=[[1,0,0],[0,GCOS,-GSIN],[0,GSIN,GCOS]];
+const MAT_S=[[1,0,0],[0,GCOS, GSIN],[0,-GSIN,GCOS]];
+const GGENS=[{key:'E',mat:MAT_E,inv:'W'},{key:'W',mat:MAT_W,inv:'E'},
+             {key:'N',mat:MAT_N,inv:'S'},{key:'S',mat:MAT_S,inv:'N'}];
+const GINV={E:'W',W:'E',N:'S',S:'N'};
+
+const gApplyMat=(mat,v)=>[
+  mat[0][0]*v[0]+mat[0][1]*v[1]+mat[0][2]*v[2],
+  mat[1][0]*v[0]+mat[1][1]*v[1]+mat[1][2]*v[2],
+  mat[2][0]*v[0]+mat[2][1]*v[1]+mat[2][2]*v[2],
+];
+const gToVec=(lat,lng)=>{
+  const p=lat*Math.PI/180, l=lng*Math.PI/180;
+  return [Math.cos(p)*Math.cos(l), Math.cos(p)*Math.sin(l), Math.sin(p)];
+};
+const gToLL=v=>({
+  lat:Math.asin(Math.max(-1,Math.min(1,v[2])))*180/Math.PI,
+  lng:Math.atan2(v[1],v[0])*180/Math.PI,
+});
+const gHexA=(hex,a)=>{
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${a.toFixed(2)})`;
+};
+
+const gCache=new Map();
+function getOrbit(ci,depth){
+  const key=`${ci}:${depth}`;
+  if(gCache.has(key)) return gCache.get(key);
+  const c=CITIES[ci];
+  const rv=gToVec(c.lat,c.lng);
+  if(depth===0){gCache.set(key,{nodes:[{vec:rv,depth:0}],arcs:[]});return gCache.get(key);}
+  const root={vec:rv,lastKey:null,depth:0};
+  const nodes=[root], arcs=[];
+  let frontier=[root];
+  for(let d=0;d<depth;d++){
+    const next=[];
+    for(const node of frontier){
+      for(const gen of GGENS){
+        if(node.lastKey&&gen.key===GINV[node.lastKey]) continue;
+        const child={vec:gApplyMat(gen.mat,node.vec),lastKey:gen.key,depth:d+1};
+        nodes.push(child);
+        arcs.push({fromVec:node.vec,toVec:child.vec,genKey:gen.key,depth:d+1});
+        next.push(child);
+      }
+    }
+    frontier=next;
+  }
+  gCache.set(key,{nodes,arcs});
+  return gCache.get(key);
+}
+
+function updateGlobe(){
+  if(!globe) return;
+  const allPts=[];
+  const r=globeR;
+  let totalPts = 0;
+  let ptsPerCity = 0;
+  CITIES.forEach((city,i)=>{
+    const {nodes}=getOrbit(i,r);
+    if (i === 0) ptsPerCity = nodes.length;
+    totalPts += nodes.length;
+    nodes.forEach(node=>{
+      const pos = gToLL(node.vec);
+      const alpha = Math.max(0.30,0.95-node.depth*0.07);
+      allPts.push({lat:pos.lat,lng:pos.lng,
+        color:gHexA(city.color,alpha),
+        radius: Math.max(0.36,1.26-node.depth*0.10),
+        altitude: 0.005 + node.depth * 0.002});
+    });
+  });
+  globe.pointsData(allPts);
+  document.getElementById('globe-depth').textContent = r;
+  document.getElementById('globe-pts').textContent = ptsPerCity;
+  document.getElementById('globe-total').textContent = totalPts;
+}
+
+async function initGlobe(){
+  const container = document.getElementById('globe-container');
+  if (!container || container.clientWidth < 10) return;
+
+  try {
+    // Wait for CDN scripts (Globe, topojson, THREE)
+    await waitForGlobeDeps(15000);
+
+    const topoRaw=await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(r=>r.json());
+    const countries=topojson.feature(topoRaw,topoRaw.objects.countries);
+
+    const loadEl=document.getElementById('globe-loading');
+    loadEl.classList.add('hide');
+    setTimeout(()=>loadEl.style.display='none',700);
+
+    globe=Globe()(container)
+      .globeImageUrl('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-night.jpg')
+      .backgroundImageUrl('')
+      .backgroundColor('#06101e')
+      .atmosphereColor('rgba(80,100,200,0.9)')
+      .atmosphereAltitude(0.12)
+      .polygonsData(countries.features)
+      .polygonCapColor(()=>'rgba(18,24,68,0.55)')
+      .polygonSideColor(()=>'rgba(40,60,160,0.12)')
+      .polygonStrokeColor(()=>'rgba(70,95,195,0.45)')
+      .polygonAltitude(0.003)
+      .pointsData([])
+      .pointLat(d=>d.lat).pointLng(d=>d.lng)
+      .pointColor(d=>d.color).pointAltitude(d=>d.altitude)
+      .pointRadius(d=>d.radius).pointResolution(10);
+
+    globe.pointOfView({lat:35,lng:60,altitude:2.3},0);
+    globe.controls().enableDamping=true;
+
+    function resizeGlobe(){
+      if (!globe) return;
+      globe.width(container.clientWidth).height(container.clientHeight);
+    }
+    window.addEventListener('resize', resizeGlobe);
+    resizeGlobe();
+
+    // City labels
+    const labelContainer = document.getElementById('city-labels');
+    const labelEls = CITIES.map(city => {
+      const dot = document.createElement('div');
+      dot.className = 'city-dot';
+      dot.style.background = city.color;
+      dot.style.boxShadow = `0 0 6px ${city.color}bb`;
+      labelContainer.appendChild(dot);
+      const el = document.createElement('div');
+      el.className = 'city-label';
+      el.textContent = city.name;
+      el.style.color = city.color;
+      el.style.textShadow = `0 0 7px ${city.color}99, 0 1px 4px #000c`;
+      labelContainer.appendChild(el);
+      return { el, dot, city };
+    });
+
+    function updateLabels() {
+      requestAnimationFrame(updateLabels);
+      const rect = container.getBoundingClientRect();
+      labelEls.forEach(({ el, dot, city }) => {
+        const coords = globe.getScreenCoords(city.lat, city.lng, 0.015);
+        if (!coords) { el.style.display='none'; dot.style.display='none'; return; }
+        const x=coords.x, y=coords.y;
+        const off = x<-50||x>rect.width+50||y<-50||y>rect.height+50;
+        el.style.display = off?'none':'block';
+        dot.style.display = off?'none':'block';
+        el.style.left = x+'px'; el.style.top = y+'px';
+        dot.style.left = x+'px'; dot.style.top = y+'px';
+      });
+    }
+    updateLabels();
+    updateGlobe();
+  } catch(e) {
+    console.warn('Globe init:', e.message);
+    const loadEl = document.getElementById('globe-loading');
+    if (loadEl) {
+      loadEl.classList.remove('hide');
+      loadEl.innerHTML = `
+        <div style="text-align:center;padding:1.5rem;max-width:320px;">
+          <div style="font-size:2.5rem;margin-bottom:0.8rem;opacity:0.5;">🌍</div>
+          <p style="color:var(--gold);font-family:var(--font-display);font-size:1rem;font-weight:600;margin-bottom:0.5rem;">
+            Interactive Globe
+          </p>
+          <p style="color:var(--muted);font-size:0.8rem;line-height:1.7;margin-bottom:0.8rem;">
+            The 3D globe requires external libraries that could not be loaded in this environment.
+          </p>
+          <p style="color:rgba(150,185,240,0.4);font-size:0.7rem;font-family:var(--font-mono);line-height:1.6;">
+            Open this file at<br>
+            <span style="color:var(--gold);">edu.kimsh.kr</span><br>
+            to see F₂ orbits on S² in full 3D.
+          </p>
+        </div>`;
+    }
+  }
+}
+
+window.setGlobeR = function(r) {
+  globeR = Math.max(0, Math.min(4, r));
+  document.getElementById('globe-rval').textContent = globeR;
+  document.getElementById('globe-slider').value = globeR;
+  document.getElementById('globe-dec').disabled = globeR === 0;
+  document.getElementById('globe-inc').disabled = globeR === 4;
+  playSfx('grow');
+  updateGlobe();
+};
+
+// ═══════════════════════════════════════════════════
+// SOCKS & SHOES
+// ═══════════════════════════════════════════════════
+const SHOE_PAIRS = 8;
+const SOCK_PAIRS = 8;
+const SHOE_COLORS = ['#8B4513','#000000','#1a1a2e','#654321','#2d1b00','#3d2b1f','#4a3728','#5c4033'];
+const SOCK_COLORS = ['#ff6b6b','#ffa07a','#ee82ee','#6495ed','#77dd77','#fdfd96','#b19cd9','#ffb347'];
+let sockChoices = new Array(SOCK_PAIRS).fill(-1);
+
+function buildShoeDrawers() {
+  const cont = document.getElementById('shoe-drawers');
+  cont.innerHTML = '';
+  for (let i = 0; i < SHOE_PAIRS; i++) {
+    const box = document.createElement('div');
+    box.className = 'drawer-box chosen';
+    box.innerHTML = `
+      <div class="item-icon">👞</div>
+      <div class="item-label" style="color:${SHOE_COLORS[i]}">pair ${i+1}</div>
+      <span class="chosen-mark">✓ left</span>
+    `;
+    box.style.borderColor = 'rgba(52,211,153,0.3)';
+    cont.appendChild(box);
+  }
+}
+
+function buildSockDrawers() {
+  const cont = document.getElementById('sock-drawers');
+  cont.innerHTML = '';
+  sockChoices = new Array(SOCK_PAIRS).fill(-1);
+  for (let i = 0; i < SOCK_PAIRS; i++) {
+    const box = document.createElement('div');
+    box.className = 'drawer-box';
+    box.dataset.pair = i;
+    const c = SOCK_COLORS[i];
+    box.innerHTML = `
+      <div style="display:flex;gap:6px;">
+        <span class="sock-item" data-pair="${i}" data-side="0" style="font-size:1.5rem;cursor:pointer;opacity:0.5;transition:all 0.3s;" onclick="chooseSock(${i},0)">🧦</span>
+        <span class="sock-item" data-pair="${i}" data-side="1" style="font-size:1.5rem;cursor:pointer;opacity:0.5;transition:all 0.3s;" onclick="chooseSock(${i},1)">🧦</span>
+      </div>
+      <div class="item-label" style="color:${c}">pair ${i+1}</div>
+      <span class="chosen-mark">✓</span>
+    `;
+    cont.appendChild(box);
+  }
+  updateSockProgress();
+}
+
+window.chooseSock = function(pair, side) {
+  ensureAudio();
+  playSfx('click');
+  sockChoices[pair] = side;
+  // Update UI
+  const box = document.querySelector(`.drawer-box[data-pair="${pair}"]`);
+  box.classList.add('chosen');
+  box.querySelectorAll('.sock-item').forEach(s => {
+    const sd = parseInt(s.dataset.side);
+    s.style.opacity = sd === side ? '1' : '0.25';
+    s.style.transform = sd === side ? 'scale(1.2)' : 'scale(0.9)';
+  });
+  updateSockProgress();
+};
+
+window.autoChooseSocks = function() {
+  ensureAudio();
+  let i = 0;
+  function chooseNext() {
+    if (i >= SOCK_PAIRS) return;
+    if (sockChoices[i] === -1) {
+      const side = Math.random() < 0.5 ? 0 : 1;
+      chooseSock(i, side);
+    }
+    i++;
+    setTimeout(chooseNext, 120);
+  }
+  playSfx('chime');
+  chooseNext();
+};
+
+function updateSockProgress() {
+  const chosen = sockChoices.filter(c => c >= 0).length;
+  document.getElementById('sock-progress').textContent = `${chosen} / ${SOCK_PAIRS} pairs chosen`;
+  if (chosen === SOCK_PAIRS) {
+    document.getElementById('sock-progress').style.borderColor = 'var(--mint)';
+    document.getElementById('sock-progress').style.color = 'var(--mint)';
+  }
+}
+
+buildShoeDrawers();
+buildSockDrawers();
+
+// ═══════════════════════════════════════════════════
+// NAV DOTS
+// ═══════════════════════════════════════════════════
+const SECTIONS = ['hero','sec-paradox','sec-rotations','sec-orbits','sec-axiom','sec-debate','sec-cohen'];
+const navContainer = document.getElementById('nav-dots');
+SECTIONS.forEach((id, i) => {
+  const dot = document.createElement('button');
+  dot.className = 'nav-dot';
+  dot.onclick = () => document.getElementById(id).scrollIntoView({behavior:'smooth'});
+  navContainer.appendChild(dot);
+});
+
+function updateNavDots() {
+  const scrollY = window.scrollY + window.innerHeight / 2;
+  let activeIdx = 0;
+  SECTIONS.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el && scrollY >= el.offsetTop) activeIdx = i;
+  });
+  document.querySelectorAll('.nav-dot').forEach((d, i) => d.classList.toggle('active', i === activeIdx));
+}
+window.addEventListener('scroll', updateNavDots, {passive:true});
+updateNavDots();
+
+// ═══════════════════════════════════════════════════
+// REVEAL ANIMATION
+// ═══════════════════════════════════════════════════
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Globe lazy-init when section scrolls into view
+const globeObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting && !globe) {
+      initGlobe();
+      globeObserver.disconnect();
+    }
+  });
+}, { threshold: 0.05 });
+const orbitsSection = document.getElementById('sec-orbits');
+if (orbitsSection) globeObserver.observe(orbitsSection);
+
+// Keyboard
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === '+' || e.key === '=') {
+    if (document.activeElement === document.getElementById('cay-slider')) setCayleyR(cayleyR+1);
+    else if (document.activeElement === document.getElementById('globe-slider')) setGlobeR(globeR+1);
+  }
+  if (e.key === 'ArrowLeft' || e.key === '-') {
+    if (document.activeElement === document.getElementById('cay-slider')) setCayleyR(cayleyR-1);
+    else if (document.activeElement === document.getElementById('globe-slider')) setGlobeR(globeR-1);
+  }
+});
+</script>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
+<div class="attr-overlay">
+  <span class="attr-name">Sang-hyun Kim</span>
+  <span class="attr-inst">Korea Institute for Advanced Study</span>
+  <a class="attr-url" href="https://kimsh.kr">kimsh.kr</a>
+</div>
+
+<div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
+  <script src="https://giscus.app/client.js"
+    data-repo="kimshmath/edu"
+    data-repo-id="R_kgDORrE8sw"
+    data-category="Comments"
+    data-category-id="DIC_kwDORrE8s84C45oL"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="dark"
+    data-lang="en"
+    crossorigin="anonymous"
+    async>
+  </script>
+</div>
+</body>
+</html>

@@ -1,0 +1,3531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-RQVK6SF2E6');
+    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>도형은 기억을 갖고 있다 — 호몰로지와 푸앵카레 쌍대성</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="homology_ios.css">
+<script src="homology_ios_bridge.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#05060f;--bg2:#0c0d1e;--gold:#c9a84c;--gold2:#e8cc80;
+  --cyan:#3cb8c3;--text:#ede5d8;--muted:#7c7693;--red:#c45555;
+  --rose:#c47a8a;
+  --border:rgba(201,168,76,0.13);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'EB Garamond',Georgia,serif;
+  font-size:1.08rem;line-height:1.75;overflow-x:hidden}
+
+/* ── HERO ── */
+#hero{position:relative;width:100vw;height:100vh;display:flex;
+  align-items:center;justify-content:center;overflow:hidden}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-overlay{position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 60% at 50% 50%,
+    rgba(5,6,15,0.0) 0%,rgba(5,6,15,0.55) 65%,rgba(5,6,15,0.92) 100%);
+  pointer-events:none}
+.hero-content{position:relative;z-index:10;text-align:center;padding:2rem;max-width:800px}
+.hero-label{font-family:'Cormorant Garamond',serif;font-size:.8rem;letter-spacing:.35em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:2rem;opacity:.9}
+.hero-title{font-family:'Cormorant Garamond',serif;
+  font-size:clamp(3rem,9vw,7.5rem);font-weight:300;line-height:1.02;
+  letter-spacing:-.01em;margin-bottom:1.5rem;
+  text-shadow:0 0 80px rgba(201,168,76,.25)}
+.hero-title em{font-style:italic;color:var(--gold2)}
+.hero-sub{font-size:1.15rem;color:var(--muted);max-width:560px;margin:0 auto 3rem;font-weight:400}
+.hero-scroller{display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  color:var(--muted);font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;
+  animation:bob 2.2s ease-in-out infinite}
+.scroll-bar{width:1px;height:48px;background:linear-gradient(to bottom,var(--gold),transparent)}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+/* ── SECTIONS ── */
+.wrap{max-width:1120px;margin:0 auto;padding:5.5rem 2rem}
+.sec-label{font-family:'Cormorant Garamond',serif;font-size:.75rem;letter-spacing:.35em;
+  text-transform:uppercase;color:var(--gold);display:block;margin-bottom:1rem;opacity:.9}
+h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4.5vw,3.8rem);
+  font-weight:300;line-height:1.1;color:var(--text);margin-bottom:1.4rem}
+h2 em{color:var(--gold2);font-style:italic}
+h3{font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;color:var(--text);margin-bottom:.6rem}
+p{color:var(--muted);margin-bottom:1rem}
+p strong{color:var(--text);font-weight:500}
+.rule{width:52px;height:1px;background:var(--gold);opacity:.45;margin:1.8rem 0}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:start}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+.five-col{display:grid;grid-template-columns:repeat(5,1fr);gap:1.2rem}
+
+/* ── CARDS & BOXES ── */
+.disk-wrap{position:relative;border-radius:14px;overflow:hidden;
+  border:1px solid var(--border);background:#08091b;
+  box-shadow:0 24px 70px rgba(0,0,0,.45),inset 0 0 60px rgba(201,168,76,.025)}
+.disk-wrap canvas{display:block;width:100%;height:auto}
+.ctrl-bar{display:flex;gap:.7rem;padding:.85rem 1.3rem;
+  background:rgba(8,9,27,.95);border-top:1px solid var(--border);
+  flex-wrap:wrap;align-items:center}
+.ctrl-bar span{font-size:.85rem;color:var(--muted)}
+.ctrl-btn{padding:.35rem .9rem;border-radius:4px;border:1px solid rgba(201,168,76,.3);
+  background:transparent;color:var(--gold);font-family:'EB Garamond',serif;
+  font-size:.95rem;cursor:pointer;transition:.2s}
+.ctrl-btn:hover{background:rgba(201,168,76,.1)}
+.ctrl-btn.active{background:rgba(201,168,76,.18);border-color:var(--gold)}
+select{background:#0c0d1e;border:1px solid rgba(201,168,76,.3);color:var(--gold);
+  padding:.3rem .7rem;border-radius:4px;font-family:'EB Garamond',serif;font-size:.95rem;cursor:pointer}
+
+.geo-card{background:rgba(12,13,30,.7);border:1px solid var(--border);
+  border-radius:10px;overflow:hidden;transition:border-color .3s,transform .3s}
+.geo-card:hover{border-color:rgba(201,168,76,.3);transform:translateY(-2px)}
+.geo-card canvas{width:100%;display:block}
+.geo-info{padding:1.1rem 1.3rem}
+.geo-info h3{font-size:1.15rem;margin-bottom:.25rem}
+.geo-tag{font-size:.85rem;font-style:italic;color:var(--gold);margin-bottom:.5rem;display:block}
+.geo-info p{font-size:.9rem;margin:0;color:var(--muted)}
+
+.theorem-box{font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:1.5rem;color:var(--text);text-align:center;padding:1.8rem 2rem;
+  border:1px solid rgba(201,168,76,.2);border-radius:8px;margin:1.5rem 0;
+  background:rgba(201,168,76,.03);line-height:1.6}
+.theorem-box span{color:var(--gold2);font-style:normal}
+.info-box{background:rgba(201,168,76,.06);border-left:3px solid var(--gold);
+  padding:.9rem 1.4rem;border-radius:0 7px 7px 0;margin:1.3rem 0}
+.info-box p{color:var(--text);margin:0;font-size:.95rem}
+.formula{font-family:'Cormorant Garamond',serif;font-size:1.2rem;
+  color:var(--gold2);font-style:italic;text-align:center;padding:.5rem 0;display:block}
+
+/* ── BETTI DISPLAY ── */
+.betti-row{display:flex;gap:1.2rem;margin:1rem 0;flex-wrap:wrap}
+.betti-chip{display:flex;flex-direction:column;align-items:center;gap:.15rem;
+  background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.2);
+  border-radius:8px;padding:.6rem 1rem;min-width:56px;transition:.3s}
+.betti-chip.active{border-color:var(--gold);background:rgba(201,168,76,.15);
+  box-shadow:0 0 20px rgba(201,168,76,.2)}
+.betti-chip .dim{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.1em}
+.betti-chip .val{font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--gold2)}
+
+/* ── SURFACE GALLERY ── */
+.surface-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1rem;margin:1.5rem 0}
+.surface-btn{background:rgba(12,13,30,.8);border:1px solid var(--border);border-radius:10px;
+  padding:1rem .8rem;cursor:pointer;text-align:center;transition:.3s;position:relative;overflow:hidden}
+.surface-btn:hover,.surface-btn.active{border-color:var(--gold);background:rgba(201,168,76,.06)}
+.surface-btn canvas{width:100%;height:120px;display:block;margin-bottom:.5rem;border-radius:6px}
+.surface-btn .sname{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--text)}
+
+/* ── CHAIN BUILDER ── */
+.chain-display{font-family:'JetBrains Mono',monospace;font-size:.85rem;padding:.8rem 1rem;
+  background:rgba(5,6,15,.7);border:1px solid var(--border);border-radius:6px;
+  color:var(--cyan);margin:.5rem 0;min-height:2rem;word-break:break-all}
+.chain-display .gold{color:var(--gold2)}
+.chain-display .rose{color:var(--rose)}
+.chain-display .green{color:#7ec8a4}
+.chain-display .red{color:var(--red)}
+.chain-display .muted{color:var(--muted)}
+.chain-display .text{color:var(--text)}
+
+/* ── BOUNDARY COMPUTATION STEPS ── */
+.bdry-line{margin-bottom:.35rem;padding:.25rem 0;border-bottom:1px solid rgba(201,168,76,.05)}
+.bdry-line:last-child{border-bottom:none}
+.bdry-label{color:var(--muted);font-size:.75rem;display:inline-block;min-width:3.5rem}
+.bdry-eq{color:var(--muted);margin:0 .3rem}
+.bdry-term-pos{color:var(--gold2)}
+.bdry-term-neg{color:var(--cyan)}
+.bdry-cancel{text-decoration:line-through;opacity:.35}
+.bdry-step{margin:.6rem 0;padding:.6rem .8rem;background:rgba(201,168,76,.03);
+  border-left:2px solid rgba(201,168,76,.15);border-radius:0 4px 4px 0;font-size:.82rem;line-height:1.9}
+.bdry-step .step-label{color:var(--gold);font-family:'Cormorant Garamond',serif;
+  font-size:.9rem;font-style:italic;display:block;margin-bottom:.2rem}
+.bdry-collect{display:inline-block;padding:.15rem .5rem;border-radius:3px;margin:.1rem .15rem;
+  border:1px solid rgba(201,168,76,.1);background:rgba(201,168,76,.03);white-space:nowrap}
+.bdry-collect.cancelled{border-color:rgba(126,200,164,.2);background:rgba(126,200,164,.06)}
+.bdry-zero{color:#7ec8a4;font-family:'Cormorant Garamond',serif;font-size:1.1rem}
+
+/* ── EULER TABLE ── */
+.euler-grid{display:grid;grid-template-columns:auto repeat(4,1fr);gap:0;
+  border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:1.5rem 0}
+.euler-grid>div{padding:.6rem 1rem;border-bottom:1px solid rgba(201,168,76,.08);font-size:.95rem}
+.euler-grid .eh{background:rgba(201,168,76,.08);color:var(--gold);font-family:'Cormorant Garamond',serif;
+  font-size:.8rem;letter-spacing:.15em;text-transform:uppercase}
+.euler-grid .ename{color:var(--text);font-family:'Cormorant Garamond',serif;font-style:italic}
+.euler-grid .eval{color:var(--muted);text-align:center;font-family:'JetBrains Mono',monospace;font-size:.9rem}
+.euler-grid .echi{color:var(--gold2);text-align:center;font-family:'Cormorant Garamond',serif;font-size:1.1rem}
+
+/* ── DUALITY MACHINE ── */
+.dual-panel{position:relative;border-radius:14px;overflow:hidden;
+  border:1px solid var(--border);background:#08091b;
+  box-shadow:0 24px 70px rgba(0,0,0,.45)}
+.dual-panel canvas{display:block;width:100%;cursor:grab}
+.dual-panel canvas:active{cursor:grabbing}
+.fvec-row{display:flex;justify-content:center;gap:2rem;padding:.8rem;align-items:center}
+.fvec{font-family:'JetBrains Mono',monospace;font-size:.95rem;padding:.4rem 1rem;
+  border-radius:6px;border:1px solid var(--border);background:rgba(5,6,15,.5)}
+.fvec.gold{color:var(--gold2);border-color:rgba(201,168,76,.25)}
+.fvec.cyan{color:var(--cyan);border-color:rgba(60,184,195,.25)}
+.fvec-arrow{font-family:'Cormorant Garamond',serif;font-size:1.5rem;color:var(--muted)}
+
+/* ── SLIDER ── */
+.slider-grid{display:grid;grid-template-columns:auto 1fr auto;gap:.45rem .9rem;align-items:center;margin:.8rem 0}
+.slider-grid label{font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:1.05rem;color:var(--text);white-space:nowrap}
+.slider-grid span{font-family:'Cormorant Garamond',serif;font-size:.9rem;
+  color:var(--gold);min-width:3.5rem;text-align:right}
+input[type=range]{-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;
+  outline:none;cursor:pointer;background:linear-gradient(to right,rgba(201,168,76,.7),rgba(201,168,76,.2))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+  width:16px;height:16px;border-radius:50%;background:#c9a84c;border:2px solid #e8cc80;
+  box-shadow:0 0 6px rgba(201,168,76,.5);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;
+  background:#c9a84c;border:2px solid #e8cc80;cursor:pointer}
+
+/* ── INTERSECTION MATRIX ── */
+.int-matrix{display:inline-grid;gap:0;border:1px solid var(--border);border-radius:6px;
+  overflow:hidden;margin:1rem auto;font-family:'JetBrains Mono',monospace;font-size:.85rem}
+.int-matrix>div{padding:.4rem .7rem;text-align:center;border-bottom:1px solid rgba(201,168,76,.06);
+  border-right:1px solid rgba(201,168,76,.06)}
+.int-matrix .mh{background:rgba(201,168,76,.08);color:var(--gold);font-style:italic}
+.int-matrix .m0{color:var(--muted)}
+.int-matrix .m1{color:var(--gold2)}
+.int-matrix .mn1{color:var(--cyan)}
+
+/* ── POINCARÉ BANNER ── */
+.poinc-banner{background:linear-gradient(135deg,rgba(12,13,30,.97),rgba(8,9,27,.97));
+  border:1px solid rgba(201,168,76,.18);border-radius:14px;
+  padding:2.8rem 3rem;margin:2.5rem 0;position:relative;overflow:hidden}
+.poinc-banner::before{content:'';position:absolute;left:0;top:0;bottom:0;
+  width:3px;background:linear-gradient(to bottom,transparent,var(--gold),transparent)}
+.poinc-name{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;
+  color:var(--gold2);margin-bottom:.3rem}
+.poinc-dates{font-size:.85rem;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;
+  margin-bottom:1.4rem}
+.poinc-quote{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.35rem;
+  color:var(--text);line-height:1.65;max-width:680px}
+.poinc-medal{display:inline-block;background:rgba(201,168,76,.12);
+  border:1px solid rgba(201,168,76,.3);border-radius:4px;
+  font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+  padding:.25rem .8rem;margin-bottom:1rem}
+
+/* ── POINCARÉ TIMELINE ── */
+.timeline{position:relative;padding:1.5rem 0 1rem 2.2rem;margin:2rem 0}
+.timeline::before{content:'';position:absolute;left:.55rem;top:0;bottom:0;
+  width:1px;background:linear-gradient(to bottom,transparent,var(--gold),var(--gold),transparent)}
+.tl-item{position:relative;margin-bottom:1.8rem;padding-left:1.5rem}
+.tl-item::before{content:'';position:absolute;left:-2.05rem;top:.45rem;width:9px;height:9px;
+  border-radius:50%;background:var(--bg);border:2px solid var(--gold);z-index:1;transition:.3s}
+.tl-item:hover::before{background:var(--gold);box-shadow:0 0 12px rgba(201,168,76,.5)}
+.tl-item.tl-main::before{width:13px;height:13px;left:-2.15rem;top:.35rem;
+  background:var(--gold);box-shadow:0 0 16px rgba(201,168,76,.45)}
+.tl-year{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.15em;
+  color:var(--gold);margin-bottom:.15rem}
+.tl-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;color:var(--text);
+  font-style:italic;margin-bottom:.25rem}
+.tl-title strong{font-style:normal;color:var(--gold2)}
+.tl-desc{font-size:.9rem;color:var(--muted);line-height:1.6}
+.tl-desc strong{color:var(--text)}
+
+/* ── DRAMATIC QUOTE ── */
+.drama-quote{font-family:'Cormorant Garamond',serif;font-size:1.65rem;font-weight:300;
+  font-style:italic;color:var(--text);text-align:center;padding:2.5rem 2rem;
+  line-height:1.55;max-width:700px;margin:2rem auto;position:relative}
+.drama-quote::before,.drama-quote::after{content:'';position:absolute;width:60px;height:1px;
+  background:linear-gradient(to right,transparent,var(--gold),transparent)}
+.drama-quote::before{top:0;left:50%;transform:translateX(-50%)}
+.drama-quote::after{bottom:0;left:50%;transform:translateX(-50%)}
+.drama-quote em{color:var(--gold2)}
+.drama-attrib{font-family:'EB Garamond',serif;font-size:.9rem;color:var(--muted);
+  text-align:center;margin-top:-.5rem;margin-bottom:2rem}
+
+/* ── FIGURE PANEL (dark inset) ── */
+.fig-panel{background:rgba(8,9,27,.85);border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;margin:1.5rem 0}
+.fig-panel canvas{display:block;width:100%}
+.fig-caption{padding:.8rem 1.3rem;border-top:1px solid var(--border);
+  font-size:.85rem;color:var(--muted);font-style:italic;text-align:center}
+
+/* ── PAPER HIGHLIGHT ── */
+.paper-highlight{background:rgba(201,168,76,.04);border:1px solid rgba(201,168,76,.15);
+  border-radius:10px;padding:1.8rem 2rem;margin:1.5rem 0;position:relative}
+.paper-highlight::after{content:'';position:absolute;right:1.5rem;top:1.5rem;
+  width:40px;height:40px;border:1px solid rgba(201,168,76,.15);border-radius:50%;
+  background:radial-gradient(circle,rgba(201,168,76,.08),transparent)}
+.paper-num{font-family:'JetBrains Mono',monospace;font-size:3rem;color:rgba(201,168,76,.12);
+  position:absolute;right:1.8rem;top:.8rem;font-weight:400;line-height:1}
+
+/* ── THREE-PANEL FIGURES ── */
+.fig-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2rem;margin:2rem 0}
+@media(max-width:760px){.fig-row{grid-template-columns:1fr}}
+
+/* ── UTILITIES ── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.reveal.vis{opacity:1;transform:none}
+.sep{border:none;border-top:1px solid var(--border);max-width:1120px;margin:0 auto}
+.text-center{text-align:center}
+.mt-2{margin-top:2rem}
+.mb-1{margin-bottom:1rem}
+footer{text-align:center;padding:3rem 2rem;border-top:1px solid var(--border);
+  color:var(--muted);font-size:.9rem}
+footer .name{font-family:'Cormorant Garamond',serif;font-size:1.2rem;color:var(--gold);display:block;margin-bottom:.5rem}
+.floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;
+  text-transform:lowercase;color:#8db830;background:transparent;padding:.35rem .7rem;
+  text-decoration:none;transition:color .25s,text-shadow .25s,transform .25s;
+  text-shadow:0 0 6px rgba(141,184,48,.4),0 0 16px rgba(141,184,48,.15)}
+.floating-badge:hover{color:#a8d43a;text-shadow:0 0 8px rgba(141,184,48,.65),0 0 22px rgba(141,184,48,.28);transform:translateY(-1px)}
+
+/* KaTeX overrides */
+.katex{font-size:1.05em;color:var(--gold2)}
+.katex-display{margin:1rem 0}
+.katex-display .katex{font-size:1.2em}
+
+@media(max-width:760px){
+  .two-col,.three-col,.five-col{grid-template-columns:1fr}
+  .surface-gallery{grid-template-columns:repeat(3,1fr)}
+  .poinc-banner{padding:1.8rem 1.5rem}
+  .fvec-row{flex-direction:column;gap:.5rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════ HERO ═══════════════════════════ -->
+<div id="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-label">수학적 여정</p>
+    <h1 class="hero-title">도형은<br><em>기억</em>을 갖고 있다</h1>
+    <p class="hero-sub">도형의 모든 구멍은 메아리를 남깁니다. 그리고 푸앵카레 쌍대성은 그 메아리가 완벽한 쌍으로 존재한다고 말해줍니다.</p>
+    <div class="hero-scroller">
+      <div class="scroll-bar"></div>
+      <span>탐험하기</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════ §1 ═══════════════════════════ -->
+<section class="wrap reveal">
+  <span class="sec-label">§ 1 — 구멍 세기</span>
+  <h2>도형이 <em>기억</em>하는 것</h2>
+  <div class="rule"></div>
+  <div class="two-col">
+    <div>
+      <p>구와 토러스(도넛 모양)의 차이는 무엇일까요? 하나의 곡면을 늘리거나 구부려 무한히 다양한 모양으로 변형시킬 수는 있습니다. 하지만 구를 찢거나 붙이지 않고 매끄럽게 토러스로 만들 수는 결코 없습니다. 토러스는 구에는 없는 <strong>구멍</strong>을 가지고 있기 때문입니다.</p>
+      <p><strong>호몰로지(Homology)</strong>는 이러한 직관을 수학적으로 엄밀하게 만들어 주는 분야입니다. 호몰로지는 모든 도형에 차원별로 구멍의 수를 세어주는 아벨 군의 순서쌍 \(H_0, H_1, H_2, \ldots\) 을 부여합니다. 연결된 조각의 수(\(H_0\)), 내부가 채워지지 않은 고리의 수(\(H_1\)), 갇혀 있는 빈 공간의 수(\(H_2\)) 등입니다.</p>
+      <p>이 군들의 계수(rank)를 <strong>베티 수(Betti numbers)</strong> \(\beta_0, \beta_1, \beta_2, \ldots\) 라고 부르며, 도형의 위상(topology)을 나타내는 가장 단순한 불변량입니다. 아래 곡면을 클릭하여 각각 어떤 <em>기억</em>을 가지고 있는지 확인해보세요. 3D 뷰를 드래그하여 회전할 수도 있습니다.</p>
+      <div id="bettiDisplay" class="betti-row">
+        <div class="betti-chip active"><span class="dim">β₀</span><span class="val" id="b0">1</span></div>
+        <div class="betti-chip"><span class="dim">β₁</span><span class="val" id="b1">0</span></div>
+        <div class="betti-chip"><span class="dim">β₂</span><span class="val" id="b2">1</span></div>
+      </div>
+      <p id="bettiCaption" style="font-style:italic;font-size:.95rem;color:var(--text)"><strong>구(Sphere)</strong> S² — 1개의 덩어리, 터널 없음, 1개의 갇힌 내부 공간.</p>
+    </div>
+    <div>
+      <div class="disk-wrap">
+        <canvas id="surfaceViewCanvas" width="500" height="400" style="cursor:grab"></canvas>
+        <div class="ctrl-bar">
+          <button class="ctrl-btn" onclick="surfResetView()">초기화</button>
+        </div>
+      </div>
+      <div id="surfaceGallery" class="surface-gallery" style="margin-top:.8rem"></div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ═══════════════════════════ §2 ═══════════════════════════ -->
+<section class="wrap reveal">
+  <span class="sec-label">§ 2 — 단체 복합체 (Simplicial Complexes)</span>
+  <h2><em>삼각형</em>으로 도형 조립하기</h2>
+  <div class="rule"></div>
+  <div class="two-col">
+    <div>
+      <p>호몰로지를 계산하려면 먼저 도형을 조합론적(combinatorial)으로 설명해야 합니다. <strong>단체 복합체(심플리셜 콤플렉스, simplicial complex)</strong>는 점(0-단체), 선분(1-단체), 삼각형(2-단체) 등 단순한 블록들을 이어 붙여 만든 도형입니다.</p>
+      <p>가장 중요한 도구는 <strong>경계 연산자(boundary operator)</strong> \(\partial\) 입니다. 이 연산자는 각각의 단체를 방향이 있는 경계로 매핑합니다:</p>
+      <div class="theorem-box" style="font-size:1.15rem">
+        \(\partial\)[v₀, v₁] = v₁ − v₀<br>
+        \(\partial\)[v₀, v₁, v₂] = [v₁, v₂] − [v₀, v₂] + [v₀, v₁]
+      </div>
+      <p>가장 심오한 특징은 <strong>\(\partial^2 = 0\)</strong> 이라는 것입니다. 경계의 경계는 항상 0입니다. 이 사실은 당연하게 보이지 않지만, 서로 방향이 반대인 항들이 정확히 상쇄되면서 발생합니다. 복합체를 캔버스에 직접 그리거나 샘플 곡면을 불러와서, 대수학적 계산이 어떻게 펼쳐지는지 확인해 보세요.</p>
+      <div class="info-box"><p>\(\partial^2 = 0\) 이라는 항등식은 호몰로지가 성립하는 대수적 근간입니다. 모든 경계(boundary)는 반드시 사이클(cycle)이지만, 사이클이라고 해서 항상 경계가 되는 것은 아닙니다. 그 둘 사이의 차이가 바로 호몰로지입니다.</p></div>
+    </div>
+    <div>
+      <div class="disk-wrap">
+        <!-- Sample bar -->
+        <div class="ctrl-bar" style="border-bottom:1px solid var(--border);border-top:none;flex-wrap:wrap">
+          <span style="font-size:.78rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase">샘플</span>
+          <button class="ctrl-btn" onclick="loadPreset('tetra')">정사면체</button>
+          <button class="ctrl-btn" onclick="loadPreset('octa')">정팔면체</button>
+          <button class="ctrl-btn" onclick="loadPreset('icosa')">정이십면체</button>
+          <button class="ctrl-btn" onclick="loadPreset('torus3')">토러스 3×3</button>
+          <button class="ctrl-btn" onclick="loadPreset('torus5')">토러스 5×5</button>
+        </div>
+        <canvas id="simplexCanvas" width="500" height="500" style="cursor:default"></canvas>
+        <div class="ctrl-bar">
+          <button class="ctrl-btn active" id="btnVertex" onclick="setSimplexMode('vertex')">점 생성</button>
+          <button class="ctrl-btn" id="btnEdge" onclick="setSimplexMode('edge')">선 생성</button>
+          <button class="ctrl-btn" id="btnFace" onclick="setSimplexMode('face')">면 생성</button>
+          <button class="ctrl-btn" id="btnRemove" onclick="setSimplexMode('remove')">제거</button>
+          <button class="ctrl-btn" id="btnRotate3d" onclick="setSimplexMode('rotate')">3D 회전</button>
+          <button class="ctrl-btn" onclick="resetSimplex()">전체 지우기</button>
+        </div>
+        <div class="ctrl-bar" style="border-top:none;padding-top:0">
+          <button class="ctrl-btn" id="btnSUndo" onclick="sUndo()" disabled>↩ 실행취소</button>
+          <button class="ctrl-btn" id="btnSRedo" onclick="sRedo()" disabled>재실행 ↪</button>
+          <button class="ctrl-btn" onclick="sZoomIn()">+ 확대</button>
+          <button class="ctrl-btn" onclick="sZoomOut()">− 축소</button>
+          <span id="bdryCheck" style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.8rem"></span>
+        </div>
+      </div>
+      <p id="sampleDesc" style="font-size:.82rem;color:var(--muted);margin-top:.6rem;text-align:center;min-height:1.5em"></p>
+    </div>
+  </div>
+
+  <!-- Computation panel below -->
+  <div id="bdryPanel" style="margin-top:2rem;display:none">
+    <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem">
+      <h3 style="color:var(--gold2);font-size:1.2rem;margin:0">실시간 경계(Boundary) 계산</h3>
+      <span id="complexSummary" style="font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted)"></span>
+    </div>
+
+    <!-- ∂ of edges -->
+    <div id="bdryEdgesWrap" style="display:none;margin-bottom:1.5rem">
+      <p style="font-size:.9rem;color:var(--text);margin-bottom:.4rem"><strong style="color:var(--cyan)">∂₁ : 선(edges) → 점(vertices)</strong> <span id="edgeCount" style="font-size:.78rem;color:var(--muted)"></span></p>
+      <div id="bdryEdgesContent" class="chain-display" style="min-height:auto;line-height:2;max-height:200px;overflow-y:auto"></div>
+    </div>
+
+    <!-- ∂ of faces -->
+    <div id="bdryFacesWrap" style="display:none;margin-bottom:1.5rem">
+      <p style="font-size:.9rem;color:var(--text);margin-bottom:.4rem"><strong style="color:var(--rose)">∂₂ : 면(faces) → 선(edges)</strong> <span id="faceCount" style="font-size:.78rem;color:var(--muted)"></span></p>
+      <div id="bdryFacesContent" class="chain-display" style="min-height:auto;line-height:2;max-height:240px;overflow-y:auto"></div>
+    </div>
+
+    <!-- ∂² deduction -->
+    <div id="bdrySquaredWrap" style="display:none">
+      <p style="font-size:.9rem;color:var(--text);margin-bottom:.4rem"><strong style="color:var(--gold2)">∂² = ∂₁ ∘ ∂₂ : 면(faces) → 점(vertices)</strong> — 경계면에 다시 경계를 취해봅니다:</p>
+      <div id="bdrySquaredContent" class="chain-display" style="min-height:auto;line-height:2.2;max-height:400px;overflow-y:auto"></div>
+      <div id="bdrySquaredResult" style="margin-top:.8rem;text-align:center;font-family:'Cormorant Garamond',serif;font-size:1.3rem"></div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ═══════════════════════════ §3 ═══════════════════════════ -->
+<section class="wrap reveal">
+  <span class="sec-label">§ 3 — 사이클과 경계 (Cycles & Boundaries)</span>
+  <h2>내부를 채우지 못하는 <em>막힌 고리</em></h2>
+  <div class="rule"></div>
+  <div class="two-col">
+    <div>
+      <p><strong>사이클(cycle)</strong>은 경계가 0인 체인(\(\partial c = 0\))입니다. 모든 경계(boundary)는 반드시 사이클이 되지만(\(\partial^2 = 0\)), 이 역제 명제는 구멍을 가진 도형 위에서는 보기좋게 성립하지 않습니다.</p>
+      <p>토러스를 생각해 보세요. 토러스에는 두 개의 유명한 1차원 사이클이 있습니다: 동체 둘레를 짧게 한 바퀴 도는 <strong style="color:var(--gold2)">자오선(meridian)</strong>과 튜브를 따라 길게 한 바퀴 도는 <strong style="color:var(--cyan)">경도선(longitude)</strong>입니다. 이 두 선 모두 닫힌 고리 형태의 사이클이지만, 그 어떤 선도 토러스 표면의 원판 영역을 완전히 감싸지 못합니다. 이들은 군 \(H_1(\mathbb{T}^2) \cong \mathbb{Z}^2\) 안에서 0이 아닌 호몰로지 류(class)를 뜻합니다.</p>
+      <p>아래 삼각분할된 토러스에서, 가장자리 선들을 클릭하여 체인을 이어 연결해 보세요. 상태 패널에서 당신이 만든 체인이 <strong>사이클</strong>인지, 특정 영역의 <strong>경계</strong>인지, 혹은 <strong>0이 아닌 호몰로지 류</strong>를 이루는지 알려줍니다.</p>
+      <div id="cycleStatus" class="chain-display" style="min-height:3rem">
+        선들을 클릭하여 토러스 위의 1차원 사이클 체인을 조립해보세요...
+      </div>
+    </div>
+    <div>
+      <div class="disk-wrap">
+        <canvas id="torusNetCanvas" width="500" height="500"></canvas>
+        <div class="ctrl-bar">
+          <button class="ctrl-btn active" onclick="resetTorusNet()">초기화</button>
+          <button class="ctrl-btn" onclick="showMeridian()">자오선 보기</button>
+          <button class="ctrl-btn" onclick="showLongitude()">경도선 보기</button>
+          <span id="cycleClass" style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--gold2)"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ═══════════════════════════ §4 ═══════════════════════════ -->
+<section class="wrap reveal">
+  <span class="sec-label">§ 4 — 오일러 표수 (The Euler Characteristic)</span>
+  <h2><em>모든 것을 지배하는</em> 단 하나의 숫자</h2>
+  <div class="rule"></div>
+  <p>호몰로지가 수학적으로 정립되기 훨씬 전, 레온하르트 오일러(Euler)는 모든 볼록 다면체에 대해 점(V), 선(E), 면(F)의 개수를 교대로 더하고 뺀 값 \(V - E + F = 2\) 가 항상 성립한다는 것을 발견했습니다. 이것이 바로 <strong>오일러 표수(Euler characteristic)</strong> \(\chi\) 입니다. 놀랍게도 이 값은 베티 수들의 교대합과 완전히 일치합니다: \(\chi = \beta_0 - \beta_1 + \beta_2 - \cdots\).</p>
+  <div class="theorem-box">
+    <span>\(\chi(M) = \sum_{k=0}^{n} (-1)^k \beta_k = \sum_{k=0}^{n} (-1)^k \,\mathrm{rank}\, H_k(M)\)</span>
+  </div>
+  <p>그 경계면이 구(sphere) 모양과 위상적으로 동형인 플라톤의 정다면체들은, 그 면을 어떻게 잘게 쪼개든 상관없이 오일러 표수가 항상 <strong>2</strong>가 됩니다.</p>
+  <div id="eulerCards" class="five-col" style="margin-top:2rem"></div>
+</section>
+
+<hr class="sep">
+
+<!-- ═══════════════════════════ §5 ═══════════════════════════ -->
+<section class="wrap reveal">
+  <span class="sec-label">§ 5 — 다섯 개의 완벽한 입체 (The Five Perfect Solids)</span>
+  <h2>정육면체와 정팔면체는 왜 <em>영혼의 단짝</em>인가</h2>
+  <div class="rule"></div>
+  <div class="two-col">
+    <div>
+      <p>볼록한 정다면체는 우주에 단 다섯 개뿐입니다. 이 <strong>플라톤의 정다면체</strong>들은 슐레플리 기호(Schläfli symbol) \(\{p,q\}\) 로 결정됩니다: 정\(p\)각형이 한 꼭짓점에 \(q\)개씩 모여있는 형태입니다.</p>
+      <p>이제 간단한 조작을 해볼까요: 다면체의 <strong>각 면</strong> 중심에 점을 하나씩 찍고, 면이 <strong>모서리</strong>를 공유할 때마다 그 두 중심점을 하나로 연결합니다. 그 결과물은 <strong>쌍대 다면체(dual polyhedron)</strong>가 되며, 그 슐레플리 기호는 앞의 것을 뒤집은 \(\{q,p\}\) 가 됩니다.</p>
+      <p>이 조작은 점과 면의 역할을 완전히 뒤바꿉니다: 원래 다면체가 \(V\)개의 점과 \(F\)개의 면을 가졌다면, 쌍대 다면체는 \(F\)개의 점과 \(V\)개의 면을 가집니다. 선(모서리)은 서로 일대일로 짝을 이룹니다. 이 기하학적 직관이 위상수학자들이 푸앵카레 쌍대성을 증명할 때 사용하는 <strong>쌍대 세포 분해(dual cell decomposition)</strong>와 정확히 같습니다.</p>
+      <div class="info-box">
+        <p>플라톤의 다면체 경계면의 위상은 2차원 구면인 $S^2$ 입니다. $S^2$ 에서의 푸앵카레 쌍대성은 \(H_0 \cong H^2\) 과 \(H_2 \cong H^0\), 즉 점(vertex)과 면(face)이 대수적인 쌍대관계임을 말해줍니다. 원본의 점(vertex)은 쌍대 다면체의 면(face)과 짝지어지고, 반대도 성립한다는 기하학적 사실 자체가 바로 이 동형사상을 보여주는 것입니다.</p>
+      </div>
+      <p>아래에서 입체 도형 하나를 골라보세요. <strong>쌍대(Dualize)</strong> 버튼을 눌러 도형이 어떻게 단짝 도형으로 변신하는지 지켜보세요. 정사면체(Tetrahedron)의 경우 완벽한 거울상으로 자기 자신과 쌍대를 이룹니다.</p>
+    </div>
+    <div>
+      <div class="dual-panel">
+        <canvas id="dualCanvas" width="600" height="450"></canvas>
+        <div class="ctrl-bar">
+          <select id="dualSelect" onchange="setDualSolid(this.value)">
+            <option value="tetra">정사면체 {3,3}</option>
+            <option value="cube" selected>정육면체 {4,3}</option>
+            <option value="octa">정팔면체 {3,4}</option>
+            <option value="dodeca">정십이면체 {5,3}</option>
+            <option value="icosa">정이십면체 {3,5}</option>
+          </select>
+          <button class="ctrl-btn" id="btnDualize" onclick="triggerDualize()">쌍대(Dualize)</button>
+          <button class="ctrl-btn" onclick="resetDual()">초기화</button>
+        </div>
+        <div class="fvec-row" id="fvecRow">
+          <div class="fvec gold" id="fvecOrig">(8, 12, 6)</div>
+          <div class="fvec-arrow">⟷</div>
+          <div class="fvec cyan" id="fvecDual">(6, 12, 8)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ═══════════════════════════ §6 ═══════════════════════════ -->
+<section class="wrap reveal">
+  <span class="sec-label">§ 6 — 푸앵카레 쌍대성 (Poincaré Duality)</span>
+  <h2>모든 구멍엔 <em>단짝</em>이 있다</h2>
+  <div class="rule"></div>
+  <div class="two-col">
+    <div>
+      <p>위상수학에서 발견된 가장 심오한 대칭성: 방향을 가진(orientable) 임의의 \(n\)차원 닫힌 다양체(closed manifold) \(M\)에 대하여 다음의 위상 동형(isomorphism)이 영원히 성립합니다.</p>
+      <div class="theorem-box">
+        <span>\(H_k(M;\,\mathbb{Z}) \;\cong\; H_{n-k}(M;\,\mathbb{Z})\)</span>
+      </div>
+      <p>모든 \(k\)차원 "구멍"은 \((n-k)\)차원 "구멍"과 한 쌍으로 엮여 있습니다. 두 구멍은 서로 <strong>교차(intersection)</strong>를 통해 상대방의 존재를 감지해냅니다: 만약 하나의 \(k\)차원 사이클과 다른 \((n-k)\)차원 사이클이 비켜나지 못하고 마주친다면, 이 교차점의 수는 위상적 불변량이 됩니다.</p>
+      <p>토러스의 경우(\(n=2\)), 쌍대성은 \(H_1\)을 자기 자신과 짝지어줍니다. <strong style="color:var(--gold2)">자오선</strong>과 <strong style="color:var(--cyan)">경도선</strong>은 토러스 위에서 정확히 한 점에서 교차하며 푸앵카레 쌍대성을 이룹니다. 선들을 마우스로 잡아당겨 그들의 찌릿거리는 교차점을 직접 느껴보세요.</p>
+      <p>동일한 호몰로지 류(class)를 유지하는 한 아무리 이 형태를 구부리거나 비틀어도, 두 선의 교차수는 영원히 <strong>±1</strong>로 유지됩니다. 이것이 푸앵카레 쌍대성이 가진 기하학적 본질입니다.</p>
+    </div>
+    <div>
+      <div class="dual-panel">
+        <canvas id="torusDualCanvas" width="600" height="500"></canvas>
+        <div class="ctrl-bar">
+          <span style="font-family:'Cormorant Garamond',serif;font-style:italic">교차수 (Intersection number):</span>
+          <span id="intNumber" style="font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--gold2);font-weight:600">+1</span>
+          <button class="ctrl-btn" onclick="resetTorusDual()" style="margin-left:auto">초기화</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rule" style="margin:3rem auto;width:120px"></div>
+
+  <!-- 3-TORUS EXAMPLE -->
+  <div class="two-col">
+    <div>
+      <h3 style="color:var(--gold2);font-size:1.5rem;margin-bottom:.8rem"><em>3차원</em>에서의 쌍대성: \(\mathbb{T}^3\)</h3>
+      <p><strong>3차원 토러스</strong> \(\mathbb{T}^3 = S^1 \times S^1 \times S^1\) 는 정육면체의 서로 마주보는 면들을 서로 이어 붙여(identify) 얻어진 3차원 다양체입니다. 이 도형의 호몰로지는 다음과 같습니다:</p>
+      <div class="theorem-box" style="font-size:1.15rem">
+        <span>\(\beta_0 = 1, \quad \beta_1 = 3, \quad \beta_2 = 3, \quad \beta_3 = 1\)</span>
+      </div>
+      <p>푸앵카레 쌍대성은 거울처럼 완벽히 작동합니다: \(\beta_k = \beta_{3-k}\). 1차원 사이클 <strong>세 개</strong>(각 축 방향의 원, <strong style="color:var(--gold2)">금색</strong> 표시)는 각각 2차원 사이클(단면의 토러스, <strong style="color:var(--cyan)">청록색</strong> 표시)들과 한 쌍씩 파트너를 이룹니다. 이 베티 수들의 배열은 이항계수 \(\binom{3}{0}, \binom{3}{1}, \binom{3}{2}, \binom{3}{3}\) 를 이룹니다.</p>
+      <p>\(x\)축 방향으로 뻗어나간 1차원 선(사이클)은 평면 \(yz\) 에 위치한 단면 영역(2차원 토러스)과 정확히 한 점에서 꿰뚫고 지나갑니다. 나머지 축들도 이처럼 기하학적으로 완벽히 짝을 이룹니다.</p>
+      <div class="betti-row" style="justify-content:center">
+        <div class="betti-chip active"><span class="dim">β₀</span><span class="val">1</span></div>
+        <div class="betti-chip active"><span class="dim">β₁</span><span class="val">3</span></div>
+        <div class="betti-chip active"><span class="dim">β₂</span><span class="val">3</span></div>
+        <div class="betti-chip active"><span class="dim">β₃</span><span class="val">1</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="dual-panel">
+        <canvas id="t3Canvas" width="600" height="480" style="cursor:grab"></canvas>
+        <div class="ctrl-bar">
+          <span style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.9rem">마주 보는 면이 연결된 정육면체 · 화면 터치로 회전</span>
+          <button class="ctrl-btn" onclick="t3ResetView()" style="margin-left:auto">초기화</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ═══════════════════════════ §7 ═══════════════════════════ -->
+<section class="wrap reveal">
+  <span class="sec-label">§ 7 — 심플렉틱 쌍 (The Symplectic Pairing)</span>
+  <h2><em>모든 곡면</em>에 존재하는 쌍대성</h2>
+  <div class="rule"></div>
+  <div class="two-col">
+    <div>
+      <p>종수(genus: 구멍의 수)가 \(g\)인 유향 곡면의 첫 번째 호몰로지 군은 \(H_1(\Sigma_g) \cong \mathbb{Z}^{2g}\) 입니다. 푸앵카레 쌍대성은 이 군에 <strong>심플렉틱 교차 형식(symplectic intersection form)</strong>을 부여합니다: 1차원 사이클들을 다음과 같은 규칙을 갖는 \((a_i, b_i)\) 쌍들로 묶어줍니다.</p>
+      <div class="theorem-box" style="font-size:1.25rem">
+        <span>\(a_i \cdot b_j = \delta_{ij}, \quad a_i \cdot a_j = 0, \quad b_i \cdot b_j = 0\)</span>
+      </div>
+      <p>곡면의 손잡이 하나당 단짝이 되는 사이클 한 쌍이 추가됩니다. 교차 형식을 행렬로 나타내면 언제나 \(\begin{pmatrix}0&1\\-1&0\end{pmatrix}\) 블록들이 대각선을 따라 이어지는 표준적인 심플렉틱 행렬 형태로 나타납니다. 닫힌 유향 곡면의 1차원 베티 수(\(\beta_1\))가 <strong>항상 짝수</strong>인 이유가 바로 이것입니다.</p>
+      <p>아래 슬라이더를 통해 곡면의 종수를 변경하며 곡면 표면, 짝지어진 사이클의 수, 그리고 교차 행렬의 크기가 어떻게 거대해지는지 확인해 보세요.</p>
+      <div class="slider-grid">
+        <label>종수 g</label>
+        <input type="range" id="genusSlider" min="0" max="5" value="1" oninput="updateGenus(+this.value)">
+        <span id="genusVal">1</span>
+      </div>
+      <div class="text-center" id="intMatrixWrap"></div>
+    </div>
+    <div>
+      <div class="dual-panel">
+        <canvas id="genusCanvas" width="600" height="450"></canvas>
+        <div class="ctrl-bar">
+          <span id="genusInfo" style="font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--text)">
+            토러스 — β₁ = 2, 한 쌍의 단짝 사이클
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ═══════════════════════════ §8 ═══════════════════════════ -->
+<section class="wrap reveal">
+  <span class="sec-label">§ 8 — 기하학을 넘어선 지성</span>
+  <h2>앙리 <em>푸앵카레 (Henri Poincaré)</em></h2>
+  <div class="rule"></div>
+
+  <div class="poinc-banner">
+    <div class="poinc-medal">대수적 위상수학의 창시자</div>
+    <div class="poinc-name">앙리 푸앵카레</div>
+    <div class="poinc-dates">1854 – 1912</div>
+    <p class="poinc-quote">단 121장 분량의 논문 하나로 한 수학자가 수학의 새로운 대륙을 발견해냈습니다. — 그리고 그는 남은 평생을 자신이 발견한 그 심오함에 감탄하고 오류를 수정하며, 그 세계를 시추(深錐)하는 데 바쳤습니다.</p>
+  </div>
+
+  <div class="two-col" style="margin-top:2.5rem">
+    <div>
+      <h3 style="color:var(--gold2);font-size:1.8rem;margin-bottom:1rem"><em>위상 분석 (Analysis Situs)</em> (1895)</h3>
+      <p>푸앵카레 이전에는 위상수학이라는 분야가 거의 존재하지 않았습니다. 오일러의 다면체 공식, 리만의 곡면, 베티의 연결수 등 흩어진 결과들만이 있었을 뿐, 통합된 이론이나 대수학적 언어는 없었습니다. 1895년, 앙리 푸앵카레는 에콜 폴리테크니크 저널에 <em>위상 분석(Analysis Situs)</em>을 발표했습니다. 이 경이로운 121쪽 분량의 논문에서 그는 역사상 유례를 찾기 힘든 위업을 달성합니다: 거의 무(無)에서 출발해 하나의 완전한 학문 분야를 창조해 낸 것입니다.</p>
+      <p>이 논문에서 최초로 다음의 개념들이 소개되었습니다: 체계적 도구로서의 <strong>호몰로지(homology)</strong>, <strong>기본군(fundamental group) \(\pi_1(M)\)</strong>, <strong>오일러-푸앵카레 공식</strong> \(\chi = \sum (-1)^k \beta_k\), 그리고 닫힌 유향 \(n\)차원 다양체의 베티 수가 \(\beta_k = \beta_{n-k}\) 를 만족한다는 <strong>쌍대성 정리(duality theorem)</strong>. 그는 셀 공간(cell decompositions)으로 지어진 다양체를 최초로 엄밀하게 다루었으며, 대수적 불변량들이 연속적인 변형 속에서도 끄떡없이 유지된다는 것을 보여주었습니다.</p>
+
+      <div class="paper-highlight">
+        <div class="paper-num">121</div>
+        <p style="margin-bottom:.5rem">수학을 영원히 바꿔 놓은 <strong>페이지 수</strong>. 그 논문은 빽빽하고 선구적이었으며 — 훗날 푸앵카레 자신이 깨달았듯이 — 완전히 올바르지는 않았습니다.</p>
+        <p>그의 첫 쌍대성 증명에는 빈틈이 있었습니다: 그는 자명한 정당화도 없이 모든 다양체가 삼각분할(triangulation)을 허용한다고 가정했습니다. 베티 수의 정의에도 미묘한 결함이 있었습니다. 그의 방법론은 혁명적이었지만 엄밀함보다는 직관에 의존하는 경향이 있었습니다. 그러나 이것들은 결점이 아니라, 이 거대한 이론이 올바른 형태를 갖추기 위해 창시자 본인조차도 10년의 시간이 더 필요했던 위대한 탄생의 진통이었습니다.</p>
+      </div>
+    </div>
+    <div>
+      <div class="fig-panel">
+        <canvas id="analysisSitusCanvas" width="540" height="420"></canvas>
+        <div class="fig-caption">삼각분할된 곡면의 쌍대 세포 분해(dual cell decomposition) — 푸앵카레 쌍대성의 기하학적 엔진. 각각의 점(금색)은 쌍대 면(청록색)과 짝을 이루며, 그 반대도 마찬가지입니다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<section class="wrap reveal">
+  <span class="sec-label">§ 8b — 여섯 편의 자매 논문</span>
+  <h2>의문, 수정, 그리고 <em>기적의 10년</em></h2>
+  <div class="rule"></div>
+
+  <p><em>위상 분석(Analysis Situs)</em> 출간 이후 벌어진 일은 실로 놀랍습니다. 덴마크의 수학자 <strong>포울 헤고르(Poul Heegaard)</strong>가 1898년 자신의 박사학위 논문에서 푸앵카레의 쌍대성 정리가 처음 진술된 형태로는 성립하지 않는다는 반례를 찾아낸 것입니다. 푸앵카레는 이 비판을 패배가 아닌 도약으로 삼았고, 1899년부터 1904년 사이 다섯 편의 보충 논문 모음인 <em>위상 분석의 보완(Compléments à l'Analysis Situs)</em>을 출간합니다. 각각의 보완 논문은 이전의 한계를 지적하고 확장해 나갔으며, 마침내 그의 마지막 논문은 위상수학 역사상 가장 유명한 난제(추측)를 낳았습니다.</p>
+
+  <div class="two-col" style="margin-top:2rem">
+    <div class="timeline">
+      <div class="tl-item tl-main">
+        <div class="tl-year">1895</div>
+        <div class="tl-title"><strong>위상 분석 (Analysis Situs)</strong></div>
+        <div class="tl-desc">모든 것의 시작. <strong>호몰로지</strong>, <strong>기본군</strong>, <strong>오일러-푸앵카레 공식</strong>, <strong>푸앵카레 쌍대성</strong>을 최초로 도입했습니다. 다양체를 셀룰라 복합체로 정리해 대수적 불변량들이 위상적인 성질이라는 것을 121페이지에 걸쳐 증명했습니다.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1899</div>
+        <div class="tl-title">첫 번째 보완 (Premier Complément)</div>
+        <div class="tl-desc"><strong>헤고르(Heegaard)</strong>의 비판에 응답해 호몰로지 군의 유한 부분인 <strong>비틀림 계수(torsion coefficients)</strong>를 도입하며 쌍대성을 재구성했습니다. 쌍대성을 위해서는 베티 수의 목록뿐만 아니라 군의 정밀한 구조 전체가 필요함을 밝혀냈습니다.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1900</div>
+        <div class="tl-title">두 번째 보완 (Deuxième Complément)</div>
+        <div class="tl-desc">다양체 위 사이클들의 <strong>교차수(intersection numbers)</strong> 이론을 심화시켜, 쌍대성 짝을 대수학적으로 대단히 엄밀하게 만들었습니다. 푸앵카레 쌍대성이 진정한 의미의 현대 대수 기하학적 형태를 갖추게 한 논문입니다.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1902 <span style="color:var(--muted);font-size:.65rem">(a)</span></div>
+        <div class="tl-title">세 번째 보완 (Troisième Complément)</div>
+        <div class="tl-desc">특정 부류의 3차원 다양체들을 연구하기 시작했습니다. 손잡이 분해(handle decompositions), 헤고르 갈라짐(Heegaard splittings), 그리고 매듭 여공간(knot complements)의 위상을 분석하는 새로운 도구들을 발명했습니다.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1902 <span style="color:var(--muted);font-size:.65rem">(b)</span></div>
+        <div class="tl-title">네 번째 보완 (Quatrième Complément)</div>
+        <div class="tl-desc"><strong>3차원 다양체</strong>의 성질을 한층 깊이 파고들어 헤고르 공간 다이어그램을 발전시켰으며, 덴 수술(Dehn surgery) 이론을 예견했습니다. 저차원 다양체의 분류 프로그램의 지평을 넓혔습니다.</div>
+      </div>
+      <div class="tl-item tl-main">
+        <div class="tl-year">1904</div>
+        <div class="tl-title"><strong>다섯 번째 보완 (Cinquième Complément)</strong></div>
+        <div class="tl-desc">불멸의 논문. \(S^3\) 와 완전히 똑같은 호몰로지를 가지면서도 위수 120의 자명하지 않은 기본군을 갖는 3차원 다양체인 <strong>푸앵카레 호몰로지 구면(Poincaré homology sphere)</strong>을 직접 조립해 냅니다. 이는 호몰로지 측정만으로는 도형이 구(Sphere)인지 완벽히 판별해 낼 수 없다는 절망임표임과 동시에, 위대한 세기의 난제로 직행하는 길목이었습니다.</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="fig-panel">
+        <canvas id="homologySphereCanvas" width="540" height="400"></canvas>
+        <div class="fig-caption">푸앵카레 호몰로지 구면: 정십이면체의 마주보는 면들을 π/5씩 비틀어 붙여서 만들 수 있습니다. 이것의 기본군은 위수 120인 이진 20면체 군(binary icosahedral group)입니다.</div>
+      </div>
+
+      <div style="margin-top:1.5rem">
+        <div class="fig-panel">
+          <canvas id="heegaardCanvas" width="540" height="280"></canvas>
+          <div class="fig-caption">3차원 다양체의 종수-2 헤고르 갈라짐(Heegaard splitting) — 푸앵카레가 세 번째와 네 번째 보완 논문에서 선구적으로 개척한 종류의 공간 분해입니다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drama-quote">
+    Mais cette question nous entraînerait <em>trop loin.</em> (하지만 이 질문은 우리를 너무 <em>먼 곳</em>으로 이끌 것입니다.)
+  </div>
+  <div class="drama-attrib">— 앙리 푸앵카레, 위상 분석의 다섯 번째 보완 (1904)</div>
+
+  <p style="max-width:800px;margin:0 auto;text-align:center">이 짧은 한 문장 — "하지만 이 질문은 우리를 너무 먼 곳으로 이끌 것입니다." — 과 함께, 푸앵카레는 1세기 동안 전 세계 수학자들을 집어삼킬 난제를 세상에 던졌습니다: <strong>단순하게 연결된(simply connected) 닫힌 3차원 다양체는 반드시 3차원 구면인 \(S^3\) 와 위상동형인가?</strong> 이 질문은 그의 호몰로지 구면의 발견으로 인해 발생했습니다. 도형이 구인지 판별하기 위해서 호몰로지만으로는 부족하다는 것이 밝혀졌으며, 기본군이 0이어야 함이 확인되었기 때문입니다. 하지만 그것만으로 충분한가에 대한 의문이 생긴 것입니다. 이 난제는 무려 99년의 시간이 흘러, 리처드 해밀턴(Richard Hamilton)이 발명한 리치 흐름(Ricci flow)과 천재 <strong>그리고리 페렐만(Grigori Perelman)</strong>의 신들린 시야를 빌려서야 비로소 풀리게 됩니다: <em>예(Yes)</em>.</p>
+
+  <div class="fig-row" style="margin-top:2.5rem">
+    <div class="fig-panel">
+      <canvas id="figBetti" width="280" height="220"></canvas>
+      <div class="fig-caption">2차원 구면을 향한 쌍대성 \(\beta_k = \beta_{n-k}\): \(\beta_0 = \beta_2 = 1\), \(\beta_1 = 0\).</div>
+    </div>
+    <div class="fig-panel">
+      <canvas id="figTorus" width="280" height="220"></canvas>
+      <div class="fig-caption">토러스를 위한 쌍대성: \(\beta_0 = \beta_2 = 1\), \(\beta_1 = 2\) — 자기 스스로와 쌍을 이룸.</div>
+    </div>
+    <div class="fig-panel">
+      <canvas id="figS3" width="280" height="220"></canvas>
+      <div class="fig-caption">\(S^3\) 를 향한 쌍대성: \(\beta_0 = \beta_3 = 1\), \(\beta_1 = \beta_2 = 0\).</div>
+    </div>
+  </div>
+
+  <div class="info-box" style="margin-top:2rem;max-width:800px;margin-left:auto;margin-right:auto">
+    <p>오직 9년의 세월에 걸쳐 집필된 <em>위상 분석</em>과 그 자매 논문들은 전혀 새로운 세계를 창조해 냈습니다. 이 논문들로부터 대수적 위상수학, 호몰로지 대수학, 올다발(fiber bundles) 이론, 호모토피 이론, 수술(surgery) 이론, 종국에는 다양체의 위상적 분류 프로그램이라는 거대한 숲이 자라났습니다. 이 페이지에 등장하는 모든 정리(theorem)는 온전히 푸앵카레 한 사람의 직관이 쏟은 파편입니다.</p>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ═══════════════════════════ §9 ═══════════════════════════ -->
+<section class="wrap reveal">
+  <span class="sec-label">§ 9 — 거대한 그림 (The Big Picture)</span>
+  <h2>도형이 <em>영혼</em>을 가진 이유</h2>
+  <div class="rule"></div>
+  <div class="two-col">
+    <div>
+      <p>푸앵카레 쌍대성은 닫힌 유향 다양체 내면에는 <strong>완벽한 거울</strong>이 존재한다는 사실을 알려줍니다. 상호보완적인 차원을 가진 구멍들은 서로 영원토록 단단히 묶여 있습니다 — 이는 결코 우연의 산물이 아니라, 다양체의 공간이 자기 자신 안으로 말려 들어가는 형태에 새겨진 깊은 기하학으로부터 기인한 것입니다.</p>
+      <p>이 대칭성은 수학을 넘어 물리학 전체로 퍼져 나갑니다. <strong>전자기학(Electromagnetism)</strong>에서 닫혀 있는, 그리고 공-닫혀 있는(co-closed) 미분 형식(differential forms)들은 사실 서로 푸앵카레 쌍대성을 이룹니다 — 시공간 위에서 호지(Hodge) 쌍대성을 엮으며 춤추는 전기장과 자기장의 실체가 바로 이것입니다. <strong>데이터 사이언스</strong>에서의 지속성 호몰로지(persistent homology)는 데이터의 구멍들이 어떻게 태어나고 소멸하는지 추적하는데, 쌍대성이 이 불변량들의 안정성을 지탱합니다.</p>
+      <p><strong>대수 기하학</strong>에서의 세르 쌍대성(Serre duality)과 그로텐디크 쌍대성(Grothendieck duality) 역시 푸앵카레의 최초 직관이 남긴 후예들입니다. <strong>끈 이론(string theory)</strong>에서 칼라비-야우(Calabi-Yau) 다양체의 호지 수(Hodge numbers) \(h^{p,q}\) 와 \(h^{n-p,q}\) 를 뒤바꾸는 거울 대칭성(mirror symmetry) — 이 모든 거울 상들이 우주를 직조하는 가장 깊은 쌍대성에 해당합니다.</p>
+      <p>모든 유향 다양체는 구멍과 그 짝꿍, 모서리와 그 메아리들이 수놓인 쌍대 조각들을 간직하고 있습니다. 수학은 그 가장 눈부신 바닥에서조차도, 감춰진 대칭성을 발굴하는 진실된 시를 쓰고 있습니다.</p>
+    </div>
+    <div>
+      <div class="dual-panel">
+        <canvas id="finalCanvas" width="600" height="500"></canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="sep">
+
+<!-- ═══════════════════════════ §10 ═══════════════════════════ -->
+<section class="wrap reveal">
+  <span class="sec-label">§ 10 — 호몰로지 구면 (The Homology Sphere)</span>
+  <h2>호몰로지가 <em>거짓말</em>을 할 때</h2>
+  <div class="rule"></div>
+  <div class="two-col">
+    <div>
+      <p>푸앵카레 호몰로지 구면은 위상수학에서 가장 유명한 반면교사입니다. 이 도형은 평범한 기하학적인 <strong>정십이면체</strong>로 시작하여, 마주보는 각각의 오각형 면들을 <strong>시계방향으로 π/5 (36°) 회전</strong>시켜 서로 이어 붙임으로써(identify) 만들어집니다. 그 결과 생성된 이 닫힌 3차원 다양체는 놀랍게도 3차원 구면 \(S^3\) 와 완전히 똑같은 호몰로지 군들을 가집니다:</p>
+      <div class="theorem-box" style="font-size:1.15rem">
+        <span>\(H_0 = \mathbb{Z},\;\; H_1 = 0,\;\; H_2 = 0,\;\; H_3 = \mathbb{Z}\)</span>
+      </div>
+      <p>푸앵카레 쌍대성 또한 완벽하게 성립합니다: \(\beta_0 = \beta_3 = 1\), \(\beta_1 = \beta_2 = 0\). 하지만 이 공간은 3차원 구면이 <strong>결코 아닙니다</strong>. 이 공간의 기본군은 위수(order) 120의 <strong>이진 20면체 군(binary icosahedral group) \(2I\)</strong> 입니다 — 이것은 아벨 파트(abelianization)가 전혀 없는 완벽군(perfect group)이기 때문에, 오직 구멍의 개수만을 세는 호몰로지는 이 거대한 꼬임을 전혀 감지하지 못하는 것입니다.</p>
+      <p>바로 이 도형이, 푸앵카레로 하여금 단순 연결성(단일 폐곡선이 점으로 줄어들 수 있는 성질)에 대해 묻게 만들었습니다: <em>\(\pi_1 = 0\) 이라는 조건은 \(M^3 \cong S^3\) 를 보장하기에 충분한가?</em></p>
+      <div class="info-box">
+        <p>이진 20면체 군은 이중 덮개(double cover) \(\mathrm{SU}(2) \to \mathrm{SO}(3)\) 아래에서의 20면체 회전군 \(A_5\) 의 역상(preimage)입니다. 위수는 120이며, 완벽군(\([2I, 2I] = 2I\))이고 오직 \(A_5\) 만을 자명하지 않은 몫군(quotient)으로 가집니다. 호몰로지 군들이 \(S^3\) 와 동일하기 때문에 푸앵카레 쌍대성이 성립하지만 — 쌍대성 그 자체는 \(\pi_1\) 속에 은밀히 숨은 비가환 대수적인 꼬임을 보지 못합니다.</p>
+      </div>
+      <p>정십이면체를 터치하여 회전시켜 보세요. 서로 마주보는 면들은 동일한 색상으로 칠해져 이어 붙여졌음을 나타냅니다.</p>
+    </div>
+    <div>
+      <div class="dual-panel">
+        <canvas id="homSphereInteractive" width="600" height="500" style="cursor:grab"></canvas>
+        <div class="ctrl-bar">
+          <span style="font-family:'Cormorant Garamond',serif;font-style:italic">호몰로지:</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--gold2)">(1, 0, 0, 1)</span>
+          <span style="font-family:'Cormorant Garamond',serif;font-style:italic;margin-left:.8rem">π₁:</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--cyan)">2I, |π₁| = 120</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════ §11 ═══════════════════════════ -->
+<section class="wrap reveal">
+  <span class="sec-label">§ 11 — 긴 그림자 (The Long Shadow)</span>
+  <h2>모든 것을 바꿔놓은 <em>네 개의 정리</em></h2>
+  <div class="rule"></div>
+
+  <p style="max-width:860px">푸앵카레 쌍대성은 종착점이 아니었습니다 — 그것은 거대한 씨앗이었습니다. 그 다음 세기에 걸쳐 이 같은 토양에서 4개의 위대한 정리가 피어났습니다: 바로 <strong>위상이 해석학(Analysis)을 지배한다</strong>는 생각, 즉 공간의 생김새(Shape) 자체가 그 위에서 일어나는 함수와 입자의 움직임을 규정한다는 기하학적 통찰입니다. 이 정리들은 본질적으로, 전역적인 위상학적 불변량이 국소적인 기하학적 혹은 해석학적 양의 총합과 정확히 일치한다는 것을 천명합니다. 이들은 함께 현대 기하학의 척추를 형성합니다.</p>
+
+  <div class="dual-panel" style="margin:2.5rem 0">
+    <canvas id="fourTheoremsCanvas" width="900" height="380"></canvas>
+  </div>
+
+  <!-- ① GAUSS–BONNET -->
+  <div style="margin-top:3rem">
+    <h3 style="color:var(--gold2);font-size:1.6rem;margin-bottom:.3rem">① 가우스-보네 정리 (Gauss–Bonnet) <span style="font-size:.85rem;color:var(--muted);font-weight:300">(1848)</span></h3>
+    <div class="rule" style="margin:.8rem 0"></div>
+    <div class="two-col" style="gap:2.5rem">
+      <div>
+        <p>가장 오래되고 가장 구체적인 푸앵카레 쌍대성의 조상입니다. 가우스 곡률 \(K\) 를 가진 닫힌 곡면 \(M\) 에 대하여,</p>
+        <div class="theorem-box">
+          <span>\(\displaystyle \int_M K \, dA \;=\; 2\pi\,\chi(M)\)</span>
+        </div>
+        <p>왼쪽 변은 <strong>국소적(local)</strong>입니다: 점마다 제각기 다른 곡률들을 모두 적분합니다. 오른쪽 변은 <strong>전역적(global)</strong>입니다: 구멍의 개수에만 의존하는 위상적 불변량인 오일러 표수 \(\chi\) 를 말합니다. 곡면을 늘이고 줄이고 구겨 넣어도 — 전체 곡률의 합은 소름 돋게도 언제나 변하지 않습니다.</p>
+        <p>이것이 앞으로 이어질 모든 지표 정리(Index theorem)의 원형입니다. 곡률은 기하학이고, 표수 \(\chi\) 는 위상수학입니다. 가우스-보네 정리는 이 둘이 서로 <em>결혼</em>했음을 알립니다.</p>
+      </div>
+      <div>
+        <div class="info-box">
+          <p>푸앵카레 쌍대성과의 연결고리: 오일러 표수 \(\chi = \sum(-1)^k \beta_k\) 는 쌍대성으로 얽힌 호몰로지 군들의 차원(베티 수)들로 구성됩니다. 가우스-보네 정리는 이 위상적인 양이 순전히 기하학적 표현을 가짐을 말해줍니다. 고차원에서는 <strong>천-가우스-보네 정리(Chern–Gauss–Bonnet theorem)</strong>가 곡률 형식의 파피안(Pfaffian)으로 확장되며 천-베유(Chern-Weil) 이론으로 꽃을 피웁니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② RIEMANN–ROCH–GROTHENDIECK -->
+  <div style="margin-top:3rem">
+    <h3 style="color:var(--cyan);font-size:1.6rem;margin-bottom:.3rem">② 히르체브루흐-리만-로흐 정리 (Hirzebruch–Riemann–Roch) <span style="font-size:.85rem;color:var(--muted);font-weight:300">(1954 / 1957)</span></h3>
+    <div class="rule" style="margin:.8rem 0"></div>
+    <div class="two-col" style="gap:2.5rem">
+      <div>
+        <p>리만(1857)은 물었습니다: 종수 \(g\) 인 콤팩트 리만 곡면 위에서, 미리 지정된 극점(poles)들을 허용하는 독립적인 유리형 함수(meromorphic functions)는 과연 몇 개나 존재하는가? 그 답은 로흐(Roch)에 의해 조금 더 다듬어져 결국 다음 형태를 갖추게 됩니다.</p>
+        <div class="theorem-box" style="font-size:1.15rem">
+          <span>\(\ell(D) - \ell(K - D) = \deg(D) - g + 1\)</span>
+        </div>
+        <p>좌변은 <strong>해석학적(analytic)</strong>인 대상(유리형 단면들의 공간의 차수)을 셉니다. 우변은 오로지 <strong>위상학적(topological)</strong>(인자(divisor)의 차수와 종수)입니다. 여기서 항 \(\ell(K-D)\) 이 나타난 근본적인 이유는 바로 푸앵카레 쌍대성의 대수 기하학적 쌍둥이인 <strong>세르 쌍대성(Serre duality)</strong> 때문입니다.</p>
+        <p>히르체브루흐(1954)는 이를 특성류(characteristic classes, 토드 류, 천 지표)를 통해 임의의 차원으로 확장합니다. 이후 그로텐디크(1957)는 단일 다양체를 향하던 이 관점을 다양체들 사이의 함수 사상(morphism)에 대한 함자(functor)적 스케일로 혁명적으로 도약시킵니다. 이것이 K-이론의 전방위 사상(pushforward)을 계산해 내는 <strong>그로텐디크-리만-로흐 정리</strong>입니다.</p>
+      </div>
+      <div>
+        <div class="info-box">
+          <p>푸앵카레의 궤적: 세르 쌍대성 \(H^k(X, \mathcal{F}) \cong H^{n-k}(X, \mathcal{F}^\vee \otimes \omega_X)^\vee\) 은 단순히 단체(simplicial) 호몰로지를 층(sheaf) 코호몰로지로 진화시킨 푸앵카레 쌍대성에 불과합니다. 유향 강체(orientation class)는 정칙 선다발(canonical bundle) \(\omega_X\) 로 대체되었습니다. 리만-로흐 공식은 이 층위에서 오일러 표수를 — \(\sum(-1)^k \dim H^k\) — 곡률 다발들에 대한 적분으로 다시 한번 완벽히 계산해 냅니다. 위상수학 = 기하학의 유산입니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ ATIYAH–SINGER -->
+  <div style="margin-top:3rem">
+    <h3 style="color:var(--rose);font-size:1.6rem;margin-bottom:.3rem">③ 아티야-싱어 지표 정리 (Atiyah–Singer Index Theorem) <span style="font-size:.85rem;color:var(--muted);font-weight:300">(1963)</span></h3>
+    <div class="rule" style="margin:.8rem 0"></div>
+    <div class="two-col" style="gap:2.5rem">
+      <div>
+        <p>대통합의 서사시. 닫힌 다양체 \(M\) 위에 타원형 편미분 작용소(elliptic differential operator) \(D\) 가 주어졌다고 해봅시다. 이 편미분 방정식의 <strong>해석학적 지표(analytic index)</strong>는 다음과 같습니다.</p>
+        <div class="theorem-box" style="font-size:1.15rem">
+          <span>\(\mathrm{ind}(D) = \dim\ker D - \dim\ker D^* = \int_M \mathrm{ch}(E)\,\mathrm{td}(TM)\)</span>
+        </div>
+        <p>왼편은 <strong>해석학적 방정식</strong>의 근을 셉니다: 오직 미분 방정식 해 공간의 차원과 그 방정식이 풀리지 못하게 막는 제약 조건(장애물) 차원의 차이 — "해의 개수 빼기 장애물의 개수"를 뜻합니다. 오른편은 놀랍게도 <strong>위상학적분</strong>입니다: 공간의 꼬임만을 재는 대수적인 특성류들의 적분을 뜻합니다.</p>
+        <p>가우스-보네 정리는 그저 \(D = d + d^*\) (드람 작용소)인 아주 작은 특수 케이스였을 뿐이었습니다. 리만-로흐 역시 \(D = \bar{\partial} + \bar{\partial}^*\) (돌보 작용소)인 특수 케이스였습니다. 아티야-싱어 정리는 수학의 거대한 봉우리들을 하나의 시야 아래로 모두 통합했습니다.</p>
+      </div>
+      <div>
+        <div class="info-box">
+          <p>쌍대성의 은신처: 지표의 정의 그 자체 — \(\dim\ker D - \dim\ker D^*\) — 다양체 위 \(D^*\) 의 수반(adjoint) 작용소의 존재를 담보하는 완전한 \(L^2\) 내적이 있어야만 존재할 수 있습니다. 이것은 호지(Hodge) 별 연산자와 기저 다발에 의해 이뤄지는, 다시 말해 언제나 푸앵카레 쌍대성을 향유하는 형상입니다. 호지 역학이 말하는 바 — 호몰로지는 조화 형식(harmonic forms)의 근과 같다 — 즉 푸앵카레 쌍대성이 만들어낸 그 뼈대가 수학의 최고봉 아티야-싱어 지표 정리를 맨 밑에서 받치고 있는 것입니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ④ CHERN–SIMONS -->
+  <div style="margin-top:3rem">
+    <h3 style="color:#7ec8a4;font-size:1.6rem;margin-bottom:.3rem">④ 천-사이먼스 이론 (Chern–Simons Theory) <span style="font-size:.85rem;color:var(--muted);font-weight:300">(1974 / 1989)</span></h3>
+    <div class="rule" style="margin:.8rem 0"></div>
+    <div class="two-col" style="gap:2.5rem">
+      <div>
+        <p>이번엔 완전히 놀라운 반전이 찾아왔습니다: 천-베유(Chern-Weil)의 곡률 매트릭스를 다면체에서 <em>적분하기 전의 바로 그 껍질 자체</em>는 어떤 형태를 가지고 있을까? 닫힌 3차원 다양체 \(M\) 위의 게이지 장(connection) 행렬 \(A\) 에 대한 <strong>천-사이먼스 불변량(Chern–Simons invariant)</strong>은 다음과 같습니다.</p>
+        <div class="theorem-box" style="font-size:1.15rem">
+          <span>\(\displaystyle \mathrm{CS}(A) = \frac{1}{8\pi^2}\int_M \mathrm{tr}\!\left(A \wedge dA + \tfrac{2}{3} A \wedge A \wedge A\right)\)</span>
+        </div>
+        <p>가우스-보네와는 달리 이 숫자는 결코 정수로 딱 떨어지지 않습니다. 대신 1을 법으로 하는(\(\mod \mathbb{Z}\)) 실수값입니다. 하나의 3차원 공간이 더 높은 4차원 시공간의 거죽(경계)으로 작용할 때, 4차원 시공간 위에서의 천-베유 모듈이 표면의 껍질로 밀려나 맺혀 나오는 형태이기 때문입니다.</p>
+        <p>1989년 에드워드 위튼(Edward Witten)은 모든 게이지 장들의 안개 위를 거니는 <strong>경로 적분(path integral)</strong> \(e^{2\pi i k \cdot \mathrm{CS}(A)}\) 가 사실 위상 양자장론(TQFT) 그 자체이며 이로부터 존스 다항식(Jones polynomial)을 뽑아낼 수 있음을 완벽하게 증명했습니다. 호몰로지가 매듭 다항식과 거시 양자장론을 한 자리로 불러올린 것입니다.</p>
+      </div>
+      <div>
+        <div class="info-box">
+          <p>푸앵카레의 속삭임: 천-사이먼스 이론은 필연적으로 <strong>홀수 차원</strong>에 살아 숨 쉽니다. 푸앵카레 쌍대성의 가장 흥미로운 거울인 "중간 차원" 코호몰로지를 수용(\(H^{n-1} \to H^n\))하기 위해서입니다. 3차원 다양체 안에서, 이것은 오로지 \(H^1\) 에 작용하는 비대칭 형식으로 수렴하며 그토록 찾아 헤매던 존스 다항식의 계산 모듈로 정착하게 됩니다. 한 세기를 타고 내려온 쌍대 역학이, 우주 공간을 기술하는 양자장론 위에서 위상수학의 새로운 언어를 빚어낸 순간입니다.</p>
+        </div>
+        <div class="info-box" style="margin-top:1rem;border-left-color:rgba(126,200,164,.6)">
+          <p style="font-size:.9rem">에드워드 위튼은 이 연구로 인해 수학의 노벨상인 필즈상(Fields Medal)을 1990년에 거머쥐었습니다. 천-사이먼스 이론과 존스 다항식의 융합은, 가장 깊은 위상수학적인 진리가 오직 조합론에 머물지 않고 입자물리학의 가장 깊은 파동(fundamental forces of nature) 아래 숨어있다는 것을 여지없이 일깨워 주었습니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Closing -->
+  <div class="drama-quote" style="margin-top:3.5rem">
+    단 하나의 등식이 이들 모두를 하나로 묶습니다: <em>위상(Topology) = 해석(Analysis)</em>.
+  </div>
+  <div class="drama-attrib">가우스-보네에서 아티야-싱어, 천-사이먼스까지 내리뻗은 하나의 핏줄</div>
+
+  <p style="max-width:860px;margin:1.5rem auto 0;text-align:center">모든 것들의 곡률을 일일이 적분하거나 미분방정식 궤도를 헤매야만 할 것 같던 이 모든 기하학적 난제들은, 사실 공간이 파 놓은 구멍의 개수라는 터무니없이 단순한 정수에 의해서 이미 완전히 정해져 있었습니다. 이 모든 거대한 마법의 다리는 언제나 오로지 하나입니다: <strong>푸앵카레 쌍대성</strong>으로부터 조립해 낸 <strong>특성류(Characteristic classes)</strong>. 이것이야말로 지난 200년간의 기하학 역사가 인류에게 가르쳐준 가장 시린 진리일 것입니다: 텅 빈 공간의 생김새는 기하학 입자의 가장 작은 떨림들마저 그 위상적 기억 속에 영원히 간직하고, 보존하고 있다. 푸앵카레의 눈물 어린 통찰이 남겼던 — 하나 남은 구멍은 필경 다른 하나와 짝을 이룬다는 바로 그 거울 역학을 통해서 말입니다.</p>
+
+</section>
+
+<hr class="sep">
+
+<!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->
+<footer>
+  <p>단체 호몰로지 (Simplicial homology) · 푸앵카레 쌍대성 (Poincaré duality) · 오일러 표수 (Euler characteristic) · 심플렉틱 교차 형식 (Symplectic form) · 쌍대 세포 분해 (Dual cell decomposition)</p>
+  <p style="margin-top:.5rem;font-size:.8rem">
+    Inspired by 앙리 푸앵카레(H. Poincaré), <em>위상 분석 (Analysis Situs)</em> (1895) ·
+    A. Hatcher, <em>Algebraic Topology</em> ·
+    J. Milnor, <em>Topology from the Differentiable Viewpoint</em>
+  </p>
+  <div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:.2rem;text-align:left">
+    <div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;font-weight:400;color:#edeef2;letter-spacing:-.01em">김상현 (Sang-hyun Kim)</div>
+    <div style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:300;color:#5c6178;letter-spacing:.01em">고등과학원 (Korea Institute for Advanced Study)</div>
+    <a href="https://kimsh.kr" style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;display:inline-block;margin-top:.25rem">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
+<div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
+  <script src="https://giscus.app/client.js"
+    data-repo="kimshmath/edu"
+    data-repo-id="R_kgDORrE8sw"
+    data-category="Comments"
+    data-category-id="DIC_kwDORrE8s84C45oL"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="dark"
+    data-lang="en"
+    crossorigin="anonymous"
+    async>
+  </script>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SCRIPTS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<script>
+"use strict";
+const TAU = 2 * Math.PI;
+const PI = Math.PI;
+
+// ═══════════════════════════════════════════════════
+// AUDIO — subtle pentatonic chimes
+// ═══════════════════════════════════════════════════
+let audioCtx = null;
+function getAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playChime(freq = 520, dur = 0.4, vol = 0.08) {
+  try {
+    const ac = getAudio();
+    const osc = ac.createOscillator();
+    const g = ac.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = freq;
+    g.gain.setValueAtTime(vol, ac.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + dur);
+    osc.connect(g); g.connect(ac.destination);
+    osc.start(); osc.stop(ac.currentTime + dur);
+  } catch(e) {}
+}
+function playDualChime() {
+  playChime(392, 0.6, 0.06); // G
+  setTimeout(() => playChime(587.3, 0.6, 0.06), 80); // D — perfect fifth
+}
+
+// ═══════════════════════════════════════════════════
+// §0 — HERO CANVAS: rotating torus with dual cycles
+// ═══════════════════════════════════════════════════
+(function heroInit() {
+  const c = document.getElementById('heroCanvas');
+  const ctx = c.getContext('2d');
+  let W, H;
+  function resize() { W = c.width = c.offsetWidth * devicePixelRatio; H = c.height = c.offsetHeight * devicePixelRatio; ctx.scale(1,1); }
+  resize(); window.addEventListener('resize', resize);
+
+  const R1 = 0.22, R2 = 0.09; // torus radii as fraction of min(W,H)
+
+  function torusPoint(u, v, r1, r2) {
+    const cu = Math.cos(u), su = Math.sin(u), cv = Math.cos(v), sv = Math.sin(v);
+    return [(r1 + r2 * cv) * cu, (r1 + r2 * cv) * su, r2 * sv];
+  }
+
+  function project(p, rotY, rotX, scale, cx, cy) {
+    let [x, y, z] = p;
+    // rotate Y
+    let x2 = x * Math.cos(rotY) - z * Math.sin(rotY);
+    let z2 = x * Math.sin(rotY) + z * Math.cos(rotY);
+    // rotate X
+    let y2 = y * Math.cos(rotX) - z2 * Math.sin(rotX);
+    let z3 = y * Math.sin(rotX) + z2 * Math.cos(rotX);
+    const d = 3.5 + z3;
+    return [cx + x2 * scale / d, cy + y2 * scale / d, z3];
+  }
+
+  let t = 0;
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    t += 0.004;
+    const scale = Math.min(W, H) * 1.8;
+    const cx = W / 2, cy = H / 2;
+    const rotY = t * 0.7, rotX = 0.45 + Math.sin(t * 0.3) * 0.1;
+    const r1 = R1 * (Math.min(W,H) / scale) * 3.5;
+    const r2 = R2 * (Math.min(W,H) / scale) * 3.5;
+
+    // wireframe torus
+    const Nu = 48, Nv = 24;
+    ctx.strokeStyle = 'rgba(201,168,76,0.08)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= Nu; i++) {
+      ctx.beginPath();
+      for (let j = 0; j <= Nv; j++) {
+        const u = (i / Nu) * TAU, v = (j / Nv) * TAU;
+        const pt = torusPoint(u, v, r1, r2);
+        const [px, py] = project(pt, rotY, rotX, scale, cx, cy);
+        j === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+    }
+    for (let j = 0; j <= Nv; j++) {
+      ctx.beginPath();
+      for (let i = 0; i <= Nu; i++) {
+        const u = (i / Nu) * TAU, v = (j / Nv) * TAU;
+        const pt = torusPoint(u, v, r1, r2);
+        const [px, py] = project(pt, rotY, rotX, scale, cx, cy);
+        i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+    }
+
+    // Meridian cycle (gold) — fixed u, vary v
+    const mu = t * 0.5;
+    ctx.strokeStyle = 'rgba(201,168,76,0.7)';
+    ctx.lineWidth = 2.5 * devicePixelRatio;
+    ctx.shadowColor = 'rgba(201,168,76,0.5)';
+    ctx.shadowBlur = 15;
+    ctx.beginPath();
+    for (let j = 0; j <= 60; j++) {
+      const v = (j / 60) * TAU;
+      const pt = torusPoint(mu, v, r1, r2);
+      const [px, py] = project(pt, rotY, rotX, scale, cx, cy);
+      j === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+
+    // Longitude cycle (cyan) — fixed v, vary u
+    const lv = PI * 0.0;
+    ctx.strokeStyle = 'rgba(60,184,195,0.7)';
+    ctx.shadowColor = 'rgba(60,184,195,0.5)';
+    ctx.beginPath();
+    for (let i = 0; i <= 80; i++) {
+      const u = (i / 80) * TAU;
+      const pt = torusPoint(u, lv, r1, r2);
+      const [px, py] = project(pt, rotY, rotX, scale, cx, cy);
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Intersection spark
+    const sp = torusPoint(mu, lv, r1, r2);
+    const [sx, sy] = project(sp, rotY, rotX, scale, cx, cy);
+    const sparkR = 4 + 3 * Math.sin(t * 5);
+    const grad = ctx.createRadialGradient(sx, sy, 0, sx, sy, sparkR * devicePixelRatio * 2);
+    grad.addColorStop(0, 'rgba(255,255,255,0.9)');
+    grad.addColorStop(0.3, 'rgba(232,204,128,0.6)');
+    grad.addColorStop(1, 'rgba(201,168,76,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.arc(sx, sy, sparkR * devicePixelRatio * 2, 0, TAU);
+    ctx.fill();
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ═══════════════════════════════════════════════════
+// §1 — SURFACE GALLERY with 3D viewer
+// ═══════════════════════════════════════════════════
+const SURFACES = [
+  { name: 'Sphere S²', betti: [1, 0, 1], desc: 'The <strong>sphere</strong> — one component, no tunnel, one trapped cavity.', color: '#c9a84c', type: 'sphere' },
+  { name: 'Torus T²', betti: [1, 2, 1], desc: 'The <strong>torus</strong> — one component, two independent tunnels, one cavity.', color: '#3cb8c3', type: 'torus' },
+  { name: 'Genus 2', betti: [1, 4, 1], desc: 'The <strong>double torus</strong> — four independent loops, one cavity.', color: '#c47a8a', type: 'genus2' },
+  { name: 'Circle S¹', betti: [1, 1, 0], desc: 'The <strong>circle</strong> — one component, one loop, no cavity.', color: '#7ec8a4', type: 'circle' },
+  { name: 'Disk D²', betti: [1, 0, 0], desc: 'The <strong>disk</strong> — contractible, no holes at all.', color: '#8b7ec8', type: 'disk' },
+  { name: 'Möbius', betti: [1, 1, 0], desc: 'The <strong>Möbius band</strong> — one loop (non-orientable, so no H₂).', color: '#c4a855', type: 'mobius' },
+];
+
+let surfCurrent = 0;
+let surfRotX = 0.4, surfRotY = 0, surfDragging = false, surfLastX = 0, surfLastY = 0;
+const svCanvas = document.getElementById('surfaceViewCanvas');
+const svCtx = svCanvas.getContext('2d');
+
+function surfResetView() { surfRotX = 0.4; surfRotY = 0; }
+
+function selectSurface(idx) {
+  surfCurrent = idx;
+  const s = SURFACES[surfCurrent];
+  document.querySelectorAll('.surface-btn').forEach((b, i) => b.classList.toggle('active', i === surfCurrent));
+  const chips = document.querySelectorAll('.betti-chip');
+  ['b0','b1','b2'].forEach((id, k) => {
+    const el = document.getElementById(id);
+    const val = s.betti[k] !== undefined ? s.betti[k] : 0;
+    el.textContent = val; chips[k].classList.toggle('active', val > 0);
+  });
+  document.getElementById('bettiCaption').innerHTML = s.desc;
+  const freqs = [392, 523.25, 659.25];
+  s.betti.forEach((b, k) => { if (b > 0) setTimeout(() => playChime(freqs[k], 0.5, 0.05), k * 120); });
+}
+
+// Gallery buttons
+(function initGallery() {
+  const wrap = document.getElementById('surfaceGallery');
+  SURFACES.forEach((s, i) => {
+    const btn = document.createElement('div');
+    btn.className = 'surface-btn' + (i === 0 ? ' active' : '');
+    btn.style.padding = '.6rem .8rem';
+    btn.innerHTML = `<div class="sname">${s.name}</div>`;
+    btn.onclick = () => selectSurface(i);
+    wrap.appendChild(btn);
+  });
+})();
+
+// Mouse drag for 3D rotation
+svCanvas.addEventListener('mousedown', e => { surfDragging = true; surfLastX = e.clientX; surfLastY = e.clientY; svCanvas.style.cursor = 'grabbing'; });
+svCanvas.addEventListener('mousemove', e => { if (!surfDragging) return; surfRotY += (e.clientX - surfLastX) * 0.01; surfRotX += (e.clientY - surfLastY) * 0.01; surfLastX = e.clientX; surfLastY = e.clientY; });
+svCanvas.addEventListener('mouseup', () => { surfDragging = false; svCanvas.style.cursor = 'grab'; });
+svCanvas.addEventListener('mouseleave', () => { surfDragging = false; svCanvas.style.cursor = 'grab'; });
+// touch
+svCanvas.addEventListener('touchstart', e => { surfDragging = true; const t = e.touches[0]; surfLastX = t.clientX; surfLastY = t.clientY; }, {passive:true});
+svCanvas.addEventListener('touchmove', e => { if (!surfDragging) return; const t = e.touches[0]; surfRotY += (t.clientX - surfLastX) * 0.01; surfRotX += (t.clientY - surfLastY) * 0.01; surfLastX = t.clientX; surfLastY = t.clientY; }, {passive:true});
+svCanvas.addEventListener('touchend', () => surfDragging = false);
+
+function proj3d(x, y, z, ry, rx, scale, cx, cy) {
+  let x2=x*Math.cos(ry)-z*Math.sin(ry), z2=x*Math.sin(ry)+z*Math.cos(ry);
+  let y2=y*Math.cos(rx)-z2*Math.sin(rx), z3=y*Math.sin(rx)+z2*Math.cos(rx);
+  const d = 3.5 + z3;
+  return [cx + x2*scale/d, cy + y2*scale/d, z3];
+}
+
+// Generate wireframe mesh data for each surface type
+function genSphereMesh(Nu, Nv) {
+  const lines = [];
+  for (let i = 0; i <= Nu; i++) {
+    const pts = [];
+    for (let j = 0; j <= Nv; j++) {
+      const u = (i/Nu)*PI, v = (j/Nv)*TAU;
+      pts.push([Math.sin(u)*Math.cos(v), Math.sin(u)*Math.sin(v), Math.cos(u)]);
+    }
+    lines.push(pts);
+  }
+  for (let j = 0; j <= Nv; j++) {
+    const pts = [];
+    for (let i = 0; i <= Nu; i++) {
+      const u = (i/Nu)*PI, v = (j/Nv)*TAU;
+      pts.push([Math.sin(u)*Math.cos(v), Math.sin(u)*Math.sin(v), Math.cos(u)]);
+    }
+    lines.push(pts);
+  }
+  return lines;
+}
+
+function genTorusMesh(R1, R2, Nu, Nv) {
+  const lines = [];
+  for (let i = 0; i <= Nu; i++) {
+    const pts = [];
+    for (let j = 0; j <= Nv; j++) {
+      const u=(i/Nu)*TAU, v=(j/Nv)*TAU;
+      pts.push([(R1+R2*Math.cos(v))*Math.cos(u), (R1+R2*Math.cos(v))*Math.sin(u), R2*Math.sin(v)]);
+    }
+    lines.push(pts);
+  }
+  for (let j = 0; j <= Nv; j++) {
+    const pts = [];
+    for (let i = 0; i <= Nu; i++) {
+      const u=(i/Nu)*TAU, v=(j/Nv)*TAU;
+      pts.push([(R1+R2*Math.cos(v))*Math.cos(u), (R1+R2*Math.cos(v))*Math.sin(u), R2*Math.sin(v)]);
+    }
+    lines.push(pts);
+  }
+  return lines;
+}
+
+function genGenus2Mesh(Nu, Nv) {
+  // Genus-2 surface: sweep a tube along a 2-lobed (peanut-shaped) spine curve
+  const lines = [];
+  const R0 = 0.45; // base radius of spine
+  const A = 0.28;   // amplitude of lobes (must be < R0 to avoid self-intersection)
+  const R2 = 0.16;  // tube radius
+
+  // Spine curve: r(u) = R0 + A*cos(2u), a 2-lobed curve in the xy-plane
+  function spine(u) {
+    const r = R0 + A * Math.cos(2 * u);
+    return [r * Math.cos(u), r * Math.sin(u), 0];
+  }
+  // Numerical tangent
+  function spineTan(u) {
+    const eps = 0.0005;
+    const a = spine(u - eps), b = spine(u + eps);
+    const dx = b[0]-a[0], dy = b[1]-a[1], dz = b[2]-a[2];
+    const len = Math.hypot(dx, dy, dz) || 1;
+    return [dx/len, dy/len, dz/len];
+  }
+  // Surface point: spine(u) + R2 * (normal frame)(v)
+  function g2pt(u, v) {
+    const s = spine(u);
+    const t = spineTan(u);
+    // Normal: perpendicular to tangent in the xy-plane
+    let n1 = [-t[1], t[0], 0];
+    const n1len = Math.hypot(n1[0], n1[1]) || 1;
+    n1 = [n1[0]/n1len, n1[1]/n1len, 0];
+    // Binormal = t × n1 (points in z-direction)
+    const bn = [t[1]*n1[2]-t[2]*n1[1], t[2]*n1[0]-t[0]*n1[2], t[0]*n1[1]-t[1]*n1[0]];
+    return [
+      s[0] + R2*(Math.cos(v)*n1[0] + Math.sin(v)*bn[0]),
+      s[1] + R2*(Math.cos(v)*n1[1] + Math.sin(v)*bn[1]),
+      s[2] + R2*(Math.cos(v)*n1[2] + Math.sin(v)*bn[2])
+    ];
+  }
+  // u-lines (along spine)
+  for (let i = 0; i <= Nu; i++) {
+    const pts = [];
+    for (let j = 0; j <= Nv; j++) pts.push(g2pt((i/Nu)*TAU, (j/Nv)*TAU));
+    lines.push(pts);
+  }
+  // v-lines (cross-sections)
+  for (let j = 0; j <= Nv; j++) {
+    const pts = [];
+    for (let i = 0; i <= Nu; i++) pts.push(g2pt((i/Nu)*TAU, (j/Nv)*TAU));
+    lines.push(pts);
+  }
+  return lines;
+}
+
+function drawWireframe(ctx, lines, ry, rx, scale, cx, cy, col, alpha) {
+  lines.forEach(pts => {
+    ctx.strokeStyle = col.replace('ALPHA', String(alpha));
+    ctx.lineWidth = 0.8;
+    ctx.beginPath();
+    pts.forEach((p, i) => {
+      const [px, py] = proj3d(p[0], p[1], p[2], ry, rx, scale, cx, cy);
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+    });
+    ctx.stroke();
+  });
+}
+
+let svT = 0;
+(function animateSurfaceView() {
+  svT += 0.003;
+  const w = svCanvas.width, h = svCanvas.height;
+  svCtx.clearRect(0, 0, w, h);
+  const s = SURFACES[surfCurrent];
+  const ry = surfRotY + (surfDragging ? 0 : svT * 0.3);
+  const rx = surfRotX;
+  const scale = Math.min(w, h) * 0.55;
+  const cx = w/2, cy = h/2;
+  const col = s.color;
+
+  if (s.type === 'sphere') {
+    const lines = genSphereMesh(16, 24);
+    drawWireframe(svCtx, lines, ry, rx, scale, cx, cy, `rgba(201,168,76,ALPHA)`, 0.2);
+  } else if (s.type === 'torus') {
+    const lines = genTorusMesh(0.7, 0.3, 32, 16);
+    drawWireframe(svCtx, lines, ry, rx, scale, cx, cy, `rgba(60,184,195,ALPHA)`, 0.2);
+  } else if (s.type === 'genus2') {
+    const lines = genGenus2Mesh(60, 20);
+    drawWireframe(svCtx, lines, ry, rx, scale, cx, cy, `rgba(196,122,138,ALPHA)`, 0.2);
+  } else if (s.type === 'circle') {
+    svCtx.strokeStyle = 'rgba(126,200,164,0.7)'; svCtx.lineWidth = 2.5;
+    svCtx.beginPath();
+    for (let i = 0; i <= 80; i++) {
+      const a = (i/80)*TAU;
+      const [px,py] = proj3d(Math.cos(a)*0.8, Math.sin(a)*0.8, 0, ry, rx, scale, cx, cy);
+      i === 0 ? svCtx.moveTo(px, py) : svCtx.lineTo(px, py);
+    }
+    svCtx.stroke();
+  } else if (s.type === 'disk') {
+    for (let r = 1; r <= 8; r++) {
+      svCtx.strokeStyle = `rgba(139,126,200,${0.08 + r*0.02})`; svCtx.lineWidth = 1;
+      svCtx.beginPath();
+      for (let i = 0; i <= 60; i++) {
+        const a = (i/60)*TAU, rr = r/8*0.8;
+        const [px,py] = proj3d(Math.cos(a)*rr, Math.sin(a)*rr, 0, ry, rx, scale, cx, cy);
+        i === 0 ? svCtx.moveTo(px, py) : svCtx.lineTo(px, py);
+      }
+      svCtx.stroke();
+    }
+    for (let i = 0; i < 12; i++) {
+      svCtx.strokeStyle = 'rgba(139,126,200,0.15)'; svCtx.lineWidth = 1;
+      svCtx.beginPath();
+      const a = (i/12)*TAU;
+      const [p0x,p0y] = proj3d(0,0,0, ry, rx, scale, cx, cy);
+      const [p1x,p1y] = proj3d(Math.cos(a)*0.8, Math.sin(a)*0.8, 0, ry, rx, scale, cx, cy);
+      svCtx.moveTo(p0x,p0y); svCtx.lineTo(p1x,p1y); svCtx.stroke();
+    }
+    svCtx.strokeStyle = 'rgba(139,126,200,0.5)'; svCtx.lineWidth = 2;
+    svCtx.beginPath();
+    for (let i = 0; i <= 80; i++) {
+      const a = (i/80)*TAU;
+      const [px,py] = proj3d(Math.cos(a)*0.8, Math.sin(a)*0.8, 0, ry, rx, scale, cx, cy);
+      i === 0 ? svCtx.moveTo(px, py) : svCtx.lineTo(px, py);
+    }
+    svCtx.stroke();
+  } else if (s.type === 'mobius') {
+    const lines = [];
+    for (let i = 0; i <= 40; i++) {
+      const pts = [];
+      for (let j = -3; j <= 3; j++) {
+        const u = (i/40)*TAU, t = j/3*0.3;
+        const x = (0.7 + t*Math.cos(u/2)) * Math.cos(u);
+        const y = (0.7 + t*Math.cos(u/2)) * Math.sin(u);
+        const z = t * Math.sin(u/2);
+        pts.push([x,y,z]);
+      }
+      lines.push(pts);
+    }
+    for (let j = -3; j <= 3; j++) {
+      const pts = [];
+      for (let i = 0; i <= 80; i++) {
+        const u = (i/80)*TAU, t = j/3*0.3;
+        const x = (0.7 + t*Math.cos(u/2)) * Math.cos(u);
+        const y = (0.7 + t*Math.cos(u/2)) * Math.sin(u);
+        const z = t * Math.sin(u/2);
+        pts.push([x,y,z]);
+      }
+      lines.push(pts);
+    }
+    drawWireframe(svCtx, lines, ry, rx, scale, cx, cy, `rgba(196,168,85,ALPHA)`, 0.25);
+  }
+
+  requestAnimationFrame(animateSurfaceView);
+})();
+
+// ═══════════════════════════════════════════════════
+// §2 — SIMPLICIAL COMPLEX BUILDER
+// ═══════════════════════════════════════════════════
+let sVerts = [], sEdges = [], sFaces = [];
+let sVerts3D = []; // 3D coords for presets; empty = 2D mode
+let sMode = 'vertex';
+let sSel = [];
+let sWrapEdges = new Set();
+let s3dRotX = 0.45, s3dRotY = 0, s3dZoom = 180;
+let s3dDrag = false, s3dLastX = 0, s3dLastY = 0;
+const sCanvas = document.getElementById('simplexCanvas');
+const sCtx = sCanvas.getContext('2d');
+
+// ── Undo / Redo ─────────────────────────────────
+let sHistory = [], sHistIdx = -1;
+function sSnapshot() {
+  const snap = { v:JSON.parse(JSON.stringify(sVerts)), e:JSON.parse(JSON.stringify(sEdges)),
+    f:JSON.parse(JSON.stringify(sFaces)), v3:JSON.parse(JSON.stringify(sVerts3D)),
+    wrap:[...sWrapEdges], rx:s3dRotX, ry:s3dRotY, zm:s3dZoom };
+  sHistory = sHistory.slice(0, sHistIdx + 1);
+  sHistory.push(snap); sHistIdx = sHistory.length - 1;
+  if (sHistory.length > 80) { sHistory.shift(); sHistIdx--; }
+  updateSUndoRedo();
+}
+function sRestore(snap) {
+  sVerts = JSON.parse(JSON.stringify(snap.v)); sEdges = JSON.parse(JSON.stringify(snap.e));
+  sFaces = JSON.parse(JSON.stringify(snap.f)); sVerts3D = JSON.parse(JSON.stringify(snap.v3));
+  sWrapEdges = new Set(snap.wrap); s3dRotX = snap.rx; s3dRotY = snap.ry; s3dZoom = snap.zm || 180;
+  sSel = [];
+}
+function sUndo() {
+  if (sHistIdx > 0) { sHistIdx--; sRestore(sHistory[sHistIdx]); drawSimplex(); updateChainDisplay(); updateSUndoRedo(); }
+}
+function sRedo() {
+  if (sHistIdx < sHistory.length - 1) { sHistIdx++; sRestore(sHistory[sHistIdx]); drawSimplex(); updateChainDisplay(); updateSUndoRedo(); }
+}
+function updateSUndoRedo() {
+  const ub = document.getElementById('btnSUndo'), rb = document.getElementById('btnSRedo');
+  if (ub) ub.disabled = sHistIdx <= 0;
+  if (rb) rb.disabled = sHistIdx >= sHistory.length - 1;
+}
+
+// ── Presets ──────────────────────────────────────
+function edgesFromFaces(faces) {
+  const es = new Set();
+  faces.forEach(([a,b,c]) => {
+    es.add(Math.min(a,b)+'-'+Math.max(a,b));
+    es.add(Math.min(a,c)+'-'+Math.max(a,c));
+    es.add(Math.min(b,c)+'-'+Math.max(b,c));
+  });
+  return [...es].map(s => s.split('-').map(Number));
+}
+function genTorusGrid(rows, cols, w, h) {
+  const pad = 30, verts = [];
+  const cw = (w-2*pad)/cols, ch = (h-2*pad)/rows;
+  for (let i=0;i<rows;i++) for (let j=0;j<cols;j++) verts.push([pad+j*cw+cw/2, pad+i*ch+ch/2]);
+  const faces = [];
+  for (let i=0;i<rows;i++) for (let j=0;j<cols;j++) {
+    const tl=i*cols+j,tr=i*cols+(j+1)%cols,bl=((i+1)%rows)*cols+j,br=((i+1)%rows)*cols+(j+1)%cols;
+    faces.push([tl,tr,bl].sort((a,b)=>a-b)); faces.push([tr,br,bl].sort((a,b)=>a-b));
+  }
+  const edges = edgesFromFaces(faces);
+  const wrap = new Set();
+  edges.forEach((e,idx)=>{if(Math.abs(verts[e[0]][0]-verts[e[1]][0])>cw*1.5||Math.abs(verts[e[0]][1]-verts[e[1]][1])>ch*1.5) wrap.add(idx);});
+  return {verts, faces, edges, wrap, v3d:[]};
+}
+function gen3DPreset(rawVerts, rawFaces) {
+  const edgeSet = new Set(), edges = [];
+  rawFaces.forEach(([a,b,c])=>{[[a,b],[a,c],[b,c]].forEach(([x,y])=>{const k=Math.min(x,y)+'-'+Math.max(x,y);if(!edgeSet.has(k)){edgeSet.add(k);edges.push([Math.min(x,y),Math.max(x,y)]);}});});
+  const maxR = Math.max(...rawVerts.map(v=>Math.hypot(...v)))||1;
+  const nv = rawVerts.map(v=>v.map(x=>x/maxR));
+  const verts2d = nv.map(v=>[250+v[0]*150, 250+v[1]*150]);
+  return {verts:verts2d, faces:rawFaces, edges, wrap:new Set(), v3d:nv};
+}
+
+const PRESETS = {
+  tetra: () => { const v3=[[1,1,1],[-1,-1,1],[-1,1,-1],[1,-1,-1]]; const f=[[0,1,2],[0,1,3],[0,2,3],[1,2,3]]; const p=gen3DPreset(v3,f); p.desc='Tetrahedron — S², χ=4−6+4=2. Use Rotate 3D to spin.'; return p; },
+  octa: () => { const v3=[[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]]; const f=[[0,2,4],[0,3,4],[0,3,5],[0,2,5],[1,2,4],[1,3,4],[1,3,5],[1,2,5]].map(t=>t.sort((a,b)=>a-b)); const p=gen3DPreset(v3,f); p.desc='Octahedron — S², χ=6−12+8=2. Use Rotate 3D to spin.'; return p; },
+  icosa: () => {
+    const phi=(1+Math.sqrt(5))/2, raw=[];
+    for(let s1 of[-1,1])for(let s2 of[-1,1]){raw.push([0,s1,s2*phi]);raw.push([s1,s2*phi,0]);raw.push([s1*phi,0,s2]);}
+    const adj={};raw.forEach((_,i)=>adj[i]=new Set());
+    for(let i=0;i<raw.length;i++)for(let j=i+1;j<raw.length;j++){if(Math.hypot(raw[i][0]-raw[j][0],raw[i][1]-raw[j][1],raw[i][2]-raw[j][2])<2.2){adj[i].add(j);adj[j].add(i);}}
+    const f=[];for(let a=0;a<12;a++)for(const b of adj[a])if(b>a)for(const c of adj[a])if(c>b&&adj[b].has(c))f.push([a,b,c]);
+    const p=gen3DPreset(raw,f);p.desc='Icosahedron — S², χ=12−30+20=2. Use Rotate 3D to spin.';return p;
+  },
+  torus3: () => { const t=genTorusGrid(3,3,500,500); t.desc='Torus 3×3 — T², χ=9−27+18=0. Dashed = identified.'; return t; },
+  torus5: () => { const t=genTorusGrid(5,5,500,500); t.desc='Torus 5×5 — T², χ=25−75+50=0. Dashed = identified.'; return t; },
+};
+
+function loadPreset(name) {
+  const p = PRESETS[name]();
+  sVerts=p.verts; sFaces=p.faces; sEdges=p.edges; sWrapEdges=p.wrap||new Set(); sVerts3D=p.v3d||[];
+  sSel=[]; if(sVerts3D.length>0){s3dRotX=0.45;s3dRotY=0;s3dZoom=180;setSimplexMode('rotate');}
+  document.getElementById('sampleDesc').innerHTML = p.desc||'';
+  sSnapshot(); drawSimplex(); updateChainDisplay(); playChime(523,0.3,0.05);
+}
+
+// ── Mode switching ──────────────────────────────────
+function setSimplexMode(m) {
+  sMode=m; sSel=[];
+  document.querySelectorAll('.disk-wrap .ctrl-bar .ctrl-btn').forEach(b=>b.classList.remove('active'));
+  const map={vertex:'Vertex',edge:'Edge',face:'Face',remove:'Remove',rotate:'Rotate3d'};
+  const btn=document.getElementById('btn'+(map[m]||''));
+  if(btn) btn.classList.add('active');
+  sCanvas.style.cursor = m==='remove'?'crosshair':m==='rotate'?'grab':'default';
+  drawSimplex();
+}
+function resetSimplex() {
+  sVerts=[];sEdges=[];sFaces=[];sSel=[];sWrapEdges=new Set();sVerts3D=[];
+  s3dRotX=0.45;s3dRotY=0;s3dZoom=180;sHistory=[];sHistIdx=-1;
+  document.getElementById('bdryPanel').style.display='none';
+  document.getElementById('bdryEdgesWrap').style.display='none';
+  document.getElementById('bdryFacesWrap').style.display='none';
+  document.getElementById('bdrySquaredWrap').style.display='none';
+  document.getElementById('bdryCheck').textContent='';
+  document.getElementById('sampleDesc').innerHTML='';
+  updateSUndoRedo(); drawSimplex();
+}
+
+// ── 3D projection ───────────────────────────────
+function sProj3d(p3){
+  const ry=s3dRotY,rx=s3dRotX;let[x,y,z]=p3;
+  let x2=x*Math.cos(ry)-z*Math.sin(ry),z2=x*Math.sin(ry)+z*Math.cos(ry);
+  let y2=y*Math.cos(rx)-z2*Math.sin(rx),z3=y*Math.sin(rx)+z2*Math.cos(rx);
+  const d=3+z3,scale=s3dZoom; return [250+x2*scale/d, 250+y2*scale/d];
+}
+function updateProjectedVerts(){if(sVerts3D.length>0)sVerts=sVerts3D.map(sProj3d);}
+
+// ── Canvas interaction ──────────────────────────────
+function sCoord(e){const r=sCanvas.getBoundingClientRect();return[(e.clientX-r.left)/r.width*sCanvas.width,(e.clientY-r.top)/r.height*sCanvas.height];}
+function nearestVert(x,y,thresh=25){let best=-1,bd=thresh;sVerts.forEach((v,i)=>{const d=Math.hypot(v[0]-x,v[1]-y);if(d<bd){bd=d;best=i;}});return best;}
+function nearestFace(x,y){for(let fi=sFaces.length-1;fi>=0;fi--){const[a,b,c]=sFaces[fi];if(ptInTri(x,y,sVerts[a],sVerts[b],sVerts[c]))return fi;}return-1;}
+function ptInTri(px,py,[x1,y1],[x2,y2],[x3,y3]){const d1=sign2d(px,py,x1,y1,x2,y2),d2=sign2d(px,py,x2,y2,x3,y3),d3=sign2d(px,py,x3,y3,x1,y1);return!((d1<0||d2<0||d3<0)&&(d1>0||d2>0||d3>0));}
+function sign2d(px,py,x1,y1,x2,y2){return(px-x2)*(y1-y2)-(x1-x2)*(py-y2);}
+function nearestEdge(x,y,thresh=12){let best=-1,bd=thresh;sEdges.forEach((e,i)=>{const[ax,ay]=sVerts[e[0]],[bx,by]=sVerts[e[1]];const dx=bx-ax,dy=by-ay,t=Math.max(0,Math.min(1,((x-ax)*dx+(y-ay)*dy)/(dx*dx+dy*dy)));const d=Math.hypot(x-(ax+t*dx),y-(ay+t*dy));if(d<bd){bd=d;best=i;}});return best;}
+
+// 3D drag + click handlers
+sCanvas.addEventListener('mousedown',function(e){if(sMode==='rotate'){s3dDrag=true;s3dLastX=e.clientX;s3dLastY=e.clientY;sCanvas.style.cursor='grabbing';return;}handleClick(e);});
+sCanvas.addEventListener('mousemove',function(e){if(s3dDrag&&sMode==='rotate'){s3dRotY+=(e.clientX-s3dLastX)*0.01;s3dRotX+=(e.clientY-s3dLastY)*0.01;s3dLastX=e.clientX;s3dLastY=e.clientY;updateProjectedVerts();drawSimplex();}});
+sCanvas.addEventListener('mouseup',function(){if(s3dDrag){s3dDrag=false;sCanvas.style.cursor='grab';}});
+sCanvas.addEventListener('mouseleave',function(){if(s3dDrag){s3dDrag=false;sCanvas.style.cursor='grab';}});
+sCanvas.addEventListener('touchstart',function(e){if(sMode==='rotate'){s3dDrag=true;s3dLastX=e.touches[0].clientX;s3dLastY=e.touches[0].clientY;}else handleClick(e.touches[0]);},{passive:true});
+sCanvas.addEventListener('touchmove',function(e){if(s3dDrag&&sMode==='rotate'){const t=e.touches[0];s3dRotY+=(t.clientX-s3dLastX)*0.01;s3dRotX+=(t.clientY-s3dLastY)*0.01;s3dLastX=t.clientX;s3dLastY=t.clientY;updateProjectedVerts();drawSimplex();}},{passive:true});
+sCanvas.addEventListener('touchend', () => { s3dDrag = false; });
+sCanvas.addEventListener('wheel', function(e) {
+  e.preventDefault();
+  s3dZoom = Math.max(60, Math.min(400, s3dZoom - e.deltaY * 0.3));
+  updateProjectedVerts(); drawSimplex();
+}, { passive: false });
+function sZoomIn() { s3dZoom = Math.min(400, s3dZoom * 1.2); updateProjectedVerts(); drawSimplex(); }
+function sZoomOut() { s3dZoom = Math.max(60, s3dZoom / 1.2); updateProjectedVerts(); drawSimplex(); }
+
+function handleClick(e){
+  const[x,y]=sCoord(e); updateProjectedVerts(); let changed=false;
+  if(sMode==='vertex'){sVerts.push([x,y]);if(sVerts3D.length>0)sVerts3D=[];playChime(440+sVerts.length*40,0.2,0.04);changed=true;}
+  else if(sMode==='edge'){const vi=nearestVert(x,y);if(vi>=0){sSel.push(vi);if(sSel.length===2){if(sSel[0]!==sSel[1]){const ne=[Math.min(sSel[0],sSel[1]),Math.max(sSel[0],sSel[1])];if(!sEdges.some(e=>e[0]===ne[0]&&e[1]===ne[1])){sEdges.push(ne);changed=true;}}playChime(523,0.25,0.04);sSel=[];}}}
+  else if(sMode==='face'){const vi=nearestVert(x,y);if(vi>=0){sSel.push(vi);if(sSel.length===3){const sorted=[...sSel].sort((a,b)=>a-b);if(!sFaces.some(f=>f[0]===sorted[0]&&f[1]===sorted[1]&&f[2]===sorted[2])){sFaces.push(sorted);[[sorted[0],sorted[1]],[sorted[0],sorted[2]],[sorted[1],sorted[2]]].forEach(ne=>{if(!sEdges.some(e=>e[0]===ne[0]&&e[1]===ne[1]))sEdges.push(ne);});changed=true;}playChime(659,0.3,0.04);sSel=[];}}}
+  else if(sMode==='remove'){
+    const fi=nearestFace(x,y);
+    if(fi>=0){sFaces.splice(fi,1);playChime(350,0.2,0.04);changed=true;}
+    else{const ei=nearestEdge(x,y);if(ei>=0){const re=sEdges[ei];sFaces=sFaces.filter(f=>!(f.includes(re[0])&&f.includes(re[1])));sEdges.splice(ei,1);sWrapEdges=new Set([...sWrapEdges].filter(i=>i<sEdges.length));playChime(330,0.2,0.04);changed=true;}
+    else{const vi=nearestVert(x,y);if(vi>=0){sFaces=sFaces.filter(f=>!f.includes(vi));sEdges=sEdges.filter(e=>!e.includes(vi));sVerts.splice(vi,1);if(sVerts3D.length>0)sVerts3D.splice(vi,1);sFaces=sFaces.map(f=>f.map(v=>v>vi?v-1:v));sEdges=sEdges.map(e=>e.map(v=>v>vi?v-1:v));sWrapEdges=new Set();playChime(300,0.25,0.04);changed=true;}}}
+  }
+  drawSimplex(); updateChainDisplay(); if(changed) sSnapshot();
+}
+
+// ── Drawing ──────────────────────────────────────
+function drawSimplex(){
+  updateProjectedVerts();
+  const w=sCanvas.width,h=sCanvas.height;sCtx.clearRect(0,0,w,h);
+  const smallComplex=sVerts.length<=15, is3d=sVerts3D.length>0;
+
+  // Apply 2D zoom (center-based) when not in 3D mode
+  const zoomFactor = is3d ? 1 : s3dZoom / 180;
+  if (!is3d && zoomFactor !== 1) {
+    sCtx.save();
+    sCtx.translate(w/2, h/2);
+    sCtx.scale(zoomFactor, zoomFactor);
+    sCtx.translate(-w/2, -h/2);
+  }
+  sFaces.forEach(f=>{if(f[0]>=sVerts.length||f[1]>=sVerts.length||f[2]>=sVerts.length)return;sCtx.fillStyle='rgba(196,122,138,0.10)';sCtx.strokeStyle='rgba(196,122,138,0.35)';sCtx.lineWidth=1;sCtx.beginPath();sCtx.moveTo(sVerts[f[0]][0],sVerts[f[0]][1]);sCtx.lineTo(sVerts[f[1]][0],sVerts[f[1]][1]);sCtx.lineTo(sVerts[f[2]][0],sVerts[f[2]][1]);sCtx.closePath();sCtx.fill();sCtx.stroke();
+    if(smallComplex){const fcx=(sVerts[f[0]][0]+sVerts[f[1]][0]+sVerts[f[2]][0])/3,fcy=(sVerts[f[0]][1]+sVerts[f[1]][1]+sVerts[f[2]][1])/3;sCtx.fillStyle='rgba(196,122,138,0.5)';sCtx.font='9px "JetBrains Mono"';sCtx.fillText('['+f.join(',')+']',fcx-14,fcy+3);}
+  });
+  sEdges.forEach((e,idx)=>{if(e[0]>=sVerts.length||e[1]>=sVerts.length)return;const x0=sVerts[e[0]][0],y0=sVerts[e[0]][1],x1=sVerts[e[1]][0],y1=sVerts[e[1]][1],isWrap=sWrapEdges.has(idx);sCtx.strokeStyle=isWrap?'rgba(60,184,195,0.3)':'rgba(60,184,195,0.6)';sCtx.lineWidth=isWrap?1:1.5;if(isWrap)sCtx.setLineDash([4,4]);sCtx.beginPath();sCtx.moveTo(x0,y0);sCtx.lineTo(x1,y1);sCtx.stroke();if(isWrap)sCtx.setLineDash([]);
+    if(!isWrap){const mx=(x0+x1)/2,my=(y0+y1)/2,ang=Math.atan2(y1-y0,x1-x0);sCtx.fillStyle='rgba(60,184,195,0.6)';sCtx.beginPath();sCtx.moveTo(mx+6*Math.cos(ang),my+6*Math.sin(ang));sCtx.lineTo(mx+6*Math.cos(ang+2.6),my+6*Math.sin(ang+2.6));sCtx.lineTo(mx+6*Math.cos(ang-2.6),my+6*Math.sin(ang-2.6));sCtx.fill();}
+  });
+  const vr=sVerts.length>20?3:5;
+  sVerts.forEach((v,i)=>{const isSel=sSel.includes(i);sCtx.fillStyle=isSel?'#e8cc80':'#c9a84c';sCtx.shadowColor='rgba(201,168,76,0.5)';sCtx.shadowBlur=isSel?10:4;sCtx.beginPath();sCtx.arc(v[0],v[1],isSel?vr+2:vr,0,TAU);sCtx.fill();sCtx.shadowBlur=0;
+    if(smallComplex){sCtx.fillStyle='#ede5d8';sCtx.font='11px "JetBrains Mono"';sCtx.fillText('v'+i,v[0]+7,v[1]-7);}
+  });
+  sSel.forEach(i=>{if(i>=sVerts.length)return;sCtx.strokeStyle='#e8cc80';sCtx.lineWidth=2;sCtx.beginPath();sCtx.arc(sVerts[i][0],sVerts[i][1],vr+4,0,TAU);sCtx.stroke();});
+  // Restore 2D zoom transform before drawing labels
+  if (!is3d && zoomFactor !== 1) sCtx.restore();
+  if(sWrapEdges.size>0){sCtx.fillStyle='rgba(201,168,76,0.4)';sCtx.font='11px "Cormorant Garamond"';sCtx.fillText('↕ edges wrap (torus identification)',10,sCanvas.height-8);}
+  if(is3d){sCtx.fillStyle='rgba(60,184,195,0.4)';sCtx.font='11px "Cormorant Garamond"';sCtx.textAlign='right';sCtx.fillText('3D · use Rotate 3D to spin',sCanvas.width-10,sCanvas.height-8);sCtx.textAlign='start';}
+  if(zoomFactor!==1){sCtx.fillStyle='rgba(124,118,147,0.5)';sCtx.font='10px "JetBrains Mono"';sCtx.textAlign='right';sCtx.fillText(Math.round(zoomFactor*100)+'%',sCanvas.width-10,16);sCtx.textAlign='start';}
+}
+
+// ── Formatting helpers ──
+function eStr(a,b){return`<span class="text">[v${a},v${b}]</span>`;}
+function vStr(i){return`<span class="gold">v${i}</span>`;}
+function fStr(a,b,c){return`<span class="rose">[v${a},v${b},v${c}]</span>`;}
+function bdrySquaredOneFace(a,b,c){let h='';h+=`<div class="bdry-step"><span class="step-label">∂² ${fStr(a,b,c)}</span>`;h+=`<span class="muted">= ∂(</span> ${eStr(b,c)} <span class="muted">−</span> ${eStr(a,c)} <span class="muted">+</span> ${eStr(a,b)} <span class="muted">)</span><br>`;h+=`<span class="muted">= (</span>${vStr(c)} <span class="muted">−</span> ${vStr(b)}<span class="muted">)</span> <span class="muted">− (</span>${vStr(c)} <span class="muted">−</span> ${vStr(a)}<span class="muted">)</span> <span class="muted">+ (</span>${vStr(b)} <span class="muted">−</span> ${vStr(a)}<span class="muted">)</span><br>`;
+  const terms=[{v:c,sign:+1},{v:b,sign:-1},{v:c,sign:-1},{v:a,sign:+1},{v:b,sign:+1},{v:a,sign:-1}];h+=`<span class="muted">=</span> `;terms.forEach((t,i)=>{const s=(i===0)?(t.sign>0?'':' <span class="muted">−</span> '):(t.sign>0?' <span class="muted">+</span> ':' <span class="muted">−</span> ');h+=`${s}${vStr(t.v)}`;});h+=`<br>`;
+  const coeffs={};terms.forEach(t=>{coeffs[t.v]=(coeffs[t.v]||0)+t.sign;});h+=`<span class="muted">=</span> `;[...new Set(terms.map(t=>t.v))].sort((x,y)=>x-y).forEach(v=>{h+=coeffs[v]===0?`<span class="bdry-collect cancelled"><span class="green">+v${v} − v${v}</span></span> `:`<span class="bdry-collect"><span class="red">${coeffs[v]>0?'+':''}${coeffs[v]}·v${v}</span></span> `;});
+  h+=`<br><span class="muted">=</span> <span class="bdry-zero">0</span> <span class="green" style="font-size:.8rem">✓</span></div>`;return h;}
+
+// ── Main display update ──────────────────────────
+function updateChainDisplay(){
+  const panel=document.getElementById('bdryPanel'),edgesWrap=document.getElementById('bdryEdgesWrap'),facesWrap=document.getElementById('bdryFacesWrap'),sqWrap=document.getElementById('bdrySquaredWrap');
+  const hasEdges=sEdges.length>0,hasFaces=sFaces.length>0,hasAnything=sVerts.length>0,DETAIL_LIMIT=8;
+  panel.style.display=hasAnything?'block':'none';edgesWrap.style.display=hasEdges?'block':'none';facesWrap.style.display=hasFaces?'block':'none';sqWrap.style.display=hasFaces?'block':'none';
+  const chi=sVerts.length-sEdges.length+sFaces.length;
+  document.getElementById('complexSummary').textContent=hasAnything?`V=${sVerts.length}  E=${sEdges.length}  F=${sFaces.length}  χ=${chi}`:'';
+  if(hasEdges){document.getElementById('edgeCount').textContent=`(${sEdges.length} edges)`;const showAll=sEdges.length<=DETAIL_LIMIT*3;let h='';(showAll?sEdges:sEdges.slice(0,4)).forEach(e=>{h+=`<div class="bdry-line"><span class="bdry-label">∂</span>${eStr(e[0],e[1])}<span class="bdry-eq">=</span>${vStr(e[1])} <span class="muted">−</span> ${vStr(e[0])}</div>`;});if(!showAll){h+=`<div class="bdry-line" style="cursor:pointer;color:var(--gold)" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('▸')?this.textContent.replace('▸','▾'):this.textContent.replace('▾','▸')">▸ ... and ${sEdges.length-4} more edges</div><div style="display:none">`;sEdges.slice(4).forEach(e=>{h+=`<div class="bdry-line"><span class="bdry-label">∂</span>${eStr(e[0],e[1])}<span class="bdry-eq">=</span>${vStr(e[1])} <span class="muted">−</span> ${vStr(e[0])}</div>`;});h+=`</div>`;}document.getElementById('bdryEdgesContent').innerHTML=h;}
+  if(hasFaces){document.getElementById('faceCount').textContent=`(${sFaces.length} faces)`;const showAll=sFaces.length<=DETAIL_LIMIT;let fh='';(showAll?sFaces:sFaces.slice(0,4)).forEach(f=>{const[a,b,c]=f;fh+=`<div class="bdry-line"><span class="bdry-label">∂</span>${fStr(a,b,c)}<span class="bdry-eq">=</span>${eStr(b,c)} <span class="muted">−</span> ${eStr(a,c)} <span class="muted">+</span> ${eStr(a,b)}</div>`;});if(!showAll){fh+=`<div class="bdry-line" style="cursor:pointer;color:var(--gold)" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('▸')?this.textContent.replace('▸','▾'):this.textContent.replace('▾','▸')">▸ ... and ${sFaces.length-4} more faces</div><div style="display:none">`;sFaces.slice(4).forEach(f=>{const[a,b,c]=f;fh+=`<div class="bdry-line"><span class="bdry-label">∂</span>${fStr(a,b,c)}<span class="bdry-eq">=</span>${eStr(b,c)} <span class="muted">−</span> ${eStr(a,c)} <span class="muted">+</span> ${eStr(a,b)}</div>`;});fh+=`</div>`;}document.getElementById('bdryFacesContent').innerHTML=fh;
+    let sqHtml='';if(sFaces.length<=DETAIL_LIMIT){sFaces.forEach(f=>{sqHtml+=bdrySquaredOneFace(f[0],f[1],f[2]);});}else{sqHtml+=`<div style="font-size:.82rem;color:var(--muted);margin-bottom:.6rem">Showing 2 of ${sFaces.length} faces in full detail.</div>`;sqHtml+=bdrySquaredOneFace(sFaces[0][0],sFaces[0][1],sFaces[0][2]);sqHtml+=bdrySquaredOneFace(sFaces[1][0],sFaces[1][1],sFaces[1][2]);sqHtml+=`<div class="bdry-line" style="cursor:pointer;color:var(--gold);padding:.4rem 0" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.textContent=this.textContent.includes('▸')?this.textContent.replace('▸','▾'):this.textContent.replace('▾','▸')">▸ Show all ${sFaces.length-2} remaining ∂²</div><div style="display:none">`;sFaces.slice(2).forEach(f=>{sqHtml+=bdrySquaredOneFace(f[0],f[1],f[2]);});sqHtml+=`</div>`;}
+    if(sFaces.length>1){sqHtml+=`<div class="bdry-step"><span class="step-label">Total ∂² over all ${sFaces.length} faces</span><div style="font-size:.78rem;color:var(--muted);margin-bottom:.5rem">Every vertex coefficient must be 0.</div>`;let tc={};sFaces.forEach(f=>{const[a,b,c]=f;tc[c]=(tc[c]||0)+1;tc[b]=(tc[b]||0)-1;tc[c]=(tc[c]||0)-1;tc[a]=(tc[a]||0)+1;tc[b]=(tc[b]||0)+1;tc[a]=(tc[a]||0)-1;});const allZero=Object.values(tc).every(v=>v===0);sqHtml+=`<div style="display:flex;flex-wrap:wrap;gap:4px">`;Object.keys(tc).sort((a,b)=>+a-+b).forEach(v=>{sqHtml+=tc[v]===0?`<span class="bdry-collect cancelled"><span class="green">v${v}: 0</span></span>`:`<span class="bdry-collect"><span class="red">v${v}: ${tc[v]>0?'+':''}${tc[v]}</span></span>`;});sqHtml+=`</div>`;sqHtml+=allZero?`<div style="margin-top:.6rem"><span class="bdry-zero">∂² = 0</span> <span class="green" style="font-size:.85rem">✓ complete cancellation</span></div>`:`<div style="margin-top:.6rem"><span class="red">∂² ≠ 0</span></div>`;sqHtml+=`</div>`;document.getElementById('bdryCheck').innerHTML=allZero?'<span style="color:#7ec8a4">∂² = 0 ✓</span>':'<span style="color:var(--red)">∂² ≠ 0</span>';}else{document.getElementById('bdryCheck').innerHTML='<span style="color:#7ec8a4">∂² = 0 ✓</span>';}
+    document.getElementById('bdrySquaredContent').innerHTML=sqHtml;document.getElementById('bdrySquaredResult').innerHTML='';
+  }else{document.getElementById('bdryCheck').textContent='';}
+  if(hasEdges&&!hasFaces)document.getElementById('bdryCheck').textContent='';
+}
+
+drawSimplex();
+
+// ═══════════════════════════════════════════════════
+// §3 — TORUS NET (cycles & boundaries)
+// ═══════════════════════════════════════════════════
+const tnCanvas = document.getElementById('torusNetCanvas');
+const tnCtx = tnCanvas.getContext('2d');
+const TN = 6; // grid size
+let tnEdges = new Map(); // "r,c,dir" -> +1/-1
+// Represent torus as TN×TN grid with wraparound
+
+function tnKey(r, c, dir) { return `${((r%TN)+TN)%TN},${((c%TN)+TN)%TN},${dir}`; }
+
+function resetTorusNet() {
+  tnEdges = new Map();
+  document.getElementById('cycleStatus').innerHTML = 'Select edges on the torus to build a 1-chain...';
+  document.getElementById('cycleClass').textContent = '';
+  drawTorusNet();
+}
+
+function showMeridian() {
+  resetTorusNet();
+  for (let r = 0; r < TN; r++) tnEdges.set(tnKey(r, 0, 'v'), 1);
+  analyzeChain();
+  drawTorusNet();
+}
+
+function showLongitude() {
+  resetTorusNet();
+  for (let c = 0; c < TN; c++) tnEdges.set(tnKey(0, c, 'h'), 1);
+  analyzeChain();
+  drawTorusNet();
+}
+
+function tnCoord(r, c) {
+  const pad = 40, w = tnCanvas.width - 2 * pad, h = tnCanvas.height - 2 * pad;
+  return [pad + (c / TN) * w, pad + (r / TN) * h];
+}
+
+tnCanvas.addEventListener('click', function(e) {
+  const rect = tnCanvas.getBoundingClientRect();
+  const mx = (e.clientX - rect.left) / rect.width * tnCanvas.width;
+  const my = (e.clientY - rect.top) / rect.height * tnCanvas.height;
+
+  // find nearest edge
+  let bestKey = null, bestDist = 25;
+  for (let r = 0; r < TN; r++) {
+    for (let c = 0; c < TN; c++) {
+      // horizontal edge (r,c) -> (r, c+1)
+      const [x1, y1] = tnCoord(r, c);
+      const [x2, y2] = tnCoord(r, (c + 1) % TN === 0 ? TN : c + 1);
+      const hx = (x1 + (c + 1 < TN ? x2 : x1 + (x2 - x1 + tnCanvas.width) % tnCanvas.width)) / 2;
+      let hmx = (x1 + x2) / 2, hmy = (y1 + y2) / 2;
+      if (c + 1 >= TN) { hmx = x1 + (tnCanvas.width - 2 * 40) / TN / 2; }
+      let dh = Math.hypot(mx - hmx, my - hmy);
+      if (dh < bestDist) { bestDist = dh; bestKey = tnKey(r, c, 'h'); }
+
+      // vertical edge (r,c) -> (r+1, c)
+      const [x3, y3] = tnCoord((r + 1) % TN === 0 ? TN : r + 1, c);
+      let vmx = (x1 + x3) / 2, vmy = (y1 + y3) / 2;
+      if (r + 1 >= TN) { vmy = y1 + (tnCanvas.height - 2 * 40) / TN / 2; }
+      let dv = Math.hypot(mx - vmx, my - vmy);
+      if (dv < bestDist) { bestDist = dv; bestKey = tnKey(r, c, 'v'); }
+    }
+  }
+
+  if (bestKey) {
+    if (tnEdges.has(bestKey)) tnEdges.delete(bestKey);
+    else tnEdges.set(bestKey, 1);
+    playChime(500, 0.15, 0.03);
+    analyzeChain();
+    drawTorusNet();
+  }
+});
+
+function analyzeChain() {
+  // Compute ∂ of the chain (sum of endpoints with signs)
+  let vertCount = {};
+  tnEdges.forEach((coeff, key) => {
+    const [r, c, dir] = key.split(',');
+    const ri = +r, ci = +c;
+    let head, tail;
+    if (dir === 'h') {
+      tail = `${ri},${ci}`;
+      head = `${ri},${(ci + 1) % TN}`;
+    } else {
+      tail = `${ri},${ci}`;
+      head = `${(ri + 1) % TN},${ci}`;
+    }
+    vertCount[head] = (vertCount[head] || 0) + coeff;
+    vertCount[tail] = (vertCount[tail] || 0) - coeff;
+  });
+
+  const isCycle = Object.values(vertCount).every(v => v === 0);
+  const statusEl = document.getElementById('cycleStatus');
+  const classEl = document.getElementById('cycleClass');
+
+  if (tnEdges.size === 0) {
+    statusEl.innerHTML = 'Select edges on the torus to build a 1-chain...';
+    classEl.textContent = '';
+    return;
+  }
+
+  // Compute homology class: count winding numbers
+  let hWind = 0, vWind = 0;
+  tnEdges.forEach((coeff, key) => {
+    const parts = key.split(',');
+    if (parts[2] === 'h') hWind += coeff;
+    else vWind += coeff;
+  });
+  // Normalize: on the torus, a chain going around once horizontally has homology class (1,0)
+  // This is approximate — it counts total flow
+  const hClass = hWind / TN;
+  const vClass = vWind / TN;
+
+  if (!isCycle) {
+    statusEl.innerHTML = '<span style="color:var(--red)">Not a cycle</span> — ∂c ≠ 0 (the chain has loose endpoints).';
+    classEl.textContent = '';
+  } else {
+    // Check if it could be a boundary
+    const isHomTrivial = (Math.round(hClass) === 0 && Math.round(vClass) === 0);
+    if (isHomTrivial) {
+      statusEl.innerHTML = '<span style="color:#7ec8a4">Cycle ✓</span> — this is a <strong>boundary</strong> (homologically trivial in H₁).';
+      classEl.textContent = '[0, 0] ∈ H₁(T²)';
+    } else {
+      statusEl.innerHTML = '<span style="color:var(--gold2)">Cycle ✓</span> — <strong>nontrivial</strong> homology class! This loop does not bound a disk.';
+      classEl.textContent = `[${Math.round(vClass)}, ${Math.round(hClass)}] ∈ H₁(T²) ≅ ℤ²`;
+    }
+  }
+}
+
+function drawTorusNet() {
+  const w = tnCanvas.width, h = tnCanvas.height;
+  tnCtx.clearRect(0, 0, w, h);
+  const pad = 40;
+
+  // Draw identification arrows on boundary
+  tnCtx.strokeStyle = 'rgba(201,168,76,0.2)';
+  tnCtx.setLineDash([4, 4]);
+  tnCtx.lineWidth = 1;
+  // top & bottom identified
+  tnCtx.beginPath(); tnCtx.moveTo(pad, pad); tnCtx.lineTo(w - pad, pad); tnCtx.stroke();
+  tnCtx.beginPath(); tnCtx.moveTo(pad, h - pad); tnCtx.lineTo(w - pad, h - pad); tnCtx.stroke();
+  // left & right identified
+  tnCtx.beginPath(); tnCtx.moveTo(pad, pad); tnCtx.lineTo(pad, h - pad); tnCtx.stroke();
+  tnCtx.beginPath(); tnCtx.moveTo(w - pad, pad); tnCtx.lineTo(w - pad, h - pad); tnCtx.stroke();
+  tnCtx.setLineDash([]);
+
+  // Identification labels
+  tnCtx.fillStyle = 'rgba(201,168,76,0.5)';
+  tnCtx.font = '12px "JetBrains Mono"';
+  tnCtx.fillText('≡', w / 2, pad - 8);
+  tnCtx.fillText('≡', w / 2, h - pad + 16);
+  tnCtx.save();
+  tnCtx.translate(pad - 10, h / 2);
+  tnCtx.rotate(-PI / 2);
+  tnCtx.fillText('≡', 0, 0);
+  tnCtx.restore();
+
+  // Grid edges (dim)
+  tnCtx.strokeStyle = 'rgba(124,118,147,0.15)';
+  tnCtx.lineWidth = 1;
+  for (let r = 0; r < TN; r++) {
+    for (let c = 0; c < TN; c++) {
+      const [x1, y1] = tnCoord(r, c);
+      const [x2] = tnCoord(r, c + 1);
+      const [, y3] = tnCoord(r + 1, c);
+      // h
+      tnCtx.beginPath(); tnCtx.moveTo(x1, y1);
+      tnCtx.lineTo(c + 1 < TN ? x2 : w - pad, y1); tnCtx.stroke();
+      // v
+      tnCtx.beginPath(); tnCtx.moveTo(x1, y1);
+      tnCtx.lineTo(x1, r + 1 < TN ? y3 : h - pad); tnCtx.stroke();
+      // diagonal (for triangulation)
+      tnCtx.beginPath(); tnCtx.moveTo(x1, y1);
+      tnCtx.lineTo(c + 1 < TN ? x2 : w - pad, r + 1 < TN ? y3 : h - pad); tnCtx.stroke();
+    }
+  }
+
+  // Selected edges (bright)
+  tnEdges.forEach((coeff, key) => {
+    const [r, c, dir] = key.split(',');
+    const ri = +r, ci = +c;
+    const [x1, y1] = tnCoord(ri, ci);
+    let x2, y2;
+    if (dir === 'h') {
+      [x2, y2] = ci + 1 < TN ? tnCoord(ri, ci + 1) : [w - pad, y1];
+    } else {
+      [x2, y2] = ri + 1 < TN ? tnCoord(ri + 1, ci) : [x1, h - pad];
+    }
+    tnCtx.strokeStyle = dir === 'h' ? 'rgba(60,184,195,0.85)' : 'rgba(201,168,76,0.85)';
+    tnCtx.lineWidth = 3;
+    tnCtx.shadowColor = dir === 'h' ? 'rgba(60,184,195,0.4)' : 'rgba(201,168,76,0.4)';
+    tnCtx.shadowBlur = 8;
+    tnCtx.beginPath(); tnCtx.moveTo(x1, y1); tnCtx.lineTo(x2, y2); tnCtx.stroke();
+    tnCtx.shadowBlur = 0;
+    // arrow
+    const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+    const ang = Math.atan2(y2 - y1, x2 - x1);
+    tnCtx.fillStyle = dir === 'h' ? '#3cb8c3' : '#c9a84c';
+    tnCtx.beginPath();
+    tnCtx.moveTo(mx + 6 * Math.cos(ang), my + 6 * Math.sin(ang));
+    tnCtx.lineTo(mx + 6 * Math.cos(ang + 2.5), my + 6 * Math.sin(ang + 2.5));
+    tnCtx.lineTo(mx + 6 * Math.cos(ang - 2.5), my + 6 * Math.sin(ang - 2.5));
+    tnCtx.fill();
+  });
+
+  // vertices
+  for (let r = 0; r < TN; r++) {
+    for (let c = 0; c < TN; c++) {
+      const [x, y] = tnCoord(r, c);
+      tnCtx.fillStyle = 'rgba(201,168,76,0.4)';
+      tnCtx.beginPath(); tnCtx.arc(x, y, 3, 0, TAU); tnCtx.fill();
+    }
+  }
+}
+drawTorusNet();
+
+// ═══════════════════════════════════════════════════
+// §4 — EULER CHARACTERISTIC (Platonic solid cards)
+// ═══════════════════════════════════════════════════
+const PLATONIC = [
+  { name: 'Tetrahedron', sym: '{3,3}', V: 4, E: 6, F: 4 },
+  { name: 'Cube', sym: '{4,3}', V: 8, E: 12, F: 6 },
+  { name: 'Octahedron', sym: '{3,4}', V: 6, E: 12, F: 8 },
+  { name: 'Dodecahedron', sym: '{5,3}', V: 20, E: 30, F: 12 },
+  { name: 'Icosahedron', sym: '{3,5}', V: 12, E: 30, F: 20 },
+];
+
+// Vertex data for Platonic solids
+function platVerts(type) {
+  const phi = (1 + Math.sqrt(5)) / 2;
+  switch(type) {
+    case 0: // tetra
+      return [[1,1,1],[-1,-1,1],[-1,1,-1],[1,-1,-1]];
+    case 1: // cube
+      return [[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]];
+    case 2: // octa
+      return [[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];
+    case 3: { // dodeca
+      const a=1,b=1/phi,c=phi;
+      const v=[];
+      for(let s1 of[-1,1])for(let s2 of[-1,1])for(let s3 of[-1,1])v.push([s1*a,s2*a,s3*a]);
+      for(let s1 of[-1,1])for(let s2 of[-1,1]){v.push([0,s1*b,s2*c]);v.push([s1*b,s2*c,0]);v.push([s1*c,0,s2*b]);}
+      return v;
+    }
+    case 4: { // icosa
+      const v=[];
+      for(let s1 of[-1,1])for(let s2 of[-1,1]){v.push([0,s1,s2*phi]);v.push([s1,s2*phi,0]);v.push([s1*phi,0,s2]);}
+      return v;
+    }
+  }
+}
+
+function platEdges(type) {
+  const verts = platVerts(type);
+  const edges = [];
+  const thresholds = [2.5, 2.1, 1.5, 1.3, 1.3];
+  const thresh = thresholds[type];
+  for (let i = 0; i < verts.length; i++) {
+    for (let j = i + 1; j < verts.length; j++) {
+      const d = Math.hypot(verts[i][0]-verts[j][0], verts[i][1]-verts[j][1], verts[i][2]-verts[j][2]);
+      if (d < thresh) edges.push([i, j]);
+    }
+  }
+  return edges;
+}
+
+function drawPlatonic3D(ctx, w, h, type, time) {
+  const verts = platVerts(type);
+  const edges = platEdges(type);
+  // normalize verts
+  let maxR = 0;
+  verts.forEach(v => { maxR = Math.max(maxR, Math.hypot(...v)); });
+  const nv = verts.map(v => v.map(x => x / maxR));
+
+  const ry = time * 0.5, rx = 0.4 + Math.sin(time * 0.2) * 0.15;
+  const scale = Math.min(w, h) * 0.32;
+  const cx = w / 2, cy = h / 2;
+
+  function proj(p) {
+    let [x, y, z] = p;
+    let x2 = x * Math.cos(ry) - z * Math.sin(ry);
+    let z2 = x * Math.sin(ry) + z * Math.cos(ry);
+    let y2 = y * Math.cos(rx) - z2 * Math.sin(rx);
+    let z3 = y * Math.sin(rx) + z2 * Math.cos(rx);
+    const d = 3 + z3;
+    return [cx + x2 * scale / d, cy + y2 * scale / d, z3];
+  }
+
+  const projected = nv.map(proj);
+
+  // edges
+  ctx.strokeStyle = 'rgba(201,168,76,0.45)';
+  ctx.lineWidth = 1.5;
+  edges.forEach(([i, j]) => {
+    ctx.beginPath();
+    ctx.moveTo(projected[i][0], projected[i][1]);
+    ctx.lineTo(projected[j][0], projected[j][1]);
+    ctx.stroke();
+  });
+
+  // vertices
+  projected.forEach(([px, py, pz]) => {
+    const bright = 0.4 + 0.3 * (1 + pz) / 2;
+    ctx.fillStyle = `rgba(201,168,76,${bright})`;
+    ctx.beginPath();
+    ctx.arc(px, py, 3, 0, TAU);
+    ctx.fill();
+  });
+}
+
+(function initEulerCards() {
+  const wrap = document.getElementById('eulerCards');
+  PLATONIC.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'geo-card';
+    card.innerHTML = `
+      <canvas data-plat="${i}" width="220" height="180"></canvas>
+      <div class="geo-info">
+        <h3>${p.name}</h3>
+        <span class="geo-tag">${p.sym}</span>
+        <p style="font-family:'JetBrains Mono',monospace;font-size:.8rem">
+          V=${p.V} − E=${p.E} + F=${p.F} = <strong style="color:var(--gold2)">2</strong>
+        </p>
+      </div>`;
+    wrap.appendChild(card);
+  });
+
+  // animate
+  let t = 0;
+  function animate() {
+    t += 0.012;
+    document.querySelectorAll('[data-plat]').forEach(cv => {
+      const idx = +cv.dataset.plat;
+      const ctx = cv.getContext('2d');
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      drawPlatonic3D(ctx, cv.width, cv.height, idx, t + idx * 1.2);
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+// ═══════════════════════════════════════════════════
+// §5 — DUALITY MACHINE
+// ═══════════════════════════════════════════════════
+const dualCanvas = document.getElementById('dualCanvas');
+const dualCtx = dualCanvas.getContext('2d');
+let dualSolid = 'cube';
+let dualT = 0;
+let dualMorph = 0; // 0 = original, 1 = fully dualized
+let dualAnimating = false;
+let dualRotX = 0, dualRotY = 0, dualDragging = false, dualLastX = 0, dualLastY = 0;
+
+const DUAL_MAP = { tetra: 'tetra', cube: 'octa', octa: 'cube', dodeca: 'icosa', icosa: 'dodeca' };
+const SOLID_IDX = { tetra: 0, cube: 1, octa: 2, dodeca: 3, icosa: 4 };
+
+function setDualSolid(s) { dualSolid = s; dualMorph = 0; updateFvec(); }
+
+function triggerDualize() {
+  if (dualAnimating) return;
+  dualAnimating = true;
+  playDualChime();
+  const start = dualMorph;
+  const target = dualMorph < 0.5 ? 1 : 0;
+  const t0 = performance.now();
+  function step(now) {
+    const p = Math.min(1, (now - t0) / 1200);
+    const ease = p < 0.5 ? 4*p*p*p : 1-Math.pow(-2*p+2,3)/2;
+    dualMorph = start + (target - start) * ease;
+    updateFvec();
+    if (p < 1) requestAnimationFrame(step);
+    else dualAnimating = false;
+  }
+  requestAnimationFrame(step);
+}
+
+function resetDual() { dualMorph = 0; dualAnimating = false; updateFvec(); }
+
+function updateFvec() {
+  const i1 = SOLID_IDX[dualSolid];
+  const i2 = SOLID_IDX[DUAL_MAP[dualSolid]];
+  const p1 = PLATONIC[i1], p2 = PLATONIC[i2];
+  const m = dualMorph;
+  const v = Math.round(p1.V * (1 - m) + p2.V * m);
+  const e = Math.round(p1.E * (1 - m) + p2.E * m);
+  const f = Math.round(p1.F * (1 - m) + p2.F * m);
+  document.getElementById('fvecOrig').textContent = `(${p1.V}, ${p1.E}, ${p1.F})`;
+  document.getElementById('fvecDual').textContent = `(${p2.V}, ${p2.E}, ${p2.F})`;
+  document.getElementById('fvecRow').querySelector('.fvec-arrow').textContent =
+    dualSolid === DUAL_MAP[dualSolid] ? '↺ self-dual' : '⟷';
+}
+
+// Mouse drag for rotation
+dualCanvas.addEventListener('mousedown', e => { dualDragging = true; dualLastX = e.clientX; dualLastY = e.clientY; });
+dualCanvas.addEventListener('mousemove', e => {
+  if (!dualDragging) return;
+  dualRotY += (e.clientX - dualLastX) * 0.008;
+  dualRotX += (e.clientY - dualLastY) * 0.008;
+  dualLastX = e.clientX; dualLastY = e.clientY;
+});
+dualCanvas.addEventListener('mouseup', () => dualDragging = false);
+dualCanvas.addEventListener('mouseleave', () => dualDragging = false);
+
+function getFaceCenters(verts, edges, type) {
+  // compute face centers from convex hull faces
+  // For simplicity, compute faces from triangulation
+  const faces = computeFaces(verts, edges);
+  return faces.map(f => {
+    const c = [0, 0, 0];
+    f.forEach(vi => { c[0] += verts[vi][0]; c[1] += verts[vi][1]; c[2] += verts[vi][2]; });
+    return c.map(x => x / f.length);
+  });
+}
+
+function computeFaces(verts, edges) {
+  // Simple approach: find cycles of length 3-5 among edges
+  const adj = {};
+  verts.forEach((_, i) => adj[i] = new Set());
+  edges.forEach(([a, b]) => { adj[a].add(b); adj[b].add(a); });
+
+  const faces = [];
+  const faceSet = new Set();
+
+  // Find triangular faces
+  for (const [a, b] of edges) {
+    for (const c of adj[a]) {
+      if (c > b && adj[b].has(c)) {
+        const key = [a, b, c].sort().join(',');
+        if (!faceSet.has(key)) { faceSet.add(key); faces.push([a, b, c]); }
+      }
+    }
+  }
+
+  // For cube/dodecahedron, need quad/pentagonal faces
+  if (faces.length === 0 || verts.length === 8) {
+    // cube faces
+    faces.length = 0; faceSet.clear();
+    for (const [a, b] of edges) {
+      for (const c of adj[b]) {
+        if (c !== a && adj[a].size > 0) {
+          for (const d of adj[c]) {
+            if (d !== b && adj[a].has(d)) {
+              const face = [a, b, c, d].sort();
+              const key = face.join(',');
+              if (!faceSet.has(key)) {
+                // verify coplanar
+                faceSet.add(key);
+                faces.push([a, b, c, d]);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return faces;
+}
+
+(function animateDual() {
+  dualT += 0.008;
+  const w = dualCanvas.width, h = dualCanvas.height;
+  dualCtx.clearRect(0, 0, w, h);
+
+  const i1 = SOLID_IDX[dualSolid];
+  const i2 = SOLID_IDX[DUAL_MAP[dualSolid]];
+  const verts1 = platVerts(i1);
+  const edges1 = platEdges(i1);
+  const verts2 = platVerts(i2);
+  const edges2 = platEdges(i2);
+
+  // normalize
+  let maxR1 = 0, maxR2 = 0;
+  verts1.forEach(v => maxR1 = Math.max(maxR1, Math.hypot(...v)));
+  verts2.forEach(v => maxR2 = Math.max(maxR2, Math.hypot(...v)));
+  const nv1 = verts1.map(v => v.map(x => x / maxR1));
+  const nv2 = verts2.map(v => v.map(x => x / maxR2 * 0.7));
+
+  const ry = dualT * 0.4 + dualRotY;
+  const rx = 0.5 + dualRotX + Math.sin(dualT * 0.15) * 0.1;
+  const scale = Math.min(w, h) * 0.55;
+  const cx = w / 2, cy = h / 2;
+
+  function proj(p) {
+    let [x, y, z] = p;
+    let x2 = x * Math.cos(ry) - z * Math.sin(ry);
+    let z2 = x * Math.sin(ry) + z * Math.cos(ry);
+    let y2 = y * Math.cos(rx) - z2 * Math.sin(rx);
+    let z3 = y * Math.sin(rx) + z2 * Math.cos(rx);
+    const d = 3.5 + z3;
+    return [cx + x2 * scale / d, cy + y2 * scale / d, z3];
+  }
+
+  const m = dualMorph;
+
+  // Draw original (fading out with morph)
+  const origAlpha = 1 - m * 0.7;
+  dualCtx.strokeStyle = `rgba(201,168,76,${0.5 * origAlpha})`;
+  dualCtx.lineWidth = 1.5;
+  const pv1 = nv1.map(proj);
+  edges1.forEach(([i, j]) => {
+    dualCtx.beginPath();
+    dualCtx.moveTo(pv1[i][0], pv1[i][1]);
+    dualCtx.lineTo(pv1[j][0], pv1[j][1]);
+    dualCtx.stroke();
+  });
+  pv1.forEach(([px, py]) => {
+    dualCtx.fillStyle = `rgba(201,168,76,${0.6 * origAlpha})`;
+    dualCtx.beginPath(); dualCtx.arc(px, py, 3, 0, TAU); dualCtx.fill();
+  });
+
+  // Draw dual (fading in with morph)
+  const dualAlpha = 0.15 + m * 0.85;
+  dualCtx.strokeStyle = `rgba(60,184,195,${0.5 * dualAlpha})`;
+  dualCtx.lineWidth = 1.5;
+  const pv2 = nv2.map(proj);
+  edges2.forEach(([i, j]) => {
+    dualCtx.beginPath();
+    dualCtx.moveTo(pv2[i][0], pv2[i][1]);
+    dualCtx.lineTo(pv2[j][0], pv2[j][1]);
+    dualCtx.stroke();
+  });
+  pv2.forEach(([px, py]) => {
+    dualCtx.fillStyle = `rgba(60,184,195,${0.5 * dualAlpha})`;
+    dualCtx.beginPath(); dualCtx.arc(px, py, 3, 0, TAU); dualCtx.fill();
+  });
+
+  // Draw intersection sparks on edges where dual edges cross original edges
+  if (m > 0.3) {
+    const sparkAlpha = Math.min(1, (m - 0.3) / 0.4);
+    // Approximate: draw sparks at edge midpoints of original
+    edges1.forEach(([i, j]) => {
+      const mx = (pv1[i][0] + pv1[j][0]) / 2;
+      const my = (pv1[i][1] + pv1[j][1]) / 2;
+      const r = 3 + 2 * Math.sin(dualT * 6 + i + j);
+      const grad = dualCtx.createRadialGradient(mx, my, 0, mx, my, r * 3);
+      grad.addColorStop(0, `rgba(255,255,255,${0.8 * sparkAlpha})`);
+      grad.addColorStop(0.4, `rgba(232,204,128,${0.4 * sparkAlpha})`);
+      grad.addColorStop(1, 'rgba(201,168,76,0)');
+      dualCtx.fillStyle = grad;
+      dualCtx.beginPath(); dualCtx.arc(mx, my, r * 3, 0, TAU); dualCtx.fill();
+    });
+  }
+
+  requestAnimationFrame(animateDual);
+})();
+updateFvec();
+
+// ═══════════════════════════════════════════════════
+// §6 — POINCARÉ DUALITY (torus intersection)
+// ═══════════════════════════════════════════════════
+const tdCanvas = document.getElementById('torusDualCanvas');
+const tdCtx = tdCanvas.getContext('2d');
+let tdT = 0;
+let tdMeridianShift = 0; // user can drag
+let tdDragging = false, tdLastX = 0;
+let tdRotY = 0, tdAutoRot = 0;
+
+tdCanvas.addEventListener('mousedown', e => { tdDragging = true; tdLastX = e.clientX; });
+tdCanvas.addEventListener('mousemove', e => {
+  if (!tdDragging) return;
+  tdMeridianShift += (e.clientX - tdLastX) * 0.01;
+  tdLastX = e.clientX;
+});
+tdCanvas.addEventListener('mouseup', () => tdDragging = false);
+tdCanvas.addEventListener('mouseleave', () => tdDragging = false);
+
+function resetTorusDual() { tdMeridianShift = 0; }
+
+(function animateTorusDual() {
+  tdT += 0.006;
+  tdAutoRot += 0.003;
+  const w = tdCanvas.width, h = tdCanvas.height;
+  tdCtx.clearRect(0, 0, w, h);
+
+  const R1 = 1.0, R2 = 0.4;
+  const ry = tdAutoRot + 0.3;
+  const rx = 0.55;
+  const scale = Math.min(w, h) * 0.38;
+  const cx = w / 2, cy = h / 2;
+
+  function tp(u, v) {
+    const x = (R1 + R2 * Math.cos(v)) * Math.cos(u);
+    const y = (R1 + R2 * Math.cos(v)) * Math.sin(u);
+    const z = R2 * Math.sin(v);
+    return [x, y, z];
+  }
+
+  function proj(p) {
+    let [x, y, z] = p;
+    let x2 = x * Math.cos(ry) - z * Math.sin(ry);
+    let z2 = x * Math.sin(ry) + z * Math.cos(ry);
+    let y2 = y * Math.cos(rx) - z2 * Math.sin(rx);
+    let z3 = y * Math.sin(rx) + z2 * Math.cos(rx);
+    const d = 3.2 + z3;
+    return [cx + x2 * scale / d, cy + y2 * scale / d, z3];
+  }
+
+  // wireframe
+  tdCtx.strokeStyle = 'rgba(201,168,76,0.06)';
+  tdCtx.lineWidth = 0.8;
+  for (let i = 0; i <= 40; i++) {
+    tdCtx.beginPath();
+    for (let j = 0; j <= 24; j++) {
+      const [px, py] = proj(tp((i/40)*TAU, (j/24)*TAU));
+      j === 0 ? tdCtx.moveTo(px, py) : tdCtx.lineTo(px, py);
+    }
+    tdCtx.stroke();
+  }
+  for (let j = 0; j <= 24; j++) {
+    tdCtx.beginPath();
+    for (let i = 0; i <= 40; i++) {
+      const [px, py] = proj(tp((i/40)*TAU, (j/24)*TAU));
+      i === 0 ? tdCtx.moveTo(px, py) : tdCtx.lineTo(px, py);
+    }
+    tdCtx.stroke();
+  }
+
+  // Meridian (gold) — at u = meridianShift
+  const mu = tdMeridianShift;
+  tdCtx.strokeStyle = 'rgba(201,168,76,0.85)';
+  tdCtx.lineWidth = 3;
+  tdCtx.shadowColor = 'rgba(201,168,76,0.5)';
+  tdCtx.shadowBlur = 12;
+  tdCtx.beginPath();
+  for (let j = 0; j <= 60; j++) {
+    const [px, py] = proj(tp(mu, (j/60)*TAU));
+    j === 0 ? tdCtx.moveTo(px, py) : tdCtx.lineTo(px, py);
+  }
+  tdCtx.stroke();
+
+  // Longitude (cyan) — at v = 0
+  tdCtx.strokeStyle = 'rgba(60,184,195,0.85)';
+  tdCtx.shadowColor = 'rgba(60,184,195,0.5)';
+  tdCtx.beginPath();
+  for (let i = 0; i <= 80; i++) {
+    const [px, py] = proj(tp((i/80)*TAU, 0));
+    i === 0 ? tdCtx.moveTo(px, py) : tdCtx.lineTo(px, py);
+  }
+  tdCtx.stroke();
+  tdCtx.shadowBlur = 0;
+
+  // Intersection spark
+  const sp = proj(tp(mu, 0));
+  const sparkR = 5 + 3 * Math.sin(tdT * 8);
+  const grad = tdCtx.createRadialGradient(sp[0], sp[1], 0, sp[0], sp[1], sparkR * 4);
+  grad.addColorStop(0, 'rgba(255,255,255,0.95)');
+  grad.addColorStop(0.3, 'rgba(232,204,128,0.6)');
+  grad.addColorStop(1, 'rgba(201,168,76,0)');
+  tdCtx.fillStyle = grad;
+  tdCtx.beginPath(); tdCtx.arc(sp[0], sp[1], sparkR * 4, 0, TAU); tdCtx.fill();
+
+  // update intersection number
+  document.getElementById('intNumber').textContent = '+1';
+
+  requestAnimationFrame(animateTorusDual);
+})();
+
+// ═══════════════════════════════════════════════════
+// §6b — 3-TORUS T³ (cube with face identifications)
+// ═══════════════════════════════════════════════════
+(function initT3() {
+  const c = document.getElementById('t3Canvas');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  let t = 0;
+  let t3rx = 0.55, t3ry = 0, t3drag = false, t3lx = 0, t3ly = 0;
+
+  c.addEventListener('mousedown', e => { t3drag=true; t3lx=e.clientX; t3ly=e.clientY; c.style.cursor='grabbing'; });
+  c.addEventListener('mousemove', e => { if(!t3drag)return; t3ry+=(e.clientX-t3lx)*0.008; t3rx+=(e.clientY-t3ly)*0.008; t3lx=e.clientX; t3ly=e.clientY; });
+  c.addEventListener('mouseup', () => { t3drag=false; c.style.cursor='grab'; });
+  c.addEventListener('mouseleave', () => { t3drag=false; c.style.cursor='grab'; });
+  c.addEventListener('touchstart', e => { t3drag=true; t3lx=e.touches[0].clientX; t3ly=e.touches[0].clientY; }, {passive:true});
+  c.addEventListener('touchmove', e => { if(!t3drag)return; const tt=e.touches[0]; t3ry+=(tt.clientX-t3lx)*0.008; t3rx+=(tt.clientY-t3ly)*0.008; t3lx=tt.clientX; t3ly=tt.clientY; }, {passive:true});
+  c.addEventListener('touchend', () => t3drag=false);
+
+  window.t3ResetView = function() { t3rx = 0.55; t3ry = 0; };
+
+  // Cube vertices: ±0.7
+  const S = 0.7;
+  const cubeV = [[-S,-S,-S],[S,-S,-S],[S,S,-S],[-S,S,-S],[-S,-S,S],[S,-S,S],[S,S,S],[-S,S,S]];
+  const cubeEdges = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
+  // Face pairs for identification: front/back (z), left/right (x), top/bottom (y)
+  // Each pair shown with matching color arrows
+  const facePairs = [
+    { name:'x', edges:[[0,3],[3,7],[7,4],[4,0]], dualEdges:[[1,2],[2,6],[6,5],[5,1]], color:'rgba(201,168,76,', axis:[1,0,0] },
+    { name:'y', edges:[[0,1],[1,5],[5,4],[4,0]], dualEdges:[[3,2],[2,6],[6,7],[7,3]], color:'rgba(60,184,195,', axis:[0,1,0] },
+    { name:'z', edges:[[0,1],[1,2],[2,3],[3,0]], dualEdges:[[4,5],[5,6],[6,7],[7,4]], color:'rgba(196,122,138,', axis:[0,0,1] },
+  ];
+
+  function proj(p, ry, rx, scale, cx, cy) {
+    let [x,y,z] = p;
+    let x2=x*Math.cos(ry)-z*Math.sin(ry), z2=x*Math.sin(ry)+z*Math.cos(ry);
+    let y2=y*Math.cos(rx)-z2*Math.sin(rx), z3=y*Math.sin(rx)+z2*Math.cos(rx);
+    const d = 3.5 + z3;
+    return [cx+x2*scale/d, cy+y2*scale/d, z3];
+  }
+
+  function draw() {
+    t += 0.004;
+    const w = c.width, h = c.height;
+    ctx.clearRect(0, 0, w, h);
+    const ry = (t3drag ? 0 : t*0.25) + t3ry;
+    const rx = t3rx;
+    const scale = Math.min(w,h)*0.5;
+    const cx = w/2, cy = h/2;
+
+    const pv = cubeV.map(v => proj(v, ry, rx, scale, cx, cy));
+
+    // Draw cube edges (dim wireframe)
+    ctx.strokeStyle = 'rgba(201,168,76,0.18)';
+    ctx.lineWidth = 1;
+    cubeEdges.forEach(([a,b]) => {
+      ctx.beginPath(); ctx.moveTo(pv[a][0],pv[a][1]); ctx.lineTo(pv[b][0],pv[b][1]); ctx.stroke();
+    });
+
+    // Draw face identification arrows and fill semi-transparent
+    facePairs.forEach((fp, pi) => {
+      const alpha = 0.06;
+      // Fill each face
+      [fp.edges, fp.dualEdges].forEach(faceEdgeLoop => {
+        ctx.fillStyle = fp.color + '0.06)';
+        ctx.beginPath();
+        faceEdgeLoop.forEach(([a,b], i) => {
+          i === 0 ? ctx.moveTo(pv[a][0],pv[a][1]) : ctx.lineTo(pv[a][0],pv[a][1]);
+        });
+        ctx.closePath();
+        ctx.fill();
+      });
+
+      // Identification arrows: dashed lines connecting face centers
+      const fc1 = [0,0,0], fc2 = [0,0,0];
+      fp.edges.forEach(([a]) => { fc1[0]+=cubeV[a][0]; fc1[1]+=cubeV[a][1]; fc1[2]+=cubeV[a][2]; });
+      fp.dualEdges.forEach(([a]) => { fc2[0]+=cubeV[a][0]; fc2[1]+=cubeV[a][1]; fc2[2]+=cubeV[a][2]; });
+      const c1 = fc1.map(x => x/4), c2 = fc2.map(x => x/4);
+      const [p1x,p1y] = proj(c1, ry, rx, scale, cx, cy);
+      const [p2x,p2y] = proj(c2, ry, rx, scale, cx, cy);
+
+      ctx.strokeStyle = fp.color + '0.4)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([5,4]);
+      ctx.beginPath(); ctx.moveTo(p1x,p1y); ctx.lineTo(p2x,p2y); ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Arrow head
+      const mx=(p1x+p2x)/2, my=(p1y+p2y)/2;
+      const ang = Math.atan2(p2y-p1y, p2x-p1x);
+      ctx.fillStyle = fp.color + '0.5)';
+      ctx.beginPath();
+      ctx.moveTo(mx+8*Math.cos(ang), my+8*Math.sin(ang));
+      ctx.lineTo(mx+8*Math.cos(ang+2.5), my+8*Math.sin(ang+2.5));
+      ctx.lineTo(mx+8*Math.cos(ang-2.5), my+8*Math.sin(ang-2.5));
+      ctx.fill();
+
+      // "≡" at face centers
+      ctx.fillStyle = fp.color + '0.6)';
+      ctx.font = '14px "JetBrains Mono"';
+      ctx.textAlign = 'center';
+      ctx.fillText('≡', p1x, p1y+4);
+      ctx.fillText('≡', p2x, p2y+4);
+      ctx.textAlign = 'start';
+    });
+
+    // Draw 1-cycles (coordinate circles) as thick lines along edges
+    const cycleData = [
+      { verts:[[0,0,-S],[0,0,S]], color:'rgba(201,168,76,0.9)', label:'x-cycle', labelPos:[S*0.5,0,0] },
+      { verts:[[0,-S,0],[0,S,0]], color:'rgba(60,184,195,0.9)', label:'y-cycle', labelPos:[0,S*0.5,0] },
+      { verts:[[-S,0,0],[S,0,0]], color:'rgba(196,122,138,0.9)', label:'z-cycle', labelPos:[0,0,S*0.5] },
+    ];
+
+    // Draw 2-cycles (coordinate torus cross-sections) as filled planes at center
+    const planeAlpha = 0.04 + 0.02 * Math.sin(t * 3);
+    // yz plane (x=0)
+    const yzVerts = [[0,-S,-S],[0,S,-S],[0,S,S],[0,-S,S]];
+    ctx.fillStyle = `rgba(201,168,76,${planeAlpha})`;
+    ctx.strokeStyle = 'rgba(201,168,76,0.25)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    yzVerts.forEach((v,i) => { const [px,py]=proj(v,ry,rx,scale,cx,cy); i===0?ctx.moveTo(px,py):ctx.lineTo(px,py); });
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+
+    // xz plane (y=0)
+    const xzVerts = [[-S,0,-S],[S,0,-S],[S,0,S],[-S,0,S]];
+    ctx.fillStyle = `rgba(60,184,195,${planeAlpha})`;
+    ctx.strokeStyle = 'rgba(60,184,195,0.25)';
+    ctx.beginPath();
+    xzVerts.forEach((v,i) => { const [px,py]=proj(v,ry,rx,scale,cx,cy); i===0?ctx.moveTo(px,py):ctx.lineTo(px,py); });
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+
+    // xy plane (z=0)
+    const xyVerts = [[-S,-S,0],[S,-S,0],[S,S,0],[-S,S,0]];
+    ctx.fillStyle = `rgba(196,122,138,${planeAlpha})`;
+    ctx.strokeStyle = 'rgba(196,122,138,0.25)';
+    ctx.beginPath();
+    xyVerts.forEach((v,i) => { const [px,py]=proj(v,ry,rx,scale,cx,cy); i===0?ctx.moveTo(px,py):ctx.lineTo(px,py); });
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+
+    // 1-cycles as thick lines through center
+    const cycles1d = [
+      { from:[-S,0,0], to:[S,0,0], color:'rgba(201,168,76,0.9)', lbl:'a₁' },
+      { from:[0,-S,0], to:[0,S,0], color:'rgba(60,184,195,0.9)', lbl:'a₂' },
+      { from:[0,0,-S], to:[0,0,S], color:'rgba(196,122,138,0.9)', lbl:'a₃' },
+    ];
+
+    cycles1d.forEach(cyc => {
+      const [x1,y1] = proj(cyc.from, ry, rx, scale, cx, cy);
+      const [x2,y2] = proj(cyc.to, ry, rx, scale, cx, cy);
+      ctx.strokeStyle = cyc.color;
+      ctx.lineWidth = 3;
+      ctx.shadowColor = cyc.color.replace('0.9','0.4');
+      ctx.shadowBlur = 8;
+      ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // arrowhead
+      const mx=(x1+x2)/2, my=(y1+y2)/2;
+      const ang = Math.atan2(y2-y1,x2-x1);
+      ctx.fillStyle = cyc.color;
+      ctx.beginPath();
+      ctx.moveTo(mx+8*Math.cos(ang), my+8*Math.sin(ang));
+      ctx.lineTo(mx+8*Math.cos(ang+2.5), my+8*Math.sin(ang+2.5));
+      ctx.lineTo(mx+8*Math.cos(ang-2.5), my+8*Math.sin(ang-2.5));
+      ctx.fill();
+
+      // label
+      ctx.font = '14px "Cormorant Garamond"';
+      ctx.fillText(cyc.lbl, x2+8, y2-5);
+    });
+
+    // Intersection sparks at origin (where each 1-cycle meets its dual 2-cycle)
+    const [ox, oy] = proj([0,0,0], ry, rx, scale, cx, cy);
+    const sr = 5 + 3*Math.sin(t*6);
+    const grad = ctx.createRadialGradient(ox,oy,0,ox,oy,sr*4);
+    grad.addColorStop(0, 'rgba(255,255,255,0.9)');
+    grad.addColorStop(0.3, 'rgba(232,204,128,0.5)');
+    grad.addColorStop(1, 'rgba(201,168,76,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(ox, oy, sr*4, 0, TAU); ctx.fill();
+
+    // Vertices
+    pv.forEach(([px,py,pz]) => {
+      const b = 0.25+0.25*(1+pz)/2;
+      ctx.fillStyle = `rgba(232,204,128,${b})`;
+      ctx.beginPath(); ctx.arc(px,py,2.5,0,TAU); ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ═══════════════════════════════════════════════════
+// §7 — GENUS SLIDER
+// ═══════════════════════════════════════════════════
+const genCanvas = document.getElementById('genusCanvas');
+const genCtx = genCanvas.getContext('2d');
+let genT = 0;
+let currentGenus = 1;
+
+function updateGenus(g) {
+  currentGenus = g;
+  document.getElementById('genusVal').textContent = g;
+
+  const names = ['Sphere', 'Torus', 'Double torus', 'Genus-3 surface', 'Genus-4 surface', 'Genus-5 surface'];
+  const info = g === 0 ? `${names[g]} — β₁ = 0, no dual pairs` :
+    `${names[g]} — β₁ = ${2*g}, ${g} dual pair${g>1?'s':''}`;
+  document.getElementById('genusInfo').textContent = info;
+
+  // build intersection matrix
+  buildIntMatrix(g);
+  playChime(400 + g * 60, 0.3, 0.04);
+}
+
+function buildIntMatrix(g) {
+  const wrap = document.getElementById('intMatrixWrap');
+  if (g === 0) {
+    wrap.innerHTML = '<p style="color:var(--muted);font-style:italic;font-size:.9rem">No intersection form for the sphere.</p>';
+    return;
+  }
+  const n = 2 * g;
+  let html = `<div class="int-matrix" style="grid-template-columns:repeat(${n+1},auto)">`;
+  // header
+  html += `<div class="mh"></div>`;
+  for (let j = 0; j < g; j++) { html += `<div class="mh">a${j+1}</div><div class="mh">b${j+1}</div>`; }
+  // rows
+  for (let i = 0; i < n; i++) {
+    const isA = i % 2 === 0;
+    const idx = Math.floor(i / 2) + 1;
+    html += `<div class="mh">${isA ? 'a' : 'b'}${idx}</div>`;
+    for (let j = 0; j < n; j++) {
+      let val = 0;
+      // a_k · b_k = 1, b_k · a_k = -1
+      if (Math.floor(i/2) === Math.floor(j/2)) {
+        if (i % 2 === 0 && j % 2 === 1) val = 1;
+        else if (i % 2 === 1 && j % 2 === 0) val = -1;
+      }
+      const cls = val === 1 ? 'm1' : val === -1 ? 'mn1' : 'm0';
+      html += `<div class="${cls}">${val}</div>`;
+    }
+  }
+  html += '</div>';
+  wrap.innerHTML = html;
+}
+
+(function animateGenus() {
+  genT += 0.005;
+  const w = genCanvas.width, h = genCanvas.height;
+  genCtx.clearRect(0, 0, w, h);
+  const g = currentGenus;
+  const cx = w / 2, cy = h / 2;
+  const ry = genT * 0.35, rx = 0.5;
+  const scale = Math.min(w, h) * 0.48;
+
+  function p3d(x,y,z) {
+    let x2=x*Math.cos(ry)-z*Math.sin(ry), z2=x*Math.sin(ry)+z*Math.cos(ry);
+    let y2=y*Math.cos(rx)-z2*Math.sin(rx), z3=y*Math.sin(rx)+z2*Math.cos(rx);
+    const d=3.5+z3;
+    return [cx+x2*scale/d, cy+y2*scale/d, z3];
+  }
+
+  if (g === 0) {
+    // Sphere wireframe
+    genCtx.strokeStyle = 'rgba(201,168,76,0.18)'; genCtx.lineWidth = 0.8;
+    for (let i = 0; i <= 20; i++) {
+      genCtx.beginPath();
+      for (let j = 0; j <= 30; j++) {
+        const u=(i/20)*PI, v=(j/30)*TAU;
+        const [px,py] = p3d(Math.sin(u)*Math.cos(v)*0.8, Math.sin(u)*Math.sin(v)*0.8, Math.cos(u)*0.8);
+        j===0?genCtx.moveTo(px,py):genCtx.lineTo(px,py);
+      }
+      genCtx.stroke();
+    }
+    for (let j = 0; j <= 16; j++) {
+      genCtx.beginPath();
+      for (let i = 0; i <= 30; i++) {
+        const u=(i/30)*PI, v=(j/16)*TAU;
+        const [px,py] = p3d(Math.sin(u)*Math.cos(v)*0.8, Math.sin(u)*Math.sin(v)*0.8, Math.cos(u)*0.8);
+        i===0?genCtx.moveTo(px,py):genCtx.lineTo(px,py);
+      }
+      genCtx.stroke();
+    }
+  } else {
+    // Genus-g surface: parametric with g handles
+    // Use a deformed torus approach: for genus 1, standard torus.
+    // For genus g, shape the "spine" as a curve with g lobes.
+    const Nu = Math.max(60, g * 20), Nv = 16;
+    const R2 = 0.22; // tube radius
+
+    // Spine curve: genus 1 = circle, genus g = g-lobed curve
+    function spine(u) {
+      if (g === 1) {
+        return [0.6*Math.cos(u), 0.6*Math.sin(u), 0];
+      }
+      // g-lobed: r = R0 + A*cos(g*u), with enough amplitude to create distinct holes
+      const R0 = 0.35 + g * 0.05;
+      const A = 0.22;
+      const r = R0 + A * Math.cos(g * u);
+      return [r * Math.cos(u), r * Math.sin(u), 0];
+    }
+
+    // Spine tangent (numerical)
+    function spineTangent(u) {
+      const eps = 0.001;
+      const a = spine(u - eps), b = spine(u + eps);
+      const dx = b[0]-a[0], dy = b[1]-a[1], dz = b[2]-a[2];
+      const len = Math.hypot(dx, dy, dz) || 1;
+      return [dx/len, dy/len, dz/len];
+    }
+
+    // Surface point: spine(u) + R2*(normal frame)(v)
+    function surfPt(u, v) {
+      const s = spine(u);
+      const t = spineTangent(u);
+      // Normal: cross(t, [0,0,1]) then cross(t, n1) for binormal
+      let n1 = [-t[1], t[0], 0];
+      const n1len = Math.hypot(n1[0], n1[1]) || 1;
+      n1 = [n1[0]/n1len, n1[1]/n1len, 0];
+      // binormal = t × n1
+      const bn = [t[1]*n1[2]-t[2]*n1[1], t[2]*n1[0]-t[0]*n1[2], t[0]*n1[1]-t[1]*n1[0]];
+      return [
+        s[0] + R2*(Math.cos(v)*n1[0] + Math.sin(v)*bn[0]),
+        s[1] + R2*(Math.cos(v)*n1[1] + Math.sin(v)*bn[1]),
+        s[2] + R2*(Math.cos(v)*n1[2] + Math.sin(v)*bn[2])
+      ];
+    }
+
+    // Draw wireframe
+    genCtx.strokeStyle = 'rgba(201,168,76,0.15)'; genCtx.lineWidth = 0.7;
+    for (let i = 0; i <= Nu; i++) {
+      genCtx.beginPath();
+      for (let j = 0; j <= Nv; j++) {
+        const pt = surfPt((i/Nu)*TAU, (j/Nv)*TAU);
+        const [px,py] = p3d(pt[0], pt[1], pt[2]);
+        j===0?genCtx.moveTo(px,py):genCtx.lineTo(px,py);
+      }
+      genCtx.stroke();
+    }
+    for (let j = 0; j <= Nv; j++) {
+      genCtx.beginPath();
+      for (let i = 0; i <= Nu; i++) {
+        const pt = surfPt((i/Nu)*TAU, (j/Nv)*TAU);
+        const [px,py] = p3d(pt[0], pt[1], pt[2]);
+        i===0?genCtx.moveTo(px,py):genCtx.lineTo(px,py);
+      }
+      genCtx.stroke();
+    }
+
+    // Draw cycle pairs on the surface
+    for (let k = 0; k < g; k++) {
+      const uBase = (k / g) * TAU + TAU / (2 * g); // position on spine
+
+      // a-cycle (gold): meridian at u = uBase (a small loop around the tube)
+      genCtx.strokeStyle = 'rgba(201,168,76,0.85)';
+      genCtx.lineWidth = 2.5;
+      genCtx.shadowColor = 'rgba(201,168,76,0.4)'; genCtx.shadowBlur = 8;
+      genCtx.beginPath();
+      for (let j = 0; j <= 40; j++) {
+        const pt = surfPt(uBase, (j/40)*TAU);
+        const [px,py] = p3d(pt[0], pt[1], pt[2]);
+        j===0?genCtx.moveTo(px,py):genCtx.lineTo(px,py);
+      }
+      genCtx.stroke();
+
+      // b-cycle (cyan): longitude going around one lobe
+      genCtx.strokeStyle = 'rgba(60,184,195,0.85)';
+      genCtx.shadowColor = 'rgba(60,184,195,0.4)';
+      genCtx.beginPath();
+      const uStart = (k / g) * TAU, uEnd = ((k + 1) / g) * TAU;
+      for (let i = 0; i <= 50; i++) {
+        const u = uStart + (i/50) * (uEnd - uStart);
+        const pt = surfPt(u, 0); // along v=0 (outer edge)
+        const [px,py] = p3d(pt[0], pt[1], pt[2]);
+        i===0?genCtx.moveTo(px,py):genCtx.lineTo(px,py);
+      }
+      genCtx.stroke();
+      genCtx.shadowBlur = 0;
+
+      // Intersection spark
+      const sp = surfPt(uBase, 0);
+      const [sx,sy] = p3d(sp[0], sp[1], sp[2]);
+      const sr = 3 + 2*Math.sin(genT*6+k);
+      const grad = genCtx.createRadialGradient(sx,sy,0,sx,sy,sr*3);
+      grad.addColorStop(0,'rgba(255,255,255,0.8)');
+      grad.addColorStop(0.4,'rgba(232,204,128,0.4)');
+      grad.addColorStop(1,'rgba(201,168,76,0)');
+      genCtx.fillStyle = grad;
+      genCtx.beginPath(); genCtx.arc(sx,sy,sr*3,0,TAU); genCtx.fill();
+
+      // labels
+      genCtx.fillStyle = 'rgba(201,168,76,0.7)';
+      genCtx.font = '13px "Cormorant Garamond"';
+      const labA = surfPt(uBase, PI*0.5);
+      const [lax,lay] = p3d(labA[0], labA[1], labA[2]);
+      genCtx.fillText(`a${k+1}`, lax+5, lay+4);
+      genCtx.fillStyle = 'rgba(60,184,195,0.7)';
+      const midU = (uStart + uEnd) / 2;
+      const labB = surfPt(midU, 0);
+      const [lbx,lby] = p3d(labB[0], labB[1], labB[2]);
+      genCtx.fillText(`b${k+1}`, lbx+5, lby-6);
+    }
+  }
+
+  requestAnimationFrame(animateGenus);
+})();
+
+updateGenus(1);
+
+// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+// §8 — ANALYSIS SITUS CANVAS (dual cell decomposition)
+// ═══════════════════════════════════════════════════
+(function initAnalysisSitus() {
+  const c = document.getElementById('analysisSitusCanvas');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  let t = 0;
+
+  // Build a triangulated surface (icosahedron-like mesh on a sphere projection)
+  const NR = 5, NC = 8;
+  function gridVerts() {
+    const verts = [];
+    for (let r = 0; r <= NR; r++) {
+      for (let ci = 0; ci < NC; ci++) {
+        const u = (ci / NC) * TAU;
+        const v = (r / NR) * PI;
+        verts.push([Math.sin(v)*Math.cos(u), Math.sin(v)*Math.sin(u), Math.cos(v)]);
+      }
+    }
+    return verts;
+  }
+  function gridFaces() {
+    const faces = [];
+    for (let r = 0; r < NR; r++) {
+      for (let ci = 0; ci < NC; ci++) {
+        const a = r * NC + ci;
+        const b = r * NC + (ci + 1) % NC;
+        const c = (r + 1) * NC + ci;
+        const d = (r + 1) * NC + (ci + 1) % NC;
+        faces.push([a, b, c]);
+        faces.push([b, d, c]);
+      }
+    }
+    return faces;
+  }
+
+  const verts = gridVerts();
+  const faces = gridFaces();
+
+  function proj(p, ry, rx, scale, cx, cy) {
+    let [x,y,z] = p;
+    let x2=x*Math.cos(ry)-z*Math.sin(ry), z2=x*Math.sin(ry)+z*Math.cos(ry);
+    let y2=y*Math.cos(rx)-z2*Math.sin(rx), z3=y*Math.sin(rx)+z2*Math.cos(rx);
+    const d=3+z3;
+    return [cx+x2*scale/d, cy+y2*scale/d, z3];
+  }
+
+  function draw() {
+    t += 0.005;
+    const w=c.width, h=c.height;
+    ctx.clearRect(0,0,w,h);
+    const ry=t*0.4, rx=0.5+Math.sin(t*0.2)*0.15;
+    const scale=Math.min(w,h)*0.55, cx=w/2, cy=h/2;
+
+    const pv = verts.map(v => proj(v, ry, rx, scale, cx, cy));
+
+    // Sort faces by average z for painter's algorithm
+    const sortedFaces = faces.map((f,i) => {
+      const az = (pv[f[0]][2]+pv[f[1]][2]+pv[f[2]][2])/3;
+      return {f, z: az, i};
+    }).sort((a,b) => a.z - b.z);
+
+    // Draw each face and its dual
+    sortedFaces.forEach(({f}) => {
+      const [a,b,cc] = f;
+      // face fill
+      ctx.fillStyle = 'rgba(196,122,138,0.04)';
+      ctx.strokeStyle = 'rgba(201,168,76,0.2)';
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(pv[a][0],pv[a][1]);
+      ctx.lineTo(pv[b][0],pv[b][1]);
+      ctx.lineTo(pv[cc][0],pv[cc][1]);
+      ctx.closePath();
+      ctx.fill(); ctx.stroke();
+
+      // Dual vertex at face center
+      const dx=(pv[a][0]+pv[b][0]+pv[cc][0])/3;
+      const dy=(pv[a][1]+pv[b][1]+pv[cc][1])/3;
+      ctx.fillStyle = 'rgba(60,184,195,0.5)';
+      ctx.beginPath(); ctx.arc(dx, dy, 2.5, 0, TAU); ctx.fill();
+    });
+
+    // Draw dual edges (connect face centers of adjacent faces)
+    ctx.strokeStyle = 'rgba(60,184,195,0.18)';
+    ctx.lineWidth = 0.8;
+    for (let i = 0; i < faces.length; i++) {
+      for (let j = i+1; j < faces.length; j++) {
+        // check if they share an edge
+        const shared = faces[i].filter(v => faces[j].includes(v));
+        if (shared.length === 2) {
+          const c1x = (pv[faces[i][0]][0]+pv[faces[i][1]][0]+pv[faces[i][2]][0])/3;
+          const c1y = (pv[faces[i][0]][1]+pv[faces[i][1]][1]+pv[faces[i][2]][1])/3;
+          const c2x = (pv[faces[j][0]][0]+pv[faces[j][1]][0]+pv[faces[j][2]][0])/3;
+          const c2y = (pv[faces[j][0]][1]+pv[faces[j][1]][1]+pv[faces[j][2]][1])/3;
+          ctx.beginPath(); ctx.moveTo(c1x,c1y); ctx.lineTo(c2x,c2y); ctx.stroke();
+        }
+      }
+    }
+
+    // Original vertices (gold, brighter)
+    pv.forEach(([px,py,pz]) => {
+      const bright = 0.35 + 0.35*(1+pz)/2;
+      ctx.fillStyle = `rgba(201,168,76,${bright})`;
+      ctx.shadowColor = 'rgba(201,168,76,0.3)';
+      ctx.shadowBlur = 4;
+      ctx.beginPath(); ctx.arc(px, py, 3, 0, TAU); ctx.fill();
+      ctx.shadowBlur = 0;
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ═══════════════════════════════════════════════════
+// §8b — POINCARÉ HOMOLOGY SPHERE (dodecahedron)
+// ═══════════════════════════════════════════════════
+(function initHomologySphere() {
+  const c = document.getElementById('homologySphereCanvas');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  let t = 0;
+
+  const phi = (1+Math.sqrt(5))/2;
+  // Dodecahedron vertices
+  const dv = [];
+  for (let s1 of [-1,1]) for (let s2 of [-1,1]) for (let s3 of [-1,1]) dv.push([s1,s2,s3]);
+  for (let s1 of [-1,1]) for (let s2 of [-1,1]) {
+    dv.push([0, s1/phi, s2*phi]);
+    dv.push([s1/phi, s2*phi, 0]);
+    dv.push([s1*phi, 0, s2/phi]);
+  }
+  // normalize
+  const maxR = Math.max(...dv.map(v=>Math.hypot(...v)));
+  const nv = dv.map(v=>v.map(x=>x/maxR));
+
+  // edges
+  const edges = [];
+  for (let i=0;i<nv.length;i++) for (let j=i+1;j<nv.length;j++) {
+    const d=Math.hypot(nv[i][0]-nv[j][0],nv[i][1]-nv[j][1],nv[i][2]-nv[j][2]);
+    if (d < 0.78) edges.push([i,j]);
+  }
+
+  // pentagonal faces (find cycles of 5)
+  const adj={};
+  nv.forEach((_,i)=>adj[i]=new Set());
+  edges.forEach(([a,b])=>{adj[a].add(b);adj[b].add(a)});
+
+  const pentFaces = [];
+  const faceSet = new Set();
+  for (let a=0;a<nv.length;a++) {
+    for (const b of adj[a]) { if(b<=a) continue;
+      for (const c2 of adj[b]) { if(c2<=a||c2===a) continue;
+        for (const d of adj[c2]) { if(d<=a||d===b||d===a) continue;
+          for (const e of adj[d]) { if(e<=a||e===c2||e===b) continue;
+            if (adj[e].has(a)) {
+              const face = [a,b,c2,d,e].sort((x,y)=>x-y);
+              const key = face.join(',');
+              if (!faceSet.has(key) && face.length===5) {
+                // verify coplanar (roughly)
+                faceSet.add(key);
+                pentFaces.push([a,b,c2,d,e]);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // pair opposite faces for identification arrows
+  function faceCenter(f) {
+    const c=[0,0,0];
+    f.forEach(i=>{c[0]+=nv[i][0];c[1]+=nv[i][1];c[2]+=nv[i][2]});
+    return c.map(x=>x/f.length);
+  }
+  const faceCenters = pentFaces.map(faceCenter);
+  const pairs = [];
+  const paired = new Set();
+  for (let i=0;i<faceCenters.length;i++) {
+    if (paired.has(i)) continue;
+    for (let j=i+1;j<faceCenters.length;j++) {
+      if (paired.has(j)) continue;
+      // opposite faces have centers summing to ~0
+      const s = Math.hypot(faceCenters[i][0]+faceCenters[j][0],
+                           faceCenters[i][1]+faceCenters[j][1],
+                           faceCenters[i][2]+faceCenters[j][2]);
+      if (s < 0.3) { pairs.push([i,j]); paired.add(i); paired.add(j); break; }
+    }
+  }
+
+  function proj(p,ry,rx,scale,cx,cy) {
+    let [x,y,z]=p;
+    let x2=x*Math.cos(ry)-z*Math.sin(ry),z2=x*Math.sin(ry)+z*Math.cos(ry);
+    let y2=y*Math.cos(rx)-z2*Math.sin(rx),z3=y*Math.sin(rx)+z2*Math.cos(rx);
+    const d=3.5+z3;
+    return [cx+x2*scale/d,cy+y2*scale/d,z3];
+  }
+
+  const pairColors = [
+    ['rgba(201,168,76,0.25)','rgba(201,168,76,0.5)'],
+    ['rgba(60,184,195,0.25)','rgba(60,184,195,0.5)'],
+    ['rgba(196,122,138,0.25)','rgba(196,122,138,0.5)'],
+    ['rgba(126,200,164,0.25)','rgba(126,200,164,0.5)'],
+    ['rgba(139,126,200,0.25)','rgba(139,126,200,0.5)'],
+    ['rgba(200,168,85,0.25)','rgba(200,168,85,0.5)'],
+  ];
+
+  function draw() {
+    t += 0.004;
+    const w=c.width, h=c.height;
+    ctx.clearRect(0,0,w,h);
+    const ry=t*0.35+0.3, rx=0.55+Math.sin(t*0.15)*0.12;
+    const scale=Math.min(w,h)*0.52, cx=w/2, cy=h/2;
+    const pv = nv.map(v=>proj(v,ry,rx,scale,cx,cy));
+
+    // Draw faces with paired colors
+    const sortedPairs = [...pairs].sort((a,b) => {
+      const za = (faceCenters[a[0]][2]+faceCenters[a[1]][2]);
+      const zb = (faceCenters[b[0]][2]+faceCenters[b[1]][2]);
+      return za-zb;
+    });
+
+    pentFaces.forEach((face, fi) => {
+      let pairIdx = pairs.findIndex(p => p[0]===fi||p[1]===fi);
+      if (pairIdx<0) pairIdx=0;
+      const col = pairColors[pairIdx % pairColors.length];
+
+      // draw face polygon
+      ctx.fillStyle = col[0];
+      ctx.strokeStyle = col[1];
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      face.forEach((vi,k) => {
+        k===0?ctx.moveTo(pv[vi][0],pv[vi][1]):ctx.lineTo(pv[vi][0],pv[vi][1]);
+      });
+      ctx.closePath();
+      ctx.fill(); ctx.stroke();
+    });
+
+    // edges
+    ctx.strokeStyle = 'rgba(201,168,76,0.35)';
+    ctx.lineWidth = 1;
+    edges.forEach(([i,j]) => {
+      ctx.beginPath();ctx.moveTo(pv[i][0],pv[i][1]);ctx.lineTo(pv[j][0],pv[j][1]);ctx.stroke();
+    });
+
+    // identification arrows between paired face centers
+    pairs.forEach(([fi,fj], pi) => {
+      const c1 = faceCenter(pentFaces[fi]);
+      const c2 = faceCenter(pentFaces[fj]);
+      const [p1x,p1y] = proj(c1,ry,rx,scale,cx,cy);
+      const [p2x,p2y] = proj(c2,ry,rx,scale,cx,cy);
+      const col = pairColors[pi % pairColors.length][1];
+
+      // dashed line
+      ctx.strokeStyle = col;
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4,4]);
+      ctx.beginPath(); ctx.moveTo(p1x,p1y); ctx.lineTo(p2x,p2y); ctx.stroke();
+      ctx.setLineDash([]);
+
+      // twist indicator (small arc at midpoint)
+      const mx=(p1x+p2x)/2, my=(p1y+p2y)/2;
+      ctx.strokeStyle = col;
+      ctx.lineWidth = 1.5;
+      const sparkPhase = Math.sin(t*3+pi)*0.5+0.5;
+      const grad = ctx.createRadialGradient(mx,my,0,mx,my,8);
+      grad.addColorStop(0, col.replace('0.5', String(0.6*sparkPhase)));
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath(); ctx.arc(mx,my,8,0,TAU); ctx.fill();
+    });
+
+    // vertices
+    pv.forEach(([px,py,pz]) => {
+      const b = 0.3+0.3*(1+pz)/2;
+      ctx.fillStyle = `rgba(232,204,128,${b})`;
+      ctx.beginPath(); ctx.arc(px,py,2.5,0,TAU); ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ═══════════════════════════════════════════════════
+// §8b — HEEGAARD SPLITTING CANVAS
+// ═══════════════════════════════════════════════════
+(function initHeegaard() {
+  const c = document.getElementById('heegaardCanvas');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  let t = 0;
+
+  function draw() {
+    t += 0.005;
+    const w=c.width, h=c.height;
+    ctx.clearRect(0,0,w,h);
+    const cx=w/2, cy=h/2;
+
+    // Draw two genus-2 handlebodies separated by a surface
+    const sep = Math.sin(t*0.8)*8; // gentle breathing
+
+    // Upper handlebody (gold)
+    ctx.save();
+    ctx.translate(cx, cy - 20 + sep);
+    drawHandlebody(ctx, 0, 0, 1, t, 'rgba(201,168,76,', w);
+    ctx.restore();
+
+    // Lower handlebody (cyan)
+    ctx.save();
+    ctx.translate(cx, cy + 20 - sep);
+    ctx.scale(1, -1);
+    drawHandlebody(ctx, 0, 0, 1, t, 'rgba(60,184,195,', w);
+    ctx.restore();
+
+    // Splitting surface (bright line between)
+    ctx.strokeStyle = 'rgba(232,204,128,0.5)';
+    ctx.lineWidth = 1.5;
+    ctx.shadowColor = 'rgba(232,204,128,0.3)';
+    ctx.shadowBlur = 8;
+    ctx.beginPath();
+    for (let i = 0; i <= 100; i++) {
+      const x = (i/100 - 0.5) * w * 0.7 + cx;
+      const y = cy + Math.sin(i/100*TAU*2 + t) * 3;
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Labels
+    ctx.fillStyle = 'rgba(201,168,76,0.6)';
+    ctx.font = '13px "Cormorant Garamond"';
+    ctx.textAlign = 'right';
+    ctx.fillText('Handlebody H₁', cx + w*0.33, cy - 65);
+    ctx.fillStyle = 'rgba(60,184,195,0.6)';
+    ctx.fillText('Handlebody H₂', cx + w*0.33, cy + 78);
+    ctx.fillStyle = 'rgba(232,204,128,0.6)';
+    ctx.font = 'italic 12px "Cormorant Garamond"';
+    ctx.fillText('Σ₂', cx + w*0.36, cy + 4);
+    ctx.textAlign = 'start';
+
+    requestAnimationFrame(draw);
+  }
+
+  function drawHandlebody(ctx, x, y, scale, time, colBase, canW) {
+    const spread = canW * 0.13;
+    // Two torus handles
+    for (let k = 0; k < 2; k++) {
+      const hx = (k - 0.5) * spread * 2;
+      // handle arch
+      ctx.strokeStyle = colBase + '0.35)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      for (let i = 0; i <= 30; i++) {
+        const ang = (i/30) * PI;
+        const px = hx + Math.cos(ang) * spread * 0.7;
+        const py = -Math.sin(ang) * 40 * scale - 8;
+        i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+      }
+      ctx.stroke();
+
+      // Handle tube effect
+      ctx.strokeStyle = colBase + '0.15)';
+      ctx.beginPath();
+      for (let i = 0; i <= 30; i++) {
+        const ang = (i/30) * PI;
+        const px = hx + Math.cos(ang) * spread * 0.5;
+        const py = -Math.sin(ang) * 28 * scale - 8;
+        i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+      }
+      ctx.stroke();
+
+      // cycle on handle (animated)
+      const phase = time * 0.6 + k * PI;
+      ctx.strokeStyle = colBase + '0.7)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let i = 0; i <= 20; i++) {
+        const ang = (i/20) * TAU;
+        const px = hx + Math.cos(phase) * spread * 0.1 + Math.cos(ang) * 8;
+        const py = -30 * scale - 8 + Math.sin(ang) * 12;
+        i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+      }
+      ctx.stroke();
+    }
+
+    // Connecting body
+    const bodyW = spread * 2.2;
+    ctx.fillStyle = colBase + '0.05)';
+    ctx.strokeStyle = colBase + '0.2)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, bodyW, 15 * scale, 0, 0, PI, true);
+    ctx.fill(); ctx.stroke();
+  }
+
+  draw();
+})();
+
+// ═══════════════════════════════════════════════════
+// §8b — BETTI DUALITY FIGURES (three small canvases)
+// ═══════════════════════════════════════════════════
+(function initBettiFigs() {
+  const configs = [
+    { id: 'figBetti', betti: [1,0,1], name: 'S²', n: 2 },
+    { id: 'figTorus', betti: [1,2,1], name: 'T²', n: 2 },
+    { id: 'figS3', betti: [1,0,0,1], name: 'S³', n: 3 },
+  ];
+  let t = 0;
+
+  function drawFig(cv, cfg) {
+    const ctx = cv.getContext('2d');
+    const w = cv.width, h = cv.height;
+    ctx.clearRect(0,0,w,h);
+    const cx = w/2, cy = h/2;
+
+    const n = cfg.betti.length;
+    const barW = 32, gap = 16;
+    const totalW = n * barW + (n-1) * gap;
+    const startX = cx - totalW/2;
+
+    // Draw Betti number bars
+    cfg.betti.forEach((b, k) => {
+      const x = startX + k * (barW + gap);
+      const maxH = 80;
+      const barH = Math.max(8, b * 35);
+      const y = cy + 20 - barH;
+
+      // bar
+      const isTop = k <= Math.floor((n-1)/2);
+      const pairK = n - 1 - k;
+      const isPaired = cfg.betti[k] === cfg.betti[pairK];
+
+      ctx.fillStyle = isTop ? 'rgba(201,168,76,0.25)' : 'rgba(60,184,195,0.25)';
+      ctx.strokeStyle = isTop ? 'rgba(201,168,76,0.5)' : 'rgba(60,184,195,0.5)';
+      ctx.lineWidth = 1;
+      const rr = 4;
+      ctx.beginPath();
+      ctx.moveTo(x+rr, y); ctx.lineTo(x+barW-rr, y);
+      ctx.arcTo(x+barW,y, x+barW,y+rr, rr);
+      ctx.lineTo(x+barW, y+barH-rr);
+      ctx.arcTo(x+barW,y+barH, x+barW-rr,y+barH, rr);
+      ctx.lineTo(x+rr, y+barH);
+      ctx.arcTo(x,y+barH, x,y+barH-rr, rr);
+      ctx.lineTo(x, y+rr);
+      ctx.arcTo(x,y, x+rr,y, rr);
+      ctx.fill(); ctx.stroke();
+
+      // value
+      ctx.fillStyle = isTop ? 'rgba(201,168,76,0.9)' : 'rgba(60,184,195,0.9)';
+      ctx.font = '18px "Cormorant Garamond"';
+      ctx.textAlign = 'center';
+      ctx.fillText(b, x + barW/2, y - 8);
+
+      // label
+      ctx.fillStyle = 'rgba(124,118,147,0.7)';
+      ctx.font = '11px "JetBrains Mono"';
+      ctx.fillText('β' + k, x + barW/2, cy + 38);
+    });
+
+    // Draw duality arcs
+    for (let k = 0; k < Math.floor(n/2); k++) {
+      const pairK = n - 1 - k;
+      if (k === pairK) continue;
+      const x1 = startX + k * (barW + gap) + barW/2;
+      const x2 = startX + pairK * (barW + gap) + barW/2;
+      const arcY = cy + 55 + k * 12;
+
+      ctx.strokeStyle = `rgba(232,204,128,${0.25 + 0.15*Math.sin(t*3+k)})`;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3,3]);
+      ctx.beginPath();
+      ctx.moveTo(x1, cy + 42);
+      ctx.quadraticCurveTo((x1+x2)/2, arcY, x2, cy + 42);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // "=" sign
+      ctx.fillStyle = 'rgba(232,204,128,0.5)';
+      ctx.font = '10px "JetBrains Mono"';
+      ctx.textAlign = 'center';
+      ctx.fillText('=', (x1+x2)/2, arcY - 2);
+    }
+
+    // Title
+    ctx.fillStyle = 'rgba(237,229,216,0.7)';
+    ctx.font = 'italic 14px "Cormorant Garamond"';
+    ctx.textAlign = 'center';
+    ctx.fillText(cfg.name, cx, 22);
+
+    ctx.textAlign = 'start';
+  }
+
+  function animate() {
+    t += 0.01;
+    configs.forEach(cfg => {
+      const cv = document.getElementById(cfg.id);
+      if (cv) drawFig(cv, cfg);
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+// §10 — INTERACTIVE POINCARÉ HOMOLOGY SPHERE
+// ═══════════════════════════════════════════════════
+(function initHomSphereInteractive() {
+  const c = document.getElementById('homSphereInteractive');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  let t = 0;
+  let hsRotX = 0.5, hsRotY = 0, hsDrag = false, hsLastX = 0, hsLastY = 0;
+
+  c.addEventListener('mousedown', e => { hsDrag=true; hsLastX=e.clientX; hsLastY=e.clientY; c.style.cursor='grabbing'; });
+  c.addEventListener('mousemove', e => { if(!hsDrag)return; hsRotY+=(e.clientX-hsLastX)*0.008; hsRotX+=(e.clientY-hsLastY)*0.008; hsLastX=e.clientX; hsLastY=e.clientY; });
+  c.addEventListener('mouseup', () => { hsDrag=false; c.style.cursor='grab'; });
+  c.addEventListener('mouseleave', () => { hsDrag=false; c.style.cursor='grab'; });
+  c.addEventListener('touchstart', e => { hsDrag=true; hsLastX=e.touches[0].clientX; hsLastY=e.touches[0].clientY; }, {passive:true});
+  c.addEventListener('touchmove', e => { if(!hsDrag)return; const tt=e.touches[0]; hsRotY+=(tt.clientX-hsLastX)*0.008; hsRotX+=(tt.clientY-hsLastY)*0.008; hsLastX=tt.clientX; hsLastY=tt.clientY; }, {passive:true});
+  c.addEventListener('touchend', () => hsDrag=false);
+
+  // Dodecahedron vertices
+  const phi = (1+Math.sqrt(5))/2;
+  const dv = [];
+  for(let s1 of[-1,1])for(let s2 of[-1,1])for(let s3 of[-1,1]) dv.push([s1,s2,s3]);
+  for(let s1 of[-1,1])for(let s2 of[-1,1]){
+    dv.push([0,s1/phi,s2*phi]); dv.push([s1/phi,s2*phi,0]); dv.push([s1*phi,0,s2/phi]);
+  }
+  const maxR = Math.max(...dv.map(v=>Math.hypot(...v)));
+  const nv = dv.map(v=>v.map(x=>x/maxR));
+
+  // Edges
+  const edges = [];
+  for(let i=0;i<nv.length;i++) for(let j=i+1;j<nv.length;j++){
+    const d=Math.hypot(nv[i][0]-nv[j][0],nv[i][1]-nv[j][1],nv[i][2]-nv[j][2]);
+    if(d<0.78) edges.push([i,j]);
+  }
+
+  // Adjacency
+  const adj={};
+  nv.forEach((_,i)=>adj[i]=new Set());
+  edges.forEach(([a,b])=>{adj[a].add(b);adj[b].add(a)});
+
+  // Find pentagonal faces (cycles of 5)
+  const pentFaces = [];
+  const faceSet = new Set();
+  for(let a=0;a<nv.length;a++){
+    for(const b of adj[a]){ if(b<=a)continue;
+      for(const c2 of adj[b]){ if(c2<=a||c2===a)continue;
+        for(const d of adj[c2]){ if(d<=a||d===b||d===a)continue;
+          for(const e of adj[d]){ if(e<=a||e===c2||e===b)continue;
+            if(adj[e].has(a)){
+              const face=[a,b,c2,d,e].sort((x,y)=>x-y);
+              const key=face.join(',');
+              if(!faceSet.has(key)){faceSet.add(key);pentFaces.push([a,b,c2,d,e]);}
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Face centers & pair opposite faces
+  function fc(f){const cc=[0,0,0];f.forEach(i=>{cc[0]+=nv[i][0];cc[1]+=nv[i][1];cc[2]+=nv[i][2]});return cc.map(x=>x/f.length);}
+  const faceCenters = pentFaces.map(fc);
+  const pairs = [];
+  const paired = new Set();
+  for(let i=0;i<faceCenters.length;i++){
+    if(paired.has(i))continue;
+    for(let j=i+1;j<faceCenters.length;j++){
+      if(paired.has(j))continue;
+      const s=Math.hypot(faceCenters[i][0]+faceCenters[j][0],faceCenters[i][1]+faceCenters[j][1],faceCenters[i][2]+faceCenters[j][2]);
+      if(s<0.3){pairs.push([i,j]);paired.add(i);paired.add(j);break;}
+    }
+  }
+
+  // Assign face to pair index
+  const faceToColor = new Array(pentFaces.length).fill(0);
+  pairs.forEach(([fi,fj], pi) => { faceToColor[fi]=pi; faceToColor[fj]=pi; });
+
+  const pColors = [
+    {fill:'rgba(201,168,76,0.18)',stroke:'rgba(201,168,76,0.55)'},
+    {fill:'rgba(60,184,195,0.18)',stroke:'rgba(60,184,195,0.55)'},
+    {fill:'rgba(196,122,138,0.18)',stroke:'rgba(196,122,138,0.55)'},
+    {fill:'rgba(126,200,164,0.18)',stroke:'rgba(126,200,164,0.55)'},
+    {fill:'rgba(139,126,200,0.18)',stroke:'rgba(139,126,200,0.55)'},
+    {fill:'rgba(200,168,85,0.18)',stroke:'rgba(200,168,85,0.55)'},
+  ];
+
+  function proj(p,ry,rx,s,cx,cy){
+    let [x,y,z]=p;
+    let x2=x*Math.cos(ry)-z*Math.sin(ry),z2=x*Math.sin(ry)+z*Math.cos(ry);
+    let y2=y*Math.cos(rx)-z2*Math.sin(rx),z3=y*Math.sin(rx)+z2*Math.cos(rx);
+    const d=3.5+z3;
+    return [cx+x2*s/d,cy+y2*s/d,z3];
+  }
+
+  function draw(){
+    t+=0.004;
+    const w=c.width,h=c.height;
+    ctx.clearRect(0,0,w,h);
+    const ry=(hsDrag?0:t*0.25)+hsRotY, rx=hsRotX;
+    const scale=Math.min(w,h)*0.55, cxp=w/2, cyp=h/2;
+    const pv=nv.map(v=>proj(v,ry,rx,scale,cxp,cyp));
+
+    // Sort faces by depth for painter's algorithm
+    const sorted = pentFaces.map((f,fi) => {
+      const ctr = fc(f);
+      const [,,z3] = proj(ctr,ry,rx,scale,cxp,cyp);
+      return {f,fi,z:z3};
+    }).sort((a,b)=>a.z-b.z);
+
+    // Draw faces
+    sorted.forEach(({f,fi}) => {
+      const pi = faceToColor[fi] % pColors.length;
+      const col = pColors[pi];
+      ctx.fillStyle = col.fill;
+      ctx.strokeStyle = col.stroke;
+      ctx.lineWidth = 1.2;
+
+      // Order vertices around the pentagon for proper polygon
+      const ctr = fc(f);
+      const angles = f.map(vi => {
+        const dx = nv[vi][0]-ctr[0], dy = nv[vi][1]-ctr[1], dz = nv[vi][2]-ctr[2];
+        // project to face plane using a stable 2D basis
+        return {vi, ang: Math.atan2(
+          (pv[vi][1]-pv[f[0]][1]),
+          (pv[vi][0]-pv[f[0]][0])
+        )};
+      });
+      // Use projected positions for ordering
+      const pcx = f.reduce((s,vi)=>s+pv[vi][0],0)/f.length;
+      const pcy = f.reduce((s,vi)=>s+pv[vi][1],0)/f.length;
+      const ordered = [...f].sort((a,b) =>
+        Math.atan2(pv[a][1]-pcy, pv[a][0]-pcx) - Math.atan2(pv[b][1]-pcy, pv[b][0]-pcx)
+      );
+
+      ctx.beginPath();
+      ordered.forEach((vi,k) => k===0?ctx.moveTo(pv[vi][0],pv[vi][1]):ctx.lineTo(pv[vi][0],pv[vi][1]));
+      ctx.closePath();
+      ctx.fill(); ctx.stroke();
+
+      // Pair number at face center
+      const [fpx,fpy] = [pcx,pcy];
+      ctx.fillStyle = col.stroke;
+      ctx.font = '11px "JetBrains Mono"';
+      ctx.textAlign = 'center';
+      ctx.fillText(String(faceToColor[fi]+1), fpx, fpy+4);
+      ctx.textAlign = 'start';
+    });
+
+    // Edges
+    ctx.strokeStyle = 'rgba(232,204,128,0.25)'; ctx.lineWidth = 0.8;
+    edges.forEach(([i,j]) => {
+      ctx.beginPath(); ctx.moveTo(pv[i][0],pv[i][1]); ctx.lineTo(pv[j][0],pv[j][1]); ctx.stroke();
+    });
+
+    // Identification arrows between paired face centers
+    pairs.forEach(([fi,fj],pi) => {
+      const c1=fc(pentFaces[fi]), c2=fc(pentFaces[fj]);
+      const [p1x,p1y]=proj(c1,ry,rx,scale,cxp,cyp);
+      const [p2x,p2y]=proj(c2,ry,rx,scale,cxp,cyp);
+      const col = pColors[pi%pColors.length].stroke;
+      ctx.strokeStyle = col; ctx.lineWidth=1; ctx.setLineDash([3,4]);
+      ctx.beginPath(); ctx.moveTo(p1x,p1y); ctx.lineTo(p2x,p2y); ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Twist arrow at midpoint
+      const mx=(p1x+p2x)/2, my=(p1y+p2y)/2;
+      ctx.strokeStyle = col; ctx.lineWidth = 1.5;
+      const a0 = Math.atan2(p2y-p1y, p2x-p1x);
+      ctx.beginPath();
+      ctx.arc(mx, my, 6, a0-1.2, a0+1.2);
+      ctx.stroke();
+      // arrowhead on arc
+      const ae = a0+1.2;
+      ctx.fillStyle = col;
+      ctx.beginPath();
+      ctx.moveTo(mx+6*Math.cos(ae), my+6*Math.sin(ae));
+      ctx.lineTo(mx+10*Math.cos(ae+0.4), my+10*Math.sin(ae+0.4));
+      ctx.lineTo(mx+10*Math.cos(ae-0.8), my+10*Math.sin(ae-0.8));
+      ctx.fill();
+    });
+
+    // Vertices
+    pv.forEach(([px,py,pz]) => {
+      const b=0.25+0.25*(1+pz)/2;
+      ctx.fillStyle=`rgba(232,204,128,${b})`;
+      ctx.beginPath(); ctx.arc(px,py,2,0,TAU); ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ═══════════════════════════════════════════════════
+// §9 — FINAL CANVAS (rotating torus with all features)
+// ═══════════════════════════════════════════════════
+(function finalInit() {
+  const c = document.getElementById('finalCanvas');
+  const ctx = c.getContext('2d');
+  let t = 0;
+
+  function tp(u, v, R1, R2) {
+    return [(R1+R2*Math.cos(v))*Math.cos(u), (R1+R2*Math.cos(v))*Math.sin(u), R2*Math.sin(v)];
+  }
+
+  function proj(p, ry, rx, s, cx, cy) {
+    let [x,y,z]=p;
+    let x2=x*Math.cos(ry)-z*Math.sin(ry), z2=x*Math.sin(ry)+z*Math.cos(ry);
+    let y2=y*Math.cos(rx)-z2*Math.sin(rx), z3=y*Math.sin(rx)+z2*Math.cos(rx);
+    const d=3.2+z3;
+    return [cx+x2*s/d, cy+y2*s/d, z3];
+  }
+
+  function draw() {
+    t += 0.004;
+    const w=c.width, h=c.height;
+    ctx.clearRect(0,0,w,h);
+    const R1=1.0, R2=0.4;
+    const ry=t*0.5, rx=0.5+Math.sin(t*0.2)*0.1;
+    const scale=Math.min(w,h)*0.35, cx=w/2, cy=h/2;
+
+    // wireframe
+    ctx.strokeStyle='rgba(201,168,76,0.07)';
+    ctx.lineWidth=0.7;
+    for(let i=0;i<=36;i++){ctx.beginPath();for(let j=0;j<=20;j++){const[px,py]=proj(tp((i/36)*TAU,(j/20)*TAU,R1,R2),ry,rx,scale,cx,cy);j===0?ctx.moveTo(px,py):ctx.lineTo(px,py)}ctx.stroke()}
+    for(let j=0;j<=20;j++){ctx.beginPath();for(let i=0;i<=36;i++){const[px,py]=proj(tp((i/36)*TAU,(j/20)*TAU,R1,R2),ry,rx,scale,cx,cy);i===0?ctx.moveTo(px,py):ctx.lineTo(px,py)}ctx.stroke()}
+
+    // meridian
+    ctx.strokeStyle='rgba(201,168,76,0.7)';ctx.lineWidth=2.5;
+    ctx.shadowColor='rgba(201,168,76,0.4)';ctx.shadowBlur=10;
+    ctx.beginPath();
+    for(let j=0;j<=50;j++){const[px,py]=proj(tp(t*0.3,(j/50)*TAU,R1,R2),ry,rx,scale,cx,cy);j===0?ctx.moveTo(px,py):ctx.lineTo(px,py)}
+    ctx.stroke();
+
+    // longitude
+    ctx.strokeStyle='rgba(60,184,195,0.7)';ctx.shadowColor='rgba(60,184,195,0.4)';
+    ctx.beginPath();
+    for(let i=0;i<=60;i++){const[px,py]=proj(tp((i/60)*TAU,0,R1,R2),ry,rx,scale,cx,cy);i===0?ctx.moveTo(px,py):ctx.lineTo(px,py)}
+    ctx.stroke();
+
+    // second meridian
+    ctx.strokeStyle='rgba(201,168,76,0.4)';ctx.lineWidth=1.5;
+    ctx.beginPath();
+    for(let j=0;j<=50;j++){const[px,py]=proj(tp(t*0.3+PI,(j/50)*TAU,R1,R2),ry,rx,scale,cx,cy);j===0?ctx.moveTo(px,py):ctx.lineTo(px,py)}
+    ctx.stroke();
+
+    // second longitude
+    ctx.strokeStyle='rgba(60,184,195,0.4)';
+    ctx.beginPath();
+    for(let i=0;i<=60;i++){const[px,py]=proj(tp((i/60)*TAU,PI,R1,R2),ry,rx,scale,cx,cy);i===0?ctx.moveTo(px,py):ctx.lineTo(px,py)}
+    ctx.stroke();
+    ctx.shadowBlur=0;
+
+    // sparks at intersections
+    [[t*0.3, 0], [t*0.3, PI], [t*0.3+PI, 0], [t*0.3+PI, PI]].forEach(([u,v]) => {
+      const [sx,sy]=proj(tp(u,v,R1,R2),ry,rx,scale,cx,cy);
+      const sr=3+2*Math.sin(t*7+u+v);
+      const grad=ctx.createRadialGradient(sx,sy,0,sx,sy,sr*3);
+      grad.addColorStop(0,'rgba(255,255,255,0.8)');
+      grad.addColorStop(0.4,'rgba(232,204,128,0.4)');
+      grad.addColorStop(1,'rgba(201,168,76,0)');
+      ctx.fillStyle=grad;
+      ctx.beginPath();ctx.arc(sx,sy,sr*3,0,TAU);ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+// §11 — FOUR THEOREMS CANVAS
+// ═══════════════════════════════════════════════════
+(function initFourTheorems() {
+  const c = document.getElementById('fourTheoremsCanvas');
+  if (!c) return;
+  const ctx = c.getContext('2d');
+  let t = 0;
+
+  const nodes = [
+    { x: 450, y: 55, label: 'Poincaré Duality', sub: '1895', color: '#e8cc80', r: 38 },
+    { x: 130, y: 180, label: 'Gauss–Bonnet', sub: '∫K dA = 2πχ', color: '#c9a84c', r: 30 },
+    { x: 370, y: 260, label: 'Riemann–Roch', sub: 'χ(E) = ∫ ch·td', color: '#3cb8c3', r: 30 },
+    { x: 590, y: 310, label: 'Atiyah–Singer', sub: 'ind(D) = ∫ ch·td', color: '#c47a8a', r: 30 },
+    { x: 790, y: 195, label: 'Chern–Simons', sub: 'CS(A) mod ℤ', color: '#7ec8a4', r: 30 },
+  ];
+
+  const edges = [
+    { from: 0, to: 1, label: 'χ = Σ(-1)ᵏβₖ' },
+    { from: 0, to: 2, label: 'Serre duality' },
+    { from: 0, to: 3, label: 'Hodge ★' },
+    { from: 0, to: 4, label: 'linking form' },
+    { from: 1, to: 3, label: 'special case' },
+    { from: 2, to: 3, label: 'special case' },
+  ];
+
+  function draw() {
+    t += 0.008;
+    const w = c.width, h = c.height;
+    ctx.clearRect(0, 0, w, h);
+
+    // Draw edges
+    edges.forEach(e => {
+      const a = nodes[e.from], b = nodes[e.to];
+      const isPrimary = e.from === 0;
+      ctx.strokeStyle = isPrimary ? 'rgba(201,168,76,0.25)' : 'rgba(124,118,147,0.12)';
+      ctx.lineWidth = isPrimary ? 1.5 : 1;
+      if (!isPrimary) ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Edge label
+      const mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+      const ang = Math.atan2(b.y - a.y, b.x - a.x);
+      const ox = -Math.sin(ang) * 10, oy = Math.cos(ang) * 10;
+      ctx.fillStyle = isPrimary ? 'rgba(201,168,76,0.45)' : 'rgba(124,118,147,0.3)';
+      ctx.font = '9px "JetBrains Mono"';
+      ctx.textAlign = 'center';
+      ctx.fillText(e.label, mx + ox, my + oy);
+    });
+
+    // Draw nodes
+    nodes.forEach((n, i) => {
+      const pulse = 1 + 0.05 * Math.sin(t * 2 + i * 1.5);
+      const r = n.r * pulse;
+
+      // Glow
+      const grd = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r * 2.5);
+      grd.addColorStop(0, n.color.replace(')', ',0.12)').replace('rgb', 'rgba'));
+      grd.addColorStop(1, 'rgba(5,6,15,0)');
+      ctx.fillStyle = grd;
+      ctx.beginPath(); ctx.arc(n.x, n.y, r * 2.5, 0, TAU); ctx.fill();
+
+      // Circle
+      ctx.strokeStyle = n.color;
+      ctx.lineWidth = i === 0 ? 2 : 1.2;
+      ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, TAU); ctx.stroke();
+
+      // Fill
+      ctx.fillStyle = 'rgba(5,6,15,0.85)';
+      ctx.beginPath(); ctx.arc(n.x, n.y, r - 1, 0, TAU); ctx.fill();
+
+      // Label
+      ctx.fillStyle = n.color;
+      ctx.font = i === 0 ? 'italic 13px "Cormorant Garamond"' : 'italic 11px "Cormorant Garamond"';
+      ctx.textAlign = 'center';
+      ctx.fillText(n.label, n.x, n.y - 3);
+
+      // Sub
+      ctx.fillStyle = 'rgba(124,118,147,0.7)';
+      ctx.font = '9px "JetBrains Mono"';
+      ctx.fillText(n.sub, n.x, n.y + 12);
+    });
+
+    ctx.textAlign = 'start';
+
+    // Flowing particles along primary edges
+    edges.forEach(e => {
+      if (e.from !== 0) return;
+      const a = nodes[e.from], b = nodes[e.to];
+      const progress = ((t * 0.3 + e.to * 0.7) % 1);
+      const px = a.x + (b.x - a.x) * progress;
+      const py = a.y + (b.y - a.y) * progress;
+      const alpha = Math.sin(progress * PI) * 0.7;
+      const grd = ctx.createRadialGradient(px, py, 0, px, py, 4);
+      grd.addColorStop(0, `rgba(232,204,128,${alpha})`);
+      grd.addColorStop(1, 'rgba(232,204,128,0)');
+      ctx.fillStyle = grd;
+      ctx.beginPath(); ctx.arc(px, py, 4, 0, TAU); ctx.fill();
+    });
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ═══════════════════════════════════════════════════
+// KaTeX auto-render
+// ═══════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: '\\(', right: '\\)', display: false},
+      {left: '\\[', right: '\\]', display: true},
+      {left: '$$', right: '$$', display: true},
+    ],
+    throwOnError: false
+  });
+});
+
+// ═══════════════════════════════════════════════════
+// SCROLL REVEAL
+// ═══════════════════════════════════════════════════
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>

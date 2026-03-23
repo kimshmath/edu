@@ -22,6 +22,7 @@
 <title>드럼의 모양을 들을 수 있을까?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Space+Mono:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="drum_ios.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -42,8 +43,8 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',Georgia,se
 .hud-sep{color:var(--border);font-size:.7rem}
 #pitch-wrap{display:flex;align-items:center;gap:.5rem;background:rgba(5,6,12,.7);border:1px solid var(--border);border-radius:100px;padding:.35rem .9rem;backdrop-filter:blur(8px)}
 #pitch-label{font-family:'Space Mono',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.08em;white-space:nowrap}
-#pitch-slider{-webkit-appearance:none;width:70px;height:2px;background:var(--border);border-radius:1px;outline:none;cursor:pointer}
-#pitch-slider::-webkit-slider-thumb{-webkit-appearance:none;width:11px;height:11px;border-radius:50%;background:var(--gold);cursor:pointer;box-shadow:0 0 6px var(--gold)}
+#pitch-slider{-webkit-appearance:none;appearance:none;width:70px;height:2px;background:var(--border);border-radius:1px;outline:none;cursor:pointer}
+#pitch-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:11px;height:11px;border-radius:50%;background:var(--gold);cursor:pointer;box-shadow:0 0 6px var(--gold)}
 #pitch-val{font-family:'Space Mono',monospace;font-size:.55rem;color:var(--gold);min-width:32px}
 
 /* ===== HERO ===== */
@@ -2604,5 +2605,6 @@ self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>
     async>
   </script>
 </div>
+<script src="drum_ios_bridge.js"></script>
 </body>
 </html>
