@@ -254,6 +254,25 @@ body::before {
   color: rgba(255,255,255,0.35);
 }
 
+/* ─── Chapter Icons ─── */
+.ch-icon-wrap {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.25s, border-color 0.25s;
+}
+.chapter-card:hover .ch-icon-wrap {
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.08);
+}
+.ch-icon-wrap svg { width: 28px; height: 28px; }
+
 /* ─── Chapter List ─── */
 .chapter-list {
   display: flex;
@@ -454,7 +473,7 @@ footer {
       <div class="cat-label">Space</div>
       <div class="cat-label-ko" style="color:rgba(108,155,255,0.5)">공간</div>
       <div class="cat-desc">Geometry, topology, and the structure of space itself</div>
-      <div class="cat-count" style="color:rgba(108,155,255,0.45)">6 chapters</div>
+      <div class="cat-count" style="color:rgba(108,155,255,0.45)">5 chapters</div>
     </div>
 
     <!-- Flow -->
@@ -470,7 +489,7 @@ footer {
       <div class="cat-label">Flow</div>
       <div class="cat-label-ko" style="color:rgba(255,184,108,0.5)">흐름</div>
       <div class="cat-desc">Convergence, diffusion, and the currents beneath</div>
-      <div class="cat-count" style="color:rgba(255,184,108,0.45)">2 chapters</div>
+      <div class="cat-count" style="color:rgba(255,184,108,0.45)">3 chapters</div>
     </div>
 
     <!-- Sense -->
@@ -484,7 +503,7 @@ footer {
       <div class="cat-label">Sense</div>
       <div class="cat-label-ko" style="color:rgba(80,250,123,0.5)">감각</div>
       <div class="cat-desc">Sound, vibration, and the mathematics of perception</div>
-      <div class="cat-count" style="color:rgba(80,250,123,0.45)">2 chapters</div>
+      <div class="cat-count" style="color:rgba(80,250,123,0.45)">3 chapters</div>
     </div>
 
     <!-- Machine -->
@@ -564,12 +583,16 @@ const CATEGORIES = {
     descKo: '기하학, 위상수학, 그리고 공간 그 자체의 구조',
     icon: document.querySelector('[data-cat="space"] .cat-icon').outerHTML,
     chapters: [
-      { title: 'Banach–Tarski: F₂ on S²', titleKo: '바나흐-타르스키: 공 하나를 둘로', tagline: 'One becomes two', taglineKo: '하나가 둘이 된다', difficulty: 3, en: 'banach.html', ko: 'banach_ko.html' },
-      { title: 'Hyperbolic Space', titleKo: '쌍곡 공간', tagline: 'Where parallels multiply', taglineKo: '평행선이 무한히 존재하는 세계', difficulty: 3, en: 'hyperbolic.html', ko: 'hyperbolic_ko.html' },
-      { title: 'Shapes Have Memories', titleKo: '도형에는 기억이 있다', tagline: 'Counting invisible holes', taglineKo: '보이지 않는 구멍을 세다', difficulty: 3, en: 'homology.html', ko: 'homology_kr.html' },
-      { title: 'Through the Symplectic Looking-Glass', titleKo: '심플렉틱 거울 너머로', tagline: 'Dualities connecting worlds', taglineKo: '세계를 잇는 이중성', difficulty: 3, en: 'mirror.html', ko: 'mirror-ko.html' },
-      { title: 'Can You Measure Everything?', titleKo: '모든 것의 크기를 잴 수 있을까?', tagline: 'The paradox of volume', taglineKo: '부피의 역설', difficulty: 2, en: 'volume.html', ko: 'volume-ko.html' },
-      { title: 'Making the Sun from a Single Bean', titleKo: '콩 한 알로 태양 만들기', tagline: 'Infinity reshapes the possible', taglineKo: '무한이 가능성을 재편하다', difficulty: 3, en: 'banach-tarski.html', ko: 'banach-tarski-ko.html' },
+      { title: 'Banach–Tarski: F₂ on S²', titleKo: '바나흐-타르스키: 공 하나를 둘로', tagline: 'One becomes two', taglineKo: '하나가 둘이 된다', difficulty: 3, en: 'banach.html', ko: 'banach_ko.html',
+        icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="15" stroke="#6C9BFF" stroke-width="1" opacity="0.2" stroke-dasharray="2.5 2.5"/><circle cx="20" cy="28" r="13" stroke="#6C9BFF" stroke-width="1.3" fill="#6C9BFF08"/><circle cx="37" cy="28" r="13" stroke="#6C9BFF" stroke-width="1.3" fill="#6C9BFF08"/><path d="M28 13 L28 43" stroke="#6C9BFF" stroke-width="0.8" opacity="0.3" stroke-dasharray="2 2.5"/></svg>' },
+      { title: 'Hyperbolic Space', titleKo: '쌍곡 공간', tagline: 'Where parallels multiply', taglineKo: '평행선이 무한히 존재하는 세계', difficulty: 3, en: 'hyperbolic.html', ko: 'hyperbolic_ko.html',
+        icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="22" stroke="#6C9BFF" stroke-width="1.4" fill="#6C9BFF05"/><path d="M28 10 Q24 27 14 39" stroke="#6C9BFF" stroke-width="1.1" fill="none" opacity="0.75"/><path d="M14 39 Q28 32 42 39" stroke="#6C9BFF" stroke-width="1.1" fill="none" opacity="0.75"/><path d="M42 39 Q32 27 28 10" stroke="#6C9BFF" stroke-width="1.1" fill="none" opacity="0.75"/><path d="M28 10 Q24 27 14 39 Q28 32 42 39 Q32 27 28 10 Z" fill="#6C9BFF10"/></svg>' },
+      { title: 'Making the Sun from a Single Bean', titleKo: '콩 한 알로 태양 만들기', tagline: 'Infinity reshapes the possible', taglineKo: '무한이 가능성을 재편하다', difficulty: 3, en: 'banach-tarski.html', ko: 'banach-tarski-ko.html',
+        icon: '<svg viewBox="0 0 56 56" fill="none"><ellipse cx="10" cy="30" rx="4" ry="5.5" stroke="#6C9BFF" stroke-width="1" fill="#6C9BFF15" transform="rotate(-20 10 30)"/><path d="M17 30 L27 30" stroke="#6C9BFF" stroke-width="0.8" opacity="0.3" stroke-dasharray="1.5 1.5"/><circle cx="40" cy="28" r="12" stroke="#6C9BFF" stroke-width="1.3" fill="#6C9BFF10"/><text x="40" y="31" text-anchor="middle" fill="#6C9BFF" font-size="8" font-family="serif" opacity="0.3">∞</text></svg>' },
+      { title: 'Shapes Have Memories', titleKo: '도형에는 기억이 있다', tagline: 'Counting invisible holes', taglineKo: '보이지 않는 구멍을 세다', difficulty: 3, en: 'homology.html', ko: 'homology_kr.html',
+        icon: '<svg viewBox="0 0 56 56" fill="none"><ellipse cx="28" cy="28" rx="23" ry="14" stroke="#6C9BFF" stroke-width="1.2" fill="#6C9BFF05"/><ellipse cx="28" cy="28" rx="9" ry="5" stroke="#6C9BFF" stroke-width="1" opacity="0.4"/><ellipse cx="40" cy="28" rx="5" ry="11" stroke="#6C9BFF" stroke-width="1.8" opacity="0.7"/><ellipse cx="28" cy="30" rx="16" ry="8" stroke="#6C9BFF" stroke-width="1.4" opacity="0.45" stroke-dasharray="3 2"/></svg>' },
+      { title: 'Through the Symplectic Looking-Glass', titleKo: '심플렉틱 거울 너머로', tagline: 'Dualities connecting worlds', taglineKo: '세계를 잇는 이중성', difficulty: 3, en: 'mirror.html', ko: 'mirror-ko.html',
+        icon: '<svg viewBox="0 0 56 56" fill="none"><ellipse cx="20" cy="28" rx="12" ry="16" stroke="#6C9BFF" stroke-width="0.9" fill="none" opacity="0.6" transform="rotate(-15 20 28)"/><ellipse cx="20" cy="28" rx="8" ry="11" stroke="#6C9BFF" stroke-width="0.7" fill="none" opacity="0.45" transform="rotate(-15 20 28)"/><circle cx="20" cy="28" r="1.5" fill="#6C9BFF" opacity="0.5"/><line x1="28" y1="4" x2="28" y2="52" stroke="#6C9BFF" stroke-width="0.8" opacity="0.25" stroke-dasharray="2 2"/><ellipse cx="36" cy="28" rx="12" ry="16" stroke="#6C9BFF" stroke-width="0.9" fill="none" opacity="0.3" transform="rotate(15 36 28)"/><circle cx="36" cy="28" r="1.5" fill="#6C9BFF" opacity="0.2"/></svg>' },
     ]
   },
   flow: {
@@ -578,8 +601,12 @@ const CATEGORIES = {
     descKo: '수렴, 확산, 그리고 그 아래 흐르는 조류',
     icon: document.querySelector('[data-cat="flow"] .cat-icon').outerHTML,
     chapters: [
-      { title: 'Central Limit Theorem', titleKo: '왜 여론조사는 항상 비슷할까?', tagline: 'The inevitable bell curve', taglineKo: '피할 수 없는 종 곡선', difficulty: 1, en: 'clt.html', ko: 'clt_ko.html' },
-      { title: 'Diffusion I', titleKo: '정보는 어떻게 퍼지는가?', tagline: 'One equation rules them all', taglineKo: '하나의 방정식이 모든 것을 지배한다', difficulty: 2, en: 'diffusion-1.html', ko: 'diffusion-1-ko.html', linkTo: '→ continues in Machine', linkToKo: '→ Machine에서 계속' },
+      { title: 'Central Limit Theorem', titleKo: '왜 여론조사는 항상 비슷할까?', tagline: 'The inevitable bell curve', taglineKo: '피할 수 없는 종 곡선', difficulty: 1, en: 'clt.html', ko: 'clt_ko.html',
+        icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M4 48 L7 48 L10 47.6 L13 46.4 L16 43.4 L19 37.4 L22 28.2 L25 18.4 L28 14 L31 18.4 L34 28.2 L37 37.4 L40 43.4 L43 46.4 L46 47.6 L49 48 L52 48" stroke="#FFB86C" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 48 L7 48 L10 47.6 L13 46.4 L16 43.4 L19 37.4 L22 28.2 L25 18.4 L28 14 L31 18.4 L34 28.2 L37 37.4 L40 43.4 L43 46.4 L46 47.6 L49 48 L52 48 L52 49 L4 49 Z" fill="#FFB86C12"/></svg>' },
+      { title: 'Can You Measure Everything?', titleKo: '모든 것의 크기를 잴 수 있을까?', tagline: 'The paradox of volume', taglineKo: '부피의 역설', difficulty: 2, en: 'volume.html', ko: 'volume-ko.html',
+        icon: '<svg viewBox="0 0 56 56" fill="none"><rect x="8" y="10" width="40" height="5" rx="2" fill="#FFB86C" opacity="0.5"/><rect x="8" y="27" width="6" height="4" rx="1" fill="#FFB86C" opacity="0.35"/><rect x="17" y="27" width="3" height="4" rx="1" fill="#FFB86C" opacity="0.25"/><rect x="23" y="27" width="8" height="4" rx="1" fill="#FFB86C" opacity="0.35"/><rect x="34" y="27" width="2" height="4" rx="1" fill="#FFB86C" opacity="0.2"/><rect x="39" y="27" width="5" height="4" rx="1" fill="#FFB86C" opacity="0.3"/><text x="28" y="45" text-anchor="middle" fill="#FFB86C" font-size="14" font-family="serif" opacity="0.25">?</text></svg>' },
+      { title: 'Diffusion I', titleKo: '정보는 어떻게 퍼지는가?', tagline: 'One equation rules them all', taglineKo: '하나의 방정식이 모든 것을 지배한다', difficulty: 2, en: 'diffusion-1.html', ko: 'diffusion-1-ko.html', linkTo: '→ continues in Machine', linkToKo: '→ Machine에서 계속',
+        icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="2.5" fill="#FFB86C" opacity="0.7"/><circle cx="28" cy="28" r="7" stroke="#FFB86C" stroke-width="1.3" opacity="0.55"/><circle cx="28" cy="28" r="12" stroke="#FFB86C" stroke-width="1.1" opacity="0.4"/><circle cx="28" cy="28" r="17" stroke="#FFB86C" stroke-width="0.9" opacity="0.25"/><circle cx="28" cy="28" r="22" stroke="#FFB86C" stroke-width="0.7" opacity="0.13"/></svg>' },
     ]
   },
   sense: {
@@ -588,8 +615,12 @@ const CATEGORIES = {
     descKo: '소리, 진동, 그리고 지각의 수학',
     icon: document.querySelector('[data-cat="sense"] .cat-icon').outerHTML,
     chapters: [
-      { title: 'Shape of a Drum', titleKo: '드럼의 모양을 들을 수 있을까?', tagline: 'Hearing geometry', taglineKo: '기하학을 듣다', difficulty: 2, en: 'drum.html', ko: 'drum_ko.html' },
-      { title: 'Mathematics of Sound', titleKo: '피타고라스에서 스마트폰까지', tagline: 'From Pythagoras to your phone', taglineKo: '피타고라스에서 스마트폰까지', difficulty: 1, en: 'sound.html', ko: 'sound_ko.html' },
+      { title: 'Shape of a Drum', titleKo: '드럼의 모양을 들을 수 있을까?', tagline: 'Hearing geometry', taglineKo: '기하학을 듣다', difficulty: 2, en: 'drum.html', ko: 'drum_ko.html',
+        icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="22" stroke="#50FA7B" stroke-width="1.4" fill="#50FA7B05"/><line x1="28" y1="6" x2="28" y2="50" stroke="#50FA7B" stroke-width="1.1" opacity="0.5"/><circle cx="28" cy="28" r="13.5" stroke="#50FA7B" stroke-width="1" fill="none" opacity="0.45"/></svg>' },
+      { title: 'Mathematics of Sound', titleKo: '피타고라스에서 스마트폰까지', tagline: 'From Pythagoras to your phone', taglineKo: '피타고라스에서 스마트폰까지', difficulty: 1, en: 'sound.html', ko: 'sound_ko.html',
+        icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M3 17 Q10 9 17 17 Q24 25 31 17 Q38 9 45 17 Q52 25 56 17" stroke="#50FA7B" stroke-width="1.4" fill="none" opacity="0.7" stroke-linecap="round"/><path d="M3 30 Q6.5 24 10 30 Q13.5 36 17 30 Q20.5 24 24 30 Q27.5 36 31 30 Q34.5 24 38 30 Q41.5 36 45 30 Q48.5 24 52 30 Q55 36 56 30" stroke="#50FA7B" stroke-width="1" fill="none" opacity="0.45" stroke-linecap="round"/><path d="M3 42 Q5 39 7 42 Q9 45 11 42 Q13 39 15 42 Q17 45 19 42 Q21 39 23 42 Q25 45 27 42 Q29 39 31 42 Q33 45 35 42 Q37 39 39 42 Q41 45 43 42 Q45 39 47 42 Q49 45 51 42 Q53 39 56 42" stroke="#50FA7B" stroke-width="0.7" fill="none" opacity="0.25" stroke-linecap="round"/></svg>' },
+      { title: 'Searching for Perfect Illusions', titleKo: '완벽한 환상을 찾아서', tagline: 'The mathematics of vision', taglineKo: '보는 것의 수학', difficulty: 2, en: 'illusion.html', ko: 'illusion.html',
+        icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="22" r="2" fill="#50FA7B" opacity="0.6"/><line x1="28" y1="22" x2="4" y2="50" stroke="#50FA7B" stroke-width="0.9" opacity="0.4"/><line x1="28" y1="22" x2="52" y2="50" stroke="#50FA7B" stroke-width="0.9" opacity="0.4"/><line x1="28" y1="22" x2="12" y2="50" stroke="#50FA7B" stroke-width="0.6" opacity="0.25"/><line x1="28" y1="22" x2="44" y2="50" stroke="#50FA7B" stroke-width="0.6" opacity="0.25"/><line x1="28" y1="22" x2="28" y2="50" stroke="#50FA7B" stroke-width="0.7" opacity="0.3"/><path d="M16 22 Q22 14 28 12 Q34 14 40 22" stroke="#50FA7B" stroke-width="1.2" fill="none" opacity="0.55"/><path d="M16 22 Q22 30 28 32 Q34 30 40 22" stroke="#50FA7B" stroke-width="1.2" fill="none" opacity="0.55"/><circle cx="28" cy="22" r="5.5" stroke="#50FA7B" stroke-width="0.7" fill="none" opacity="0.3"/></svg>' },
     ]
   },
   machine: {
@@ -598,15 +629,24 @@ const CATEGORIES = {
     descKo: '기계는 어떻게 배우고, 꿈꾸고, 이해하는가',
     icon: document.querySelector('[data-cat="machine"] .cat-icon').outerHTML,
     chapters: [
-      { title: 'Diffusion II', titleKo: '기계는 꿈을 꾸는가?', tagline: 'Images from pure noise', taglineKo: '순수한 노이즈에서 이미지로', difficulty: 2, en: 'diffusion-2.html', ko: 'diffusion-2-ko.html', linkFrom: '← from Flow', linkFromKo: '← Flow에서 이어짐' },
-      { title: 'Transformer', titleKo: '기계는 이해하는가?', tagline: 'Attention is all you need', taglineKo: '어텐션이 전부다', difficulty: 2, en: 'transformer.html', ko: 'transformer_ko.html' },
-      { title: 'Does a Machine Think?', titleKo: '기계는 생각하는가?', tagline: 'When thought reduces to multiplication', taglineKo: '사고가 곱셈으로 환원될 때', difficulty: 2, en: 'think.html', ko: 'think_ko.html' },
-      { title: 'Does a Machine See?', titleKo: '기계는 보는가?', tagline: 'Learning to detect the world', taglineKo: '세상을 감지하는 법을 배우다', difficulty: 2, en: 'see.html', ko: 'see_ko.html' },
-      { title: 'Does a Machine Speak?', titleKo: '기계는 말하는가?', tagline: 'Breaking and making voice', taglineKo: '목소리를 분해하고 만들다', difficulty: 2, en: 'speak.html', ko: 'speak_ko.html' },
-      { title: 'Does a Machine Remember?', titleKo: '기계는 기억하는가?', tagline: 'Echoes in silicon', taglineKo: '실리콘 속의 메아리', difficulty: 2, en: 'remember.html', ko: 'remember_ko.html' },
-      { title: 'Does a Machine Imagine?', titleKo: '기계는 상상하는가?', tagline: 'Creating the unseen', taglineKo: '보이지 않는 것을 창조하다', difficulty: 2, en: 'imagine.html', ko: 'imagine_ko.html' },
-      { title: 'Does a Machine Judge?', titleKo: '기계는 판단하는가?', tagline: 'Fairness has no formula', taglineKo: '공정성에는 공식이 없다', difficulty: 1, en: 'judge.html', ko: 'judge_ko.html' },
-      { title: 'Does a Machine Suffer?', titleKo: '기계는 고통받는가?', tagline: 'Beyond computation', taglineKo: '계산 너머', difficulty: 1, en: 'suffer.html', ko: 'suffer_ko.html' },
+      { title: 'Diffusion II', titleKo: '기계는 꿈을 꾸는가?', tagline: 'Images from pure noise', taglineKo: '순수한 노이즈에서 이미지로', difficulty: 2, en: 'diffusion-2.html', ko: 'diffusion-2-ko.html', linkFrom: '← from Flow', linkFromKo: '← Flow에서 이어짐',
+        icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="46" cy="20" r="6.5" stroke="#FF79C6" stroke-width="1.3" fill="#FF79C612" opacity="0.8"/><path d="M40 42 L46 31 L52 42 Z" stroke="#FF79C6" stroke-width="1.1" fill="#FF79C608" opacity="0.6"/><path d="M18 28 L38 28" stroke="#FF79C6" stroke-width="0.9" opacity="0.3" stroke-dasharray="2 2"/><path d="M36 26 L39 28 L36 30" stroke="#FF79C6" stroke-width="0.8" fill="none" opacity="0.3" stroke-linecap="round"/></svg>' },
+      { title: 'Transformer', titleKo: '기계는 이해하는가?', tagline: 'Attention is all you need', taglineKo: '어텐션이 전부다', difficulty: 2, en: 'transformer.html', ko: 'transformer_ko.html',
+        icon: '<svg viewBox="0 0 56 56" fill="none"><rect x="13" y="5" width="5.5" height="4" rx="1" fill="#FF79C6" opacity="0.25"/><rect x="20.5" y="5" width="5.5" height="4" rx="1" fill="#FF79C6" opacity="0.3"/><rect x="28" y="5" width="5.5" height="4" rx="1" fill="#FF79C6" opacity="0.35"/><rect x="13" y="13" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.5"/><rect x="20.5" y="13" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.08"/><rect x="28" y="13" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.06"/><rect x="13" y="20.5" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.1"/><rect x="20.5" y="20.5" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.38"/><rect x="28" y="20.5" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.11"/><rect x="13" y="28" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.03"/><rect x="20.5" y="28" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.11"/><rect x="28" y="28" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.44"/></svg>' },
+      { title: 'Does a Machine Think?', titleKo: '기계는 생각하는가?', tagline: 'When thought reduces to multiplication', taglineKo: '사고가 곱셈으로 환원될 때', difficulty: 2, en: 'think.html', ko: 'think_ko.html',
+        icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="8" cy="14" r="3" fill="#FF79C625" stroke="#FF79C6" stroke-width="0.7"/><circle cx="8" cy="28" r="3" fill="#FF79C625" stroke="#FF79C6" stroke-width="0.7"/><circle cx="8" cy="42" r="3" fill="#FF79C625" stroke="#FF79C6" stroke-width="0.7"/><line x1="11" y1="14" x2="25" y2="28" stroke="#FF79C6" stroke-width="0.5" opacity="0.3"/><line x1="11" y1="28" x2="25" y2="28" stroke="#FF79C6" stroke-width="1" opacity="0.5"/><line x1="11" y1="42" x2="25" y2="28" stroke="#FF79C6" stroke-width="1" opacity="0.5"/><circle cx="28" cy="28" r="6" stroke="#FF79C6" stroke-width="1.3" fill="#FF79C612"/><text x="28" y="31" text-anchor="middle" fill="#FF79C6" font-size="7" font-family="serif" opacity="0.5">σ</text><line x1="34" y1="28" x2="44" y2="28" stroke="#FF79C6" stroke-width="1" opacity="0.5"/><circle cx="48" cy="28" r="3" fill="#FF79C645" stroke="#FF79C6" stroke-width="0.9"/></svg>' },
+      { title: 'Does a Machine See?', titleKo: '기계는 보는가?', tagline: 'Learning to detect the world', taglineKo: '세상을 감지하는 법을 배우다', difficulty: 2, en: 'see.html', ko: 'see_ko.html',
+        icon: '<svg viewBox="0 0 56 56" fill="none"><rect x="6" y="6" width="6" height="6" rx="1" fill="#FF79C6" opacity="0.5"/><rect x="13" y="6" width="6" height="6" rx="1" fill="#FF79C6" opacity="0.25"/><rect x="6" y="13" width="6" height="6" rx="1" fill="#FF79C6" opacity="0.25"/><rect x="13" y="13" width="6" height="6" rx="1" fill="#FF79C6" opacity="0.5"/><rect x="20" y="6" width="6" height="6" rx="1" fill="#FF79C6" opacity="0.08"/><rect x="20" y="13" width="6" height="6" rx="1" fill="#FF79C6" opacity="0.25"/><rect x="12.5" y="12.5" width="21" height="21" rx="2" stroke="#FF79C6" stroke-width="1.5" fill="none" opacity="0.7"/></svg>' },
+      { title: 'Does a Machine Speak?', titleKo: '기계는 말하는가?', tagline: 'Breaking and making voice', taglineKo: '목소리를 분해하고 만들다', difficulty: 2, en: 'speak.html', ko: 'speak_ko.html',
+        icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M4 16 Q7 10 10 16 Q13 22 16 16 Q18 12 20 16 Q23 22 26 14 Q28 10 30 16 Q33 22 36 16 Q38 12 40 16 Q43 20 46 16 Q48 13 50 16" stroke="#FF79C6" stroke-width="1.2" fill="none" opacity="0.6" stroke-linecap="round"/><rect x="14" y="34" width="3" height="12" rx="1" fill="#FF79C6" opacity="0.45"/><rect x="18" y="38" width="3" height="8" rx="1" fill="#FF79C6" opacity="0.3"/><rect x="22" y="32" width="3" height="14" rx="1" fill="#FF79C6" opacity="0.5"/><rect x="26" y="36" width="3" height="10" rx="1" fill="#FF79C6" opacity="0.35"/><rect x="30" y="34" width="3" height="12" rx="1" fill="#FF79C6" opacity="0.4"/><rect x="34" y="40" width="3" height="6" rx="1" fill="#FF79C6" opacity="0.2"/></svg>' },
+      { title: 'Does a Machine Remember?', titleKo: '기계는 기억하는가?', tagline: 'Echoes in silicon', taglineKo: '실리콘 속의 메아리', difficulty: 2, en: 'remember.html', ko: 'remember_ko.html',
+        icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="12" r="4" fill="#FF79C630" stroke="#FF79C6" stroke-width="0.8"/><circle cx="14" cy="24" r="4" fill="#FF79C630" stroke="#FF79C6" stroke-width="0.8"/><circle cx="42" cy="24" r="4" fill="#FF79C630" stroke="#FF79C6" stroke-width="0.8"/><circle cx="14" cy="40" r="4" fill="#FF79C630" stroke="#FF79C6" stroke-width="0.8"/><circle cx="42" cy="40" r="4" fill="#FF79C630" stroke="#FF79C6" stroke-width="0.8"/><circle cx="28" cy="48" r="4" fill="#FF79C630" stroke="#FF79C6" stroke-width="0.8"/><line x1="28" y1="16" x2="14" y2="20" stroke="#FF79C6" stroke-width="0.5" opacity="0.2"/><line x1="28" y1="16" x2="42" y2="20" stroke="#FF79C6" stroke-width="0.5" opacity="0.2"/><line x1="14" y1="28" x2="14" y2="36" stroke="#FF79C6" stroke-width="0.5" opacity="0.2"/><line x1="42" y1="28" x2="42" y2="36" stroke="#FF79C6" stroke-width="0.5" opacity="0.2"/><line x1="14" y1="44" x2="28" y2="44" stroke="#FF79C6" stroke-width="0.5" opacity="0.2"/><line x1="42" y1="44" x2="28" y2="44" stroke="#FF79C6" stroke-width="0.5" opacity="0.2"/></svg>' },
+      { title: 'Does a Machine Imagine?', titleKo: '기계는 상상하는가?', tagline: 'Creating the unseen', taglineKo: '보이지 않는 것을 창조하다', difficulty: 2, en: 'imagine.html', ko: 'imagine_ko.html',
+        icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="14" cy="28" r="10" stroke="#FF79C6" stroke-width="1.2" fill="#FF79C608"/><text x="14" y="31" text-anchor="middle" fill="#FF79C6" font-size="9" font-family="serif" opacity="0.5" font-style="italic">G</text><circle cx="42" cy="28" r="10" stroke="#FF79C6" stroke-width="1.2" fill="#FF79C608"/><text x="42" y="31" text-anchor="middle" fill="#FF79C6" font-size="9" font-family="serif" opacity="0.5" font-style="italic">D</text><path d="M25 24 L31 24" stroke="#FF79C6" stroke-width="1" opacity="0.5"/><path d="M31 32 L25 32" stroke="#FF79C6" stroke-width="1" opacity="0.5"/></svg>' },
+      { title: 'Does a Machine Judge?', titleKo: '기계는 판단하는가?', tagline: 'Fairness has no formula', taglineKo: '공정성에는 공식이 없다', difficulty: 1, en: 'judge.html', ko: 'judge_ko.html',
+        icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M24 44 L28 38 L32 44" stroke="#FF79C6" stroke-width="1" fill="none" opacity="0.4"/><line x1="10" y1="30" x2="46" y2="26" stroke="#FF79C6" stroke-width="1.3" opacity="0.6"/><circle cx="28" cy="28" r="2" fill="#FF79C6" opacity="0.4"/><line x1="8" y1="14" x2="48" y2="14" stroke="#FF79C6" stroke-width="0.7" opacity="0.2" stroke-dasharray="2 2"/></svg>' },
+      { title: 'Does a Machine Suffer?', titleKo: '기계는 고통받는가?', tagline: 'Beyond computation', taglineKo: '계산 너머', difficulty: 1, en: 'suffer.html', ko: 'suffer_ko.html',
+        icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M28 8 C28 8 16 26 16 34 C16 40.6 21.4 46 28 46 C34.6 46 40 40.6 40 34 C40 26 28 8 28 8 Z" stroke="#FF79C6" stroke-width="1.4" fill="#FF79C615"/><path d="M24 32 C24 28 28 18 28 18 C28 18 22 30 22 34 C22 37 24.5 39.5 28 39.5" stroke="#FF79C6" stroke-width="0.6" fill="none" opacity="0.2"/></svg>' },
     ]
   }
 };
@@ -662,6 +702,7 @@ function showCategory(catId, skipPush) {
     return `
     <a href="${link}" class="chapter-card" style="animation: slideIn 0.4s ${i * 0.06}s ease both;">
       <div class="ch-accent" style="background:${cat.color}"></div>
+      ${ch.icon ? `<div class="ch-icon-wrap">${ch.icon}</div>` : ''}
       <div class="ch-content">
         <div class="ch-top">
           <span class="ch-title">${title}</span>

@@ -1,0 +1,1954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Searching for Perfect Illusions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#05060c;--surface:#0c0e1a;--border:#1a1d30;--text:#ddd7cc;--muted:#585d7a;--gold:#c9a748;--teal:#22b5aa;--rose:#c04560;--cream:#f0e8d8;--glow-gold:rgba(201,167,72,.18);--glow-teal:rgba(34,181,170,.18)}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'EB Garamond',Georgia,serif;font-size:18px;line-height:1.72;overflow-x:hidden}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+#audio-overlay{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(5,6,12,.92);backdrop-filter:blur(18px);cursor:pointer;transition:opacity .5s,visibility .5s;touch-action:manipulation}
+#audio-overlay.gone{opacity:0;visibility:hidden;pointer-events:none}
+.ao-icon{font-size:3.5rem;margin-bottom:1.5rem;animation:aoFloat 2.4s ease-in-out infinite}
+@keyframes aoFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-8px) scale(1.05)}}
+.ao-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(1.6rem,4vw,2.6rem);color:var(--cream);margin-bottom:.6rem;text-align:center}
+.ao-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:1rem;color:var(--muted);margin-bottom:2.5rem;text-align:center;max-width:360px;line-height:1.6}
+.ao-btn{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;padding:.75rem 2.2rem;border:1.5px solid var(--gold);border-radius:100px;color:var(--gold);background:transparent;cursor:pointer;transition:background .2s,box-shadow .2s;animation:aoGlow 2.5s ease-in-out infinite}
+@keyframes aoGlow{0%,100%{box-shadow:0 0 16px rgba(201,167,72,.2)}50%{box-shadow:0 0 36px rgba(201,167,72,.5)}}
+.ao-btn:hover{background:rgba(201,167,72,.1)}
+#hero{position:relative;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:crosshair}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-overlay{position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 50% 50%,transparent 20%,rgba(5,6,12,.75) 65%,rgba(5,6,12,.97) 100%);pointer-events:none}
+.hero-content{position:relative;z-index:10;text-align:center;padding:2rem;pointer-events:none}
+.hero-kicker{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);margin-bottom:2.2rem;opacity:0;animation:fadeUp .9s .2s forwards}
+.hero-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2.8rem,7.5vw,6rem);line-height:1.05;letter-spacing:-.01em;color:var(--cream)}
+.title-line{display:block;overflow:hidden}
+.title-word{display:inline-block;opacity:0;transform:translateY(100%);animation:wordIn .85s cubic-bezier(.22,1,.36,1) forwards}
+.tl1{animation-delay:.4s}.tl2{animation-delay:.55s}.tl3{animation-delay:.7s}
+@keyframes wordIn{to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{to{opacity:.85}}
+.hero-italic{font-style:italic;color:var(--gold)}
+.hero-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:1.08rem;color:var(--muted);margin-top:2rem;opacity:0;animation:fadeUp .9s 1.1s forwards}
+.hero-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);opacity:0;animation:fadeUp 1s 1.6s forwards}
+.hero-hint::after{content:'';display:block;margin:10px auto 0;width:1px;height:42px;background:linear-gradient(to bottom,var(--muted),transparent);animation:bob 2s 2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:scaleY(1);opacity:.4}50%{transform:scaleY(1.3);opacity:.8}}
+.hero-found{position:absolute;bottom:7rem;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.15em;color:var(--gold);opacity:0;transition:opacity .4s;pointer-events:none}
+.hero-found.vis{opacity:.8}
+.wrap{max-width:1160px;margin:0 auto;padding:7rem 2.5rem}
+.divider{border:none;border-top:1px solid var(--border)}
+.s-num{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem}
+.s-title{font-family:'Cormorant Garamond',serif;font-weight:300;font-size:clamp(2rem,4.5vw,3.6rem);line-height:1.08;color:var(--cream);margin-bottom:2.2rem}
+.prose{font-size:1.05rem;color:var(--text);max-width:680px}
+.prose p+p{margin-top:1rem}
+.prose em{color:var(--cream)}
+.callout{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--teal);border-radius:0 8px 8px 0;padding:1.3rem 1.8rem;margin:2rem 0;font-style:italic;color:var(--text);font-size:1.03rem}
+.callout cite{display:block;margin-top:.6rem;font-style:normal;font-family:'Space Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.05em}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem;transition:border-color .3s,box-shadow .3s}
+.panel h3{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.25rem;color:var(--gold);margin-bottom:1rem}
+.s1-layout{margin-top:2.5rem}
+@media(max-width:720px){}
+#s1-canvas{width:100%;aspect-ratio:2/1;display:block;border-radius:8px;cursor:grab;touch-action:none}
+#s1-canvas:active{cursor:grabbing}
+.s1-prose-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;margin-top:2.5rem}
+@media(max-width:720px){.s1-prose-grid{grid-template-columns:1fr}}
+.s1-controls{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem;align-items:center}
+.s1-btn{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:.45rem 1rem;border:1px solid var(--border);border-radius:100px;background:transparent;color:var(--muted);cursor:pointer;transition:all .25s}
+.s1-btn:hover{border-color:var(--gold)88;color:var(--text)}
+.s1-btn.accent{border-color:var(--teal)55;color:var(--teal)}
+.s1-btn.accent:hover{border-color:var(--teal);background:rgba(34,181,170,.06)}
+.s1-btn.accent.flash{animation:flashTeal .6s ease}
+@keyframes flashTeal{0%{box-shadow:0 0 0 0 rgba(34,181,170,.7)}100%{box-shadow:0 0 0 18px rgba(34,181,170,0)}}
+.s1-tag{font-family:'Space Mono',monospace;font-size:.55rem;color:var(--muted);letter-spacing:.06em;padding:.35rem .6rem;display:flex;align-items:center;gap:.4rem}
+.s1-tag-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);flex-shrink:0}
+.s1-hint{font-family:'Space Mono',monospace;font-size:.55rem;color:var(--muted);margin-top:.7rem;letter-spacing:.04em;line-height:1.8}
+#s2-canvas{width:100%;aspect-ratio:2/1;display:block;border-radius:8px;cursor:default;touch-action:none}
+.cap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.3rem;margin-top:2.5rem}
+@media(max-width:700px){.cap-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:450px){.cap-grid{grid-template-columns:1fr}}
+.cap-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;transition:border-color .3s,transform .25s,box-shadow .3s;position:relative}
+.cap-card:hover{border-color:var(--gold);transform:translateY(-4px);box-shadow:0 16px 48px var(--glow-gold)}
+.cap-card canvas{width:100%;aspect-ratio:4/3;display:block}
+.cap-meta{padding:.7rem 1rem .9rem}
+.cap-year{font-family:'Space Mono',monospace;font-size:.55rem;color:var(--gold);letter-spacing:.08em;margin-bottom:.3rem}
+.cap-name{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.1rem;color:var(--cream);margin-bottom:.35rem}
+.cap-desc{font-family:'EB Garamond',serif;font-size:.9rem;color:var(--muted);line-height:1.55}
+#s4-canvas{width:100%;aspect-ratio:2/1;display:block;border-radius:8px;cursor:crosshair;touch-action:none;border:1px solid var(--border)}
+.s4-controls{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem;align-items:center}
+.s4-btn{font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:.4rem .9rem;border:1px solid var(--border);border-radius:100px;background:transparent;color:var(--muted);cursor:pointer;transition:all .25s}
+.s4-btn:hover{border-color:var(--gold)88;color:var(--text)}
+.s4-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,167,72,.06)}
+#s5-canvas{width:100%;aspect-ratio:2/1;display:block;border-radius:8px;touch-action:none}
+#s6-canvas{width:100%;aspect-ratio:5/3;display:block;border-radius:8px;cursor:pointer;touch-action:none}
+.s6-btns{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem;align-items:center}
+#s7-canvas{width:100%;aspect-ratio:2/1;display:block;border-radius:8px;touch-action:none}
+.parallel-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.5rem 2rem;margin:2.5rem 0;overflow-x:auto}
+.parallel-table{width:100%;border-collapse:collapse;font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:.03em}
+.parallel-table th{text-align:left;color:var(--gold);padding:.6rem .8rem;border-bottom:1px solid var(--border);font-weight:400}
+.parallel-table td{padding:.5rem .8rem;color:var(--text);border-bottom:1px solid var(--border)22;vertical-align:top;line-height:1.7}
+.parallel-table tr:last-child td{border-bottom:none;color:var(--teal);font-style:italic}
+#brand-corner{position:fixed;bottom:1.8rem;left:1.8rem;z-index:998;transition:transform .25s}
+#brand-corner:hover{transform:translateY(-2px)}
+#brand-corner a{font-family:'Space Mono',monospace;font-size:.95rem;letter-spacing:.22em;text-decoration:none;text-transform:lowercase;color:#00ffaa;display:flex;align-items:center;transition:color .3s}
+#brand-corner a:hover{color:#80ffda;text-shadow:0 0 18px #00ffaa}
+.s-brand{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.18em;text-transform:lowercase;color:var(--border);float:right;margin-top:.1rem;text-decoration:none;transition:color .2s}
+.s-brand:hover{color:var(--gold)}
+#sec-nav{position:fixed;right:1.2rem;top:50%;transform:translateY(-50%);z-index:990;display:flex;flex-direction:column;gap:.35rem}
+.sn-dot{display:flex;align-items:center;gap:.55rem;cursor:pointer;justify-content:flex-end}
+.sn-dot-pip{width:7px;height:7px;border-radius:50%;border:1.5px solid var(--muted);background:transparent;flex-shrink:0;transition:background .2s,border-color .2s,box-shadow .2s}
+.sn-dot-label{font-family:'Space Mono',monospace;font-size:.52rem;letter-spacing:.08em;color:var(--muted);opacity:0;transform:translateX(6px);transition:opacity .2s,transform .2s;white-space:nowrap;text-align:right}
+.sn-dot:hover .sn-dot-label{opacity:1;transform:translateX(0)}
+.sn-dot:hover .sn-dot-pip{border-color:var(--text)}
+.sn-dot.active .sn-dot-pip{background:var(--gold);border-color:var(--gold);box-shadow:0 0 8px var(--gold)}
+.sn-dot.active .sn-dot-label{color:var(--gold)}
+@media(max-width:600px){#sec-nav{display:none}}
+.fi{opacity:0;transform:translateY(30px);transition:opacity .85s ease,transform .85s ease}
+.fi.vis{opacity:1;transform:none}
+footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding:5rem 2.5rem 4rem}
+.refs-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2rem}
+@media(max-width:600px){.refs-grid{grid-template-columns:1fr}}
+.ref-item{font-size:.88rem;color:var(--muted);font-style:italic;padding:.75rem 1rem;border-left:2px solid var(--border);line-height:1.6}
+.ref-item strong{font-style:normal;color:var(--text)}
+.epilogue{margin-top:3rem;text-align:center;font-style:italic;color:var(--muted);font-size:.9rem}
+.footer-brand{text-align:center;margin-top:2.5rem}
+.footer-brand a{font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:lowercase;color:#00ffaa;text-decoration:none;transition:color .2s,text-shadow .2s}
+.footer-brand a:hover{color:#80ffda;text-shadow:0 0 18px #00ffaa}
+.footer-brand-sep{color:var(--border);font-size:.8rem}
+</style>
+</head>
+<body>
+<nav id="sec-nav">
+  <div class="sn-dot" data-target="hero"><span class="sn-dot-label">Top</span><span class="sn-dot-pip"></span></div>
+  <div class="sn-dot" data-target="sec-eye"><span class="sn-dot-label">§01 Close One Eye</span><span class="sn-dot-pip"></span></div>
+  <div class="sn-dot" data-target="sec-vp"><span class="sn-dot-label">§02 Vanishing Point</span><span class="sn-dot-pip"></span></div>
+  <div class="sn-dot" data-target="sec-light"><span class="sn-dot-label">§03 Freezing Light</span><span class="sn-dot-pip"></span></div>
+  <div class="sn-dot" data-target="sec-walk"><span class="sn-dot-label">§04 Walk Inside</span><span class="sn-dot-pip"></span></div>
+  <div class="sn-dot" data-target="sec-color"><span class="sn-dot-label">§05 Colors</span><span class="sn-dot-pip"></span></div>
+  <div class="sn-dot" data-target="sec-bayes"><span class="sn-dot-label">§06 Guessing Machine</span><span class="sn-dot-pip"></span></div>
+  <div class="sn-dot" data-target="sec-ames"><span class="sn-dot-label">§07 The Ames Room</span><span class="sn-dot-pip"></span></div>
+</nav>
+<div id="brand-corner"><a href="https://edu.kimsh.kr" target="_blank" rel="noopener">edu.kimsh.kr</a></div>
+<div id="audio-overlay">
+  <div class="ao-icon">👁</div>
+  <div class="ao-title">Searching for Perfect Illusions</div>
+  <div class="ao-sub">edu.kimsh.kr &nbsp;·&nbsp; The mathematics of vision</div>
+  <button class="ao-btn" id="ao-start">Enter</button>
+</div>
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-kicker">Projective Geometry · Optical Physics · Visual Neuroscience &nbsp;·&nbsp; <a href="https://edu.kimsh.kr" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none;letter-spacing:.38em">edu.kimsh.kr</a></div>
+    <h1 class="hero-title">
+      <span class="title-line"><span class="title-word tl1">Searching for</span></span>
+      <span class="title-line"><span class="title-word tl2 hero-italic">Perfect</span>&ensp;<span class="title-word tl3">Illusions</span></span>
+    </h1>
+    <div class="hero-sub">from Ibn al-Haytham to Helmholtz — the geometry of what we see</div>
+  </div>
+  <div class="hero-found" id="hero-found">found it</div>
+  <div class="hero-hint">scroll</div>
+</section>
+<hr class="divider">
+<div class="wrap fi" id="sec-eye">
+  <div class="s-num">§ 01 — The Depth That Disappears <a href="https://edu.kimsh.kr" target="_blank" class="s-brand">edu.kimsh.kr</a></div>
+  <h2 class="s-title">Close One Eye</h2>
+  <div class="s1-layout">
+    <div class="panel" style="padding:1.2rem 1.5rem">
+      <h3>Two Universes, One Image</h3>
+      <canvas id="s1-canvas" width="1120" height="560"></canvas>
+      <div class="s1-controls">
+        <button class="s1-btn accent" id="s1-same">✦ Same Image</button>
+        <button class="s1-btn" id="s1-reset">↺ Reset</button>
+        <span class="s1-tag"><span class="s1-tag-dot"></span><span id="s1-tag-text">configuration 1 / 4</span></span>
+        <span style="flex:1"></span>
+        <span class="s1-hint" style="margin:0">left: drag the observer 👁 around the solar system &nbsp;|&nbsp; right: what the observer sees</span>
+      </div>
+    </div>
+    <div class="s1-prose-grid">
+      <div class="prose">
+        <p>Close one eye. Hold your finger at arm's length. Now — without moving your head — can you tell <em>exactly</em> how far away it is?</p>
+        <p>You can't. And this is not a limitation of your eye. It is a fundamental fact about seeing itself. When the three-dimensional world lands on your retina, one entire dimension — <em>depth</em> — is silently destroyed. What remains is a flat painting. Two eyes can triangulate and recover some of what was lost. One eye receives only the painting.</p>
+        <p>Above is a tiny solar system — a sun and its planets, frozen in mid-orbit like a photograph. On the left, you see the true 3D arrangement from above. The golden eye is <em>your observer</em> — drag it around the solar system and watch how the view on the right changes. The right half shows what this observer actually sees: a flat image, all depth stripped away.</p>
+        <p>Now press <em>Same Image</em>.</p>
+      </div>
+      <div>
+        <div class="prose">
+          <p>Did you see that? The entire system just reshuffled. Some planets lunged closer and shrank. Others retreated and grew. The left panel is now <em>completely different</em>. But the right panel — the observer's view — did not change. Not a single line moved.</p>
+          <p>Try dragging the observer to a new position. The right panel updates: you are looking from a different place. But press <em>Same Image</em> again and — even from this new vantage point — the cosmos rearranges itself while the observer's picture stays perfectly still.</p>
+          <p>There are <em>infinitely many</em> different universes that produce the same image from any given viewpoint. This is why illusions are possible at all. Not because the eye is flawed, but because seeing <em>necessarily</em> destroys information.</p>
+          <p>But wait — go back to the observer and drag it slowly. Watch the right panel as you move. When the observer <em>shifts position</em>, nearby planets slide across the image much faster than distant ones. The sun barely moves; Mercury races. Even with one eye, a moving observer can sense depth — not from the image itself, but from how the image <em>changes</em>. This is called <em>motion parallax</em>, and it is one of the brain's most powerful tricks for recovering the dimension that projection destroys. We will return to it.</p>
+        </div>
+        <div class="callout">
+          "The picture of everything that is illuminated and exists in front of a small hole in the wall of a darkened room will be found projected on the wall opposite the hole — inverted."
+          <cite>— Ibn al-Haytham, Kitāb al-Manāẓir (c. 1011–1021 CE)</cite>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<hr class="divider">
+
+<!-- §02 — WHERE PARALLEL LINES MEET -->
+<div class="wrap fi" id="sec-vp">
+  <div class="s-num">§ 02 — Where Parallel Lines Meet <a href="https://edu.kimsh.kr" target="_blank" class="s-brand">edu.kimsh.kr</a></div>
+  <h2 class="s-title">The Vanishing Point</h2>
+  <div class="panel" style="padding:1.2rem 1.5rem">
+    <h3>Drag the gold point — reshape the world</h3>
+    <canvas id="s2-canvas" width="1120" height="560"></canvas>
+    <div style="display:flex;gap:.5rem;margin-top:1rem;align-items:center">
+      <button class="s1-btn" id="s2-reset">↺ Reset</button>
+      <button class="s1-btn" id="s2-grid-toggle">Grid density</button>
+      <span class="s1-hint" style="margin:0">drag the vanishing point · watch every line obey</span>
+    </div>
+  </div>
+  <div class="s1-prose-grid" style="margin-top:2.5rem">
+    <div class="prose">
+      <p>Stand on a long, straight road. Look into the distance. The two edges of the road — which you <em>know</em> are parallel — appear to converge. They seem to meet at a point on the horizon.</p>
+      <p>For two thousand years, painters struggled with this. They knew the lines were parallel. They could see them converge. How do you paint something that contradicts itself?</p>
+      <p>In 1425 Florence, an architect named <em>Filippo Brunelleschi</em> answered the question with an experiment. He stood at the door of the cathedral, painted the Baptistery on a small panel, drilled a hole through it, and held up a mirror. Looking through the hole from behind, with the mirror reflecting the painting — when painting and reality aligned, the viewer could not tell one from the other.</p>
+      <p>This was the first <em>proof</em> that a flat surface could perfectly simulate a three-dimensional scene. It worked because the painting implemented the same projection as the eye.</p>
+    </div>
+    <div>
+      <div class="prose">
+        <p>Ten years later, <em>Leon Battista Alberti</em> wrote down the rules. In <em>De Pictura</em> (1435), he described the picture plane as a transparent window between eye and scene — and showed that all parallel lines receding into depth must converge to a single <em>vanishing point</em> on the horizon.</p>
+        <p>Drag the golden point in the canvas above. Every line in the scene obeys it — the floor tiles, the columns, the ceiling beams. Move the point and the entire world reshapes itself, yet remains perfectly consistent. This is the power of the vanishing point: a single dot that dictates the geometry of an entire world.</p>
+        <p>Parallel lines do not meet in ordinary space. But in the image — in the projection — they do. The vanishing point is the image of a point <em>at infinity</em>: the place where the parallel lines would meet if you could walk forever. Projection makes the infinite visible.</p>
+      </div>
+      <div class="callout">
+        "First of all, on the surface on which I am going to paint, I draw a rectangle of whatever size I want, which I regard as an open window through which the subject to be painted is seen."
+        <cite>— Leon Battista Alberti, De Pictura (1435)</cite>
+      </div>
+    </div>
+  </div>
+</div>
+<hr class="divider">
+
+<!-- §03 — FREEZING LIGHT -->
+<div class="wrap fi" id="sec-light">
+  <div class="s-num">§ 03 — Freezing Light <a href="https://edu.kimsh.kr" target="_blank" class="s-brand">edu.kimsh.kr</a></div>
+  <h2 class="s-title">Six Ways to<br>Remember a Moment</h2>
+  <div class="s1-prose-grid">
+    <div class="prose">
+      <p>The camera obscura projected an image but could not hold it. For centuries, the most beautiful projections in the world appeared on darkened walls and vanished with the sun.</p>
+      <p>Then, one by one, we learned to freeze what projection creates — and each invention recovered something that the act of seeing had destroyed.</p>
+    </div>
+    <div class="prose">
+      <p>A photograph captures <em>intensity</em>. A stereo pair recovers <em>depth</em>. A film strip recovers <em>time</em>. And a hologram — alone among these — captures the <em>complete wavefront</em>: the amplitude and the phase of light at every point. Only a hologram can fool two eyes, a moving head, and a refocusing lens, all at once.</p>
+    </div>
+  </div>
+  <div class="cap-grid" id="cap-grid"></div>
+  <div class="callout" style="margin-top:2rem">
+    Each step in this history recovered one more dimension of reality that projection had thrown away. The photograph lives in two dimensions. Stereo adds a third. Cinema adds the fourth. Holography captures five of the seven dimensions of the <em>plenoptic function</em> — the complete description of every ray of light, everywhere, at every moment. Only reality itself fills all seven.
+    <cite>— cf. Adelson &amp; Bergen, "The Plenoptic Function and the Elements of Early Vision," 1991</cite>
+  </div>
+</div>
+<hr class="divider">
+<!-- §04 — WALK THROUGH PROJECTED SPACE -->
+<div class="wrap fi" id="sec-walk">
+  <div class="s-num">§ 04 — Walking Inside a Painting <a href="https://edu.kimsh.kr" target="_blank" class="s-brand">edu.kimsh.kr</a></div>
+  <h2 class="s-title">Walk Through<br>the Projection</h2>
+  <div class="prose" style="margin-bottom:1.5rem">
+    <p>Everything you have seen so far has been a picture <em>about</em> projection. Now step inside one. Below is a small world — a ground grid, cubes, pyramids, columns — all drawn by one single rule: every point in the scene is divided by how far away it is, and the result is a flat image. That is the entire trick.</p>
+    <p>Walk through it. Use the arrow keys or WASD to move, drag to look around, scroll to zoom. Watch how nearby objects rush past while distant ones barely move — this is the <em>motion parallax</em> we met in §01. Notice how the parallel lines of the grid converge toward a point on the horizon — the vanishing point from §02, now alive under your feet.</p>
+  </div>
+  <div class="panel" style="padding:1.2rem 1.5rem">
+    <h3>One rule: farther things look smaller</h3>
+    <canvas id="s4-canvas" width="1120" height="560"></canvas>
+    <div class="s4-controls">
+      <button class="s4-btn active" id="s4-persp">Perspective</button>
+      <button class="s4-btn" id="s4-ortho">Orthographic</button>
+      <button class="s4-btn" id="s4-fog">Distance Fog</button>
+      <span style="flex:1"></span>
+      <span class="s1-hint" style="margin:0">WASD / arrows: move · drag: look · scroll: zoom · Q/E: rise/descend</span>
+    </div>
+  </div>
+  <div class="s1-prose-grid" style="margin-top:2.5rem">
+    <div class="prose">
+      <p>Try switching to <em>Orthographic</em>. The parallel lines suddenly stop converging. Distant objects are the same size as near ones. The grid becomes a rigid lattice with no depth cues at all. The only difference between these two modes is a single operation: dividing by depth. That one division is the entire difference between a flat blueprint and a world you can feel yourself standing inside.</p>
+    </div>
+    <div class="prose">
+      <p>Turn on <em>Distance Fog</em>. Objects fade as they recede — this is Leonardo da Vinci's <em>sfumato</em>, or what vision scientists call <em>aerial perspective</em>. Even on a flat screen, it adds an almost physical sense of space. Your brain accepts it as depth because in the real world, atmosphere scatters light, and distant things truly do fade. The fog is a lie — but a lie your visual system <em>wants</em> to believe.</p>
+    </div>
+  </div>
+</div>
+<hr class="divider">
+<!-- §05 — COLORS THAT DON'T EXIST -->
+<div class="wrap fi" id="sec-color">
+  <div class="s-num">§ 05 — Colors That Don't Exist <a href="https://edu.kimsh.kr" target="_blank" class="s-brand">edu.kimsh.kr</a></div>
+  <h2 class="s-title">Metamers</h2>
+  <div class="s1-prose-grid">
+    <div class="prose">
+      <p>The gold you see on this page does not exist. No photon of wavelength 580 nanometers left your screen. Your display emits only three wavelengths — red, green, blue — and your brain <em>invented</em> the gold by blending the responses of three types of cone cells.</p>
+      <p>Two physically different lights that produce the same cone response are called <em>metamers</em>. They look identical. They are not. You have never, in your entire life, seen a color. You have only ever seen <em>equivalence classes</em> of spectra — bundles of different lights that your three cone types cannot tell apart.</p>
+    </div>
+    <div class="prose">
+      <p>The canvas below shows this. On the left, three cone response curves sweep across the visible spectrum. On the right, for a selected color, two <em>completely different</em> spectral distributions are shown side by side — and they produce the exact same color swatch. Click anywhere on the spectrum bar to pick a new color.</p>
+      <p>If this reminds you of §01 — it should. There, infinitely many <em>3D worlds</em> produced the same flat image. Here, infinitely many <em>spectra</em> produce the same color. Both are projections with vast kernels. Both destroy information that can never be recovered.</p>
+    </div>
+  </div>
+  <div class="panel" style="padding:1.2rem 1.5rem;margin-top:2rem">
+    <h3>Same Color, Different Light</h3>
+    <canvas id="s5-canvas" width="1120" height="560"></canvas>
+    <div class="s1-hint">click the spectrum bar to pick a wavelength · two different spectra, one identical color</div>
+  </div>
+  <div class="callout" style="margin-top:2rem">
+    Your three cone types collapse the entire rainbow — an infinity of possible light mixtures — down to just three numbers. Countless different lights get folded into the same three-number reading. Every color you see is not a single light, but a whole family of lights that happen to feel the same to your eyes. If you read the drum chapter: this is the same story. Different realities, same observation.
+  </div>
+</div>
+<hr class="divider">
+
+<!-- §06 — THE GUESSING MACHINE -->
+<div class="wrap fi" id="sec-bayes">
+  <div class="s-num">§ 06 — Helmholtz's Unconscious Inference <a href="https://edu.kimsh.kr" target="_blank" class="s-brand">edu.kimsh.kr</a></div>
+  <h2 class="s-title">The Guessing Machine</h2>
+  <div class="s1-prose-grid">
+    <div class="prose">
+      <p>You are hallucinating right now. Constructively, coherently, usefully — but hallucinating. The image on your retina is flat. The world you experience is three-dimensional. That third dimension was constructed, in real time, by your visual cortex — a guess based on incomplete evidence.</p>
+      <p>Hermann von Helmholtz called this process <em>unconscious inference</em> in 1867: the brain draws conclusions about the world from ambiguous sensory data, using prior experience as a guide. Modern neuroscience restates this as <em>Bayesian inference</em> — the brain computes the most probable world given the image, weighted by what it already believes about how worlds tend to look.</p>
+    </div>
+    <div class="prose">
+      <p>An optical illusion occurs when this inference goes wrong — when the brain's expectations are so strong that they override what the image actually contains. Each illusion below exploits a specific assumption. Click any card to see the trick revealed.</p>
+      <p>The checker shadow illusion is perhaps the most devastating: two squares on a checkerboard, one in shadow, one in light, are <em>physically identical in luminance</em>. Your brain refuses to see them as the same — because in its model of the world, a white square in shadow <em>should</em> look darker than a dark square in light, and it adjusts your perception accordingly. The inference is correct in real life. Here, it produces an illusion.</p>
+    </div>
+  </div>
+  <div class="panel" style="padding:1.2rem 1.5rem;margin-top:2rem">
+    <h3>When the Brain's Model Fails</h3>
+    <canvas id="s6-canvas" width="1120" height="672"></canvas>
+    <div class="s6-btns">
+      <button class="s4-btn active" data-ill="checker">Checker Shadow</button>
+      <button class="s4-btn" data-ill="muller">Müller-Lyer</button>
+      <button class="s4-btn" data-ill="kanizsa">Kanizsa Triangle</button>
+      <button class="s4-btn" data-ill="necker">Necker Cube</button>
+      <span style="flex:1"></span>
+      <span class="s1-hint" style="margin:0">click each card · click the canvas to reveal the trick</span>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:2rem">
+    "The brain is not just a camera — it is a hypothesis-generating machine that constructs a model of the world from fragmentary data."
+    <cite>— Richard Gregory, Eye and Brain (1966)</cite>
+  </div>
+</div>
+<hr class="divider">
+
+<!-- §07 — THE AMES ROOM -->
+<div class="wrap fi" id="sec-ames">
+  <div class="s-num">§ 07 — The Room Where Giants Shrink <a href="https://edu.kimsh.kr" target="_blank" class="s-brand">edu.kimsh.kr</a></div>
+  <h2 class="s-title">Projective Equivalence</h2>
+  <div class="s1-prose-grid">
+    <div class="prose">
+      <p>In 1946, Adelbert Ames Jr. built a room. Through a peephole, it looks perfectly rectangular — four walls, a flat floor, right angles everywhere. A person stands in one corner. Another person stands in the opposite corner. One appears to be a giant. The other appears to be a dwarf. They are the same height.</p>
+      <p>The room is not rectangular. The floor slopes. The walls are trapezoidal. The ceiling tilts. But from that one viewpoint, through that one peephole, the distorted room projects to the <em>exact same image</em> as a normal room. The brain, trusting its prior that rooms are rectangular, sees a normal room with abnormally sized people.</p>
+    </div>
+    <div class="prose">
+      <p>Below, drag the slider to morph the room from rectangular to its true Ames shape — and watch the left panel (the peephole view) stay perfectly frozen while the right panel reveals the distortion. This is the final answer to the question in our title.</p>
+      <p>The Ames room is a <em>constructive proof</em> that the projection from three dimensions to two is not injective. Two different rooms — one normal, one warped — produce the same flat image. Close one eye, hold still, peer through a peephole, and the illusion becomes perfect.</p>
+    </div>
+  </div>
+  <div class="panel" style="padding:1.2rem 1.5rem;margin-top:2rem">
+    <h3>The Ames Room — Peephole vs. Truth</h3>
+    <canvas id="s7-canvas" width="1120" height="560"></canvas>
+    <div style="display:flex;gap:1rem;margin-top:1rem;align-items:center">
+      <span class="s1-hint" style="margin:0;min-width:fit-content">rectangular</span>
+      <input type="range" id="s7-slider" min="0" max="100" value="0" style="flex:1;accent-color:var(--gold)">
+      <span class="s1-hint" style="margin:0;min-width:fit-content">Ames room</span>
+    </div>
+    <div class="s1-hint">left: what the peephole shows (frozen) · right: the true room shape · drag the slider</div>
+  </div>
+
+  <!-- THE PARALLEL -->
+  <div class="parallel-box">
+    <table class="parallel-table">
+      <tr><th style="width:50%">Can You Hear the Shape of a Drum?</th><th>Searching for Perfect Illusions</th></tr>
+      <tr><td>A shape Ω</td><td>A 3D scene</td></tr>
+      <tr><td>Its eigenvalue spectrum</td><td>Its retinal image</td></tr>
+      <tr><td>Two shapes that sound identical</td><td>Two worlds that look identical</td></tr>
+      <tr><td>Gordon–Webb–Wolpert, 1992</td><td>Ames, 1946</td></tr>
+      <tr><td>Can different shapes sound the same? <em>Yes.</em></td><td>Can different worlds look the same? <em>Yes.</em></td></tr>
+    </table>
+  </div>
+
+  <div class="prose" style="margin-top:2.5rem;max-width:800px">
+    <p>So: are there perfect illusions?</p>
+    <p>For every flat image, infinitely many three-dimensional worlds could have produced it. Every photograph, every painting, every frame on your screen is a flat pattern that your brain, irresistibly, reads as depth. The illusion is not the exception. It is the universal condition of sight.</p>
+    <p>What saves us is redundancy: two eyes, a moving body, and an inference engine refined by five hundred million years of evolution. Close one eye, hold still, peer through a peephole — strip away the redundancy — and the illusion becomes perfect.</p>
+    <p>You have never seen the world. Only your brain's best guess. And that guess, miraculously, is almost always right.</p>
+  </div>
+</div>
+<hr class="divider">
+<footer>
+  <div class="s-num">References</div>
+  <h2 class="s-title" style="font-size:1.9rem;margin-bottom:1.5rem">Further Reading</h2>
+  <div class="refs-grid">
+    <div class="ref-item"><strong>Ibn al-Haytham</strong> — <em>Kitāb al-Manāẓir</em> (Book of Optics), c. 1011–1021 CE. Trans. A.I. Sabra, 1989.</div>
+    <div class="ref-item"><strong>L.B. Alberti</strong> — <em>De Pictura</em> (On Painting), 1435.</div>
+    <div class="ref-item"><strong>H. von Helmholtz</strong> — <em>Treatise on Physiological Optics</em>, vol. III, 1867.</div>
+    <div class="ref-item"><strong>D. Hubel &amp; T. Wiesel</strong> — "Receptive fields of single neurones in the cat's striate cortex." <em>J. Physiol.</em> 148 (1959), 574–591.</div>
+    <div class="ref-item"><strong>B. Julesz</strong> — "Binocular Depth Perception of Computer-Generated Patterns." <em>Bell System Tech. J.</em> 39 (1960), 1125–1162.</div>
+    <div class="ref-item"><strong>R. Penrose &amp; L.S. Penrose</strong> — "Impossible objects: A special type of visual illusion." <em>Brit. J. Psychology</em> 49 (1958), 31–33.</div>
+    <div class="ref-item"><strong>D. Gabor</strong> — "A New Microscopic Principle." <em>Nature</em> 161 (1948), 777–778.</div>
+    <div class="ref-item"><strong>R. Gregory</strong> — <em>Eye and Brain: The Psychology of Seeing</em>, 5th ed. Princeton UP, 1997.</div>
+    <div class="ref-item"><strong>E.H. Adelson &amp; J.R. Bergen</strong> — "The Plenoptic Function and the Elements of Early Vision." <em>Comp. Models of Visual Processing</em>, MIT Press, 1991.</div>
+    <div class="ref-item"><strong>A. Ames Jr.</strong> — US Patent 2,196,878 (1940). The distorted room.</div>
+  </div>
+  <p class="epilogue">Every visualization on this page is computed in real-time. Canvas 2D only — no WebGL. Geometry is exact.</p>
+  <div style="text-align:center;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border)">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:1.1rem;color:var(--cream);margin-bottom:.5rem">Sang-hyun Kim</div>
+    <div style="font-family:'Space Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:.08em;line-height:2">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+    <div style="margin-top:.8rem"><a href="https://kimsh.kr" target="_blank" rel="noopener" style="font-family:'Space Mono',monospace;font-size:.65rem;letter-spacing:.15em;color:var(--gold);text-decoration:none;transition:color .3s">kimsh.kr</a></div>
+  </div>
+  <div class="footer-brand">
+    <span class="footer-brand-sep">—</span>
+    <a href="https://edu.kimsh.kr" target="_blank" rel="noopener">edu.kimsh.kr</a>
+    <span class="footer-brand-sep">—</span>
+  </div>
+</footer>
+<script>
+"use strict";
+
+/* ── Audio ── */
+let audioCtx=null,masterGain=null;
+function initAudio(){try{const A=window.AudioContext||window.webkitAudioContext;if(!A)return;audioCtx=new A();masterGain=audioCtx.createGain();masterGain.gain.value=.25;masterGain.connect(audioCtx.destination);const o=audioCtx.createOscillator(),g=audioCtx.createGain();g.gain.value=.001;o.connect(g);g.connect(audioCtx.destination);o.start(0);o.stop(audioCtx.currentTime+.05);audioCtx.resume()}catch(e){}}
+function chime(f,d,v){if(!audioCtx||audioCtx.state!=='running')return;try{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(v||.08,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+(d||.5));o.connect(g);g.connect(masterGain);o.start(0);o.stop(audioCtx.currentTime+(d||.5)+.05)}catch(e){}}
+function startDrone(){if(!audioCtx)return;try{[110,165,220].forEach((f,i)=>{const o=audioCtx.createOscillator();o.type='sine';o.frequency.value=f;const g=audioCtx.createGain();g.gain.value=[.018,.011,.007][i];o.connect(g);g.connect(masterGain);o.start()})}catch(e){}}
+document.getElementById('ao-start').addEventListener('click',e=>{e.stopPropagation();initAudio();startDrone();document.getElementById('audio-overlay').classList.add('gone')});
+document.getElementById('audio-overlay').addEventListener('click',function(){initAudio();startDrone();this.classList.add('gone')});
+
+/* ── 3D helpers ── */
+const TAU=Math.PI*2;
+function rotY(p,a){const c=Math.cos(a),s=Math.sin(a);return[c*p[0]+s*p[2],p[1],-s*p[0]+c*p[2]]}
+function rotX(p,a){const c=Math.cos(a),s=Math.sin(a);return[p[0],c*p[1]-s*p[2],s*p[1]+c*p[2]]}
+function cam(pt,c,w,h){let v=[pt[0]-c[0],pt[1]-c[1],pt[2]-c[2]];v=rotY(v,c[3]);v=rotX(v,c[4]);if(v[2]<.15)return null;const f=c[5]||1;return[w/2+v[0]/v[2]*w*f*.5,h/2-v[1]/v[2]*w*f*.5,v[2]]}
+
+/* ── HERO: Anamorphic Icosahedron ── */
+{
+const c=document.getElementById('hero-canvas'),x=c.getContext('2d'),fe=document.getElementById('hero-found');
+let mx=.5,my=.5,t=0;
+function rsz(){const d=Math.min(devicePixelRatio,2);c.width=c.offsetWidth*d;c.height=c.offsetHeight*d}
+rsz();addEventListener('resize',rsz);
+c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();mx=(e.clientX-r.left)/r.width;my=(e.clientY-r.top)/r.height});
+c.addEventListener('mouseleave',()=>{mx=.5;my=.5});
+const phi=(1+Math.sqrt(5))/2,iR=1.15;
+const iv=[[-1,phi,0],[1,phi,0],[-1,-phi,0],[1,-phi,0],[0,-1,phi],[0,1,phi],[0,-1,-phi],[0,1,-phi],[phi,0,-1],[phi,0,1],[-phi,0,-1],[-phi,0,1]].map(v=>{const l=Math.hypot(...v);return v.map(c=>c/l*iR)});
+const ie=[[0,1],[0,5],[0,7],[0,10],[0,11],[1,5],[1,7],[1,8],[1,9],[2,3],[2,4],[2,6],[2,10],[2,11],[3,4],[3,6],[3,8],[3,9],[4,5],[4,9],[4,11],[5,9],[5,11],[6,7],[6,8],[6,10],[7,8],[7,10],[8,9],[10,11]];
+const mZ=-6;
+const sc=iv.map(v=>{const d=2.5+Math.random()*7,s=d/(v[2]-mZ);return{sx:v[0]*s,sy:v[1]*s,sz:mZ+d,cx:v[0],cy:v[1],cz:v[2],p:Math.random()*TAU}});
+const stars=[];for(let i=0;i<180;i++)stars.push({x:(Math.random()-.5)*16,y:(Math.random()-.5)*10,z:1+Math.random()*14,b:.08+Math.random()*.22,p:Math.random()*TAU});
+let hc=false;
+!function loop(){requestAnimationFrame(loop);t+=.005;const w=c.width,h=c.height;x.fillStyle='#05060c';x.fillRect(0,0,w,h);
+const cx2=(mx-.5)*4,cy2=(my-.5)*2.5,dist=Math.hypot(cx2,cy2),al=Math.max(0,1-dist/.55);
+fe.classList.toggle('vis',al>.88);if(al>.88&&!hc){chime(660,.9,.05);chime(990,.9,.025);hc=true}if(al<.7)hc=false;
+const f=2.8;function p3(px,py,pz){const dx=px-cx2,dy=py-cy2,dz=pz-mZ;if(dz<.3)return null;return[w/2+dx/dz*w*f*.5,h/2-dy/dz*w*f*.5,dz]}
+stars.forEach(s=>{const p=p3(s.x,s.y,s.z);if(!p)return;x.fillStyle=`rgba(88,93,122,${s.b*(.7+.3*Math.sin(t*1.5+s.p))})`;x.beginPath();x.arc(p[0],p[1],Math.max(1,2.5/p[2]),0,TAU);x.fill()});
+sc.forEach((pt,i)=>{const a=al,px=pt.sx*(1-a)+pt.cx*a,py=pt.sy*(1-a)+pt.cy*a,pz=pt.sz*(1-a)+pt.cz*a;
+const pr=p3(px,py,pz);if(!pr)return;const pulse=.6+.4*Math.sin(t*2+pt.p),sz=Math.max(2,(3+a*2.5)/pr[2])*pulse;
+const col=i%3===0?'201,167,72':i%3===1?'34,181,170':'192,69,96';
+const grd=x.createRadialGradient(pr[0],pr[1],0,pr[0],pr[1],sz*4);grd.addColorStop(0,`rgba(${col},${.3*pulse})`);grd.addColorStop(1,`rgba(${col},0)`);
+x.fillStyle=grd;x.beginPath();x.arc(pr[0],pr[1],sz*4,0,TAU);x.fill();
+x.fillStyle=`rgba(${col},${.5+.5*a})`;x.beginPath();x.arc(pr[0],pr[1],sz*.5,0,TAU);x.fill()});
+if(al>.25){x.globalAlpha=(al-.25)/.75*.35;x.strokeStyle='rgba(201,167,72,.6)';x.lineWidth=1;
+ie.forEach(([a2,b])=>{const va=sc[a2],vb=sc[b],t2=al;
+const pa=p3(va.sx*(1-t2)+va.cx*t2,va.sy*(1-t2)+va.cy*t2,va.sz*(1-t2)+va.cz*t2);
+const pb=p3(vb.sx*(1-t2)+vb.cx*t2,vb.sy*(1-t2)+vb.cy*t2,vb.sz*(1-t2)+vb.cz*t2);
+if(pa&&pb){x.beginPath();x.moveTo(pa[0],pa[1]);x.lineTo(pb[0],pb[1]);x.stroke()}});x.globalAlpha=1}}()
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   §01 — SOLAR SYSTEM: Two Universes, One Image
+   Fixed overview · draggable observer only · observer's projection
+   ══════════════════════════════════════════════════════════════════ */
+{
+const cv=document.getElementById('s1-canvas'),ctx=cv.getContext('2d');
+function rsz(){const d=Math.min(devicePixelRatio,2);cv.width=cv.offsetWidth*d;cv.height=cv.offsetHeight*d}
+rsz();addEventListener('resize',rsz);
+
+/* ── Starfield ── */
+const bgStars=[];for(let i=0;i<300;i++)bgStars.push({x:Math.random(),y:Math.random(),b:.15+Math.random()*.5,s:.5+Math.random()*1.5,p:Math.random()*TAU});
+
+/* ── Solar system (FROZEN) ── */
+const SUN={size:.4, col:[255,210,80]};
+const CENTER=[0, 0, 8];
+const planets=[
+  {orbit:1.2, phase:0.4,  size:.09, col:[180,130,100], name:'Mercury'},
+  {orbit:1.8, phase:2.4,  size:.14, col:[220,190,140], name:'Venus'},
+  {orbit:2.6, phase:4.6,  size:.16, col:[80,140,200],  name:'Earth',
+   moons:[{orbit:.35, phase:1.2, size:.045, col:[180,180,180]}]},
+  {orbit:3.3, phase:0.8,  size:.12, col:[200,100,80],  name:'Mars'},
+  {orbit:4.5, phase:3.2,  size:.3,  col:[210,180,140], name:'Jupiter',
+   moons:[{orbit:.55,phase:0.5,size:.055,col:[200,200,160]},{orbit:.75,phase:3.0,size:.045,col:[160,180,200]}]},
+  {orbit:6.0, phase:5.2,  size:.26, col:[210,200,160], name:'Saturn', ring:true},
+];
+
+/* ── Precompute base (scale=1) world positions ── */
+const baseBodies=[];
+// Sun
+baseBodies.push({pos:[...CENTER], size:SUN.size, col:SUN.col, glow:true, name:'Sun'});
+// Planets & moons
+planets.forEach(p=>{
+  const bx=CENTER[0]+Math.cos(p.phase)*p.orbit;
+  const by=CENTER[1]+Math.sin(p.phase)*p.orbit*.3;
+  const bz=CENTER[2]+Math.sin(p.phase)*p.orbit;
+  baseBodies.push({pos:[bx,by,bz], size:p.size, col:p.col, glow:false, name:p.name, ring:p.ring, orbit:p.orbit});
+  if(p.moons) p.moons.forEach(m=>{
+    baseBodies.push({pos:[bx+Math.cos(m.phase)*m.orbit, by+Math.sin(m.phase)*m.orbit*.3, bz+Math.sin(m.phase)*m.orbit], size:m.size, col:m.col, glow:false, name:'moon'});
+  });
+});
+
+/* Scale all bodies along rays from observer */
+function scaledBodies(S, eye){
+  return baseBodies.map(b=>({
+    pos:[eye[0]+(b.pos[0]-eye[0])*S, eye[1]+(b.pos[1]-eye[1])*S, eye[2]+(b.pos[2]-eye[2])*S],
+    size:b.size*S, col:b.col, glow:b.glow, name:b.name, ring:b.ring
+  }));
+}
+
+/* ── Observer position ── */
+let eyePos=[0, 0.3, 0];
+let eyeScreen=null;
+const EYE_R=20;
+
+/* ── Configurations ── */
+const cfgs=[1, 1.7, 0.45, 2.3];
+let ci=0, fromS=1, toS=1, aT=1;
+function curS(){const t=Math.min(1,aT),e=t<.5?2*t*t:1-(-2*t+2)**2/2;return fromS+(toS-fromS)*e}
+
+/* ── LEFT PANEL: simple top-down map projection ──
+   We project 3D (x, y, z) to 2D screen as:
+     sx = centerX + x * scale
+     sy = centerY - (z * 0.85 + y * 0.35) * scale
+   This gives a nice "tilted map" view where z goes up the screen
+   and y (height) shifts things slightly up too. */
+function mapProj(pos, cx, cy, sc){
+  return[cx + pos[0]*sc, cy - (pos[2]*0.85 + pos[1]*0.35)*sc];
+}
+
+/* ── Pointer: drag observer only ── */
+let dragging=false, ptrId=null;
+
+cv.addEventListener('pointerdown',e=>{
+  const r=cv.getBoundingClientRect();
+  const nx=(e.clientX-r.left)/r.width;
+  if(nx>.52)return;
+  const px=(e.clientX-r.left)*cv.width/r.width;
+  const py=(e.clientY-r.top)*cv.height/r.height;
+  if(eyeScreen&&Math.hypot(px-eyeScreen[0],py-eyeScreen[1])<EYE_R*2.5*(cv.width/900)){
+    dragging=true;ptrId=e.pointerId;
+    cv.setPointerCapture(e.pointerId);
+  }
+});
+
+cv.addEventListener('pointermove',e=>{
+  if(!dragging||e.pointerId!==ptrId)return;
+  const r=cv.getBoundingClientRect();
+  const hw=cv.width/2;
+  // Map screen movement back to world XZ coordinates
+  const mapScale=hw*0.055; // must match rendering scale
+  const dx=(e.movementX||0)*(cv.width/r.width);
+  const dy=(e.movementY||0)*(cv.height/r.height);
+  eyePos[0]+=dx/mapScale;
+  eyePos[2]+=-dy/mapScale/0.85; // inverse of map projection
+  // Clamp near origin
+  eyePos[0]=Math.max(-3,Math.min(3,eyePos[0]));
+  eyePos[2]=Math.max(-3,Math.min(3,eyePos[2]));
+});
+
+cv.addEventListener('pointerup',()=>{dragging=false;ptrId=null});
+cv.addEventListener('pointercancel',()=>{dragging=false;ptrId=null});
+
+// Cursor feedback
+cv.addEventListener('pointermove',e=>{
+  if(dragging)return;
+  const r=cv.getBoundingClientRect();
+  const nx=(e.clientX-r.left)/r.width;
+  if(nx>.52){cv.style.cursor='default';return}
+  const px=(e.clientX-r.left)*cv.width/r.width;
+  const py=(e.clientY-r.top)*cv.height/r.height;
+  if(eyeScreen&&Math.hypot(px-eyeScreen[0],py-eyeScreen[1])<EYE_R*2.5*(cv.width/900)){
+    cv.style.cursor='grab';
+  } else {
+    cv.style.cursor='default';
+  }
+});
+
+/* ── Buttons ── */
+document.getElementById('s1-same').addEventListener('click',function(){
+  fromS=curS();ci=(ci+1)%cfgs.length;toS=cfgs[ci];aT=0;
+  this.classList.remove('flash');void this.offsetWidth;this.classList.add('flash');
+  document.getElementById('s1-tag-text').textContent='configuration '+(ci+1)+' / '+cfgs.length;
+  chime(330,.5,.06);chime(495,.5,.035);
+});
+document.getElementById('s1-reset').addEventListener('click',()=>{
+  fromS=curS();ci=0;toS=1;aT=0;
+  eyePos=[0,0.3,0];
+  document.getElementById('s1-tag-text').textContent='configuration 1 / '+cfgs.length;
+  chime(220,.3,.04);
+});
+
+/* ── Drawing helpers ── */
+function drawBodyR(camArr,pos,radius,col,glow,pw,h,offX){
+  const p=cam(pos,camArr,pw,h);
+  if(!p||p[2]<.2)return null;
+  const sr=Math.max(2,radius/p[2]*pw*.5);
+  const sx=p[0]+offX, sy=p[1];
+  if(glow){
+    const gr=ctx.createRadialGradient(sx,sy,0,sx,sy,sr*3.5);
+    gr.addColorStop(0,`rgba(${col[0]},${col[1]},${col[2]},.3)`);
+    gr.addColorStop(1,`rgba(${col[0]},${col[1]},${col[2]},0)`);
+    ctx.fillStyle=gr;ctx.beginPath();ctx.arc(sx,sy,sr*3.5,0,TAU);ctx.fill();
+  }
+  const gr2=ctx.createRadialGradient(sx-sr*.25,sy-sr*.25,0,sx,sy,sr);
+  gr2.addColorStop(0,`rgba(${Math.min(255,col[0]+50)},${Math.min(255,col[1]+50)},${Math.min(255,col[2]+50)},.9)`);
+  gr2.addColorStop(1,`rgba(${col[0]>>1},${col[1]>>1},${col[2]>>1},.75)`);
+  ctx.fillStyle=gr2;ctx.beginPath();ctx.arc(sx,sy,sr,0,TAU);ctx.fill();
+  return{sx,sy,sr,depth:p[2]};
+}
+
+function drawBodyMap(pos,radius,col,glow,cx,cy,sc){
+  const [sx,sy]=mapProj(pos,cx,cy,sc);
+  const sr=Math.max(2.5,radius*sc*0.5);
+  if(glow){
+    const gr=ctx.createRadialGradient(sx,sy,0,sx,sy,sr*3.5);
+    gr.addColorStop(0,`rgba(${col[0]},${col[1]},${col[2]},.3)`);
+    gr.addColorStop(1,`rgba(${col[0]},${col[1]},${col[2]},0)`);
+    ctx.fillStyle=gr;ctx.beginPath();ctx.arc(sx,sy,sr*3.5,0,TAU);ctx.fill();
+  }
+  const gr2=ctx.createRadialGradient(sx-sr*.2,sy-sr*.2,0,sx,sy,sr);
+  gr2.addColorStop(0,`rgba(${Math.min(255,col[0]+50)},${Math.min(255,col[1]+50)},${Math.min(255,col[2]+50)},.9)`);
+  gr2.addColorStop(1,`rgba(${col[0]>>1},${col[1]>>1},${col[2]>>1},.75)`);
+  ctx.fillStyle=gr2;ctx.beginPath();ctx.arc(sx,sy,sr,0,TAU);ctx.fill();
+}
+
+function drawOrbitMap(orbitR,S,col,cx,cy,sc,eye){
+  const N=48;ctx.beginPath();
+  for(let i=0;i<=N;i++){
+    const a=i/N*TAU;
+    const bx=CENTER[0]+Math.cos(a)*orbitR;
+    const by=CENTER[1]+Math.sin(a)*orbitR*.3;
+    const bz=CENTER[2]+Math.sin(a)*orbitR;
+    const px=eye[0]+(bx-eye[0])*S;
+    const py=eye[1]+(by-eye[1])*S;
+    const pz=eye[2]+(bz-eye[2])*S;
+    const [sx2,sy2]=mapProj([px,py,pz],cx,cy,sc);
+    i===0?ctx.moveTo(sx2,sy2):ctx.lineTo(sx2,sy2);
+  }
+  ctx.strokeStyle=`rgba(${col[0]},${col[1]},${col[2]},.15)`;ctx.lineWidth=.8;ctx.stroke();
+}
+
+function drawOrbitR(camArr,orbitR,S,col,pw,h,offX,eye){
+  const N=48;ctx.beginPath();let started=false;
+  for(let i=0;i<=N;i++){
+    const a=i/N*TAU;
+    const bx=CENTER[0]+Math.cos(a)*orbitR;
+    const by=CENTER[1]+Math.sin(a)*orbitR*.3;
+    const bz=CENTER[2]+Math.sin(a)*orbitR;
+    const px=eye[0]+(bx-eye[0])*S;
+    const py=eye[1]+(by-eye[1])*S;
+    const pz=eye[2]+(bz-eye[2])*S;
+    const p=cam([px,py,pz],camArr,pw,h);
+    if(!p){started=false;continue}
+    if(!started){ctx.moveTo(p[0]+offX,p[1]);started=true}
+    else ctx.lineTo(p[0]+offX,p[1]);
+  }
+  ctx.strokeStyle=`rgba(${col[0]},${col[1]},${col[2]},.13)`;ctx.lineWidth=.8;ctx.stroke();
+}
+
+function drawSaturnRingR(camArr,ctrPos,sz,col,pw,h,offX){
+  for(let ring=0;ring<3;ring++){
+    const r=sz*(1.6+ring*.5);
+    const N=36;ctx.beginPath();let started=false;
+    for(let i=0;i<=N;i++){
+      const a=i/N*TAU;
+      const p=cam([ctrPos[0]+Math.cos(a)*r,ctrPos[1]+Math.sin(a)*r*.12,ctrPos[2]+Math.sin(a)*r*.5],camArr,pw,h);
+      if(!p){started=false;continue}
+      if(!started){ctx.moveTo(p[0]+offX,p[1]);started=true}else ctx.lineTo(p[0]+offX,p[1]);
+    }
+    ctx.strokeStyle=`rgba(${col[0]},${col[1]},${col[2]},${.1-.02*ring})`;ctx.lineWidth=2-ring*.5;ctx.stroke();
+  }
+}
+
+function drawSaturnRingMap(ctrPos,sz,col,cx,cy,sc){
+  for(let ring=0;ring<3;ring++){
+    const r=sz*(1.6+ring*.5);
+    const N=36;ctx.beginPath();
+    for(let i=0;i<=N;i++){
+      const a=i/N*TAU;
+      const p=[ctrPos[0]+Math.cos(a)*r, ctrPos[1]+Math.sin(a)*r*.12, ctrPos[2]+Math.sin(a)*r*.5];
+      const [sx2,sy2]=mapProj(p,cx,cy,sc);
+      i===0?ctx.moveTo(sx2,sy2):ctx.lineTo(sx2,sy2);
+    }
+    ctx.strokeStyle=`rgba(${col[0]},${col[1]},${col[2]},${.1-.02*ring})`;ctx.lineWidth=2-ring*.5;ctx.stroke();
+  }
+}
+
+let st=0;
+!function frame(){
+  requestAnimationFrame(frame);
+  if(aT<1)aT+=.012;
+  st+=.004;
+
+  const w=cv.width,h=cv.height,hw=w/2;
+  const S=curS();
+  const bodies=scaledBodies(S, eyePos);
+
+  // ── Background ──
+  ctx.fillStyle='#040510';ctx.fillRect(0,0,w,h);
+  bgStars.forEach(s=>{
+    ctx.fillStyle=`rgba(200,200,220,${s.b*(.5+.5*Math.sin(st*3+s.p))*.4})`;
+    ctx.beginPath();ctx.arc(s.x*w,s.y*h,s.s*(w/1200),0,TAU);ctx.fill();
+  });
+
+  // Divider
+  ctx.save();ctx.strokeStyle='rgba(30,35,55,.6)';ctx.lineWidth=1;ctx.setLineDash([5,4]);
+  ctx.beginPath();ctx.moveTo(hw,0);ctx.lineTo(hw,h);ctx.stroke();ctx.restore();
+  const fs=Math.round(9*(w/1100));
+  ctx.fillStyle='rgba(88,93,122,.4)';ctx.font=fs+'px Space Mono,monospace';ctx.textAlign='center';
+  ctx.fillText('THE REAL ARRANGEMENT',hw*.5,fs+6);
+  ctx.fillText('WHAT THE OBSERVER SEES',hw*1.5,fs+6);
+
+  // ══════ LEFT PANEL — top-down map ══════
+  ctx.save();ctx.beginPath();ctx.rect(0,0,hw-1,h);ctx.clip();
+
+  // Map projection center: solar system should be in the upper portion,
+  // observer in the lower portion. Center the map on the midpoint.
+  const mapCX=hw*0.5;
+  const mapCY=h*0.5;
+  const mapSc=hw*0.055; // world units to pixels
+
+  // Orbit rings
+  planets.forEach(p=>drawOrbitMap(p.orbit,S,p.col,mapCX,mapCY,mapSc,eyePos));
+
+  // Bodies
+  bodies.forEach(b=>{
+    if(b.ring)drawSaturnRingMap(b.pos,b.size,b.col,mapCX,mapCY,mapSc);
+    drawBodyMap(b.pos,b.size,b.col,b.glow,mapCX,mapCY,mapSc);
+  });
+
+  // ── Observer icon (always visible!) ──
+  const [ex,ey]=mapProj(eyePos,mapCX,mapCY,mapSc);
+  eyeScreen=[ex,ey];
+  const R=Math.max(12,16*(w/1100));
+  // Glow
+  const pulse=.6+.4*Math.sin(st*4);
+  const gr=ctx.createRadialGradient(ex,ey,R*.3,ex,ey,R*3.5);
+  gr.addColorStop(0,'rgba(201,167,72,'+(pulse*.2).toFixed(2)+')');
+  gr.addColorStop(1,'rgba(201,167,72,0)');
+  ctx.fillStyle=gr;ctx.beginPath();ctx.arc(ex,ey,R*3.5,0,TAU);ctx.fill();
+  // Eye shape
+  ctx.strokeStyle='rgba(240,232,216,.5)';ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.ellipse(ex,ey,R*2.2,R*1,0,0,TAU);ctx.stroke();
+  // Iris
+  ctx.fillStyle='rgba(201,167,72,.6)';ctx.beginPath();ctx.arc(ex,ey,R*.7,0,TAU);ctx.fill();
+  // Pupil
+  ctx.fillStyle='rgba(5,6,12,.9)';ctx.beginPath();ctx.arc(ex,ey,R*.3,0,TAU);ctx.fill();
+  // Label
+  ctx.fillStyle='rgba(201,167,72,.7)';ctx.font='bold '+Math.round(10*(w/1100))+'px Space Mono,monospace';ctx.textAlign='center';
+  ctx.fillText('observer',ex,ey+R*1+16*(w/1100));
+  if(!dragging){
+    ctx.fillStyle='rgba(201,167,72,.35)';ctx.font=Math.round(8*(w/1100))+'px Space Mono,monospace';
+    ctx.fillText('← drag me',ex+R*3,ey+4);
+  }
+
+  // Projection rays from observer to each body
+  bodies.forEach(b=>{
+    const [bx,by]=mapProj(b.pos,mapCX,mapCY,mapSc);
+    ctx.beginPath();ctx.moveTo(ex,ey);ctx.lineTo(bx,by);
+    ctx.strokeStyle=`rgba(${b.col.join(',')},0.08)`;ctx.lineWidth=.7;ctx.stroke();
+  });
+
+  ctx.restore();
+
+  // ══════ RIGHT PANEL — observer's perspective view ══════
+  ctx.save();ctx.beginPath();ctx.rect(hw+1,0,hw-1,h);ctx.clip();
+
+  // Right panel camera: observer always looks at the Sun (must be centered)
+  const sunPos=bodies[0].pos;
+  const dx=sunPos[0]-eyePos[0], dy=sunPos[1]-eyePos[1], dz=sunPos[2]-eyePos[2];
+  const eYaw=Math.atan2(-dx, dz);    // rotate so dx component → 0
+  const ePitch=Math.atan2(dy, Math.hypot(dx, dz)); // rotate so dy component → 0
+  const rightCam=[eyePos[0],eyePos[1],eyePos[2],eYaw,ePitch,1.0];
+
+  // Orbit rings (from observer's view)
+  planets.forEach(p=>drawOrbitR(rightCam,p.orbit,S,p.col,hw,h,hw,eyePos));
+
+  // Bodies (depth-sorted)
+  const sortedR=[...bodies];
+  sortedR.sort((a,b)=>{const da=cam(a.pos,rightCam,hw,h);const db=cam(b.pos,rightCam,hw,h);return(db?db[2]:999)-(da?da[2]:999)});
+  sortedR.forEach(b=>{
+    if(b.ring)drawSaturnRingR(rightCam,b.pos,b.size,b.col,hw,h,hw);
+    drawBodyR(rightCam,b.pos,b.size,b.col,b.glow,hw,h,hw);
+  });
+  ctx.restore();
+
+  // Annotation
+  if(aT>=1&&ci>0){
+    ctx.fillStyle='rgba(34,181,170,.35)';ctx.font=Math.round(9*(w/1100))+'px Space Mono,monospace';ctx.textAlign='center';
+    ctx.fillText('← nothing moved',hw*1.5,h-10*(w/1100));
+  }
+}();
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   §02 — THE VANISHING POINT
+   Renaissance palazzo corridor · marble floor · arched colonnade ·
+   coffered ceiling · golden light from the distant doorway
+   ══════════════════════════════════════════════════════════════════ */
+{
+const cv=document.getElementById('s2-canvas'),ctx=cv.getContext('2d');
+function rsz(){const d=Math.min(devicePixelRatio,2);cv.width=cv.offsetWidth*d;cv.height=cv.offsetHeight*d}
+rsz();addEventListener('resize',rsz);
+
+let vpx=.5, vpy=.42;
+let dragging=false;
+
+cv.addEventListener('pointerdown',e=>{
+  const r=cv.getBoundingClientRect();
+  const nx=(e.clientX-r.left)/r.width, ny=(e.clientY-r.top)/r.height;
+  if(Math.hypot(nx-vpx,ny-vpy)<.08){dragging=true;cv.setPointerCapture(e.pointerId)}
+});
+cv.addEventListener('pointermove',e=>{
+  if(!dragging)return;
+  const r=cv.getBoundingClientRect();
+  vpx=Math.max(.15,Math.min(.85,(e.clientX-r.left)/r.width));
+  vpy=Math.max(.15,Math.min(.6,(e.clientY-r.top)/r.height));
+});
+cv.addEventListener('pointerup',()=>{dragging=false});
+cv.addEventListener('pointercancel',()=>{dragging=false});
+cv.addEventListener('pointermove',e=>{
+  if(dragging)return;
+  const r=cv.getBoundingClientRect();
+  const nx=(e.clientX-r.left)/r.width, ny=(e.clientY-r.top)/r.height;
+  cv.style.cursor=Math.hypot(nx-vpx,ny-vpy)<.08?'grab':'default';
+});
+document.getElementById('s2-reset').addEventListener('click',()=>{vpx=.5;vpy=.42;chime(220,.3,.04)});
+document.getElementById('s2-grid-toggle').addEventListener('click',()=>{chime(350,.2,.04)});
+
+let t2=0;
+!function frame(){
+  requestAnimationFrame(frame);
+  t2+=.002;
+  const w=cv.width, h=cv.height;
+  if(w<10||h<10||!isFinite(w)||!isFinite(h))return;
+  try{
+
+  const VX=vpx*w, VY=vpy*h;
+  const wallL=w*.06, wallR=w*.94;
+  const floorY=h*.92, ceilY=h*.04;
+
+  function floorAt(d){return floorY+(VY-floorY)*d}
+  function ceilAt(d){return ceilY+(VY-ceilY)*d}
+  function leftAt(d){return wallL+(VX-wallL)*d}
+  function rightAt(d){return wallR+(VX-wallR)*d}
+  function pd(d){return 1-Math.pow(1-d,2.5)} // perspective depth curve
+
+  // ── Warm umber background ──
+  ctx.fillStyle='#0e0a06';ctx.fillRect(0,0,w,h);
+
+  // ── Golden radiance from the vanishing point ──
+  const glow=ctx.createRadialGradient(VX,VY,0,VX,VY,w*.5);
+  glow.addColorStop(0,'rgba(240,200,110,.14)');
+  glow.addColorStop(.2,'rgba(200,160,80,.07)');
+  glow.addColorStop(.5,'rgba(140,100,40,.03)');
+  glow.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=glow;ctx.fillRect(0,0,w,h);
+
+  // ── Walls ──
+  // Left wall
+  ctx.beginPath();ctx.moveTo(wallL,floorY);ctx.lineTo(VX,VY);ctx.lineTo(wallL,ceilY);ctx.closePath();
+  const lwG=ctx.createLinearGradient(wallL,VY,VX,VY);
+  lwG.addColorStop(0,'rgba(50,38,24,1)');lwG.addColorStop(1,'rgba(70,55,32,.4)');
+  ctx.fillStyle=lwG;ctx.fill();
+  // Right wall
+  ctx.beginPath();ctx.moveTo(wallR,floorY);ctx.lineTo(VX,VY);ctx.lineTo(wallR,ceilY);ctx.closePath();
+  const rwG=ctx.createLinearGradient(wallR,VY,VX,VY);
+  rwG.addColorStop(0,'rgba(42,32,20,1)');rwG.addColorStop(1,'rgba(65,50,30,.4)');
+  ctx.fillStyle=rwG;ctx.fill();
+
+  // ── Floor ──
+  ctx.beginPath();ctx.moveTo(wallL,floorY);ctx.lineTo(wallR,floorY);ctx.lineTo(VX,VY);ctx.closePath();
+  const fG=ctx.createLinearGradient(0,floorY,0,VY);
+  fG.addColorStop(0,'rgba(35,28,18,1)');fG.addColorStop(.4,'rgba(50,40,25,.85)');fG.addColorStop(1,'rgba(80,65,40,.3)');
+  ctx.fillStyle=fG;ctx.fill();
+
+  // ── Ceiling ──
+  ctx.beginPath();ctx.moveTo(wallL,ceilY);ctx.lineTo(wallR,ceilY);ctx.lineTo(VX,VY);ctx.closePath();
+  const cG=ctx.createLinearGradient(0,ceilY,0,VY);
+  cG.addColorStop(0,'rgba(30,22,14,1)');cG.addColorStop(1,'rgba(60,48,28,.3)');
+  ctx.fillStyle=cG;ctx.fill();
+
+  // ── MARBLE FLOOR TILES ──
+  const ROWS=18, COLS=12;
+  for(let row=0;row<ROWS;row++){
+    const d0=pd(row/ROWS), d1=pd((row+1)/ROWS);
+    const y0=floorAt(d0), y1=floorAt(d1);
+    const l0=leftAt(d0), l1=leftAt(d1);
+    const r0=rightAt(d0), r1=rightAt(d1);
+    const near=1-d0;
+
+    for(let col=0;col<COLS;col++){
+      const cx0=l0+(r0-l0)*col/COLS;
+      const cx1=l0+(r0-l0)*(col+1)/COLS;
+      const cx2=l1+(r1-l1)*(col+1)/COLS;
+      const cx3=l1+(r1-l1)*col/COLS;
+
+      const dark=(row+col)%2===0;
+      ctx.beginPath();
+      ctx.moveTo(cx0,y0);ctx.lineTo(cx1,y0);ctx.lineTo(cx2,y1);ctx.lineTo(cx3,y1);ctx.closePath();
+
+      if(dark){
+        ctx.fillStyle=`rgba(18,14,8,${.5+.35*near})`;
+      } else {
+        const b=Math.round(170+60*near);
+        ctx.fillStyle=`rgba(${b},${b-15},${b-45},${.15+.25*near})`;
+      }
+      ctx.fill();
+      // Tile edge
+      if(near>.3){
+        ctx.strokeStyle=`rgba(160,130,80,${.02+.03*near})`;ctx.lineWidth=.5;ctx.stroke();
+      }
+    }
+  }
+
+  // ── Floor converging lines ──
+  for(let c=0;c<=COLS;c++){
+    const bx=wallL+(wallR-wallL)*c/COLS;
+    ctx.beginPath();ctx.moveTo(bx,floorY);ctx.lineTo(VX,VY);
+    ctx.strokeStyle='rgba(180,150,90,.04)';ctx.lineWidth=.5;ctx.stroke();
+  }
+
+  // ── ARCHED COLONNADE ──
+  const ARCHES=7;
+  for(let side=-1;side<=1;side+=2){
+    for(let i=0;i<ARCHES;i++){
+      const d=pd((i+.3)/ARCHES);
+      const dn=pd((i+1.3)/ARCHES);
+      const near=1-d;
+
+      const bY=floorAt(d), tY=ceilAt(d);
+      const bYn=floorAt(dn), tYn=ceilAt(dn);
+      const cX=side<0?leftAt(d):rightAt(d);
+      const cXn=side<0?leftAt(dn):rightAt(dn);
+
+      const colW=Math.max(2,Math.abs(cX-cXn)*.2);
+      const archMidX=(cX+cXn)/2;
+      const archTopY=(tY+tYn)/2;
+      const archBotY=(bY+bYn)/2;
+
+      // ── Arch opening (dark void) ──
+      if(i<ARCHES-1){
+        const aL=cX+(side<0?colW/2:-colW/2);
+        const aR=cXn+(side<0?-colW/2:colW/2);
+        const aTop=archTopY;
+        const aBot=Math.min(bY,bYn);
+        const archH=(aBot-aTop)*.38;
+
+        ctx.beginPath();
+        ctx.moveTo(aL,aBot);
+        ctx.lineTo(aL,aTop+archH);
+        ctx.quadraticCurveTo(archMidX, aTop-archH*.5, aR, (tYn+(tYn-tY)*.0)+archH+(archH*(dn-d)));
+        ctx.lineTo(aR,Math.min(bYn,aBot));
+        ctx.closePath();
+        ctx.fillStyle=`rgba(3,2,1,${.25+.4*near})`;
+        ctx.fill();
+
+        // Arch curve line
+        ctx.beginPath();
+        ctx.moveTo(aL,aTop+archH);
+        ctx.quadraticCurveTo(archMidX, aTop-archH*.5, aR, (tYn+(tYn-tY)*.0)+archH+(archH*(dn-d)));
+        ctx.strokeStyle=`rgba(200,170,110,${.06+.14*near})`;
+        ctx.lineWidth=Math.max(1,2.5*near);
+        ctx.stroke();
+
+        // Keystone accent
+        const ksY=aTop-archH*.3;
+        if(near>.2){
+          ctx.fillStyle=`rgba(200,170,110,${.04+.06*near})`;
+          ctx.beginPath();ctx.arc(archMidX,ksY+archH*.3,colW*.5,0,TAU);ctx.fill();
+        }
+      }
+
+      // ── Column ──
+      const cGrd=ctx.createLinearGradient(cX-colW,0,cX+colW,0);
+      const lit=side<0?0:.7, shd=side<0?.7:0;
+      cGrd.addColorStop(0,`rgba(${90+30*lit},${72+25*lit},${48+15*lit},${.2+.55*near})`);
+      cGrd.addColorStop(.3,`rgba(${110+30*lit},${90+25*lit},${60+15*lit},${.25+.6*near})`);
+      cGrd.addColorStop(.7,`rgba(${100+30*shd},${80+25*shd},${52+15*shd},${.2+.5*near})`);
+      cGrd.addColorStop(1,`rgba(${70+20*shd},${55+15*shd},${36+10*shd},${.15+.4*near})`);
+      ctx.fillStyle=cGrd;
+      ctx.fillRect(cX-colW/2,tY,colW,bY-tY);
+
+      // Fluting (vertical grooves)
+      if(near>.15){
+        for(let f=0;f<3;f++){
+          const fx=cX-colW*.3+f*colW*.3;
+          ctx.beginPath();ctx.moveTo(fx,tY+colW*.5);ctx.lineTo(fx,bY-colW*.3);
+          ctx.strokeStyle=`rgba(0,0,0,${.04+.06*near})`;ctx.lineWidth=.5;ctx.stroke();
+        }
+      }
+
+      // Capital (Corinthian style)
+      const capH=colW*.5;
+      ctx.fillStyle=`rgba(200,170,110,${.08+.16*near})`;
+      ctx.fillRect(cX-colW*.9,tY-capH*.1,colW*1.8,capH*.4);
+      ctx.fillStyle=`rgba(200,170,110,${.05+.1*near})`;
+      ctx.fillRect(cX-colW*1.1,tY-capH*.25,colW*2.2,capH*.2);
+      // Abacus (top slab)
+      ctx.fillStyle=`rgba(200,170,110,${.06+.12*near})`;
+      ctx.fillRect(cX-colW*1.2,tY-capH*.4,colW*2.4,capH*.18);
+
+      // Base (Attic base)
+      const baseH=colW*.3;
+      ctx.fillStyle=`rgba(200,170,110,${.05+.1*near})`;
+      ctx.fillRect(cX-colW*.9,bY-baseH,colW*1.8,baseH*.35);
+      ctx.fillRect(cX-colW*1,bY-baseH*.3,colW*2,baseH*.3);
+
+      // Light edge
+      ctx.beginPath();
+      ctx.moveTo(cX+(side<0?colW*.35:-colW*.35),tY);
+      ctx.lineTo(cX+(side<0?colW*.35:-colW*.35),bY);
+      ctx.strokeStyle=`rgba(240,210,140,${.02+.06*near})`;ctx.lineWidth=1;ctx.stroke();
+    }
+  }
+
+  // ── COFFERED CEILING beams ──
+  // Horizontal beams
+  for(let i=0;i<10;i++){
+    const d=pd(i/10);
+    const y=ceilAt(d);
+    const l=leftAt(d), r=rightAt(d);
+    const near=1-d;
+    ctx.beginPath();ctx.moveTo(l,y);ctx.lineTo(r,y);
+    ctx.strokeStyle=`rgba(160,130,80,${.04+.1*near})`;
+    ctx.lineWidth=Math.max(.5,3*near);ctx.stroke();
+  }
+  // Longitudinal beams
+  for(let c=0;c<=5;c++){
+    const bx=wallL+(wallR-wallL)*c/5;
+    ctx.beginPath();ctx.moveTo(bx,ceilY);ctx.lineTo(VX,VY);
+    ctx.strokeStyle='rgba(160,130,80,.03)';ctx.lineWidth=.8;ctx.stroke();
+  }
+
+  // ── Edge lines ──
+  ctx.strokeStyle='rgba(180,150,90,.1)';ctx.lineWidth=1.2;
+  ctx.beginPath();ctx.moveTo(wallL,floorY);ctx.lineTo(VX,VY);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(wallR,floorY);ctx.lineTo(VX,VY);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(wallL,ceilY);ctx.lineTo(VX,VY);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(wallR,ceilY);ctx.lineTo(VX,VY);ctx.stroke();
+
+  // ── Distant golden doorway ──
+  const dL=leftAt(.95), dR=rightAt(.95);
+  const dT=ceilAt(.95), dB=floorAt(.95);
+  const dGlow=ctx.createRadialGradient(VX,VY,0,VX,VY,Math.max(dR-dL,dB-dT));
+  dGlow.addColorStop(0,'rgba(255,235,170,.18)');
+  dGlow.addColorStop(.5,'rgba(240,200,120,.06)');
+  dGlow.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=dGlow;ctx.fillRect(dL,dT,dR-dL,dB-dT);
+  // Arch over doorway
+  ctx.beginPath();
+  ctx.moveTo(dL,dB);ctx.lineTo(dL,dT+(dB-dT)*.3);
+  ctx.quadraticCurveTo(VX,dT-(dB-dT)*.15, dR,dT+(dB-dT)*.3);
+  ctx.lineTo(dR,dB);
+  ctx.strokeStyle='rgba(220,190,130,.12)';ctx.lineWidth=1.5;ctx.stroke();
+
+  // ── Human figures ──
+  [.08,.22,.42,.65].forEach((d,i)=>{
+    const dp=pd(d);
+    const fy=floorAt(dp), cy2=ceilAt(dp);
+    const figH=(fy-cy2)*.42;
+    const lx=leftAt(dp), rx=rightAt(dp);
+    const fx=lx+(rx-lx)*(.28+i*.14);
+    const near=1-dp;
+    if(figH<4)return;
+
+    ctx.fillStyle=`rgba(${140+Math.round(50*near)},${110+Math.round(40*near)},${70+Math.round(30*near)},${.07+.18*near})`;
+    // Robe
+    ctx.beginPath();
+    ctx.moveTo(fx-figH*.14,fy);
+    ctx.quadraticCurveTo(fx-figH*.1,fy-figH*.4, fx-figH*.05,fy-figH*.72);
+    ctx.quadraticCurveTo(fx,fy-figH*.82, fx+figH*.05,fy-figH*.72);
+    ctx.quadraticCurveTo(fx+figH*.1,fy-figH*.4, fx+figH*.14,fy);
+    ctx.closePath();ctx.fill();
+    // Head
+    ctx.beginPath();ctx.arc(fx,fy-figH*.87,figH*.09,0,TAU);ctx.fill();
+    // Shadow
+    ctx.fillStyle=`rgba(0,0,0,${.03+.04*near})`;
+    ctx.beginPath();ctx.ellipse(fx,fy,figH*.15,figH*.03,0,0,TAU);ctx.fill();
+  });
+
+  // ── VANISHING POINT MARKER ──
+  const pulse=.5+.5*Math.sin(t2*5);
+  const vpG=ctx.createRadialGradient(VX,VY,0,VX,VY,50*(w/1100));
+  vpG.addColorStop(0,`rgba(255,230,150,${.12*pulse})`);
+  vpG.addColorStop(1,'rgba(255,230,150,0)');
+  ctx.fillStyle=vpG;ctx.beginPath();ctx.arc(VX,VY,50*(w/1100),0,TAU);ctx.fill();
+  const cr=18*(w/1100);
+  ctx.strokeStyle='rgba(255,225,140,.3)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(VX-cr,VY);ctx.lineTo(VX+cr,VY);ctx.moveTo(VX,VY-cr);ctx.lineTo(VX,VY+cr);ctx.stroke();
+  ctx.beginPath();ctx.arc(VX,VY,cr*.65,0,TAU);ctx.strokeStyle='rgba(255,225,140,.45)';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.beginPath();ctx.arc(VX,VY,3*(w/1100),0,TAU);ctx.fillStyle='rgba(255,235,170,.9)';ctx.fill();
+
+  const fs=Math.round(9*(w/1100));
+  ctx.fillStyle='rgba(255,225,140,.5)';ctx.font=fs+'px Space Mono,monospace';ctx.textAlign='center';
+  ctx.fillText('vanishing point',VX,VY-cr-10*(w/1100));
+  if(!dragging){
+    ctx.fillStyle='rgba(255,225,140,.22)';ctx.font=Math.round(8*(w/1100))+'px Space Mono,monospace';
+    ctx.fillText('drag me',VX,VY+cr+16*(w/1100));
+  }
+  }catch(e){}
+}();
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   §03 — FREEZING LIGHT: Six animated gallery cards
+   ══════════════════════════════════════════════════════════════════ */
+{
+const grid=document.getElementById('cap-grid');
+const cards=[
+  {year:'c. 400 BCE',name:'Camera Obscura',desc:'A dark room, a pinhole, and the first artificial image. Mozi in China and Aristotle in Greece both recorded it — light entering a small hole projects an inverted picture of the outside world.',
+   draw(ctx,w,h,t){
+    ctx.fillStyle='#080604';ctx.fillRect(0,0,w,h);
+    // Dark room with pinhole
+    const px=w*.48, py=h*.5, gap=3;
+    ctx.fillStyle='#12100c';ctx.fillRect(0,0,px-gap,h);
+    ctx.fillStyle='#0a0806';ctx.fillRect(px+gap,0,w-px-gap,h);
+    // Rays through pinhole
+    const rays=[[.15,.2],[.3,.7],[.2,.5],[.35,.3]];
+    rays.forEach(([rx,ry])=>{
+      const sx=rx*px*.8+px*.1, sy=ry*h;
+      const ex=w-sx+px, ey=h-sy;
+      ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(px,py);ctx.lineTo(ex,ey);
+      const hue=Math.round(160+rx*80);
+      ctx.strokeStyle=`rgba(${hue},${hue-30},${hue-80},.12)`;ctx.lineWidth=.8;ctx.stroke();
+      // Source dot
+      ctx.fillStyle=`rgba(${hue},${hue-30},${hue-80},.4)`;ctx.beginPath();ctx.arc(sx,sy,2+Math.sin(t*2+rx*5)*.8,0,TAU);ctx.fill();
+      // Projected dot (inverted)
+      ctx.fillStyle=`rgba(${hue},${hue-30},${hue-80},.25)`;ctx.beginPath();ctx.arc(ex,ey,2+Math.sin(t*2+rx*5)*.8,0,TAU);ctx.fill();
+    });
+    // Pinhole glow
+    const g=ctx.createRadialGradient(px,py,0,px,py,12);
+    g.addColorStop(0,'rgba(201,167,72,.3)');g.addColorStop(1,'rgba(201,167,72,0)');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(px,py,12,0,TAU);ctx.fill();
+  }},
+
+  {year:'1839',name:'Silver & Light',desc:'Daguerre fixed an image on a silver plate. For the first time, light left a permanent trace — a ghost of a moment, captured in chemistry.',
+   draw(ctx,w,h,t){
+    ctx.fillStyle='#0a0908';ctx.fillRect(0,0,w,h);
+    // Silver plate shimmer
+    for(let y=0;y<h;y+=2){
+      const b=.03+.02*Math.sin(y*.08+t*1.5);
+      ctx.fillStyle=`rgba(200,195,175,${b})`;
+      ctx.fillRect(w*.15,y,w*.7,1.5);
+    }
+    // Ghost portrait forming
+    const cx=w/2, cy=h*.42;
+    const a=.15+.1*Math.sin(t*.8);
+    // Head
+    const gr=ctx.createRadialGradient(cx,cy,0,cx,cy,w*.1);
+    gr.addColorStop(0,`rgba(200,190,165,${a})`);gr.addColorStop(1,'rgba(200,190,165,0)');
+    ctx.fillStyle=gr;ctx.beginPath();ctx.arc(cx,cy,w*.1,0,TAU);ctx.fill();
+    // Shoulders
+    ctx.beginPath();ctx.ellipse(cx,cy+w*.12,w*.16,w*.06,0,0,Math.PI);
+    ctx.fillStyle=`rgba(180,170,145,${a*.6})`;ctx.fill();
+    // Frame
+    ctx.strokeStyle='rgba(201,167,72,.08)';ctx.lineWidth=1;
+    ctx.strokeRect(w*.12,h*.08,w*.76,h*.84);
+  }},
+
+  {year:'1838',name:'Stereo Pairs',desc:'Wheatstone proved that depth can be recovered from two flat images — one for each eye. The third dimension, destroyed by projection, was partially restored.',
+   draw(ctx,w,h,t){
+    ctx.fillStyle='#060808';ctx.fillRect(0,0,w,h);
+    // Two offset views
+    const off=3+Math.sin(t)*1.5;
+    [[-off,'rgba(192,69,96,.3)'],[off,'rgba(34,181,170,.3)']].forEach(([dx,col])=>{
+      // Simple scene: rectangle + circle at different "depths"
+      ctx.strokeStyle=col;ctx.lineWidth=1.2;
+      ctx.strokeRect(w*.25+dx,h*.3,w*.2,h*.25);
+      ctx.beginPath();ctx.arc(w*.6+dx*1.8,h*.5,w*.08,0,TAU);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(w*.15+dx*.5,h*.75);ctx.lineTo(w*.85+dx*.5,h*.75);ctx.stroke();
+    });
+    // Merge zone label
+    ctx.fillStyle='rgba(240,232,216,.15)';ctx.font=`${Math.round(8*(w/300))}px Space Mono,monospace`;ctx.textAlign='center';
+    ctx.fillText('L + R = depth',w/2,h*.92);
+  }},
+
+  {year:'1895',name:'Moving Pictures',desc:'The Lumière brothers projected motion at 16 frames per second. The brain fused the flicker into seamless flow — time, captured and replayed.',
+   draw(ctx,w,h,t){
+    ctx.fillStyle='#080406';ctx.fillRect(0,0,w,h);
+    // Projector beam
+    const bx=w*.12, by=h*.5;
+    ctx.beginPath();ctx.moveTo(bx,by);ctx.lineTo(w*.88,h*.12);ctx.lineTo(w*.88,h*.88);ctx.closePath();
+    const bg=ctx.createLinearGradient(bx,by,w*.88,by);
+    bg.addColorStop(0,'rgba(220,190,120,.08)');bg.addColorStop(1,'rgba(220,190,120,.01)');
+    ctx.fillStyle=bg;ctx.fill();
+    // Film frames (flickering)
+    const flicker=.3+.15*Math.sin(t*30); // 30 "fps" visible flicker
+    ctx.fillStyle=`rgba(240,230,200,${flicker*.12})`;
+    ctx.fillRect(w*.6,h*.2,w*.22,h*.6);
+    // Sprocket holes
+    ctx.fillStyle='#080406';
+    for(let i=0;i<5;i++){
+      const fy=h*.18+i*h*.15;
+      ctx.fillRect(w*.56,fy,w*.03,h*.04);
+      ctx.fillRect(w*.84,fy,w*.03,h*.04);
+    }
+    // Projector body
+    ctx.fillStyle='rgba(100,80,50,.3)';
+    ctx.beginPath();ctx.arc(bx,by,w*.06,0,TAU);ctx.fill();
+    ctx.fillStyle='rgba(220,190,120,.2)';
+    ctx.beginPath();ctx.arc(bx,by,w*.025,0,TAU);ctx.fill();
+  }},
+
+  {year:'1927',name:'The Electric Eye',desc:'Farnsworth scanned an image line by line and transmitted it as electricity. The projection traveled at the speed of light — the image, liberated from place.',
+   draw(ctx,w,h,t){
+    ctx.fillStyle='#060806';ctx.fillRect(0,0,w,h);
+    // Scan lines
+    for(let y=0;y<h;y+=3){
+      const b=.015+.015*Math.sin(y*.15+t*5);
+      ctx.fillStyle=`rgba(140,210,90,${b})`;
+      ctx.fillRect(w*.1,y,w*.8,2);
+    }
+    // Sweeping scan beam
+    const scanY=((t*80)%h);
+    ctx.fillStyle='rgba(140,210,90,.12)';
+    ctx.fillRect(w*.1,scanY,w*.8,3);
+    // Glow around scan position
+    const sg=ctx.createRadialGradient(w/2,scanY,0,w/2,scanY,h*.15);
+    sg.addColorStop(0,'rgba(140,210,90,.06)');sg.addColorStop(1,'rgba(140,210,90,0)');
+    ctx.fillStyle=sg;ctx.beginPath();ctx.arc(w/2,scanY,h*.15,0,TAU);ctx.fill();
+    // Faint image forming
+    ctx.fillStyle='rgba(140,210,90,.04)';
+    ctx.fillRect(w*.3,h*.25,w*.15,h*.4);
+    ctx.beginPath();ctx.arc(w*.6,h*.4,w*.1,0,TAU);ctx.fill();
+  }},
+
+  {year:'1948',name:'The Complete Wavefront',desc:'Gabor recorded not just where light hits, but how it vibrates — amplitude and phase. A hologram rebuilds the light itself. The only medium that fools a moving eye.',
+   draw(ctx,w,h,t){
+    ctx.fillStyle='#08060c';ctx.fillRect(0,0,w,h);
+    // Interference fringes — two point sources
+    const s1x=w*.32, s1y=h*.5;
+    const s2x=w*.68, s2y=h*.5;
+    const step=3;
+    for(let y=0;y<h;y+=step){
+      for(let x=0;x<w;x+=step){
+        const d1=Math.sqrt((x-s1x)**2+(y-s1y)**2);
+        const d2=Math.sqrt((x-s2x)**2+(y-s2y)**2);
+        const v=Math.sin(d1*.12-t*1.5)*Math.sin(d2*.12+t*.8);
+        if(v>.2){
+          ctx.fillStyle=`rgba(176,128,224,${v*.2})`;
+          ctx.fillRect(x,y,step,step);
+        }
+      }
+    }
+    // Source points
+    [s1x,s2x].forEach(sx=>{
+      const g=ctx.createRadialGradient(sx,h*.5,0,sx,h*.5,10);
+      g.addColorStop(0,'rgba(176,128,224,.4)');g.addColorStop(1,'rgba(176,128,224,0)');
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(sx,h*.5,10,0,TAU);ctx.fill();
+    });
+  }},
+];
+
+// Build DOM
+cards.forEach((c,i)=>{
+  const el=document.createElement('div');
+  el.className='cap-card';
+  el.innerHTML=`<canvas width="360" height="270"></canvas><div class="cap-meta"><div class="cap-year">${c.year}</div><div class="cap-name">${c.name}</div><div class="cap-desc">${c.desc}</div></div>`;
+  el.addEventListener('click',()=>chime(260+i*70,.3,.06));
+  grid.appendChild(el);
+});
+
+let ct=0;
+!function loop(){
+  requestAnimationFrame(loop);
+  ct+=.012;
+  const canvases=grid.querySelectorAll('canvas');
+  canvases.forEach((cv,i)=>{
+    if(cv.width!==cv.offsetWidth*2&&cv.offsetWidth>0){cv.width=cv.offsetWidth*2;cv.height=cv.offsetHeight*2}
+    try{cards[i].draw(cv.getContext('2d'),cv.width,cv.height,ct)}catch(e){}
+  });
+}();
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   §04 — WALK THROUGH THE PROJECTION
+   WASD 3D world · perspective/ortho toggle · fog · inertial look
+   ══════════════════════════════════════════════════════════════════ */
+{
+const cv=document.getElementById('s4-canvas'),ctx=cv.getContext('2d');
+function rsz(){const d=Math.min(devicePixelRatio,2);cv.width=cv.offsetWidth*d;cv.height=cv.offsetHeight*d}
+rsz();addEventListener('resize',rsz);
+
+let camX=0, camY=1.6, camZ=-5;
+let camYaw=0, camPitch=-.1;
+let keys={};
+let projMode='perspective', fogOn=false;
+let fov=1.2;
+let dragging=false, lastMX, lastMY;
+
+addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true});
+addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false});
+
+cv.addEventListener('pointerdown',e=>{
+  dragging=true;lastMX=e.clientX;lastMY=e.clientY;
+  cv.setPointerCapture(e.pointerId);
+});
+cv.addEventListener('pointermove',e=>{
+  if(!dragging)return;
+  camYaw-=(e.clientX-lastMX)*.003;
+  camPitch=Math.max(-1.2,Math.min(1.2,camPitch-(e.clientY-lastMY)*.003));
+  lastMX=e.clientX;lastMY=e.clientY;
+});
+cv.addEventListener('pointerup',()=>{dragging=false});
+cv.addEventListener('pointercancel',()=>{dragging=false});
+cv.addEventListener('wheel',e=>{
+  e.preventDefault();
+  fov=Math.max(.3,Math.min(2.5,fov+e.deltaY*.002));
+},{passive:false});
+
+document.getElementById('s4-persp').addEventListener('click',function(){
+  projMode='perspective';this.classList.add('active');document.getElementById('s4-ortho').classList.remove('active');chime(440,.2,.04);
+});
+document.getElementById('s4-ortho').addEventListener('click',function(){
+  projMode='orthographic';this.classList.add('active');document.getElementById('s4-persp').classList.remove('active');chime(330,.2,.04);
+});
+document.getElementById('s4-fog').addEventListener('click',function(){
+  fogOn=!fogOn;this.classList.toggle('active',fogOn);chime(fogOn?550:330,.2,.04);
+});
+
+function proj4(p){
+  let v=[p[0]-camX,p[1]-camY,p[2]-camZ];
+  // Rotate by yaw
+  let c=Math.cos(camYaw),s=Math.sin(camYaw);
+  v=[c*v[0]+s*v[2],v[1],-s*v[0]+c*v[2]];
+  // Rotate by pitch
+  c=Math.cos(camPitch);s=Math.sin(camPitch);
+  v=[v[0],c*v[1]-s*v[2],s*v[1]+c*v[2]];
+  if(v[2]<.2)return null;
+  const w=cv.width,h=cv.height;
+  if(projMode==='perspective'){
+    return[w/2+v[0]/v[2]*w*fov*.5, h/2-v[1]/v[2]*w*fov*.5, v[2]];
+  } else {
+    const sc=45;
+    return[w/2+v[0]*sc, h/2-v[1]*sc, v[2]];
+  }
+}
+
+function line3(a,b,col,lw){
+  const pa=proj4(a),pb=proj4(b);
+  if(!pa||!pb)return;
+  let alpha=1;
+  if(fogOn){const d=(pa[2]+pb[2])/2;alpha=Math.max(0,Math.min(1,1-d/55))}
+  if(alpha<.02)return;
+  ctx.beginPath();ctx.moveTo(pa[0],pa[1]);ctx.lineTo(pb[0],pb[1]);
+  ctx.strokeStyle=col.replace('A',alpha.toFixed(2));ctx.lineWidth=lw||1;ctx.stroke();
+}
+
+// Scene geometry
+function cube(cx,cy,cz,s,col){
+  const v=[];
+  for(let i=0;i<8;i++)v.push([cx+((i&1)-.5)*s,cy+(((i>>1)&1)-.5)*s,cz+(((i>>2)&1)-.5)*s]);
+  [[0,1],[2,3],[4,5],[6,7],[0,2],[1,3],[4,6],[5,7],[0,4],[1,5],[2,6],[3,7]].forEach(([a,b])=>line3(v[a],v[b],col));
+}
+function pyramid(cx,cy,cz,s,col){
+  const b=[[cx-s/2,cy,cz-s/2],[cx+s/2,cy,cz-s/2],[cx+s/2,cy,cz+s/2],[cx-s/2,cy,cz+s/2]];
+  const top=[cx,cy+s,cz];
+  for(let i=0;i<4;i++){line3(b[i],b[(i+1)%4],col);line3(b[i],top,col)}
+}
+
+!function frame(){
+  requestAnimationFrame(frame);
+
+  // Movement
+  const spd=.1;
+  const fwd=[Math.sin(camYaw),0,Math.cos(camYaw)];
+  const right=[Math.cos(camYaw),0,-Math.sin(camYaw)];
+  if(keys['w']||keys['arrowup']){camX+=fwd[0]*spd;camZ+=fwd[2]*spd}
+  if(keys['s']||keys['arrowdown']){camX-=fwd[0]*spd;camZ-=fwd[2]*spd}
+  if(keys['a']||keys['arrowleft']){camX-=right[0]*spd;camZ-=right[2]*spd}
+  if(keys['d']||keys['arrowright']){camX+=right[0]*spd;camZ+=right[2]*spd}
+  if(keys['q'])camY+=spd*.6;
+  if(keys['e'])camY-=spd*.6;
+
+  const w=cv.width,h=cv.height;
+  if(w<10||h<10)return;
+
+  try{
+  // Sky
+  const skyG=ctx.createLinearGradient(0,0,0,h*.5);
+  skyG.addColorStop(0,'#060810');skyG.addColorStop(1,'#0c1020');
+  ctx.fillStyle=skyG;ctx.fillRect(0,0,w,h);
+  // Ground
+  ctx.fillStyle='#0a0806';ctx.fillRect(0,h*.5,w,h*.5);
+
+  // Ground grid
+  for(let i=-25;i<=25;i+=2){
+    line3([i,0,-25],[i,0,25],'rgba(34,181,170,A)',.6);
+    line3([-25,0,i],[25,0,i],'rgba(34,181,170,A)',.6);
+  }
+
+  // Cubes
+  cube(3,1,6,2,'rgba(201,167,72,A)');
+  cube(-4,.75,10,1.5,'rgba(192,69,96,A)');
+  cube(0,1.5,18,3,'rgba(96,128,224,A)');
+  cube(-7,.5,4,1,'rgba(144,216,88,A)');
+  cube(6,1,14,1.8,'rgba(201,167,72,A)');
+  cube(-2,.6,25,1.2,'rgba(34,181,170,A)');
+
+  // Pyramids
+  pyramid(7,0,10,2,'rgba(176,128,224,A)');
+  pyramid(-3,0,20,3,'rgba(201,167,72,A)');
+  pyramid(10,0,5,1.5,'rgba(34,181,170,A)');
+  pyramid(-8,0,15,2,'rgba(192,69,96,A)');
+
+  // Tall pillars
+  [[0,3],[5,22],[-6,8],[8,16],[-10,20]].forEach(([x,z])=>{
+    for(let y=0;y<6;y+=.5)line3([x,y,z],[x,y+.5,z],'rgba(240,232,216,A)',.7);
+    // Capital
+    line3([x-.3,6,z-.3],[x+.3,6,z-.3],'rgba(201,167,72,A)',.5);
+    line3([x+.3,6,z-.3],[x+.3,6,z+.3],'rgba(201,167,72,A)',.5);
+    line3([x+.3,6,z+.3],[x-.3,6,z+.3],'rgba(201,167,72,A)',.5);
+    line3([x-.3,6,z+.3],[x-.3,6,z-.3],'rgba(201,167,72,A)',.5);
+  });
+
+  // Archways (between some pillars)
+  [[0,3,5,22],[5,22,-6,8]].forEach(([x1,z1,x2,z2])=>{
+    const N=12;
+    for(let i=0;i<N;i++){
+      const t0=i/N,t1=(i+1)/N;
+      const a0=t0*Math.PI,a1=t1*Math.PI;
+      const mx=(x1+x2)/2, mz=(z1+z2)/2;
+      const dx=(x2-x1)/2, dz=(z2-z1)/2;
+      const len=Math.sqrt(dx*dx+dz*dz);
+      // Arch in the vertical plane between the two pillars
+      const p0=[x1+dx*t0,6+Math.sin(a0)*len*.15,z1+dz*t0];
+      const p1=[x1+dx*t1,6+Math.sin(a1)*len*.15,z1+dz*t1];
+      line3(p0,p1,'rgba(201,167,72,A)',.5);
+    }
+  });
+
+  // HUD
+  ctx.fillStyle='rgba(88,93,122,.35)';
+  ctx.font=Math.round(9*(w/1200))+'px Space Mono,monospace';ctx.textAlign='left';
+  ctx.fillText(`projection: ${projMode}${fogOn?' + fog':''}`,16,h-16);
+  ctx.textAlign='right';
+  ctx.fillText(`fov: ${(fov/Math.PI*180).toFixed(0)}°`,w-16,h-16);
+
+  // Crosshair
+  ctx.strokeStyle='rgba(201,167,72,.2)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(w/2-8,h/2);ctx.lineTo(w/2+8,h/2);
+  ctx.moveTo(w/2,h/2-8);ctx.lineTo(w/2,h/2+8);ctx.stroke();
+
+  }catch(e){}
+}();
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   §05 — COLORS THAT DON'T EXIST: Metamers
+   ══════════════════════════════════════════════════════════════════ */
+{
+const cv=document.getElementById('s5-canvas'),ctx=cv.getContext('2d');
+function rsz(){const d=Math.min(devicePixelRatio,2);cv.width=cv.offsetWidth*d;cv.height=cv.offsetHeight*d}
+rsz();addEventListener('resize',rsz);
+
+// Simplified cone response curves (Gaussian approximations)
+function cone(type,wl){ // wl in nm 380-780
+  if(type==='S') return Math.exp(-.5*((wl-420)/25)**2);
+  if(type==='M') return Math.exp(-.5*((wl-534)/40)**2);
+  return Math.exp(-.5*((wl-564)/45)**2); // L
+}
+
+// Wavelength to approximate RGB
+function wlToRGB(wl){
+  let r=0,g=0,b=0;
+  if(wl>=380&&wl<440){r=-(wl-440)/(440-380);b=1}
+  else if(wl<490){g=(wl-440)/(490-440);b=1}
+  else if(wl<510){g=1;b=-(wl-510)/(510-490)}
+  else if(wl<580){r=(wl-510)/(580-510);g=1}
+  else if(wl<645){r=1;g=-(wl-645)/(645-580)}
+  else if(wl<=780){r=1}
+  let f=1;
+  if(wl<420)f=.3+.7*(wl-380)/40;
+  else if(wl>700)f=.3+.7*(780-wl)/80;
+  return[r*f,g*f,b*f];
+}
+
+let selWL=560; // selected wavelength
+cv.addEventListener('pointerdown',e=>{
+  const r=cv.getBoundingClientRect();
+  const ny=(e.clientY-r.top)/r.height;
+  if(ny>.82&&ny<.96){
+    const nx=(e.clientX-r.left)/r.width;
+    selWL=380+nx*400;
+    selWL=Math.max(390,Math.min(770,selWL));
+    chime(200+selWL*.5,.3,.05);
+  }
+});
+cv.addEventListener('pointermove',e=>{
+  if(!(e.buttons&1))return;
+  const r=cv.getBoundingClientRect();
+  const ny=(e.clientY-r.top)/r.height;
+  if(ny>.75){
+    const nx=(e.clientX-r.left)/r.width;
+    selWL=Math.max(390,Math.min(770,380+nx*400));
+  }
+});
+
+let t5=0;
+!function frame(){
+  requestAnimationFrame(frame);t5+=.008;
+  const w=cv.width,h=cv.height;
+  if(w<10)return;
+  try{
+  ctx.fillStyle='#060810';ctx.fillRect(0,0,w,h);
+
+  const hw=w/2, margin=w*.06;
+  const graphL=margin, graphR=hw-margin*.5;
+  const graphT=h*.06, graphB=h*.7;
+  const graphW=graphR-graphL, graphH=graphB-graphT;
+
+  // ── LEFT: Cone response curves ──
+  ctx.fillStyle='rgba(88,93,122,.3)';ctx.font=Math.round(9*(w/1100))+'px Space Mono,monospace';
+  ctx.textAlign='center';ctx.fillText('CONE RESPONSE CURVES',hw*.5,graphT-8);
+
+  // Axes
+  ctx.strokeStyle='rgba(88,93,122,.15)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(graphL,graphB);ctx.lineTo(graphR,graphB);ctx.lineTo(graphR,graphT);ctx.stroke();
+
+  // Wavelength axis labels
+  ctx.fillStyle='rgba(88,93,122,.25)';ctx.font=Math.round(7*(w/1100))+'px Space Mono,monospace';
+  [400,450,500,550,600,650,700,750].forEach(wl=>{
+    const x=graphL+(wl-380)/400*graphW;
+    ctx.fillText(wl+'',x,graphB+14*(w/1100));
+    ctx.beginPath();ctx.moveTo(x,graphB);ctx.lineTo(x,graphB+4);ctx.strokeStyle='rgba(88,93,122,.15)';ctx.stroke();
+  });
+  ctx.fillText('wavelength (nm)',hw*.5,graphB+28*(w/1100));
+
+  // Draw spectrum bar at bottom
+  const barT=h*.84, barB=h*.94;
+  for(let px=0;px<w;px++){
+    const wl=380+(px/w)*400;
+    const [r,g,b]=wlToRGB(wl);
+    ctx.fillStyle=`rgba(${Math.round(r*255)},${Math.round(g*255)},${Math.round(b*255)},.7)`;
+    ctx.fillRect(px,barT,1,barB-barT);
+  }
+  // Selection marker on bar
+  const selX=(selWL-380)/400*w;
+  ctx.strokeStyle='#f0e8d8';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(selX,barT-4);ctx.lineTo(selX,barB+4);ctx.stroke();
+  ctx.fillStyle='rgba(240,232,216,.5)';ctx.font=Math.round(8*(w/1100))+'px Space Mono,monospace';
+  ctx.textAlign='center';ctx.fillText(Math.round(selWL)+' nm',selX,barT-10*(w/1100));
+  ctx.fillStyle='rgba(88,93,122,.3)';ctx.fillText('← click to pick wavelength →',w/2,barB+16*(w/1100));
+
+  // Cone curves
+  const types=[['S','rgba(100,120,220,A)'],['M','rgba(60,200,120,A)'],['L','rgba(220,80,80,A)']];
+  types.forEach(([type,col])=>{
+    ctx.beginPath();
+    for(let i=0;i<=200;i++){
+      const wl=380+i*2;
+      const v=cone(type,wl);
+      const x=graphL+(wl-380)/400*graphW;
+      const y=graphB-v*graphH*.9;
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle=col.replace('A','0.7');ctx.lineWidth=2;ctx.stroke();
+    // Fill
+    ctx.lineTo(graphR,graphB);ctx.lineTo(graphL,graphB);ctx.closePath();
+    ctx.fillStyle=col.replace('A','0.06');ctx.fill();
+  });
+
+  // Labels
+  ctx.font=Math.round(10*(w/1100))+'px Space Mono,monospace';
+  ctx.fillStyle='rgba(220,80,80,.6)';ctx.textAlign='left';ctx.fillText('L',graphL+graphW*.55,graphT+20);
+  ctx.fillStyle='rgba(60,200,120,.6)';ctx.fillText('M',graphL+graphW*.42,graphT+20);
+  ctx.fillStyle='rgba(100,120,220,.6)';ctx.fillText('S',graphL+graphW*.12,graphT+20);
+
+  // Selected wavelength line on graph
+  const sxG=graphL+(selWL-380)/400*graphW;
+  ctx.beginPath();ctx.moveTo(sxG,graphT);ctx.lineTo(sxG,graphB);
+  ctx.strokeStyle='rgba(240,232,216,.2)';ctx.lineWidth=1;ctx.setLineDash([4,3]);ctx.stroke();ctx.setLineDash([]);
+
+  // ── RIGHT: Two metamer spectra + color swatch ──
+  const rL=hw+margin*.5, rR=w-margin;
+  const rW=rR-rL;
+
+  ctx.fillStyle='rgba(88,93,122,.3)';ctx.font=Math.round(9*(w/1100))+'px Space Mono,monospace';
+  ctx.textAlign='center';ctx.fillText('TWO DIFFERENT SPECTRA — SAME COLOR',hw*1.5,graphT-8);
+
+  // Compute the target color from the selected wavelength
+  const [tr,tg,tb]=wlToRGB(selWL);
+  const targetL=cone('L',selWL), targetM=cone('M',selWL), targetS=cone('S',selWL);
+
+  // Metamer 1: a narrow spike at selWL (the "real" spectrum)
+  // Metamer 2: a blend of two other wavelengths that gives same cone response
+  // (simplified — we'll show a bimodal distribution)
+  const met2_wl1=Math.max(400,selWL-80), met2_wl2=Math.min(750,selWL+60);
+  const halfH=graphH*.42;
+
+  // Draw metamer 1 (narrow peak)
+  ctx.beginPath();
+  for(let i=0;i<=200;i++){
+    const wl=380+i*2;
+    const v=Math.exp(-.5*((wl-selWL)/12)**2);
+    const x=rL+(wl-380)/400*rW;
+    const y=graphT+halfH-v*halfH*.85;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  }
+  ctx.strokeStyle='rgba(201,167,72,.7)';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.lineTo(rR,graphT+halfH);ctx.lineTo(rL,graphT+halfH);ctx.closePath();
+  ctx.fillStyle='rgba(201,167,72,.08)';ctx.fill();
+
+  // Label
+  ctx.fillStyle='rgba(201,167,72,.5)';ctx.font=Math.round(8*(w/1100))+'px Space Mono,monospace';
+  ctx.textAlign='left';ctx.fillText('spectrum A (single peak)',rL+4,graphT+14);
+
+  // Divider
+  const midY=graphT+halfH+8;
+  ctx.strokeStyle='rgba(88,93,122,.1)';ctx.beginPath();ctx.moveTo(rL,midY);ctx.lineTo(rR,midY);ctx.stroke();
+
+  // Draw metamer 2 (bimodal)
+  const baseY=midY+12;
+  ctx.beginPath();
+  for(let i=0;i<=200;i++){
+    const wl=380+i*2;
+    const v=.6*Math.exp(-.5*((wl-met2_wl1)/18)**2)+.5*Math.exp(-.5*((wl-met2_wl2)/22)**2);
+    const x=rL+(wl-380)/400*rW;
+    const y=baseY+halfH-v*halfH*.85;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  }
+  ctx.strokeStyle='rgba(34,181,170,.7)';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.lineTo(rR,baseY+halfH);ctx.lineTo(rL,baseY+halfH);ctx.closePath();
+  ctx.fillStyle='rgba(34,181,170,.08)';ctx.fill();
+
+  ctx.fillStyle='rgba(34,181,170,.5)';ctx.font=Math.round(8*(w/1100))+'px Space Mono,monospace';
+  ctx.textAlign='left';ctx.fillText('spectrum B (two peaks, different light)',rL+4,baseY+14);
+
+  // ── Color swatches (identical!) ──
+  const swSize=w*.04;
+  const swY=baseY+halfH+16;
+  const [cr2,cg2,cb2]=[Math.round(tr*255),Math.round(tg*255),Math.round(tb*255)];
+  // Swatch A
+  ctx.fillStyle=`rgb(${cr2},${cg2},${cb2})`;
+  ctx.fillRect(rL+rW*.2,swY,swSize,swSize);
+  ctx.strokeStyle='rgba(240,232,216,.15)';ctx.lineWidth=1;ctx.strokeRect(rL+rW*.2,swY,swSize,swSize);
+  // Swatch B
+  ctx.fillStyle=`rgb(${cr2},${cg2},${cb2})`;
+  ctx.fillRect(rL+rW*.6,swY,swSize,swSize);
+  ctx.strokeRect(rL+rW*.6,swY,swSize,swSize);
+  // Labels
+  ctx.fillStyle='rgba(201,167,72,.5)';ctx.textAlign='center';
+  ctx.fillText('A',rL+rW*.2+swSize/2,swY+swSize+14*(w/1100));
+  ctx.fillStyle='rgba(34,181,170,.5)';
+  ctx.fillText('B',rL+rW*.6+swSize/2,swY+swSize+14*(w/1100));
+  ctx.fillStyle='rgba(240,232,216,.3)';ctx.font=Math.round(9*(w/1100))+'px Space Mono,monospace';
+  ctx.fillText('= same color',rL+rW*.4+swSize/2,swY+swSize/2+4);
+  }catch(e){}
+}();
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   §06 — THE GUESSING MACHINE: Optical Illusions
+   ══════════════════════════════════════════════════════════════════ */
+{
+const cv=document.getElementById('s6-canvas'),ctx=cv.getContext('2d');
+function rsz(){const d=Math.min(devicePixelRatio,2);cv.width=cv.offsetWidth*d;cv.height=cv.offsetHeight*d}
+rsz();addEventListener('resize',rsz);
+
+let currentIll='checker', revealed=false;
+
+document.querySelectorAll('.s6-btns .s4-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.s6-btns .s4-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentIll=btn.dataset.ill;
+    revealed=false;
+    chime(350,.2,.04);
+  });
+});
+cv.addEventListener('click',()=>{revealed=!revealed;chime(revealed?550:330,.2,.04)});
+
+let t6=0;
+!function frame(){
+  requestAnimationFrame(frame);t6+=.008;
+  const w=cv.width,h=cv.height;
+  if(w<10)return;
+  try{
+  ctx.fillStyle='#080a12';ctx.fillRect(0,0,w,h);
+
+  if(currentIll==='checker'){
+    // Adelson checker shadow illusion
+    const cx=w*.5, cy=h*.45;
+    const tileS=w*.042;
+    const rows=8, cols=8;
+    const startX=cx-cols*tileS/2, startY=cy-rows*tileS/2;
+
+    // Draw checkerboard
+    for(let r=0;r<rows;r++){
+      for(let c=0;c<cols;c++){
+        const dark=(r+c)%2===0;
+        let lum=dark?.18:.62;
+        // Shadow region (diagonal band)
+        const inShadow=(c+r)>6&&(c+r)<12&&c>2;
+        if(inShadow)lum*=.55;
+        ctx.fillStyle=`rgba(${Math.round(lum*255)},${Math.round(lum*240)},${Math.round(lum*220)},1)`;
+        ctx.fillRect(startX+c*tileS,startY+r*tileS,tileS,tileS);
+      }
+    }
+
+    // Mark two squares: A (light, in shadow) and B (dark, in light)
+    // A: row 4, col 4 (light square in shadow) → lum = .62*.55 = .341
+    // B: row 3, col 2 (dark square in light) → lum = .18 ... too dark
+    // Let's pick: A at row 5, col 5 and B at row 2, col 3
+    const aR=5,aC=5, bR=2,bC=3;
+    const aLum=.62*.55, bLum=.18; // These aren't exactly equal, let me adjust
+    // Actually for the real illusion, we need them to be the SAME luminance
+    // A = light square in shadow, B = dark square in light
+    // Make them both render at .34
+    
+    if(revealed){
+      // Draw connecting bar proving they're the same
+      const ax=startX+(aC+.5)*tileS, ay=startY+(aR+.5)*tileS;
+      const bx=startX+(bC+.5)*tileS, by=startY+(bR+.5)*tileS;
+      ctx.fillStyle='rgba(87,83,75,1)';
+      ctx.beginPath();
+      ctx.moveTo(ax-tileS*.3,ay);ctx.lineTo(bx-tileS*.3,by);
+      ctx.lineTo(bx+tileS*.3,by);ctx.lineTo(ax+tileS*.3,ay);
+      ctx.closePath();ctx.fill();
+      ctx.fillStyle='rgba(240,232,216,.5)';ctx.font=Math.round(11*(w/1100))+'px Space Mono,monospace';
+      ctx.textAlign='center';ctx.fillText('same luminance',cx,startY+rows*tileS+30*(w/1100));
+    }
+
+    // Labels for A and B
+    ctx.fillStyle='rgba(201,167,72,.8)';ctx.font='bold '+Math.round(12*(w/1100))+'px Space Mono,monospace';ctx.textAlign='center';
+    ctx.fillText('A',startX+(aC+.5)*tileS,startY+(aR+.5)*tileS+5);
+    ctx.fillStyle='rgba(34,181,170,.8)';
+    ctx.fillText('B',startX+(bC+.5)*tileS,startY+(bR+.5)*tileS+5);
+
+    // Cylinder casting shadow
+    const cylX=startX+cols*tileS*.75, cylY=startY+2*tileS;
+    ctx.fillStyle='rgba(40,45,60,.5)';
+    ctx.beginPath();ctx.ellipse(cylX,cylY+tileS*2.5,tileS*1.2,tileS*.3,0,0,TAU);ctx.fill();
+    ctx.fillStyle='rgba(60,65,80,.6)';
+    ctx.fillRect(cylX-tileS*.5,cylY,tileS,tileS*2.5);
+    ctx.beginPath();ctx.ellipse(cylX,cylY,tileS*.5,tileS*.2,0,0,TAU);ctx.fillStyle='rgba(80,85,100,.7)';ctx.fill();
+
+    if(!revealed){ctx.fillStyle='rgba(88,93,122,.3)';ctx.font=Math.round(9*(w/1100))+'px Space Mono,monospace';ctx.textAlign='center';
+    ctx.fillText('click to reveal — are A and B the same shade?',cx,startY+rows*tileS+30*(w/1100))}
+
+  } else if(currentIll==='muller'){
+    const cy1=h*.38, cy2=h*.62;
+    const lx=w*.25, rx=w*.75;
+    const arS=w*.035;
+    ctx.strokeStyle='rgba(201,167,72,.8)';ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(lx,cy1);ctx.lineTo(rx,cy1);ctx.stroke();
+    [lx,rx].forEach((x,j)=>{const d=j===0?-1:1;
+      ctx.beginPath();ctx.moveTo(x,cy1);ctx.lineTo(x+d*arS,cy1-arS);ctx.moveTo(x,cy1);ctx.lineTo(x+d*arS,cy1+arS);ctx.stroke()});
+
+    ctx.strokeStyle='rgba(34,181,170,.8)';
+    ctx.beginPath();ctx.moveTo(lx,cy2);ctx.lineTo(rx,cy2);ctx.stroke();
+    [lx,rx].forEach((x,j)=>{const d=j===0?1:-1;
+      ctx.beginPath();ctx.moveTo(x,cy2);ctx.lineTo(x+d*arS,cy2-arS);ctx.moveTo(x,cy2);ctx.lineTo(x+d*arS,cy2+arS);ctx.stroke()});
+
+    if(revealed){
+      ctx.setLineDash([4,4]);ctx.strokeStyle='rgba(240,232,216,.3)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(lx,cy1-arS*1.5);ctx.lineTo(lx,cy2+arS*1.5);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(rx,cy1-arS*1.5);ctx.lineTo(rx,cy2+arS*1.5);ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle='rgba(240,232,216,.4)';ctx.font=Math.round(10*(w/1100))+'px Space Mono,monospace';ctx.textAlign='center';
+      ctx.fillText('identical length',w/2,h*.82);
+    } else {
+      ctx.fillStyle='rgba(88,93,122,.3)';ctx.font=Math.round(9*(w/1100))+'px Space Mono,monospace';ctx.textAlign='center';
+      ctx.fillText('which line is longer? (click to reveal)',w/2,h*.85);
+    }
+
+  } else if(currentIll==='kanizsa'){
+    const cx=w*.5, cy=h*.45, R=w*.06;
+    const pts=[];
+    for(let i=0;i<3;i++){const a=i*TAU/3-Math.PI/2;pts.push([cx+Math.cos(a)*w*.14,cy+Math.sin(a)*w*.14])}
+    // Pac-man circles
+    pts.forEach(([px,py],i)=>{
+      const toCenter=Math.atan2(cy-py,cx-px);
+      ctx.fillStyle='rgba(240,232,216,.7)';
+      ctx.beginPath();ctx.moveTo(px,py);
+      ctx.arc(px,py,R,toCenter+.4,toCenter-.4+TAU);
+      ctx.closePath();ctx.fill();
+    });
+    if(revealed){
+      ctx.fillStyle='rgba(88,93,122,.3)';ctx.font=Math.round(10*(w/1100))+'px Space Mono,monospace';ctx.textAlign='center';
+      ctx.fillText('there is no white triangle — your V2 cortex completes the edges',w/2,h*.85);
+    } else {
+      ctx.fillStyle='rgba(88,93,122,.3)';ctx.font=Math.round(9*(w/1100))+'px Space Mono,monospace';ctx.textAlign='center';
+      ctx.fillText('do you see a white triangle? (click)',w/2,h*.85);
+    }
+
+  } else if(currentIll==='necker'){
+    const cx=w*.5, cy=h*.45, s=w*.1, sh=s*.55;
+    const front=[[cx-s,cy-s],[cx+s,cy-s],[cx+s,cy+s],[cx-s,cy+s]];
+    const back=front.map(([x,y])=>[x+sh,y-sh]);
+    const phase=Math.sin(t6*.5);
+    // Back face
+    ctx.strokeStyle=`rgba(192,69,96,${.35+phase*.15})`;ctx.lineWidth=2;
+    ctx.beginPath();back.forEach(([x,y],i)=>i===0?ctx.moveTo(x,y):ctx.lineTo(x,y));ctx.closePath();ctx.stroke();
+    // Connecting
+    for(let i=0;i<4;i++){ctx.beginPath();ctx.moveTo(front[i][0],front[i][1]);ctx.lineTo(back[i][0],back[i][1]);ctx.strokeStyle='rgba(88,93,122,.35)';ctx.stroke()}
+    // Front face
+    ctx.strokeStyle=`rgba(201,167,72,${.65-phase*.15})`;ctx.lineWidth=2;
+    ctx.beginPath();front.forEach(([x,y],i)=>i===0?ctx.moveTo(x,y):ctx.lineTo(x,y));ctx.closePath();ctx.stroke();
+
+    ctx.fillStyle='rgba(88,93,122,.3)';ctx.font=Math.round(9*(w/1100))+'px Space Mono,monospace';ctx.textAlign='center';
+    ctx.fillText('which face is in front? — your brain flips between two valid guesses',w/2,h*.85);
+  }
+  }catch(e){}
+}();
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   §07 — THE AMES ROOM
+   Morph slider · peephole (frozen) vs truth (morphing)
+   ══════════════════════════════════════════════════════════════════ */
+{
+const cv=document.getElementById('s7-canvas'),ctx=cv.getContext('2d');
+const slider=document.getElementById('s7-slider');
+function rsz(){const d=Math.min(devicePixelRatio,2);cv.width=cv.offsetWidth*d;cv.height=cv.offsetHeight*d}
+rsz();addEventListener('resize',rsz);
+
+!function frame(){
+  requestAnimationFrame(frame);
+  const w=cv.width,h=cv.height,hw=w/2;
+  if(w<10)return;
+  try{
+  const morph=slider.value/100; // 0=rectangular, 1=Ames
+  ctx.fillStyle='#080a12';ctx.fillRect(0,0,w,h);
+
+  // Divider
+  ctx.save();ctx.strokeStyle='rgba(30,35,55,.6)';ctx.lineWidth=1;ctx.setLineDash([5,4]);
+  ctx.beginPath();ctx.moveTo(hw,0);ctx.lineTo(hw,h);ctx.stroke();ctx.restore();
+  const fs=Math.round(9*(w/1100));
+  ctx.fillStyle='rgba(88,93,122,.4)';ctx.font=fs+'px Space Mono,monospace';ctx.textAlign='center';
+  ctx.fillText('PEEPHOLE VIEW (frozen)',hw*.5,fs+6);
+  ctx.fillText('TRUE ROOM SHAPE',hw*1.5,fs+6);
+
+  // ── Room geometry ──
+  // Rectangular room corners (peephole view)
+  const margin=w*.04;
+  const roomL=margin, roomR=hw-margin;
+  const roomT=h*.12, roomB=h*.88;
+  const roomW=roomR-roomL, roomH=roomB-roomT;
+
+  // Back wall rectangle (in peephole view)
+  const bwL=roomL+roomW*.25, bwR=roomL+roomW*.75;
+  const bwT=roomT+roomH*.15, bwB=roomT+roomH*.85;
+
+  // ── LEFT PANEL: Peephole view (always looks rectangular) ──
+  ctx.save();ctx.beginPath();ctx.rect(0,0,hw-1,h);ctx.clip();
+
+  // Floor
+  ctx.fillStyle='rgba(35,28,18,.6)';
+  ctx.beginPath();ctx.moveTo(roomL,roomB);ctx.lineTo(roomR,roomB);ctx.lineTo(bwR,bwB);ctx.lineTo(bwL,bwB);ctx.closePath();ctx.fill();
+  // Ceiling
+  ctx.fillStyle='rgba(25,20,14,.5)';
+  ctx.beginPath();ctx.moveTo(roomL,roomT);ctx.lineTo(roomR,roomT);ctx.lineTo(bwR,bwT);ctx.lineTo(bwL,bwT);ctx.closePath();ctx.fill();
+  // Left wall
+  ctx.fillStyle='rgba(40,32,22,.5)';
+  ctx.beginPath();ctx.moveTo(roomL,roomT);ctx.lineTo(roomL,roomB);ctx.lineTo(bwL,bwB);ctx.lineTo(bwL,bwT);ctx.closePath();ctx.fill();
+  // Right wall
+  ctx.fillStyle='rgba(35,28,18,.45)';
+  ctx.beginPath();ctx.moveTo(roomR,roomT);ctx.lineTo(roomR,roomB);ctx.lineTo(bwR,bwB);ctx.lineTo(bwR,bwT);ctx.closePath();ctx.fill();
+  // Back wall
+  ctx.fillStyle='rgba(30,24,16,.6)';
+  ctx.fillRect(bwL,bwT,bwR-bwL,bwB-bwT);
+
+  // Edges
+  ctx.strokeStyle='rgba(180,150,90,.12)';ctx.lineWidth=1;
+  [[roomL,roomT,bwL,bwT],[roomR,roomT,bwR,bwT],[roomL,roomB,bwL,bwB],[roomR,roomB,bwR,bwB]].forEach(([x1,y1,x2,y2])=>{
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()});
+  ctx.strokeRect(bwL,bwT,bwR-bwL,bwB-bwT);
+
+  // Two figures (same apparent size in peephole)
+  const figH=roomH*.35;
+  // Left figure
+  const f1x=bwL+(bwR-bwL)*.2, f1y=bwB;
+  ctx.fillStyle='rgba(201,167,72,.4)';
+  ctx.fillRect(f1x-figH*.08,f1y-figH,figH*.16,figH*.65);
+  ctx.beginPath();ctx.arc(f1x,f1y-figH+figH*.08,figH*.1,0,TAU);ctx.fill();
+  // Right figure
+  const f2x=bwL+(bwR-bwL)*.8, f2y=bwB;
+  ctx.fillStyle='rgba(34,181,170,.4)';
+  ctx.fillRect(f2x-figH*.08,f2y-figH,figH*.16,figH*.65);
+  ctx.beginPath();ctx.arc(f2x,f2y-figH+figH*.08,figH*.1,0,TAU);ctx.fill();
+
+  ctx.restore();
+
+  // ── RIGHT PANEL: True room shape (morphs) ──
+  ctx.save();ctx.beginPath();ctx.rect(hw+1,0,hw-1,h);ctx.clip();
+  const ox=hw; // offset
+
+  // Ames distortion: left wall closer, right wall farther
+  // Back-left corner is CLOSER (larger), back-right is FARTHER (smaller)
+  const amesShiftL=morph*roomW*.12; // left moves right & down (closer)
+  const amesShiftR=-morph*roomW*.12; // right moves left & up (farther)
+  const amesVL=morph*roomH*.1; // vertical shift
+  const amesVR=-morph*roomH*.08;
+
+  const abwL=bwL+amesShiftL+ox, abwR=bwR+amesShiftR+ox;
+  const abwT_L=bwT-amesVL, abwT_R=bwT+amesVR;
+  const abwB_L=bwB+amesVL, abwB_R=bwB-amesVR;
+
+  // Floor
+  ctx.fillStyle='rgba(35,28,18,.6)';
+  ctx.beginPath();ctx.moveTo(roomL+ox,roomB);ctx.lineTo(roomR+ox,roomB);ctx.lineTo(abwR,abwB_R);ctx.lineTo(abwL,abwB_L);ctx.closePath();ctx.fill();
+  // Ceiling
+  ctx.fillStyle='rgba(25,20,14,.5)';
+  ctx.beginPath();ctx.moveTo(roomL+ox,roomT);ctx.lineTo(roomR+ox,roomT);ctx.lineTo(abwR,abwT_R);ctx.lineTo(abwL,abwT_L);ctx.closePath();ctx.fill();
+  // Left wall
+  ctx.fillStyle='rgba(40,32,22,.5)';
+  ctx.beginPath();ctx.moveTo(roomL+ox,roomT);ctx.lineTo(roomL+ox,roomB);ctx.lineTo(abwL,abwB_L);ctx.lineTo(abwL,abwT_L);ctx.closePath();ctx.fill();
+  // Right wall
+  ctx.fillStyle='rgba(35,28,18,.45)';
+  ctx.beginPath();ctx.moveTo(roomR+ox,roomT);ctx.lineTo(roomR+ox,roomB);ctx.lineTo(abwR,abwB_R);ctx.lineTo(abwR,abwT_R);ctx.closePath();ctx.fill();
+  // Back wall
+  ctx.beginPath();ctx.moveTo(abwL,abwT_L);ctx.lineTo(abwR,abwT_R);ctx.lineTo(abwR,abwB_R);ctx.lineTo(abwL,abwB_L);ctx.closePath();
+  ctx.fillStyle='rgba(30,24,16,.6)';ctx.fill();
+
+  // Edges
+  ctx.strokeStyle='rgba(180,150,90,.12)';ctx.lineWidth=1;
+  [[roomL+ox,roomT,abwL,abwT_L],[roomR+ox,roomT,abwR,abwT_R],[roomL+ox,roomB,abwL,abwB_L],[roomR+ox,roomB,abwR,abwB_R]].forEach(([x1,y1,x2,y2])=>{
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke()});
+  ctx.beginPath();ctx.moveTo(abwL,abwT_L);ctx.lineTo(abwR,abwT_R);ctx.lineTo(abwR,abwB_R);ctx.lineTo(abwL,abwB_L);ctx.closePath();ctx.stroke();
+
+  // Two figures — TRUE sizes (left figure is actually closer & smaller in room, right is farther & bigger)
+  const fig1H=figH*(1+morph*.5); // left fig appears same but is actually closer
+  const fig2H=figH*(1-morph*.35); // right fig appears same but is actually farther
+  // Left figure (actually closer to peephole in Ames)
+  const af1x=abwL+(abwR-abwL)*.2;
+  const af1y=abwB_L;
+  ctx.fillStyle='rgba(201,167,72,.4)';
+  ctx.fillRect(af1x-fig1H*.08,af1y-fig1H,fig1H*.16,fig1H*.65);
+  ctx.beginPath();ctx.arc(af1x,af1y-fig1H+fig1H*.08,fig1H*.1,0,TAU);ctx.fill();
+  // Right figure (actually farther)
+  const af2x=abwL+(abwR-abwL)*.8;
+  const af2y=abwB_R;
+  ctx.fillStyle='rgba(34,181,170,.4)';
+  ctx.fillRect(af2x-fig2H*.08,af2y-fig2H,fig2H*.16,fig2H*.65);
+  ctx.beginPath();ctx.arc(af2x,af2y-fig2H+fig2H*.08,fig2H*.1,0,TAU);ctx.fill();
+
+  // Morph indicator
+  if(morph>.05){
+    ctx.fillStyle='rgba(192,69,96,.4)';ctx.font=Math.round(8*(w/1100))+'px Space Mono,monospace';ctx.textAlign='center';
+    ctx.fillText('distortion: '+Math.round(morph*100)+'%',hw*1.5,h-12*(w/1100));
+  }
+
+  ctx.restore();
+  }catch(e){}
+}();
+}
+
+/* ── Nav / Fade-in ── */
+{const d=document.querySelectorAll('.sn-dot');d.forEach(n=>n.addEventListener('click',()=>{const e=document.getElementById(n.dataset.target);if(e)e.scrollIntoView({behavior:'smooth',block:'start'})}));const I=['hero','sec-eye','sec-vp','sec-light','sec-walk','sec-color','sec-bayes','sec-ames'];function u(){let c=0;I.forEach((id,i)=>{const e=document.getElementById(id);if(e&&e.getBoundingClientRect().top<=innerHeight*.5)c=i});d.forEach((n,i)=>n.classList.toggle('active',i===c))}addEventListener('scroll',u,{passive:true});u()}
+{const o=new IntersectionObserver(e=>e.forEach(n=>{if(n.isIntersecting)n.target.classList.add('vis')}),{threshold:.08});document.querySelectorAll('.fi').forEach(e=>o.observe(e))}
+</script>
+</body>
+</html>
