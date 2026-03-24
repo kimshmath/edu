@@ -1,0 +1,1861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Is All Moving, Moving? — Calculus</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#05060f;--bg2:#0c0d1e;--surface:#10112a;
+  --gold:#c9a84c;--gold2:#e8cc80;--gold-dim:rgba(201,168,76,0.13);
+  --cyan:#3cb8c3;--text:#ede5d8;--muted:#7c7693;--red:#c45555;
+  --border:rgba(201,168,76,0.13);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'EB Garamond',Georgia,serif;
+  font-size:1.08rem;line-height:1.75;overflow-x:hidden}
+
+/* ── HERO ── */
+#hero{position:relative;width:100vw;height:100vh;display:flex;
+  align-items:center;justify-content:center;overflow:hidden}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-overlay{position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 60% at 50% 50%,
+    rgba(5,6,15,0.0) 0%,rgba(5,6,15,0.55) 65%,rgba(5,6,15,0.92) 100%);
+  pointer-events:none}
+.hero-content{position:relative;z-index:10;text-align:center;padding:2rem;max-width:800px}
+.hero-label{font-family:'Cormorant Garamond',serif;font-size:.8rem;letter-spacing:.35em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:2rem;opacity:.9}
+.hero-title{font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.8rem,8vw,6.5rem);font-weight:300;line-height:1.05;
+  letter-spacing:-.01em;margin-bottom:1.5rem;
+  text-shadow:0 0 80px rgba(201,168,76,.25)}
+.hero-title em{font-style:italic;color:var(--gold2)}
+.hero-sub{font-size:1.15rem;color:var(--muted);max-width:520px;margin:0 auto 3rem;font-weight:400}
+.hero-scroller{display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  color:var(--muted);font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;
+  cursor:pointer;transition:color .3s}
+.hero-scroller:hover{color:var(--gold)}
+.scroll-bar{width:1px;height:48px;background:linear-gradient(to bottom,var(--gold),transparent);
+  animation:bob 2.2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+/* ── LAYOUT ── */
+.wrap{max-width:1120px;margin:0 auto;padding:5.5rem 2rem}
+hr.divider{border:none;border-top:1px solid var(--border);margin:0}
+.sec-label{font-family:'Cormorant Garamond',serif;font-size:.72rem;letter-spacing:.35em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem}
+h2{font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(2rem,4.5vw,3.4rem);line-height:1.08;margin-bottom:2rem}
+h2 em{font-style:italic;color:var(--gold2)}
+.prose{max-width:680px;font-size:1.05rem;color:var(--text)}
+.prose p+p{margin-top:1rem}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:3.5rem;align-items:start}
+
+/* ── COMPONENTS ── */
+.theorem-box{background:var(--surface);border:1px solid var(--border);
+  border-left:3px solid var(--gold);border-radius:0 8px 8px 0;
+  padding:1.3rem 1.8rem;margin:2rem 0;text-align:center;
+  font-family:'JetBrains Mono',monospace;font-size:.95rem;color:var(--gold2)}
+.info-box{background:rgba(60,184,195,0.04);border:1px solid rgba(60,184,195,0.15);
+  border-left:3px solid var(--cyan);border-radius:0 8px 8px 0;
+  padding:1.2rem 1.6rem;margin:2rem 0;font-size:.95rem;color:var(--text);font-style:italic}
+.info-box strong{color:var(--cyan);font-style:normal}
+
+/* ── INTERACTIVE PANELS ── */
+.canvas-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  overflow:hidden;position:relative}
+.canvas-wrap canvas{display:block;width:100%;cursor:crosshair}
+.ctrl-bar{display:flex;align-items:center;gap:1rem;padding:.8rem 1.2rem;
+  background:rgba(5,6,15,.6);border-top:1px solid var(--border);flex-wrap:wrap}
+.ctrl-bar label{font-family:'JetBrains Mono',monospace;font-size:.65rem;
+  letter-spacing:.08em;color:var(--muted);text-transform:uppercase;white-space:nowrap}
+.ctrl-bar input[type=range]{-webkit-appearance:none;appearance:none;height:3px;
+  background:var(--border);border-radius:2px;outline:none;flex:1;min-width:80px}
+.ctrl-bar input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;
+  width:12px;height:12px;border-radius:50%;background:var(--gold);cursor:pointer}
+.ctrl-bar .val{font-family:'JetBrains Mono',monospace;font-size:.72rem;
+  color:var(--gold2);min-width:60px;text-align:right}
+.ctrl-bar button,.btn{font-family:'JetBrains Mono',monospace;font-size:.65rem;
+  letter-spacing:.1em;text-transform:uppercase;background:transparent;
+  border:1px solid var(--gold-dim);color:var(--gold);padding:.45rem 1rem;
+  border-radius:4px;cursor:pointer;transition:all .25s}
+.ctrl-bar button:hover,.btn:hover{background:rgba(201,168,76,.1);border-color:var(--gold)}
+.ctrl-bar button.active{background:rgba(201,168,76,.15);border-color:var(--gold);color:var(--gold2)}
+.canvas-caption{font-family:'JetBrains Mono',monospace;font-size:.6rem;
+  color:var(--muted);letter-spacing:.04em;padding:.6rem 1.2rem;text-align:center;
+  border-top:1px solid var(--border)}
+.readout{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--gold2);
+  padding:.6rem 1.2rem;text-align:center;border-top:1px solid var(--border);
+  background:rgba(5,6,15,.4)}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s ease,transform .8s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ── FLOATING BADGE ── */
+.floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.12em;
+  text-transform:lowercase;color:#8db830;background:transparent;
+  text-decoration:none;transition:all .3s;
+  text-shadow:0 0 12px rgba(141,184,48,.4)}
+.floating-badge:hover{color:#a8e030;text-shadow:0 0 18px rgba(141,184,48,.7)}
+
+/* ── FOOTER ── */
+footer{max-width:1120px;margin:0 auto;padding:3rem 2rem 4rem;text-align:center;
+  border-top:1px solid var(--border)}
+footer p{font-size:.85rem;color:var(--muted);margin-bottom:.3rem}
+.footer-attr{display:flex;flex-direction:column;gap:.2rem;align-items:center;margin-top:2rem;
+  padding-top:2rem;border-top:1px solid rgba(255,255,255,.06)}
+.footer-name{font-family:'Fraunces',Georgia,serif;font-size:.85rem;font-weight:400;
+  color:#edeef2;letter-spacing:-.01em}
+.footer-inst{font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:300;
+  color:#5c6178;letter-spacing:.01em}
+.footer-link{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;
+  color:#d4a853;text-decoration:none;display:inline-block;margin-top:.25rem}
+
+/* ── RESPONSIVE ── */
+@media(max-width:800px){
+  .two-col{grid-template-columns:1fr;gap:2rem}
+  .wrap{padding:3.5rem 1.2rem}
+  .hero-title{font-size:clamp(2rem,7vw,3.5rem)}
+}
+
+/* ── EXTRA POLISH ── */
+/* Smoother reveal */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 1s cubic-bezier(.23,1,.32,1),transform 1s cubic-bezier(.23,1,.32,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* Section breathing room */
+section.wrap{padding-bottom:4rem}
+
+/* Subtle glow on active buttons */
+.ctrl-bar button.active{box-shadow:0 0 12px rgba(201,168,76,0.15)}
+
+/* Canvas panels: subtle hover lift */
+.canvas-wrap{transition:border-color .4s,box-shadow .4s}
+.canvas-wrap:hover{border-color:rgba(201,168,76,0.2);box-shadow:0 4px 30px rgba(0,0,0,0.3)}
+
+/* Divider glow */
+hr.divider{border-top:1px solid rgba(201,168,76,0.08);position:relative}
+
+/* Better slider thumb */
+.ctrl-bar input[type=range]::-webkit-slider-thumb{transition:transform .15s;box-shadow:0 0 6px rgba(201,168,76,0.3)}
+.ctrl-bar input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
+
+/* Nicer readout pulse on convergence */
+@keyframes convergePulse{0%{text-shadow:0 0 0 transparent}50%{text-shadow:0 0 12px rgba(60,184,195,0.4)}100%{text-shadow:0 0 0 transparent}}
+
+/* Mobile: wrap series buttons */
+@media(max-width:600px){
+  .ctrl-bar{gap:.5rem;padding:.6rem .8rem}
+  .ctrl-bar button{font-size:.55rem;padding:.35rem .6rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════ -->
+<!--                    HERO                     -->
+<!-- ════════════════════════════════════════════ -->
+<div id="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-label">Mellow Math · Chapter I</div>
+    <h1 class="hero-title">Is All <em>Moving,</em> Moving?</h1>
+    <p class="hero-sub">An arrow frozen in mid-flight. A ball on a hill you drew yourself. A ramp that beats every other ramp. Blocks stacking toward π. Five encounters with the mathematics of change.</p>
+    <div class="hero-scroller" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">
+      Explore
+      <div class="scroll-bar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!--          § 1.1 — ZENO'S ARROW              -->
+<!-- ════════════════════════════════════════════ -->
+<hr class="divider" id="s1">
+<section class="wrap reveal">
+  <div class="sec-label">§ 1 — Zeno's Arrow</div>
+  <h2>The arrow that <em>cannot</em> move</h2>
+
+  <div class="two-col">
+    <div class="prose">
+      <p style="font-style:italic;color:var(--muted);margin-bottom:1.5rem;font-size:.95rem;">"At every instant, the arrow occupies a fixed position. A thing in a fixed position is at rest. So when does it move?" — Zeno of Elea, c. 450 BC</p>
+
+      <p>The paradox haunted Western thought for over two thousand years. Aristotle tried to refute it. He failed. So did everyone else — until Newton and Leibniz, in the late 1600s, discovered the answer.</p>
+      <p>Don't ask what the arrow does at a single instant. Instead, look at two nearby moments, measure how far the arrow moves between them, and divide by the time elapsed. Then <em>shrink that gap</em>. The ratio settles to a definite number — the instantaneous velocity. The arrow was never frozen. We just needed the right way to see it.</p>
+      <p>Try it on the right. Drag Δt toward zero and watch.</p>
+
+      <div class="info-box">
+        <strong>Calculus refuted a metaphysics.</strong> Zeno's paradoxes weren't puzzles — they were Parmenides' argument that all change is illusion. The limit dissolved the paradox and, with it, a philosophy.
+      </div>
+    </div>
+
+    <div>
+      <div class="canvas-wrap">
+        <canvas id="zenoCanvas" width="560" height="400"></canvas>
+        <div class="readout" id="zenoReadout">
+          <span>Δx = <span id="zenoDx">—</span></span> &nbsp;&nbsp;
+          <span>Δt = <span id="zenoDt">—</span></span> &nbsp;&nbsp;
+          <span style="color:var(--gold2)">Δx/Δt = <span id="zenoRatio">—</span></span>
+        </div>
+        <div class="ctrl-bar">
+          <label>Δt</label>
+          <input type="range" id="zenoSlider" min="0.003" max="1" step="0.001" value="0.8">
+          <span class="val" id="zenoSliderVal">0.800</span>
+        </div>
+        <div class="canvas-caption">Drag Δt toward zero. The arrow unfreezes when the limit is reached.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!--    § 2 — DRAW A HILL, RIDE IT DOWN         -->
+<!-- ════════════════════════════════════════════ -->
+<hr class="divider" id="s2">
+<section class="wrap reveal">
+  <div class="sec-label">§ 2 — Draw a Hill, Ride It Down</div>
+  <h2>Your curve. <em>Your</em> ride.</h2>
+
+  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">Click to place dots and sculpt a hill. Press Roll. A ball obeys your landscape — plunging where it's steep, crawling where it's flat. Below, a second curve draws itself in real time: the <em>speed</em> at every point. Steep sections spike. Flat sections dip. You just built a function and its derivative — without a single equation.</p>
+
+  <div class="canvas-wrap" style="max-width:900px;margin:0 auto;">
+    <canvas id="hillCanvas" height="520"></canvas>
+    <div class="readout" id="hillReadout">
+      <span style="color:var(--gold2)">speed = <span id="hillSpeed">—</span></span> &nbsp;&nbsp;
+      <span style="color:var(--cyan)">steepness = <span id="hillSlope">—</span></span> &nbsp;&nbsp;
+      <span style="color:var(--muted)">position: <span id="hillPos">—</span>%</span>
+    </div>
+    <div class="ctrl-bar">
+      <button id="hillPlace" class="active">● Place dots</button>
+      <button id="hillUndo">← Undo</button>
+      <button id="hillRoll">▶ Roll</button>
+      <button id="hillReset">↺ Clear</button>
+      <label style="margin-left:auto">gravity</label>
+      <input type="range" id="hillGrav" min="0.5" max="5" step="0.1" value="2.0">
+      <span class="val" id="hillGravVal">2.0</span>
+    </div>
+    <div class="canvas-caption">Click to place control points. The curve updates live. Drag any dot to reshape. Press Roll to release the ball.</div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!--   § 3 — THE BRACHISTOCHRONE RACE            -->
+<!-- ════════════════════════════════════════════ -->
+<hr class="divider" id="s3">
+<section class="wrap reveal">
+  <div class="sec-label">§ 3 — The Brachistochrone Race</div>
+  <h2>Can you beat a <em>330-year-old</em> curve?</h2>
+
+  <p class="prose" style="max-width:700px;margin-bottom:1rem;">In June 1696, Johann Bernoulli posed a challenge to Europe's mathematicians: what curve carries a bead from A to B in the <em>least time</em> under gravity? Newton received the problem at 4 pm, solved it by 4 am, and sent the solution anonymously. Bernoulli recognized him anyway: <em>"I know the lion by its claw."</em></p>
+  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">The answer is a <strong>cycloid</strong> — the curve traced by a point on a rolling wheel. It dips steeply, gaining speed before straightening out. It looks reckless. It always wins. Build your own ramp and race it.</p>
+
+  <div class="canvas-wrap" style="max-width:900px;margin:0 auto;">
+    <canvas id="brachCanvas" height="460"></canvas>
+    <div class="readout" id="brachReadout">
+      <span style="color:var(--gold2)">your time: <span id="brachYou">—</span>s</span> &nbsp;&nbsp;
+      <span style="color:var(--cyan)">cycloid: <span id="brachOpt">—</span>s</span> &nbsp;&nbsp;
+      <span style="color:var(--muted)"><span id="brachVerdict"></span></span>
+    </div>
+    <div class="ctrl-bar">
+      <button id="brachPlace" class="active">● Draw ramp</button>
+      <button id="brachUndo">← Undo</button>
+      <button id="brachRace">▶ Race!</button>
+      <button id="brachReset">↺ Clear</button>
+    </div>
+    <div class="canvas-caption">Place dots between A (top-left) and B (bottom-right) to build your ramp. Then race the cycloid.</div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!--     § 4 — FILLING THE GAP                  -->
+<!-- ════════════════════════════════════════════ -->
+<hr class="divider" id="s4">
+<section class="wrap reveal">
+  <div class="sec-label">§ 4 — Filling the Gap</div>
+  <h2>How to measure the <em>unmeasurable</em></h2>
+
+  <p class="prose" style="max-width:700px;margin-bottom:1rem;">Archimedes could find the area under a parabola — but it took him a lifetime of ingenuity. Riemann's idea, twenty-one centuries later, was almost rude in its simplicity: <em>chop the region into thin rectangles and add up their areas.</em> The thinner the slices, the better the answer.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">Drag the slider. With 4 rectangles, the fit is clumsy. With 40, it's respectable. With 300, the rectangles vanish into the curve and the sum glows gold — the <em>integral</em>, exact to four decimal places.</p>
+
+  <div class="canvas-wrap" style="max-width:900px;margin:0 auto;">
+    <canvas id="riemannCanvas" height="440"></canvas>
+    <div class="readout" id="riemannReadout">
+      <span style="color:var(--gold2)">n = <span id="riemannN">4</span> rectangles</span> &nbsp;&nbsp;
+      <span style="color:var(--cyan)">sum ≈ <span id="riemannSum">—</span></span> &nbsp;&nbsp;
+      <span style="color:var(--muted)">exact = <span id="riemannExact">—</span></span>
+    </div>
+    <div class="ctrl-bar">
+      <label>rectangles</label>
+      <input type="range" id="riemannSlider" min="1" max="300" step="1" value="4">
+      <span class="val" id="riemannSliderVal">4</span>
+    </div>
+    <div class="ctrl-bar" style="border-top:none;padding-top:0">
+      <button id="rFn1" class="active">sin(x)</button>
+      <button id="rFn2">x²</button>
+      <button id="rFn3">√x</button>
+      <button id="rFn4">bell curve</button>
+    </div>
+    <div class="canvas-caption">Drag to add rectangles. The sum converges to the exact area — the integral.</div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!--     § 5 — THE INFINITE STAIRCASE            -->
+<!-- ════════════════════════════════════════════ -->
+<hr class="divider" id="s5">
+<section class="wrap reveal">
+  <div class="sec-label">§ 5 — The Infinite Staircase</div>
+  <h2>Some infinities <em>fit</em></h2>
+
+  <p class="prose" style="max-width:700px;margin-bottom:1rem;">Add 1 + ½ + ⅓ + ¼ + … forever. The sum grows without bound — slowly, but inexorably. The tower has no ceiling. This is the <em>harmonic series</em>, and its divergence stunned 14th-century mathematicians.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">Now try 1 + ¼ + ⅑ + ¹⁄₁₆ + … — the reciprocals of perfect squares. The tower stops. It converges. And it converges to <em>exactly</em> π²/6. Why should π — the ratio of a circle's circumference to its diameter — appear in a sum of fractions? Euler solved this in 1735 and it made him famous across Europe. Stack the blocks yourself and watch.</p>
+
+  <div class="canvas-wrap" style="max-width:900px;margin:0 auto;">
+    <canvas id="seriesCanvas" height="480"></canvas>
+    <div class="readout" id="seriesReadout">
+      <span style="color:var(--gold2)">terms: <span id="seriesN">0</span></span> &nbsp;&nbsp;
+      <span style="color:var(--cyan)">sum = <span id="seriesSum">0</span></span> &nbsp;&nbsp;
+      <span style="color:var(--muted)"><span id="seriesLimit"></span></span>
+    </div>
+    <div class="ctrl-bar">
+      <button id="serHarmonic">1/n (diverges)</button>
+      <button id="serBasel" class="active">1/n² → π²/6</button>
+      <button id="serGeometric">1/2ⁿ → 1</button>
+      <button id="serAlternating">(-1)ⁿ/n → ln 2</button>
+    </div>
+    <div class="ctrl-bar" style="border-top:none;padding-top:0">
+      <button id="serStep">+ next block</button>
+      <button id="serRun">▶ Auto-stack</button>
+      <button id="serReset">↺ Reset</button>
+    </div>
+    <div class="canvas-caption">Stack blocks one at a time or let them auto-pile. Some towers converge; some grow forever.</div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!--           CHAPTER CLOSING                   -->
+<!-- ════════════════════════════════════════════ -->
+<hr class="divider">
+<section class="wrap reveal" style="text-align:center;padding:4rem 2rem 3rem;">
+  <p class="prose" style="max-width:620px;margin:0 auto 2rem;font-size:1.15rem;color:var(--muted);font-style:italic;">
+    Everything moves. The question was never whether, but <em style="color:var(--gold2)">how</em> — and the answer turned out to be a limit, a slope, a curve you sculpt with your own hand.
+  </p>
+  <p class="prose" style="max-width:620px;margin:0 auto;font-size:1rem;color:var(--muted);">
+    A ball on a hill. A bead on a wire that always loses to a 330-year-old cycloid. Rectangles that dissolve into area. Blocks that somehow stack to π. This is calculus — the mathematics of change, of motion, of everything that refuses to stand still.
+  </p>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!--               FOOTER                        -->
+<!-- ════════════════════════════════════════════ -->
+<footer>
+  <p>Is All Moving, Moving? — Chapter I</p>
+  <p style="font-size:.7rem;">Every visualization is computed in real time. No recordings, no pre-rendered assets — just math.</p>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study</div>
+    <a class="footer-link" href="https://kimsh.kr">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
+<!-- ════════════════════════════════════════════ -->
+<!--              JAVASCRIPT                     -->
+<!-- ════════════════════════════════════════════ -->
+<script>
+/* ── KaTeX ── */
+document.addEventListener('DOMContentLoaded',()=>{
+  renderMathInElement(document.body,{
+    delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],
+    throwOnError:false
+  });
+});
+
+/* ── Scroll Reveal ── */
+const revealObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+
+/* ════════════════════════════════════════════════════════════ */
+/*   HERO CANVAS — Hamiltonian phase portrait flow field      */
+/*   Particles trace solution curves of a double-well         */
+/*   potential: H(x,p) = p²/2 + x⁴/4 − x²/2                */
+/*   This IS calculus: every curve is an integral curve of     */
+/*   Hamilton's equations dx/dt = ∂H/∂p, dp/dt = −∂H/∂x     */
+/* ════════════════════════════════════════════════════════════ */
+(function(){
+  const c = document.getElementById('heroCanvas');
+  const ctx = c.getContext('2d');
+  const dpr = window.devicePixelRatio||1;
+  let W,H;
+  function resize(){
+    W=c.offsetWidth; H=c.offsetHeight;
+    c.width=W*dpr; c.height=H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  resize(); window.addEventListener('resize',resize);
+
+  // Hamilton's equations for double-well: H = p²/2 + x⁴/4 − x²/2
+  // dx/dt = p,  dp/dt = x − x³
+  const dxdt = (x,p)=> p;
+  const dpdt = (x,p)=> x - x*x*x;
+  // Energy for color coding
+  const energy = (x,p)=> p*p/2 + x*x*x*x/4 - x*x/2;
+
+  // Coordinate transform: math coords [-2.5,2.5]x[-2,2] → screen
+  const xRange=5, yRange=4;
+  const toSx = x => (x/xRange+0.5)*W;
+  const toSy = p => (0.5-p/yRange)*H;
+
+  // ── Static: faint vector field arrows ──
+  let fieldArrows = [];
+  function buildField(){
+    fieldArrows = [];
+    const nx=28, ny=20;
+    for(let i=0;i<=nx;i++){
+      for(let j=0;j<=ny;j++){
+        const x = (i/nx - 0.5)*xRange;
+        const p = (0.5 - j/ny)*yRange;
+        const vx = dxdt(x,p), vp = dpdt(x,p);
+        const mag = Math.sqrt(vx*vx+vp*vp);
+        if(mag<0.01)continue;
+        const scale = Math.min(mag, 1.5) * 12;
+        fieldArrows.push({sx:toSx(x), sy:toSy(p),
+          dx:vx/mag*scale, dy:-vp/mag*scale, mag});
+      }
+    }
+  }
+  buildField();
+
+  // ── Flowing particles ──
+  const NP = 400;
+  const particles = [];
+  function spawnParticle(){
+    // Spawn along interesting energy levels
+    const x = (Math.random()-0.5)*xRange*0.85;
+    const p = (Math.random()-0.5)*yRange*0.85;
+    return {x, p, age:0, maxAge:300+Math.random()*500,
+            trail:[], trailMax:60+Math.random()*40};
+  }
+  for(let i=0;i<NP;i++) particles.push(spawnParticle());
+
+  // ── Precomputed integral curves (static, drawn once per frame) ──
+  function traceOrbit(x0,p0,steps,dt){
+    const pts=[];
+    let x=x0,p=p0;
+    for(let i=0;i<steps;i++){
+      pts.push({sx:toSx(x),sy:toSy(p)});
+      // RK2
+      const k1x=dxdt(x,p)*dt, k1p=dpdt(x,p)*dt;
+      const mx=x+k1x*0.5, mp=p+k1p*0.5;
+      x+=dxdt(mx,mp)*dt; p+=dpdt(mx,mp)*dt;
+    }
+    return pts;
+  }
+
+  // A few special orbits: separatrix + closed orbits
+  const staticOrbits = [];
+  // Separatrix: energy = 0 passes through saddle at origin
+  // Starts near the saddle
+  for(const sign of [1,-1]){
+    for(const dir of [1,-1]){
+      const x0 = sign*0.001;
+      const p0 = dir*Math.sqrt(Math.max(0, 2*(x0*x0/2 - x0*x0*x0*x0/4)));
+      staticOrbits.push(traceOrbit(x0, p0+dir*0.01, 600, 0.008*dir));
+    }
+  }
+  // Closed orbits around each well
+  for(const cx of [-1, 1]){
+    for(let e=0.02; e<0.22; e+=0.06){
+      const p0 = Math.sqrt(2*e);
+      staticOrbits.push(traceOrbit(cx, p0, 800, 0.008));
+    }
+  }
+  // Large outer orbits
+  for(let p0=1.2; p0<1.9; p0+=0.2){
+    staticOrbits.push(traceOrbit(0, p0, 1200, 0.006));
+  }
+
+  // ── Energy-to-color ──
+  function eColor(e, alpha){
+    // Negative energy (inside wells) → warm gold
+    // Zero (separatrix) → bright white-gold
+    // Positive (outer orbits) → cool cyan
+    if(e < -0.1) return `rgba(201,168,76,${alpha})`;
+    if(e < 0.05) return `rgba(232,204,128,${alpha})`;
+    return `rgba(60,184,195,${alpha*0.7})`;
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    // ── Background glow at the two wells (x=±1) ──
+    for(const cx of [-1,1]){
+      const gx = toSx(cx), gy = toSy(0);
+      const grad = ctx.createRadialGradient(gx,gy,0,gx,gy,W*0.18);
+      grad.addColorStop(0,'rgba(201,168,76,0.04)');
+      grad.addColorStop(1,'rgba(5,6,15,0)');
+      ctx.fillStyle=grad; ctx.fillRect(0,0,W,H);
+    }
+
+    // ── Static vector field (very faint) ──
+    ctx.lineWidth = 0.5;
+    for(const a of fieldArrows){
+      const alpha = Math.min(0.12, a.mag*0.04);
+      ctx.strokeStyle = `rgba(201,168,76,${alpha})`;
+      ctx.beginPath(); ctx.moveTo(a.sx, a.sy);
+      ctx.lineTo(a.sx+a.dx, a.sy+a.dy); ctx.stroke();
+    }
+
+    // ── Static integral curves (faint, structural) ──
+    ctx.lineWidth = 0.8;
+    for(const orbit of staticOrbits){
+      if(orbit.length<2) continue;
+      const e = energy(orbit[0].sx/W*xRange-xRange/2, 0); // approximate
+      ctx.strokeStyle = `rgba(201,168,76,0.06)`;
+      ctx.beginPath();
+      for(let i=0;i<orbit.length;i++){
+        const {sx,sy}=orbit[i];
+        if(sx<-50||sx>W+50||sy<-50||sy>H+50){ctx.moveTo(sx,sy);continue;}
+        i===0?ctx.moveTo(sx,sy):ctx.lineTo(sx,sy);
+      }
+      ctx.stroke();
+    }
+
+    // ── Flowing particles ──
+    const dt = 0.012;
+    for(const pt of particles){
+      // RK2 integration
+      const k1x=dxdt(pt.x,pt.p)*dt, k1p=dpdt(pt.x,pt.p)*dt;
+      const mx=pt.x+k1x*0.5, mp=pt.p+k1p*0.5;
+      pt.x+=dxdt(mx,mp)*dt; pt.p+=dpdt(mx,mp)*dt;
+      pt.age++;
+
+      const sx=toSx(pt.x), sy=toSy(pt.p);
+      pt.trail.push({sx,sy});
+      if(pt.trail.length>pt.trailMax) pt.trail.shift();
+
+      // Respawn if out of bounds or too old
+      if(pt.age>pt.maxAge || Math.abs(pt.x)>3 || Math.abs(pt.p)>2.5){
+        Object.assign(pt, spawnParticle());
+        pt.trail=[];
+        continue;
+      }
+
+      // Draw trail
+      const e = energy(pt.x, pt.p);
+      if(pt.trail.length>2){
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        for(let i=0;i<pt.trail.length;i++){
+          const {sx:tx,sy:ty}=pt.trail[i];
+          i===0?ctx.moveTo(tx,ty):ctx.lineTo(tx,ty);
+        }
+        const fadeIn = Math.min(1, pt.age/60);
+        const fadeOut = Math.min(1, (pt.maxAge-pt.age)/60);
+        const alpha = 0.35 * fadeIn * fadeOut;
+        ctx.strokeStyle = eColor(e, alpha);
+        ctx.stroke();
+      }
+
+      // Draw head
+      const fadeIn = Math.min(1, pt.age/40);
+      const fadeOut = Math.min(1, (pt.maxAge-pt.age)/40);
+      const headAlpha = 0.7 * fadeIn * fadeOut;
+      ctx.beginPath(); ctx.arc(sx,sy,1.5,0,Math.PI*2);
+      ctx.fillStyle = eColor(e, headAlpha);
+      ctx.fill();
+    }
+
+    // ── Axes (very subtle) ──
+    ctx.strokeStyle='rgba(201,168,76,0.08)'; ctx.lineWidth=0.5;
+    // x-axis
+    ctx.beginPath(); ctx.moveTo(0,toSy(0)); ctx.lineTo(W,toSy(0)); ctx.stroke();
+    // p-axis
+    ctx.beginPath(); ctx.moveTo(toSx(0),0); ctx.lineTo(toSx(0),H); ctx.stroke();
+
+    // ── Fixed points: dots at (-1,0), (0,0), (1,0) ──
+    for(const fx of [-1,0,1]){
+      const sx=toSx(fx), sy=toSy(0);
+      ctx.beginPath(); ctx.arc(sx,sy, fx===0?3:4, 0,Math.PI*2);
+      ctx.fillStyle = fx===0 ? 'rgba(196,85,85,0.5)' : 'rgba(201,168,76,0.6)';
+      ctx.fill();
+      // glow
+      ctx.beginPath(); ctx.arc(sx,sy,8,0,Math.PI*2);
+      ctx.fillStyle = fx===0 ? 'rgba(196,85,85,0.08)' : 'rgba(201,168,76,0.08)';
+      ctx.fill();
+    }
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+  window.addEventListener('resize',()=>{resize(); buildField();});
+})();
+
+/* ════════════════════════════════════════════════ */
+/*        § 1.1 — ZENO'S ARROW INTERACTIVE         */
+/* ════════════════════════════════════════════════ */
+(function(){
+  const c = document.getElementById('zenoCanvas');
+  const ctx = c.getContext('2d');
+  const dpr = window.devicePixelRatio||1;
+  let W,H;
+  function resize(){
+    const rect = c.getBoundingClientRect();
+    W = rect.width; H = rect.height;
+    c.width = W*dpr; c.height = H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  resize(); window.addEventListener('resize',resize);
+
+  const slider = document.getElementById('zenoSlider');
+  const sliderVal = document.getElementById('zenoSliderVal');
+  const dxEl = document.getElementById('zenoDx');
+  const dtEl = document.getElementById('zenoDt');
+  const ratioEl = document.getElementById('zenoRatio');
+
+  // Position function: x(t) = 0.5 * sin(2*pi*t) + 0.5*t  (some smooth motion)
+  // For visual: arrow moves from left to right along a curve
+  const posX = t => 0.15 + 0.7 * t;   // linear for simplicity
+  const posY = t => 0.5 + 0.12 * Math.sin(Math.PI * 2 * t);
+  // Velocity (derivative): dx/dt component
+  const velX = t => 0.7;
+  const velY = t => 0.12 * Math.PI * 2 * Math.cos(Math.PI * 2 * t);
+
+  const t0 = 0.35; // fixed time instant
+  let dt = 0.8;
+  let arrowFreed = false;
+  let freeT = 0;
+  let whooshPlayed = false;
+
+  // Audio context for whoosh
+  let audioCtx = null;
+  function playWhoosh(){
+    if(whooshPlayed) return;
+    whooshPlayed = true;
+    try{
+      audioCtx = audioCtx || new (window.AudioContext||window.webkitAudioContext)();
+      // Noise burst with decay
+      const dur = 0.6;
+      const buf = audioCtx.createBuffer(1,audioCtx.sampleRate*dur,audioCtx.sampleRate);
+      const d = buf.getChannelData(0);
+      for(let i=0;i<d.length;i++){
+        const t=i/audioCtx.sampleRate;
+        d[i] = (Math.random()*2-1) * Math.exp(-t*6) * 0.15;
+      }
+      const src = audioCtx.createBufferSource();
+      src.buffer = buf;
+      // bandpass for whoosh character
+      const filt = audioCtx.createBiquadFilter();
+      filt.type='bandpass'; filt.frequency.value=800; filt.Q.value=0.8;
+      src.connect(filt); filt.connect(audioCtx.destination);
+      src.start();
+    }catch(e){}
+  }
+
+  function drawArrow(cx, cy, angle, size, color, alpha){
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(angle);
+    ctx.globalAlpha = alpha;
+    // Arrow shaft
+    ctx.beginPath();
+    ctx.moveTo(-size*0.6, 0);
+    ctx.lineTo(size*0.3, 0);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+    // Arrowhead
+    ctx.beginPath();
+    ctx.moveTo(size*0.6, 0);
+    ctx.lineTo(size*0.2, -size*0.15);
+    ctx.lineTo(size*0.25, 0);
+    ctx.lineTo(size*0.2, size*0.15);
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+
+  function drawTimeline(t, dt_val){
+    const margin = {l:50, r:30, t:30, b:70};
+    const pw = W-margin.l-margin.r, ph = H-margin.t-margin.b;
+
+    ctx.clearRect(0,0,W,H);
+
+    // Background subtle grid
+    ctx.strokeStyle='rgba(201,168,76,0.06)';
+    ctx.lineWidth=0.5;
+    for(let i=0;i<=10;i++){
+      const x=margin.l+pw*i/10;
+      ctx.beginPath();ctx.moveTo(x,margin.t);ctx.lineTo(x,margin.t+ph);ctx.stroke();
+    }
+    for(let i=0;i<=6;i++){
+      const y=margin.t+ph*i/6;
+      ctx.beginPath();ctx.moveTo(margin.l,y);ctx.lineTo(margin.l+pw,y);ctx.stroke();
+    }
+
+    // Draw the trajectory curve
+    ctx.beginPath();
+    ctx.strokeStyle='rgba(201,168,76,0.25)';
+    ctx.lineWidth=1.5;
+    for(let i=0;i<=200;i++){
+      const tt=i/200;
+      const sx=margin.l+posX(tt)*pw;
+      const sy=margin.t+(1-posY(tt))*ph;
+      i===0?ctx.moveTo(sx,sy):ctx.lineTo(sx,sy);
+    }
+    ctx.stroke();
+
+    // Positions at t0 and t0+dt
+    const x1=posX(t0), y1=posY(t0);
+    const x2=posX(t0+dt_val), y2=posY(t0+dt_val);
+    const sx1=margin.l+x1*pw, sy1=margin.t+(1-y1)*ph;
+    const sx2=margin.l+x2*pw, sy2=margin.t+(1-y2)*ph;
+
+    // Bracket showing Δt on horizontal axis
+    const baseY = margin.t+ph+15;
+    ctx.strokeStyle='var(--cyan)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(margin.l+posX(t0)*pw,baseY-5);
+    ctx.lineTo(margin.l+posX(t0)*pw,baseY+5);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(margin.l+posX(t0+dt_val)*pw,baseY-5);
+    ctx.lineTo(margin.l+posX(t0+dt_val)*pw,baseY+5);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(margin.l+posX(t0)*pw,baseY);
+    ctx.lineTo(margin.l+posX(t0+dt_val)*pw,baseY);ctx.stroke();
+    ctx.fillStyle='#3cb8c3';ctx.font='11px "JetBrains Mono"';ctx.textAlign='center';
+    ctx.fillText('Δt',(margin.l+posX(t0)*pw + margin.l+posX(t0+dt_val)*pw)/2,baseY+16);
+
+    // Draw the two arrow positions
+    const angle1 = Math.atan2(-(posY(t0+0.01)-posY(t0)), posX(t0+0.01)-posX(t0));
+    const angle2 = Math.atan2(-(posY(t0+dt_val+0.01)-posY(t0+dt_val)), posX(t0+dt_val+0.01)-posX(t0+dt_val));
+
+    if(dt_val > 0.015){
+      // Ghost arrow at t0+dt (cyan, fainter)
+      drawArrow(sx2, sy2, angle2, 30, '#3cb8c3', 0.5);
+      // Main arrow at t0 (gold)
+      drawArrow(sx1, sy1, angle1, 30, '#c9a84c', 0.9);
+      // Dashed line connecting them
+      ctx.setLineDash([4,4]);ctx.strokeStyle='rgba(201,168,76,0.3)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(sx1,sy1);ctx.lineTo(sx2,sy2);ctx.stroke();
+      ctx.setLineDash([]);
+    } else {
+      // Limit reached — single glowing arrow
+      drawArrow(sx1, sy1, angle1, 32, '#e8cc80', 1.0);
+      // Glow
+      ctx.shadowColor='rgba(201,168,76,0.6)';ctx.shadowBlur=20;
+      drawArrow(sx1, sy1, angle1, 32, '#e8cc80', 0.4);
+      ctx.shadowBlur=0;
+    }
+
+    // Labels
+    ctx.fillStyle='rgba(201,168,76,0.6)';ctx.font='10px "JetBrains Mono"';
+    ctx.textAlign='left';
+    ctx.fillText('t',margin.l-5,margin.t+ph+40);
+    ctx.textAlign='right';
+    ctx.fillText('position',margin.l-8,margin.t+10);
+
+    // Time axis
+    ctx.strokeStyle='rgba(201,168,76,0.15)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(margin.l,margin.t+ph);ctx.lineTo(margin.l+pw,margin.t+ph);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(margin.l,margin.t);ctx.lineTo(margin.l,margin.t+ph);ctx.stroke();
+  }
+
+  function drawFreeArrow(time){
+    const margin = {l:50, r:30, t:30, b:70};
+    const pw = W-margin.l-margin.r, ph = H-margin.t-margin.b;
+
+    ctx.clearRect(0,0,W,H);
+
+    // Background grid
+    ctx.strokeStyle='rgba(201,168,76,0.06)';ctx.lineWidth=0.5;
+    for(let i=0;i<=10;i++){
+      const x=margin.l+pw*i/10;
+      ctx.beginPath();ctx.moveTo(x,margin.t);ctx.lineTo(x,margin.t+ph);ctx.stroke();
+    }
+
+    // Trajectory
+    ctx.beginPath();ctx.strokeStyle='rgba(201,168,76,0.25)';ctx.lineWidth=1.5;
+    for(let i=0;i<=200;i++){
+      const tt=i/200;
+      const sx=margin.l+posX(tt)*pw;
+      const sy=margin.t+(1-posY(tt))*ph;
+      i===0?ctx.moveTo(sx,sy):ctx.lineTo(sx,sy);
+    }
+    ctx.stroke();
+
+    // Glowing trail
+    const trailLen=80;
+    for(let i=0;i<trailLen;i++){
+      const tt=freeT-i*0.003;
+      if(tt<0)break;
+      const sx=margin.l+posX(tt)*pw;
+      const sy=margin.t+(1-posY(tt))*ph;
+      ctx.beginPath();ctx.arc(sx,sy,2,0,Math.PI*2);
+      ctx.fillStyle=`rgba(201,168,76,${0.4*(1-i/trailLen)})`;
+      ctx.fill();
+    }
+
+    // Arrow at current position
+    const cx=margin.l+posX(freeT)*pw;
+    const cy=margin.t+(1-posY(freeT))*ph;
+    const angle=Math.atan2(-(posY(freeT+0.01)-posY(freeT)),posX(freeT+0.01)-posX(freeT));
+    ctx.shadowColor='rgba(201,168,76,0.5)';ctx.shadowBlur=15;
+    drawArrow(cx,cy,angle,34,'#e8cc80',1);
+    ctx.shadowBlur=0;
+
+    // Velocity vector
+    const vx=velX(freeT), vy=velY(freeT);
+    const vscale=80;
+    ctx.beginPath();ctx.moveTo(cx,cy);
+    ctx.lineTo(cx+vx*vscale,cy-vy*vscale);
+    ctx.strokeStyle='rgba(60,184,195,0.6)';ctx.lineWidth=1.5;ctx.stroke();
+    ctx.fillStyle='#3cb8c3';ctx.font='10px "JetBrains Mono"';ctx.textAlign='left';
+    ctx.fillText('v(t)',cx+vx*vscale+6,cy-vy*vscale);
+
+    // Label
+    ctx.fillStyle='rgba(201,168,76,0.8)';ctx.font='12px "JetBrains Mono"';
+    ctx.textAlign='center';
+    ctx.fillText('The arrow moves.',W/2,H-20);
+  }
+
+  slider.addEventListener('input',()=>{
+    dt = parseFloat(slider.value);
+    sliderVal.textContent = dt.toFixed(3);
+    arrowFreed = false;
+    whooshPlayed = false;
+    freeT = 0;
+
+    // Compute readout values
+    const dx = Math.sqrt((posX(t0+dt)-posX(t0))**2 + (posY(t0+dt)-posY(t0))**2);
+    const ratio = dx/dt;
+    const trueV = Math.sqrt(velX(t0)**2 + velY(t0)**2);
+
+    dxEl.textContent = dx.toFixed(4);
+    dtEl.textContent = dt.toFixed(4);
+    ratioEl.textContent = ratio.toFixed(4);
+
+    if(dt < 0.015){
+      arrowFreed = true;
+      ratioEl.textContent = trueV.toFixed(4) + '  ← limit!';
+      ratioEl.style.color = '#3cb8c3';
+      playWhoosh();
+    } else {
+      ratioEl.style.color = '';
+    }
+  });
+
+  // Trigger initial readout
+  slider.dispatchEvent(new Event('input'));
+
+  function animate(time){
+    if(arrowFreed){
+      freeT += 0.003;
+      if(freeT > 1) freeT = 0;
+      drawFreeArrow(time);
+    } else {
+      drawTimeline(time, dt);
+    }
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+})();
+
+/* ════════════════════════════════════════════════ */
+/*    § 2 — DRAW A HILL (dot placement version)   */
+/* ════════════════════════════════════════════════ */
+(function(){
+  const c = document.getElementById('hillCanvas');
+  const ctx = c.getContext('2d');
+  const dpr = window.devicePixelRatio||1;
+  let W,H;
+  function resize(){
+    const rect=c.getBoundingClientRect();
+    W=rect.width; H=rect.height;
+    c.width=W*dpr; c.height=H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  resize(); window.addEventListener('resize',resize);
+
+  const btnPlace=document.getElementById('hillPlace');
+  const btnUndo=document.getElementById('hillUndo');
+  const btnRoll=document.getElementById('hillRoll');
+  const btnReset=document.getElementById('hillReset');
+  const gravSlider=document.getElementById('hillGrav');
+  const gravVal=document.getElementById('hillGravVal');
+  const speedEl=document.getElementById('hillSpeed');
+  const slopeEl=document.getElementById('hillSlope');
+  const posEl=document.getElementById('hillPos');
+
+  // Layout
+  const topFrac=0.58, gapPx=30, botPad=15, MRG=35;
+  function topH(){return H*topFrac}
+  function botTop(){return H*topFrac+gapPx}
+  function botH(){return H-botTop()-botPad}
+
+  // State
+  let dots=[];       // {nx,ny} normalized 0-1
+  let hillCurve=[];  // [{x,y}] screen coords
+  let slopes=[];     // slope at each curve point
+  let arcLen=[];     // cumulative normalized arc length
+  let totalArc=0;
+  let ballS=0, ballV=0, gravity=2.0, rolling=false, lastTime=null, animId=null;
+  let mode='place', dragIdx=-1;
+
+  // ── Catmull-Rom interpolation ──
+  function cr(p0,p1,p2,p3,t){
+    const t2=t*t, t3=t2*t;
+    return .5*((2*p1)+(-p0+p2)*t+(2*p0-5*p1+4*p2-p3)*t2+(-p0+3*p1-3*p2+p3)*t3);
+  }
+
+  function buildCurve(){
+    hillCurve=[]; slopes=[]; arcLen=[]; totalArc=0;
+    if(dots.length<2) return;
+    const sorted=[...dots].sort((a,b)=>a.nx-b.nx);
+    const pts=sorted.map(d=>({x:MRG+(W-2*MRG)*d.nx, y:20+(topH()-40)*d.ny}));
+    // Pad ends (mirror)
+    const pad=[
+      {x:2*pts[0].x-pts[1].x, y:2*pts[0].y-pts[1].y},
+      ...pts,
+      {x:2*pts[pts.length-1].x-pts[pts.length-2].x,
+       y:2*pts[pts.length-1].y-pts[pts.length-2].y}
+    ];
+    // Tension-controlled Catmull-Rom (tension=0.5 = standard, higher = tighter)
+    const tension=0.3; // lower = smoother, less overshoot
+    function crT(p0,p1,p2,p3,t){
+      const t2=t*t, t3=t2*t;
+      const m1=tension*(p2-p0), m2=tension*(p3-p1);
+      return (2*t3-3*t2+1)*p1 + (t3-2*t2+t)*m1 + (-2*t3+3*t2)*p2 + (t3-t2)*m2;
+    }
+    const segs=100;
+    for(let i=0;i<pad.length-3;i++){
+      const [p0,p1,p2,p3]=[pad[i],pad[i+1],pad[i+2],pad[i+3]];
+      for(let j=0;j<=segs;j++){
+        if(j===0&&i>0)continue;
+        const t=j/segs;
+        hillCurve.push({
+          x:crT(p0.x,p1.x,p2.x,p3.x,t),
+          y:Math.max(10,Math.min(topH()-10,crT(p0.y,p1.y,p2.y,p3.y,t)))
+        });
+      }
+    }
+    // Arc length
+    arcLen=[0];
+    for(let i=1;i<hillCurve.length;i++){
+      const dx=hillCurve[i].x-hillCurve[i-1].x, dy=hillCurve[i].y-hillCurve[i-1].y;
+      totalArc+=Math.sqrt(dx*dx+dy*dy); arcLen.push(totalArc);
+    }
+    for(let i=0;i<arcLen.length;i++) arcLen[i]/=totalArc;
+    // Raw slopes (wide finite-difference window = 8 samples each side)
+    const rawSlopes=[];
+    const win=8;
+    for(let i=0;i<hillCurve.length;i++){
+      const im=Math.max(0,i-win), ip=Math.min(hillCurve.length-1,i+win);
+      const dx=hillCurve[ip].x-hillCurve[im].x, dy=hillCurve[ip].y-hillCurve[im].y;
+      rawSlopes.push(dx===0?0:dy/dx);
+    }
+    // Gaussian smoothing of slopes (3 passes, kernel width 12)
+    slopes=rawSlopes.slice();
+    for(let pass=0;pass<3;pass++){
+      const prev=slopes.slice();
+      const k=12;
+      for(let i=0;i<prev.length;i++){
+        let sum=0, wt=0;
+        for(let j=-k;j<=k;j++){
+          const idx=Math.max(0,Math.min(prev.length-1,i+j));
+          const g=Math.exp(-j*j/(2*(k/2.5)*(k/2.5)));
+          sum+=prev[idx]*g; wt+=g;
+        }
+        slopes[i]=sum/wt;
+      }
+    }
+  }
+
+  function posAtS(s){
+    s=Math.max(0,Math.min(1,s));
+    let lo=0,hi=arcLen.length-1;
+    while(lo<hi-1){const m=(lo+hi)>>1;if(arcLen[m]<=s)lo=m;else hi=m;}
+    const t=(s-arcLen[lo])/(arcLen[hi]-arcLen[lo]||1);
+    return{x:hillCurve[lo].x*(1-t)+hillCurve[hi].x*t, y:hillCurve[lo].y*(1-t)+hillCurve[hi].y*t, idx:lo+t};
+  }
+  function slopeAtS(s){const p=posAtS(s);return slopes[Math.min(Math.round(p.idx),slopes.length-1)]||0;}
+
+  // Coordinate helpers
+  function normToScr(nx,ny){return{sx:MRG+(W-2*MRG)*nx, sy:20+(topH()-40)*ny}}
+  function scrToNorm(sx,sy){return{nx:(sx-MRG)/(W-2*MRG), ny:(sy-20)/(topH()-40)}}
+  function hitDot(sx,sy){
+    for(let i=0;i<dots.length;i++){
+      const s=normToScr(dots[i].nx,dots[i].ny);
+      if((sx-s.sx)**2+(sy-s.sy)**2<20*20)return i;
+    }return-1;
+  }
+  function getPos(e){const r=c.getBoundingClientRect();return{sx:e.clientX-r.left,sy:e.clientY-r.top}}
+
+  // ── Mouse events ──
+  c.addEventListener('mousedown',e=>{
+    const p=getPos(e); if(p.sy>topH()||rolling)return;
+    const hit=hitDot(p.sx,p.sy);
+    if(hit>=0){mode='drag';dragIdx=hit;c.style.cursor='grabbing';}
+    else{
+      const n=scrToNorm(p.sx,p.sy);
+      if(n.nx<0||n.nx>1||n.ny<0||n.ny>1)return;
+      dots.push({nx:Math.max(0,Math.min(1,n.nx)),ny:Math.max(.02,Math.min(.98,n.ny))});
+      buildCurve();drawScene();
+    }
+  });
+  c.addEventListener('mousemove',e=>{
+    const p=getPos(e);
+    if(mode==='drag'&&dragIdx>=0){
+      const n=scrToNorm(p.sx,p.sy);
+      dots[dragIdx].nx=Math.max(0,Math.min(1,n.nx));
+      dots[dragIdx].ny=Math.max(.02,Math.min(.98,n.ny));
+      buildCurve();drawScene();
+    } else if(!rolling&&p.sy<topH()){
+      c.style.cursor=hitDot(p.sx,p.sy)>=0?'grab':'crosshair';
+    }
+  });
+  c.addEventListener('mouseup',()=>{if(mode==='drag'){mode='place';dragIdx=-1;c.style.cursor='crosshair';}});
+
+  // ── Touch events ──
+  c.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0],p=getPos(t);
+    if(p.sy>topH()||rolling)return;const hit=hitDot(p.sx,p.sy);
+    if(hit>=0){mode='drag';dragIdx=hit;}else{
+      const n=scrToNorm(p.sx,p.sy);if(n.nx<0||n.nx>1||n.ny<0||n.ny>1)return;
+      dots.push({nx:Math.max(0,Math.min(1,n.nx)),ny:Math.max(.02,Math.min(.98,n.ny))});buildCurve();drawScene();}
+  },{passive:false});
+  c.addEventListener('touchmove',e=>{e.preventDefault();if(mode==='drag'&&dragIdx>=0){
+    const t=e.touches[0],p=getPos(t),n=scrToNorm(p.sx,p.sy);
+    dots[dragIdx].nx=Math.max(0,Math.min(1,n.nx));dots[dragIdx].ny=Math.max(.02,Math.min(.98,n.ny));
+    buildCurve();drawScene();}},{passive:false});
+  c.addEventListener('touchend',e=>{e.preventDefault();mode='place';dragIdx=-1;},{passive:false});
+
+  // ── Buttons ──
+  btnPlace.addEventListener('click',()=>{
+    if(rolling){rolling=false;if(animId)cancelAnimationFrame(animId);}
+    mode='place';btnPlace.classList.add('active');btnRoll.classList.remove('active');drawScene();
+  });
+  btnUndo.addEventListener('click',()=>{if(rolling)return;dots.pop();buildCurve();drawScene();});
+  btnRoll.addEventListener('click',()=>{
+    if(hillCurve.length<10)return;
+    mode='roll';rolling=true;btnRoll.classList.add('active');btnPlace.classList.remove('active');
+    ballS=0;ballV=0;lastTime=null;
+    if(animId)cancelAnimationFrame(animId);animId=requestAnimationFrame(rollLoop);
+  });
+  btnReset.addEventListener('click',()=>{
+    rolling=false;if(animId){cancelAnimationFrame(animId);animId=null;}
+    dots=[];hillCurve=[];slopes=[];arcLen=[];mode='place';ballS=0;ballV=0;
+    btnPlace.classList.add('active');btnRoll.classList.remove('active');
+    speedEl.textContent='—';slopeEl.textContent='—';posEl.textContent='—';drawScene();
+  });
+  gravSlider.addEventListener('input',()=>{gravity=parseFloat(gravSlider.value);gravVal.textContent=gravity.toFixed(1);});
+
+  // ── Rolling physics ──
+  function rollLoop(time){
+    if(!rolling)return;
+    if(lastTime===null){lastTime=time;animId=requestAnimationFrame(rollLoop);return;}
+    const dt=Math.min((time-lastTime)/1000,.05);lastTime=time;
+    const sl=slopeAtS(ballS), sinTh=sl/Math.sqrt(1+sl*sl);
+    ballV+=gravity*sinTh*dt; ballV*=.998;
+    if(ballV<.0005&&ballS<.95)ballV=.0005;
+    ballS+=ballV*dt;
+    if(ballS>=1){ballS=1;ballV=0;rolling=false;}
+    speedEl.textContent=Math.abs(ballV).toFixed(2);
+    slopeEl.textContent=sl.toFixed(2);
+    posEl.textContent=Math.round(ballS*100);
+    drawScene();
+    if(rolling)animId=requestAnimationFrame(rollLoop);
+  }
+
+  // ── Render ──
+  function drawScene(){
+    ctx.clearRect(0,0,W,H);
+    const th=topH(),bt=botTop(),bh=botH();
+    ctx.fillStyle='rgba(16,17,42,0.4)';ctx.fillRect(0,0,W,th);
+    ctx.fillStyle='rgba(16,17,42,0.25)';ctx.fillRect(0,bt,W,bh);
+    ctx.fillStyle='rgba(201,168,76,0.35)';ctx.font='10px "JetBrains Mono"';ctx.textAlign='left';
+    ctx.fillText('speed (the derivative)',MRG,bt-6);
+    ctx.fillText('your hill',MRG,14);
+    ctx.strokeStyle='rgba(201,168,76,0.08)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(0,th+gapPx/2);ctx.lineTo(W,th+gapPx/2);ctx.stroke();
+
+    // Prompt if no dots
+    if(dots.length===0){
+      ctx.fillStyle='rgba(201,168,76,0.2)';ctx.font='16px "Cormorant Garamond"';ctx.textAlign='center';
+      ctx.fillText('Click to place your first dot',W/2,th/2-8);
+      ctx.font='12px "Cormorant Garamond"';ctx.fillText('at least 3 dots to make a hill',W/2,th/2+16);
+      return;
+    }
+
+    // Draw control dots (always)
+    for(let i=0;i<dots.length;i++){
+      const s=normToScr(dots[i].nx,dots[i].ny);
+      ctx.beginPath();ctx.arc(s.sx,s.sy,12,0,Math.PI*2);ctx.fillStyle='rgba(201,168,76,0.07)';ctx.fill();
+      ctx.beginPath();ctx.arc(s.sx,s.sy,5,0,Math.PI*2);
+      ctx.fillStyle=dragIdx===i?'#e8cc80':'#c9a84c';ctx.fill();
+      ctx.strokeStyle='rgba(201,168,76,0.4)';ctx.lineWidth=1;ctx.stroke();
+    }
+
+    if(dots.length<2){
+      ctx.fillStyle='rgba(201,168,76,0.2)';ctx.font='13px "Cormorant Garamond"';ctx.textAlign='center';
+      ctx.fillText('place more dots…',W/2,th/2+40);return;
+    }
+    if(hillCurve.length<2)return;
+
+    // ── Hill curve ──
+    ctx.beginPath();ctx.moveTo(hillCurve[0].x,hillCurve[0].y);
+    for(let i=1;i<hillCurve.length;i++)ctx.lineTo(hillCurve[i].x,hillCurve[i].y);
+    ctx.lineTo(hillCurve[hillCurve.length-1].x,th);ctx.lineTo(hillCurve[0].x,th);ctx.closePath();
+    const grd=ctx.createLinearGradient(0,0,0,th);
+    grd.addColorStop(0,'rgba(201,168,76,0.07)');grd.addColorStop(1,'rgba(201,168,76,0.01)');
+    ctx.fillStyle=grd;ctx.fill();
+    ctx.beginPath();ctx.moveTo(hillCurve[0].x,hillCurve[0].y);
+    for(let i=1;i<hillCurve.length;i++)ctx.lineTo(hillCurve[i].x,hillCurve[i].y);
+    ctx.strokeStyle='rgba(201,168,76,0.7)';ctx.lineWidth=2.5;ctx.stroke();
+
+    // ── Derivative (speed) panel ──
+    let maxSl=0;for(const s of slopes)if(Math.abs(s)>maxSl)maxSl=Math.abs(s);
+    maxSl=Math.max(maxSl,.3);
+    // Full faint
+    ctx.beginPath();
+    for(let i=0;i<hillCurve.length;i++){
+      const sy=bt+bh-(Math.abs(slopes[i])/maxSl)*(bh-10)-5;
+      i===0?ctx.moveTo(hillCurve[i].x,sy):ctx.lineTo(hillCurve[i].x,sy);
+    }
+    ctx.strokeStyle='rgba(60,184,195,0.2)';ctx.lineWidth=1.5;ctx.stroke();
+
+    // Bright portion if rolling
+    if((mode==='roll'||ballS>0)&&hillCurve.length>1){
+      const bi=Math.round(posAtS(ballS).idx);
+      const li=Math.min(bi,hillCurve.length-1);
+      ctx.beginPath();ctx.moveTo(hillCurve[0].x,bt+bh-5);
+      for(let i=0;i<=li;i++){const sy=bt+bh-(Math.abs(slopes[i])/maxSl)*(bh-10)-5;ctx.lineTo(hillCurve[i].x,sy);}
+      ctx.lineTo(hillCurve[li].x,bt+bh-5);ctx.closePath();
+      const g2=ctx.createLinearGradient(0,bt,0,bt+bh);
+      g2.addColorStop(0,'rgba(60,184,195,0.25)');g2.addColorStop(1,'rgba(60,184,195,0.02)');
+      ctx.fillStyle=g2;ctx.fill();
+      ctx.beginPath();
+      for(let i=0;i<=li;i++){const sy=bt+bh-(Math.abs(slopes[i])/maxSl)*(bh-10)-5;i===0?ctx.moveTo(hillCurve[i].x,sy):ctx.lineTo(hillCurve[i].x,sy);}
+      ctx.strokeStyle='rgba(60,184,195,0.7)';ctx.lineWidth=2;ctx.stroke();
+      // Speed dot
+      const si=Math.min(bi,slopes.length-1);
+      const dsy=bt+bh-(Math.abs(slopes[si])/maxSl)*(bh-10)-5;
+      ctx.beginPath();ctx.arc(hillCurve[si].x,dsy,5,0,Math.PI*2);ctx.fillStyle='#3cb8c3';ctx.fill();
+      ctx.beginPath();ctx.arc(hillCurve[si].x,dsy,10,0,Math.PI*2);ctx.fillStyle='rgba(60,184,195,0.15)';ctx.fill();
+    }
+    // Zero line
+    ctx.strokeStyle='rgba(201,168,76,0.06)';ctx.lineWidth=.5;
+    ctx.beginPath();ctx.moveTo(MRG,bt+bh-5);ctx.lineTo(W-MRG,bt+bh-5);ctx.stroke();
+
+    // ── Ball ──
+    if((mode==='roll'||ballS>0)&&hillCurve.length>1){
+      const bp=posAtS(ballS);
+      ctx.beginPath();ctx.arc(bp.x,bp.y,18,0,Math.PI*2);
+      const bg=ctx.createRadialGradient(bp.x,bp.y,0,bp.x,bp.y,18);
+      bg.addColorStop(0,'rgba(232,204,128,0.35)');bg.addColorStop(1,'rgba(232,204,128,0)');
+      ctx.fillStyle=bg;ctx.fill();
+      ctx.beginPath();ctx.arc(bp.x,bp.y,8,0,Math.PI*2);ctx.fillStyle='#e8cc80';ctx.fill();
+      ctx.strokeStyle='rgba(201,168,76,0.5)';ctx.lineWidth=1.5;ctx.stroke();
+      const barH=Math.min(Math.abs(ballV)*35,65);
+      ctx.fillStyle='rgba(60,184,195,0.5)';ctx.fillRect(bp.x+15,bp.y-barH/2,4,barH);
+      // Connector
+      const si=Math.round(bp.idx),ci=Math.min(si,hillCurve.length-1);
+      const dsy=bt+bh-(Math.abs(slopes[Math.min(si,slopes.length-1)])/maxSl)*(bh-10)-5;
+      ctx.setLineDash([2,4]);ctx.strokeStyle='rgba(60,184,195,0.12)';ctx.lineWidth=.5;
+      ctx.beginPath();ctx.moveTo(bp.x,bp.y+12);ctx.lineTo(hillCurve[ci].x,bt);ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+
+  drawScene();
+  window.addEventListener('resize',()=>{resize();buildCurve();drawScene()});
+})();
+
+/* ════════════════════════════════════════════════ */
+/*    § 3 — THE BRACHISTOCHRONE RACE               */
+/* ════════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('brachCanvas');
+  const ctx=c.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  let W,H;
+  function resize(){const r=c.getBoundingClientRect();W=r.width;H=r.height;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+  resize();window.addEventListener('resize',resize);
+
+  const btnPlace=document.getElementById('brachPlace');
+  const btnUndo=document.getElementById('brachUndo');
+  const btnRace=document.getElementById('brachRace');
+  const btnReset=document.getElementById('brachReset');
+  const elYou=document.getElementById('brachYou');
+  const elOpt=document.getElementById('brachOpt');
+  const elVerdict=document.getElementById('brachVerdict');
+
+  // Fixed endpoints
+  const MRG=50,PAD=30;
+  const Ax=MRG,Ay=PAD;       // top-left
+  function Bx(){return W-MRG}
+  function By(){return H-PAD-20}
+
+  // State
+  let dots=[];        // user control points (screen coords, between A and B)
+  let userCurve=[];   // [{x,y}]
+  let cycloidCurve=[]; // [{x,y}]
+  let mode='place', dragIdx=-1;
+  let racing=false, animId=null;
+
+  // Ball states
+  let uBall={s:0,v:0,t:0,done:false};
+  let cBall={s:0,v:0,t:0,done:false};
+  let uArc=[], cArc=[], uSlopes=[], cSlopes=[];
+  let uTotalArc=0, cTotalArc=0;
+  let lastTime=null;
+  const G=4.0; // gravity
+
+  // ── Catmull-Rom with tension ──
+  function crT(p0,p1,p2,p3,t,tension){
+    tension=tension||0.3;
+    const t2=t*t,t3=t2*t;
+    const m1=tension*(p2-p0),m2=tension*(p3-p1);
+    return(2*t3-3*t2+1)*p1+(t3-2*t2+t)*m1+(-2*t3+3*t2)*p2+(t3-t2)*m2;
+  }
+
+  function buildSpline(points, N){
+    if(points.length<2)return[];
+    const pad=[
+      {x:2*points[0].x-points[1].x, y:2*points[0].y-points[1].y},
+      ...points,
+      {x:2*points[points.length-1].x-points[points.length-2].x,
+       y:2*points[points.length-1].y-points[points.length-2].y}
+    ];
+    const segs=Math.max(60,Math.round(N/(pad.length-3)));
+    const out=[];
+    for(let i=0;i<pad.length-3;i++){
+      const[p0,p1,p2,p3]=[pad[i],pad[i+1],pad[i+2],pad[i+3]];
+      for(let j=0;j<=segs;j++){
+        if(j===0&&i>0)continue;
+        const t=j/segs;
+        out.push({x:crT(p0.x,p1.x,p2.x,p3.x,t,0.3), y:crT(p0.y,p1.y,p2.y,p3.y,t,0.3)});
+      }
+    }
+    return out;
+  }
+
+  function computeArcAndSlopes(curve){
+    const arc=[0]; let total=0;
+    for(let i=1;i<curve.length;i++){
+      const dx=curve[i].x-curve[i-1].x, dy=curve[i].y-curve[i-1].y;
+      total+=Math.sqrt(dx*dx+dy*dy); arc.push(total);
+    }
+    for(let i=0;i<arc.length;i++) arc[i]/=total;
+    // Raw slopes
+    const raw=[];const win=8;
+    for(let i=0;i<curve.length;i++){
+      const im=Math.max(0,i-win),ip=Math.min(curve.length-1,i+win);
+      const dx=curve[ip].x-curve[im].x, dy=curve[ip].y-curve[im].y;
+      raw.push(dx===0?0:dy/dx);
+    }
+    // Gaussian smooth 3 passes
+    let sl=raw.slice();
+    for(let p=0;p<3;p++){
+      const prev=sl.slice();const k=10;
+      for(let i=0;i<prev.length;i++){
+        let s=0,w=0;
+        for(let j=-k;j<=k;j++){
+          const idx=Math.max(0,Math.min(prev.length-1,i+j));
+          const g=Math.exp(-j*j/(2*16));s+=prev[idx]*g;w+=g;
+        }
+        sl[i]=s/w;
+      }
+    }
+    return{arc,slopes:sl,total};
+  }
+
+  // ── Build cycloid from A to B ──
+  function buildCycloid(){
+    const bx=Bx(),by=By();
+    const dx=bx-Ax, dy=by-Ay;
+    // Cycloid parametric: x=r(θ−sinθ), y=r(1−cosθ)
+    // We need to find r and θ_max such that x(θ_max)=dx, y(θ_max)=dy
+    // Newton's method to solve
+    let thMax=Math.PI; // initial guess
+    for(let iter=0;iter<50;iter++){
+      const r=dy/(1-Math.cos(thMax));
+      const xAt=r*(thMax-Math.sin(thMax));
+      const err=xAt-dx;
+      // derivative: d(xAt)/d(thMax) using chain rule
+      const drdth=dy*Math.sin(thMax)/((1-Math.cos(thMax))**2);
+      const dxdth=drdth*(thMax-Math.sin(thMax))+r*(1-Math.cos(thMax));
+      thMax-=err/dxdth;
+      if(Math.abs(err)<0.01)break;
+    }
+    const r=dy/(1-Math.cos(thMax));
+    cycloidCurve=[];
+    const N=400;
+    for(let i=0;i<=N;i++){
+      const th=thMax*i/N;
+      cycloidCurve.push({
+        x:Ax+r*(th-Math.sin(th)),
+        y:Ay+r*(1-Math.cos(th))
+      });
+    }
+    const res=computeArcAndSlopes(cycloidCurve);
+    cArc=res.arc; cSlopes=res.slopes; cTotalArc=res.total;
+  }
+
+  function buildUserCurve(){
+    // Combine A + user dots + B
+    const allPts=[{x:Ax,y:Ay}];
+    const sorted=[...dots].sort((a,b)=>a.x-b.x);
+    allPts.push(...sorted);
+    allPts.push({x:Bx(),y:By()});
+    userCurve=buildSpline(allPts,500);
+    // Clamp y to stay within canvas
+    for(const p of userCurve) p.y=Math.max(10,Math.min(H-10,p.y));
+    const res=computeArcAndSlopes(userCurve);
+    uArc=res.arc; uSlopes=res.slopes; uTotalArc=res.total;
+  }
+
+  function posAtS(curve,arc,s){
+    s=Math.max(0,Math.min(1,s));
+    let lo=0,hi=arc.length-1;
+    while(lo<hi-1){const m=(lo+hi)>>1;if(arc[m]<=s)lo=m;else hi=m;}
+    const t=(s-arc[lo])/(arc[hi]-arc[lo]||1);
+    return{x:curve[lo].x*(1-t)+curve[hi].x*t, y:curve[lo].y*(1-t)+curve[hi].y*t, idx:lo+t};
+  }
+  function slopeAtS(slopes,arc,s){
+    const lo=arc.findIndex(a=>a>=s)||0;
+    return slopes[Math.min(lo,slopes.length-1)]||0;
+  }
+
+  // ── Hit test ──
+  function hitDot(sx,sy){
+    for(let i=0;i<dots.length;i++){
+      if((sx-dots[i].x)**2+(sy-dots[i].y)**2<18*18)return i;
+    }return-1;
+  }
+  function getPos(e){const r=c.getBoundingClientRect();return{sx:e.clientX-r.left,sy:e.clientY-r.top}}
+
+  // ── Input ──
+  c.addEventListener('mousedown',e=>{
+    const p=getPos(e);if(racing)return;
+    const hit=hitDot(p.sx,p.sy);
+    if(hit>=0){mode='drag';dragIdx=hit;c.style.cursor='grabbing';}
+    else{
+      // Only place between A and B x-range and within canvas
+      if(p.sx<=Ax+15||p.sx>=Bx()-15||p.sy<10||p.sy>H-10)return;
+      dots.push({x:p.sx,y:p.sy});
+      buildUserCurve();draw();
+    }
+  });
+  c.addEventListener('mousemove',e=>{
+    const p=getPos(e);
+    if(mode==='drag'&&dragIdx>=0){
+      dots[dragIdx].x=Math.max(Ax+15,Math.min(Bx()-15,p.sx));
+      dots[dragIdx].y=Math.max(15,Math.min(H-15,p.sy));
+      buildUserCurve();draw();
+    }else if(!racing){c.style.cursor=hitDot(p.sx,p.sy)>=0?'grab':'crosshair';}
+  });
+  c.addEventListener('mouseup',()=>{if(mode==='drag'){mode='place';dragIdx=-1;c.style.cursor='crosshair';}});
+  // Touch
+  c.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0],p=getPos(t);if(racing)return;
+    const hit=hitDot(p.sx,p.sy);if(hit>=0){mode='drag';dragIdx=hit;}
+    else{if(p.sx<=Ax+15||p.sx>=Bx()-15)return;dots.push({x:p.sx,y:p.sy});buildUserCurve();draw();}
+  },{passive:false});
+  c.addEventListener('touchmove',e=>{e.preventDefault();if(mode==='drag'&&dragIdx>=0){
+    const t=e.touches[0],p=getPos(t);dots[dragIdx].x=Math.max(Ax+15,Math.min(Bx()-15,p.sx));
+    dots[dragIdx].y=Math.max(15,Math.min(H-15,p.sy));buildUserCurve();draw();}},{passive:false});
+  c.addEventListener('touchend',e=>{e.preventDefault();mode='place';dragIdx=-1;},{passive:false});
+
+  // ── Buttons ──
+  btnPlace.addEventListener('click',()=>{
+    if(racing){racing=false;if(animId)cancelAnimationFrame(animId);}
+    mode='place';btnPlace.classList.add('active');btnRace.classList.remove('active');draw();
+  });
+  btnUndo.addEventListener('click',()=>{if(racing)return;dots.pop();buildUserCurve();draw();});
+  btnRace.addEventListener('click',()=>{
+    if(dots.length<1){return;}
+    buildUserCurve(); buildCycloid();
+    racing=true; mode='race';
+    btnRace.classList.add('active');btnPlace.classList.remove('active');
+    uBall={s:0,v:0,t:0,done:false};
+    cBall={s:0,v:0,t:0,done:false};
+    lastTime=null;
+    elYou.textContent='—';elOpt.textContent='—';elVerdict.textContent='';
+    if(animId)cancelAnimationFrame(animId);
+    animId=requestAnimationFrame(raceLoop);
+  });
+  btnReset.addEventListener('click',()=>{
+    racing=false;if(animId){cancelAnimationFrame(animId);animId=null;}
+    dots=[];userCurve=[];mode='place';
+    btnPlace.classList.add('active');btnRace.classList.remove('active');
+    elYou.textContent='—';elOpt.textContent='—';elVerdict.textContent='';draw();
+  });
+
+  // ── Race physics ──
+  function stepBall(ball, slopes, arc, dt){
+    if(ball.done)return;
+    const sl=slopeAtS(slopes,arc,ball.s);
+    const sinTh=sl/Math.sqrt(1+sl*sl);
+    ball.v+=G*sinTh*dt;
+    ball.v*=0.999;
+    if(ball.v<0.0003)ball.v=0.0003;
+    ball.s+=ball.v*dt;
+    ball.t+=dt;
+    if(ball.s>=1){ball.s=1;ball.done=true;}
+  }
+
+  function raceLoop(time){
+    if(!racing)return;
+    if(lastTime===null){lastTime=time;animId=requestAnimationFrame(raceLoop);return;}
+    const dt=Math.min((time-lastTime)/1000,0.04);
+    lastTime=time;
+    stepBall(uBall,uSlopes,uArc,dt);
+    stepBall(cBall,cSlopes,cArc,dt);
+    if(uBall.done) elYou.textContent=uBall.t.toFixed(2);
+    if(cBall.done) elOpt.textContent=cBall.t.toFixed(2);
+    if(uBall.done&&cBall.done){
+      racing=false;
+      const diff=((uBall.t-cBall.t)/cBall.t*100).toFixed(0);
+      if(diff<=2) elVerdict.textContent='🎯 Nearly perfect — you found the cycloid!';
+      else if(diff<=8) elVerdict.textContent=`Close! The cycloid wins by ${diff}%. Try dipping steeper.`;
+      else if(diff<=20) elVerdict.textContent=`Cycloid wins by ${diff}%. Hint: go steep early, level out late.`;
+      else elVerdict.textContent=`Cycloid wins — ${diff}% faster. Newton solved it in one night.`;
+      elVerdict.style.color=diff<=5?'#c9a84c':'rgba(196,122,138,0.9)';
+    }
+    draw();
+    if(racing)animId=requestAnimationFrame(raceLoop);
+  }
+
+  // ── Render ──
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const bx=Bx(),by=By();
+
+    // Subtle background grid
+    ctx.strokeStyle='rgba(201,168,76,0.04)';ctx.lineWidth=0.5;
+    for(let x=MRG;x<=bx;x+=50){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+    for(let y=PAD;y<=by;y+=50){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+
+    // ── Straight line A→B (reference, very faint) ──
+    ctx.setLineDash([6,6]);ctx.strokeStyle='rgba(201,168,76,0.08)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(Ax,Ay);ctx.lineTo(bx,by);ctx.stroke();
+    ctx.setLineDash([]);
+
+    // ── Cycloid (if racing or after race) ──
+    if(cycloidCurve.length>1&&(racing||cBall.done)){
+      ctx.beginPath();ctx.moveTo(cycloidCurve[0].x,cycloidCurve[0].y);
+      for(let i=1;i<cycloidCurve.length;i++)ctx.lineTo(cycloidCurve[i].x,cycloidCurve[i].y);
+      ctx.strokeStyle='rgba(60,184,195,0.5)';ctx.lineWidth=2.5;ctx.stroke();
+      // Label
+      ctx.fillStyle='rgba(60,184,195,0.5)';ctx.font='11px "JetBrains Mono"';ctx.textAlign='left';
+      const lbl=cycloidCurve[Math.round(cycloidCurve.length*0.4)];
+      ctx.fillText('cycloid',lbl.x+8,lbl.y-8);
+    }
+
+    // ── User curve ──
+    if(userCurve.length>1){
+      ctx.beginPath();ctx.moveTo(userCurve[0].x,userCurve[0].y);
+      for(let i=1;i<userCurve.length;i++)ctx.lineTo(userCurve[i].x,userCurve[i].y);
+      ctx.strokeStyle='rgba(201,168,76,0.6)';ctx.lineWidth=2.5;ctx.stroke();
+    }
+
+    // ── Control dots ──
+    for(let i=0;i<dots.length;i++){
+      ctx.beginPath();ctx.arc(dots[i].x,dots[i].y,12,0,Math.PI*2);ctx.fillStyle='rgba(201,168,76,0.07)';ctx.fill();
+      ctx.beginPath();ctx.arc(dots[i].x,dots[i].y,5,0,Math.PI*2);
+      ctx.fillStyle=dragIdx===i?'#e8cc80':'#c9a84c';ctx.fill();
+      ctx.strokeStyle='rgba(201,168,76,0.4)';ctx.lineWidth=1;ctx.stroke();
+    }
+
+    // ── Endpoints A and B ──
+    // A
+    ctx.beginPath();ctx.arc(Ax,Ay,7,0,Math.PI*2);ctx.fillStyle='#c9a84c';ctx.fill();
+    ctx.fillStyle='rgba(201,168,76,0.8)';ctx.font='bold 12px "JetBrains Mono"';ctx.textAlign='center';
+    ctx.fillText('A',Ax,Ay-14);
+    // B
+    ctx.beginPath();ctx.arc(bx,by,7,0,Math.PI*2);ctx.fillStyle='#c9a84c';ctx.fill();
+    ctx.fillText('B',bx,by+22);
+
+    // ── Balls ──
+    if(racing||uBall.done||cBall.done){
+      // User ball (gold)
+      if(userCurve.length>1){
+        const up=posAtS(userCurve,uArc,uBall.s);
+        ctx.beginPath();ctx.arc(up.x,up.y,18,0,Math.PI*2);
+        const ug=ctx.createRadialGradient(up.x,up.y,0,up.x,up.y,18);
+        ug.addColorStop(0,'rgba(232,204,128,0.35)');ug.addColorStop(1,'rgba(232,204,128,0)');
+        ctx.fillStyle=ug;ctx.fill();
+        ctx.beginPath();ctx.arc(up.x,up.y,8,0,Math.PI*2);ctx.fillStyle='#e8cc80';ctx.fill();
+        ctx.strokeStyle='rgba(201,168,76,0.5)';ctx.lineWidth=1.5;ctx.stroke();
+        // Timer near ball
+        if(!uBall.done){
+          ctx.fillStyle='rgba(201,168,76,0.6)';ctx.font='10px "JetBrains Mono"';ctx.textAlign='left';
+          ctx.fillText(uBall.t.toFixed(1)+'s',up.x+14,up.y-4);
+        }
+      }
+      // Cycloid ball (cyan)
+      if(cycloidCurve.length>1){
+        const cp=posAtS(cycloidCurve,cArc,cBall.s);
+        ctx.beginPath();ctx.arc(cp.x,cp.y,18,0,Math.PI*2);
+        const cg=ctx.createRadialGradient(cp.x,cp.y,0,cp.x,cp.y,18);
+        cg.addColorStop(0,'rgba(60,184,195,0.3)');cg.addColorStop(1,'rgba(60,184,195,0)');
+        ctx.fillStyle=cg;ctx.fill();
+        ctx.beginPath();ctx.arc(cp.x,cp.y,8,0,Math.PI*2);ctx.fillStyle='#3cb8c3';ctx.fill();
+        ctx.strokeStyle='rgba(60,184,195,0.5)';ctx.lineWidth=1.5;ctx.stroke();
+        if(!cBall.done){
+          ctx.fillStyle='rgba(60,184,195,0.6)';ctx.font='10px "JetBrains Mono"';ctx.textAlign='left';
+          ctx.fillText(cBall.t.toFixed(1)+'s',cp.x+14,cp.y-4);
+        }
+      }
+    }
+
+    // Prompt if no dots
+    if(dots.length===0&&!racing&&!uBall.done){
+      ctx.fillStyle='rgba(201,168,76,0.18)';ctx.font='15px "Cormorant Garamond"';ctx.textAlign='center';
+      ctx.fillText('Click to place dots for your ramp between A and B',W/2,H/2);
+    }
+  }
+
+  draw();
+  window.addEventListener('resize',()=>{resize();buildCycloid();if(dots.length)buildUserCurve();draw();});
+})();
+
+/* ════════════════════════════════════════════════ */
+/*    § 4 — FILLING THE GAP (Riemann sums)        */
+/* ════════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('riemannCanvas');
+  const ctx=c.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  let W,H;
+  function resize(){const r=c.getBoundingClientRect();W=r.width;H=r.height;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+  resize();window.addEventListener('resize',()=>{resize();draw();});
+
+  const slider=document.getElementById('riemannSlider');
+  const sliderVal=document.getElementById('riemannSliderVal');
+  const elN=document.getElementById('riemannN');
+  const elSum=document.getElementById('riemannSum');
+  const elExact=document.getElementById('riemannExact');
+
+  const fns={
+    sin:{f:x=>Math.sin(x),a:0,b:Math.PI,exact:2,label:'sin(x)',range:[0,Math.PI]},
+    x2:{f:x=>x*x,a:0,b:1,exact:1/3,label:'x²',range:[0,1]},
+    sqrt:{f:x=>Math.sqrt(x),a:0,b:4,exact:16/3,label:'√x',range:[0,4]},
+    bell:{f:x=>Math.exp(-x*x/2)/Math.sqrt(2*Math.PI),a:-3.5,b:3.5,exact:0.9995,label:'bell curve',range:[-3.5,3.5]}
+  };
+  let cur='sin';
+
+  document.getElementById('rFn1').addEventListener('click',function(){cur='sin';updBtns();draw();});
+  document.getElementById('rFn2').addEventListener('click',function(){cur='x2';updBtns();draw();});
+  document.getElementById('rFn3').addEventListener('click',function(){cur='sqrt';updBtns();draw();});
+  document.getElementById('rFn4').addEventListener('click',function(){cur='bell';updBtns();draw();});
+  function updBtns(){
+    document.getElementById('rFn1').classList.toggle('active',cur==='sin');
+    document.getElementById('rFn2').classList.toggle('active',cur==='x2');
+    document.getElementById('rFn3').classList.toggle('active',cur==='sqrt');
+    document.getElementById('rFn4').classList.toggle('active',cur==='bell');
+  }
+
+  slider.addEventListener('input',()=>{
+    sliderVal.textContent=slider.value;
+    draw();
+  });
+
+  const MRG={l:45,r:20,t:20,b:40};
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const fn=fns[cur];
+    const n=parseInt(slider.value);
+    const pw=W-MRG.l-MRG.r, ph=H-MRG.t-MRG.b;
+    const a=fn.a, b=fn.b;
+
+    // Compute y range
+    let yMax=0;
+    for(let i=0;i<=300;i++){const x=a+(b-a)*i/300;const y=fn.f(x);if(y>yMax)yMax=y;}
+    yMax*=1.15;if(yMax===0)yMax=1;
+
+    function toS(x,y){return{sx:MRG.l+(x-a)/(b-a)*pw, sy:MRG.t+(1-y/yMax)*ph};}
+
+    // Grid
+    ctx.strokeStyle='rgba(201,168,76,0.05)';ctx.lineWidth=0.5;
+    for(let i=0;i<=8;i++){const x=a+(b-a)*i/8;const s=toS(x,0);ctx.beginPath();ctx.moveTo(s.sx,MRG.t);ctx.lineTo(s.sx,MRG.t+ph);ctx.stroke();}
+    // Axes
+    ctx.strokeStyle='rgba(201,168,76,0.12)';ctx.lineWidth=1;
+    const ax=toS(a,0);ctx.beginPath();ctx.moveTo(MRG.l,ax.sy);ctx.lineTo(MRG.l+pw,ax.sy);ctx.stroke();
+    if(a<0&&b>0){const zy=toS(0,0);ctx.beginPath();ctx.moveTo(zy.sx,MRG.t);ctx.lineTo(zy.sx,MRG.t+ph);ctx.stroke();}
+
+    // Riemann rectangles
+    const dx=(b-a)/n;
+    let sum=0;
+    const converged=Math.abs(n)>=200;
+    for(let i=0;i<n;i++){
+      const xi=a+dx*i;
+      const xm=xi+dx/2; // midpoint
+      const yi=fn.f(xm);
+      sum+=yi*dx;
+      const s0=toS(xi,0), s1=toS(xi,yi), s2=toS(xi+dx,yi);
+      const rh=s0.sy-s1.sy;
+      const rw=s2.sx-s1.sx;
+      // Fill
+      const alpha=converged?0.5:0.35;
+      ctx.fillStyle=`rgba(201,168,76,${alpha})`;
+      ctx.fillRect(s1.sx,s1.sy,Math.max(1,rw-0.5),rh);
+      // Border (only if not too many)
+      if(n<=80){
+        ctx.strokeStyle='rgba(201,168,76,0.2)';ctx.lineWidth=0.5;
+        ctx.strokeRect(s1.sx,s1.sy,rw,rh);
+      }
+    }
+
+    // If converged, flood fill with brighter gold
+    if(converged){
+      ctx.beginPath();
+      const s0=toS(a,0);ctx.moveTo(s0.sx,s0.sy);
+      for(let i=0;i<=400;i++){
+        const x=a+(b-a)*i/400;
+        const s=toS(x,fn.f(x));
+        ctx.lineTo(s.sx,s.sy);
+      }
+      const sEnd=toS(b,0);ctx.lineTo(sEnd.sx,sEnd.sy);ctx.closePath();
+      ctx.fillStyle='rgba(201,168,76,0.18)';ctx.fill();
+    }
+
+    // Curve (on top)
+    ctx.beginPath();
+    for(let i=0;i<=400;i++){
+      const x=a+(b-a)*i/400;
+      const s=toS(x,fn.f(x));
+      i===0?ctx.moveTo(s.sx,s.sy):ctx.lineTo(s.sx,s.sy);
+    }
+    ctx.strokeStyle=converged?'rgba(232,204,128,0.9)':'rgba(201,168,76,0.6)';
+    ctx.lineWidth=converged?2.5:2;ctx.stroke();
+    if(converged){ctx.shadowColor='rgba(201,168,76,0.3)';ctx.shadowBlur=10;ctx.stroke();ctx.shadowBlur=0;}
+
+    // Readout
+    elN.textContent=n;
+    const err=Math.abs(sum-fn.exact)/fn.exact*100;
+    elSum.textContent=sum.toFixed(4);
+    elExact.textContent=fn.exact.toFixed(4);
+    if(converged){
+      elSum.style.color='#3cb8c3';
+      elSum.textContent=sum.toFixed(4)+' ✓';
+    } else {
+      elSum.style.color='';
+      if(n>=10) elSum.textContent=sum.toFixed(4)+' ('+err.toFixed(1)+'% off)';
+    }
+  }
+
+  draw();
+})();
+
+/* ════════════════════════════════════════════════ */
+/*    § 5 — THE INFINITE STAIRCASE (series)        */
+/* ════════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('seriesCanvas');
+  const ctx=c.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  let W,H;
+  function resize(){const r=c.getBoundingClientRect();W=r.width;H=r.height;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+  resize();window.addEventListener('resize',()=>{resize();draw();});
+
+  const elN=document.getElementById('seriesN');
+  const elSum=document.getElementById('seriesSum');
+  const elLimit=document.getElementById('seriesLimit');
+
+  const series={
+    harmonic:{term:n=>1/n, limit:Infinity, label:'1/n', limitLabel:'diverges → ∞', color:'#c45555'},
+    basel:{term:n=>1/(n*n), limit:Math.PI*Math.PI/6, label:'1/n²', limitLabel:'→ π²/6 ≈ '+((Math.PI*Math.PI/6).toFixed(4)), color:'#3cb8c3'},
+    geometric:{term:n=>Math.pow(0.5,n), limit:1, label:'1/2ⁿ', limitLabel:'→ 1', color:'#c9a84c'},
+    alternating:{term:n=>Math.pow(-1,n+1)/n, limit:Math.LN2, label:'(-1)ⁿ⁺¹/n', limitLabel:'→ ln 2 ≈ '+(Math.LN2.toFixed(4)), color:'#8db830'}
+  };
+  let cur='basel';
+  let blocks=[]; // {value, partialSum}
+  let autoRunning=false, autoId=null;
+
+  function reset(){
+    blocks=[];autoRunning=false;
+    if(autoId){clearInterval(autoId);autoId=null;}
+    elN.textContent='0';elSum.textContent='0';
+    elLimit.textContent=series[cur].limitLabel;
+    elLimit.style.color=series[cur].color;
+    draw();
+  }
+
+  function addBlock(){
+    const n=blocks.length+1;
+    const val=series[cur].term(n);
+    const prev=blocks.length>0?blocks[blocks.length-1].partialSum:0;
+    blocks.push({value:val, partialSum:prev+val, n});
+    elN.textContent=blocks.length;
+    const ps=blocks[blocks.length-1].partialSum;
+    elSum.textContent=ps.toFixed(6);
+    // Show how close we are to the limit
+    const s=series[cur];
+    if(s.limit!==Infinity && blocks.length>=5){
+      const pct=Math.abs(ps/s.limit*100).toFixed(1);
+      const err=Math.abs(ps-s.limit);
+      if(err<0.01){
+        elLimit.textContent=s.limitLabel+' ✓';
+        elLimit.style.color='#e8cc80';
+      } else {
+        elLimit.textContent=s.limitLabel+'  ('+pct+'% there)';
+        elLimit.style.color=s.color;
+      }
+    } else if(s.limit===Infinity && blocks.length>=10){
+      elLimit.textContent='diverges… no ceiling';
+      elLimit.style.color=s.color;
+    }
+    draw();
+  }
+
+  // Buttons
+  document.getElementById('serHarmonic').addEventListener('click',function(){cur='harmonic';updBtns();reset();});
+  document.getElementById('serBasel').addEventListener('click',function(){cur='basel';updBtns();reset();});
+  document.getElementById('serGeometric').addEventListener('click',function(){cur='geometric';updBtns();reset();});
+  document.getElementById('serAlternating').addEventListener('click',function(){cur='alternating';updBtns();reset();});
+  function updBtns(){
+    document.getElementById('serHarmonic').classList.toggle('active',cur==='harmonic');
+    document.getElementById('serBasel').classList.toggle('active',cur==='basel');
+    document.getElementById('serGeometric').classList.toggle('active',cur==='geometric');
+    document.getElementById('serAlternating').classList.toggle('active',cur==='alternating');
+  }
+
+  document.getElementById('serStep').addEventListener('click',addBlock);
+  document.getElementById('serRun').addEventListener('click',()=>{
+    if(autoRunning){autoRunning=false;if(autoId)clearInterval(autoId);return;}
+    autoRunning=true;
+    autoId=setInterval(()=>{
+      if(blocks.length>=500||!autoRunning){autoRunning=false;clearInterval(autoId);return;}
+      addBlock();
+    },60);
+  });
+  document.getElementById('serReset').addEventListener('click',reset);
+
+  const MRG={l:55,r:30,t:25,b:30};
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const pw=W-MRG.l-MRG.r, ph=H-MRG.t-MRG.b;
+    const s=series[cur];
+
+    if(blocks.length===0){
+      ctx.fillStyle='rgba(201,168,76,0.15)';ctx.font='15px "Cormorant Garamond"';ctx.textAlign='center';
+      ctx.fillText('Press "+ next block" or "▶ Auto-stack" to begin',W/2,H/2);
+      // Draw limit line if finite
+      if(s.limit!==Infinity){
+        const limY=MRG.t+ph*0.15;
+        ctx.setLineDash([6,4]);ctx.strokeStyle=s.color+'66';ctx.lineWidth=1;
+        ctx.beginPath();ctx.moveTo(MRG.l,limY);ctx.lineTo(MRG.l+pw,limY);ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle=s.color;ctx.font='11px "JetBrains Mono"';ctx.textAlign='right';
+        ctx.fillText(s.limitLabel,MRG.l+pw,limY-6);
+      }
+      return;
+    }
+
+    // Determine y-axis range
+    let maxSum=0,minSum=0;
+    for(const b of blocks){
+      if(b.partialSum>maxSum)maxSum=b.partialSum;
+      if(b.partialSum<minSum)minSum=b.partialSum;
+    }
+    // Include limit if finite
+    if(s.limit!==Infinity&&s.limit>maxSum) maxSum=s.limit*1.15;
+    if(s.limit!==Infinity&&s.limit<minSum) minSum=s.limit*1.15;
+    maxSum=Math.max(maxSum*1.15,0.5);
+    if(minSum<0)minSum*=1.15;
+    const yRange=maxSum-minSum;
+
+    function toS(i,y){
+      return{
+        sx:MRG.l+(i/Math.max(blocks.length,1))*pw,
+        sy:MRG.t+(1-(y-minSum)/yRange)*ph
+      };
+    }
+
+    // Zero line
+    if(minSum<0){
+      const z=toS(0,0);
+      ctx.strokeStyle='rgba(201,168,76,0.08)';ctx.lineWidth=0.5;
+      ctx.beginPath();ctx.moveTo(MRG.l,z.sy);ctx.lineTo(MRG.l+pw,z.sy);ctx.stroke();
+    }
+
+    // Limit line (if finite)
+    if(s.limit!==Infinity){
+      const lim=toS(0,s.limit);
+      ctx.setLineDash([6,4]);ctx.lineWidth=1;
+      // Glow brighter if we're close
+      const close=blocks.length>0&&Math.abs(blocks[blocks.length-1].partialSum-s.limit)<0.05;
+      ctx.strokeStyle=close?(s.color+'cc'):(s.color+'44');
+      if(close){ctx.shadowColor=s.color;ctx.shadowBlur=8;}
+      ctx.beginPath();ctx.moveTo(MRG.l,lim.sy);ctx.lineTo(MRG.l+pw,lim.sy);ctx.stroke();
+      ctx.shadowBlur=0;
+      ctx.setLineDash([]);
+      ctx.fillStyle=s.color;ctx.font='11px "JetBrains Mono"';ctx.textAlign='right';
+      ctx.fillText(s.limitLabel,MRG.l+pw,lim.sy-6);
+    }
+
+    // Draw blocks as a staircase
+    const barW=Math.max(1,pw/Math.max(blocks.length,1));
+    for(let i=0;i<blocks.length;i++){
+      const b=blocks[i];
+      const prevSum=i>0?blocks[i-1].partialSum:0;
+      const s0=toS(i,prevSum);
+      const s1=toS(i,b.partialSum);
+      const bh=Math.abs(s0.sy-s1.sy);
+      const top=Math.min(s0.sy,s1.sy);
+      // Color: fade older blocks, highlight recent
+      const recency=Math.max(0,1-(blocks.length-1-i)/30);
+      const alpha=0.2+recency*0.4;
+      ctx.fillStyle=b.value>=0?
+        `rgba(201,168,76,${alpha})`:`rgba(196,85,85,${alpha})`;
+      ctx.fillRect(s0.sx,top,Math.max(1,barW-0.5),Math.max(1,bh));
+      // Border for visible blocks
+      if(barW>3){
+        ctx.strokeStyle='rgba(201,168,76,0.15)';ctx.lineWidth=0.5;
+        ctx.strokeRect(s0.sx,top,barW,bh);
+      }
+    }
+
+    // Partial sum curve
+    ctx.beginPath();
+    for(let i=0;i<blocks.length;i++){
+      const p=toS(i,blocks[i].partialSum);
+      i===0?ctx.moveTo(p.sx,p.sy):ctx.lineTo(p.sx,p.sy);
+    }
+    ctx.strokeStyle=s.color;ctx.lineWidth=2;ctx.stroke();
+
+    // Current sum dot
+    if(blocks.length>0){
+      const last=blocks[blocks.length-1];
+      const p=toS(blocks.length-1,last.partialSum);
+      ctx.beginPath();ctx.arc(p.sx,p.sy,5,0,Math.PI*2);
+      ctx.fillStyle=s.color;ctx.fill();
+      ctx.beginPath();ctx.arc(p.sx,p.sy,12,0,Math.PI*2);
+      ctx.fillStyle=s.color+'22';ctx.fill();
+    }
+
+    // Y axis label
+    ctx.fillStyle='rgba(201,168,76,0.3)';ctx.font='10px "JetBrains Mono"';
+    ctx.textAlign='right';ctx.fillText('partial sum',MRG.l-6,MRG.t+10);
+    ctx.textAlign='left';ctx.fillText('n (terms)',MRG.l+pw-40,MRG.t+ph+18);
+  }
+
+  reset();
+})();
+</script>
+</body>
+</html>

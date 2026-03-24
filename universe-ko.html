@@ -1,0 +1,2228 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>우주는 둥근가?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'$$',right:'$$',display:true}]})"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#05060f;--bg2:#0a0b1a;--bg3:#10112a;
+  --gold:#c9a84c;--gold2:#e8cc80;--gold-glow:rgba(201,168,76,.35);
+  --cyan:#3cb8c3;--cyan-dim:rgba(60,184,195,.25);
+  --text:#ede5d8;--muted:#7c7693;--red:#c45555;--rose:#c47a8a;
+  --border:rgba(201,168,76,.12);
+  --font-display:'Cormorant Garamond',Georgia,serif;
+  --font-body:'EB Garamond',Georgia,serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:1.08rem;line-height:1.78;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(201,168,76,.25);border-radius:3px}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.45;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.038'/%3E%3C/svg%3E")}
+h2{font-family:var(--font-display);font-size:clamp(2rem,4.5vw,3.6rem);font-weight:300;line-height:1.12;color:var(--text);margin-bottom:1.4rem;letter-spacing:-.01em}
+h2 em{color:var(--gold2);font-style:italic}
+h3{font-family:var(--font-display);font-size:1.45rem;font-weight:400;color:var(--text);margin-bottom:.6rem}
+p{color:var(--muted);margin-bottom:1.05rem}
+p strong{color:var(--text);font-weight:500}
+p em{color:var(--gold2);font-style:italic}
+.wrap{max-width:920px;margin:0 auto;padding:6rem 2rem}
+.sec-label{font-family:var(--font-display);font-size:.72rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:1.2rem;opacity:.85}
+.rule{width:48px;height:1px;background:var(--gold);opacity:.4;margin:2rem 0}
+hr.section-rule{border:none;height:1px;margin:0;background:linear-gradient(90deg,transparent 5%,rgba(201,168,76,.18) 50%,transparent 95%)}
+.theorem-box{background:var(--bg2);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:1.4rem 1.8rem;margin:1.5rem 0}
+.info-box{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.4rem 1.8rem;margin:1.5rem 0}
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .9s cubic-bezier(.25,.46,.45,.94),transform .9s cubic-bezier(.25,.46,.45,.94)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.ctrl-btn{padding:.4rem 1rem;border-radius:5px;border:1px solid rgba(201,168,76,.28);background:transparent;color:var(--gold);font-family:var(--font-body);font-size:.92rem;cursor:pointer;transition:all .25s}
+.ctrl-btn:hover{background:rgba(201,168,76,.1);border-color:var(--gold)}
+.ctrl-btn.active{background:rgba(201,168,76,.18);border-color:var(--gold);color:var(--gold2)}
+.floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;font-family:var(--font-mono);font-size:.6rem;letter-spacing:.14em;text-transform:lowercase;color:#8db830;background:transparent;padding:.35rem .7rem;text-decoration:none;transition:color .25s,text-shadow .25s,transform .25s;text-shadow:0 0 6px rgba(141,184,48,.4),0 0 16px rgba(141,184,48,.15)}
+.floating-badge:hover{color:#a8d43a;transform:translateY(-1px);text-shadow:0 0 8px rgba(141,184,48,.65),0 0 22px rgba(141,184,48,.28)}
+footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid rgba(255,255,255,.04);margin-top:2rem}
+.footer-attr{display:flex;flex-direction:column;gap:.2rem;align-items:center;margin-top:1.5rem}
+.footer-name{font-family:'Fraunces',Georgia,serif;font-size:.85rem;font-weight:400;color:#edeef2;letter-spacing:-.01em}
+.footer-inst{font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:300;color:#5c6178;letter-spacing:.01em}
+.footer-link{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;margin-top:.25rem}
+
+/* ── HERO ── */
+#hero{position:relative;width:100%;height:100vh;min-height:600px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 55% 55% at 50% 48%,transparent 0%,rgba(5,6,15,.4) 60%,rgba(5,6,15,.92) 100%),linear-gradient(to bottom,rgba(5,6,15,0) 70%,var(--bg) 100%)}
+.hero-content{position:relative;z-index:10;text-align:center;padding:2rem;max-width:800px}
+.hero-label{font-family:var(--font-display);font-size:.78rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:2.2rem;opacity:.8}
+.hero-title{font-family:var(--font-display);font-size:clamp(2.8rem,8.5vw,7rem);font-weight:300;line-height:1.04;letter-spacing:-.015em;margin-bottom:1.6rem;color:var(--text);text-shadow:0 0 60px rgba(201,168,76,.2),0 2px 40px rgba(0,0,0,.5)}
+.hero-title em{font-style:italic;color:var(--gold2)}
+.hero-sub{font-size:1.12rem;color:var(--muted);max-width:560px;margin:0 auto 3.5rem;font-weight:400;line-height:1.7}
+.hero-scroll{display:inline-flex;flex-direction:column;align-items:center;gap:.6rem;color:var(--muted);font-family:var(--font-display);font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;text-decoration:none;animation:float 2.4s ease-in-out infinite}
+.hero-scroll-line{width:1px;height:44px;background:linear-gradient(to bottom,var(--gold),transparent)}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+.hero-shape-label{position:absolute;bottom:22%;left:50%;transform:translateX(-50%);font-family:var(--font-mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);opacity:.5;pointer-events:none;z-index:10;transition:opacity .4s,color .4s}
+
+/* ── § 1 ERATOSTHENES ── */
+.erato-grid{display:grid;grid-template-columns:1fr 320px;gap:2.5rem;align-items:start;margin:2.5rem 0}
+.erato-canvas-box{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:#07081a;box-shadow:0 20px 60px rgba(0,0,0,.5),inset 0 0 60px rgba(201,168,76,.02);aspect-ratio:4/3}
+.erato-canvas-box canvas{position:absolute;inset:0;width:100%;height:100%}
+.erato-panel{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.6rem;display:flex;flex-direction:column;gap:1.1rem}
+.erato-panel-title{font-family:var(--font-display);font-size:1.15rem;color:var(--text);font-weight:400;margin-bottom:.2rem}
+.erato-row{display:flex;justify-content:space-between;align-items:baseline}
+.erato-label{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+.erato-value{font-family:var(--font-display);font-size:1.5rem;color:var(--gold2);font-weight:300}
+.erato-slider{-webkit-appearance:none;width:100%;height:3px;border-radius:3px;background:rgba(201,168,76,.18);outline:none;cursor:pointer}
+.erato-slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--gold);cursor:pointer;box-shadow:0 0 10px var(--gold-glow),0 0 25px rgba(201,168,76,.15)}
+.erato-result{text-align:center;padding:1.2rem;background:rgba(201,168,76,.04);border-radius:8px;border:1px solid rgba(201,168,76,.12)}
+.erato-result .big-num{display:block;font-family:var(--font-display);font-size:2.2rem;color:var(--gold2);font-weight:300;margin:.3rem 0;text-shadow:0 0 20px rgba(201,168,76,.2)}
+.erato-result .actual{font-size:.72rem;color:var(--muted);font-family:var(--font-mono);letter-spacing:.05em}
+
+/* ── § 2 ZOOM SURFACE ── */
+.zoom-wrap{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:#07081a;aspect-ratio:16/9;cursor:grab;margin:2rem 0;box-shadow:0 20px 60px rgba(0,0,0,.5),inset 0 0 60px rgba(201,168,76,.02);touch-action:none}
+.zoom-wrap:active{cursor:grabbing}
+.zoom-wrap canvas{position:absolute;inset:0;width:100%;height:100%}
+.lens-btns{display:flex;gap:.5rem;justify-content:center;margin:1rem 0;flex-wrap:wrap}
+.zoom-hud{position:absolute;top:12px;left:14px;font-family:var(--font-mono);font-size:.58rem;letter-spacing:.13em;text-transform:uppercase;color:var(--gold);opacity:.7;pointer-events:none;z-index:2;text-shadow:0 0 8px rgba(0,0,0,.8)}
+.zoom-badge{position:absolute;bottom:14px;right:16px;font-family:var(--font-mono);font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;pointer-events:none;z-index:2;padding:.25rem .6rem;border-radius:3px;border:1px solid rgba(201,168,76,.2);color:var(--gold);opacity:.6;transition:all .5s;text-shadow:0 0 8px rgba(0,0,0,.8)}
+.zoom-badge.flat{border-color:rgba(60,184,195,.3);color:var(--cyan);opacity:.9}
+
+/* ── § 3 SURFACE FACTORY ── */
+.factory-grid{display:grid;grid-template-columns:1fr 300px;gap:2.5rem;align-items:start;margin:2rem 0}
+.factory-canvas-box{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:#07081a;aspect-ratio:1;box-shadow:0 20px 60px rgba(0,0,0,.5);cursor:grab}
+.factory-canvas-box:active{cursor:grabbing}
+.factory-canvas-box canvas{position:absolute;inset:0;width:100%;height:100%}
+.factory-panel{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.6rem;display:flex;flex-direction:column;gap:.9rem}
+.factory-panel-title{font-family:var(--font-display);font-size:1.15rem;color:var(--text);font-weight:400}
+.factory-stat{display:flex;justify-content:space-between;align-items:baseline;padding:.55rem 0;border-bottom:1px solid rgba(255,255,255,.035)}
+.factory-stat:last-child{border-bottom:none}
+.stat-label{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.stat-val{font-family:var(--font-display);font-size:1.4rem;color:var(--gold2);font-weight:300}
+.factory-btns{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.3rem}
+
+/* ── § 4 FLAT TORUS FLIGHT ── */
+.flight-wrap{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:#000;aspect-ratio:16/9;margin:2rem 0;box-shadow:0 20px 60px rgba(0,0,0,.5);cursor:crosshair;outline:none}
+.flight-wrap canvas{position:absolute;inset:0;width:100%;height:100%}
+.flight-hud{position:absolute;top:12px;left:14px;font-family:var(--font-mono);font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);opacity:.7;pointer-events:none;z-index:2;text-shadow:0 1px 4px rgba(0,0,0,.9);line-height:1.7}
+.flight-minimap{position:absolute;bottom:12px;right:14px;width:90px;height:90px;border:1px solid rgba(201,168,76,.25);border-radius:4px;background:rgba(5,6,15,.75);pointer-events:none;z-index:2}
+.flight-help{position:absolute;bottom:12px;left:14px;font-family:var(--font-mono);font-size:.5rem;letter-spacing:.08em;color:var(--muted);pointer-events:none;z-index:2;text-shadow:0 1px 4px rgba(0,0,0,.9);transition:opacity 1s}
+.flight-edge-flash{position:absolute;inset:0;pointer-events:none;z-index:3;opacity:0;transition:opacity .15s}
+
+/* ── § 4b SLOPE TRACER ── */
+.slope-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;margin:2rem 0}
+.slope-box{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:#07081a;aspect-ratio:1;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.slope-box canvas{position:absolute;inset:0;width:100%;height:100%}
+.slope-box-label{position:absolute;top:10px;left:12px;font-family:var(--font-mono);font-size:.55rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);opacity:.6;pointer-events:none;z-index:2;text-shadow:0 1px 4px rgba(0,0,0,.9)}
+.slope-controls{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;margin:1rem 0}
+.slope-controls label{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.slope-slider{-webkit-appearance:none;width:180px;height:3px;border-radius:3px;background:rgba(201,168,76,.18);outline:none;cursor:pointer}
+.slope-slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--gold);cursor:pointer;box-shadow:0 0 10px rgba(201,168,76,.35)}
+.slope-readout{font-family:var(--font-display);font-size:1.2rem;color:var(--gold2);font-weight:300;min-width:80px}
+
+/* ── § 5 ORIENTABILITY ── */
+.orient-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;margin:2rem 0}
+.orient-box{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:#07081a;aspect-ratio:4/3;box-shadow:0 20px 60px rgba(0,0,0,.5);cursor:grab}
+.orient-box:active{cursor:grabbing}
+.orient-box canvas{position:absolute;inset:0;width:100%;height:100%}
+.orient-label{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-family:var(--font-mono);font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;pointer-events:none;z-index:2;text-shadow:0 1px 4px rgba(0,0,0,.9)}
+.orient-play-bar{display:flex;gap:.6rem;justify-content:center;margin:1rem 0;flex-wrap:wrap;align-items:center}
+
+/* ── § 6 KLEIN BOTTLE & MÖBIUS (was § 5) ── */
+.klein-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start;margin:2rem 0}
+.klein-box{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:#07081a;aspect-ratio:1;box-shadow:0 20px 60px rgba(0,0,0,.5);cursor:grab}
+.klein-box:active{cursor:grabbing}
+.klein-box canvas{position:absolute;inset:0;width:100%;height:100%}
+.klein-ctrl{padding:.7rem 1.2rem;display:flex;align-items:center;gap:.8rem;border-top:1px solid var(--border);background:rgba(8,9,27,.95);position:absolute;bottom:0;left:0;right:0;z-index:2}
+.klein-slider{-webkit-appearance:none;flex:1;height:3px;border-radius:3px;background:rgba(196,122,138,.2);outline:none;cursor:pointer}
+.klein-slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--rose);cursor:pointer;box-shadow:0 0 10px rgba(196,122,138,.4)}
+.diagram-box{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:#07081a;aspect-ratio:1;display:flex;align-items:center;justify-content:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.diagram-box canvas{display:block}
+.mobius-box{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:#07081a;aspect-ratio:16/10;margin:2rem 0;box-shadow:0 20px 60px rgba(0,0,0,.5);cursor:grab}
+.mobius-box:active{cursor:grabbing}
+.mobius-box canvas{position:absolute;inset:0;width:100%;height:100%}
+.mobius-ctrl{position:absolute;bottom:0;left:0;right:0;padding:.7rem 1.2rem;display:flex;align-items:center;gap:.7rem;border-top:1px solid var(--border);background:rgba(8,9,27,.95);z-index:2}
+
+@media(max-width:760px){
+  .erato-grid,.factory-grid,.klein-grid,.slope-grid,.orient-grid{grid-template-columns:1fr}
+  .wrap{padding:4rem 1.3rem}
+  .hero-shape-label{bottom:18%}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section id="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-label">수학의 여정</div>
+    <h1 class="hero-title">우주는 <em>둥근가?</em></h1>
+    <p class="hero-sub">그리스인들은 막대기 두 개와 그림자 하나로 지구가 둥글다는 것을 증명했다. 23세기가 지난 지금, 우주의 모양은 여전히 수수께끼다.</p>
+    <a href="#s1" class="hero-scroll"><span>탐험하기</span><div class="hero-scroll-line"></div></a>
+  </div>
+  <div class="hero-shape-label" id="heroShapeLabel">S³ — the 3-sphere</div>
+</section>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════ § 1 ═══════════════════ -->
+<div class="wrap reveal" id="s1">
+  <span class="sec-label">§ 1 — 지구는 둥글다</span>
+  <h2>그림자, 배, 그리고 세계의 <em>곡률</em></h2>
+
+  <p>인류 역사 대부분의 시간 동안, 지구의 모양은 알려지지 않았다. 들판에 서서 주위를 둘러보라. 땅은 사방으로 수평선까지 평평하게 펼쳐진다. 자신이 거대한 공 위에 서 있다는 생각은 황당하게 느껴졌을 것이다.</p>
+
+  <p>그런데 기원전 <strong>500년</strong> 무렵, 피타고라스가 바로 그 주장을 했다 — 순전히 미학적 이유에서. 그는 구가 가장 완벽한 형태이며, 우주는 완벽을 갖춰야 한다고 믿었다. <strong>아리스토텔레스</strong>(기원전 384–322)는 한 걸음 더 나아가 물리적 증거를 제시했다. 배가 수평선 너머로 사라질 때 선체부터 보이지 않고, 월식 때 달에 드리운 지구의 그림자는 언제나 원형이며, 남쪽으로 여행하면 수평선 위로 새로운 별자리가 떠오른다. 이 중 어느 것도 평평한 지구에서는 설명할 수 없다.</p>
+
+  <p>그리고 모든 것을 바꾼 측정이 이루어졌다.</p>
+
+  <div class="rule"></div>
+
+  <h3>에라토스테네스의 실험 (기원전 ~240년)</h3>
+
+  <p><strong>시에네</strong>(오늘날의 아스완)에서 에라토스테네스는 하지 정오에 태양이 깊은 우물 속으로 곧바로 비친다는 것을 알고 있었다 — 완벽히 수직, 그림자가 전혀 없었다. 그런데 800km 북쪽의 <strong>알렉산드리아</strong>에서는, 같은 순간 수직으로 세운 막대기가 수직선에서 약 <strong>7.2°</strong> 기울어진 그림자를 드리웠다. 원 전체의 50분의 1이다.</p>
+
+  <p>평평한 지구에서라면 태양의 평행 광선이 두 막대기에 같은 각도로 닿을 것이다. 같은 순간에 다른 그림자 각도가 나타나는 유일한 설명: 두 도시 사이의 지면이 <em>휘어져</em> 있다는 것이다.</p>
+
+  <div class="erato-grid">
+    <div class="erato-canvas-box">
+      <canvas id="eratoCanvas"></canvas>
+    </div>
+    <div class="erato-panel">
+      <div class="erato-panel-title">에라토스테네스의 측정</div>
+      <div class="erato-row">
+        <span class="erato-label">날짜</span>
+        <span style="font-family:var(--font-display);font-size:1rem;color:var(--text)">하지, 기원전 ~240년</span>
+      </div>
+      <div>
+        <span class="erato-label">시에네의 태양</span>
+        <div class="erato-value" style="font-size:1.2rem;color:var(--cyan)">머리 바로 위</div>
+      </div>
+      <div>
+        <span class="erato-label">알렉산드리아의 그림자 각도</span>
+        <div class="erato-value" id="eAngleVal">0.0°</div>
+      </div>
+      <div>
+        <span class="erato-label">하지까지 슬라이드 →</span>
+        <input type="range" class="erato-slider" id="eSlider" min="0" max="100" value="0">
+      </div>
+      <div class="erato-result" id="eResultBox" style="opacity:.3;transition:opacity .5s">
+        <span class="erato-label">계산된 둘레</span>
+        <span class="big-num" id="eCircVal">—</span>
+        <span class="actual">실제 값: 40,075 km</span>
+      </div>
+    </div>
+  </div>
+
+  <p>두 도시 사이 거리에 50을 곱하면 약 <strong>250,000 스타디아</strong> — 오늘날 알려진 40,075km의 2% 이내다. 막대기 두 개, 그림자 하나, 곱셈 한 번이 행성 전체를 측정한 것이다.</p>
+
+  <p>수 세기 후, 콜럼버스는 프톨레마이오스의 더 작은 (<em>잘못된</em>) 추정치를 믿고 서쪽으로 항해할 용기를 냈다. <strong>마젤란 원정대</strong>(1519–1522)가 최초의 세계 일주를 완수하면서 질문은 해결되었다: 지구는 둥글다.</p>
+
+  <p>그러나 비교할 수 없이 더 깊은 질문이 이미 형성되고 있었다.</p>
+</div>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════ § 2 ═══════════════════ -->
+<div class="wrap reveal" id="s2">
+  <span class="sec-label">§ 2 — 그런데 우주는?</span>
+  <h2>걸어서 한 바퀴 돌기엔 너무 <em>큰</em> 질문</h2>
+
+  <p>지구가 둥글다는 것은 배를 타고 한 바퀴 돌아 증명했다. 그렇다면 <em>우주</em>는? 아무도 우주를 한 바퀴 돌 수 없다. 아무도 우주 밖으로 나갈 수 없다. 우리는 안에 갇혀 있다 — 풍선 위의 개미처럼, 풍선의 모양을 기어다니면서 추측하는 것이다.</p>
+
+  <p>게다가, 국소적으로 공간은 아무것도 드러내지 않는다. 마당에서 본 지구가 평평해 보이듯 — 수평선은 곧고, 평행선은 평행하고, 각의 합은 180° — 공간은 측정할 수 있는 모든 방향에서 완벽하게 유클리드적으로 보인다. 곡률이 있다면, 우리가 볼 수 있는 것보다 훨씬 더 큰 규모에 숨어 있다.</p>
+
+  <p>1854년, 젊은 독일 수학자 <strong>베른하르트 리만</strong>이 인류의 공간 사고방식을 바꾸는 강연을 했다. 그의 통찰: 공간은 <em>국소적으로 평평하면서 전체적으로 휘어질</em> 수 있다. 유한한 부피를 가지면서 경계가 없을 수 있다. 이러한 공간의 수학적 이름이 <strong>다양체</strong>(manifold)다.</p>
+
+  <div class="theorem-box">
+    <p style="color:var(--text);margin-bottom:.5rem"><strong>다양체란 무엇인가?</strong></p>
+    <p>\(n\)차원 다양체는 국소적으로 \(\mathbb{R}^n\) — 평범한 유클리드 공간 — 처럼 보이지만, 전체적으로는 완전히 다른 모양을 가질 수 있는 공간이다. 지구 표면은 2차원 다양체(국소적으로 \(\mathbb{R}^2\))이다. 우주는 3차원 다양체(국소적으로 \(\mathbb{R}^3\))이다.</p>
+  </div>
+
+  <p>직접 확인해 보자. <strong>드래그</strong>하여 각 곡면을 회전시키고, <strong>스크롤</strong>(또는 핀치)로 확대하고, <strong>Shift+드래그</strong>로 이동하라. 확대할수록 곡률이 사라진다. 격자 사각형이 균일해진다. 구든, 토러스든, 클라인 병이든 — 충분히 가까이 가면 모두 같은 것, 평평한 격자가 보인다. 이것이 다양체의 의미다.</p>
+
+  <div class="zoom-wrap" id="zoomWrap">
+    <canvas id="zoomCanvas"></canvas>
+    <div class="zoom-hud" id="zoomHud">
+      <div id="zoomLevel">ZOOM: 1.0×</div>
+      <div id="zoomHint" style="opacity:.5;margin-top:2px">드래그: 회전 · shift+드래그: 이동 · 스크롤: 확대</div>
+    </div>
+    <div class="zoom-badge" id="zoomBadge">다양체</div>
+  </div>
+  <div class="lens-btns">
+    <button class="ctrl-btn active" data-surface="sphere">구 \(S^2\)</button>
+    <button class="ctrl-btn" data-surface="torus">토러스 \(T^2\)</button>
+    <button class="ctrl-btn" data-surface="klein">클라인 병 \(K\)</button>
+  </div>
+
+  <p>충분히 확대하면, 모든 곡면은 평평한 사각형과 구별할 수 없다 — 이것이 <strong>좌표 차트</strong>, 다양체를 만드는 \(\mathbb{R}^2\)의 국소 조각이다. 깊은 질문은 조각들이 어떻게 보이느냐가 아니라 — 모두 같아 보인다 — 어떻게 <em>맞물리느냐</em>이다. 그것이 전체 모양을 결정한다.</p>
+
+  <div class="rule"></div>
+
+  <h3>우주에 대한 세 가지 비전</h3>
+
+  <p><strong>리만</strong>(1854)은 우주가 <strong>3차원 구</strong> \(S^3\) — 공의 표면의 3차원 유사물 — 일 수 있다고 제안했다. 유한한 부피, 경계 없음, 양의 곡률. 어느 방향으로든 충분히 걸으면 출발점으로 돌아온다. 아인슈타인은 1917년 최초의 우주론적 해에서 이 모델을 채택했다.</p>
+
+  <p><strong>클리포드</strong>와 <strong>클라인</strong>(1873–1890)은 \(S^3\) 안에 사는 평면 토러스의 발견에 영감을 받아 대안을 제시했다: <strong>3차원 토러스</strong> \(T^3\). 평평하고, 유한하며, 다중 연결 — 마주보는 면이 붙여진 정육면체. 북쪽 벽을 통과하면 남쪽에서 나타난다.</p>
+
+  <p><strong>자이페르트</strong>와 <strong>베버</strong>(1933)는 세 번째 가능성을 보였다: 정십이면체의 마주보는 면을 \(3\pi/5\) 비틀어 붙인 닫힌 <strong>쌍곡</strong> 3차원 다양체. 평행선이 서서히 갈라지는, 음의 곡률의 우주.</p>
+
+  <div class="info-box" style="text-align:center;border-color:rgba(201,168,76,.2)">
+    <p style="color:var(--text);font-family:var(--font-display);font-size:1.2rem;margin-bottom:.4rem;font-weight:300">우주의 모양 후보 세 가지:</p>
+    <p style="margin-bottom:0">
+      <span style="color:var(--gold2)">\(S^3\)</span> (둥근) · 
+      <span style="color:var(--cyan)">\(T^3\)</span> (평평한) · 
+      <span style="color:var(--rose)">\(\mathcal{SW}\)</span> (쌍곡)
+    </p>
+  </div>
+
+  <p><em>우주는 둥근가?</em> 라는 질문이 이렇게 탄생했다. 답으로 가려면 먼저 2차원의 경우, 곡면을 이해해야 한다.</p>
+</div>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════ § 3 ═══════════════════ -->
+<div class="wrap reveal" id="s3">
+  <span class="sec-label">§ 3 — 곡면</span>
+  <h2>모든 닫힌 곡면은 손잡이가 달린 <em>구</em>이다</h2>
+
+  <p>우주의 모양 — 3차원 다양체 — 에 대해 말하려면 한 차원 아래의 세계를 먼저 이해해야 한다. 곡면의 분류는 워밍업 문제다. 그리고 이미 수학에서 가장 아름다운 정리 중 하나다.</p>
+
+  <p><strong>곡면 분류 정리</strong>에 의하면, 모든 닫힌 연결 곡면은 단 두 가지로 결정된다: <strong>방향성</strong>(orientability)이 있는지 여부, 그리고 하나의 정수.</p>
+
+  <p>곡면이 <strong>방향성을 갖는</strong> 경우 — "안"과 "밖"이 일관되게 정의되는 경우 — 이는 <em>손잡이</em>가 몇 개 달린 구이다. 그 수가 <strong>종수</strong>(genus) \(g\)다. 구는 종수 0, 토러스(도넛)는 종수 1, 프레첼 모양은 종수 2. 이렇게 영원히 계속된다.</p>
+
+  <p>곡면이 <strong>방향성이 없는</strong> 경우 — 뫼비우스 띠나 클라인 병처럼 — 손잡이 대신 <em>교차 모자</em>(crosscap)가 쓰이고, 교차 모자의 개수 \(k\)로 분류된다. 교차 모자 하나면 사영 평면 \(\mathbb{R}P^2\), 둘이면 클라인 병이다.</p>
+
+  <div class="theorem-box">
+    <p style="color:var(--text);margin-bottom:.4rem"><strong>닫힌 곡면의 분류</strong></p>
+    <p>모든 닫힌 연결 곡면은 다음 중 정확히 하나와 위상동형이다:</p>
+    <p style="text-align:center;color:var(--gold2);margin:.7rem 0">\(S^2,\; T^2,\; T^2 \# T^2,\; T^2 \# T^2 \# T^2,\; \ldots\) &ensp;<span style="color:var(--muted);font-size:.9rem">(방향성 있음, 종수 \(g = 0,1,2,3,\ldots\))</span></p>
+    <p style="text-align:center;color:var(--cyan);margin:.7rem 0">\(\mathbb{R}P^2,\; K,\; \ldots\) &ensp;<span style="color:var(--muted);font-size:.9rem">(방향성 없음, 교차모자 \(k = 1,2,\ldots\)개)</span></p>
+    <p><strong>오일러 표수</strong> \(\chi = 2 - 2g\) (방향성 있는 경우) 또는 \(\chi = 2 - k\) (방향성 없는 경우)가 완전 불변량이다.</p>
+  </div>
+
+  <p>아래의 <strong>곡면 공장</strong>을 사용해 보라. 구에서 시작하여 <strong>+손잡이</strong>로 손잡이를 추가하거나 <strong>+교차모자</strong>로 방향성 없는 세계로 들어가라. 드래그하여 회전.</p>
+
+  <div class="factory-grid">
+    <div class="factory-canvas-box">
+      <canvas id="factoryCanvas"></canvas>
+    </div>
+    <div class="factory-panel">
+      <div class="factory-panel-title">곡면 공장</div>
+      <div class="factory-stat">
+        <span class="stat-label">이름</span>
+        <span class="stat-val" id="fName" style="font-size:1.1rem">Sphere</span>
+      </div>
+      <div class="factory-stat">
+        <span class="stat-label">기호</span>
+        <span class="stat-val" id="fSymbol" style="font-size:1.1rem">\(S^2\)</span>
+      </div>
+      <div class="factory-stat">
+        <span class="stat-label">종수 / 교차모자</span>
+        <span class="stat-val" id="fGenus">g = 0</span>
+      </div>
+      <div class="factory-stat">
+        <span class="stat-label">방향성</span>
+        <span class="stat-val" id="fOrient" style="color:var(--cyan)">Yes</span>
+      </div>
+      <div class="factory-stat">
+        <span class="stat-label">Euler \(\chi\)</span>
+        <span class="stat-val" id="fChi">2</span>
+      </div>
+      <div class="factory-btns">
+        <button class="ctrl-btn" id="addHandle">+ 손잡이</button>
+        <button class="ctrl-btn" id="addCrosscap">+ 교차모자</button>
+        <button class="ctrl-btn" id="resetFactory">초기화</button>
+      </div>
+    </div>
+  </div>
+
+  <p>오일러 표수를 살펴보라: 손잡이 하나마다 2씩, 교차 모자 하나마다 1씩 줄어든다. 토러스(\(g=1\))는 \(\chi = 0\)이다. 클라인 병(\(k=2\))도 \(\chi = 0\)이다. 같은 수 — 그러나 위상적으로 다르다. 하나는 방향성이 있고 다른 하나는 없기 때문이다. 분류에는 <em>두 가지 정보 모두</em> 필요하다. 어느 하나만으로는 충분하지 않다.</p>
+</div>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════ § 4 ═══════════════════ -->
+<div class="wrap reveal" id="s4">
+  <span class="sec-label">§ 4 — 평면 토러스</span>
+  <h2>경계도 없고 곡률도 없는 <em>유한한</em> 세계</h2>
+
+  <p>정사각형 종이를 한 장 들어라. 왼쪽 변을 오른쪽 변에 붙여라. 위쪽 변을 아래쪽 변에 붙여라. 늘리지도, 구기지도 않고 — 그냥 변을 식별(identify)하는 것이다. 결과는 <strong>평면 토러스</strong> \(T^2\): 어디서나 평평하고, 넓이는 유한하고, 경계는 전혀 없는 곡면.</p>
+
+  <p>이 곡면 안에서 산다면 어떤 느낌일까? 정사각형 방 안에 서 있다고 생각하라. 오른쪽 벽으로 걸어가면 왼쪽에서 나타난다. 위로 올라가면 아래에서 떨어진다. 문도 벽도 없는 방 — 그러나 유한하다. <em>닫힌 평면 다양체</em>의 가장 간단한 예이다.</p>
+
+  <p>아래의 평면 토러스를 비행해 보라. <strong>WASD</strong> 또는 <strong>방향키</strong>로 이동한다. 미니맵이 기본 영역에서의 위치를 추적한다. 한쪽을 벗어날 때마다 반대쪽에서 다시 나타난다. 끝은 없다.</p>
+
+  <div class="flight-wrap" id="flightWrap" tabindex="0">
+    <canvas id="flightCanvas"></canvas>
+    <div class="flight-hud">
+      <div>평면 토러스 T²</div>
+      <div id="flightCoords">x: 0.50 &nbsp; y: 0.50</div>
+    </div>
+    <canvas class="flight-minimap" id="flightMinimap" width="90" height="90"></canvas>
+    <div class="flight-help" id="flightHelp">클릭하여 포커스 · WASD 또는 방향키로 비행</div>
+    <div class="flight-edge-flash" id="flightFlash"></div>
+  </div>
+
+  <p>만약 우주가 <strong>3차원 토러스</strong> — 마주보는 면이 식별된 정육면체 — 라면, 직선으로 비행해도 결국 집으로 돌아올 수 있다. 앞을 바라보면 자신의 복사본이 멀리 사라져 가는 것이 보인다. 마치 두 개의 평행 거울 사이에 선 것처럼. 유한한 우주, 경계 없음, 완전히 평평함.</p>
+
+  <div class="rule"></div>
+
+  <h3>토러스 위의 직선</h3>
+
+  <p>평면 토러스 위에서 직선으로 걸으면 어떻게 될까? <strong>기울기</strong>에 달려 있다. 기울기가 <em>유리수</em> — 예를 들어 \(p/q\) — 라면, 직선은 감기면서 결국 닫힌 고리가 된다. 그러나 기울기가 <em>무리수</em> — \(\sqrt{2}\)라든가 \(\pi\) — 라면, 직선은 <strong>절대 닫히지 않는다</strong>. 영원히 계속되면서, 점점 더 빽빽하게 감기고, 점차 곡면 전체를 채운다. 유한한 곡면 위의 단 하나의 직선이 <em>조밀</em>한 것이다.</p>
+
+  <p>기울기를 조절하고, 평면 정사각형(왼쪽)과 3D 토러스(오른쪽)에 그려지는 경로를 관찰하라.</p>
+
+  <div class="slope-controls">
+    <label>기울기</label>
+    <input type="range" class="slope-slider" id="slopeSlider" min="0" max="314" value="100">
+    <span class="slope-readout" id="slopeReadout">1.00</span>
+    <button class="ctrl-btn" id="slopeRational">1/1</button>
+    <button class="ctrl-btn" id="slopeGolden">φ</button>
+    <button class="ctrl-btn" id="slopeSqrt2">√2</button>
+    <button class="ctrl-btn" id="slopePi">π</button>
+    <button class="ctrl-btn" id="slopeClear">지우기</button>
+  </div>
+  <div class="slope-grid">
+    <div class="slope-box">
+      <canvas id="slopeFlatCanvas"></canvas>
+      <div class="slope-box-label">기본 영역</div>
+    </div>
+    <div class="slope-box" style="cursor:grab">
+      <canvas id="slopeTorusCanvas"></canvas>
+      <div class="slope-box-label">3D 토러스</div>
+    </div>
+  </div>
+</div>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════ § 5 — ORIENTABILITY ═══════════════════ -->
+<div class="wrap reveal" id="s5">
+  <span class="sec-label">§ 5 — 방향성</span>
+  <h2>왼쪽과 오른쪽이 <em>바뀔 때</em></h2>
+
+  <p>오른손을 거울에 비춰 보라. 거울에 비친 것은 왼손이다. 방향성 있는 곡면 — 구, 토러스, 손잡이가 달린 어떤 곡면 — 에서는 <em>걸어 다니는 것</em>만으로는 이런 일이 절대 일어나지 않는다. 어떤 경로를 걸어도, 오른손은 오른손 그대로다.</p>
+
+  <p>그러나 <strong>방향성 없는</strong> 곡면에서는 <em>거울 반전된 채로</em> 돌아오는 경로가 존재한다. 왼쪽과 오른쪽이 소리 없이 바뀌어 있다. 가장 간단한 예가 <strong>뫼비우스 띠</strong>이다.</p>
+
+  <p>이를 생생하게 확인하는 방법이 있다. <strong>법선 벡터</strong> — "바깥"을 가리키는 화살표 — 를 각 곡면 위에서 닫힌 경로를 따라 옮겨 보라. <strong>원기둥</strong>에서는 화살표가 변하지 않고 돌아온다. <strong>뫼비우스 띠</strong>에서는 <em>뒤집혀서</em> 돌아온다.</p>
+
+  <p><strong>▶ 재생</strong>을 눌러 직접 확인해 보라.</p>
+
+  <div class="orient-grid">
+    <div class="orient-box" id="cylinderBox">
+      <canvas id="cylinderCanvas"></canvas>
+      <div class="orient-label" style="color:var(--cyan)">원기둥 — 방향성 있음</div>
+    </div>
+    <div class="orient-box" id="mobiusStripBox">
+      <canvas id="mobiusStripCanvas"></canvas>
+      <div class="orient-label" style="color:var(--rose)">뫼비우스 띠 — 방향성 없음</div>
+    </div>
+  </div>
+  <div class="orient-play-bar">
+    <button class="ctrl-btn" id="orientPlay">▶ 재생</button>
+    <button class="ctrl-btn" id="orientReset">초기화</button>
+    <span id="orientStatus" style="font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;color:var(--muted)">준비</span>
+  </div>
+
+  <p>이것이 "한 면"의 진정한 의미이다: 뫼비우스 띠 위에서 "바깥"을 일관되게 정의할 방법이 없다. 모든 닫힌 비방향성 곡면 — 클라인 병, 사영 평면 — 은 그 안에 뫼비우스 띠를 숨기고 있다. 마치 처음부터 양면이 아니었던 곳 사이의 비밀 통로처럼.</p>
+</div>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════ § 6 ═══════════════════ -->
+<div class="wrap reveal" id="s6">
+  <span class="sec-label">§ 6 — 클라인 병과 뫼비우스 띠</span>
+  <h2><em>안이 없는</em> 곡면</h2>
+
+  <p><strong>클라인 병</strong>은 펠릭스 클라인이 1882년에 발견한, 가장 간단한 <em>닫힌</em> 비방향성 곡면이다. 정사각형의 변을 붙여 만든다: 한 쌍은 같은 방향으로(토러스처럼), 다른 한 쌍은 <em>반대 방향으로</em>. 이 한 번의 뒤집기가 모든 것을 바꾼다.</p>
+
+  <p>비방향성이므로, 클라인 병에는 일관된 "안"과 "밖"이 없다. 3차원 공간에서는 자기 자신을 관통하지 않고는 놓을 수 없다 — 그러나 4차원에서는 자기교차 없이 깔끔하게 매장된다.</p>
+
+  <p>드래그하여 회전시키라. <strong>4D 올리기</strong> 슬라이더를 움직여 곡면이 4차원으로 올라가면서 자기교차가 해소되는 것을 관찰하라.</p>
+
+  <div class="klein-grid">
+    <div class="klein-box" id="kleinBox">
+      <canvas id="kleinCanvas"></canvas>
+      <div class="klein-ctrl">
+        <span class="erato-label">4D 올리기</span>
+        <input type="range" class="klein-slider" id="kleinSlider" min="0" max="100" value="0">
+        <span class="erato-label" id="kleinDim" style="color:var(--rose)">3D 몰입상</span>
+      </div>
+    </div>
+    <div class="diagram-box">
+      <canvas id="kleinDiagram" width="400" height="400"></canvas>
+    </div>
+  </div>
+
+  <div class="rule"></div>
+
+  <h3>도넛을 비틀어 자르기</h3>
+
+  <p><strong>뫼비우스 띠</strong> — 반 비틀림이 있는 띠 — 는 비방향성의 기본 구성 요소다. 면이 하나, 변이 하나밖에 없다. 그리고 저차원 위상수학에서 가장 놀라운 사실 중 하나로 이어진다:</p>
+
+  <div class="info-box">
+    <p style="color:var(--text)"><strong>속이 찬 토러스</strong>(속이 찬 도넛)를 들어라. 그 안에 뫼비우스 띠를 꿰어, 중심 원을 한 바퀴 돌며 반 비틀림을 준다. 이제 이 띠를 따라 속이 찬 토러스를 <strong>자르라</strong>. 두 조각이 될 것 같지만 — 결과는 <em>여전히 한 조각</em>이다. 더 얇은 또 다른 속이 찬 토러스.</p>
+  </div>
+
+  <p><strong>자르기</strong>를 누르고 지켜보라.</p>
+
+  <div class="mobius-box" id="mobiusBox">
+    <canvas id="mobiusCanvas"></canvas>
+    <div class="mobius-ctrl">
+      <button class="ctrl-btn" id="mobiusCut">✂ 자르기</button>
+      <button class="ctrl-btn" id="mobiusReset">초기화</button>
+      <span id="mobiusStatus" style="margin-left:auto;font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;color:var(--muted)">준비</span>
+    </div>
+  </div>
+</div>
+
+<hr class="section-rule">
+
+<div class="wrap" style="padding:4rem 2rem;text-align:center">
+  <p style="color:var(--muted);font-family:var(--font-display);font-size:1.1rem;font-style:italic;font-weight:300;max-width:560px;margin:0 auto 1rem">이제 우리에게는 언어가 있다: 다양체, 종수, 방향성, 평면 토러스, 클라인 병. 2차원의 경우는 완전히 분류되었다. 그러나 우주는 3차원이다 — 그리고 진정한 미스터리는 거기에서 시작된다.</p>
+  <p style="color:var(--muted);font-style:italic;font-size:.9rem">§ 7–9: 3차원 다양체, 서스턴의 기하학, 페렐만의 증명, 그리고 우주의 형태 — 곧 이어집니다.</p>
+</div>
+
+<footer>
+  <div class="footer-attr">
+    <span class="footer-name">Sang-hyun Kim</span>
+    <span class="footer-inst">고등과학원</span>
+    <a href="https://kimsh.kr" class="footer-link">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
+<script>
+"use strict";
+
+/* ── reveal ── */
+{const o=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.06});document.querySelectorAll('.reveal').forEach(el=>o.observe(el))}
+
+/* ── audio ── */
+let _ac=null;
+function ac(){if(!_ac)_ac=new(window.AudioContext||window.webkitAudioContext)();return _ac}
+function chime(f=440,d=.35,v=.12){const c=ac(),o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(v,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+d);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+d)}
+
+/* ══════════════════════════════════════════════════════════════════
+   HERO — starfield + morphing wireframes
+   ══════════════════════════════════════════════════════════════════ */
+(function(){
+  const canvas=document.getElementById('heroCanvas');
+  const labelEl=document.getElementById('heroShapeLabel');
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(45,innerWidth/innerHeight,.1,200);
+  camera.position.z=5.5;
+
+  /* twinkling stars with custom shader */
+  const SN=2200;
+  const sp=new Float32Array(SN*3),sc=new Float32Array(SN*3),ss=new Float32Array(SN);
+  for(let i=0;i<SN;i++){
+    sp[i*3]=(Math.random()-.5)*120;sp[i*3+1]=(Math.random()-.5)*80;sp[i*3+2]=-10-Math.random()*100;
+    const b=.4+Math.random()*.6;sc[i*3]=b;sc[i*3+1]=b*.95;sc[i*3+2]=b*(.85+Math.random()*.15);
+    ss[i]=.03+Math.random()*.06;
+  }
+  const sg=new THREE.BufferGeometry();
+  sg.setAttribute('position',new THREE.BufferAttribute(sp,3));
+  sg.setAttribute('color',new THREE.BufferAttribute(sc,3));
+  sg.setAttribute('size',new THREE.BufferAttribute(ss,1));
+  const starMat=new THREE.ShaderMaterial({
+    uniforms:{uTime:{value:0}},vertexColors:true,transparent:true,depthWrite:false,
+    vertexShader:`
+      attribute float size; varying vec3 vColor; uniform float uTime;
+      void main(){
+        vColor=color; vec4 mv=modelViewMatrix*vec4(position,1.);
+        float tw=.7+.3*sin(uTime*1.5+position.x*3.7+position.y*2.3);
+        gl_PointSize=size*tw*(200./-mv.z);
+        gl_Position=projectionMatrix*mv;
+      }`,
+    fragmentShader:`
+      varying vec3 vColor;
+      void main(){
+        float d=length(gl_PointCoord-.5)*2.;
+        float a=1.-smoothstep(0.,1.,d);
+        gl_FragColor=vec4(vColor,a*.85);
+      }`
+  });
+  scene.add(new THREE.Points(sg,starMat));
+
+  /* three candidate shapes */
+  const mkMat=c=>new THREE.MeshBasicMaterial({color:c,wireframe:true,transparent:true,opacity:0});
+  const shapes=[
+    {mesh:new THREE.Mesh(new THREE.SphereGeometry(1.35,28,20),mkMat(0xc9a84c)),label:'S\u00B3 \u2014 3\uCC28\uC6D0 \uAD6C',col:'#c9a84c'},
+    {mesh:new THREE.Mesh(new THREE.TorusGeometry(1.05,.42,18,36),mkMat(0x3cb8c3)),label:'T\u00B3 \u2014 3\uCC28\uC6D0 \uD1A0\uB7EC\uC2A4',col:'#3cb8c3'},
+    {mesh:new THREE.Mesh(new THREE.DodecahedronGeometry(1.25,0),mkMat(0xc47a8a)),label:'\uC2ED\uC774\uBA74\uCCB4 \uACF5\uAC04',col:'#c47a8a'},
+  ];
+  shapes.forEach(s=>scene.add(s.mesh));
+
+  const CYCLE=5,FADE=.8;
+  function animate(t){
+    requestAnimationFrame(animate);
+    const sec=t*.001; starMat.uniforms.uTime.value=sec;
+    const total=CYCLE*shapes.length,phase=sec%total;
+    const idx=Math.floor(phase/CYCLE)%shapes.length;
+    const local=phase-idx*CYCLE;
+    shapes.forEach((s,i)=>{
+      if(i===idx){
+        let op=1; if(local<FADE)op=local/FADE; else if(local>CYCLE-FADE)op=(CYCLE-local)/FADE;
+        s.mesh.material.opacity=op*.32; s.mesh.visible=true;
+        s.mesh.rotation.x=sec*.12+i*.5; s.mesh.rotation.y=sec*.18+i;
+      }else{s.mesh.material.opacity=0;s.mesh.visible=false}
+    });
+    const s=shapes[idx]; labelEl.textContent=s.label; labelEl.style.color=s.col;
+    let lo=1; if(local<FADE)lo=local/FADE; else if(local>CYCLE-FADE)lo=(CYCLE-local)/FADE;
+    labelEl.style.opacity=lo*.5;
+    renderer.render(scene,camera);
+  }
+  requestAnimationFrame(animate);
+  function onR(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight)}
+  window.addEventListener('resize',onR); onR();
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   § 1 — ERATOSTHENES INTERACTIVE
+   ══════════════════════════════════════════════════════════════════ */
+(function(){
+  const canvas=document.getElementById('eratoCanvas');
+  const ctx=canvas.getContext('2d');
+  const slider=document.getElementById('eSlider');
+  const angleEl=document.getElementById('eAngleVal');
+  const circEl=document.getElementById('eCircVal');
+  const resultBox=document.getElementById('eResultBox');
+  const dpr=Math.min(devicePixelRatio,2);
+
+  function resize(){
+    const b=canvas.parentElement.getBoundingClientRect();
+    canvas.width=b.width*dpr; canvas.height=b.height*dpr;
+    draw();
+  }
+
+  function draw(){
+    const w=canvas.width,h=canvas.height;
+    ctx.clearRect(0,0,w,h); ctx.save(); ctx.scale(dpr,dpr);
+    const W=w/dpr,H=h/dpr;
+    const progress=slider.value/100;
+    const shadDeg=7.2*progress, shadRad=shadDeg*Math.PI/180;
+
+    const cx=W*.48,cy=H*.54,R=Math.min(W,H)*.34;
+
+    // Subtle glow
+    const gl=ctx.createRadialGradient(cx,cy,R*.7,cx,cy,R*1.6);
+    gl.addColorStop(0,'rgba(60,184,195,.04)');gl.addColorStop(1,'transparent');
+    ctx.fillStyle=gl;ctx.beginPath();ctx.arc(cx,cy,R*1.6,0,Math.PI*2);ctx.fill();
+
+    // Earth
+    const eg=ctx.createRadialGradient(cx-R*.25,cy-R*.25,R*.1,cx,cy,R);
+    eg.addColorStop(0,'rgba(60,184,195,.1)');eg.addColorStop(.7,'rgba(10,11,26,.6)');eg.addColorStop(1,'rgba(5,6,15,.8)');
+    ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fillStyle=eg;ctx.fill();
+    ctx.strokeStyle='rgba(60,184,195,.25)';ctx.lineWidth=1.2;ctx.stroke();
+
+    // Latitude lines
+    ctx.strokeStyle='rgba(60,184,195,.08)';ctx.lineWidth=.7;
+    for(let i=1;i<6;i++){const phi=i*Math.PI/6,r=R*Math.sin(phi),yy=cy-R*Math.cos(phi);ctx.beginPath();ctx.ellipse(cx,yy,r,r*.28,0,0,Math.PI*2);ctx.stroke()}
+
+    // Sun rays
+    ctx.strokeStyle=`rgba(240,200,80,${.08+progress*.18})`;ctx.lineWidth=1;ctx.setLineDash([6,8]);
+    for(let i=-3;i<=3;i++){ctx.beginPath();ctx.moveTo(cx+i*28,cy-R-70);ctx.lineTo(cx+i*28,cy-R+5);ctx.stroke()}
+    ctx.setLineDash([]);
+
+    // Positions
+    const syA=-Math.PI/2, alA=syA-shadRad;
+    const sx=cx+R*Math.cos(syA),sy=cy+R*Math.sin(syA);
+    const ax=cx+R*Math.cos(alA),ay=cy+R*Math.sin(alA);
+
+    // Sticks (surface normals)
+    const sL=28;
+    ctx.strokeStyle='#e8cc80';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.moveTo(sx,sy);ctx.lineTo(sx+Math.cos(syA)*sL,sy+Math.sin(syA)*sL);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(ax+Math.cos(alA)*sL,ay+Math.sin(alA)*sL);ctx.stroke();
+
+    // Shadow at Alexandria
+    if(progress>.05){
+      const tx=Math.sin(alA),ty=-Math.cos(alA);
+      const shL=sL*Math.tan(shadRad)*1.8;
+      ctx.strokeStyle='rgba(196,85,85,.65)';ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(ax+tx*shL,ay+ty*shL);ctx.stroke();
+
+      // Angle arc
+      ctx.strokeStyle='rgba(201,168,76,.5)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.arc(ax,ay,18,alA,alA+shadRad+.02);ctx.stroke();
+
+      // Angle label
+      ctx.font='11px "JetBrains Mono"';ctx.fillStyle='rgba(201,168,76,.7)';ctx.textAlign='left';
+      const mA=alA+shadRad/2;
+      ctx.fillText(shadDeg.toFixed(1)+'\u00B0',ax+Math.cos(mA)*30,ay+Math.sin(mA)*30);
+    }
+
+    // Radii to center
+    if(progress>.2){
+      ctx.strokeStyle='rgba(201,168,76,.1)';ctx.lineWidth=.8;ctx.setLineDash([3,5]);
+      ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(sx,sy);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(ax,ay);ctx.stroke();
+      ctx.setLineDash([]);
+      if(progress>.4){ctx.strokeStyle='rgba(201,168,76,.25)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(cx,cy,30,syA,alA,true);ctx.stroke()}
+    }
+
+    // City labels
+    ctx.font='13px "EB Garamond"';ctx.textAlign='center';ctx.fillStyle='#3cb8c3';
+    ctx.fillText('Syene',sx+8,sy-22);
+    ctx.fillText('Alexandria',ax-32,ay-16);
+
+    // Arc on surface
+    if(progress>.1){
+      ctx.strokeStyle='rgba(201,168,76,.3)';ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(cx,cy,R,syA,alA,true);ctx.stroke();
+      ctx.font='10px "JetBrains Mono"';ctx.fillStyle='rgba(201,168,76,.6)';
+      const dM=(syA+alA)/2;
+      ctx.fillText('~800 km',cx+(R+18)*Math.cos(dM),cy+(R+18)*Math.sin(dM));
+    }
+
+    // Center dot
+    ctx.beginPath();ctx.arc(cx,cy,2.5,0,Math.PI*2);ctx.fillStyle='rgba(201,168,76,.35)';ctx.fill();
+
+    // Sun
+    const sunY=cy-R-55,sunR=10+progress*4;
+    const sg2=ctx.createRadialGradient(cx,sunY,0,cx,sunY,sunR*2.5);
+    sg2.addColorStop(0,`rgba(240,200,80,${.15+progress*.25})`);sg2.addColorStop(1,'transparent');
+    ctx.fillStyle=sg2;ctx.beginPath();ctx.arc(cx,sunY,sunR*2.5,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.arc(cx,sunY,sunR,0,Math.PI*2);
+    ctx.fillStyle=`rgba(240,210,100,${.3+progress*.5})`;ctx.fill();
+
+    ctx.restore();
+
+    // Readouts
+    angleEl.textContent=shadDeg.toFixed(1)+'\u00B0';
+    if(progress>.15){
+      const circ=Math.round(800*360/shadDeg);
+      circEl.textContent='\u2248 '+circ.toLocaleString()+' km';
+      resultBox.style.opacity=(.3+progress*.7).toString();
+    }else{circEl.textContent='\u2014';resultBox.style.opacity='.3'}
+  }
+
+  slider.addEventListener('input',draw);
+  let chimeDone=false;
+  slider.addEventListener('input',()=>{
+    if(slider.value>95&&!chimeDone){chimeDone=true;chime(523,.5,.1);setTimeout(()=>chime(659,.4,.08),200)}
+    if(slider.value<50)chimeDone=false;
+  });
+  window.addEventListener('resize',resize); resize();
+})();
+
+
+/* ══════════════════════════════════════════════════════════════════
+   § 2 — ZOOM SURFACE (rotate, pan, zoom — all surfaces become ℝ²)
+   ══════════════════════════════════════════════════════════════════ */
+(function(){
+  const wrap=document.getElementById('zoomWrap');
+  const canvas=document.getElementById('zoomCanvas');
+  const hudLevel=document.getElementById('zoomLevel');
+  const hudHint=document.getElementById('zoomHint');
+  const badge=document.getElementById('zoomBadge');
+
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setClearColor(0x07081a,1);
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(45,16/9,.001,500);
+
+  let currentSurface='sphere';
+  let zoomDist=3.2;
+  const ZOOM_MIN=.04, ZOOM_MAX=7;
+  let rotX=.35, rotY=0;
+  let panX=0, panY=0; // camera target offset
+  let surfGroup=null;
+  const lookTarget=new THREE.Vector3();
+
+  /* ── surface colors ── */
+  const surfColors={sphere:0x3cb8c3, torus:0xc9a84c, klein:0xc47a8a};
+
+  /* ── build surface (wireframe only — clean grid lines) ── */
+  function buildSurface(type){
+    if(surfGroup){
+      scene.remove(surfGroup);
+      surfGroup.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){if(Array.isArray(o.material))o.material.forEach(m=>m.dispose());else o.material.dispose();}});
+    }
+    surfGroup=new THREE.Group();
+    const col=surfColors[type]||0xc9a84c;
+
+    let geom;
+    if(type==='sphere'){
+      geom=new THREE.SphereGeometry(1.2,40,30);
+    } else if(type==='torus'){
+      geom=new THREE.TorusGeometry(.9,.38,30,50);
+    } else {
+      // Klein bottle: classic bottle immersion
+      geom=new THREE.BufferGeometry();
+      const Nu=80, Nv=40;
+      const verts=[], uvs=[], idx=[];
+      for(let i=0;i<=Nu;i++){
+        const u=i/Nu*Math.PI*2;
+        const cu=Math.cos(u), su=Math.sin(u);
+        for(let j=0;j<=Nv;j++){
+          const v=j/Nv*Math.PI*2;
+          const cv=Math.cos(v), sv=Math.sin(v);
+          let x,y,z;
+          if(u<Math.PI){
+            x=6*cu*(1+su)+4*(1-cu/2)*cv;
+            y=16*su;
+            z=4*(1-cu/2)*sv;
+          }else{
+            x=6*cu*(1+su)-4*(1-cu/2)*cv;
+            y=16*su;
+            z=4*(1-cu/2)*sv;
+          }
+          verts.push(x*.052, y*.052, z*.052);
+          uvs.push(i/Nu, j/Nv);
+        }
+      }
+      for(let i=0;i<Nu;i++){
+        for(let j=0;j<Nv;j++){
+          const a=i*(Nv+1)+j, b=a+1, c2=(i+1)*(Nv+1)+j, d=c2+1;
+          idx.push(a,b,c2, b,d,c2);
+        }
+      }
+      geom.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));
+      geom.setAttribute('uv',new THREE.Float32BufferAttribute(uvs,2));
+      geom.setIndex(idx);
+      geom.computeVertexNormals();
+    }
+
+    // Semi-transparent fill
+    const fillMat=new THREE.MeshBasicMaterial({color:col, transparent:true, opacity:.08, side:THREE.DoubleSide});
+    surfGroup.add(new THREE.Mesh(geom,fillMat));
+
+    // Wireframe (the grid lines the user sees)
+    const wireMat=new THREE.MeshBasicMaterial({color:col, wireframe:true, transparent:true, opacity:.35});
+    surfGroup.add(new THREE.Mesh(geom.clone(),wireMat));
+
+    scene.add(surfGroup);
+  }
+
+  buildSurface('sphere');
+
+  /* ── interaction ── */
+  let dragging=false, panning=false, prevX=0, prevY=0, interacted=false;
+
+  wrap.addEventListener('pointerdown',e=>{
+    dragging=true;
+    panning=e.shiftKey || e.button===1 || e.button===2; // shift or middle/right click = pan
+    prevX=e.clientX; prevY=e.clientY;
+    wrap.setPointerCapture(e.pointerId);
+    interacted=true;
+  });
+  wrap.addEventListener('pointermove',e=>{
+    if(!dragging) return;
+    const dx=e.clientX-prevX, dy=e.clientY-prevY;
+    if(panning || e.shiftKey){
+      // Pan: move the look target
+      const panSpeed=zoomDist*.002;
+      // Pan in camera-local right/up directions
+      const right=new THREE.Vector3();
+      const up=new THREE.Vector3();
+      camera.getWorldDirection(new THREE.Vector3());
+      right.crossVectors(camera.up, new THREE.Vector3().subVectors(camera.position,lookTarget)).normalize();
+      up.copy(camera.up);
+      panX-=dx*panSpeed*right.x+dy*panSpeed*up.x;
+      panY-=dx*panSpeed*right.y+dy*panSpeed*up.y;
+      // Simpler: just use screen-space pan
+      panX-=dx*zoomDist*.0008;
+      panY+=dy*zoomDist*.0008;
+    } else {
+      // Rotate
+      rotY+=dx*.006;
+      rotX+=dy*.006;
+      rotX=Math.max(-1.4,Math.min(1.4,rotX));
+    }
+    prevX=e.clientX; prevY=e.clientY;
+  });
+  wrap.addEventListener('pointerup',()=>{dragging=false; panning=false;});
+  wrap.addEventListener('pointercancel',()=>{dragging=false; panning=false;});
+  // Prevent context menu on right-click
+  wrap.addEventListener('contextmenu',e=>e.preventDefault());
+
+  // Scroll to zoom
+  wrap.addEventListener('wheel',e=>{
+    e.preventDefault(); interacted=true;
+    zoomDist*=1+e.deltaY*.0012;
+    zoomDist=Math.max(ZOOM_MIN,Math.min(ZOOM_MAX,zoomDist));
+  },{passive:false});
+
+  // Pinch zoom (mobile)
+  let lastPinch=0;
+  wrap.addEventListener('touchstart',e=>{
+    if(e.touches.length===2){
+      const dx=e.touches[0].clientX-e.touches[1].clientX;
+      const dy=e.touches[0].clientY-e.touches[1].clientY;
+      lastPinch=Math.hypot(dx,dy);
+    }
+  },{passive:true});
+  wrap.addEventListener('touchmove',e=>{
+    if(e.touches.length===2){
+      e.preventDefault(); interacted=true;
+      const dx=e.touches[0].clientX-e.touches[1].clientX;
+      const dy=e.touches[0].clientY-e.touches[1].clientY;
+      const d=Math.hypot(dx,dy);
+      if(lastPinch>0){zoomDist*=lastPinch/d; zoomDist=Math.max(ZOOM_MIN,Math.min(ZOOM_MAX,zoomDist));}
+      lastPinch=d;
+    }
+  },{passive:false});
+
+  // Surface buttons
+  document.querySelectorAll('.lens-btns .ctrl-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.lens-btns .ctrl-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      currentSurface=btn.dataset.surface;
+      buildSurface(currentSurface);
+      zoomDist=3.2; rotX=.35; rotY=0; panX=0; panY=0;
+      chime({sphere:523,torus:440,klein:392}[currentSurface]||440,.3,.1);
+    });
+  });
+
+  /* ── resize ── */
+  function onResize(){
+    const r=wrap.getBoundingClientRect();
+    renderer.setSize(r.width,r.height);
+    camera.aspect=r.width/r.height;
+    camera.updateProjectionMatrix();
+  }
+
+  /* ── render loop ── */
+  let rafId;
+  function animate(){
+    rafId=requestAnimationFrame(animate);
+    if(!surfGroup) return;
+
+    // Gentle auto-rotate when idle
+    if(!dragging) rotY+=.0012;
+
+    // Camera orbits around panX,panY offset
+    lookTarget.set(panX, panY, 0);
+    camera.position.x=panX+zoomDist*Math.sin(rotY)*Math.cos(rotX);
+    camera.position.y=panY+zoomDist*Math.sin(rotX);
+    camera.position.z=zoomDist*Math.cos(rotY)*Math.cos(rotX);
+    camera.lookAt(lookTarget);
+
+    // HUD
+    const zf=3.2/zoomDist;
+    hudLevel.textContent='\ud655\ub300: '+zf.toFixed(1)+'\u00d7';
+
+    // Badge transition
+    if(zf>12){
+      badge.textContent='\u211d\u00b2 \u2014 \uad6d\uc18c\uc801\uc73c\ub85c \ud3c9\ud3c9';
+      badge.classList.add('flat');
+    } else {
+      badge.textContent='\ub2e4\uc591\uccb4';
+      badge.classList.remove('flat');
+    }
+
+    if(interacted) hudHint.style.opacity='0';
+
+    renderer.render(scene,camera);
+  }
+
+  // Only run when visible
+  const obs=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting) animate();
+    else cancelAnimationFrame(rafId);
+  },{threshold:.05});
+  obs.observe(wrap);
+
+  window.addEventListener('resize',onResize);
+  onResize();
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   § 3 — SURFACE FACTORY
+   ══════════════════════════════════════════════════════════════════ */
+(function(){
+  const canvas=document.getElementById('factoryCanvas');
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setClearColor(0x07081a,1);
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(40,1,.1,100);
+  camera.position.set(0,.5,4);
+
+  let genus=0, orientable=true;
+  let mesh=null;
+
+  const nameEl=document.getElementById('fName');
+  const symbolEl=document.getElementById('fSymbol');
+  const genusEl=document.getElementById('fGenus');
+  const orientEl=document.getElementById('fOrient');
+  const chiEl=document.getElementById('fChi');
+
+  /* ── build geometry for current surface ── */
+  function buildMesh(){
+    if(mesh){scene.remove(mesh); mesh.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material)o.material.dispose();});}
+
+    const group=new THREE.Group();
+    const col=orientable?0xc9a84c:0xc47a8a;
+
+    if(genus===0 && orientable){
+      const geom=new THREE.SphereGeometry(1.2,32,24);
+      group.add(new THREE.Mesh(geom,new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.1,side:THREE.DoubleSide})));
+      group.add(new THREE.Mesh(geom.clone(),new THREE.MeshBasicMaterial({color:col,wireframe:true,transparent:true,opacity:.35})));
+    } else if(orientable){
+      /* Genus g: sweep a tube along a SINGLE closed curve that
+         creates g holes. The curve is a "chain of loops":
+         
+         For g=1: a circle (torus)
+         For g=2: a figure-8 — one continuous curve with 2 loops
+         For g=3: three loops in a row sharing tangent points
+         
+         We parameterize as: the curve goes right along the bottom,
+         arcs up and over each loop, comes back down, continues right
+         to the next loop, and finally returns left along the bottom
+         to close. This creates g enclosed holes. */
+
+      const tubeR=.14;
+      const Nv=18;
+      const spine=[];
+
+      if(genus===1){
+        // Simple torus
+        const R=.7;
+        const Ns=100;
+        for(let i=0;i<Ns;i++){
+          const a=i/Ns*Math.PI*2;
+          spine.push({x:R*Math.cos(a), y:R*Math.sin(a), z:0});
+        }
+      } else {
+        // Multi-genus: chain of g semicircular arcs on top,
+        // connected by a straight bottom rail.
+        // Each loop has its center on the x-axis.
+        const loopR=.38;
+        const gap=loopR*.15; // small gap between adjacent loops
+        const step=loopR*2+gap;
+        const totalW=(genus-1)*step;
+        const ptsPerArc=40;
+        const ptsPerSeg=8;
+
+        // Build left to right
+        for(let k=0;k<genus;k++){
+          const cx=-totalW/2+k*step;
+          // Bottom-left of this loop
+          const startX=cx-loopR;
+
+          // If not first loop, we're already at the junction from previous arc.
+          // Top arc: semicircle from (cx-loopR, 0) up and over to (cx+loopR, 0)
+          for(let i=0;i<ptsPerArc;i++){
+            const t=i/ptsPerArc;
+            // Semicircle: goes from angle π (left) to 0 (right), through top
+            const ang=Math.PI*(1-t);
+            spine.push({x:cx+loopR*Math.cos(ang), y:loopR*Math.sin(ang), z:0});
+          }
+
+          // Short horizontal segment to next loop (bottom rail to the right)
+          if(k<genus-1){
+            const endX=cx+loopR;
+            const nextStartX=-totalW/2+(k+1)*step-loopR;
+            for(let i=1;i<=ptsPerSeg;i++){
+              const t=i/ptsPerSeg;
+              spine.push({x:endX+(nextStartX-endX)*t, y:0, z:0});
+            }
+          }
+        }
+
+        // Now close: bottom rail going from rightmost point back to leftmost
+        const rightX=-totalW/2+(genus-1)*step+loopR;
+        const leftX=-totalW/2-loopR;
+        const closePts=Math.max(12, Math.round(Math.abs(rightX-leftX)/.05));
+        for(let i=1;i<=closePts;i++){
+          const t=i/(closePts+1);
+          // Go underneath: slight downward dip to visually separate from top arcs
+          const x=rightX+(leftX-rightX)*t;
+          const y=-loopR*.25*Math.sin(t*Math.PI); // gentle dip below y=0
+          spine.push({x, y, z:0});
+        }
+      }
+
+      // Compute Frenet frame and sweep tube
+      const N=spine.length;
+      const normals=[], binormals=[];
+      for(let i=0;i<N;i++){
+        const prev=spine[(i-1+N)%N], next=spine[(i+1)%N];
+        let tx=next.x-prev.x, ty=next.y-prev.y, tz=next.z-prev.z;
+        const len=Math.sqrt(tx*tx+ty*ty+tz*tz)||1;
+        tx/=len; ty/=len; tz/=len;
+        // Normal: (0,0,1) × tangent = (-ty, tx, 0)
+        let nx=-ty, ny=tx, nz=0;
+        const nlen=Math.sqrt(nx*nx+ny*ny)||1;
+        nx/=nlen; ny/=nlen;
+        normals.push({x:nx,y:ny,z:nz});
+        // Binormal = tangent × normal
+        binormals.push({x:ty*nz-tz*ny, y:tz*nx-tx*nz, z:tx*ny-ty*nx});
+      }
+
+      const verts=[], idx=[];
+      for(let i=0;i<=N;i++){
+        const ii=i%N;
+        const s=spine[ii], n=normals[ii], b=binormals[ii];
+        for(let j=0;j<=Nv;j++){
+          const v=j/Nv*Math.PI*2;
+          const cv=Math.cos(v), sv=Math.sin(v);
+          verts.push(
+            s.x+tubeR*(cv*n.x+sv*b.x),
+            s.y+tubeR*(cv*n.y+sv*b.y),
+            s.z+tubeR*(cv*n.z+sv*b.z)
+          );
+        }
+      }
+      for(let i=0;i<N;i++){
+        for(let j=0;j<Nv;j++){
+          const a=i*(Nv+1)+j, b2=a+1, c2=(i+1)*(Nv+1)+j, d=c2+1;
+          idx.push(a,b2,c2, b2,d,c2);
+        }
+      }
+
+      const geom=new THREE.BufferGeometry();
+      geom.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));
+      geom.setIndex(idx);
+      geom.computeVertexNormals();
+
+      // Auto-scale to fit
+      geom.computeBoundingBox();
+      const bb=geom.boundingBox;
+      const maxSpan=Math.max(bb.max.x-bb.min.x, bb.max.y-bb.min.y, bb.max.z-bb.min.z)||1;
+      const sc=2.2/maxSpan;
+      group.scale.set(sc,sc,sc);
+      // Center
+      const midX=(bb.max.x+bb.min.x)/2, midY=(bb.max.y+bb.min.y)/2;
+      group.position.set(-midX*sc,-midY*sc,0);
+
+      group.add(new THREE.Mesh(geom,new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.1,side:THREE.DoubleSide})));
+      group.add(new THREE.Mesh(geom.clone(),new THREE.MeshBasicMaterial({color:col,wireframe:true,transparent:true,opacity:.35})));
+
+    } else {
+      // Non-orientable surfaces
+      if(genus===1){
+        // Projective plane: use Boy's surface parametrization
+        const geom=new THREE.BufferGeometry();
+        const N=60;
+        const verts=[], idx=[];
+        for(let i=0;i<=N;i++){
+          const u=i/N*Math.PI; // 0..π
+          for(let j=0;j<=N;j++){
+            const v=j/N*Math.PI*2; // 0..2π
+            // Boy's surface (Bryant-Kusner parametrization simplified)
+            const cu=Math.cos(u), su=Math.sin(u);
+            const cv=Math.cos(v), sv=Math.sin(v);
+            const s2u=Math.sin(2*u);
+            const x=su*cv;
+            const y=su*sv;
+            const z=cu;
+            // Apply a cross-cap map: identify antipodal points
+            // Roman surface / Steiner surface approximation
+            const px=(x*y)*.9;
+            const py=(y*z)*.9;
+            const pz=(x*z)*.9;
+            verts.push(px*2.5, py*2.5, pz*2.5);
+          }
+        }
+        for(let i=0;i<N;i++){
+          for(let j=0;j<N;j++){
+            const a=i*(N+1)+j, b=a+1, c2=(i+1)*(N+1)+j, d=c2+1;
+            idx.push(a,b,c2, b,d,c2);
+          }
+        }
+        geom.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));
+        geom.setIndex(idx);
+        geom.computeVertexNormals();
+        group.add(new THREE.Mesh(geom,new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.1,side:THREE.DoubleSide})));
+        group.add(new THREE.Mesh(geom.clone(),new THREE.MeshBasicMaterial({color:col,wireframe:true,transparent:true,opacity:.35})));
+      } else {
+        // Klein bottle (k=2 crosscaps): classic bottle immersion
+        const geom=new THREE.BufferGeometry();
+        const Nu=80,Nv=40;
+        const verts=[],idx=[];
+        for(let i=0;i<=Nu;i++){
+          const u=i/Nu*Math.PI*2;
+          const cu=Math.cos(u),su=Math.sin(u);
+          for(let j=0;j<=Nv;j++){
+            const v=j/Nv*Math.PI*2;
+            const cv=Math.cos(v),sv=Math.sin(v);
+            let x,y,z;
+            if(u<Math.PI){
+              x=6*cu*(1+su)+4*(1-cu/2)*cv;
+              y=16*su;
+              z=4*(1-cu/2)*sv;
+            }else{
+              x=6*cu*(1+su)-4*(1-cu/2)*cv;
+              y=16*su;
+              z=4*(1-cu/2)*sv;
+            }
+            verts.push(x*.052, y*.052, z*.052);
+          }
+        }
+        for(let i=0;i<Nu;i++){
+          for(let j=0;j<Nv;j++){
+            const a=i*(Nv+1)+j,b=a+1,c2=(i+1)*(Nv+1)+j,d=c2+1;
+            idx.push(a,b,c2,b,d,c2);
+          }
+        }
+        geom.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));
+        geom.setIndex(idx);
+        geom.computeVertexNormals();
+        group.add(new THREE.Mesh(geom,new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.1,side:THREE.DoubleSide})));
+        group.add(new THREE.Mesh(geom.clone(),new THREE.MeshBasicMaterial({color:col,wireframe:true,transparent:true,opacity:.35})));
+      }
+    }
+
+    mesh=group;
+    scene.add(mesh);
+  }
+
+  function updatePanel(){
+    const chi=orientable? 2-2*genus : 2-genus;
+    const oNames=['구','토러스','이중 토러스','종수-3 곡면','종수-4 곡면','종수-5 곡면'];
+    const nNames=['','사영 평면','클라인 병'];
+    const oSyms=['S^2','T^2','T^2 \\# T^2','\\Sigma_3','\\Sigma_4','\\Sigma_5'];
+    const nSyms=['','\\mathbb{R}P^2','K'];
+
+    nameEl.textContent=orientable?(oNames[genus]||'종수-'+genus+' 곡면'):(nNames[genus]||genus+'-교차모자');
+    symbolEl.innerHTML='';
+    const symStr=orientable?(oSyms[genus]||'\\Sigma_{'+genus+'}'):(nSyms[genus]||'N_{'+genus+'}');
+    try{katex.render(symStr,symbolEl,{throwOnError:false});}catch(e){symbolEl.textContent=symStr;}
+
+    genusEl.textContent=orientable?'g = '+genus:'k = '+genus;
+    orientEl.textContent=orientable?'예':'아니오';
+    orientEl.style.color=orientable?'var(--cyan)':'var(--rose)';
+    chiEl.textContent=chi.toString();
+  }
+
+  document.getElementById('addHandle').addEventListener('click',()=>{
+    if(!orientable){orientable=true;genus=1;}
+    else{genus=Math.min(genus+1,5);}
+    buildMesh(); updatePanel();
+    chime(330+genus*55,.3,.1);
+  });
+  document.getElementById('addCrosscap').addEventListener('click',()=>{
+    if(orientable){orientable=false;genus=1;}
+    else if(genus<2){genus=2;}
+    // Cap at 2: we can faithfully depict RP² (k=1) and Klein bottle (k=2)
+    buildMesh(); updatePanel();
+    chime(280,.3,.1);
+  });
+  document.getElementById('resetFactory').addEventListener('click',()=>{
+    genus=0; orientable=true;
+    buildMesh(); updatePanel();
+    chime(523,.2,.08);
+  });
+
+  buildMesh(); updatePanel();
+
+  // Drag to rotate
+  let dragging=false,prevX=0,prevY=0,rX=.3,rY=0;
+  canvas.addEventListener('pointerdown',e=>{dragging=true;prevX=e.clientX;prevY=e.clientY;canvas.setPointerCapture(e.pointerId);});
+  canvas.addEventListener('pointermove',e=>{
+    if(!dragging)return;
+    rY+=(e.clientX-prevX)*.008; rX+=(e.clientY-prevY)*.008;
+    rX=Math.max(-1.3,Math.min(1.3,rX));
+    prevX=e.clientX;prevY=e.clientY;
+  });
+  canvas.addEventListener('pointerup',()=>dragging=false);
+  canvas.addEventListener('pointercancel',()=>dragging=false);
+
+  function onResize(){
+    const r=canvas.parentElement.getBoundingClientRect();
+    renderer.setSize(r.width,r.height);
+    camera.aspect=r.width/r.height;
+    camera.updateProjectionMatrix();
+  }
+
+  let rafId;
+  function animate(t){
+    rafId=requestAnimationFrame(animate);
+    if(mesh){
+      if(!dragging) rY+=.003;
+      mesh.rotation.x=rX;
+      mesh.rotation.y=rY;
+    }
+    renderer.render(scene,camera);
+  }
+
+  const obs=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting) animate();
+    else cancelAnimationFrame(rafId);
+  },{threshold:.05});
+  obs.observe(canvas.parentElement);
+
+  window.addEventListener('resize',onResize);
+  onResize();
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   § 4 — FLAT TORUS FLIGHT SIMULATOR
+   ══════════════════════════════════════════════════════════════════ */
+(function(){
+  const wrap=document.getElementById('flightWrap');
+  const canvas=document.getElementById('flightCanvas');
+  const minimap=document.getElementById('flightMinimap');
+  const mmCtx=minimap.getContext('2d');
+  const coordsEl=document.getElementById('flightCoords');
+  const helpEl=document.getElementById('flightHelp');
+  const flashEl=document.getElementById('flightFlash');
+
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setClearColor(0x020308,1);
+  const scene=new THREE.Scene();
+  scene.fog=new THREE.FogExp2(0x020308,.06);
+  const camera=new THREE.PerspectiveCamera(75,16/9,.05,250);
+
+  const TILE=16; // fundamental domain size
+  const GRID=3;  // copies in each direction
+
+  /* ── build the repeating rooms ── */
+  function createRoom(ox,oz){
+    const g=new THREE.Group();
+
+    // Floor grid
+    const floorGeo=new THREE.PlaneGeometry(TILE,TILE,16,16);
+    floorGeo.rotateX(-Math.PI/2);
+    const floorWire=new THREE.Mesh(floorGeo,new THREE.MeshBasicMaterial({color:0x1a1a3a,wireframe:true,transparent:true,opacity:.25}));
+    floorWire.position.set(ox,-1,oz);
+    g.add(floorWire);
+
+    // Faint solid floor
+    const floorSolid=new THREE.Mesh(
+      new THREE.PlaneGeometry(TILE,TILE).rotateX(-Math.PI/2),
+      new THREE.MeshBasicMaterial({color:0x080818,side:THREE.DoubleSide})
+    );
+    floorSolid.position.set(ox,-1.01,oz);
+    g.add(floorSolid);
+
+    // Ceiling grid (faint)
+    const ceilWire=new THREE.Mesh(
+      new THREE.PlaneGeometry(TILE,TILE,16,16).rotateX(Math.PI/2),
+      new THREE.MeshBasicMaterial({color:0x12122a,wireframe:true,transparent:true,opacity:.1})
+    );
+    ceilWire.position.set(ox,4,oz);
+    g.add(ceilWire);
+
+    // Four colored pillars to orient the viewer (same in every copy)
+    const cols=[0xc9a84c, 0x3cb8c3, 0xc47a8a, 0x7c7693];
+    const pillarPositions=[
+      [ox-TILE*.35, oz-TILE*.35],
+      [ox+TILE*.35, oz-TILE*.35],
+      [ox+TILE*.35, oz+TILE*.35],
+      [ox-TILE*.35, oz+TILE*.35]
+    ];
+    pillarPositions.forEach(([px,pz],i)=>{
+      const pillar=new THREE.Mesh(
+        new THREE.CylinderGeometry(.08,.08,3.5,8),
+        new THREE.MeshBasicMaterial({color:cols[i],transparent:true,opacity:.4})
+      );
+      pillar.position.set(px,.75,pz);
+      g.add(pillar);
+
+      // Glow sphere on top
+      const bulb=new THREE.Mesh(
+        new THREE.SphereGeometry(.12,8,8),
+        new THREE.MeshBasicMaterial({color:cols[i],transparent:true,opacity:.6})
+      );
+      bulb.position.set(px,2.6,pz);
+      g.add(bulb);
+    });
+
+    // A distinct marker at center: small floating diamond
+    const diamond=new THREE.Mesh(
+      new THREE.OctahedronGeometry(.15,0),
+      new THREE.MeshBasicMaterial({color:0xc9a84c,transparent:true,opacity:.35})
+    );
+    diamond.position.set(ox,1.5,oz);
+    g.add(diamond);
+    // Store for animation
+    g.userData.diamond=diamond;
+
+    // Border lines on floor (edges of fundamental domain)
+    const borderMat=new THREE.LineBasicMaterial({color:0xc9a84c,transparent:true,opacity:.12});
+    const half=TILE/2;
+    [[ox-half,oz-half,ox-half,oz+half],[ox+half,oz-half,ox+half,oz+half],
+     [ox-half,oz-half,ox+half,oz-half],[ox-half,oz+half,ox+half,oz+half]].forEach(([x1,z1,x2,z2])=>{
+      const geo=new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(x1,-1,z1), new THREE.Vector3(x2,-1,z2)
+      ]);
+      g.add(new THREE.Line(geo,borderMat));
+    });
+
+    scene.add(g);
+    return g;
+  }
+
+  const rooms=[];
+  for(let i=-GRID;i<=GRID;i++){
+    for(let j=-GRID;j<=GRID;j++){
+      rooms.push(createRoom(i*TILE, j*TILE));
+    }
+  }
+
+  // Sparse stars overhead
+  const starGeo=new THREE.BufferGeometry();
+  const sPos=new Float32Array(600*3);
+  for(let i=0;i<600;i++){
+    sPos[i*3]=(Math.random()-.5)*200;
+    sPos[i*3+1]=6+Math.random()*25;
+    sPos[i*3+2]=(Math.random()-.5)*200;
+  }
+  starGeo.setAttribute('position',new THREE.BufferAttribute(sPos,3));
+  scene.add(new THREE.Points(starGeo,new THREE.PointsMaterial({color:0xffffff,size:.06,transparent:true,opacity:.4})));
+
+  // Player state
+  let px=0, pz=0, angle=0;
+  const speed=.07, turnSpeed=.035;
+  const keys={};
+  let focused=false;
+
+  wrap.addEventListener('click',()=>{ wrap.focus(); focused=true; helpEl.style.opacity='0'; });
+  wrap.addEventListener('blur',()=>{ focused=false; });
+  wrap.addEventListener('keydown',e=>{ keys[e.key.toLowerCase()]=true; e.preventDefault(); });
+  wrap.addEventListener('keyup',e=>{ keys[e.key.toLowerCase()]=false; });
+
+  function mod(x,m){ return ((x%m)+m)%m; }
+
+  // Edge flash
+  let flashTimer=0;
+  function flash(color){
+    flashEl.style.background=`radial-gradient(ellipse at center,${color} 0%,transparent 70%)`;
+    flashEl.style.opacity='.25';
+    flashTimer=.3;
+  }
+
+  function drawMinimap(){
+    const w=90,h=90;
+    mmCtx.clearRect(0,0,w,h);
+
+    // Background
+    mmCtx.fillStyle='rgba(5,6,15,.75)';
+    mmCtx.fillRect(0,0,w,h);
+
+    // Grid border
+    mmCtx.strokeStyle='rgba(201,168,76,.25)';
+    mmCtx.lineWidth=1;
+    mmCtx.strokeRect(4,4,82,82);
+
+    // Pillar indicators
+    const cols=['#c9a84c','#3cb8c3','#c47a8a','#7c7693'];
+    const ppos=[[.15,.15],[.85,.15],[.85,.85],[.15,.85]];
+    ppos.forEach(([fx,fy],i)=>{
+      mmCtx.beginPath();
+      mmCtx.arc(4+fx*82, 4+fy*82, 2.5, 0, Math.PI*2);
+      mmCtx.fillStyle=cols[i];
+      mmCtx.globalAlpha=.5;
+      mmCtx.fill();
+      mmCtx.globalAlpha=1;
+    });
+
+    // Player position
+    const nx=mod(px,TILE)/TILE;
+    const ny=mod(pz,TILE)/TILE;
+    const dx=4+nx*82, dy=4+ny*82;
+
+    // Direction triangle
+    mmCtx.save();
+    mmCtx.translate(dx,dy);
+    mmCtx.rotate(angle);
+    mmCtx.fillStyle='#c9a84c';
+    mmCtx.beginPath();
+    mmCtx.moveTo(0,-5);
+    mmCtx.lineTo(-3,3);
+    mmCtx.lineTo(3,3);
+    mmCtx.closePath();
+    mmCtx.fill();
+    mmCtx.restore();
+  }
+
+  function onResize(){
+    const r=wrap.getBoundingClientRect();
+    renderer.setSize(r.width,r.height);
+    camera.aspect=r.width/r.height;
+    camera.updateProjectionMatrix();
+  }
+
+  let rafId, prevPx=0, prevPz=0;
+  function animate(t){
+    rafId=requestAnimationFrame(animate);
+    const sec=t*.001;
+
+    // Input
+    if(keys['arrowleft']||keys['a']) angle-=turnSpeed;
+    if(keys['arrowright']||keys['d']) angle+=turnSpeed;
+    if(keys['arrowup']||keys['w']){
+      px+=Math.sin(angle)*speed;
+      pz+=Math.cos(angle)*speed;
+    }
+    if(keys['arrowdown']||keys['s']){
+      px-=Math.sin(angle)*speed*.5;
+      pz-=Math.cos(angle)*speed*.5;
+    }
+
+    // Detect edge crossing for flash
+    const oldTileX=Math.floor(prevPx/TILE), newTileX=Math.floor(px/TILE);
+    const oldTileZ=Math.floor(prevPz/TILE), newTileZ=Math.floor(pz/TILE);
+    if(oldTileX!==newTileX || oldTileZ!==newTileZ){
+      flash('rgba(201,168,76,.4)');
+      chime(660+Math.random()*200, .15, .04);
+    }
+    prevPx=px; prevPz=pz;
+
+    // Flash fade
+    if(flashTimer>0){
+      flashTimer-=.016;
+      if(flashTimer<=0) flashEl.style.opacity='0';
+    }
+
+    // Camera
+    camera.position.set(px, .6, pz);
+    camera.rotation.set(0, -angle, 0);
+
+    // Animate diamonds
+    rooms.forEach(r=>{
+      if(r.userData.diamond){
+        r.userData.diamond.rotation.y=sec*.8;
+        r.userData.diamond.rotation.x=sec*.5;
+      }
+    });
+
+    // HUD
+    const nx=mod(px,TILE)/TILE;
+    const nz=mod(pz,TILE)/TILE;
+    coordsEl.textContent='x: '+nx.toFixed(2)+'  y: '+nz.toFixed(2);
+
+    drawMinimap();
+    renderer.render(scene,camera);
+  }
+
+  const obs=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting) animate(0);
+    else cancelAnimationFrame(rafId);
+  },{threshold:.05});
+  obs.observe(wrap);
+
+  window.addEventListener('resize',onResize);
+  onResize();
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   § 4b — SLOPE TRACER (flat square + 3D torus side by side)
+   ══════════════════════════════════════════════════════════════════ */
+(function(){
+  const flatCanvas=document.getElementById('slopeFlatCanvas');
+  const torusCanvas=document.getElementById('slopeTorusCanvas');
+  const sliderEl=document.getElementById('slopeSlider');
+  const readoutEl=document.getElementById('slopeReadout');
+  const fCtx=flatCanvas.getContext('2d');
+  const dpr=Math.min(devicePixelRatio,2);
+
+  // 3D torus scene
+  const tRenderer=new THREE.WebGLRenderer({canvas:torusCanvas,antialias:true,alpha:true});
+  tRenderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  tRenderer.setClearColor(0x07081a,1);
+  const tScene=new THREE.Scene();
+  const tCam=new THREE.PerspectiveCamera(40,1,.1,100);
+  tCam.position.set(0,.8,3.5);
+  tCam.lookAt(0,0,0);
+
+  // Torus wireframe
+  const torusGeo=new THREE.TorusGeometry(.9,.38,24,48);
+  tScene.add(new THREE.Mesh(torusGeo,new THREE.MeshBasicMaterial({color:0xc9a84c,wireframe:true,transparent:true,opacity:.12})));
+  tScene.add(new THREE.Mesh(torusGeo.clone(),new THREE.MeshBasicMaterial({color:0xc9a84c,transparent:true,opacity:.04,side:THREE.DoubleSide})));
+
+  // Trail on torus
+  let trailLine=null;
+  let slope=1.0;
+  let trailPoints=[];
+
+  function computeTrail(){
+    trailPoints=[];
+    const steps=2000;
+    const dt=1/steps;
+    for(let i=0;i<=steps;i++){
+      const t=i*dt;
+      const u=(t*4)%(1); // x on fundamental domain, wraps
+      const v=(t*4*slope)%(1); // y on fundamental domain
+      trailPoints.push({u,v});
+    }
+  }
+
+  function torusPoint(u,v,R,r){
+    R=R||.9; r=r||.38;
+    const ua=u*Math.PI*2, va=v*Math.PI*2;
+    return new THREE.Vector3(
+      (R+r*Math.cos(va))*Math.cos(ua),
+      (R+r*Math.cos(va))*Math.sin(ua),
+      r*Math.sin(va)
+    );
+  }
+
+  function updateTrail(){
+    computeTrail();
+    // Remove old trail
+    if(trailLine){ tScene.remove(trailLine); trailLine.geometry.dispose(); trailLine.material.dispose(); }
+    // Build new
+    const pts=trailPoints.map(p=>torusPoint(p.u,p.v));
+    const geo=new THREE.BufferGeometry().setFromPoints(pts);
+    trailLine=new THREE.Line(geo,new THREE.LineBasicMaterial({color:0xe8cc80,transparent:true,opacity:.7}));
+    tScene.add(trailLine);
+  }
+
+  function drawFlat(){
+    const b=flatCanvas.parentElement.getBoundingClientRect();
+    flatCanvas.width=b.width*dpr; flatCanvas.height=b.height*dpr;
+    fCtx.clearRect(0,0,flatCanvas.width,flatCanvas.height);
+    fCtx.save(); fCtx.scale(dpr,dpr);
+    const W=b.width, H=b.height;
+    const pad=20, S=Math.min(W,H)-pad*2;
+    const ox=(W-S)/2, oy=(H-S)/2;
+
+    // Background
+    fCtx.fillStyle='#07081a'; fCtx.fillRect(0,0,W,H);
+
+    // Square border
+    fCtx.strokeStyle='rgba(201,168,76,.25)'; fCtx.lineWidth=1;
+    fCtx.strokeRect(ox,oy,S,S);
+
+    // Grid
+    fCtx.strokeStyle='rgba(201,168,76,.06)'; fCtx.lineWidth=.5;
+    for(let i=1;i<10;i++){
+      fCtx.beginPath(); fCtx.moveTo(ox+i*S/10,oy); fCtx.lineTo(ox+i*S/10,oy+S); fCtx.stroke();
+      fCtx.beginPath(); fCtx.moveTo(ox,oy+i*S/10); fCtx.lineTo(ox+S,oy+i*S/10); fCtx.stroke();
+    }
+
+    // Identification arrows
+    fCtx.strokeStyle='rgba(60,184,195,.3)'; fCtx.lineWidth=2;
+    // Top/bottom (same direction)
+    [oy, oy+S].forEach(y=>{
+      fCtx.beginPath(); fCtx.moveTo(ox,y); fCtx.lineTo(ox+S,y); fCtx.stroke();
+      // Arrow
+      fCtx.beginPath(); fCtx.moveTo(ox+S/2+6,y-4); fCtx.lineTo(ox+S/2,y); fCtx.lineTo(ox+S/2+6,y+4); fCtx.stroke();
+    });
+    // Left/right (same direction)
+    fCtx.strokeStyle='rgba(201,168,76,.3)';
+    [ox, ox+S].forEach(x=>{
+      fCtx.beginPath(); fCtx.moveTo(x,oy); fCtx.lineTo(x,oy+S); fCtx.stroke();
+      fCtx.beginPath(); fCtx.moveTo(x-4,oy+S/2+6); fCtx.lineTo(x,oy+S/2); fCtx.lineTo(x+4,oy+S/2+6); fCtx.stroke();
+    });
+
+    // Draw trail
+    fCtx.strokeStyle='rgba(232,204,128,.7)'; fCtx.lineWidth=1.2;
+    // Draw as wrapped segments
+    let prevU=trailPoints[0].u, prevV=trailPoints[0].v;
+    for(let i=1;i<trailPoints.length;i++){
+      const u=trailPoints[i].u, v=trailPoints[i].v;
+      const du=Math.abs(u-prevU), dv=Math.abs(v-prevV);
+      if(du<.5 && dv<.5){ // no wrap
+        fCtx.beginPath();
+        fCtx.moveTo(ox+prevU*S, oy+(1-prevV)*S);
+        fCtx.lineTo(ox+u*S, oy+(1-v)*S);
+        fCtx.stroke();
+      }
+      prevU=u; prevV=v;
+    }
+
+    // Start dot
+    fCtx.beginPath(); fCtx.arc(ox+trailPoints[0].u*S, oy+(1-trailPoints[0].v)*S, 3, 0, Math.PI*2);
+    fCtx.fillStyle='#e8cc80'; fCtx.fill();
+
+    fCtx.restore();
+  }
+
+  // Slope presets
+  document.getElementById('slopeRational').addEventListener('click',()=>{slope=1;sliderEl.value=100;update();});
+  document.getElementById('slopeGolden').addEventListener('click',()=>{slope=(1+Math.sqrt(5))/2;sliderEl.value=Math.round(slope*100);update();});
+  document.getElementById('slopeSqrt2').addEventListener('click',()=>{slope=Math.sqrt(2);sliderEl.value=Math.round(slope*100);update();});
+  document.getElementById('slopePi').addEventListener('click',()=>{slope=Math.PI;sliderEl.value=314;update();});
+  document.getElementById('slopeClear').addEventListener('click',()=>{
+    if(trailLine){tScene.remove(trailLine);trailLine.geometry.dispose();trailLine.material.dispose();trailLine=null;}
+    trailPoints=[];
+    drawFlat();
+  });
+  sliderEl.addEventListener('input',()=>{slope=sliderEl.value/100;update();});
+
+  function update(){
+    readoutEl.textContent=slope.toFixed(2);
+    // Check if close to rational
+    for(let q=1;q<=8;q++){
+      const p=Math.round(slope*q);
+      if(Math.abs(slope-p/q)<.02){
+        readoutEl.textContent=p+'/'+q;
+        break;
+      }
+    }
+    updateTrail();
+    drawFlat();
+  }
+
+  // Torus drag rotation
+  let tDrag=false, tPX=0, tPY=0, tRX=.3, tRY=0;
+  torusCanvas.parentElement.addEventListener('pointerdown',e=>{tDrag=true;tPX=e.clientX;tPY=e.clientY;});
+  window.addEventListener('pointerup',()=>tDrag=false);
+  window.addEventListener('pointermove',e=>{
+    if(!tDrag)return;
+    tRY+=(e.clientX-tPX)*.008; tRX+=(e.clientY-tPY)*.008;
+    tRX=Math.max(-1.3,Math.min(1.3,tRX));
+    tPX=e.clientX;tPY=e.clientY;
+  });
+
+  function resizeTorus(){
+    const b=torusCanvas.parentElement.getBoundingClientRect();
+    tRenderer.setSize(b.width,b.height);
+    tCam.aspect=b.width/b.height;
+    tCam.updateProjectionMatrix();
+  }
+
+  let rafId;
+  function animate(t){
+    rafId=requestAnimationFrame(animate);
+    if(!tDrag) tRY+=.003;
+    tScene.rotation.x=tRX; tScene.rotation.y=tRY;
+    tRenderer.render(tScene,tCam);
+  }
+
+  const obs=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting){update();animate(0);}
+    else cancelAnimationFrame(rafId);
+  },{threshold:.05});
+  obs.observe(flatCanvas.parentElement.parentElement);
+
+  window.addEventListener('resize',()=>{resizeTorus();drawFlat();});
+  resizeTorus();
+  update();
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   § 5 — ORIENTABILITY (cylinder vs Möbius strip normal vector)
+   ══════════════════════════════════════════════════════════════════ */
+(function(){
+  // Two side-by-side Three.js scenes: cylinder and Möbius strip
+  const cylCanvas=document.getElementById('cylinderCanvas');
+  const mobCanvas=document.getElementById('mobiusStripCanvas');
+  const playBtn=document.getElementById('orientPlay');
+  const resetBtn=document.getElementById('orientReset');
+  const statusEl=document.getElementById('orientStatus');
+
+  function makeScene(canvas){
+    const r=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+    r.setPixelRatio(Math.min(devicePixelRatio,2));
+    r.setClearColor(0x07081a,1);
+    const s=new THREE.Scene();
+    const c=new THREE.PerspectiveCamera(40,4/3,.1,100);
+    c.position.set(0,.8,3);
+    c.lookAt(0,0,0);
+    return {renderer:r, scene:s, camera:c};
+  }
+
+  const cylScene=makeScene(cylCanvas);
+  const mobScene=makeScene(mobCanvas);
+
+  // Build cylinder
+  function buildCylinder(scene){
+    const geo=new THREE.CylinderGeometry(.6,.6,2,32,1,true);
+    geo.rotateZ(Math.PI/2); // orient along x
+    scene.add(new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:0x3cb8c3,wireframe:true,transparent:true,opacity:.25})));
+    scene.add(new THREE.Mesh(geo.clone(),new THREE.MeshBasicMaterial({color:0x3cb8c3,transparent:true,opacity:.06,side:THREE.DoubleSide})));
+  }
+
+  // Build Möbius strip
+  function buildMobiusStrip(scene){
+    const N=120, W=15;
+    const verts=[], idx=[];
+    for(let i=0;i<=N;i++){
+      const u=i/N*Math.PI*2;
+      for(let j=0;j<=W;j++){
+        const v=(j/W-.5)*.7;
+        const halfA=u/2;
+        const R=1;
+        const x=(R+v*Math.cos(halfA))*Math.cos(u);
+        const y=(R+v*Math.cos(halfA))*Math.sin(u);
+        const z=v*Math.sin(halfA);
+        verts.push(x*.8, z*.8, y*.8);
+      }
+    }
+    for(let i=0;i<N;i++){
+      for(let j=0;j<W;j++){
+        const a=i*(W+1)+j, b=a+1, c=(i+1)*(W+1)+j, d=c+1;
+        idx.push(a,b,c, b,d,c);
+      }
+    }
+    const geo=new THREE.BufferGeometry();
+    geo.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));
+    geo.setIndex(idx);
+    geo.computeVertexNormals();
+    scene.add(new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:0xc47a8a,wireframe:true,transparent:true,opacity:.25})));
+    scene.add(new THREE.Mesh(geo.clone(),new THREE.MeshBasicMaterial({color:0xc47a8a,transparent:true,opacity:.06,side:THREE.DoubleSide})));
+  }
+
+  buildCylinder(cylScene.scene);
+  buildMobiusStrip(mobScene.scene);
+
+  // Normal vector arrows (animated along the path)
+  let animT=0, playing=false;
+  const arrowLen=.4;
+
+  // Cylinder path: circle at surface
+  function cylPoint(t){
+    const u=t*Math.PI*2;
+    return {pos:new THREE.Vector3(Math.cos(u)*.6,0,Math.sin(u)*.6).multiplyScalar(.8).applyAxisAngle(new THREE.Vector3(0,0,1),Math.PI/2),
+            normal:new THREE.Vector3(Math.cos(u),0,Math.sin(u)).applyAxisAngle(new THREE.Vector3(0,0,1),Math.PI/2)};
+  }
+  // Möbius path: center line
+  function mobPoint(t){
+    const u=t*Math.PI*2;
+    const R=1;
+    const x=R*Math.cos(u)*.8;
+    const y=R*Math.sin(u)*.8;
+    const z=0;
+    // Normal at the center line of Möbius strip
+    const halfA=u/2;
+    const nx=Math.cos(halfA)*Math.cos(u);
+    const ny=Math.cos(halfA)*Math.sin(u);
+    const nz=Math.sin(halfA);
+    return {pos:new THREE.Vector3(x,z,y), normal:new THREE.Vector3(nx*.8,nz*.8,ny*.8)};
+  }
+
+  let cylArrow=null, mobArrow=null, cylDot=null, mobDot=null;
+  let cylTrail=null, mobTrail=null;
+  const cylTrailPts=[], mobTrailPts=[];
+
+  function createArrow(scene,color){
+    const mat=new THREE.MeshBasicMaterial({color});
+    const shaft=new THREE.Mesh(new THREE.CylinderGeometry(.015,.015,arrowLen,6),mat);
+    const tip=new THREE.Mesh(new THREE.ConeGeometry(.04,.1,6),mat);
+    tip.position.y=arrowLen/2;
+    const g=new THREE.Group();
+    g.add(shaft); g.add(tip);
+    scene.add(g);
+    return g;
+  }
+
+  function createDot(scene,color){
+    const m=new THREE.Mesh(new THREE.SphereGeometry(.05,8,8),new THREE.MeshBasicMaterial({color}));
+    scene.add(m);
+    return m;
+  }
+
+  cylArrow=createArrow(cylScene.scene,0x3cb8c3);
+  mobArrow=createArrow(mobScene.scene,0xc47a8a);
+  cylDot=createDot(cylScene.scene,0x3cb8c3);
+  mobDot=createDot(mobScene.scene,0xc47a8a);
+
+  function updateArrow(arrow, dot, pointFn, t, trailPts, scene, trailRef, color){
+    const p=pointFn(t);
+    dot.position.copy(p.pos);
+    // Orient arrow along normal
+    const n=p.normal.clone().normalize();
+    arrow.position.copy(p.pos).add(n.clone().multiplyScalar(arrowLen/2));
+    // Look direction
+    const up=new THREE.Vector3(0,1,0);
+    const quat=new THREE.Quaternion();
+    const dir=n.clone();
+    // Align Y-axis of arrow with normal direction
+    const defaultDir=new THREE.Vector3(0,1,0);
+    quat.setFromUnitVectors(defaultDir,dir);
+    arrow.setRotationFromQuaternion(quat);
+
+    // Trail
+    trailPts.push(p.pos.clone());
+    if(trailPts.length>2){
+      if(trailRef.line){scene.remove(trailRef.line);trailRef.line.geometry.dispose();}
+      const geo=new THREE.BufferGeometry().setFromPoints(trailPts);
+      trailRef.line=new THREE.Line(geo,new THREE.LineBasicMaterial({color,transparent:true,opacity:.5}));
+      scene.add(trailRef.line);
+    }
+  }
+
+  cylTrail={line:null}; mobTrail={line:null};
+
+  function resetAnim(){
+    animT=0; playing=false;
+    cylTrailPts.length=0; mobTrailPts.length=0;
+    if(cylTrail.line){cylScene.scene.remove(cylTrail.line);cylTrail.line=null;}
+    if(mobTrail.line){mobScene.scene.remove(mobTrail.line);mobTrail.line=null;}
+    statusEl.textContent='\uc900\ube44';
+    const p0c=cylPoint(0), p0m=mobPoint(0);
+    cylDot.position.copy(p0c.pos); mobDot.position.copy(p0m.pos);
+    cylArrow.visible=true; mobArrow.visible=true;
+    updateArrow(cylArrow,cylDot,cylPoint,0,cylTrailPts,cylScene.scene,cylTrail,0x3cb8c3);
+    updateArrow(mobArrow,mobDot,mobPoint,0,mobTrailPts,mobScene.scene,mobTrail,0xc47a8a);
+  }
+
+  playBtn.addEventListener('click',()=>{
+    if(playing) return;
+    playing=true; animT=0;
+    cylTrailPts.length=0; mobTrailPts.length=0;
+    if(cylTrail.line){cylScene.scene.remove(cylTrail.line);cylTrail.line=null;}
+    if(mobTrail.line){mobScene.scene.remove(mobTrail.line);mobTrail.line=null;}
+    statusEl.textContent='\uc774\ub3d9 \uc911...';
+  });
+  resetBtn.addEventListener('click',resetAnim);
+
+  // Drag rotate
+  let cDrag=false,cPX=0,cRY=0;
+  [cylCanvas.parentElement,mobCanvas.parentElement].forEach(el=>{
+    el.addEventListener('pointerdown',e=>{cDrag=true;cPX=e.clientX;});
+  });
+  window.addEventListener('pointerup',()=>cDrag=false);
+  window.addEventListener('pointermove',e=>{
+    if(!cDrag)return;
+    cRY+=(e.clientX-cPX)*.008;
+    cPX=e.clientX;
+  });
+
+  function onResize(){
+    [cylScene,mobScene].forEach(s=>{
+      const el=s.renderer.domElement.parentElement;
+      const b=el.getBoundingClientRect();
+      s.renderer.setSize(b.width,b.height);
+      s.camera.aspect=b.width/b.height;
+      s.camera.updateProjectionMatrix();
+    });
+  }
+
+  let rafId;
+  function animate(){
+    rafId=requestAnimationFrame(animate);
+
+    if(playing){
+      animT+=.003;
+      if(animT>=1){
+        animT=1; playing=false;
+        // Check: on Möbius strip the normal has flipped
+        statusEl.textContent='원기둥: 법선 변화 없음 · 뫼비우스: 법선 뒤집힘 ↕';
+        chime(440,.4,.1);
+        setTimeout(()=>chime(330,.5,.1),200);
+      }
+      updateArrow(cylArrow,cylDot,cylPoint,animT,cylTrailPts,cylScene.scene,cylTrail,0x3cb8c3);
+      updateArrow(mobArrow,mobDot,mobPoint,animT,mobTrailPts,mobScene.scene,mobTrail,0xc47a8a);
+    }
+
+    if(!cDrag) cRY+=.002;
+    cylScene.scene.rotation.y=cRY;
+    mobScene.scene.rotation.y=cRY;
+
+    cylScene.renderer.render(cylScene.scene,cylScene.camera);
+    mobScene.renderer.render(mobScene.scene,mobScene.camera);
+  }
+
+  const obs=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting){resetAnim();animate();}
+    else cancelAnimationFrame(rafId);
+  },{threshold:.05});
+  obs.observe(cylCanvas.parentElement.parentElement);
+
+  window.addEventListener('resize',onResize);
+  onResize();
+  resetAnim();
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   § 6a — KLEIN BOTTLE (3D with 4D 올리기 slider)
+   ══════════════════════════════════════════════════════════════════ */
+(function(){
+  const box=document.getElementById('kleinBox');
+  const canvas=document.getElementById('kleinCanvas');
+  const slider=document.getElementById('kleinSlider');
+  const dimLabel=document.getElementById('kleinDim');
+
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setClearColor(0x07081a,1);
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(40,1,.1,100);
+  camera.position.set(0,.3,3.8);
+
+  let w4=0, mesh=null;
+  const col=0xc47a8a;
+
+  function buildKlein(lift){
+    if(mesh){scene.remove(mesh); mesh.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material)o.material.dispose();});}
+    const group=new THREE.Group();
+    const geom=new THREE.BufferGeometry();
+    const Nu=100, Nv=50;
+    const verts=[], idx=[];
+    for(let i=0;i<=Nu;i++){
+      const u=i/Nu*Math.PI*2;
+      const cu=Math.cos(u), su=Math.sin(u);
+      for(let j=0;j<=Nv;j++){
+        const v=j/Nv*Math.PI*2;
+        const cv=Math.cos(v), sv=Math.sin(v);
+        let x,y,z;
+        if(u<Math.PI){
+          x=6*cu*(1+su)+4*(1-cu/2)*cv;
+          y=16*su;
+          z=4*(1-cu/2)*sv;
+        }else{
+          x=6*cu*(1+su)-4*(1-cu/2)*cv;
+          y=16*su;
+          z=4*(1-cu/2)*sv;
+        }
+        // 4D 올리기: shift x based on lift parameter to resolve self-intersection
+        const liftAmount=lift*Math.sin(u)*.35;
+        x+=liftAmount*8;
+        verts.push(x*.052, y*.052, z*.052);
+      }
+    }
+    for(let i=0;i<Nu;i++){
+      for(let j=0;j<Nv;j++){
+        const a=i*(Nv+1)+j, b=a+1, c2=(i+1)*(Nv+1)+j, d=c2+1;
+        idx.push(a,b,c2, b,d,c2);
+      }
+    }
+    geom.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));
+    geom.setIndex(idx);
+    geom.computeVertexNormals();
+
+    group.add(new THREE.Mesh(geom,new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.1,side:THREE.DoubleSide})));
+    group.add(new THREE.Mesh(geom.clone(),new THREE.MeshBasicMaterial({color:col,wireframe:true,transparent:true,opacity:.3})));
+    mesh=group;
+    scene.add(mesh);
+  }
+
+  buildKlein(0);
+
+  slider.addEventListener('input',()=>{
+    w4=slider.value/100;
+    buildKlein(w4);
+    dimLabel.textContent=w4>.5?'4D 매장':'3D 몰입상';
+    dimLabel.style.color=w4>.5?'var(--cyan)':'var(--rose)';
+  });
+
+  // Drag to rotate
+  let dragging=false,prevX=0,prevY=0,rX=.2,rY=0;
+  box.addEventListener('pointerdown',e=>{if(e.target===canvas){dragging=true;prevX=e.clientX;prevY=e.clientY;box.setPointerCapture(e.pointerId);}});
+  box.addEventListener('pointermove',e=>{if(!dragging)return;rY+=(e.clientX-prevX)*.008;rX+=(e.clientY-prevY)*.008;rX=Math.max(-1.3,Math.min(1.3,rX));prevX=e.clientX;prevY=e.clientY;});
+  box.addEventListener('pointerup',()=>dragging=false);
+  box.addEventListener('pointercancel',()=>dragging=false);
+
+  function onResize(){
+    const r=box.getBoundingClientRect();
+    const h=r.height-42;
+    renderer.setSize(r.width,h>100?h:300);
+    camera.aspect=r.width/(h>100?h:300);
+    camera.updateProjectionMatrix();
+  }
+
+  let rafId;
+  function animate(t){
+    rafId=requestAnimationFrame(animate);
+    if(mesh){
+      if(!dragging) rY+=.003;
+      mesh.rotation.x=rX; mesh.rotation.y=rY;
+    }
+    renderer.render(scene,camera);
+  }
+  const obs=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting) animate(0);
+    else cancelAnimationFrame(rafId);
+  },{threshold:.05});
+  obs.observe(box);
+  window.addEventListener('resize',onResize);
+  setTimeout(onResize,100);
+
+  // ── Identification diagram ──
+  const dC=document.getElementById('kleinDiagram');
+  const dc=dC.getContext('2d');
+  function drawDiagram(){
+    const w=400,h=400;
+    dc.clearRect(0,0,w,h);
+    dc.fillStyle='#07081a'; dc.fillRect(0,0,w,h);
+
+    const m=65, s=w-2*m;
+
+    // Square
+    dc.strokeStyle='rgba(255,255,255,.08)'; dc.lineWidth=1;
+    dc.strokeRect(m,m,s,s);
+
+    // Top edge → (cyan, arrows pointing right)
+    dc.strokeStyle='#3cb8c3'; dc.lineWidth=3;
+    dc.beginPath(); dc.moveTo(m,m); dc.lineTo(m+s,m); dc.stroke();
+    // Arrow
+    dc.fillStyle='#3cb8c3';
+    dc.beginPath(); dc.moveTo(m+s/2+6,m-6); dc.lineTo(m+s/2,m+1); dc.lineTo(m+s/2-6,m-6); dc.fill();
+
+    // Bottom edge → (cyan, arrows pointing right — same direction)
+    dc.beginPath(); dc.moveTo(m,m+s); dc.lineTo(m+s,m+s); dc.stroke();
+    dc.beginPath(); dc.moveTo(m+s/2+6,m+s-6); dc.lineTo(m+s/2,m+s+1); dc.lineTo(m+s/2-6,m+s-6); dc.fill();
+
+    // Left edge ↓ (rose, arrow pointing down)
+    dc.strokeStyle='#c47a8a'; dc.lineWidth=3;
+    dc.beginPath(); dc.moveTo(m,m); dc.lineTo(m,m+s); dc.stroke();
+    dc.beginPath(); dc.moveTo(m-6,m+s/2+6); dc.lineTo(m+1,m+s/2); dc.lineTo(m-6,m+s/2-6); dc.fill();
+
+    // Right edge ↑ (rose, arrow pointing UP — reversed!)
+    dc.beginPath(); dc.moveTo(m+s,m); dc.lineTo(m+s,m+s); dc.stroke();
+    dc.beginPath(); dc.moveTo(m+s+6,m+s/2-6); dc.lineTo(m+s-1,m+s/2); dc.lineTo(m+s+6,m+s/2+6); dc.fill();
+
+    // Labels
+    dc.font='12px "EB Garamond"'; dc.textAlign='center';
+    dc.fillStyle='#3cb8c3';
+    dc.fillText('identify →',m+s/2,m-16);
+    dc.fillText('identify →',m+s/2,m+s+20);
+    dc.fillStyle='#c47a8a';
+    dc.save(); dc.translate(m-22,m+s/2); dc.rotate(-Math.PI/2);
+    dc.fillText('identify ↓',0,0); dc.restore();
+    dc.save(); dc.translate(m+s+22,m+s/2); dc.rotate(Math.PI/2);
+    dc.fillText('identify ↓ (reversed!)',0,0); dc.restore();
+
+    // Title
+    dc.font='11px "JetBrains Mono"'; dc.fillStyle='rgba(201,168,76,.4)'; dc.textAlign='center';
+    dc.fillText('KLEIN BOTTLE IDENTIFICATION',w/2,h-18);
+
+    // Torus comparison note
+    dc.font='10px "EB Garamond"'; dc.fillStyle='rgba(124,118,147,.5)';
+    dc.fillText('(for torus: both pairs same direction)',w/2,h-6);
+  }
+  drawDiagram();
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   § 6b — MÖBIUS CUT ANIMATION
+   ══════════════════════════════════════════════════════════════════ */
+(function(){
+  const box=document.getElementById('mobiusBox');
+  const canvas=document.getElementById('mobiusCanvas');
+  const statusEl=document.getElementById('mobiusStatus');
+
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setClearColor(0x07081a,1);
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(40,16/10,.1,100);
+  camera.position.set(0,1.8,4.5);
+  camera.lookAt(0,0,0);
+
+  // Solid torus (translucent)
+  const torusGeo=new THREE.TorusGeometry(1.4,.65,24,48);
+  const torusFill=new THREE.Mesh(torusGeo,new THREE.MeshBasicMaterial({color:0x3cb8c3,transparent:true,opacity:.08,side:THREE.DoubleSide}));
+  const torusWire=new THREE.Mesh(torusGeo.clone(),new THREE.MeshBasicMaterial({color:0x3cb8c3,wireframe:true,transparent:true,opacity:.15}));
+  scene.add(torusFill); scene.add(torusWire);
+
+  // Möbius strip inside torus
+  function createMobius(){
+    const N=200, W=16;
+    const verts=[], idx=[];
+    for(let i=0;i<=N;i++){
+      const u=i*Math.PI*2/N;
+      for(let j=0;j<=W;j++){
+        const v=(j/W-.5)*.55;
+        const halfAngle=u/2;
+        const R=1.4;
+        const x=(R+v*Math.cos(halfAngle))*Math.cos(u);
+        const y=(R+v*Math.cos(halfAngle))*Math.sin(u);
+        const z=v*Math.sin(halfAngle);
+        verts.push(x,z,y);
+      }
+    }
+    for(let i=0;i<N;i++){
+      for(let j=0;j<W;j++){
+        const a=i*(W+1)+j, b=a+1, c2=(i+1)*(W+1)+j, d=c2+1;
+        idx.push(a,b,c2, b,d,c2);
+      }
+    }
+    const geom=new THREE.BufferGeometry();
+    geom.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));
+    geom.setIndex(idx);
+    geom.computeVertexNormals();
+    return geom;
+  }
+
+  const mobiusGeo=createMobius();
+  const mobiusFill=new THREE.Mesh(mobiusGeo,new THREE.MeshBasicMaterial({color:0xc9a84c,transparent:true,opacity:.3,side:THREE.DoubleSide}));
+  const mobiusWire=new THREE.Mesh(mobiusGeo.clone(),new THREE.MeshBasicMaterial({color:0xc9a84c,wireframe:true,transparent:true,opacity:.2}));
+  scene.add(mobiusFill); scene.add(mobiusWire);
+
+  let cutting=false, cutProgress=0;
+
+  document.getElementById('mobiusCut').addEventListener('click',()=>{
+    if(cutting) return;
+    cutting=true; cutProgress=0;
+    statusEl.textContent='자르는 중...';
+    chime(220,1.5,.08);
+  });
+  document.getElementById('mobiusReset').addEventListener('click',()=>{
+    cutting=false; cutProgress=0;
+    torusFill.material.opacity=.08;
+    torusWire.material.opacity=.15;
+    mobiusFill.material.opacity=.3;
+    mobiusWire.material.opacity=.2;
+    mobiusFill.visible=true; mobiusWire.visible=true;
+    torusFill.position.y=0; torusWire.position.y=0;
+    statusEl.textContent='\uc900\ube44';
+  });
+
+  // Drag to rotate
+  let dragging=false,prevX=0,prevY=0,rX=.3,rY=0;
+  box.addEventListener('pointerdown',e=>{dragging=true;prevX=e.clientX;prevY=e.clientY;box.setPointerCapture(e.pointerId);});
+  box.addEventListener('pointermove',e=>{if(!dragging)return;rY+=(e.clientX-prevX)*.008;rX+=(e.clientY-prevY)*.008;prevX=e.clientX;prevY=e.clientY;});
+  box.addEventListener('pointerup',()=>dragging=false);
+  box.addEventListener('pointercancel',()=>dragging=false);
+
+  function onResize(){
+    const r=box.getBoundingClientRect();
+    const h=r.height-42;
+    renderer.setSize(r.width,h>100?h:300);
+    camera.aspect=r.width/(h>100?h:300);
+    camera.updateProjectionMatrix();
+  }
+
+  let rafId;
+  function animate(t){
+    rafId=requestAnimationFrame(animate);
+    const sec=t*.001;
+
+    if(cutting && cutProgress<1){
+      cutProgress+=.004;
+      if(cutProgress>.4){
+        // Fade out the Möbius band
+        const fade=Math.max(0,1-(cutProgress-.4)/.3);
+        mobiusFill.material.opacity=.3*fade;
+        mobiusWire.material.opacity=.2*fade;
+        if(fade<=0){mobiusFill.visible=false;mobiusWire.visible=false;}
+      }
+      if(cutProgress>.6){
+        statusEl.textContent='결과: 또 다른 속이 찬 토러스!';
+        statusEl.style.color='var(--gold)';
+        // Glow the torus
+        torusFill.material.opacity=.08+.07*Math.sin(sec*4);
+        torusWire.material.opacity=.15+.1*Math.sin(sec*4);
+      }
+    }
+
+    // Rotate
+    const autoRot=dragging?0:.002;
+    rY+=autoRot;
+    const group=[torusFill,torusWire,mobiusFill,mobiusWire];
+    group.forEach(m=>{m.rotation.x=rX;m.rotation.y=rY;});
+
+    renderer.render(scene,camera);
+  }
+
+  const obs=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting) animate(0);
+    else cancelAnimationFrame(rafId);
+  },{threshold:.05});
+  obs.observe(box);
+  window.addEventListener('resize',onResize);
+  setTimeout(onResize,100);
+})();
+
+/* ── ambient drone ── */
+{let s=false;function d(){if(s)return;s=true;try{const c=ac(),o1=c.createOscillator(),o2=c.createOscillator(),g=c.createGain();o1.type='sine';o1.frequency.value=55;o2.type='sine';o2.frequency.value=82.5;g.gain.setValueAtTime(0,c.currentTime);g.gain.linearRampToValueAtTime(.025,c.currentTime+4);o1.connect(g);o2.connect(g);g.connect(c.destination);o1.start();o2.start()}catch(e){}}document.addEventListener('click',d,{once:true});document.addEventListener('keydown',d,{once:true})}
+</script>
+</body>
+</html>
