@@ -6,6 +6,7 @@
 <title>Searching for Perfect Illusions</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Space+Mono:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mellow_ios.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#05060c;--surface:#0c0e1a;--border:#1a1d30;--text:#ddd7cc;--muted:#585d7a;--gold:#c9a748;--teal:#22b5aa;--rose:#c04560;--cream:#f0e8d8;--glow-gold:rgba(201,167,72,.18);--glow-teal:rgba(34,181,170,.18)}
@@ -1950,5 +1951,6 @@ rsz();addEventListener('resize',rsz);
 {const d=document.querySelectorAll('.sn-dot');d.forEach(n=>n.addEventListener('click',()=>{const e=document.getElementById(n.dataset.target);if(e)e.scrollIntoView({behavior:'smooth',block:'start'})}));const I=['hero','sec-eye','sec-vp','sec-light','sec-walk','sec-color','sec-bayes','sec-ames'];function u(){let c=0;I.forEach((id,i)=>{const e=document.getElementById(id);if(e&&e.getBoundingClientRect().top<=innerHeight*.5)c=i});d.forEach((n,i)=>n.classList.toggle('active',i===c))}addEventListener('scroll',u,{passive:true});u()}
 {const o=new IntersectionObserver(e=>e.forEach(n=>{if(n.isIntersecting)n.target.classList.add('vis')}),{threshold:.08});document.querySelectorAll('.fi').forEach(e=>o.observe(e))}
 </script>
+<script src="illusion_ios_bridge.js"></script>
 </body>
 </html>

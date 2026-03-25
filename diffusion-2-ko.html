@@ -6,6 +6,7 @@
 <title>기계는 꿈을 꾸는가? — 노이즈, 잠재 공간, 그리고 AI의 상상력</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mellow_ios.css">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
@@ -988,5 +989,6 @@ const nd=document.getElementById('nav-dots');secs.forEach(id=>{const d=document.
 const sO=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){const i=secs.indexOf(e.target.id);document.querySelectorAll('.nav-dot').forEach((d,j)=>d.classList.toggle('active',j===i));}});},{threshold:0.3});
 secs.forEach(id=>{const el=document.getElementById(id);if(el)sO.observe(el);});
 </script>
+<script src="mellow_ios_bridge.js"></script>
 </body>
 </html>

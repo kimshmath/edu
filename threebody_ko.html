@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>삼체, 답은 없다 — 삼체 문제</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400&family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#05060f;--bg2:#0c0d1e;--surface:#10112a;
+  --gold:#c9a84c;--gold2:#e8cc80;--gold-dim:rgba(201,168,76,0.13);
+  --cyan:#3cb8c3;--text:#ede5d8;--muted:#7c7693;--red:#c45555;
+  --rose:#c47a8a;
+  --border:rgba(201,168,76,0.13);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Noto Serif KR','EB Garamond',Georgia,serif;
+  font-size:1.05rem;line-height:1.85;overflow-x:hidden}
+
+/* ── HERO ── */
+#hero{position:relative;width:100vw;height:100vh;display:flex;
+  align-items:center;justify-content:center;overflow:hidden}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-overlay{position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 60% at 50% 50%,
+    rgba(5,6,15,0.0) 0%,rgba(5,6,15,0.55) 65%,rgba(5,6,15,0.92) 100%);
+  pointer-events:none}
+.hero-content{position:relative;z-index:10;text-align:center;padding:2rem;max-width:800px}
+.hero-label{font-family:'Cormorant Garamond',serif;font-size:.8rem;letter-spacing:.35em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:2rem;opacity:.9}
+.hero-title{font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.8rem,8vw,6.5rem);font-weight:300;line-height:1.05;
+  letter-spacing:-.01em;margin-bottom:1.5rem;
+  text-shadow:0 0 80px rgba(201,168,76,.25)}
+.hero-title em{font-style:italic;color:var(--gold2)}
+.hero-sub{font-size:1.15rem;color:var(--muted);max-width:520px;margin:0 auto 3rem;font-weight:400}
+.hero-scroller{display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  color:var(--muted);font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;
+  cursor:pointer;transition:color .3s}
+.hero-scroller:hover{color:var(--gold)}
+.scroll-bar{width:1px;height:48px;background:linear-gradient(to bottom,var(--gold),transparent);
+  animation:bob 2.2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+/* ── LAYOUT ── */
+.wrap{max-width:1120px;margin:0 auto;padding:5.5rem 2rem}
+hr.divider{border:none;border-top:1px solid rgba(201,168,76,0.08);margin:0}
+.sec-label{font-family:'Cormorant Garamond',serif;font-size:.72rem;letter-spacing:.35em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem}
+h2{font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(2rem,4.5vw,3.4rem);line-height:1.08;margin-bottom:2rem}
+h2 em{font-style:italic;color:var(--gold2)}
+.prose{max-width:680px;font-size:1.05rem;color:var(--text)}
+.prose p+p{margin-top:1rem}
+
+/* ── COMPONENTS ── */
+.info-box{background:rgba(60,184,195,0.04);border:1px solid rgba(60,184,195,0.15);
+  border-left:3px solid var(--cyan);border-radius:0 8px 8px 0;
+  padding:1.2rem 1.6rem;margin:2rem 0;font-size:.95rem;color:var(--text);font-style:italic}
+.info-box strong{color:var(--cyan);font-style:normal}
+
+/* ── INTERACTIVE PANELS ── */
+.canvas-wrap{background:var(--surface);border:1px solid var(--border);border-radius:10px;
+  overflow:hidden;position:relative;transition:border-color .4s,box-shadow .4s}
+.canvas-wrap:hover{border-color:rgba(201,168,76,0.2);box-shadow:0 4px 30px rgba(0,0,0,0.3)}
+.canvas-wrap canvas{display:block;width:100%}
+.ctrl-bar{display:flex;align-items:center;gap:1rem;padding:.8rem 1.2rem;
+  background:rgba(5,6,15,.6);border-top:1px solid var(--border);flex-wrap:wrap}
+.ctrl-bar label{font-family:'JetBrains Mono',monospace;font-size:.65rem;
+  letter-spacing:.08em;color:var(--muted);text-transform:uppercase;white-space:nowrap}
+.ctrl-bar input[type=range]{-webkit-appearance:none;appearance:none;height:3px;
+  background:var(--border);border-radius:2px;outline:none;flex:1;min-width:80px}
+.ctrl-bar input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;
+  width:12px;height:12px;border-radius:50%;background:var(--gold);cursor:pointer;
+  transition:transform .15s;box-shadow:0 0 6px rgba(201,168,76,0.3)}
+.ctrl-bar input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.3)}
+.ctrl-bar .val{font-family:'JetBrains Mono',monospace;font-size:.72rem;
+  color:var(--gold2);min-width:50px;text-align:right}
+.ctrl-bar button{font-family:'JetBrains Mono',monospace;font-size:.65rem;
+  letter-spacing:.1em;text-transform:uppercase;background:transparent;
+  border:1px solid var(--gold-dim);color:var(--gold);padding:.45rem 1rem;
+  border-radius:4px;cursor:pointer;transition:all .25s}
+.ctrl-bar button:hover{background:rgba(201,168,76,.1);border-color:var(--gold)}
+.ctrl-bar button.active{background:rgba(201,168,76,.15);border-color:var(--gold);color:var(--gold2);
+  box-shadow:0 0 12px rgba(201,168,76,0.15)}
+.canvas-caption{font-family:'JetBrains Mono',monospace;font-size:.6rem;
+  color:var(--muted);letter-spacing:.04em;padding:.6rem 1.2rem;text-align:center;
+  border-top:1px solid var(--border)}
+.readout{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--gold2);
+  padding:.6rem 1.2rem;text-align:center;border-top:1px solid var(--border);
+  background:rgba(5,6,15,.4)}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 1s cubic-bezier(.23,1,.32,1),transform 1s cubic-bezier(.23,1,.32,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ── FLOATING BADGE ── */
+.floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.12em;
+  text-transform:lowercase;color:#8db830;background:transparent;
+  text-decoration:none;transition:all .3s;
+  text-shadow:0 0 12px rgba(141,184,48,.4)}
+.floating-badge:hover{color:#a8e030;text-shadow:0 0 18px rgba(141,184,48,.7)}
+
+/* ── FOOTER ── */
+footer{max-width:1120px;margin:0 auto;padding:3rem 2rem 4rem;text-align:center;
+  border-top:1px solid var(--border)}
+footer p{font-size:.85rem;color:var(--muted);margin-bottom:.3rem}
+.footer-attr{display:flex;flex-direction:column;gap:.2rem;align-items:center;margin-top:2rem;
+  padding-top:2rem;border-top:1px solid rgba(255,255,255,.06)}
+.footer-name{font-family:'Fraunces',Georgia,serif;font-size:.85rem;font-weight:400;
+  color:#edeef2;letter-spacing:-.01em}
+.footer-inst{font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:300;
+  color:#5c6178;letter-spacing:.01em}
+.footer-link{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;
+  color:#d4a853;text-decoration:none;display:inline-block;margin-top:.25rem}
+
+/* ── RESPONSIVE ── */
+@media(max-width:800px){
+  .wrap{padding:3rem 1.2rem}
+  .hero-title{font-size:clamp(2rem,7vw,3.5rem)}
+  .hero-sub{font-size:1rem;max-width:90vw}
+  .canvas-wrap canvas{height:280px!important}
+  .info-box{font-size:.88rem;padding:1rem 1.2rem}
+  h2{font-size:clamp(1.6rem,5vw,2.4rem);margin-bottom:1.5rem}
+  .prose{font-size:.98rem}
+}
+section.wrap{padding-bottom:3.5rem}
+@media(max-width:600px){
+  .ctrl-bar{gap:.4rem;padding:.5rem .7rem}
+  .ctrl-bar button{font-size:.52rem;padding:.3rem .55rem;letter-spacing:.05em}
+  .ctrl-bar label{font-size:.55rem}
+  .ctrl-bar .val{font-size:.6rem;min-width:35px}
+  .readout{font-size:.65rem;padding:.5rem .8rem}
+  .canvas-caption{font-size:.52rem;padding:.5rem .8rem}
+  .canvas-wrap canvas{height:240px!important}
+  .sec-label{font-size:.6rem;margin-bottom:.8rem}
+  .wrap{padding:2.5rem 1rem}
+  .hero-sub{font-size:.9rem}
+  .info-box{margin:1.5rem 0;font-size:.85rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════ -->
+<!--                    HERO                     -->
+<!-- ════════════════════════════════════════════ -->
+<div id="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-label">Mellow Math · 제2장</div>
+    <h1 class="hero-title">삼체, <em>답은 없다</em></h1>
+    <p class="hero-sub">두 물체는 완벽한 타원 궤도를 그린다. 세 번째를 더하면, 미래는 알 수 없게 된다. 이것은 물리학에서 가장 오래된 미해결 문제이다.</p>
+    <div class="hero-scroller" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">
+      시작하기
+      <div class="scroll-bar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!--    § 1 — TWO BODIES, PERFECT HARMONY        -->
+<!-- ════════════════════════════════════════════ -->
+<hr class="divider" id="s1">
+<section class="wrap reveal">
+  <div class="sec-label">§ 1 — 이체, 완벽한 조화</div>
+  <h2>우주라는 <em>시계</em></h2>
+
+  <p class="prose" style="max-width:700px;margin-bottom:1rem;">중력으로 묶인 두 물체에 대해 우주는 관대합니다. 정확한 해를 내어줍니다. 케플러의 타원. 모든 위치, 모든 속도가, 지금부터 시간의 끝까지, 닫힌 공식으로 적혀 있습니다. 근사도, 시뮬레이션도, 불확실성도 없습니다. 오직 기하학뿐.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">아래에서 두 질량이 공통 무게중심을 돌고 있습니다 — 금빛 별과 청록빛 동반성. 이심률을 늘리고, 질량비를 바꿔보세요. 타원은 스스로 형태를 바꾸지만, 항상 완벽하고, 항상 반복됩니다. 이것이 풀린 문제입니다. 이 평온함을 기억하세요.</p>
+
+  <div class="canvas-wrap" style="max-width:720px;margin:0 auto;">
+    <canvas id="twobodyCanvas" height="400"></canvas>
+    <div class="readout" id="twobodyReadout">
+      <span style="color:var(--gold2)">주기: <span id="tbPeriod">—</span></span> &nbsp;&nbsp;
+      <span style="color:var(--cyan)">에너지: <span id="tbEnergy">—</span></span> &nbsp;&nbsp;
+      <span style="color:var(--muted)">시간: <span id="tbTime">0</span></span>
+    </div>
+    <div class="ctrl-bar">
+      <label>질량비</label>
+      <input type="range" id="tbMassRatio" min="0.05" max="1.0" step="0.01" value="0.5">
+      <span class="val" id="tbMassVal">1 : 1</span>
+    </div>
+    <div class="ctrl-bar" style="border-top:none;padding-top:0">
+      <label>이심률</label>
+      <input type="range" id="tbEcc" min="0" max="0.85" step="0.01" value="0.0">
+      <span class="val" id="tbEccVal">0.00</span>
+    </div>
+    <div class="ctrl-bar" style="border-top:none;padding-top:0">
+      <button id="tbReset">↺ 초기화</button>
+      <label style="margin-left:auto">궤적</label>
+      <input type="range" id="tbTrailLen" min="50" max="800" step="10" value="300">
+    </div>
+    <div class="canvas-caption">풀린 문제. 질량비와 이심률을 조정하세요 — 타원은 언제나 완벽합니다.</div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!--       § 2 — ENTER THE THIRD                -->
+<!-- ════════════════════════════════════════════ -->
+<hr class="divider" id="s2">
+<section class="wrap reveal">
+  <div class="sec-label">§ 2 — 세 번째가 등장하다</div>
+  <h2>시계가 <em>부서지다</em></h2>
+
+  <p class="prose" style="max-width:700px;margin-bottom:1rem;">1887년, 스웨덴의 오스카르 2세 국왕은 태양계가 안정적임을 증명하는 사람에게 상금을 걸었습니다. 앙리 푸앵카레는 안정성을 증명했다고 주장하는 270쪽의 논문을 제출했고, 수상했습니다. 논문은 인쇄에 들어갔습니다.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:1rem;">그런데 교정을 검토하던 동료 라르스 프라그멘이 실수를 발견했습니다. 푸앵카레는 자기 논문을 재검토하고, 경악 속에서 깨달았습니다 — 그 오류가 오탈자가 아니라 <em>결론을 완전히 뒤집는 것</em>이었다는 사실을. 불가능하다고 무시했던 궤적들이 사실은 어디에나 존재했습니다. 초기 위치의 미세한 차이가 완전히 다른 미래로 이어졌습니다. 그는 카오스를 발견한 것입니다.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">푸앵카레는 인쇄된 모든 부수를 자비로 회수했습니다 — 비용이 상금보다 컸습니다 — 그리고 원래 주장의 정반대를 증명하는 수정된 논문을 출판했습니다. 그것은 수학사에서 가장 중요한 논문 중 하나가 되었습니다.</p>
+
+  <div class="canvas-wrap" style="max-width:720px;margin:0 auto;">
+    <canvas id="threeCanvas" height="400"></canvas>
+    <div class="readout" id="threeReadout">
+      <span style="color:var(--gold2)">물체 수: <span id="t3Count">2</span></span> &nbsp;&nbsp;
+      <span style="color:var(--rose)">발산: <span id="t3Diverge">—</span></span> &nbsp;&nbsp;
+      <span style="color:var(--muted)">시간: <span id="t3Time">0</span></span>
+    </div>
+    <div class="ctrl-bar">
+      <button id="t3Release" style="border-color:var(--rose);color:var(--rose);">● 세 번째 물체 투입</button>
+      <button id="t3Reset">↺ 초기화</button>
+      <label style="margin-left:auto">속도</label>
+      <input type="range" id="t3Speed" min="1" max="20" step="1" value="6">
+      <span class="val" id="t3SpeedVal">6</span>
+    </div>
+    <div class="canvas-caption">세 번째 물체를 투입하세요. 흐릿한 그림자 점은 0.001만큼 떨어져 시작합니다 — 발산을 지켜보세요.</div>
+  </div>
+
+  <div class="info-box" style="max-width:720px;margin:2rem auto 0;">
+    <strong>"카오스"는 정밀한 용어입니다.</strong> 푸앵카레가 말한 것은 무작위성이 아닙니다. <em>초기 조건에 대한 민감한 의존성</em>입니다: 머리카락 한 올 차이로 시작한 두 시스템이 완전히 다른 상태에 도달합니다. 법칙은 결정론적이지만, 측정의 아주 작은 불확실성이 모든 예측을 넘어서 증폭됩니다.
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!--    § 3 — LAGRANGE POINTS                    -->
+<!-- ════════════════════════════════════════════ -->
+<hr class="divider" id="s3">
+<section class="wrap reveal">
+  <div class="sec-label">§ 3 — 라그랑주 점</div>
+  <h2><em>고요한</em> 다섯 개의 섬</h2>
+
+  <p class="prose" style="max-width:700px;margin-bottom:1rem;">카오스 속에서도 안식처는 있습니다. 1772년, 라그랑주는 두 개의 큰 궤도 물체에 대해 작은 물체가 정확히 다섯 위치에서 균형을 이룰 수 있음을 증명했습니다. 셋은 연결선 위에, 둘은 정삼각형을 이루며 — 하나는 앞서고, 하나는 뒤따릅니다 — 이 둘은 <em>안정</em>합니다.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">제임스 웹 우주망원경은 바로 지금 이 점들 중 하나에 있습니다. 지구 뒤쪽 150만 킬로미터, 중력의 지형 속에서 그릇 바닥의 구슬처럼 균형을 잡고 있습니다. 아래 아무 곳이나 클릭해서 시험 입자를 놓아보고, 중력의 위상을 느껴보세요.</p>
+
+  <div class="canvas-wrap" style="max-width:720px;margin:0 auto;">
+    <canvas id="lagrangeCanvas" height="420"></canvas>
+    <div class="readout" id="lagrangeReadout">
+      <span style="color:var(--gold2)">클릭하여 시험 입자 배치</span> &nbsp;&nbsp;
+      <span style="color:var(--muted)"><span id="lgStatus"></span></span>
+    </div>
+    <div class="ctrl-bar">
+      <button id="lgL1">L1으로</button>
+      <button id="lgL2">L2로</button>
+      <button id="lgL4" class="active">L4로</button>
+      <button id="lgL5">L5로</button>
+      <button id="lgClear">↺ 초기화</button>
+      <label style="margin-left:auto">퍼텐셜</label>
+      <input type="range" id="lgPotential" min="0" max="1" step="0.01" value="0.3">
+    </div>
+    <div class="canvas-caption">클릭하여 시험 입자를 놓으세요. L4와 L5는 영원히 가둡니다. L1, L2, L3은 탈출시킵니다.</div>
+  </div>
+
+  <div class="info-box" style="max-width:720px;margin:2rem auto 0;">
+    <strong>트로이 소행성군.</strong> 목성의 L4와 L5 점에는 12,000개가 넘는 소행성이 갇혀 있습니다 — 트로이군과 그리스군 — 위에서 본 것과 같은 수학에 의해 수십억 년간 제자리를 지키고 있습니다. 토성, 해왕성, 화성, 심지어 지구도 자체 트로이 소행성을 가지고 있습니다.
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!--    § 4 — THE FIGURE EIGHT                   -->
+<!-- ════════════════════════════════════════════ -->
+<hr class="divider" id="s4">
+<section class="wrap reveal">
+  <div class="sec-label">§ 4 — 8자 궤도</div>
+  <h2><em>3세기</em> 동안 숨겨진 춤</h2>
+
+  <p class="prose" style="max-width:700px;margin-bottom:1rem;">1993년, 크리스토퍼 무어는 컴퓨터에서 놀라운 것을 발견했습니다: 세 개의 동일한 질량이 하나의 8자 곡선을 따라 서로를 쫓으며, 줄 위의 구슬처럼 같은 간격으로, 정확히 같은 경로를 그리는 것. 셴시너와 몽고메리가 2000년에 엄밀하게 증명했습니다.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">뉴턴의 방정식 안에 300년간 숨어 있던 비밀 안무입니다. 아래에서 감상하세요. 그리고 파괴할 수도 있습니다: 섭동 슬라이더를 살짝 건드려 완벽함이 얼마나 오래 버티는지 보세요.</p>
+
+  <div class="canvas-wrap" style="max-width:720px;margin:0 auto;">
+    <canvas id="choreCanvas" height="380"></canvas>
+    <div class="readout" id="choreReadout">
+      <span style="color:var(--gold2)"><span id="choreName">8자 궤도</span></span> &nbsp;&nbsp;
+      <span style="color:var(--cyan)">주기: <span id="chorePeriod">—</span></span> &nbsp;&nbsp;
+      <span style="color:var(--muted)">섭동: <span id="chorePertVal">0%</span></span>
+    </div>
+    <div class="ctrl-bar">
+      <button id="choreFig8" class="active">8자 궤도</button>
+      <button id="choreButterfly">나비 I</button>
+      <button id="choreMoth">나방 I</button>
+      <button id="choreYarn">실타래</button>
+    </div>
+    <div class="ctrl-bar" style="border-top:none;padding-top:0">
+      <label>섭동</label>
+      <input type="range" id="chorePert" min="0" max="0.05" step="0.0005" value="0">
+      <span class="val" id="chorePertDisp">0%</span>
+      <button id="choreReset" style="margin-left:auto">↺ 초기화</button>
+    </div>
+    <div class="canvas-caption">세 물체, 하나의 경로. 섭동을 건드리면 완벽함이 무너집니다.</div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!--  § 5 — IS THE SOLAR SYSTEM STABLE?          -->
+<!-- ════════════════════════════════════════════ -->
+<hr class="divider" id="s5">
+<section class="wrap reveal">
+  <div class="sec-label">§ 5 — 태양계는 안정한가?</div>
+  <h2>40억 년의 <em>행운</em></h2>
+
+  <p class="prose" style="max-width:700px;margin-bottom:1rem;">이것은 수리물리학에서 가장 오래된 미해결 문제입니다. 라플라스는 태양계가 영원한 시계라고 믿었습니다. 푸앵카레는 아닐 수 있음을 보였습니다. 2009년, 자크 라스카르가 50억 년에 걸친 태양계 시뮬레이션을 수천 번 수행했습니다. 대략 1%에서 수성의 궤도가 금성의 경로와 교차할 때까지 늘어났습니다 — 충돌이든, 심우주로의 추방이든.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">우리 태양계는 시계가 아닙니다. 느린 확률 게임이며, 우리는 그 안에 있습니다. 아래에서 내태양계를 수백만 년 빨리감기하세요. 대부분의 실행은 조용합니다. 일부는 그렇지 않습니다. 오른쪽 수성의 이심률 게이지를 보세요 — 빨간 선 아래에 머물기를 바라면서.</p>
+
+  <div class="canvas-wrap" style="max-width:720px;margin:0 auto;">
+    <canvas id="solarCanvas" height="400"></canvas>
+    <div class="readout" id="solarReadout">
+      <span style="color:var(--gold2)">연도: <span id="solYear">0</span>백만 년</span> &nbsp;&nbsp;
+      <span style="color:var(--cyan)">실행: <span id="solRuns">0</span></span> &nbsp;&nbsp;
+      <span style="color:var(--muted)">안정: <span id="solStable">0</span> · 불안정: <span id="solUnstable" style="color:var(--red)">0</span></span>
+    </div>
+    <div class="ctrl-bar">
+      <button id="solRun">▶ 실행</button>
+      <button id="solReset">↺ 새 실행</button>
+      <label style="margin-left:auto">속도</label>
+      <input type="range" id="solSpeed" min="1" max="30" step="1" value="10">
+      <span class="val" id="solSpeedVal">10</span>
+    </div>
+    <div class="canvas-caption">태양계를 빨리감기합니다. 대부분은 살아남습니다. 일부는 그렇지 않습니다.</div>
+  </div>
+
+  <div class="info-box" style="max-width:720px;margin:2rem auto 0;">
+    <strong>50억 년 중 1%.</strong> 라스카르의 시뮬레이션은 수성이 태양계의 와일드카드임을 보여주었습니다. 수성의 궤도는 수백만 년 규모에서 카오스적입니다 — 결정론적이지만 예측 불가능한, 푸앵카레가 발견한 바로 그것. 지금까지 우리는 운이 좋았을 뿐입니다.
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!--           CHAPTER CLOSING                   -->
+<!-- ════════════════════════════════════════════ -->
+<hr class="divider">
+<section class="wrap reveal" style="text-align:center;padding:4rem 2rem 3rem;">
+  <p class="prose" style="max-width:620px;margin:0 auto 2rem;font-size:1.15rem;color:var(--muted);font-style:italic;">
+    두 물체는 영원한 타원을 그리며 춤춘다. 세 번째를 더하면, 미래는 어떤 계산으로도 완전히 답할 수 없는 질문이 된다.
+  </p>
+  <p class="prose" style="max-width:620px;margin:0 auto;font-size:1rem;color:var(--muted);">
+    그럼에도 — 카오스 안에 8자 궤도가 있다. 불안정 속에 다섯 개의 정지점이 있다. 40억 년의 주사위 던지기를 견딘 태양계가 있다. 삼체 문제는 물리학의 실패가 아니다. 물리학이 스스로의 지평선과 만나는 곳이다.
+  </p>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!--               FOOTER                        -->
+<!-- ════════════════════════════════════════════ -->
+<footer>
+  <p>삼체, 답은 없다 — 제2장</p>
+  <p style="font-size:.7rem;">모든 궤도는 수치 적분을 통해 실시간으로 계산됩니다. 미리 그려진 경로는 없습니다 — 오직 뉴턴의 법칙뿐.</p>
+  <div class="footer-attr">
+    <div class="footer-name">김상현</div>
+    <div class="footer-inst">고등과학원</div>
+    <a class="footer-link" href="https://kimsh.kr">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
+<!-- ════════════════════════════════════════════ -->
+<!--              JAVASCRIPT                     -->
+<!-- ════════════════════════════════════════════ -->
+<script>
+/* ── Scroll Reveal ── */
+const revealObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+
+/* ════════════════════════════════════════════════════════════ */
+/*   HERO — Chaotic three-body animation                      */
+/* ════════════════════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('heroCanvas');
+  const ctx=c.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  let W,H;
+  function resize(){W=c.offsetWidth;H=c.offsetHeight;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+  resize();window.addEventListener('resize',resize);
+
+  // Three bodies — chaotic initial conditions
+  const G=1;
+  const bodies=[
+    {x:-0.5, y:0, vx:0, vy:-0.4, m:1.0, color:'rgba(201,168,76,', trail:[]},
+    {x:0.5,  y:0, vx:0, vy:0.4,  m:1.0, color:'rgba(60,184,195,', trail:[]},
+    {x:0,    y:0.6, vx:0.35, vy:0, m:0.8, color:'rgba(196,122,138,', trail:[]}
+  ];
+  const maxTrail=600;
+
+  function accel(i){
+    let ax=0,ay=0;
+    for(let j=0;j<3;j++){
+      if(i===j)continue;
+      const dx=bodies[j].x-bodies[i].x, dy=bodies[j].y-bodies[i].y;
+      const r2=dx*dx+dy*dy+0.001; // softening
+      const r=Math.sqrt(r2);
+      const f=G*bodies[j].m/(r2*r);
+      ax+=f*dx; ay+=f*dy;
+    }
+    return{ax,ay};
+  }
+
+  // Velocity Verlet
+  function step(dt){
+    const acc=bodies.map((_,i)=>accel(i));
+    for(let i=0;i<3;i++){
+      bodies[i].x+=bodies[i].vx*dt+0.5*acc[i].ax*dt*dt;
+      bodies[i].y+=bodies[i].vy*dt+0.5*acc[i].ay*dt*dt;
+    }
+    const accNew=bodies.map((_,i)=>accel(i));
+    for(let i=0;i<3;i++){
+      bodies[i].vx+=0.5*(acc[i].ax+accNew[i].ax)*dt;
+      bodies[i].vy+=0.5*(acc[i].ay+accNew[i].ay)*dt;
+    }
+  }
+
+  function toScreen(x,y){
+    const scale=Math.min(W,H)*0.28;
+    return{sx:W/2+x*scale, sy:H/2+y*scale};
+  }
+
+  function draw(){
+    ctx.fillStyle='rgba(5,6,15,0.08)';
+    ctx.fillRect(0,0,W,H);
+
+    const substeps=8;
+    const dt=0.004;
+    for(let s=0;s<substeps;s++) step(dt);
+
+    for(const b of bodies){
+      b.trail.push({x:b.x,y:b.y});
+      if(b.trail.length>maxTrail) b.trail.shift();
+
+      // Trail
+      for(let i=1;i<b.trail.length;i++){
+        const alpha=(i/b.trail.length)*0.4;
+        const s0=toScreen(b.trail[i-1].x,b.trail[i-1].y);
+        const s1=toScreen(b.trail[i].x,b.trail[i].y);
+        ctx.beginPath();ctx.moveTo(s0.sx,s0.sy);ctx.lineTo(s1.sx,s1.sy);
+        ctx.strokeStyle=b.color+alpha+')';
+        ctx.lineWidth=1.2;ctx.stroke();
+      }
+
+      // Body
+      const s=toScreen(b.x,b.y);
+      ctx.beginPath();ctx.arc(s.sx,s.sy,3.5,0,Math.PI*2);
+      ctx.fillStyle=b.color+'0.9)';ctx.fill();
+      // Glow
+      const g=ctx.createRadialGradient(s.sx,s.sy,0,s.sx,s.sy,14);
+      g.addColorStop(0,b.color+'0.2)');g.addColorStop(1,b.color+'0)');
+      ctx.beginPath();ctx.arc(s.sx,s.sy,14,0,Math.PI*2);
+      ctx.fillStyle=g;ctx.fill();
+    }
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+
+/* ════════════════════════════════════════════════════════════ */
+/*   § 1 — TWO BODIES, PERFECT HARMONY                       */
+/* ════════════════════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('twobodyCanvas');
+  const ctx=c.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  let W,H;
+  function resize(){const r=c.getBoundingClientRect();W=r.width;H=r.height;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+  resize();window.addEventListener('resize',resize);
+
+  const massSlider=document.getElementById('tbMassRatio');
+  const massVal=document.getElementById('tbMassVal');
+  const eccSlider=document.getElementById('tbEcc');
+  const eccVal=document.getElementById('tbEccVal');
+  const trailSlider=document.getElementById('tbTrailLen');
+  const btnReset=document.getElementById('tbReset');
+  const elPeriod=document.getElementById('tbPeriod');
+  const elEnergy=document.getElementById('tbEnergy');
+  const elTime=document.getElementById('tbTime');
+
+  // Two-body as reduced one-body problem
+  // m1 + m2 = 1, mu = m1*m2/(m1+m2)
+  const G=40;
+  let m1,m2,ecc,a; // semi-major axis
+  let trailMax=300;
+
+  // State: positions of both bodies in COM frame
+  let b1={x:0,y:0,vx:0,vy:0,trail:[]};
+  let b2={x:0,y:0,vx:0,vy:0,trail:[]};
+  let simTime=0;
+
+  function initOrbits(){
+    const q=parseFloat(massSlider.value); // q = m2/(m1+m2)
+    m1=1-q; m2=q;
+    ecc=parseFloat(eccSlider.value);
+    a=1.5; // semi-major axis of relative orbit
+
+    // Relative orbit: at periapsis, r = a(1-e), v = sqrt(G*(m1+m2)*(1+e)/(a*(1-e)))
+    const rPeri=a*(1-ecc);
+    const vPeri=Math.sqrt(G*(m1+m2)*(1+ecc)/(a*(1-ecc)));
+
+    // In COM frame: r1 = -m2/(m1+m2)*r, r2 = m1/(m1+m2)*r
+    b1={x:-m2*rPeri, y:0, vx:0, vy:-m2*vPeri, trail:[]};
+    b2={x: m1*rPeri, y:0, vx:0, vy: m1*vPeri, trail:[]};
+    simTime=0;
+
+    // Compute orbital period
+    const T=2*Math.PI*Math.sqrt(a*a*a/(G*(m1+m2)));
+    elPeriod.textContent=T.toFixed(2);
+
+    // Display mass ratio
+    const ratio=(m1/m2).toFixed(1);
+    massVal.textContent=ratio>5?Math.round(m1/m2)+' : 1':ratio+' : 1';
+    eccVal.textContent=ecc.toFixed(2);
+  }
+
+  function accelOn(bx,by, otherMass, ox,oy){
+    const dx=ox-bx, dy=oy-by;
+    const r2=dx*dx+dy*dy+0.0001;
+    const r=Math.sqrt(r2);
+    const f=G*otherMass/(r2*r);
+    return{ax:f*dx, ay:f*dy};
+  }
+
+  function step(dt){
+    // Velocity Verlet for both bodies
+    const a1=accelOn(b1.x,b1.y,m2,b2.x,b2.y);
+    const a2=accelOn(b2.x,b2.y,m1,b1.x,b1.y);
+
+    b1.x+=b1.vx*dt+0.5*a1.ax*dt*dt;
+    b1.y+=b1.vy*dt+0.5*a1.ay*dt*dt;
+    b2.x+=b2.vx*dt+0.5*a2.ax*dt*dt;
+    b2.y+=b2.vy*dt+0.5*a2.ay*dt*dt;
+
+    const a1n=accelOn(b1.x,b1.y,m2,b2.x,b2.y);
+    const a2n=accelOn(b2.x,b2.y,m1,b1.x,b1.y);
+
+    b1.vx+=0.5*(a1.ax+a1n.ax)*dt;
+    b1.vy+=0.5*(a1.ay+a1n.ay)*dt;
+    b2.vx+=0.5*(a2.ax+a2n.ax)*dt;
+    b2.vy+=0.5*(a2.ay+a2n.ay)*dt;
+
+    simTime+=dt;
+  }
+
+  function toScreen(x,y){
+    const scale=Math.min(W,H)*0.15;
+    return{sx:W/2+x*scale, sy:H/2+y*scale};
+  }
+
+  function drawBody(b,radius,color,colorBase){
+    // colorBase is like 'rgba(201,168,76,' — without closing alpha
+    // Trail
+    for(let i=1;i<b.trail.length;i++){
+      const alpha=(i/b.trail.length)*0.5;
+      const s0=toScreen(b.trail[i-1].x,b.trail[i-1].y);
+      const s1=toScreen(b.trail[i].x,b.trail[i].y);
+      ctx.beginPath();ctx.moveTo(s0.sx,s0.sy);ctx.lineTo(s1.sx,s1.sy);
+      ctx.strokeStyle=colorBase+alpha+')';
+      ctx.lineWidth=1.8;ctx.stroke();
+    }
+    // Body
+    const s=toScreen(b.x,b.y);
+    ctx.beginPath();ctx.arc(s.sx,s.sy,radius,0,Math.PI*2);
+    ctx.fillStyle=color;ctx.fill();
+    // Glow
+    const g=ctx.createRadialGradient(s.sx,s.sy,0,s.sx,s.sy,radius*3);
+    g.addColorStop(0,colorBase+'0.2)');
+    g.addColorStop(1,colorBase+'0)');
+    ctx.beginPath();ctx.arc(s.sx,s.sy,radius*3,0,Math.PI*2);
+    ctx.fillStyle=g;ctx.fill();
+  }
+
+  function animate(){
+    ctx.clearRect(0,0,W,H);
+
+    // Subtle grid
+    ctx.strokeStyle='rgba(201,168,76,0.03)';ctx.lineWidth=0.5;
+    const sc=Math.min(W,H)*0.15;
+    for(let i=-10;i<=10;i++){
+      const sx=W/2+i*sc*0.5;
+      ctx.beginPath();ctx.moveTo(sx,0);ctx.lineTo(sx,H);ctx.stroke();
+      const sy=H/2+i*sc*0.5;
+      ctx.beginPath();ctx.moveTo(0,sy);ctx.lineTo(W,sy);ctx.stroke();
+    }
+
+    // Center of mass marker
+    const cm=toScreen(0,0);
+    ctx.beginPath();ctx.arc(cm.sx,cm.sy,2,0,Math.PI*2);
+    ctx.fillStyle='rgba(201,168,76,0.15)';ctx.fill();
+    ctx.beginPath();ctx.arc(cm.sx,cm.sy,0.8,0,Math.PI*2);
+    ctx.fillStyle='rgba(201,168,76,0.4)';ctx.fill();
+
+    // Ghost ellipse (analytical orbit for reference)
+    ctx.strokeStyle='rgba(201,168,76,0.06)';ctx.lineWidth=0.8;
+    ctx.beginPath();
+    for(let i=0;i<=200;i++){
+      const theta=i/200*Math.PI*2;
+      const r=a*(1-ecc*ecc)/(1+ecc*Math.cos(theta));
+      const rx=-m2*r*Math.cos(theta), ry=-m2*r*Math.sin(theta);
+      const s=toScreen(rx,ry);
+      i===0?ctx.moveTo(s.sx,s.sy):ctx.lineTo(s.sx,s.sy);
+    }
+    ctx.stroke();
+    ctx.beginPath();
+    for(let i=0;i<=200;i++){
+      const theta=i/200*Math.PI*2;
+      const r=a*(1-ecc*ecc)/(1+ecc*Math.cos(theta));
+      const rx=m1*r*Math.cos(theta), ry=m1*r*Math.sin(theta);
+      const s=toScreen(rx,ry);
+      i===0?ctx.moveTo(s.sx,s.sy):ctx.lineTo(s.sx,s.sy);
+    }
+    ctx.stroke();
+
+    // Integration substeps
+    const substeps=12;
+    const dt=0.0008;
+    for(let s=0;s<substeps;s++) step(dt);
+
+    trailMax=parseInt(trailSlider.value);
+    b1.trail.push({x:b1.x,y:b1.y});
+    b2.trail.push({x:b2.x,y:b2.y});
+    if(b1.trail.length>trailMax) b1.trail.shift();
+    if(b2.trail.length>trailMax) b2.trail.shift();
+
+    // Draw bodies
+    const r1=4+m1*6, r2=4+m2*6;
+    drawBody(b1,r1,'rgba(201,168,76,0.9)','rgba(201,168,76,');
+    drawBody(b2,r2,'rgba(60,184,195,0.9)','rgba(60,184,195,');
+
+    // Energy
+    const dx=b2.x-b1.x, dy=b2.y-b1.y;
+    const r=Math.sqrt(dx*dx+dy*dy);
+    const KE=0.5*m1*(b1.vx*b1.vx+b1.vy*b1.vy)+0.5*m2*(b2.vx*b2.vx+b2.vy*b2.vy);
+    const PE=-G*m1*m2/r;
+    elEnergy.textContent=(KE+PE).toFixed(2);
+    elTime.textContent=simTime.toFixed(1);
+
+    requestAnimationFrame(animate);
+  }
+
+  massSlider.addEventListener('input',()=>{initOrbits();});
+  eccSlider.addEventListener('input',()=>{initOrbits();});
+  btnReset.addEventListener('click',()=>{initOrbits();});
+
+  initOrbits();
+  requestAnimationFrame(animate);
+})();
+
+/* ════════════════════════════════════════════════════════════ */
+/*   § 2 — ENTER THE THIRD                                    */
+/* ════════════════════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('threeCanvas');
+  const ctx=c.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  let W,H;
+  function resize(){const r=c.getBoundingClientRect();W=r.width;H=r.height;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+  resize();window.addEventListener('resize',resize);
+
+  const btnRelease=document.getElementById('t3Release');
+  const btnReset=document.getElementById('t3Reset');
+  const speedSlider=document.getElementById('t3Speed');
+  const speedVal=document.getElementById('t3SpeedVal');
+  const elCount=document.getElementById('t3Count');
+  const elDiverge=document.getElementById('t3Diverge');
+  const elTime=document.getElementById('t3Time');
+
+  const G=40;
+  let thirdReleased=false;
+  let simTime=0;
+  let substepsPerFrame=6;
+
+  // Bodies array: initially 2, third added on release
+  // Also a "shadow" third body starting 0.001 away — for divergence demo
+  let bodies=[], shadow=null;
+  const maxTrail=500;
+
+  const colors=[
+    {fill:'rgba(201,168,76,0.9)',trail:'rgba(201,168,76,'},   // gold
+    {fill:'rgba(60,184,195,0.9)',trail:'rgba(60,184,195,'},    // cyan
+    {fill:'rgba(196,122,138,0.9)',trail:'rgba(196,122,138,'} // rose
+  ];
+
+  function init(){
+    thirdReleased=false; simTime=0; shadow=null;
+    elCount.textContent='2'; elDiverge.textContent='—';
+    btnRelease.style.borderColor='var(--rose)';btnRelease.style.color='var(--rose)';
+    btnRelease.textContent='● 세 번째 물체 투입';
+
+    // Two bodies in a nice circular orbit
+    const m1=0.6, m2=0.4, a=1.8;
+    const rPeri=a;
+    const v=Math.sqrt(G*(m1+m2)/a);
+    bodies=[
+      {x:-m2*rPeri, y:0, vx:0, vy:-m2*v, m:m1, trail:[], ci:0},
+      {x: m1*rPeri, y:0, vx:0, vy: m1*v, m:m2, trail:[], ci:1}
+    ];
+  }
+
+  function releaseThird(){
+    if(thirdReleased)return;
+    thirdReleased=true;
+    elCount.textContent='3';
+    btnRelease.classList.add('active');
+    btnRelease.textContent='✓ 투입 완료';
+
+    // Third body enters from the side
+    const m3=0.35;
+    const third={x:2.5, y:1.0, vx:-1.8, vy:-0.6, m:m3, trail:[], ci:2};
+    bodies.push(third);
+
+    // Shadow copy of third body, offset by 0.001 in x — for divergence
+    shadow={x:third.x+0.001, y:third.y, vx:third.vx, vy:third.vy, m:m3};
+  }
+
+  function accelOn(bx,by,bodies_arr,skipIdx){
+    let ax=0,ay=0;
+    for(let j=0;j<bodies_arr.length;j++){
+      if(j===skipIdx)continue;
+      const dx=bodies_arr[j].x-bx, dy=bodies_arr[j].y-by;
+      const r2=dx*dx+dy*dy+0.01;
+      const r=Math.sqrt(r2);
+      const f=G*bodies_arr[j].m/(r2*r);
+      ax+=f*dx; ay+=f*dy;
+    }
+    return{ax,ay};
+  }
+
+  function step(dt){
+    const n=bodies.length;
+    // Compute accelerations
+    const acc=[];
+    for(let i=0;i<n;i++) acc.push(accelOn(bodies[i].x,bodies[i].y,bodies,i));
+
+    // Position update
+    for(let i=0;i<n;i++){
+      bodies[i].x+=bodies[i].vx*dt+0.5*acc[i].ax*dt*dt;
+      bodies[i].y+=bodies[i].vy*dt+0.5*acc[i].ay*dt*dt;
+    }
+
+    // New accelerations
+    const accN=[];
+    for(let i=0;i<n;i++) accN.push(accelOn(bodies[i].x,bodies[i].y,bodies,i));
+
+    // Velocity update
+    for(let i=0;i<n;i++){
+      bodies[i].vx+=0.5*(acc[i].ax+accN[i].ax)*dt;
+      bodies[i].vy+=0.5*(acc[i].ay+accN[i].ay)*dt;
+    }
+
+    // Shadow third body (same forces, but from slightly different position)
+    if(shadow){
+      const sa=accelOn(shadow.x,shadow.y,bodies,-1);
+      // Use simplified Euler for shadow (doesn't need Verlet precision)
+      shadow.vx+=sa.ax*dt;
+      shadow.vy+=sa.ay*dt;
+      shadow.x+=shadow.vx*dt;
+      shadow.y+=shadow.vy*dt;
+    }
+
+    simTime+=dt;
+  }
+
+  function toScreen(x,y){
+    const scale=Math.min(W,H)*0.13;
+    return{sx:W/2+x*scale, sy:H/2+y*scale};
+  }
+
+  function animate(){
+    ctx.clearRect(0,0,W,H);
+
+    // Subtle grid
+    ctx.strokeStyle='rgba(201,168,76,0.03)';ctx.lineWidth=0.5;
+    const sc=Math.min(W,H)*0.13;
+    for(let i=-12;i<=12;i++){
+      ctx.beginPath();ctx.moveTo(W/2+i*sc*0.5,0);ctx.lineTo(W/2+i*sc*0.5,H);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(0,H/2+i*sc*0.5);ctx.lineTo(W,H/2+i*sc*0.5);ctx.stroke();
+    }
+
+    // Integrate
+    substepsPerFrame=parseInt(speedSlider.value);
+    speedVal.textContent=substepsPerFrame;
+    const dt=0.001;
+    for(let s=0;s<substepsPerFrame;s++) step(dt);
+
+    // Update trails
+    for(const b of bodies){
+      b.trail.push({x:b.x,y:b.y});
+      if(b.trail.length>maxTrail) b.trail.shift();
+    }
+
+    // Draw trails
+    for(const b of bodies){
+      const col=colors[b.ci];
+      for(let i=1;i<b.trail.length;i++){
+        const alpha=(i/b.trail.length)*0.45;
+        const s0=toScreen(b.trail[i-1].x,b.trail[i-1].y);
+        const s1=toScreen(b.trail[i].x,b.trail[i].y);
+        // Don't draw very long segments (wrapping artifacts)
+        if(Math.abs(s1.sx-s0.sx)>W*0.4||Math.abs(s1.sy-s0.sy)>H*0.4)continue;
+        ctx.beginPath();ctx.moveTo(s0.sx,s0.sy);ctx.lineTo(s1.sx,s1.sy);
+        ctx.strokeStyle=col.trail+alpha+')';
+        ctx.lineWidth=1.5;ctx.stroke();
+      }
+    }
+
+    // Draw shadow trail (faint gold, slightly offset — shows divergence)
+    if(shadow && thirdReleased){
+      const ss=toScreen(shadow.x,shadow.y);
+      ctx.beginPath();ctx.arc(ss.sx,ss.sy,3,0,Math.PI*2);
+      ctx.fillStyle='rgba(196,122,138,0.3)';ctx.fill();
+      // Dashed line from third body to shadow
+      const tb=bodies[2];
+      const ts=toScreen(tb.x,tb.y);
+      const dist=Math.sqrt((tb.x-shadow.x)**2+(tb.y-shadow.y)**2);
+      if(dist*sc<W*0.5){
+        ctx.setLineDash([3,3]);ctx.strokeStyle='rgba(196,122,138,0.2)';ctx.lineWidth=0.8;
+        ctx.beginPath();ctx.moveTo(ts.sx,ts.sy);ctx.lineTo(ss.sx,ss.sy);ctx.stroke();
+        ctx.setLineDash([]);
+      }
+      // Divergence readout
+      const logDiv=Math.log10(Math.max(dist,1e-10));
+      elDiverge.textContent=dist<0.01?dist.toExponential(1):dist.toFixed(2);
+      elDiverge.style.color=dist>1?'#c45555':dist>0.1?'#c9a84c':'#3cb8c3';
+    }
+
+    // Draw bodies
+    for(const b of bodies){
+      const col=colors[b.ci];
+      const s=toScreen(b.x,b.y);
+      const radius=4+b.m*5;
+      // Glow
+      const g=ctx.createRadialGradient(s.sx,s.sy,0,s.sx,s.sy,radius*3.5);
+      g.addColorStop(0,col.trail+'0.2)');g.addColorStop(1,col.trail+'0)');
+      ctx.beginPath();ctx.arc(s.sx,s.sy,radius*3.5,0,Math.PI*2);
+      ctx.fillStyle=g;ctx.fill();
+      // Body
+      ctx.beginPath();ctx.arc(s.sx,s.sy,radius,0,Math.PI*2);
+      ctx.fillStyle=col.fill;ctx.fill();
+    }
+
+    // Center of mass
+    let cx=0,cy=0,tm=0;
+    for(const b of bodies){cx+=b.x*b.m;cy+=b.y*b.m;tm+=b.m;}
+    const cms=toScreen(cx/tm,cy/tm);
+    ctx.beginPath();ctx.arc(cms.sx,cms.sy,1.5,0,Math.PI*2);
+    ctx.fillStyle='rgba(201,168,76,0.3)';ctx.fill();
+
+    elTime.textContent=simTime.toFixed(1);
+
+    requestAnimationFrame(animate);
+  }
+
+  btnRelease.addEventListener('click',releaseThird);
+  btnReset.addEventListener('click',init);
+  speedSlider.addEventListener('input',()=>{speedVal.textContent=speedSlider.value;});
+
+  init();
+  requestAnimationFrame(animate);
+})();
+
+/* ════════════════════════════════════════════════════════════ */
+/*   § 3 — LAGRANGE POINTS                                    */
+/*   Rotating frame: Sun-Earth system, effective potential,    */
+/*   test particles placed by click                            */
+/* ════════════════════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('lagrangeCanvas');
+  const ctx=c.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  let W,H;
+  function resize(){const r=c.getBoundingClientRect();W=r.width;H=r.height;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+  resize();window.addEventListener('resize',resize);
+
+  const elStatus=document.getElementById('lgStatus');
+  const potSlider=document.getElementById('lgPotential');
+
+  // Sun-Earth system in rotating frame
+  // Normalized: total mass=1, distance=1, Omega=1
+  const mu=0.01; // Earth mass fraction (Sun=1-mu, Earth=mu)
+  // Sun at (-mu, 0), Earth at (1-mu, 0) in rotating frame
+  const sunX=-mu, earthX=1-mu;
+
+  // Lagrange points (approximate)
+  // L1: between Sun and Earth
+  const rL=Math.pow(mu/3,1/3);
+  const L1={x:earthX-rL, y:0, label:'L1', stable:false};
+  const L2={x:earthX+rL, y:0, label:'L2', stable:false};
+  const L3={x:-(1+5*mu/12), y:0, label:'L3', stable:false};
+  const L4={x:0.5-mu, y:Math.sqrt(3)/2, label:'L4', stable:true};
+  const L5={x:0.5-mu, y:-Math.sqrt(3)/2, label:'L5', stable:true};
+  const LPs=[L1,L2,L3,L4,L5];
+
+  // Effective potential in rotating frame
+  function effPotential(x,y){
+    const r1=Math.sqrt((x-sunX)**2+y*y);
+    const r2=Math.sqrt((x-earthX)**2+y*y);
+    return -0.5*(x*x+y*y) - (1-mu)/Math.max(r1,0.01) - mu/Math.max(r2,0.01);
+  }
+
+  // Test particles
+  let particles=[]; // {x,y,vx,vy,trail:[]}
+  const maxPTrail=400;
+
+  // Equations of motion in rotating frame:
+  // x'' - 2*y' = dΩ/dx, y'' + 2*x' = dΩ/dy
+  // where Ω = 0.5*(x²+y²) + (1-mu)/r1 + mu/r2
+  function accelParticle(x,y,vx,vy){
+    const r1=Math.sqrt((x-sunX)**2+y*y);
+    const r2=Math.sqrt((x-earthX)**2+y*y);
+    const r13=Math.max(r1*r1*r1,0.0001);
+    const r23=Math.max(r2*r2*r2,0.0001);
+    // Gradient of Ω
+    const dOdx=x - (1-mu)*(x-sunX)/r13 - mu*(x-earthX)/r23;
+    const dOdy=y - (1-mu)*y/r13 - mu*y/r23;
+    // Coriolis: x'' = 2*vy + dOdx, y'' = -2*vx + dOdy
+    return{ax:2*vy+dOdx, ay:-2*vx+dOdy};
+  }
+
+  function stepParticle(p,dt){
+    const a=accelParticle(p.x,p.y,p.vx,p.vy);
+    p.x+=p.vx*dt+0.5*a.ax*dt*dt;
+    p.y+=p.vy*dt+0.5*a.ay*dt*dt;
+    const aN=accelParticle(p.x,p.y,p.vx+a.ax*dt,p.vy+a.ay*dt);
+    p.vx+=0.5*(a.ax+aN.ax)*dt;
+    p.vy+=0.5*(a.ay+aN.ay)*dt;
+  }
+
+  // Coordinate mapping: rotating frame [-1.8, 2.2] x [-1.8, 1.8] → screen
+  const xMin=-1.8, xMax=2.2, yMin=-1.8, yMax=1.8;
+  function toS(x,y){return{sx:(x-xMin)/(xMax-xMin)*W, sy:(1-(y-yMin)/(yMax-yMin))*H};}
+  function fromS(sx,sy){return{x:xMin+sx/W*(xMax-xMin), y:yMin+(1-sy/H)*(yMax-yMin)};}
+
+  // Precompute potential image
+  let potImg=null;
+  function buildPotentialImage(){
+    const res=200;
+    const imgData=ctx.createImageData(res,res);
+    let minP=Infinity, maxP=-Infinity;
+    const vals=[];
+    for(let j=0;j<res;j++){
+      for(let i=0;i<res;i++){
+        const x=xMin+i/res*(xMax-xMin);
+        const y=yMin+(1-j/res)*(yMax-yMin);
+        const v=effPotential(x,y);
+        const clamped=Math.max(-4,Math.min(-1,v));
+        vals.push(clamped);
+        if(clamped<minP)minP=clamped;
+        if(clamped>maxP)maxP=clamped;
+      }
+    }
+    for(let k=0;k<vals.length;k++){
+      const t=(vals[k]-minP)/(maxP-minP);
+      // Dark blue to gold colormap
+      imgData.data[k*4]  =Math.round(t*t*180);      // R
+      imgData.data[k*4+1]=Math.round(t*t*140);       // G
+      imgData.data[k*4+2]=Math.round((1-t)*40+t*60); // B
+      imgData.data[k*4+3]=255;
+    }
+    // Create offscreen canvas
+    const oc=document.createElement('canvas');oc.width=res;oc.height=res;
+    oc.getContext('2d').putImageData(imgData,0,0);
+    potImg=oc;
+  }
+  buildPotentialImage();
+
+  // Place particle
+  function placeAt(x,y,vx,vy){
+    vx=vx||0; vy=vy||0;
+    particles.push({x,y,vx,vy,trail:[]});
+  }
+
+  // Click to place
+  c.addEventListener('click',e=>{
+    const rect=c.getBoundingClientRect();
+    const sx=e.clientX-rect.left, sy=e.clientY-rect.top;
+    const p=fromS(sx,sy);
+    // Small random velocity to break symmetry
+    placeAt(p.x,p.y,(Math.random()-0.5)*0.02,(Math.random()-0.5)*0.02);
+    elStatus.textContent='입자 배치: ('+p.x.toFixed(2)+', '+p.y.toFixed(2)+')';
+  });
+
+  // Preset buttons
+  function goTo(lp){
+    particles=[];
+    // Place near the Lagrange point with tiny offset
+    placeAt(lp.x+0.01, lp.y+0.005, 0, 0);
+    elStatus.textContent=lp.label+' 근처'+(lp.stable?' (안정)':' (불안정)');
+    // Highlight button
+    document.querySelectorAll('#lgL1,#lgL2,#lgL4,#lgL5').forEach(b=>b.classList.remove('active'));
+  }
+  document.getElementById('lgL1').addEventListener('click',function(){goTo(L1);this.classList.add('active');});
+  document.getElementById('lgL2').addEventListener('click',function(){goTo(L2);this.classList.add('active');});
+  document.getElementById('lgL4').addEventListener('click',function(){goTo(L4);this.classList.add('active');});
+  document.getElementById('lgL5').addEventListener('click',function(){goTo(L5);this.classList.add('active');});
+  document.getElementById('lgClear').addEventListener('click',()=>{
+    particles=[];elStatus.textContent='';
+    document.querySelectorAll('#lgL1,#lgL2,#lgL4,#lgL5').forEach(b=>b.classList.remove('active'));
+  });
+
+  // Initial particle at L4
+  placeAt(L4.x+0.01, L4.y+0.005, 0, 0);
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    // Draw potential field
+    const potAlpha=parseFloat(potSlider.value);
+    if(potAlpha>0.01 && potImg){
+      ctx.globalAlpha=potAlpha*0.5;
+      ctx.drawImage(potImg,0,0,W,H);
+      ctx.globalAlpha=1;
+    }
+
+    // Integration
+    const dt=0.003;
+    const substeps=8;
+    for(let s=0;s<substeps;s++){
+      for(const p of particles) stepParticle(p,dt);
+    }
+
+    // Update trails
+    for(const p of particles){
+      p.trail.push({x:p.x,y:p.y});
+      if(p.trail.length>maxPTrail)p.trail.shift();
+    }
+
+    // Draw orbit of Earth (circle at radius 1 from COM ≈ Sun)
+    ctx.strokeStyle='rgba(60,184,195,0.06)';ctx.lineWidth=0.8;
+    ctx.beginPath();
+    for(let i=0;i<=200;i++){
+      const th=i/200*Math.PI*2;
+      const s=toS(Math.cos(th),Math.sin(th));
+      i===0?ctx.moveTo(s.sx,s.sy):ctx.lineTo(s.sx,s.sy);
+    }
+    ctx.stroke();
+
+    // Sun
+    const ss=toS(sunX,0);
+    ctx.beginPath();ctx.arc(ss.sx,ss.sy,10,0,Math.PI*2);
+    const sg=ctx.createRadialGradient(ss.sx,ss.sy,0,ss.sx,ss.sy,20);
+    sg.addColorStop(0,'rgba(255,220,100,0.8)');sg.addColorStop(0.5,'rgba(201,168,76,0.3)');sg.addColorStop(1,'rgba(201,168,76,0)');
+    ctx.fillStyle=sg;ctx.fill();
+    ctx.beginPath();ctx.arc(ss.sx,ss.sy,5,0,Math.PI*2);
+    ctx.fillStyle='#e8cc80';ctx.fill();
+
+    // Earth
+    const es=toS(earthX,0);
+    ctx.beginPath();ctx.arc(es.sx,es.sy,4,0,Math.PI*2);
+    ctx.fillStyle='#3cb8c3';ctx.fill();
+    const eg=ctx.createRadialGradient(es.sx,es.sy,0,es.sx,es.sy,12);
+    eg.addColorStop(0,'rgba(60,184,195,0.3)');eg.addColorStop(1,'rgba(60,184,195,0)');
+    ctx.beginPath();ctx.arc(es.sx,es.sy,12,0,Math.PI*2);
+    ctx.fillStyle=eg;ctx.fill();
+
+    // Lagrange points
+    ctx.font='10px "JetBrains Mono"';
+    for(const lp of LPs){
+      const ls=toS(lp.x,lp.y);
+      ctx.beginPath();ctx.arc(ls.sx,ls.sy,lp.stable?4:3,0,Math.PI*2);
+      ctx.fillStyle=lp.stable?'rgba(141,184,48,0.7)':'rgba(196,85,85,0.5)';
+      ctx.fill();
+      // Halo
+      if(lp.stable){
+        ctx.beginPath();ctx.arc(ls.sx,ls.sy,8,0,Math.PI*2);
+        ctx.fillStyle='rgba(141,184,48,0.1)';ctx.fill();
+      }
+      // Label
+      ctx.fillStyle=lp.stable?'rgba(141,184,48,0.8)':'rgba(196,85,85,0.6)';
+      ctx.textAlign='center';
+      ctx.fillText(lp.label,ls.sx,ls.sy-10);
+    }
+
+    // Labels for Sun and Earth
+    ctx.fillStyle='rgba(232,204,128,0.6)';ctx.font='9px "JetBrains Mono"';ctx.textAlign='center';
+    ctx.fillText('태양',ss.sx,ss.sy+20);
+    ctx.fillStyle='rgba(60,184,195,0.6)';
+    ctx.fillText('지구',es.sx,es.sy+16);
+
+    // Draw test particles and their trails
+    for(const p of particles){
+      // Trail
+      for(let i=1;i<p.trail.length;i++){
+        const alpha=(i/p.trail.length)*0.5;
+        const s0=toS(p.trail[i-1].x,p.trail[i-1].y);
+        const s1=toS(p.trail[i].x,p.trail[i].y);
+        if(Math.abs(s1.sx-s0.sx)>W*0.3)continue;
+        ctx.beginPath();ctx.moveTo(s0.sx,s0.sy);ctx.lineTo(s1.sx,s1.sy);
+        ctx.strokeStyle='rgba(232,204,128,'+alpha+')';
+        ctx.lineWidth=1.5;ctx.stroke();
+      }
+      // Particle
+      const ps=toS(p.x,p.y);
+      ctx.beginPath();ctx.arc(ps.sx,ps.sy,3,0,Math.PI*2);
+      ctx.fillStyle='#e8cc80';ctx.fill();
+      ctx.beginPath();ctx.arc(ps.sx,ps.sy,8,0,Math.PI*2);
+      const pg=ctx.createRadialGradient(ps.sx,ps.sy,0,ps.sx,ps.sy,8);
+      pg.addColorStop(0,'rgba(232,204,128,0.3)');pg.addColorStop(1,'rgba(232,204,128,0)');
+      ctx.fillStyle=pg;ctx.fill();
+    }
+
+    // Remove escaped particles
+    particles=particles.filter(p=>Math.abs(p.x)<5&&Math.abs(p.y)<5);
+
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+  window.addEventListener('resize',()=>{resize();buildPotentialImage();});
+})();
+
+/* ════════════════════════════════════════════════════════════ */
+/*   § 4 — THE FIGURE EIGHT (choreographies)                  */
+/*   Known periodic solutions to the equal-mass 3-body problem */
+/*   Initial conditions from Šuvakov & Dmitrašinović (2013)    */
+/* ════════════════════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('choreCanvas');
+  const ctx=c.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  let W,H;
+  function resize(){const r=c.getBoundingClientRect();W=r.width;H=r.height;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+  resize();window.addEventListener('resize',resize);
+
+  const elName=document.getElementById('choreName');
+  const elPeriod=document.getElementById('chorePeriod');
+  const elPertVal=document.getElementById('chorePertVal');
+  const pertSlider=document.getElementById('chorePert');
+  const pertDisp=document.getElementById('chorePertDisp');
+
+  // Choreography initial conditions (equal masses m=1, G=1)
+  // Format: body 1 at (x1,0) with velocity (0,v1), bodies 2&3 at (-x1/2, ±y) with velocity derived from symmetry
+  // These use the convention: body 1 starts on x-axis, body 3's velocity = -(v1+v2)
+  // Šuvakov-Dmitrašinović classification
+  const choreographies={
+    fig8:{
+      name:'8자 궤도',
+      // Chenciner-Montgomery figure-eight
+      // Body 1 at (-0.97..., 0), Bodies 2,3 at (0.97/2, ±...)
+      // Velocity of body 3: (v3x, v3y), body 1: (-2*v3x, -2*v3y) NO — 
+      // Standard IC: body 1 at (x,0) vel (0,v), body 2 at (-x,0) vel (0,-v), body 3 at (0,0) vel (-2*0, 0)
+      // Actually the standard figure-8:
+      // r1=(-1,0), r2=(1,0), r3=(0,0)
+      // v1=v2=(vx,vy), v3=(-2vx,-2vy)
+      // vx=0.347111, vy=0.532728
+      bodies:[
+        {x:-1, y:0, vx:0.347111, vy:0.532728},
+        {x:1,  y:0, vx:0.347111, vy:0.532728},
+        {x:0,  y:0, vx:-0.694222, vy:-1.065456}
+      ],
+      period:6.32,
+      scale:0.35
+    },
+    butterfly:{
+      name:'나비 I',
+      // Šuvakov #6 "butterfly I"
+      bodies:[
+        {x:-1, y:0, vx:0.30689, vy:0.12551},
+        {x:1,  y:0, vx:0.30689, vy:0.12551},
+        {x:0,  y:0, vx:-0.61378, vy:-0.25102}
+      ],
+      period:6.24,
+      scale:0.30
+    },
+    moth:{
+      name:'나방 I',
+      // Šuvakov #3 "moth I"
+      bodies:[
+        {x:-1, y:0, vx:0.46444, vy:0.39606},
+        {x:1,  y:0, vx:0.46444, vy:0.39606},
+        {x:0,  y:0, vx:-0.92888, vy:-0.79212}
+      ],
+      period:14.89,
+      scale:0.22
+    },
+    yarn:{
+      name:'실타래',
+      // Šuvakov #11 "yarn"
+      bodies:[
+        {x:-1, y:0, vx:0.55906, vy:0.34919},
+        {x:1,  y:0, vx:0.55906, vy:0.34919},
+        {x:0,  y:0, vx:-1.11812, vy:-0.69838}
+      ],
+      period:55.79,
+      scale:0.14
+    }
+  };
+
+  let current='fig8';
+  let bodies=[];
+  let perturbation=0;
+  const G=1;
+  const maxTrail=1200;
+  let simTime=0;
+
+  const colors=[
+    {fill:'#e8cc80',base:'rgba(201,168,76,'},
+    {fill:'#3cb8c3',base:'rgba(60,184,195,'},
+    {fill:'#c47a8a',base:'rgba(196,122,138,'}
+  ];
+
+  function init(){
+    const ch=choreographies[current];
+    bodies=ch.bodies.map((b,i)=>({
+      x:b.x, y:b.y,
+      vx:b.vx+perturbation*(Math.random()-0.5),
+      vy:b.vy+perturbation*(Math.random()-0.5),
+      m:1, trail:[], ci:i
+    }));
+    simTime=0;
+    elName.textContent=ch.name;
+    elPeriod.textContent=ch.period.toFixed(2);
+  }
+
+  function accel(i){
+    let ax=0,ay=0;
+    for(let j=0;j<3;j++){
+      if(i===j)continue;
+      const dx=bodies[j].x-bodies[i].x, dy=bodies[j].y-bodies[i].y;
+      const r2=dx*dx+dy*dy+1e-8;
+      const r=Math.sqrt(r2);
+      const f=G*bodies[j].m/(r2*r);
+      ax+=f*dx; ay+=f*dy;
+    }
+    return{ax,ay};
+  }
+
+  function step(dt){
+    const acc=bodies.map((_,i)=>accel(i));
+    for(let i=0;i<3;i++){
+      bodies[i].x+=bodies[i].vx*dt+0.5*acc[i].ax*dt*dt;
+      bodies[i].y+=bodies[i].vy*dt+0.5*acc[i].ay*dt*dt;
+    }
+    const accN=bodies.map((_,i)=>accel(i));
+    for(let i=0;i<3;i++){
+      bodies[i].vx+=0.5*(acc[i].ax+accN[i].ax)*dt;
+      bodies[i].vy+=0.5*(acc[i].ay+accN[i].ay)*dt;
+    }
+    simTime+=dt;
+  }
+
+  function toS(x,y){
+    const ch=choreographies[current];
+    const scale=Math.min(W,H)*ch.scale;
+    return{sx:W/2+x*scale, sy:H/2+y*scale};
+  }
+
+  function animate(){
+    ctx.clearRect(0,0,W,H);
+
+    // Faint grid
+    ctx.strokeStyle='rgba(201,168,76,0.025)';ctx.lineWidth=0.5;
+    const ch=choreographies[current];
+    const sc=Math.min(W,H)*ch.scale;
+    for(let i=-8;i<=8;i++){
+      ctx.beginPath();ctx.moveTo(W/2+i*sc*0.5,0);ctx.lineTo(W/2+i*sc*0.5,H);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(0,H/2+i*sc*0.5);ctx.lineTo(W,H/2+i*sc*0.5);ctx.stroke();
+    }
+
+    // Integrate
+    const dt=0.0005;
+    const substeps=16;
+    for(let s=0;s<substeps;s++) step(dt);
+
+    // Trails
+    for(const b of bodies){
+      b.trail.push({x:b.x,y:b.y});
+      if(b.trail.length>maxTrail) b.trail.shift();
+    }
+
+    // Draw trails
+    for(const b of bodies){
+      const col=colors[b.ci];
+      ctx.beginPath();
+      for(let i=1;i<b.trail.length;i++){
+        const s0=toS(b.trail[i-1].x,b.trail[i-1].y);
+        const s1=toS(b.trail[i].x,b.trail[i].y);
+        if(Math.abs(s1.sx-s0.sx)>W*0.4)continue;
+        ctx.moveTo(s0.sx,s0.sy);ctx.lineTo(s1.sx,s1.sy);
+      }
+      // Single gradient stroke for performance
+      const alpha=0.35;
+      ctx.strokeStyle=col.base+alpha+')';
+      ctx.lineWidth=1.8;ctx.stroke();
+
+      // Bright recent portion
+      const recent=Math.min(60,b.trail.length);
+      if(recent>2){
+        ctx.beginPath();
+        for(let i=b.trail.length-recent;i<b.trail.length;i++){
+          const s=toS(b.trail[i].x,b.trail[i].y);
+          if(i===b.trail.length-recent)ctx.moveTo(s.sx,s.sy);
+          else ctx.lineTo(s.sx,s.sy);
+        }
+        ctx.strokeStyle=col.base+'0.7)';
+        ctx.lineWidth=2.2;ctx.stroke();
+      }
+    }
+
+    // Bodies
+    for(const b of bodies){
+      const col=colors[b.ci];
+      const s=toS(b.x,b.y);
+      // Glow
+      const g=ctx.createRadialGradient(s.sx,s.sy,0,s.sx,s.sy,18);
+      g.addColorStop(0,col.base+'0.25)');g.addColorStop(1,col.base+'0)');
+      ctx.beginPath();ctx.arc(s.sx,s.sy,18,0,Math.PI*2);
+      ctx.fillStyle=g;ctx.fill();
+      // Dot
+      ctx.beginPath();ctx.arc(s.sx,s.sy,5,0,Math.PI*2);
+      ctx.fillStyle=col.fill;ctx.fill();
+    }
+
+    // Center of mass
+    const cm=toS(
+      (bodies[0].x+bodies[1].x+bodies[2].x)/3,
+      (bodies[0].y+bodies[1].y+bodies[2].y)/3
+    );
+    ctx.beginPath();ctx.arc(cm.sx,cm.sy,1.5,0,Math.PI*2);
+    ctx.fillStyle='rgba(201,168,76,0.25)';ctx.fill();
+
+    requestAnimationFrame(animate);
+  }
+
+  // Buttons
+  function selectChoreo(key,btn){
+    current=key;
+    perturbation=parseFloat(pertSlider.value);
+    document.querySelectorAll('#choreFig8,#choreButterfly,#choreMoth,#choreYarn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    init();
+  }
+  document.getElementById('choreFig8').addEventListener('click',function(){selectChoreo('fig8',this);});
+  document.getElementById('choreButterfly').addEventListener('click',function(){selectChoreo('butterfly',this);});
+  document.getElementById('choreMoth').addEventListener('click',function(){selectChoreo('moth',this);});
+  document.getElementById('choreYarn').addEventListener('click',function(){selectChoreo('yarn',this);});
+
+  pertSlider.addEventListener('input',()=>{
+    perturbation=parseFloat(pertSlider.value);
+    const pct=(perturbation/0.05*100).toFixed(0);
+    pertDisp.textContent=pct+'%';
+    elPertVal.textContent=pct+'%';
+    init();
+  });
+
+  document.getElementById('choreReset').addEventListener('click',()=>{
+    pertSlider.value=0;perturbation=0;
+    pertDisp.textContent='0%';elPertVal.textContent='0%';
+    init();
+  });
+
+  init();
+  requestAnimationFrame(animate);
+})();
+
+/* ════════════════════════════════════════════════════════════ */
+/*   § 5 — IS THE SOLAR SYSTEM STABLE?                        */
+/* ════════════════════════════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('solarCanvas');
+  const ctx=c.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  let W,H;
+  function resize(){const r=c.getBoundingClientRect();W=r.width;H=r.height;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
+  resize();window.addEventListener('resize',resize);
+
+  const btnRun=document.getElementById('solRun');
+  const btnReset=document.getElementById('solReset');
+  const speedSlider=document.getElementById('solSpeed');
+  const speedValEl=document.getElementById('solSpeedVal');
+  const elYear=document.getElementById('solYear');
+  const elRuns=document.getElementById('solRuns');
+  const elStable=document.getElementById('solStable');
+  const elUnstable=document.getElementById('solUnstable');
+
+  const G_AU=4*Math.PI*Math.PI;
+  const sunM=1;
+
+  const planetData=[
+    {a:0.387, e:0.2056, m:1.66e-7, color:'#c47a8a', base:'rgba(196,122,138,', name:'수성', mxT:200},
+    {a:0.723, e:0.0068, m:2.45e-6, color:'#e8cc80', base:'rgba(232,204,128,', name:'금성', mxT:150},
+    {a:1.000, e:0.0167, m:3.00e-6, color:'#3cb8c3', base:'rgba(60,184,195,', name:'지구', mxT:120},
+    {a:1.524, e:0.0934, m:3.23e-7, color:'#c9a84c', base:'rgba(201,168,76,', name:'화성', mxT:100}
+  ];
+
+  let planets=[], running=false;
+  let simYear=0, mercuryUnstable=false, instChance=0;
+  let totalRuns=0, stableCount=0, unstableCount=0;
+
+  function initPlanets(){
+    simYear=0; mercuryUnstable=false;
+    instChance=Math.random();
+    planets=planetData.map(pd=>{
+      const r=pd.a*(1-pd.e);
+      const v=Math.sqrt(G_AU*sunM*(1+pd.e)/(pd.a*(1-pd.e)));
+      const th=Math.random()*Math.PI*2;
+      return{x:r*Math.cos(th),y:r*Math.sin(th),vx:-v*Math.sin(th),vy:v*Math.cos(th),
+        m:pd.m,a:pd.a,color:pd.color,base:pd.base,name:pd.name,trail:[],mxT:pd.mxT,curE:pd.e};
+    });
+    elYear.textContent='0';
+  }
+
+  function accelP(px,py,skip){
+    let r2=px*px+py*py+1e-10,r=Math.sqrt(r2);
+    let ax=-G_AU*sunM*px/(r2*r), ay=-G_AU*sunM*py/(r2*r);
+    const amp=5000;
+    for(let j=0;j<planets.length;j++){
+      if(j===skip)continue;
+      const dx=planets[j].x-px,dy=planets[j].y-py;
+      r2=dx*dx+dy*dy+1e-6;r=Math.sqrt(r2);
+      const f=G_AU*planets[j].m*amp/(r2*r);
+      ax+=f*dx;ay+=f*dy;
+    }
+    return{ax,ay};
+  }
+
+  function stepSol(dt){
+    const n=planets.length;
+    const acc=planets.map((p,i)=>accelP(p.x,p.y,i));
+    for(let i=0;i<n;i++){planets[i].x+=planets[i].vx*dt+.5*acc[i].ax*dt*dt;planets[i].y+=planets[i].vy*dt+.5*acc[i].ay*dt*dt;}
+    const accN=planets.map((p,i)=>accelP(p.x,p.y,i));
+    for(let i=0;i<n;i++){planets[i].vx+=.5*(acc[i].ax+accN[i].ax)*dt;planets[i].vy+=.5*(acc[i].ay+accN[i].ay)*dt;}
+    // Mercury instability pump
+    if(instChance<0.12&&simYear>1500){
+      const me=planets[0],r=Math.sqrt(me.x*me.x+me.y*me.y);
+      const kick=0.00002*(simYear-1500)/3000;
+      me.vx+=me.x/r*kick*dt*100;me.vy+=me.y/r*kick*dt*100;
+    }
+    simYear+=dt*50;
+  }
+
+  function compEcc(p){
+    const r=Math.sqrt(p.x*p.x+p.y*p.y);
+    const v2=p.vx*p.vx+p.vy*p.vy;
+    const eps=v2/2-G_AU*sunM/r;
+    const h=p.x*p.vy-p.y*p.vx;
+    return Math.sqrt(Math.max(0,1+2*eps*h*h/(G_AU*G_AU*sunM*sunM)));
+  }
+
+  function toS(x,y){const s=Math.min(W,H)*0.27;return{sx:W/2+x*s,sy:H/2+y*s};}
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // Reference orbits
+    ctx.strokeStyle='rgba(201,168,76,0.04)';ctx.lineWidth=.5;
+    for(const pd of planetData){const s0=toS(pd.a,0);ctx.beginPath();ctx.arc(W/2,H/2,Math.abs(s0.sx-W/2),0,Math.PI*2);ctx.stroke();}
+
+    if(running){
+      const sub=parseInt(speedSlider.value);
+      speedValEl.textContent=sub;
+      for(let s=0;s<sub;s++) stepSol(0.0003);
+      elYear.textContent=Math.round(simYear);
+      for(const p of planets)p.curE=compEcc(p);
+      if(planets[0].curE>0.65&&!mercuryUnstable){mercuryUnstable=true;unstableCount++;elUnstable.textContent=unstableCount;}
+      if(simYear>=5000){running=false;totalRuns++;elRuns.textContent=totalRuns;if(!mercuryUnstable){stableCount++;elStable.textContent=stableCount;}btnRun.textContent='▶ 실행';}
+    }
+
+    for(const p of planets){p.trail.push({x:p.x,y:p.y});if(p.trail.length>p.mxT)p.trail.shift();}
+
+    // Sun
+    const ss=toS(0,0);
+    const sg=ctx.createRadialGradient(ss.sx,ss.sy,0,ss.sx,ss.sy,16);
+    sg.addColorStop(0,'rgba(255,220,100,0.6)');sg.addColorStop(0.5,'rgba(201,168,76,0.15)');sg.addColorStop(1,'rgba(201,168,76,0)');
+    ctx.beginPath();ctx.arc(ss.sx,ss.sy,16,0,Math.PI*2);ctx.fillStyle=sg;ctx.fill();
+    ctx.beginPath();ctx.arc(ss.sx,ss.sy,4,0,Math.PI*2);ctx.fillStyle='#e8cc80';ctx.fill();
+
+    // Planets
+    for(let i=0;i<planets.length;i++){
+      const p=planets[i];const isMerc=i===0;const danger=isMerc&&p.curE>0.4;
+      for(let j=1;j<p.trail.length;j++){
+        const a=(j/p.trail.length)*0.4;
+        const s0=toS(p.trail[j-1].x,p.trail[j-1].y),s1=toS(p.trail[j].x,p.trail[j].y);
+        if(Math.abs(s1.sx-s0.sx)>W*0.4)continue;
+        ctx.beginPath();ctx.moveTo(s0.sx,s0.sy);ctx.lineTo(s1.sx,s1.sy);
+        ctx.strokeStyle=danger?'rgba(196,85,85,'+a+')':p.base+a+')';
+        ctx.lineWidth=isMerc?2:1.5;ctx.stroke();
+      }
+      const ps=toS(p.x,p.y);const rad=isMerc?4:3;
+      const bc=danger?'#c45555':p.color;
+      const gb=danger?'rgba(196,85,85,':'rgba(201,168,76,';
+      const pg=ctx.createRadialGradient(ps.sx,ps.sy,0,ps.sx,ps.sy,rad*4);
+      pg.addColorStop(0,gb+'0.2)');pg.addColorStop(1,gb+'0)');
+      ctx.beginPath();ctx.arc(ps.sx,ps.sy,rad*4,0,Math.PI*2);ctx.fillStyle=pg;ctx.fill();
+      ctx.beginPath();ctx.arc(ps.sx,ps.sy,rad,0,Math.PI*2);ctx.fillStyle=bc;ctx.fill();
+      ctx.fillStyle=danger?'rgba(196,85,85,0.7)':p.base+'0.5)';
+      ctx.font='9px "JetBrains Mono"';ctx.textAlign='left';
+      ctx.fillText(p.name,ps.sx+rad+4,ps.sy+3);
+
+      // Mercury eccentricity gauge
+      if(isMerc){
+        const bx=W-Math.min(65,W*0.12),by=Math.min(30,H*0.06),bh=Math.min(100,H*0.25);
+        ctx.fillStyle='rgba(201,168,76,0.06)';ctx.fillRect(bx,by,18,bh);
+        const eh=Math.min(1,p.curE)*bh;
+        const ec=p.curE>0.6?'rgba(196,85,85,0.6)':p.curE>0.35?'rgba(201,168,76,0.4)':'rgba(60,184,195,0.3)';
+        ctx.fillStyle=ec;ctx.fillRect(bx,by+bh-eh,18,eh);
+        const ty=by+bh-0.65*bh;
+        ctx.strokeStyle='rgba(196,85,85,0.35)';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+        ctx.beginPath();ctx.moveTo(bx-2,ty);ctx.lineTo(bx+20,ty);ctx.stroke();ctx.setLineDash([]);
+        ctx.fillStyle='rgba(201,168,76,0.35)';ctx.font='8px "JetBrains Mono"';ctx.textAlign='center';
+        ctx.fillText('수성',bx+9,by-4);ctx.fillText('이심률',bx+9,by-13);
+        ctx.fillStyle='rgba(196,85,85,0.35)';ctx.fillText('위험',bx+9,ty-3);
+        ctx.fillStyle='rgba(201,168,76,0.25)';ctx.fillText(p.curE.toFixed(3),bx+9,by+bh+12);
+      }
+    }
+    if(mercuryUnstable&&running){const fl=Math.sin(Date.now()*0.01)*0.5+0.5;ctx.fillStyle='rgba(196,85,85,'+(fl*0.03)+')';ctx.fillRect(0,0,W,H);}
+
+    requestAnimationFrame(draw);
+  }
+
+  btnRun.addEventListener('click',()=>{
+    if(running){running=false;btnRun.textContent='▶ 실행';return;}
+    if(simYear>=5000)initPlanets();
+    running=true;btnRun.textContent='⏸ 일시정지';
+  });
+  btnReset.addEventListener('click',()=>{running=false;btnRun.textContent='▶ 실행';initPlanets();});
+  speedSlider.addEventListener('input',()=>{speedValEl.textContent=speedSlider.value;});
+
+  initPlanets();
+  requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>

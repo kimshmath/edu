@@ -14,6 +14,7 @@
 <title>Does a Machine Suffer? — The Science of AI Consciousness</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mellow_ios.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#080d1a;--bg2:#0c1326;--bg3:#111b38;--card:#131f42;--gold:#f0b429;--gold-dim:#c4912080;--sky:#38bdf8;--purple:#a78bfa;--coral:#fb7185;--mint:#34d399;--text:#e0e6f0;--muted:#7b8db5;--font-display:'Fraunces',Georgia,serif;--font-body:'DM Sans',sans-serif;--font-mono:'JetBrains Mono',monospace}
@@ -466,5 +467,6 @@ SEC.forEach(id=>{const d=document.createElement('button');d.className='nav-dot';
 const sO=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){const i=SEC.indexOf(e.target.id);document.querySelectorAll('.nav-dot').forEach((d,j)=>d.classList.toggle('active',j===i));}});},{threshold:.25});
 SEC.forEach(id=>{const el=document.getElementById(id);if(el)sO.observe(el);});
 </script>
+<script src="mellow_ios_bridge.js"></script>
 </body>
 </html>'''

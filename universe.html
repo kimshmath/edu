@@ -11,6 +11,7 @@
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
   onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'$$',right:'$$',display:true}]})"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link rel="stylesheet" href="mellow_ios.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -2224,5 +2225,6 @@ function chime(f=440,d=.35,v=.12){const c=ac(),o=c.createOscillator(),g=c.create
 /* ── ambient drone ── */
 {let s=false;function d(){if(s)return;s=true;try{const c=ac(),o1=c.createOscillator(),o2=c.createOscillator(),g=c.createGain();o1.type='sine';o1.frequency.value=55;o2.type='sine';o2.frequency.value=82.5;g.gain.setValueAtTime(0,c.currentTime);g.gain.linearRampToValueAtTime(.025,c.currentTime+4);o1.connect(g);o2.connect(g);g.connect(c.destination);o1.start();o2.start()}catch(e){}}document.addEventListener('click',d,{once:true});document.addEventListener('keydown',d,{once:true})}
 </script>
+<script src="universe_ios_bridge.js"></script>
 </body>
 </html>

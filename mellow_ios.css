@@ -1,0 +1,211 @@
+/* ═════════════════════════════════════════════ */
+/*  mellow_ios.css – Shared iOS styles          */
+/*  Include in ALL chapters for iOS app         */
+/* ═════════════════════════════════════════════ */
+
+/* ── Safe‑area insets ── */
+body {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+footer {
+  padding-bottom: calc(2rem + env(safe-area-inset-bottom)) !important;
+}
+
+/* ── Touch targets ≥ 44pt ── */
+button, .ctrl-btn, .btn, .btn-accent, .s1-btn, .s4-btn {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Larger slider thumb for touch */
+input[type=range] {
+  min-height: 44px;
+}
+input[type=range]::-webkit-slider-thumb {
+  width: 22px !important;
+  height: 22px !important;
+  border: 2px solid rgba(5,6,15,0.6);
+}
+
+/* ── Canvas touch ── */
+canvas {
+  touch-action: none;
+}
+
+/* ── Floating badge: hide in iOS app ── */
+.floating-badge, #brand-corner {
+  display: none !important;
+}
+
+/* ── Hero: account for status bar ── */
+#hero {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* ── Interactive feedback ── */
+button:active, .ctrl-btn:active, .btn:active, .btn-accent:active {
+  transform: scale(0.95);
+  opacity: 0.85;
+}
+
+/* ── Smooth momentum scrolling ── */
+html {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── No selection on interactive panels ── */
+.canvas-wrap, .zoom-wrap, .factory-canvas-box, .flight-wrap,
+.klein-box, .mobius-box, .orient-box, .slope-box, .erato-canvas-box,
+.instrument-grid, .ab-option {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* ── Audio overlay: larger tap target ── */
+#audio-overlay button, #audio-gate button {
+  min-height: 54px;
+  min-width: 120px;
+  font-size: 1rem;
+}
+
+
+/* ═════════════════════════════════════════════ */
+/*  iPad layout (regular width)                 */
+/* ═════════════════════════════════════════════ */
+@media (min-width: 768px) {
+  .wrap {
+    max-width: 1000px;
+    padding: 5rem 3rem;
+  }
+}
+
+
+/* ═════════════════════════════════════════════ */
+/*  iPhone layout (compact width ≤ 430pt)       */
+/* ═════════════════════════════════════════════ */
+@media (max-width: 430px) {
+  /* General layout */
+  .wrap {
+    padding: 2.5rem 1rem !important;
+  }
+
+  /* Headings */
+  h2 {
+    font-size: clamp(1.5rem, 6vw, 2rem) !important;
+    line-height: 1.2 !important;
+  }
+  h3 {
+    font-size: 1.15rem !important;
+  }
+
+  /* Hero section */
+  #hero {
+    min-height: 70vh;
+  }
+  .hero-title {
+    font-size: clamp(2rem, 10vw, 3.2rem) !important;
+  }
+  .hero-sub {
+    font-size: 0.95rem !important;
+    padding: 0 0.5rem;
+  }
+  .hero-label {
+    font-size: 0.65rem !important;
+    letter-spacing: 0.25em !important;
+  }
+
+  /* Grids: force single column */
+  .erato-grid, .factory-grid, .klein-grid,
+  .slope-grid, .orient-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  /* Panels */
+  .erato-panel, .factory-panel {
+    padding: 1.2rem !important;
+  }
+
+  /* Canvas aspect ratios: taller on phone */
+  .zoom-wrap, .flight-wrap {
+    aspect-ratio: 4/3 !important;
+  }
+
+  /* Section labels */
+  .sec-label {
+    font-size: 0.62rem !important;
+    letter-spacing: 0.25em !important;
+  }
+
+  /* Theorem & info boxes */
+  .theorem-box, .info-box {
+    padding: 1rem 1.2rem !important;
+  }
+
+  /* Buttons: stack when too many */
+  .lens-btns, .factory-btns, .orient-play-bar {
+    gap: 0.35rem !important;
+  }
+  .ctrl-btn {
+    padding: 0.35rem 0.7rem !important;
+    font-size: 0.82rem !important;
+  }
+
+  /* Slope controls */
+  .slope-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .slope-slider {
+    width: 100% !important;
+  }
+
+  /* Instrument grids */
+  .instrument-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.6rem !important;
+  }
+
+  /* Slider value labels */
+  .slider-value {
+    font-size: 0.75rem !important;
+  }
+
+  /* Footer */
+  footer {
+    padding: 2rem 1rem calc(1.5rem + env(safe-area-inset-bottom)) !important;
+  }
+
+  /* KaTeX math: prevent overflow */
+  .katex-display {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    padding: 0.5rem 0 !important;
+  }
+}
+
+/* ═════════════════════════════════════════════ */
+/*  iPhone SE / very small screens (≤ 375pt)    */
+/* ═════════════════════════════════════════════ */
+@media (max-width: 375px) {
+  .wrap {
+    padding: 2rem 0.7rem !important;
+  }
+  h2 {
+    font-size: 1.4rem !important;
+  }
+  .hero-title {
+    font-size: 2rem !important;
+  }
+  body {
+    font-size: 0.95rem !important;
+    line-height: 1.65 !important;
+  }
+  .ctrl-btn {
+    padding: 0.3rem 0.5rem !important;
+    font-size: 0.75rem !important;
+  }
+}

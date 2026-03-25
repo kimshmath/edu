@@ -1,0 +1,119 @@
+/* ═════════════════════════════════════════════ */
+/*  calculus_ios.css – iOS / iPad optimizations  */
+/* ═════════════════════════════════════════════ */
+
+/* ── Safe‑area insets ── */
+body {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Extra bottom padding for home indicator */
+footer {
+  padding-bottom: calc(2rem + env(safe-area-inset-bottom)) !important;
+}
+
+/* ── Touch targets ≥ 44pt ── */
+.ctrl-bar button, .btn {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.5rem 1.2rem;
+  font-size: 0.7rem;
+}
+
+/* Larger slider thumb for touch */
+.ctrl-bar input[type=range] {
+  height: 6px;
+  min-height: 44px; /* touch target */
+}
+.ctrl-bar input[type=range]::-webkit-slider-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid rgba(5,6,15,0.6);
+  box-shadow: 0 0 10px rgba(201,168,76,0.4);
+}
+
+/* ── Canvas touch ── */
+canvas {
+  touch-action: none; /* prevent scroll while interacting */
+}
+
+/* ── iPad layout ── */
+@media (min-width: 768px) {
+  .wrap {
+    max-width: 1000px;
+    padding: 5rem 3rem;
+  }
+  .prose {
+    font-size: 1.12rem;
+    line-height: 1.85;
+  }
+  h2 {
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+  }
+  .ctrl-bar {
+    padding: 1rem 1.5rem;
+    gap: 1.2rem;
+  }
+  .readout {
+    font-size: 0.85rem;
+    padding: 0.8rem 1.5rem;
+  }
+  .canvas-caption {
+    font-size: 0.65rem;
+    padding: 0.8rem 1.5rem;
+  }
+}
+
+/* ── iPhone SE / small screens ── */
+@media (max-width: 375px) {
+  .wrap {
+    padding: 2.5rem 0.8rem;
+  }
+  .hero-title {
+    font-size: clamp(1.8rem, 6vw, 2.4rem) !important;
+  }
+  .two-col {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+  .ctrl-bar {
+    gap: 0.3rem;
+    padding: 0.5rem 0.6rem;
+  }
+  .ctrl-bar button {
+    font-size: 0.55rem;
+    padding: 0.4rem 0.5rem;
+  }
+}
+
+/* ── Floating badge: hide in iOS app ── */
+.floating-badge {
+  display: none !important;
+}
+
+/* ── Hero: account for status bar ── */
+#hero {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* ── Interactive feedback ── */
+.ctrl-bar button:active {
+  transform: scale(0.95);
+  opacity: 0.85;
+}
+
+/* ── Smooth momentum scrolling ── */
+html {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Canvas panels: no selection ── */
+.canvas-wrap {
+  -webkit-user-select: none;
+  user-select: none;
+}
