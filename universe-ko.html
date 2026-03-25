@@ -11,7 +11,6 @@
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
   onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'$$',right:'$$',display:true}]})"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<link rel="stylesheet" href="mellow_ios.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -149,8 +148,23 @@ footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid rgba(255,25
 .mobius-box canvas{position:absolute;inset:0;width:100%;height:100%}
 .mobius-ctrl{position:absolute;bottom:0;left:0;right:0;padding:.7rem 1.2rem;display:flex;align-items:center;gap:.7rem;border-top:1px solid var(--border);background:rgba(8,9,27,.95);z-index:2}
 
+/* ── § 7 THURSTON GALLERY ── */
+.thurston-gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:2.5rem 0}
+.thurston-card{position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:#07081a;aspect-ratio:1;cursor:pointer;transition:border-color .3s,transform .3s,box-shadow .3s}
+.thurston-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.thurston-card.active{border-color:var(--gold);box-shadow:0 0 20px rgba(201,168,76,.15)}
+.thurston-card canvas{position:absolute;inset:0;width:100%;height:100%}
+.thurston-card-label{position:absolute;bottom:0;left:0;right:0;padding:.5rem .6rem;background:linear-gradient(transparent,rgba(5,6,15,.92));pointer-events:none;z-index:2}
+.thurston-card-sym{font-family:var(--font-display);font-size:.85rem;color:var(--gold2);display:block;line-height:1.2}
+.thurston-card-name{font-family:var(--font-mono);font-size:.42rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;margin-top:.15rem}
+.thurston-card-curv{position:absolute;top:6px;right:8px;font-family:var(--font-mono);font-size:.4rem;letter-spacing:.08em;text-transform:uppercase;pointer-events:none;z-index:2}
+.thurston-detail{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.4rem 1.6rem;margin-top:1rem;min-height:60px;transition:opacity .3s}
+.thurston-detail-name{font-family:var(--font-display);font-size:1.2rem;color:var(--gold2);font-weight:300;margin-bottom:.4rem}
+.thurston-detail p{color:var(--muted);font-size:.95rem;margin-bottom:.3rem}
+
 @media(max-width:760px){
   .erato-grid,.factory-grid,.klein-grid,.slope-grid,.orient-grid{grid-template-columns:1fr}
+  .thurston-gallery{grid-template-columns:repeat(2,1fr)}
   .wrap{padding:4rem 1.3rem}
   .hero-shape-label{bottom:18%}
 }
@@ -182,7 +196,7 @@ footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid rgba(255,25
 
   <p>그런데 기원전 <strong>500년</strong> 무렵, 피타고라스가 바로 그 주장을 했다 — 순전히 미학적 이유에서. 그는 구가 가장 완벽한 형태이며, 우주는 완벽을 갖춰야 한다고 믿었다. <strong>아리스토텔레스</strong>(기원전 384–322)는 한 걸음 더 나아가 물리적 증거를 제시했다. 배가 수평선 너머로 사라질 때 선체부터 보이지 않고, 월식 때 달에 드리운 지구의 그림자는 언제나 원형이며, 남쪽으로 여행하면 수평선 위로 새로운 별자리가 떠오른다. 이 중 어느 것도 평평한 지구에서는 설명할 수 없다.</p>
 
-  <p>그리고 모든 것을 바꾼 측정이 이루어졌다.</p>
+  <p>그리고 결정적 실험이 이루어졌다.</p>
 
   <div class="rule"></div>
 
@@ -292,7 +306,7 @@ footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid rgba(255,25
 <!-- ═══════════════════ § 3 ═══════════════════ -->
 <div class="wrap reveal" id="s3">
   <span class="sec-label">§ 3 — 곡면</span>
-  <h2>모든 닫힌 곡면은 손잡이가 달린 <em>구</em>이다</h2>
+  <h2>곡면의 <em>분류</em></h2>
 
   <p>우주의 모양 — 3차원 다양체 — 에 대해 말하려면 한 차원 아래의 세계를 먼저 이해해야 한다. 곡면의 분류는 워밍업 문제다. 그리고 이미 수학에서 가장 아름다운 정리 중 하나다.</p>
 
@@ -373,7 +387,7 @@ footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid rgba(255,25
     <div class="flight-edge-flash" id="flightFlash"></div>
   </div>
 
-  <p>만약 우주가 <strong>3차원 토러스</strong> — 마주보는 면이 식별된 정육면체 — 라면, 직선으로 비행해도 결국 집으로 돌아올 수 있다. 앞을 바라보면 자신의 복사본이 멀리 사라져 가는 것이 보인다. 마치 두 개의 평행 거울 사이에 선 것처럼. 유한한 우주, 경계 없음, 완전히 평평함.</p>
+  <p>만약 우주가 <strong>3차원 토러스</strong> — 마주보는 면이 식별된 정육면체 — 라면, 직선으로 비행해도 결국 집으로 돌아올 수 있다. 앞을 바라보면 자신의 복사본이 멀리 사라져 가는 것이 보인다. 마치 두 개의 평행 거울 사이에 선 것처럼. 유한한 우주, 완전히 평평하고, 경계도 중심도 없는.</p>
 
   <div class="rule"></div>
 
@@ -436,7 +450,7 @@ footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid rgba(255,25
     <span id="orientStatus" style="font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;color:var(--muted)">준비</span>
   </div>
 
-  <p>이것이 "한 면"의 진정한 의미이다: 뫼비우스 띠 위에서 "바깥"을 일관되게 정의할 방법이 없다. 모든 닫힌 비방향성 곡면 — 클라인 병, 사영 평면 — 은 그 안에 뫼비우스 띠를 숨기고 있다. 마치 처음부터 양면이 아니었던 곳 사이의 비밀 통로처럼.</p>
+  <p>이것이 "한 면"의 진정한 의미이다: 뫼비우스 띠 위에서 "바깥"을 일관되게 정의할 방법이 없다. 모든 닫힌 비방향성 곡면 — 클라인 병, 사영 평면 — 은 그 안에 뫼비우스 띠를 숨기고 있다. 처음부터 양면이 아니었던 곳 사이의 비밀 통로.</p>
 </div>
 
 <hr class="section-rule">
@@ -468,22 +482,19 @@ footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid rgba(255,25
 
   <div class="rule"></div>
 
-  <h3>도넛을 비틀어 자르기</h3>
+  <h3>도넛 속의 비틀린 띠</h3>
 
-  <p><strong>뫼비우스 띠</strong> — 반 비틀림이 있는 띠 — 는 비방향성의 기본 구성 요소다. 면이 하나, 변이 하나밖에 없다. 그리고 저차원 위상수학에서 가장 놀라운 사실 중 하나로 이어진다:</p>
+  <p><strong>속이 찬 토러스</strong> — 속이 찬 도넛 — 를 들고, 그 안에 종이띠를 하나 끼워 넣어 중심을 한 바퀴 돌게 하라. 띠에 <strong>반 비틀림이 없으면</strong>(0개), 평범한 양면 띠다: 크림치즈를 한쪽 면에만 바를 수 있고 반대편은 깨끗하다. 그런데 <strong>반 비틀림을 한 번</strong> 주면, 띠는 <em>뫼비우스 띠</em>가 된다 — 면이 하나밖에 없다. 어디서 시작하든 크림치즈를 한 번의 연속 동작으로 띠 <em>전체</em>에 바르게 된다. 깨끗한 "반대편"이란 존재하지 않는다.</p>
 
-  <div class="info-box">
-    <p style="color:var(--text)"><strong>속이 찬 토러스</strong>(속이 찬 도넛)를 들어라. 그 안에 뫼비우스 띠를 꿰어, 중심 원을 한 바퀴 돌며 반 비틀림을 준다. 이제 이 띠를 따라 속이 찬 토러스를 <strong>자르라</strong>. 두 조각이 될 것 같지만 — 결과는 <em>여전히 한 조각</em>이다. 더 얇은 또 다른 속이 찬 토러스.</p>
-  </div>
-
-  <p><strong>자르기</strong>를 누르고 지켜보라.</p>
+  <p><strong>−</strong>와 <strong>+</strong> 버튼으로 반 비틀림 횟수를 바꿔 보라. 토러스 안에서 띠가 변하는 것을 관찰하라. 반 비틀림이 <strong>홀수</strong>이면 한 면(뫼비우스 띠), <strong>짝수</strong>이면 두 면(보통 띠)이다.</p>
 
   <div class="mobius-box" id="mobiusBox">
     <canvas id="mobiusCanvas"></canvas>
     <div class="mobius-ctrl">
-      <button class="ctrl-btn" id="mobiusCut">✂ 자르기</button>
-      <button class="ctrl-btn" id="mobiusReset">초기화</button>
-      <span id="mobiusStatus" style="margin-left:auto;font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;color:var(--muted)">준비</span>
+      <button class="ctrl-btn" id="twistMinus">−</button>
+      <span id="twistCount" style="font-family:var(--font-display);font-size:1.3rem;color:var(--gold2);min-width:100px;text-align:center">반 비틀림 1회</span>
+      <button class="ctrl-btn" id="twistPlus">+</button>
+      <span id="twistSided" style="margin-left:auto;font-family:var(--font-mono);font-size:.58rem;letter-spacing:.1em;color:var(--rose)">한 면 · 🧀 한 번에 전체를 바를 수 있음</span>
     </div>
   </div>
 </div>
@@ -491,9 +502,112 @@ footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid rgba(255,25
 <hr class="section-rule">
 
 <div class="wrap" style="padding:4rem 2rem;text-align:center">
-  <p style="color:var(--muted);font-family:var(--font-display);font-size:1.1rem;font-style:italic;font-weight:300;max-width:560px;margin:0 auto 1rem">이제 우리에게는 언어가 있다: 다양체, 종수, 방향성, 평면 토러스, 클라인 병. 2차원의 경우는 완전히 분류되었다. 그러나 우주는 3차원이다 — 그리고 진정한 미스터리는 거기에서 시작된다.</p>
-  <p style="color:var(--muted);font-style:italic;font-size:.9rem">§ 7–9: 3차원 다양체, 서스턴의 기하학, 페렐만의 증명, 그리고 우주의 형태 — 곧 이어집니다.</p>
+  <p style="color:var(--muted);font-family:var(--font-display);font-size:1.1rem;font-style:italic;font-weight:300;max-width:560px;margin:0 auto 1rem">이제 우리에게는 언어가 있다: 다양체, 종수, 방향성, 평면 토러스, 클라인 병. 2차원의 경우는 완전히 분류되었다. 그러나 우주는 3차원이다 &mdash; 그리고 진정한 미스터리는 거기에서 시작된다.</p>
 </div>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════ § 7 ═══════════════════ -->
+<div class="wrap reveal" id="s7">
+  <span class="sec-label">§ 7 — 3차원 다양체</span>
+  <h2>모든 것의 <em>형태</em></h2>
+
+  <p>우리가 사는 우주는 3차원이다. 모든 점에서 앞-뒤, 좌-우, 위-아래로 움직일 수 있다 — 세 개의 독립적인 방향, 국소적으로 \(\mathbb{R}^3\)의 복사본을 이룬다. 그러나 구 위의 2차원 존재가 작은 조각 안에서 곡률을 감지할 수 없듯, 우리 우주의 전역적 위상은 무한 유클리드 공간과는 완전히 다른 것일 수 있다.</p>
+
+  <p><strong>닫힌 3차원 다양체</strong>는 부피가 유한하고, 경계가 없으며, 국소적으로 \(\mathbb{R}^3\)과 구별할 수 없는 3차원 공간이다. <em>우리 우주는 어떤 닫힌 3차원 다양체인가?</em> 이 질문은 한 세기 넘게 수학과 우주론을 사로잡아 왔다.</p>
+
+  <p>2차원에서는 분류가 깔끔했다: 종수와 방향성. 3차원에서는 상황이 <strong>비교할 수 없이 풍부하다</strong>. 3차원 다양체를 분류하는 단 하나의 정수 같은 것은 없다. 대신, 가능성의 세계가 있으며, 이를 하나의 심오한 구조 정리가 조직한다.</p>
+
+  <div class="rule"></div>
+
+  <h3>서스턴의 기하화</h3>
+
+  <p>1970년대에 <strong>윌리엄 서스턴</strong>은 숨이 멎는 추측을 제안했다: 모든 닫힌 3차원 다양체는 특정 구와 토러스를 따라 잘라서, 각 조각이 정확히 <strong>8가지 모델 기하학</strong> 중 하나를 갖는 조각들로 분해할 수 있다. 모든 곡면이 구면, 평면, 쌍곡면 중 하나이듯, 모든 3차원 다양체는 8가지 기하학으로 이루어진다 — 그 이상도 이하도 아니다.</p>
+
+  <div class="theorem-box">
+    <p style="color:var(--text);margin-bottom:.4rem"><strong>서스턴의 8가지 기하학</strong></p>
+    <p>모든 닫힌 3차원 다양체는 다음 기하학 중 하나를 갖는 조각들로 분해된다:</p>
+    <p style="text-align:center;color:var(--gold2);margin:.7rem 0;font-size:1.05rem">
+      \(S^3\) · \(\mathbb{E}^3\) · \(\mathbb{H}^3\) · \(S^2 \!\times\! \mathbb{R}\) · \(\mathbb{H}^2 \!\times\! \mathbb{R}\) · \(\widetilde{\mathrm{SL}_2\mathbb{R}}\) · \(\mathrm{Nil}\) · \(\mathrm{Sol}\)
+    </p>
+    <p>처음 셋은 등곡률 기하학: 양(\(S^3\)), 영(\(\mathbb{E}^3\)), 음(\(\mathbb{H}^3\)). 나머지 다섯은 <em>비등방적</em> — 방향에 따라 기하학이 다르다.</p>
+  </div>
+
+  <p>각 기하학을 클릭하여 탐험해 보라.</p>
+
+  <div class="thurston-gallery" id="thurstonGallery">
+    <div class="thurston-card active" data-geo="0"><canvas></canvas>
+      <div class="thurston-card-label"><span class="thurston-card-sym">\(S^3\)</span><span class="thurston-card-name">구면</span></div>
+      <span class="thurston-card-curv" style="color:var(--gold)">K &gt; 0</span></div>
+    <div class="thurston-card" data-geo="1"><canvas></canvas>
+      <div class="thurston-card-label"><span class="thurston-card-sym">\(\mathbb{E}^3\)</span><span class="thurston-card-name">유클리드</span></div>
+      <span class="thurston-card-curv" style="color:var(--cyan)">K = 0</span></div>
+    <div class="thurston-card" data-geo="2"><canvas></canvas>
+      <div class="thurston-card-label"><span class="thurston-card-sym">\(\mathbb{H}^3\)</span><span class="thurston-card-name">쌍곡</span></div>
+      <span class="thurston-card-curv" style="color:var(--rose)">K &lt; 0</span></div>
+    <div class="thurston-card" data-geo="3"><canvas></canvas>
+      <div class="thurston-card-label"><span class="thurston-card-sym">\(S^2\!\times\!\mathbb{R}\)</span><span class="thurston-card-name">구 × 직선</span></div>
+      <span class="thurston-card-curv" style="color:var(--muted)">혼합</span></div>
+    <div class="thurston-card" data-geo="4"><canvas></canvas>
+      <div class="thurston-card-label"><span class="thurston-card-sym">\(\mathbb{H}^2\!\times\!\mathbb{R}\)</span><span class="thurston-card-name">쌍곡면 × 직선</span></div>
+      <span class="thurston-card-curv" style="color:var(--muted)">혼합</span></div>
+    <div class="thurston-card" data-geo="5"><canvas></canvas>
+      <div class="thurston-card-label"><span class="thurston-card-sym">\(\widetilde{\mathrm{SL}_2}\)</span><span class="thurston-card-name">보편 피복</span></div>
+      <span class="thurston-card-curv" style="color:var(--muted)">비틀림</span></div>
+    <div class="thurston-card" data-geo="6"><canvas></canvas>
+      <div class="thurston-card-label"><span class="thurston-card-sym">\(\mathrm{Nil}\)</span><span class="thurston-card-name">닐기하학</span></div>
+      <span class="thurston-card-curv" style="color:var(--muted)">비틀림</span></div>
+    <div class="thurston-card" data-geo="7"><canvas></canvas>
+      <div class="thurston-card-label"><span class="thurston-card-sym">\(\mathrm{Sol}\)</span><span class="thurston-card-name">솔기하학</span></div>
+      <span class="thurston-card-curv" style="color:var(--muted)">비틀림</span></div>
+  </div>
+  <div class="thurston-detail" id="thurstonDetail">
+    <div class="thurston-detail-name" id="thurstonDetailName">\(S^3\) — 구면 기하학</div>
+    <p id="thurstonDetailText">일정한 양의 곡률. 3차원 구의 기하학. 측지선은 항상 다시 만나는 대원이다 — 어느 방향으로든 걸으면 출발점으로 돌아온다. 가장 간단한 닫힌 3차원 다양체; 아인슈타인의 최초 우주 모델.</p>
+  </div>
+
+  <p>이 중 셋이 우주 형태의 가장 간단한 후보 — § 2에서 만났던 그 셋이다:</p>
+
+  <div class="info-box" style="border-color:rgba(201,168,76,.25)">
+    <p style="color:var(--gold2);margin-bottom:.6rem;font-family:var(--font-display);font-size:1.1rem;font-weight:300">세 가지 등곡률 우주론</p>
+    <p><strong style="color:var(--gold2)">\(S^3\) — 3차원 구</strong> &ensp;(양의 곡률). 가장 간단한 닫힌 3차원 다양체. 어느 방향으로든 충분히 걸으면 출발점으로 돌아온다. 아인슈타인의 최초 우주론 모델(1917).</p>
+    <p><strong style="color:var(--cyan)">\(T^3\) — 3차원 토러스</strong> &ensp;(영 곡률). 마주보는 면이 식별된 정육면체. 어디서나 평평하고, 유한한 부피, 삼중 주기적. 앞을 바라보면 자신의 복사본이 무한히 멀어져 간다.</p>
+    <p><strong style="color:var(--rose)">\(\mathcal{SW}\) — 자이페르트-베버 공간</strong> &ensp;(음의 곡률). 정십이면체의 마주보는 면을 \(3\pi/5\) 비틀어 식별. 평행선이 서서히 갈라진다.</p>
+  </div>
+
+  <div class="rule"></div>
+
+  <h3>페렐만의 증명</h3>
+
+  <p>서스턴의 추측은 거의 30년간 미해결로 남아 있었다. 그러다 2002–2003년, <strong>그리고리 페렐만</strong>이 arXiv에 세 편의 논문을 올려 이를 완전히 증명했다 — <strong>리처드 해밀턴</strong>의 <strong>리치 흐름</strong> 프로그램을 완성함으로써.</p>
+
+  <p>아이디어: 3차원 다양체에 임의의 계량을 놓고 다음에 따라 진화시킨다:</p>
+
+  <p style="text-align:center;margin:1.2rem 0">$$\frac{\partial g}{\partial t} = -2\,\mathrm{Ric}(g)$$</p>
+
+  <p>이것은 기하학 자체에 대한 열 방정식이다 — 울퉁불퉁한 곳이 매끄러워지고, 곡률이 평형을 찾는다. 2차원에서 해밀턴(1982)은 \(S^2\) 위의 모든 계량이 둥근 구로 흐른다는 것을 보였다. 3차원에서는 <strong>특이점</strong>이 생긴다: 목이 조여지고, 위상이 찢어진다. 페렐만은 각 특이점에서 <em>수술</em>을 수행하는 방법 — 자르고, 막고, 계속 — 을 보였고, 유한 번의 수술 후 다양체가 서스턴이 예측한 바로 그 기하학적 조각들로 분해됨을 증명했다.</p>
+
+  <p>이 증명은 위상수학에서 가장 유명한 미해결 문제인 <strong>푸앵카레 추측</strong>도 해결했다: <em>단순 연결인 모든 닫힌 3차원 다양체는 \(S^3\)과 위상동형이다.</em> 페렐만은 필즈상(2006)과 클레이 밀레니엄 상(2010)을 수여받았다. 그는 둘 다 거절했다.</p>
+
+  <div class="rule"></div>
+
+  <h3>우주의 질문</h3>
+
+  <p>수학은 완전한 분류를 주었다. 그런데 <em>우주는 어떤 기하학인가?</em></p>
+
+  <p>답은 측정에 달려 있다. <strong>우주 마이크로파 배경</strong>(CMB), 빅뱅의 잔광에 우주의 전역 기하학의 흔적이 담겨 있다. 공간이 양의 곡률이면 큰 각도 규모에서 특정 패턴이 나타나야 하고, 평평하면 다른 패턴, 음의 곡률이면 또 다른 패턴이 나타나야 한다.</p>
+
+  <p>현재 관측(WMAP, Planck)은 우주가 매우 평평에 가깝다고 알려준다 — \(\mathbb{E}^3\)과 일치하지만, 매우 큰 \(S^3\)이나 \(\mathbb{H}^3\)과도 모순되지 않는다. 오차 막대가 아직 너무 넓다. 그리고 설령 공간이 정확히 평평하더라도, 그것이 무한한 \(\mathbb{R}^3\)인지 아니면 \(T^3\) 같은 유한한 평면 다양체인지 구별할 수 없다.</p>
+
+  <p><em>우주는 둥근가?</em> — 이 질문은 여전히 열려 있다.</p>
+
+  <div class="info-box" style="text-align:center;border-color:rgba(201,168,76,.2)">
+    <p style="color:var(--text);font-family:var(--font-display);font-size:1.15rem;font-weight:300;margin-bottom:.3rem">막대기 두 개와 그림자 하나면 지구를 측정하기에 충분했다.</p>
+    <p style="color:var(--muted);margin-bottom:0">우주는 아직, 자신만의 에라토스테네스를 기다리고 있다.</p>
+  </div>
+</div>
+
+<hr class="section-rule">
 
 <footer>
   <div class="footer-attr">
@@ -2091,140 +2205,426 @@ function chime(f=440,d=.35,v=.12){const c=ac(),o=c.createOscillator(),g=c.create
   drawDiagram();
 })();
 
+
 /* ══════════════════════════════════════════════════════════════════
-   § 6b — MÖBIUS CUT ANIMATION
+   § 6b — TWIST STRIP IN SOLID TORUS
    ══════════════════════════════════════════════════════════════════ */
 (function(){
-  const box=document.getElementById('mobiusBox');
-  const canvas=document.getElementById('mobiusCanvas');
-  const statusEl=document.getElementById('mobiusStatus');
+  var box=document.getElementById('mobiusBox');
+  var canvas=document.getElementById('mobiusCanvas');
+  var countEl=document.getElementById('twistCount');
+  var sidedEl=document.getElementById('twistSided');
+  var btnMinus=document.getElementById('twistMinus');
+  var btnPlus=document.getElementById('twistPlus');
+  if(!box||!canvas) return;
 
-  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+  var renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});
   renderer.setPixelRatio(Math.min(devicePixelRatio,2));
   renderer.setClearColor(0x07081a,1);
-  const scene=new THREE.Scene();
-  const camera=new THREE.PerspectiveCamera(40,16/10,.1,100);
-  camera.position.set(0,1.8,4.5);
+  var scene=new THREE.Scene();
+  var camera=new THREE.PerspectiveCamera(50,16/10,0.01,200);
+  camera.position.set(0,1,3);
   camera.lookAt(0,0,0);
 
-  // Solid torus (translucent)
-  const torusGeo=new THREE.TorusGeometry(1.4,.65,24,48);
-  const torusFill=new THREE.Mesh(torusGeo,new THREE.MeshBasicMaterial({color:0x3cb8c3,transparent:true,opacity:.08,side:THREE.DoubleSide}));
-  const torusWire=new THREE.Mesh(torusGeo.clone(),new THREE.MeshBasicMaterial({color:0x3cb8c3,wireframe:true,transparent:true,opacity:.15}));
-  scene.add(torusFill); scene.add(torusWire);
+  var R=3, SC=0.3;
 
-  // Möbius strip inside torus
-  function createMobius(){
-    const N=200, W=16;
-    const verts=[], idx=[];
-    for(let i=0;i<=N;i++){
-      const u=i*Math.PI*2/N;
-      for(let j=0;j<=W;j++){
-        const v=(j/W-.5)*.55;
-        const halfAngle=u/2;
-        const R=1.4;
-        const x=(R+v*Math.cos(halfAngle))*Math.cos(u);
-        const y=(R+v*Math.cos(halfAngle))*Math.sin(u);
-        const z=v*Math.sin(halfAngle);
-        verts.push(x,z,y);
-      }
-    }
-    for(let i=0;i<N;i++){
-      for(let j=0;j<W;j++){
-        const a=i*(W+1)+j, b=a+1, c2=(i+1)*(W+1)+j, d=c2+1;
-        idx.push(a,b,c2, b,d,c2);
-      }
-    }
-    const geom=new THREE.BufferGeometry();
-    geom.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));
-    geom.setIndex(idx);
-    geom.computeVertexNormals();
-    return geom;
+  // ── Parametric torus (Mathematica coords with y↔z swap) ──
+  var N=96, M=48, pos=[], idx=[];
+  for(var i=0;i<=N;i++){var t_=i/N*2*Math.PI;
+    for(var j=0;j<=M;j++){var u_=j/M*2*Math.PI;
+      var mx=Math.cos(t_)*(R+Math.cos(u_));
+      var my=Math.sin(t_)*(R+Math.cos(u_));
+      var mz=Math.sin(u_);
+      pos.push(mx*SC, mz*SC, my*SC);
+    }}
+  for(var i=0;i<N;i++) for(var j=0;j<M;j++){var a_=i*(M+1)+j,b_=a_+1,c_=a_+(M+1),d_=c_+1;idx.push(a_,b_,c_,b_,d_,c_);}
+  var torusGeo=new THREE.BufferGeometry();
+  torusGeo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+  torusGeo.setIndex(idx); torusGeo.computeVertexNormals();
+  scene.add(new THREE.Mesh(torusGeo,new THREE.MeshBasicMaterial({color:0xaabbcc,transparent:true,opacity:0.18,side:THREE.DoubleSide})));
+
+  // ── TK (exact Mathematica formula, y↔z swap) ──
+  function TK(p,q,t){
+    var mx=Math.cos(p*t)*(R+Math.cos(q*t));
+    var my=Math.sin(p*t)*(R+Math.cos(q*t));
+    var mz=Math.sin(q*t);
+    return new THREE.Vector3(mx*SC, mz*SC, my*SC);
   }
 
-  const mobiusGeo=createMobius();
-  const mobiusFill=new THREE.Mesh(mobiusGeo,new THREE.MeshBasicMaterial({color:0xc9a84c,transparent:true,opacity:.3,side:THREE.DoubleSide}));
-  const mobiusWire=new THREE.Mesh(mobiusGeo.clone(),new THREE.MeshBasicMaterial({color:0xc9a84c,wireframe:true,transparent:true,opacity:.2}));
-  scene.add(mobiusFill); scene.add(mobiusWire);
+  var halfTwists=1;
+  var stripMeshes=[];
 
-  let cutting=false, cutProgress=0;
+  function rebuild(){
+    stripMeshes.forEach(function(m){scene.remove(m);if(m.geometry)m.geometry.dispose();if(m.material)m.material.dispose();});
+    stripMeshes=[];
+    var q=halfTwists, p=2;
+    var oneSided=(q%2!==0);
 
-  document.getElementById('mobiusCut').addEventListener('click',()=>{
-    if(cutting) return;
-    cutting=true; cutProgress=0;
-    statusEl.textContent='자르는 중...';
-    chime(220,1.5,.08);
+    if(q>0){
+      // ── Strip: u·TK(p,q,t) + (1-u)·TK(p,q,t+π) ──
+      var Nt=150, Nu=12;
+      var verts=new Float32Array((Nt+1)*(Nu+1)*3);
+      var vi=0;
+      for(var i=0;i<=Nt;i++){
+        var t=i/Nt*Math.PI;
+        var A=TK(p,q,t), B=TK(p,q,t+Math.PI);
+        for(var j=0;j<=Nu;j++){
+          var u=j/Nu;
+          verts[vi++]=u*A.x+(1-u)*B.x;
+          verts[vi++]=u*A.y+(1-u)*B.y;
+          verts[vi++]=u*A.z+(1-u)*B.z;
+        }
+      }
+      var indices=[];
+      for(var i=0;i<Nt;i++) for(var j=0;j<Nu;j++){
+        var a=i*(Nu+1)+j,b=a+1,c=a+(Nu+1),d=c+1;
+        indices.push(a,b,c,b,d,c);
+      }
+      var geo=new THREE.BufferGeometry();
+      geo.setAttribute('position',new THREE.BufferAttribute(verts,3));
+      geo.setIndex(indices); geo.computeVertexNormals();
+
+      // Strip fill — MeshNormalMaterial (same as working test)
+      var normalMesh=new THREE.Mesh(geo.clone(),new THREE.MeshNormalMaterial({
+        side:THREE.DoubleSide, transparent:true, opacity:0.5
+      }));
+      scene.add(normalMesh); stripMeshes.push(normalMesh);
+
+      // Green wireframe (same as working test)
+      var wireMesh=new THREE.Mesh(geo.clone(),new THREE.MeshBasicMaterial({
+        color:0x44ff44, wireframe:true
+      }));
+      scene.add(wireMesh); stripMeshes.push(wireMesh);
+
+      // Boundary: TK(p,q,t), t∈[0,2π] — thin red line
+      var bPts=[];
+      for(var i=0;i<=500;i++) bPts.push(TK(p,q,i/500*Math.PI*2));
+      var bLine=new THREE.Line(
+        new THREE.BufferGeometry().setFromPoints(bPts),
+        new THREE.LineBasicMaterial({color:0xee4444})
+      );
+      scene.add(bLine); stripMeshes.push(bLine);
+    } else {
+      // q=0: flat annulus (y↔z swap: y=0 plane becomes the ring plane)
+      var Nf=100,Mf=12,pf=[],idf=[];
+      for(var i=0;i<=Nf;i++){var t=i/Nf*Math.PI*2;
+        for(var j=0;j<=Mf;j++){var s=j/Mf;var rr=(R-1+s*2)*SC;
+          pf.push(rr*Math.cos(t),0,rr*Math.sin(t));}}
+      for(var i=0;i<Nf;i++) for(var j=0;j<Mf;j++){var a=i*(Mf+1)+j,b=a+1,c=a+(Mf+1),d=c+1;idf.push(a,b,c,b,d,c);}
+      var gf=new THREE.BufferGeometry();gf.setAttribute('position',new THREE.Float32BufferAttribute(pf,3));
+      gf.setIndex(idf);gf.computeVertexNormals();
+      var fm=new THREE.Mesh(gf,new THREE.MeshNormalMaterial({side:THREE.DoubleSide,transparent:true,opacity:0.5}));
+      scene.add(fm);stripMeshes.push(fm);
+      [R-1,R+1].forEach(function(radius){
+        var pts=[];for(var i=0;i<=200;i++){var a=i/200*Math.PI*2;pts.push(new THREE.Vector3(radius*SC*Math.cos(a),0,radius*SC*Math.sin(a)));}
+        var line=new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineBasicMaterial({color:0xee4444}));
+        scene.add(line);stripMeshes.push(line);
+      });
+    }
+
+    // UI
+    if(countEl) countEl.textContent='BC18 BE44D2C0B9BC '+halfTwists+'D68C';
+    if(sidedEl){
+      if(oneSided){
+        sidedEl.innerHTML='한 면 · <span style="font-size:.75rem">\uD83E\uDDC0</span> 한 번에 전체를 바를 수 있음';
+        sidedEl.style.color='var(--rose)';
+      } else {
+        sidedEl.innerHTML='두 면 · <span style="font-size:.75rem">\uD83E\uDDC0</span> 한쪽은 깨끗하게 남음';
+        sidedEl.style.color='var(--cyan)';
+      }
+    }
+  }
+
+  rebuild();
+
+  // Buttons
+  if(btnMinus) btnMinus.addEventListener('click',function(e){
+    e.stopPropagation(); halfTwists=Math.max(0,halfTwists-1);
+    rebuild(); chime(halfTwists%2?392:523,.25,.08);
   });
-  document.getElementById('mobiusReset').addEventListener('click',()=>{
-    cutting=false; cutProgress=0;
-    torusFill.material.opacity=.08;
-    torusWire.material.opacity=.15;
-    mobiusFill.material.opacity=.3;
-    mobiusWire.material.opacity=.2;
-    mobiusFill.visible=true; mobiusWire.visible=true;
-    torusFill.position.y=0; torusWire.position.y=0;
-    statusEl.textContent='\uc900\ube44';
+  if(btnPlus) btnPlus.addEventListener('click',function(e){
+    e.stopPropagation(); halfTwists=Math.min(6,halfTwists+1);
+    rebuild(); chime(halfTwists%2?392:523,.25,.08);
   });
 
-  // Drag to rotate
-  let dragging=false,prevX=0,prevY=0,rX=.3,rY=0;
-  box.addEventListener('pointerdown',e=>{dragging=true;prevX=e.clientX;prevY=e.clientY;box.setPointerCapture(e.pointerId);});
-  box.addEventListener('pointermove',e=>{if(!dragging)return;rY+=(e.clientX-prevX)*.008;rX+=(e.clientY-prevY)*.008;prevX=e.clientX;prevY=e.clientY;});
-  box.addEventListener('pointerup',()=>dragging=false);
-  box.addEventListener('pointercancel',()=>dragging=false);
+  // Drag rotate + scroll zoom
+  var dragging=false, prevX=0, prevY=0, rotX=0.35, rotY=0, camDist=3;
+  canvas.addEventListener('pointerdown',function(e){dragging=true;prevX=e.clientX;prevY=e.clientY;canvas.setPointerCapture(e.pointerId);});
+  canvas.addEventListener('pointermove',function(e){if(!dragging)return;rotY+=(e.clientX-prevX)*.006;rotX+=(e.clientY-prevY)*.006;rotX=Math.max(-1.4,Math.min(1.4,rotX));prevX=e.clientX;prevY=e.clientY;});
+  canvas.addEventListener('pointerup',function(){dragging=false;});
+  canvas.addEventListener('pointercancel',function(){dragging=false;});
+  canvas.addEventListener('wheel',function(e){e.preventDefault();camDist=Math.max(1.5,Math.min(8,camDist+e.deltaY*.003));},{passive:false});
 
+  // Resize
   function onResize(){
-    const r=box.getBoundingClientRect();
-    const h=r.height-42;
-    renderer.setSize(r.width,h>100?h:300);
-    camera.aspect=r.width/(h>100?h:300);
+    var rect=box.getBoundingClientRect();
+    var h=Math.max(rect.height-44,200);
+    renderer.setSize(rect.width,h);
+    camera.aspect=rect.width/h;
     camera.updateProjectionMatrix();
   }
 
-  let rafId;
-  function animate(t){
+  // Render loop
+  var rafId;
+  function animate(){
     rafId=requestAnimationFrame(animate);
-    const sec=t*.001;
-
-    if(cutting && cutProgress<1){
-      cutProgress+=.004;
-      if(cutProgress>.4){
-        // Fade out the Möbius band
-        const fade=Math.max(0,1-(cutProgress-.4)/.3);
-        mobiusFill.material.opacity=.3*fade;
-        mobiusWire.material.opacity=.2*fade;
-        if(fade<=0){mobiusFill.visible=false;mobiusWire.visible=false;}
-      }
-      if(cutProgress>.6){
-        statusEl.textContent='결과: 또 다른 속이 찬 토러스!';
-        statusEl.style.color='var(--gold)';
-        // Glow the torus
-        torusFill.material.opacity=.08+.07*Math.sin(sec*4);
-        torusWire.material.opacity=.15+.1*Math.sin(sec*4);
-      }
-    }
-
-    // Rotate
-    const autoRot=dragging?0:.002;
-    rY+=autoRot;
-    const group=[torusFill,torusWire,mobiusFill,mobiusWire];
-    group.forEach(m=>{m.rotation.x=rX;m.rotation.y=rY;});
-
+    if(!dragging) rotY+=0.004;
+    scene.rotation.x=rotX;
+    scene.rotation.y=rotY;
+    camera.position.set(0,1,camDist);
+    camera.lookAt(0,0,0);
     renderer.render(scene,camera);
   }
 
-  const obs=new IntersectionObserver(entries=>{
-    if(entries[0].isIntersecting) animate(0);
+  var obs=new IntersectionObserver(function(entries){
+    if(entries[0].isIntersecting) animate();
     else cancelAnimationFrame(rafId);
-  },{threshold:.05});
+  },{threshold:0.05});
   obs.observe(box);
   window.addEventListener('resize',onResize);
-  setTimeout(onResize,100);
+  setTimeout(onResize,120);
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   § 7 — THURSTON GEOMETRY GALLERY (Canvas 2D — no WebGL context needed)
+   ══════════════════════════════════════════════════════════════════ */
+(function(){
+  var gallery=document.getElementById('thurstonGallery');
+  if(!gallery) return;
+  var detailName=document.getElementById('thurstonDetailName');
+  var detailText=document.getElementById('thurstonDetailText');
+
+  var geoData=[
+    {sym:'\\(S^3\\)',name:'구면 기하학',
+     desc:'일정한 양의 곡률. 측지선은 항상 다시 만나는 대원 — 어느 방향으로든 걸으면 돌아온다. 가장 간단한 닫힌 3차원 다양체; 아인슈타인의 최초 우주 모델.',
+     color:'#c9a84c'},
+    {sym:'\\(\\mathbb{E}^3\\)',name:'유클리드 기하학',
+     desc:'영 곡률 — 평평한 공간. 측지선은 다시 만나지 않는 직선. 3차원 토러스 T³가 여기 속한다: 정육면체의 면을 식별해 만든 유한한 평평한 우주.',
+     color:'#3cb8c3'},
+    {sym:'\\(\\mathbb{H}^3\\)',name:'쌍곡 기하학',
+     desc:'일정한 음의 곡률. 측지선은 지수적으로 갈라진다. 자이페르트-베버 십이면체 공간은 닫힌 쌍곡 3차원 다양체.',
+     color:'#c47a8a'},
+    {sym:'\\(S^2\\!\\times\\!\\mathbb{R}\\)',name:'구 × 직선',
+     desc:'2차원 구와 직선의 곱. 두 방향은 양의 곡률, 세 번째는 평평. 구를 수직으로 쌓은 것 — 수평 단면은 둥글고 수직은 곧다.',
+     color:'#7a9aaa'},
+    {sym:'\\(\\mathbb{H}^2\\!\\times\\!\\mathbb{R}\\)',name:'쌍곡면 × 직선',
+     desc:'쌍곡 평면과 직선의 곱. 두 방향은 음의 곡률, 세 번째는 평평. 수평 단면은 쌍곡, 수직은 유클리드.',
+     color:'#8a7a9a'},
+    {sym:'\\(\\widetilde{\\mathrm{SL}_2}\\)',name:'SL₂(ℝ) 기하학',
+     desc:'SL(2,ℝ)의 보편 피복. 쌍곡 평면과 원의 비틀린 곱. 측지선이 나선을 그리며 회전한다.',
+     color:'#6a8aaa'},
+    {sym:'\\(\\mathrm{Nil}\\)',name:'닐기하학',
+     desc:'하이젠베르크 군의 기하학. 수평면은 평평하지만 수직 방향이 전단되어 있다. 측지선은 나선을 그리며 공간을 관통한다.',
+     color:'#8aaa6a'},
+    {sym:'\\(\\mathrm{Sol}\\)',name:'솔기하학',
+     desc:'가해 리 군 Sol의 기하학. 한 방향으로 지수적으로 늘어나고 다른 방향으로 줄어든다. 측지선은 혼돈적이다.',
+     color:'#aa8a6a'}
+  ];
+
+  // Draw functions for each geometry (Canvas 2D)
+  var drawFns=[
+    // S³: nested great circles
+    function(ctx,w,h,t){
+      var cx=w/2,cy=h/2,r=Math.min(w,h)*0.35;
+      ctx.lineWidth=1.2;
+      for(var k=0;k<6;k++){
+        var a=t*0.5+k*Math.PI/6;
+        ctx.strokeStyle='rgba(201,168,76,'+(0.5-k*0.06)+')';
+        ctx.beginPath();
+        for(var i=0;i<=80;i++){
+          var th=i/80*Math.PI*2;
+          var x=r*Math.cos(th);
+          var y=r*Math.sin(th)*Math.cos(a)+r*0.3*Math.sin(a)*Math.sin(th*2+t);
+          ctx[i?'lineTo':'moveTo'](cx+x,cy+y);
+        }
+        ctx.stroke();
+      }
+    },
+    // E³: cubic lattice
+    function(ctx,w,h,t){
+      var cx=w/2,cy=h/2,s=Math.min(w,h)*0.28;
+      var ca=Math.cos(t*0.4),sa=Math.sin(t*0.4);
+      var cb=Math.cos(0.5),sb=Math.sin(0.5);
+      function proj(x,y,z){
+        var rx=x*ca-z*sa, rz=x*sa+z*ca;
+        var ry=y*cb-rz*sb; rz=y*sb+rz*cb;
+        return [cx+rx*s, cy+ry*s];
+      }
+      ctx.strokeStyle='rgba(60,184,195,0.3)';ctx.lineWidth=1;
+      for(var a=-1;a<=1;a++) for(var b=-1;b<=1;b++){
+        var p1=proj(a,b,-1),p2=proj(a,b,1);ctx.beginPath();ctx.moveTo(p1[0],p1[1]);ctx.lineTo(p2[0],p2[1]);ctx.stroke();
+        p1=proj(a,-1,b);p2=proj(a,1,b);ctx.beginPath();ctx.moveTo(p1[0],p1[1]);ctx.lineTo(p2[0],p2[1]);ctx.stroke();
+        p1=proj(-1,a,b);p2=proj(1,a,b);ctx.beginPath();ctx.moveTo(p1[0],p1[1]);ctx.lineTo(p2[0],p2[1]);ctx.stroke();
+      }
+    },
+    // H³: Poincaré disk with expanding circles + radial lines
+    function(ctx,w,h,t){
+      var cx=w/2,cy=h/2,R=Math.min(w,h)*0.38;
+      // Boundary circle
+      ctx.strokeStyle='rgba(196,122,138,0.2)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.stroke();
+      // Concentric geodesic circles (shrinking spacing toward edge)
+      for(var k=1;k<8;k++){
+        var r=R*Math.tanh(k*0.22);
+        ctx.strokeStyle='rgba(196,122,138,'+(0.45-k*0.04)+')';
+        ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
+      }
+      // Radial geodesics
+      ctx.strokeStyle='rgba(196,122,138,0.15)';
+      for(var k=0;k<12;k++){
+        var a=k/12*Math.PI*2+t*0.2;
+        ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+R*Math.cos(a),cy+R*Math.sin(a));ctx.stroke();
+      }
+    },
+    // S²×R: circles stacked vertically
+    function(ctx,w,h,t){
+      var cx=w/2,cy=h/2,r=Math.min(w,h)*0.22;
+      ctx.lineWidth=1;
+      for(var k=-2;k<=2;k++){
+        var y=cy+k*r*0.6;
+        var sc=1-Math.abs(k)*0.08;
+        ctx.strokeStyle='rgba(122,154,170,'+(0.45-Math.abs(k)*0.08)+')';
+        ctx.beginPath();
+        ctx.ellipse(cx,y,r*sc,r*sc*0.35,0,0,Math.PI*2);
+        ctx.stroke();
+      }
+      // Vertical lines
+      ctx.strokeStyle='rgba(122,154,170,0.2)';
+      for(var k=0;k<6;k++){
+        var a=k/6*Math.PI*2+t*0.3;
+        var x=cx+r*Math.cos(a);
+        ctx.beginPath();ctx.moveTo(x,cy-r*1.4);ctx.lineTo(x,cy+r*1.4);ctx.stroke();
+      }
+    },
+    // H²×R: hyperbolic circles + vertical lines
+    function(ctx,w,h,t){
+      var cx=w/2,cy=h/2,R=Math.min(w,h)*0.3;
+      for(var k=1;k<6;k++){
+        var r=R*Math.tanh(k*0.3);
+        ctx.strokeStyle='rgba(138,122,154,'+(0.4-k*0.05)+')';ctx.lineWidth=1;
+        ctx.beginPath();ctx.ellipse(cx,cy,r,r*0.35,0,0,Math.PI*2);ctx.stroke();
+      }
+      ctx.strokeStyle='rgba(138,122,154,0.2)';
+      for(var k=0;k<8;k++){
+        var a=k/8*Math.PI*2+t*0.2;
+        var x=cx+R*0.85*Math.cos(a);
+        ctx.beginPath();ctx.moveTo(x,cy-R*1.2);ctx.lineTo(x,cy+R*1.2);ctx.stroke();
+      }
+    },
+    // SL2: spiraling curves
+    function(ctx,w,h,t){
+      var cx=w/2,cy=h/2,R=Math.min(w,h)*0.32;
+      ctx.lineWidth=1.2;
+      for(var k=0;k<4;k++){
+        ctx.strokeStyle='rgba(106,138,170,'+(0.5-k*0.08)+')';
+        ctx.beginPath();
+        var off=k*Math.PI/2;
+        for(var i=0;i<=100;i++){
+          var th=i/100*Math.PI*4;
+          var r=R*(0.15+0.7*(i/100));
+          var x=cx+r*Math.cos(th+off+t*0.5);
+          var y=cy+r*Math.sin(th+off+t*0.5)*0.4-R*(i/100-0.5)*0.8;
+          ctx[i?'lineTo':'moveTo'](x,y);
+        }
+        ctx.stroke();
+      }
+    },
+    // Nil: helices (Heisenberg)
+    function(ctx,w,h,t){
+      var cx=w/2,cy=h/2,R=Math.min(w,h)*0.32;
+      ctx.lineWidth=1.2;
+      for(var k=0;k<5;k++){
+        var rh=R*(0.2+k*0.15);
+        ctx.strokeStyle='rgba(138,170,106,'+(0.5-k*0.06)+')';
+        ctx.beginPath();
+        var off=k*Math.PI*2/5;
+        for(var i=0;i<=80;i++){
+          var th=i/80*Math.PI*3;
+          var x=cx+rh*Math.cos(th+off+t*0.4);
+          var y=cy-R*0.7+i/80*R*1.4+rh*0.15*Math.sin(th+off);
+          ctx[i?'lineTo':'moveTo'](x,y);
+        }
+        ctx.stroke();
+      }
+    },
+    // Sol: saddle-like exponential grid
+    function(ctx,w,h,t){
+      var cx=w/2,cy=h/2,S=Math.min(w,h)*0.35;
+      ctx.lineWidth=1;
+      for(var k=-3;k<=3;k++){
+        ctx.strokeStyle='rgba(170,138,106,'+(0.35-Math.abs(k)*0.03)+')';
+        // Expanding curves
+        ctx.beginPath();
+        for(var i=0;i<=40;i++){
+          var x_=(i/40-0.5)*2;
+          var y_=Math.exp(x_*0.6)*k*0.15;
+          ctx[i?'lineTo':'moveTo'](cx+x_*S,cy+y_*S);
+        }
+        ctx.stroke();
+        // Contracting curves
+        ctx.beginPath();
+        for(var i=0;i<=40;i++){
+          var y_=(i/40-0.5)*2;
+          var x_=Math.exp(-y_*0.6)*k*0.15;
+          ctx[i?'lineTo':'moveTo'](cx+x_*S,cy+y_*S);
+        }
+        ctx.stroke();
+      }
+    }
+  ];
+
+  // Card click handler
+  var cards=gallery.querySelectorAll('.thurston-card');
+  cards.forEach(function(card,idx){
+    card.addEventListener('click',function(){
+      cards.forEach(function(c){c.classList.remove('active');});
+      card.classList.add('active');
+      var d=geoData[idx];
+      detailName.innerHTML=d.sym+' — '+d.name;
+      detailText.textContent=d.desc;
+      try{renderMathInElement(detailName,{delimiters:[{left:'\\(',right:'\\)',display:false}]});}catch(e){}
+      chime(280+idx*40,.15,.05);
+    });
+  });
+
+  // Animation
+  var dpr=Math.min(devicePixelRatio,2);
+  var canvases=[];
+  cards.forEach(function(card){canvases.push(card.querySelector('canvas'));});
+
+  function onResize(){
+    canvases.forEach(function(cv){
+      var rect=cv.parentElement.getBoundingClientRect();
+      cv.width=rect.width*dpr; cv.height=rect.height*dpr;
+    });
+  }
+
+  var rafId;
+  function animate(time){
+    rafId=requestAnimationFrame(animate);
+    var t=time*0.001;
+    canvases.forEach(function(cv,idx){
+      var ctx=cv.getContext('2d');
+      var w=cv.width, h=cv.height;
+      ctx.clearRect(0,0,w,h);
+      ctx.save();
+      ctx.scale(dpr,dpr);
+      drawFns[idx](ctx,w/dpr,h/dpr,t);
+      ctx.restore();
+    });
+  }
+
+  var obs=new IntersectionObserver(function(entries){
+    if(entries[0].isIntersecting){onResize();animate(0);}
+    else cancelAnimationFrame(rafId);
+  },{threshold:0.05});
+  obs.observe(gallery);
+  window.addEventListener('resize',onResize);
+  setTimeout(onResize,150);
 })();
 
 /* ── ambient drone ── */
 {let s=false;function d(){if(s)return;s=true;try{const c=ac(),o1=c.createOscillator(),o2=c.createOscillator(),g=c.createGain();o1.type='sine';o1.frequency.value=55;o2.type='sine';o2.frequency.value=82.5;g.gain.setValueAtTime(0,c.currentTime);g.gain.linearRampToValueAtTime(.025,c.currentTime+4);o1.connect(g);o2.connect(g);g.connect(c.destination);o1.start();o2.start()}catch(e){}}document.addEventListener('click',d,{once:true});document.addEventListener('keydown',d,{once:true})}
 </script>
-<script src="universe_ios_bridge.js"></script>
 </body>
 </html>

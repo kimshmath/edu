@@ -11,7 +11,6 @@
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
   onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'$$',right:'$$',display:true}]})"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<link rel="stylesheet" href="mellow_ios.css">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -149,8 +148,23 @@ footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid rgba(255,25
 .mobius-box canvas{position:absolute;inset:0;width:100%;height:100%}
 .mobius-ctrl{position:absolute;bottom:0;left:0;right:0;padding:.7rem 1.2rem;display:flex;align-items:center;gap:.7rem;border-top:1px solid var(--border);background:rgba(8,9,27,.95);z-index:2}
 
+/* ── § 7 THURSTON GALLERY ── */
+.thurston-gallery{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:2.5rem 0}
+.thurston-card{position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--border);background:#07081a;aspect-ratio:1;cursor:pointer;transition:border-color .3s,transform .3s,box-shadow .3s}
+.thurston-card:hover{border-color:var(--gold);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.thurston-card.active{border-color:var(--gold);box-shadow:0 0 20px rgba(201,168,76,.15)}
+.thurston-card canvas{position:absolute;inset:0;width:100%;height:100%}
+.thurston-card-label{position:absolute;bottom:0;left:0;right:0;padding:.5rem .6rem;background:linear-gradient(transparent,rgba(5,6,15,.92));pointer-events:none;z-index:2}
+.thurston-card-sym{font-family:var(--font-display);font-size:.85rem;color:var(--gold2);display:block;line-height:1.2}
+.thurston-card-name{font-family:var(--font-mono);font-size:.42rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:block;margin-top:.15rem}
+.thurston-card-curv{position:absolute;top:6px;right:8px;font-family:var(--font-mono);font-size:.4rem;letter-spacing:.08em;text-transform:uppercase;pointer-events:none;z-index:2}
+.thurston-detail{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.4rem 1.6rem;margin-top:1rem;min-height:60px;transition:opacity .3s}
+.thurston-detail-name{font-family:var(--font-display);font-size:1.2rem;color:var(--gold2);font-weight:300;margin-bottom:.4rem}
+.thurston-detail p{color:var(--muted);font-size:.95rem;margin-bottom:.3rem}
+
 @media(max-width:760px){
   .erato-grid,.factory-grid,.klein-grid,.slope-grid,.orient-grid{grid-template-columns:1fr}
+  .thurston-gallery{grid-template-columns:repeat(2,1fr)}
   .wrap{padding:4rem 1.3rem}
   .hero-shape-label{bottom:18%}
 }
@@ -182,7 +196,7 @@ footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid rgba(255,25
 
   <p>Yet by <strong>500 BC</strong>, Pythagoras had proposed exactly that — on purely aesthetic grounds. The sphere, he believed, was the most perfect shape, and the cosmos deserved perfection. <strong>Aristotle</strong> (384–322 BC) went further and offered physical evidence: ships vanish hull-first over the horizon; the Earth's shadow on the Moon during an eclipse is always circular; and travelers who go south see new constellations rise above the horizon. None of this makes sense on a flat Earth.</p>
 
-  <p>Then came the measurement that changed everything.</p>
+  <p>And then came the decisive experiment.</p>
 
   <div class="rule"></div>
 
@@ -292,7 +306,7 @@ footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid rgba(255,25
 <!-- ═══════════════════ § 3 ═══════════════════ -->
 <div class="wrap reveal" id="s3">
   <span class="sec-label">§ 3 — Surfaces</span>
-  <h2>Every closed surface is a sphere with <em>handles</em></h2>
+  <h2>The <em>classification</em> of surfaces</h2>
 
   <p>Before we can say anything about the shape of the universe — a 3-manifold — we should understand the world one dimension down. The classification of surfaces is the warm-up problem. And it is already one of the most beautiful theorems in mathematics.</p>
 
@@ -373,7 +387,7 @@ footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid rgba(255,25
     <div class="flight-edge-flash" id="flightFlash"></div>
   </div>
 
-  <p>If the universe were a <strong>3-torus</strong> — a cube with opposite faces identified — you could fly in a straight line and eventually return home. Looking ahead, you would see copies of yourself receding into the distance, like standing between two parallel mirrors. A finite cosmos, with no edge, and completely flat.</p>
+  <p>If the universe were a <strong>3-torus</strong> — a cube with opposite faces identified — you could fly in a straight line and eventually return home. Looking ahead, you would see copies of yourself receding into the distance, like standing between two parallel mirrors. A finite cosmos, completely flat, with no edge and no center.</p>
 
   <div class="rule"></div>
 
@@ -436,7 +450,7 @@ footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid rgba(255,25
     <span id="orientStatus" style="font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;color:var(--muted)">READY</span>
   </div>
 
-  <p>This is what "one-sided" really means: there is no way to consistently define "outward" on the Möbius strip. Every closed non-orientable surface — the Klein bottle, the projective plane — contains a Möbius strip hidden inside it, like a secret passage between the two sides that were never really two sides at all.</p>
+  <p>This is what "one-sided" really means: there is no way to consistently define "outward" on the Möbius strip. Every closed non-orientable surface — the Klein bottle, the projective plane — contains a Möbius strip hidden inside it. A secret passage between two sides that were never really two sides at all.</p>
 </div>
 
 <hr class="section-rule">
@@ -468,22 +482,19 @@ footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid rgba(255,25
 
   <div class="rule"></div>
 
-  <h3>Cutting a doughnut with a twist</h3>
+  <h3>A twisted strip inside a doughnut</h3>
 
-  <p>The <strong>Möbius band</strong> — a strip with one half-twist — is the fundamental building block of non-orientability. It has only one side and only one edge. And it leads to one of the most surprising facts in low-dimensional topology:</p>
+  <p>Take a <strong>solid torus</strong> — a filled doughnut — and embed a strip of paper inside it, running once around the core. If the strip has <strong>zero half-twists</strong>, it is an ordinary two-sided band: you can spread cream cheese on one side without getting any on the other. But give it <strong>one half-twist</strong>, and the strip becomes a <em>Möbius band</em> — it has only one side. If you try to spread cream cheese starting from any point, you will cover the <em>entire</em> strip in one continuous stroke. There is no "other side" left clean.</p>
 
-  <div class="info-box">
-    <p style="color:var(--text)">Take a <strong>solid torus</strong> (a filled doughnut). Thread a Möbius band through it, running once around the core with a half-twist. Now <strong>cut</strong> the solid torus along this band. You might expect two pieces — but the result is <em>still one piece</em>. It is another solid torus, just thinner.</p>
-  </div>
-
-  <p>Press <strong>Cut</strong> and watch.</p>
+  <p>Use the <strong>−</strong> and <strong>+</strong> buttons to change the number of half-twists. Watch the strip change inside the torus. When the number of half-twists is <strong>odd</strong>, the strip is one-sided (a Möbius band). When it is <strong>even</strong>, the strip is two-sided (an ordinary band). The cream cheese indicator tells you which.</p>
 
   <div class="mobius-box" id="mobiusBox">
     <canvas id="mobiusCanvas"></canvas>
     <div class="mobius-ctrl">
-      <button class="ctrl-btn" id="mobiusCut">✂ Cut</button>
-      <button class="ctrl-btn" id="mobiusReset">Reset</button>
-      <span id="mobiusStatus" style="margin-left:auto;font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;color:var(--muted)">READY</span>
+      <button class="ctrl-btn" id="twistMinus">−</button>
+      <span id="twistCount" style="font-family:var(--font-display);font-size:1.3rem;color:var(--gold2);min-width:100px;text-align:center">1 half-twist</span>
+      <button class="ctrl-btn" id="twistPlus">+</button>
+      <span id="twistSided" style="margin-left:auto;font-family:var(--font-mono);font-size:.58rem;letter-spacing:.1em;color:var(--rose)">ONE-SIDED · 🧀 one swipe covers all</span>
     </div>
   </div>
 </div>
@@ -491,9 +502,112 @@ footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid rgba(255,25
 <hr class="section-rule">
 
 <div class="wrap" style="padding:4rem 2rem;text-align:center">
-  <p style="color:var(--muted);font-family:var(--font-display);font-size:1.1rem;font-style:italic;font-weight:300;max-width:560px;margin:0 auto 1rem">We now have the language: manifolds, genus, orientability, flat tori, Klein bottles. The two-dimensional case is fully classified. But the universe is three-dimensional — and that is where the real mystery begins.</p>
-  <p style="color:var(--muted);font-style:italic;font-size:.9rem">§ 7–9: Three-manifolds, Thurston's geometries, Perelman's proof, and the cosmic question — coming soon.</p>
+  <p style="color:var(--muted);font-family:var(--font-display);font-size:1.1rem;font-style:italic;font-weight:300;max-width:560px;margin:0 auto 1rem">We now have the language: manifolds, genus, orientability, flat tori, Klein bottles. The two-dimensional case is fully classified. But the universe is three-dimensional &mdash; and that is where the real mystery begins.</p>
 </div>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════ § 7 ═══════════════════ -->
+<div class="wrap reveal" id="s7">
+  <span class="sec-label">§ 7 — Three-Manifolds</span>
+  <h2>The shape of <em>everything</em></h2>
+
+  <p>The universe we inhabit is three-dimensional. At every point, you can move forward-back, left-right, up-down — three independent directions, spanning a local copy of \(\mathbb{R}^3\). But just as a two-dimensional being on a sphere cannot detect the curvature from inside a small patch, the global topology of our universe might be something far stranger than infinite Euclidean space.</p>
+
+  <p>A <strong>closed 3-manifold</strong> is a three-dimensional space that is finite in volume, has no boundary, and is locally indistinguishable from \(\mathbb{R}^3\). The question — <em>which closed 3-manifold is our universe?</em> — has haunted mathematics and cosmology for over a century.</p>
+
+  <p>In two dimensions, the classification was clean: genus and orientability. In three dimensions, the situation is <strong>incomparably richer</strong>. There is no single integer that classifies 3-manifolds. Instead, there is an enormous landscape of possibilities — organized by one of the deepest theorems in all of mathematics.</p>
+
+  <div class="rule"></div>
+
+  <h3>Thurston's Geometrization</h3>
+
+  <p>In the 1970s, <strong>William Thurston</strong> proposed a breathtaking conjecture: every closed 3-manifold can be cut along certain spheres and tori into pieces, each of which admits one of exactly <strong>eight model geometries</strong>. Just as every surface is spherical, flat, or hyperbolic, every 3-manifold is built from eight types of geometry — no more, no fewer.</p>
+
+  <div class="theorem-box">
+    <p style="color:var(--text);margin-bottom:.4rem"><strong>Thurston's Eight Geometries</strong></p>
+    <p>Every closed 3-manifold decomposes into pieces, each carrying one of:</p>
+    <p style="text-align:center;color:var(--gold2);margin:.7rem 0;font-size:1.05rem">
+      \(S^3\) · \(\mathbb{E}^3\) · \(\mathbb{H}^3\) · \(S^2 \!\times\! \mathbb{R}\) · \(\mathbb{H}^2 \!\times\! \mathbb{R}\) · \(\widetilde{\mathrm{SL}_2\mathbb{R}}\) · \(\mathrm{Nil}\) · \(\mathrm{Sol}\)
+    </p>
+    <p>The first three are the constant-curvature geometries: positive (\(S^3\)), zero (\(\mathbb{E}^3\)), negative (\(\mathbb{H}^3\)). The remaining five are <em>anisotropic</em> — their geometry depends on direction.</p>
+  </div>
+
+  <p>Click each geometry to explore it.</p>
+
+  <div class="thurston-gallery" id="thurstonGallery">
+    <div class="thurston-card active" data-geo="0"><canvas></canvas>
+      <div class="thurston-card-label"><span class="thurston-card-sym">\(S^3\)</span><span class="thurston-card-name">Spherical</span></div>
+      <span class="thurston-card-curv" style="color:var(--gold)">K &gt; 0</span></div>
+    <div class="thurston-card" data-geo="1"><canvas></canvas>
+      <div class="thurston-card-label"><span class="thurston-card-sym">\(\mathbb{E}^3\)</span><span class="thurston-card-name">Euclidean</span></div>
+      <span class="thurston-card-curv" style="color:var(--cyan)">K = 0</span></div>
+    <div class="thurston-card" data-geo="2"><canvas></canvas>
+      <div class="thurston-card-label"><span class="thurston-card-sym">\(\mathbb{H}^3\)</span><span class="thurston-card-name">Hyperbolic</span></div>
+      <span class="thurston-card-curv" style="color:var(--rose)">K &lt; 0</span></div>
+    <div class="thurston-card" data-geo="3"><canvas></canvas>
+      <div class="thurston-card-label"><span class="thurston-card-sym">\(S^2\!\times\!\mathbb{R}\)</span><span class="thurston-card-name">Sphere × Line</span></div>
+      <span class="thurston-card-curv" style="color:var(--muted)">mixed</span></div>
+    <div class="thurston-card" data-geo="4"><canvas></canvas>
+      <div class="thurston-card-label"><span class="thurston-card-sym">\(\mathbb{H}^2\!\times\!\mathbb{R}\)</span><span class="thurston-card-name">Hyperbolic × Line</span></div>
+      <span class="thurston-card-curv" style="color:var(--muted)">mixed</span></div>
+    <div class="thurston-card" data-geo="5"><canvas></canvas>
+      <div class="thurston-card-label"><span class="thurston-card-sym">\(\widetilde{\mathrm{SL}_2}\)</span><span class="thurston-card-name">Universal cover</span></div>
+      <span class="thurston-card-curv" style="color:var(--muted)">twisted</span></div>
+    <div class="thurston-card" data-geo="6"><canvas></canvas>
+      <div class="thurston-card-label"><span class="thurston-card-sym">\(\mathrm{Nil}\)</span><span class="thurston-card-name">Nilgeometry</span></div>
+      <span class="thurston-card-curv" style="color:var(--muted)">twisted</span></div>
+    <div class="thurston-card" data-geo="7"><canvas></canvas>
+      <div class="thurston-card-label"><span class="thurston-card-sym">\(\mathrm{Sol}\)</span><span class="thurston-card-name">Solvegeometry</span></div>
+      <span class="thurston-card-curv" style="color:var(--muted)">twisted</span></div>
+  </div>
+  <div class="thurston-detail" id="thurstonDetail">
+    <div class="thurston-detail-name" id="thurstonDetailName">\(S^3\) — Spherical geometry</div>
+    <p id="thurstonDetailText">Constant positive curvature. The geometry of the 3-sphere. Geodesics are great circles that always reconverge — walk in any direction and you return home. The simplest closed 3-manifold; Einstein's first model of the cosmos.</p>
+  </div>
+
+  <p>Three of these give the simplest candidates for the shape of the universe — the same three we met in § 2:</p>
+
+  <div class="info-box" style="border-color:rgba(201,168,76,.25)">
+    <p style="color:var(--gold2);margin-bottom:.6rem;font-family:var(--font-display);font-size:1.1rem;font-weight:300">The three constant-curvature cosmologies</p>
+    <p><strong style="color:var(--gold2)">\(S^3\) — the 3-sphere</strong> &ensp;(positive curvature). The simplest closed 3-manifold. Walk far enough in any direction and you return home. Einstein's first cosmological model (1917).</p>
+    <p><strong style="color:var(--cyan)">\(T^3\) — the 3-torus</strong> &ensp;(zero curvature). A cube with opposite faces identified. Flat everywhere, finite volume, triply periodic. Look ahead and you see copies of yourself receding into the distance.</p>
+    <p><strong style="color:var(--rose)">\(\mathcal{SW}\) — the Seifert–Weber space</strong> &ensp;(negative curvature). A regular dodecahedron with opposite faces identified by a \(3\pi/5\) twist. Parallel lines slowly diverge.</p>
+  </div>
+
+  <div class="rule"></div>
+
+  <h3>Perelman's proof</h3>
+
+  <p>Thurston's conjecture remained unproved for nearly thirty years. Then, in 2002–2003, <strong>Grigori Perelman</strong> posted three papers to the arXiv that proved it in full — by completing <strong>Richard Hamilton</strong>'s program of <strong>Ricci flow</strong>.</p>
+
+  <p>The idea: take a 3-manifold with an arbitrary metric and let it evolve under</p>
+
+  <p style="text-align:center;margin:1.2rem 0">$$\frac{\partial g}{\partial t} = -2\,\mathrm{Ric}(g)$$</p>
+
+  <p>This is a heat equation for geometry itself — bumps smooth out, curvature equilibrates. In two dimensions, Hamilton (1982) showed that any metric on \(S^2\) flows to a round sphere. In three dimensions, <strong>singularities</strong> form: necks pinch, topologies tear. Perelman showed how to perform <em>surgery</em> at each singularity — cut, cap, continue — and after finitely many surgeries, the manifold decomposes into exactly the geometric pieces Thurston predicted.</p>
+
+  <p>The proof also settled the <strong>Poincaré conjecture</strong>, the most famous open problem in topology: <em>every simply connected closed 3-manifold is homeomorphic to \(S^3\).</em> Perelman was offered the Fields Medal in 2006 and the Clay Millennium Prize in 2010. He declined both.</p>
+
+  <div class="rule"></div>
+
+  <h3>The cosmic question</h3>
+
+  <p>Mathematics has given us the full classification. But <em>which geometry is the universe?</em></p>
+
+  <p>The answer depends on measurement. The <strong>cosmic microwave background</strong> (CMB), the afterglow of the Big Bang, carries an imprint of the universe's global geometry. If space is positively curved, we should see certain patterns at large angular scales; if flat, different patterns; if negatively curved, yet others.</p>
+
+  <p>Current observations (WMAP, Planck) indicate that the universe is very close to flat — consistent with \(\mathbb{E}^3\), but also with a very large \(S^3\) or \(\mathbb{H}^3\). The error bars are too wide to distinguish. And even if space is exactly flat, we cannot tell whether it is infinite \(\mathbb{R}^3\) or a finite flat manifold like \(T^3\).</p>
+
+  <p>The question — <em>is the universe round?</em> — remains open.</p>
+
+  <div class="info-box" style="text-align:center;border-color:rgba(201,168,76,.2)">
+    <p style="color:var(--text);font-family:var(--font-display);font-size:1.15rem;font-weight:300;margin-bottom:.3rem">Two sticks and a shadow were enough to measure the Earth.</p>
+    <p style="color:var(--muted);margin-bottom:0">The universe is still waiting for its Eratosthenes.</p>
+  </div>
+</div>
+
+<hr class="section-rule">
 
 <footer>
   <div class="footer-attr">
@@ -2091,140 +2205,426 @@ function chime(f=440,d=.35,v=.12){const c=ac(),o=c.createOscillator(),g=c.create
   drawDiagram();
 })();
 
+
 /* ══════════════════════════════════════════════════════════════════
-   § 6b — MÖBIUS CUT ANIMATION
+   § 6b — TWIST STRIP IN SOLID TORUS
    ══════════════════════════════════════════════════════════════════ */
 (function(){
-  const box=document.getElementById('mobiusBox');
-  const canvas=document.getElementById('mobiusCanvas');
-  const statusEl=document.getElementById('mobiusStatus');
+  var box=document.getElementById('mobiusBox');
+  var canvas=document.getElementById('mobiusCanvas');
+  var countEl=document.getElementById('twistCount');
+  var sidedEl=document.getElementById('twistSided');
+  var btnMinus=document.getElementById('twistMinus');
+  var btnPlus=document.getElementById('twistPlus');
+  if(!box||!canvas) return;
 
-  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+  var renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,alpha:true});
   renderer.setPixelRatio(Math.min(devicePixelRatio,2));
   renderer.setClearColor(0x07081a,1);
-  const scene=new THREE.Scene();
-  const camera=new THREE.PerspectiveCamera(40,16/10,.1,100);
-  camera.position.set(0,1.8,4.5);
+  var scene=new THREE.Scene();
+  var camera=new THREE.PerspectiveCamera(50,16/10,0.01,200);
+  camera.position.set(0,1,3);
   camera.lookAt(0,0,0);
 
-  // Solid torus (translucent)
-  const torusGeo=new THREE.TorusGeometry(1.4,.65,24,48);
-  const torusFill=new THREE.Mesh(torusGeo,new THREE.MeshBasicMaterial({color:0x3cb8c3,transparent:true,opacity:.08,side:THREE.DoubleSide}));
-  const torusWire=new THREE.Mesh(torusGeo.clone(),new THREE.MeshBasicMaterial({color:0x3cb8c3,wireframe:true,transparent:true,opacity:.15}));
-  scene.add(torusFill); scene.add(torusWire);
+  var R=3, SC=0.3;
 
-  // Möbius strip inside torus
-  function createMobius(){
-    const N=200, W=16;
-    const verts=[], idx=[];
-    for(let i=0;i<=N;i++){
-      const u=i*Math.PI*2/N;
-      for(let j=0;j<=W;j++){
-        const v=(j/W-.5)*.55;
-        const halfAngle=u/2;
-        const R=1.4;
-        const x=(R+v*Math.cos(halfAngle))*Math.cos(u);
-        const y=(R+v*Math.cos(halfAngle))*Math.sin(u);
-        const z=v*Math.sin(halfAngle);
-        verts.push(x,z,y);
-      }
-    }
-    for(let i=0;i<N;i++){
-      for(let j=0;j<W;j++){
-        const a=i*(W+1)+j, b=a+1, c2=(i+1)*(W+1)+j, d=c2+1;
-        idx.push(a,b,c2, b,d,c2);
-      }
-    }
-    const geom=new THREE.BufferGeometry();
-    geom.setAttribute('position',new THREE.Float32BufferAttribute(verts,3));
-    geom.setIndex(idx);
-    geom.computeVertexNormals();
-    return geom;
+  // ── Parametric torus (Mathematica coords with y↔z swap) ──
+  var N=96, M=48, pos=[], idx=[];
+  for(var i=0;i<=N;i++){var t_=i/N*2*Math.PI;
+    for(var j=0;j<=M;j++){var u_=j/M*2*Math.PI;
+      var mx=Math.cos(t_)*(R+Math.cos(u_));
+      var my=Math.sin(t_)*(R+Math.cos(u_));
+      var mz=Math.sin(u_);
+      pos.push(mx*SC, mz*SC, my*SC);
+    }}
+  for(var i=0;i<N;i++) for(var j=0;j<M;j++){var a_=i*(M+1)+j,b_=a_+1,c_=a_+(M+1),d_=c_+1;idx.push(a_,b_,c_,b_,d_,c_);}
+  var torusGeo=new THREE.BufferGeometry();
+  torusGeo.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+  torusGeo.setIndex(idx); torusGeo.computeVertexNormals();
+  scene.add(new THREE.Mesh(torusGeo,new THREE.MeshBasicMaterial({color:0xaabbcc,transparent:true,opacity:0.18,side:THREE.DoubleSide})));
+
+  // ── TK (exact Mathematica formula, y↔z swap) ──
+  function TK(p,q,t){
+    var mx=Math.cos(p*t)*(R+Math.cos(q*t));
+    var my=Math.sin(p*t)*(R+Math.cos(q*t));
+    var mz=Math.sin(q*t);
+    return new THREE.Vector3(mx*SC, mz*SC, my*SC);
   }
 
-  const mobiusGeo=createMobius();
-  const mobiusFill=new THREE.Mesh(mobiusGeo,new THREE.MeshBasicMaterial({color:0xc9a84c,transparent:true,opacity:.3,side:THREE.DoubleSide}));
-  const mobiusWire=new THREE.Mesh(mobiusGeo.clone(),new THREE.MeshBasicMaterial({color:0xc9a84c,wireframe:true,transparent:true,opacity:.2}));
-  scene.add(mobiusFill); scene.add(mobiusWire);
+  var halfTwists=1;
+  var stripMeshes=[];
 
-  let cutting=false, cutProgress=0;
+  function rebuild(){
+    stripMeshes.forEach(function(m){scene.remove(m);if(m.geometry)m.geometry.dispose();if(m.material)m.material.dispose();});
+    stripMeshes=[];
+    var q=halfTwists, p=2;
+    var oneSided=(q%2!==0);
 
-  document.getElementById('mobiusCut').addEventListener('click',()=>{
-    if(cutting) return;
-    cutting=true; cutProgress=0;
-    statusEl.textContent='CUTTING...';
-    chime(220,1.5,.08);
+    if(q>0){
+      // ── Strip: u·TK(p,q,t) + (1-u)·TK(p,q,t+π) ──
+      var Nt=150, Nu=12;
+      var verts=new Float32Array((Nt+1)*(Nu+1)*3);
+      var vi=0;
+      for(var i=0;i<=Nt;i++){
+        var t=i/Nt*Math.PI;
+        var A=TK(p,q,t), B=TK(p,q,t+Math.PI);
+        for(var j=0;j<=Nu;j++){
+          var u=j/Nu;
+          verts[vi++]=u*A.x+(1-u)*B.x;
+          verts[vi++]=u*A.y+(1-u)*B.y;
+          verts[vi++]=u*A.z+(1-u)*B.z;
+        }
+      }
+      var indices=[];
+      for(var i=0;i<Nt;i++) for(var j=0;j<Nu;j++){
+        var a=i*(Nu+1)+j,b=a+1,c=a+(Nu+1),d=c+1;
+        indices.push(a,b,c,b,d,c);
+      }
+      var geo=new THREE.BufferGeometry();
+      geo.setAttribute('position',new THREE.BufferAttribute(verts,3));
+      geo.setIndex(indices); geo.computeVertexNormals();
+
+      // Strip fill — MeshNormalMaterial (same as working test)
+      var normalMesh=new THREE.Mesh(geo.clone(),new THREE.MeshNormalMaterial({
+        side:THREE.DoubleSide, transparent:true, opacity:0.5
+      }));
+      scene.add(normalMesh); stripMeshes.push(normalMesh);
+
+      // Green wireframe (same as working test)
+      var wireMesh=new THREE.Mesh(geo.clone(),new THREE.MeshBasicMaterial({
+        color:0x44ff44, wireframe:true
+      }));
+      scene.add(wireMesh); stripMeshes.push(wireMesh);
+
+      // Boundary: TK(p,q,t), t∈[0,2π] — thin red line
+      var bPts=[];
+      for(var i=0;i<=500;i++) bPts.push(TK(p,q,i/500*Math.PI*2));
+      var bLine=new THREE.Line(
+        new THREE.BufferGeometry().setFromPoints(bPts),
+        new THREE.LineBasicMaterial({color:0xee4444})
+      );
+      scene.add(bLine); stripMeshes.push(bLine);
+    } else {
+      // q=0: flat annulus (y↔z swap: y=0 plane becomes the ring plane)
+      var Nf=100,Mf=12,pf=[],idf=[];
+      for(var i=0;i<=Nf;i++){var t=i/Nf*Math.PI*2;
+        for(var j=0;j<=Mf;j++){var s=j/Mf;var rr=(R-1+s*2)*SC;
+          pf.push(rr*Math.cos(t),0,rr*Math.sin(t));}}
+      for(var i=0;i<Nf;i++) for(var j=0;j<Mf;j++){var a=i*(Mf+1)+j,b=a+1,c=a+(Mf+1),d=c+1;idf.push(a,b,c,b,d,c);}
+      var gf=new THREE.BufferGeometry();gf.setAttribute('position',new THREE.Float32BufferAttribute(pf,3));
+      gf.setIndex(idf);gf.computeVertexNormals();
+      var fm=new THREE.Mesh(gf,new THREE.MeshNormalMaterial({side:THREE.DoubleSide,transparent:true,opacity:0.5}));
+      scene.add(fm);stripMeshes.push(fm);
+      [R-1,R+1].forEach(function(radius){
+        var pts=[];for(var i=0;i<=200;i++){var a=i/200*Math.PI*2;pts.push(new THREE.Vector3(radius*SC*Math.cos(a),0,radius*SC*Math.sin(a)));}
+        var line=new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineBasicMaterial({color:0xee4444}));
+        scene.add(line);stripMeshes.push(line);
+      });
+    }
+
+    // UI
+    if(countEl) countEl.textContent=halfTwists+' half-twist'+(halfTwists===1?'':'s');
+    if(sidedEl){
+      if(oneSided){
+        sidedEl.innerHTML='ONE-SIDED \u00B7 <span style="font-size:.75rem">\uD83E\uDDC0</span> one swipe covers all';
+        sidedEl.style.color='var(--rose)';
+      } else {
+        sidedEl.innerHTML='TWO-SIDED \u00B7 <span style="font-size:.75rem">\uD83E\uDDC0</span> one side stays clean';
+        sidedEl.style.color='var(--cyan)';
+      }
+    }
+  }
+
+  rebuild();
+
+  // Buttons
+  if(btnMinus) btnMinus.addEventListener('click',function(e){
+    e.stopPropagation(); halfTwists=Math.max(0,halfTwists-1);
+    rebuild(); chime(halfTwists%2?392:523,.25,.08);
   });
-  document.getElementById('mobiusReset').addEventListener('click',()=>{
-    cutting=false; cutProgress=0;
-    torusFill.material.opacity=.08;
-    torusWire.material.opacity=.15;
-    mobiusFill.material.opacity=.3;
-    mobiusWire.material.opacity=.2;
-    mobiusFill.visible=true; mobiusWire.visible=true;
-    torusFill.position.y=0; torusWire.position.y=0;
-    statusEl.textContent='READY';
+  if(btnPlus) btnPlus.addEventListener('click',function(e){
+    e.stopPropagation(); halfTwists=Math.min(6,halfTwists+1);
+    rebuild(); chime(halfTwists%2?392:523,.25,.08);
   });
 
-  // Drag to rotate
-  let dragging=false,prevX=0,prevY=0,rX=.3,rY=0;
-  box.addEventListener('pointerdown',e=>{dragging=true;prevX=e.clientX;prevY=e.clientY;box.setPointerCapture(e.pointerId);});
-  box.addEventListener('pointermove',e=>{if(!dragging)return;rY+=(e.clientX-prevX)*.008;rX+=(e.clientY-prevY)*.008;prevX=e.clientX;prevY=e.clientY;});
-  box.addEventListener('pointerup',()=>dragging=false);
-  box.addEventListener('pointercancel',()=>dragging=false);
+  // Drag rotate + scroll zoom
+  var dragging=false, prevX=0, prevY=0, rotX=0.35, rotY=0, camDist=3;
+  canvas.addEventListener('pointerdown',function(e){dragging=true;prevX=e.clientX;prevY=e.clientY;canvas.setPointerCapture(e.pointerId);});
+  canvas.addEventListener('pointermove',function(e){if(!dragging)return;rotY+=(e.clientX-prevX)*.006;rotX+=(e.clientY-prevY)*.006;rotX=Math.max(-1.4,Math.min(1.4,rotX));prevX=e.clientX;prevY=e.clientY;});
+  canvas.addEventListener('pointerup',function(){dragging=false;});
+  canvas.addEventListener('pointercancel',function(){dragging=false;});
+  canvas.addEventListener('wheel',function(e){e.preventDefault();camDist=Math.max(1.5,Math.min(8,camDist+e.deltaY*.003));},{passive:false});
 
+  // Resize
   function onResize(){
-    const r=box.getBoundingClientRect();
-    const h=r.height-42;
-    renderer.setSize(r.width,h>100?h:300);
-    camera.aspect=r.width/(h>100?h:300);
+    var rect=box.getBoundingClientRect();
+    var h=Math.max(rect.height-44,200);
+    renderer.setSize(rect.width,h);
+    camera.aspect=rect.width/h;
     camera.updateProjectionMatrix();
   }
 
-  let rafId;
-  function animate(t){
+  // Render loop
+  var rafId;
+  function animate(){
     rafId=requestAnimationFrame(animate);
-    const sec=t*.001;
-
-    if(cutting && cutProgress<1){
-      cutProgress+=.004;
-      if(cutProgress>.4){
-        // Fade out the Möbius band
-        const fade=Math.max(0,1-(cutProgress-.4)/.3);
-        mobiusFill.material.opacity=.3*fade;
-        mobiusWire.material.opacity=.2*fade;
-        if(fade<=0){mobiusFill.visible=false;mobiusWire.visible=false;}
-      }
-      if(cutProgress>.6){
-        statusEl.textContent='RESULT: ANOTHER SOLID TORUS';
-        statusEl.style.color='var(--gold)';
-        // Glow the torus
-        torusFill.material.opacity=.08+.07*Math.sin(sec*4);
-        torusWire.material.opacity=.15+.1*Math.sin(sec*4);
-      }
-    }
-
-    // Rotate
-    const autoRot=dragging?0:.002;
-    rY+=autoRot;
-    const group=[torusFill,torusWire,mobiusFill,mobiusWire];
-    group.forEach(m=>{m.rotation.x=rX;m.rotation.y=rY;});
-
+    if(!dragging) rotY+=0.004;
+    scene.rotation.x=rotX;
+    scene.rotation.y=rotY;
+    camera.position.set(0,1,camDist);
+    camera.lookAt(0,0,0);
     renderer.render(scene,camera);
   }
 
-  const obs=new IntersectionObserver(entries=>{
-    if(entries[0].isIntersecting) animate(0);
+  var obs=new IntersectionObserver(function(entries){
+    if(entries[0].isIntersecting) animate();
     else cancelAnimationFrame(rafId);
-  },{threshold:.05});
+  },{threshold:0.05});
   obs.observe(box);
   window.addEventListener('resize',onResize);
-  setTimeout(onResize,100);
+  setTimeout(onResize,120);
+})();
+
+/* ══════════════════════════════════════════════════════════════════
+   § 7 — THURSTON GEOMETRY GALLERY (Canvas 2D — no WebGL context needed)
+   ══════════════════════════════════════════════════════════════════ */
+(function(){
+  var gallery=document.getElementById('thurstonGallery');
+  if(!gallery) return;
+  var detailName=document.getElementById('thurstonDetailName');
+  var detailText=document.getElementById('thurstonDetailText');
+
+  var geoData=[
+    {sym:'\\(S^3\\)',name:'Spherical geometry',
+     desc:'Constant positive curvature. Geodesics are great circles that always reconverge — walk in any direction and you return home. The simplest closed 3-manifold; Einstein\'s first model of the cosmos.',
+     color:'#c9a84c'},
+    {sym:'\\(\\mathbb{E}^3\\)',name:'Euclidean geometry',
+     desc:'Zero curvature — flat space. Geodesics are straight lines that never meet again. The 3-torus T³ lives here: a finite flat universe with no boundary, built by identifying opposite faces of a cube.',
+     color:'#3cb8c3'},
+    {sym:'\\(\\mathbb{H}^3\\)',name:'Hyperbolic geometry',
+     desc:'Constant negative curvature. Geodesics diverge exponentially. Space expands faster than you can explore it. The Seifert–Weber dodecahedral space is a closed hyperbolic 3-manifold.',
+     color:'#c47a8a'},
+    {sym:'\\(S^2\\!\\times\\!\\mathbb{R}\\)',name:'Sphere × Line',
+     desc:'The product of a 2-sphere with a line. Positively curved in two directions, flat in the third. Think of stacking spheres along a vertical axis — each horizontal slice is round, but the vertical direction is straight.',
+     color:'#7a9aaa'},
+    {sym:'\\(\\mathbb{H}^2\\!\\times\\!\\mathbb{R}\\)',name:'Hyperbolic plane × Line',
+     desc:'The product of the hyperbolic plane with a line. Negatively curved in two directions, flat in the third. Horizontal slices are hyperbolic; the vertical direction is Euclidean.',
+     color:'#8a7a9a'},
+    {sym:'\\(\\widetilde{\\mathrm{SL}_2}\\)',name:'SL₂(ℝ) geometry',
+     desc:'The universal cover of SL(2,ℝ). A twisted product of the hyperbolic plane with a circle. Geodesics spiral — they rotate as they move through the space, like light in a fiber-optic cable that twists.',
+     color:'#6a8aaa'},
+    {sym:'\\(\\mathrm{Nil}\\)',name:'Nilgeometry',
+     desc:'The geometry of the Heisenberg group. Horizontal planes are flat, but the vertical direction is "sheared." Geodesics trace helices — straight lines that corkscrew through space.',
+     color:'#8aaa6a'},
+    {sym:'\\(\\mathrm{Sol}\\)',name:'Solvegeometry',
+     desc:'The geometry of the solvable Lie group Sol. Space stretches exponentially in one direction and contracts in another. Geodesics behave chaotically.',
+     color:'#aa8a6a'}
+  ];
+
+  // Draw functions for each geometry (Canvas 2D)
+  var drawFns=[
+    // S³: nested great circles
+    function(ctx,w,h,t){
+      var cx=w/2,cy=h/2,r=Math.min(w,h)*0.35;
+      ctx.lineWidth=1.2;
+      for(var k=0;k<6;k++){
+        var a=t*0.5+k*Math.PI/6;
+        ctx.strokeStyle='rgba(201,168,76,'+(0.5-k*0.06)+')';
+        ctx.beginPath();
+        for(var i=0;i<=80;i++){
+          var th=i/80*Math.PI*2;
+          var x=r*Math.cos(th);
+          var y=r*Math.sin(th)*Math.cos(a)+r*0.3*Math.sin(a)*Math.sin(th*2+t);
+          ctx[i?'lineTo':'moveTo'](cx+x,cy+y);
+        }
+        ctx.stroke();
+      }
+    },
+    // E³: cubic lattice
+    function(ctx,w,h,t){
+      var cx=w/2,cy=h/2,s=Math.min(w,h)*0.28;
+      var ca=Math.cos(t*0.4),sa=Math.sin(t*0.4);
+      var cb=Math.cos(0.5),sb=Math.sin(0.5);
+      function proj(x,y,z){
+        var rx=x*ca-z*sa, rz=x*sa+z*ca;
+        var ry=y*cb-rz*sb; rz=y*sb+rz*cb;
+        return [cx+rx*s, cy+ry*s];
+      }
+      ctx.strokeStyle='rgba(60,184,195,0.3)';ctx.lineWidth=1;
+      for(var a=-1;a<=1;a++) for(var b=-1;b<=1;b++){
+        var p1=proj(a,b,-1),p2=proj(a,b,1);ctx.beginPath();ctx.moveTo(p1[0],p1[1]);ctx.lineTo(p2[0],p2[1]);ctx.stroke();
+        p1=proj(a,-1,b);p2=proj(a,1,b);ctx.beginPath();ctx.moveTo(p1[0],p1[1]);ctx.lineTo(p2[0],p2[1]);ctx.stroke();
+        p1=proj(-1,a,b);p2=proj(1,a,b);ctx.beginPath();ctx.moveTo(p1[0],p1[1]);ctx.lineTo(p2[0],p2[1]);ctx.stroke();
+      }
+    },
+    // H³: Poincaré disk with expanding circles + radial lines
+    function(ctx,w,h,t){
+      var cx=w/2,cy=h/2,R=Math.min(w,h)*0.38;
+      // Boundary circle
+      ctx.strokeStyle='rgba(196,122,138,0.2)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.stroke();
+      // Concentric geodesic circles (shrinking spacing toward edge)
+      for(var k=1;k<8;k++){
+        var r=R*Math.tanh(k*0.22);
+        ctx.strokeStyle='rgba(196,122,138,'+(0.45-k*0.04)+')';
+        ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
+      }
+      // Radial geodesics
+      ctx.strokeStyle='rgba(196,122,138,0.15)';
+      for(var k=0;k<12;k++){
+        var a=k/12*Math.PI*2+t*0.2;
+        ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+R*Math.cos(a),cy+R*Math.sin(a));ctx.stroke();
+      }
+    },
+    // S²×R: circles stacked vertically
+    function(ctx,w,h,t){
+      var cx=w/2,cy=h/2,r=Math.min(w,h)*0.22;
+      ctx.lineWidth=1;
+      for(var k=-2;k<=2;k++){
+        var y=cy+k*r*0.6;
+        var sc=1-Math.abs(k)*0.08;
+        ctx.strokeStyle='rgba(122,154,170,'+(0.45-Math.abs(k)*0.08)+')';
+        ctx.beginPath();
+        ctx.ellipse(cx,y,r*sc,r*sc*0.35,0,0,Math.PI*2);
+        ctx.stroke();
+      }
+      // Vertical lines
+      ctx.strokeStyle='rgba(122,154,170,0.2)';
+      for(var k=0;k<6;k++){
+        var a=k/6*Math.PI*2+t*0.3;
+        var x=cx+r*Math.cos(a);
+        ctx.beginPath();ctx.moveTo(x,cy-r*1.4);ctx.lineTo(x,cy+r*1.4);ctx.stroke();
+      }
+    },
+    // H²×R: hyperbolic circles + vertical lines
+    function(ctx,w,h,t){
+      var cx=w/2,cy=h/2,R=Math.min(w,h)*0.3;
+      for(var k=1;k<6;k++){
+        var r=R*Math.tanh(k*0.3);
+        ctx.strokeStyle='rgba(138,122,154,'+(0.4-k*0.05)+')';ctx.lineWidth=1;
+        ctx.beginPath();ctx.ellipse(cx,cy,r,r*0.35,0,0,Math.PI*2);ctx.stroke();
+      }
+      ctx.strokeStyle='rgba(138,122,154,0.2)';
+      for(var k=0;k<8;k++){
+        var a=k/8*Math.PI*2+t*0.2;
+        var x=cx+R*0.85*Math.cos(a);
+        ctx.beginPath();ctx.moveTo(x,cy-R*1.2);ctx.lineTo(x,cy+R*1.2);ctx.stroke();
+      }
+    },
+    // SL2: spiraling curves
+    function(ctx,w,h,t){
+      var cx=w/2,cy=h/2,R=Math.min(w,h)*0.32;
+      ctx.lineWidth=1.2;
+      for(var k=0;k<4;k++){
+        ctx.strokeStyle='rgba(106,138,170,'+(0.5-k*0.08)+')';
+        ctx.beginPath();
+        var off=k*Math.PI/2;
+        for(var i=0;i<=100;i++){
+          var th=i/100*Math.PI*4;
+          var r=R*(0.15+0.7*(i/100));
+          var x=cx+r*Math.cos(th+off+t*0.5);
+          var y=cy+r*Math.sin(th+off+t*0.5)*0.4-R*(i/100-0.5)*0.8;
+          ctx[i?'lineTo':'moveTo'](x,y);
+        }
+        ctx.stroke();
+      }
+    },
+    // Nil: helices (Heisenberg)
+    function(ctx,w,h,t){
+      var cx=w/2,cy=h/2,R=Math.min(w,h)*0.32;
+      ctx.lineWidth=1.2;
+      for(var k=0;k<5;k++){
+        var rh=R*(0.2+k*0.15);
+        ctx.strokeStyle='rgba(138,170,106,'+(0.5-k*0.06)+')';
+        ctx.beginPath();
+        var off=k*Math.PI*2/5;
+        for(var i=0;i<=80;i++){
+          var th=i/80*Math.PI*3;
+          var x=cx+rh*Math.cos(th+off+t*0.4);
+          var y=cy-R*0.7+i/80*R*1.4+rh*0.15*Math.sin(th+off);
+          ctx[i?'lineTo':'moveTo'](x,y);
+        }
+        ctx.stroke();
+      }
+    },
+    // Sol: saddle-like exponential grid
+    function(ctx,w,h,t){
+      var cx=w/2,cy=h/2,S=Math.min(w,h)*0.35;
+      ctx.lineWidth=1;
+      for(var k=-3;k<=3;k++){
+        ctx.strokeStyle='rgba(170,138,106,'+(0.35-Math.abs(k)*0.03)+')';
+        // Expanding curves
+        ctx.beginPath();
+        for(var i=0;i<=40;i++){
+          var x_=(i/40-0.5)*2;
+          var y_=Math.exp(x_*0.6)*k*0.15;
+          ctx[i?'lineTo':'moveTo'](cx+x_*S,cy+y_*S);
+        }
+        ctx.stroke();
+        // Contracting curves
+        ctx.beginPath();
+        for(var i=0;i<=40;i++){
+          var y_=(i/40-0.5)*2;
+          var x_=Math.exp(-y_*0.6)*k*0.15;
+          ctx[i?'lineTo':'moveTo'](cx+x_*S,cy+y_*S);
+        }
+        ctx.stroke();
+      }
+    }
+  ];
+
+  // Card click handler
+  var cards=gallery.querySelectorAll('.thurston-card');
+  cards.forEach(function(card,idx){
+    card.addEventListener('click',function(){
+      cards.forEach(function(c){c.classList.remove('active');});
+      card.classList.add('active');
+      var d=geoData[idx];
+      detailName.innerHTML=d.sym+' — '+d.name;
+      detailText.textContent=d.desc;
+      try{renderMathInElement(detailName,{delimiters:[{left:'\\(',right:'\\)',display:false}]});}catch(e){}
+      chime(280+idx*40,.15,.05);
+    });
+  });
+
+  // Animation
+  var dpr=Math.min(devicePixelRatio,2);
+  var canvases=[];
+  cards.forEach(function(card){canvases.push(card.querySelector('canvas'));});
+
+  function onResize(){
+    canvases.forEach(function(cv){
+      var rect=cv.parentElement.getBoundingClientRect();
+      cv.width=rect.width*dpr; cv.height=rect.height*dpr;
+    });
+  }
+
+  var rafId;
+  function animate(time){
+    rafId=requestAnimationFrame(animate);
+    var t=time*0.001;
+    canvases.forEach(function(cv,idx){
+      var ctx=cv.getContext('2d');
+      var w=cv.width, h=cv.height;
+      ctx.clearRect(0,0,w,h);
+      ctx.save();
+      ctx.scale(dpr,dpr);
+      drawFns[idx](ctx,w/dpr,h/dpr,t);
+      ctx.restore();
+    });
+  }
+
+  var obs=new IntersectionObserver(function(entries){
+    if(entries[0].isIntersecting){onResize();animate(0);}
+    else cancelAnimationFrame(rafId);
+  },{threshold:0.05});
+  obs.observe(gallery);
+  window.addEventListener('resize',onResize);
+  setTimeout(onResize,150);
 })();
 
 /* ── ambient drone ── */
 {let s=false;function d(){if(s)return;s=true;try{const c=ac(),o1=c.createOscillator(),o2=c.createOscillator(),g=c.createGain();o1.type='sine';o1.frequency.value=55;o2.type='sine';o2.frequency.value=82.5;g.gain.setValueAtTime(0,c.currentTime);g.gain.linearRampToValueAtTime(.025,c.currentTime+4);o1.connect(g);o2.connect(g);g.connect(c.destination);o1.start();o2.start()}catch(e){}}document.addEventListener('click',d,{once:true});document.addEventListener('keydown',d,{once:true})}
 </script>
-<script src="universe_ios_bridge.js"></script>
 </body>
 </html>

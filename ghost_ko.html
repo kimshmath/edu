@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>수학의 소리</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Noto+Sans+KR:wght@300;400;500;600&family=Noto+Serif+KR:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
@@ -506,10 +506,111 @@ footer a:hover { color: var(--accent); }
 
 /* ───── Responsive ───── */
 @media (max-width: 640px) {
-  :root { --section-gap: 5rem; }
-  .ab-container { grid-template-columns: 1fr; }
-  .instrument-grid { grid-template-columns: repeat(2, 1fr); }
+  :root { --section-gap: 4rem; }
+
+  html { font-size: 15px; }
+
+  body { 
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+
+  .top-brand { top: 0.8rem; left: 1rem; font-size: 0.65rem; }
+
+  #audio-gate { padding: 1.5rem; }
+  #audio-gate h2 { font-size: 1.3rem; }
+  #audio-gate p { font-size: 0.85rem; max-width: 90vw; }
+  #audio-gate details { max-width: 90vw; }
+  .gate-btn { padding: 0.8rem 1.8rem; font-size: 0.9rem; }
+
+  #hero { min-height: 90vh; padding: 1.5rem; }
+  #hero h1 { font-size: clamp(2.2rem, 10vw, 3.2rem); }
+  .hero-sub { font-size: 0.95rem; max-width: 90vw; margin-bottom: 1.5rem; }
+  .hero-hook { font-size: 1rem; max-width: 90vw; margin-bottom: 2rem; }
+  .hero-label { font-size: 0.65rem; margin-bottom: 1rem; }
+
   .chapter-section { padding-left: 1rem; padding-right: 1rem; }
+  .chapter-section h2 { font-size: clamp(1.4rem, 5.5vw, 1.9rem); }
+  .chapter-section h3 { font-size: 1.15rem; }
+
+  .interactive-card { padding: 1.2rem; margin: 1.5rem 0; }
+  .card-label { font-size: 0.6rem; }
+
+  .ab-container { grid-template-columns: 1fr; gap: 0.8rem; }
+  .ab-option { padding: 1rem; }
+
+  .instrument-grid { 
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 0.5rem;
+  }
+  .instrument-tile { padding: 0.7rem 0.5rem; }
+  .instrument-tile .inst-name { font-size: 0.75rem; }
+
+  .btn { 
+    padding: 0.6rem 1rem; font-size: 0.8rem;
+    min-height: 44px;
+  }
+  .btn-accent { 
+    padding: 0.7rem 1.2rem; font-size: 0.85rem;
+    min-height: 44px;
+  }
+  .btn-row { gap: 0.4rem; justify-content: center; }
+
+  canvas.viz { height: 150px; }
+  canvas.viz-tall { height: 200px; }
+  canvas.viz-short { height: 90px; }
+
+  .slider-row { gap: 0.5rem; }
+  .slider-row label { min-width: 1.5rem; font-size: 0.7rem; }
+  .slider-row input[type="range"]::-webkit-slider-thumb {
+    width: 20px; height: 20px;
+  }
+  .slider-value { min-width: 3.5rem; font-size: 0.72rem; }
+
+  .timeline { padding-left: 1.5rem; }
+  .timeline-item::before { left: -1.5rem; }
+  .timeline-title { font-size: 1.05rem; }
+  .timeline-desc { font-size: 0.82rem; }
+
+  .component-toggle { 
+    padding: 0.45rem 0.7rem; font-size: 0.65rem;
+    min-height: 36px; 
+  }
+
+  .quote-block { padding-left: 1rem; }
+  .quote-block p { font-size: 1rem; }
+
+  .equation { font-size: 0.8rem; padding: 1rem; }
+
+  .section-divider { margin: 0 1rem; }
+
+  .references { padding: 2rem 1rem; }
+  .ref-item { font-size: 0.75rem; padding-left: 1.2rem; text-indent: -1.2rem; }
+
+  footer { padding: 3rem 1rem 2rem; }
+  footer .footer-title { font-size: 0.9rem; }
+  footer .footer-author { font-size: 1rem; }
+}
+
+@media (max-width: 380px) {
+  html { font-size: 14px; }
+  #hero h1 { font-size: 2rem; }
+  .hero-sub { font-size: 0.88rem; }
+  .hero-hook { font-size: 0.92rem; }
+  .interactive-card { padding: 1rem; }
+  .instrument-grid { grid-template-columns: repeat(2, 1fr); }
+  .btn-accent { padding: 0.6rem 0.9rem; font-size: 0.8rem; }
+  canvas.viz { height: 120px; }
+  canvas.viz-tall { height: 160px; }
+  canvas.viz-short { height: 80px; }
+}
+
+@media (max-height: 500px) and (orientation: landscape) {
+  #hero { min-height: 100vh; padding: 1rem 2rem; }
+  #hero h1 { font-size: 2rem; }
+  .hero-sub, .hero-hook { font-size: 0.9rem; margin-bottom: 1rem; }
+  #audio-gate { padding: 1rem; }
+  #audio-gate h2 { font-size: 1.2rem; }
 }
 </style>
 </head>

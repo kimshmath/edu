@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Music of the Primes — 소수의 음악</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#05060f;--bg2:#0c0d1e;--surface:#10112a;--gold:#c9a84c;--gold2:#e8cc80;--gold-dim:rgba(201,168,76,0.13);--cyan:#3cb8c3;--cyan-dim:rgba(60,184,195,0.12);--text:#ede5d8;--muted:#7c7693;--red:#c45555;--rose:#c47a8a;--mint:#6ec49a;--violet:#9b7ed8;--border:rgba(201,168,76,0.13);--font-display:'Cormorant Garamond',serif;--font-body:'EB Garamond',Georgia,serif;--font-mono:'JetBrains Mono',monospace}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:1.08rem;line-height:1.75;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:rgba(201,168,76,.3);border-radius:3px}
+body::before{content:'';position:fixed;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.5}
+.lang-toggle{position:fixed;top:1.2rem;right:1.5rem;z-index:1000;font-family:var(--font-display);font-size:.85rem;letter-spacing:.12em}
+.lang-toggle a{color:var(--muted);text-decoration:none;cursor:pointer;transition:color .3s}
+.lang-toggle a:hover,.lang-toggle a.active{color:var(--gold)}
+.lang-toggle span{color:var(--border);margin:0 .4rem}
+[lang="en"] .ko{display:none}[lang="ko"] .en{display:none}
+#hero{position:relative;width:100vw;height:100vh;min-height:600px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-overlay{position:absolute;inset:0;background:radial-gradient(ellipse 55% 55% at 50% 48%,rgba(5,6,15,0) 0%,rgba(5,6,15,.5) 60%,rgba(5,6,15,.95) 100%);pointer-events:none}
+.hero-content{position:relative;z-index:10;text-align:center;padding:2rem;max-width:760px}
+.hero-label{font-family:var(--font-display);font-size:.72rem;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:2rem;opacity:.8}
+.hero-title{font-family:var(--font-display);font-size:clamp(2.6rem,7.5vw,6rem);font-weight:300;line-height:1.08;letter-spacing:-.01em;margin-bottom:1.5rem;text-shadow:0 0 80px rgba(201,168,76,.2)}
+.hero-title em{font-style:italic;color:var(--gold2)}
+.hero-sub{font-size:1.08rem;color:var(--muted);max-width:500px;margin:0 auto 3rem;line-height:1.85}
+.hero-scroll{display:inline-block;width:1px;height:48px;background:linear-gradient(to bottom,var(--gold),transparent);animation:heroFade 2.5s ease-in-out infinite}
+@keyframes heroFade{0%,100%{opacity:.2}50%{opacity:.8}}
+.section{max-width:720px;margin:0 auto;padding:5rem 1.5rem}
+.sec-label{font-family:var(--font-display);font-size:.7rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);opacity:.7;margin-bottom:.8rem}
+.sec-title{font-family:var(--font-display);font-size:clamp(1.8rem,4.5vw,2.8rem);font-weight:300;line-height:1.15;margin-bottom:1.2rem}
+.sec-title em{font-style:italic;color:var(--gold2)}
+.sec-prose{color:var(--muted);max-width:580px;margin-bottom:2rem;font-size:1.02rem;line-height:1.85}
+.sec-divider{max-width:720px;margin:0 auto;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent)}
+.demo-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:2rem 0;position:relative}
+.demo-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.demo-body{padding:1.2rem}
+.demo-canvas-wrap{position:relative;width:100%;background:#07081a;border-bottom:1px solid var(--border)}
+.demo-canvas-wrap canvas{display:block;width:100%}
+.controls{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;padding:.7rem 1rem;border-top:1px solid var(--border)}
+.btn{font-family:var(--font-display);font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;padding:.45rem 1.1rem;border:1px solid var(--gold-dim);border-radius:4px;background:transparent;color:var(--gold);cursor:pointer;transition:all .3s}
+.btn:hover{background:var(--gold-dim);border-color:var(--gold)}
+.btn.active{background:var(--gold);color:var(--bg)}
+.slider-row{display:flex;align-items:center;gap:.5rem}
+.slider-row label{font-family:var(--font-mono);font-size:.68rem;color:var(--muted);letter-spacing:.05em;white-space:nowrap}
+.slider-row input[type=range]{-webkit-appearance:none;width:100px;height:3px;background:var(--border);border-radius:2px;outline:none}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:var(--gold);cursor:pointer;box-shadow:0 0 6px rgba(201,168,76,.4)}
+.stat-box{font-family:var(--font-mono);font-size:.7rem;color:var(--cyan);background:rgba(60,184,195,.06);border:1px solid rgba(60,184,195,.15);border-radius:4px;padding:.25rem .6rem;white-space:nowrap}
+.eq-box{text-align:center;padding:1.5rem 1rem;margin:1.5rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.eq-box .katex{font-size:1.1rem}
+#sieveGrid{display:grid;gap:2px;padding:.8rem;justify-content:center}
+#sieveGrid .cell{display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:clamp(.5rem,.85vw,.72rem);border-radius:3px;aspect-ratio:1;transition:all .35s ease;cursor:default}
+#sieveGrid .cell.alive{background:rgba(201,168,76,.1);color:var(--gold2);border:1px solid rgba(201,168,76,.18)}
+#sieveGrid .cell.prime{background:rgba(201,168,76,.22);color:var(--gold);border:1px solid rgba(201,168,76,.4);text-shadow:0 0 6px rgba(201,168,76,.3);animation:pp 3s ease-in-out infinite}
+#sieveGrid .cell.sieved{background:rgba(30,25,50,.25);color:rgba(120,110,140,.25);border:1px solid rgba(120,110,140,.05);transform:scale(.85);opacity:.6}
+#sieveGrid .cell.sieving{background:rgba(195,85,85,.3);color:var(--red);border:1px solid rgba(195,85,85,.5);transform:scale(1.08)}
+@keyframes pp{0%,100%{box-shadow:0 0 3px rgba(201,168,76,.08)}50%{box-shadow:0 0 10px rgba(201,168,76,.2)}}
+.factor-tip{position:fixed;z-index:999;pointer-events:none;font-family:var(--font-mono);font-size:.7rem;color:var(--gold2);background:rgba(5,6,15,.92);border:1px solid var(--gold-dim);border-radius:4px;padding:3px 8px;opacity:0;transition:opacity .2s}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .9s ease,transform .9s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+footer{padding:3rem 0 4rem;max-width:720px;margin:0 auto;padding-left:2rem;padding-right:2rem}
+.footer-rule{width:100%;height:1px;background:var(--border);margin-bottom:1.75rem}
+.footer-attr{display:flex;flex-direction:column;gap:.2rem}
+.footer-name{font-family:'Fraunces',Georgia,serif;font-size:.85rem;color:#edeef2}
+.footer-inst{font-family:'DM Sans',sans-serif;font-size:.72rem;color:var(--muted)}
+.footer-url{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.08em;color:var(--gold);text-decoration:none;margin-top:.25rem;display:inline-block}
+.footer-url:hover{text-decoration:underline}
+
+/* ── STORY CARDS ── */
+.story-card{display:flex;gap:1.2rem;padding:1.5rem;margin:1.5rem 0;
+  border:1px solid rgba(201,168,76,.08);border-radius:8px;background:rgba(12,13,30,.5)}
+.story-icon{font-size:1.5rem;flex-shrink:0;width:2.2rem;text-align:center;
+  color:var(--cyan);opacity:.7;padding-top:.15rem}
+.story-text{font-size:.95rem;line-height:1.85;color:var(--text)}
+.story-text b{color:var(--gold2);font-weight:500}
+
+/* ── CONSEQUENCE GRID ── */
+.consequence-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
+@media(max-width:600px){.consequence-grid{grid-template-columns:1fr}}
+.consequence-item{padding:1.2rem;border:1px solid rgba(201,168,76,.08);border-radius:8px;
+  background:rgba(12,13,30,.4);display:flex;gap:.8rem}
+.cons-num{font-family:var(--font-display);font-size:1.4rem;color:var(--gold);opacity:.5;
+  flex-shrink:0;width:1.5rem;text-align:center;line-height:1.3}
+.cons-text{font-size:.88rem;line-height:1.8;color:var(--muted)}
+.cons-text b{color:var(--text);font-weight:500}
+
+/* ── L-FUNCTION BUTTONS ── */
+.lfunc-btn{font-size:.72rem!important;padding:.35rem .7rem!important;letter-spacing:.08em!important}
+.lfunc-btn.active{background:var(--cyan)!important;color:var(--bg)!important;border-color:var(--cyan)!important}
+.floating-badge{position:fixed;bottom:1.2rem;left:1.2rem;z-index:1000;font-family:var(--font-mono);font-size:.65rem;letter-spacing:.1em;color:#8db830;text-decoration:none;text-shadow:0 0 12px rgba(141,184,48,.4);opacity:.7;transition:all .3s}
+.floating-badge:hover{opacity:1;text-shadow:0 0 18px rgba(141,184,48,.6)}
+.nav-dots{position:fixed;right:1.2rem;top:50%;transform:translateY(-50%);z-index:900;display:flex;flex-direction:column;gap:10px}
+.nav-dots a{display:block;width:7px;height:7px;border-radius:50%;background:rgba(201,168,76,.18);border:1px solid rgba(201,168,76,.12);transition:all .3s;text-decoration:none}
+.nav-dots a:hover,.nav-dots a.active{background:var(--gold);box-shadow:0 0 8px rgba(201,168,76,.4);transform:scale(1.4)}
+.audio-notice{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;background:rgba(5,6,15,.55);backdrop-filter:blur(4px)}
+.audio-notice-box{text-align:center;max-width:340px;padding:2.5rem 2.5rem 2rem;background:rgba(10,12,30,.75);border:1px solid rgba(201,168,76,.12);border-radius:12px;backdrop-filter:blur(12px);box-shadow:0 8px 40px rgba(0,0,0,.5)}
+.audio-notice-box .icon{font-size:2rem;margin-bottom:1.2rem;opacity:.7;color:var(--gold)}
+.audio-notice-box p{font-family:var(--font-body);font-size:.95rem;color:var(--muted);margin-bottom:1.8rem;line-height:1.8}
+.audio-notice-box .btn{font-size:.85rem;padding:.55rem 2rem}
+@media(max-width:600px){.section{padding:3.5rem 1rem}.controls{gap:.4rem;padding:.5rem .7rem}.btn{font-size:.68rem;padding:.35rem .7rem}.slider-row input[type=range]{width:65px}.hero-sub{font-size:.92rem}.eq-box .katex{font-size:.95rem}.nav-dots{display:none}}
+@media(max-width:400px){#sieveGrid .cell{font-size:.45rem!important}}
+</style>
+</head>
+<body lang="en">
+<div class="lang-toggle"><a id="langEn" class="active" onclick="setLang('en')">EN</a><span>|</span><a id="langKo" onclick="setLang('ko')">한국어</a></div>
+<div class="audio-notice" id="audioNotice"><div class="audio-notice-box"><div class="icon">♪</div><p><span class="en">This page contains sound.<br>In § 5 you will <em>hear</em> the zeros of the Riemann zeta function.</span><span class="ko">이 페이지에는 소리가 포함되어 있습니다.<br>§ 5에서 리만 제타 함수의 영점을 <em>들을</em> 수 있습니다.</span></p><button class="btn" onclick="dismissNotice()"><span class="en">Enter</span><span class="ko">입장</span></button></div></div>
+<nav class="nav-dots" id="navDots"><a href="#hero"></a><a href="#sec1"></a><a href="#sec2"></a><a href="#sec3"></a><a href="#sec4"></a><a href="#sec5"></a><a href="#sec6"></a><a href="#sec7"></a><a href="#sec8"></a></nav>
+
+<!-- HERO -->
+<section id="hero"><canvas id="heroCanvas"></canvas><div class="hero-overlay"></div><div class="hero-content"><div class="hero-label">Interactive Mathematics</div><h1 class="hero-title"><span class="en">The <em>Music</em> of the Primes</span><span class="ko"><em>소수</em>의 음악</span></h1><p class="hero-sub"><span class="en">Primes never repeat, never end, and hide a pattern that has eluded every mind for two thousand years. What if that pattern is a kind of music?</span><span class="ko">소수는 반복하지 않고, 끝나지 않으며, 2천 년 동안 모든 지성을 피해 온 패턴을 숨기고 있습니다. 그 패턴이 일종의 음악이라면?</span></p><div class="hero-scroll"></div></div></section>
+
+<!-- §1 ATOMS — what are primes? -->
+<section class="section reveal" id="sec1"><div class="sec-label">§ 1</div><h2 class="sec-title"><span class="en">Atoms of <em>Arithmetic</em></span><span class="ko">산술의 <em>원자</em></span></h2><p class="sec-prose"><span class="en">Every integer is either prime or breaks uniquely into primes. They are the indivisible atoms of multiplication — click any composite to see its factorization.</span><span class="ko">모든 정수는 소수이거나, 소수들의 곱으로 유일하게 분해됩니다. 곱셈의 쪼갤 수 없는 원자 — 합성수를 클릭하면 소인수분해를 볼 수 있습니다.</span></p><div class="demo-card"><div class="demo-body" style="padding:0"><div id="sieveGrid"></div></div><div class="controls"><button class="btn" id="sievePlay" onclick="sieveStart()"><span class="en">▶ Sieve</span><span class="ko">▶ 체 실행</span></button><button class="btn" onclick="sieveReset()"><span class="en">Reset</span><span class="ko">초기화</span></button><div class="slider-row"><label><span class="en">Speed</span><span class="ko">속도</span></label><input type="range" id="sieveSpeed" min="1" max="10" value="5"></div><div class="stat-box" id="sieveStat"><span class="en">Primes: 0</span><span class="ko" style="display:none">소수: 0</span></div></div></div><div class="eq-box"><span class="en" id="eq1en"></span><span class="ko" id="eq1ko"></span></div></section><div class="sec-divider"></div>
+
+<!-- §2 HOW MANY? — the natural question after seeing the sieve -->
+<section class="section reveal" id="sec2"><div class="sec-label">§ 2</div>
+<h2 class="sec-title"><span class="en">How <em>Many?</em></span><span class="ko"><em>몇 개</em>나 있을까?</span></h2>
+<p class="sec-prose"><span class="en">After the sieve, a question lingers: the primes thin out, but never vanish. How many are there below a million? Below a billion? Gauss guessed the answer as a teenager. A century later, Hadamard and de la Vallée-Poussin proved him right: roughly <i>x</i>/ln <i>x</i> primes live below <i>x</i>. But <em>how sharp</em> is this estimate? The answer depends on the deepest unsolved problem in mathematics.</span>
+<span class="ko">체를 돌리고 나면 질문이 남습니다: 소수는 점점 드물어지지만, 절대 사라지지 않는다. 백만 이하에는 몇 개? 10억 이하에는? 가우스는 십대 때 이미 답을 짐작했습니다. 한 세기 뒤, 아다마르와 드 라 발레푸생이 그가 옳았음을 증명했습니다: <i>x</i> 이하의 소수는 대략 <i>x</i>/ln <i>x</i>개. 그런데 이 추정이 <em>얼마나 정확한지</em>? 그 답은 수학에서 가장 깊은 미해결 문제에 달려 있습니다.</span></p>
+<div class="demo-card"><div class="demo-canvas-wrap"><canvas id="stakeCanvas" height="360"></canvas></div>
+<div class="controls"><div class="slider-row" style="flex:1"><label>N =</label>
+<input type="range" id="stakeN" min="2" max="5" value="3" step="0.1" style="width:140px">
+<span class="stat-box" id="stakeNVal">N = 1,000</span></div>
+<button class="btn" id="stakeRH" onclick="toggleRH()">RH: ON</button></div></div>
+<p class="sec-prose" style="margin-top:1.5rem"><span class="en">Gold is the true count <i>π</i>(<i>x</i>). Cyan is Li(<i>x</i>), the logarithmic integral — a better approximation. Toggle <b>RH: OFF</b> to imagine a world where the hypothesis fails: the error explodes, and the primes lose their rhythm.</span>
+<span class="ko">금색은 실제 소수 세기 함수 <i>π</i>(<i>x</i>). 청록은 로그 적분 Li(<i>x</i>) — 더 정밀한 근사. <b>RH: OFF</b>를 누르면 가설이 실패한 세계를 볼 수 있습니다: 오차가 폭주하고, 소수는 리듬을 잃습니다.</span></p>
+</section><div class="sec-divider"></div>
+
+<!-- §3 EULER'S BRIDGE — connecting primes to analysis -->
+<section class="section reveal" id="sec3"><div class="sec-label">§ 3</div><h2 class="sec-title"><span class="en">Euler's <em>Bridge</em></span><span class="ko">오일러의 <em>다리</em></span></h2>
+<p class="sec-prose"><span class="en">How do you count things you cannot predict? In 1737, Euler found a miraculous bridge: a sum over <em>all</em> integers equals a product over <em>only primes</em>. One side is addition. The other is multiplication. They are the same.</span>
+<span class="ko">예측할 수 없는 것을 어떻게 셀까요? 1737년, 오일러는 기적 같은 다리를 발견했습니다: <em>모든</em> 정수에 대한 급수가 <em>소수만으로</em> 이루어진 곱과 같다. 한쪽은 덧셈. 다른 쪽은 곱셈. 둘은 같습니다.</span></p>
+<div class="demo-card"><div class="demo-canvas-wrap"><canvas id="eulerCanvas" height="380"></canvas></div><div class="controls"><div class="slider-row" style="flex:1"><label>s =</label><input type="range" id="eulerS" min="110" max="400" value="200" style="width:160px"><span class="stat-box" id="eulerSVal">s = 2.00</span></div><div class="stat-box" id="eulerResult"></div></div></div><div class="eq-box"><span id="eq2"></span></div></section><div class="sec-divider"></div>
+
+<!-- §4 ZETA LANDSCAPE — Riemann's leap -->
+<section class="section reveal" id="sec4"><div class="sec-label">§ 4</div><h2 class="sec-title"><span class="en">The Zeta <em>Landscape</em></span><span class="ko">제타 함수의 <em>풍경</em></span></h2>
+<p class="sec-prose"><span class="en">In 1859, Riemann wrote an eight-page paper that changed mathematics forever. His idea: let <i>s</i> be a complex number. Euler's series becomes a function on the complex plane — a landscape of phase and magnitude. Its hidden zeros, Riemann realized, control the distribution of primes.</span>
+<span class="ko">1859년, 리만은 수학을 영원히 바꿀 8쪽짜리 논문을 썼습니다. 그의 아이디어: <i>s</i>를 복소수로 확장하라. 오일러의 급수는 복소 평면 위의 함수 — 위상과 크기의 풍경이 됩니다. 리만은 깨달았습니다. 이 풍경의 숨겨진 영점이 소수의 분포를 지배한다는 것을.</span></p>
+<div class="demo-card"><div class="demo-canvas-wrap" style="position:relative"><canvas id="domainCanvas" height="500"></canvas><div id="domainTooltip" style="position:absolute;top:8px;right:8px;font-family:var(--font-mono);font-size:.68rem;color:var(--cyan);background:rgba(5,6,15,.88);padding:3px 8px;border-radius:4px;border:1px solid rgba(60,184,195,.18);pointer-events:none;opacity:0;transition:opacity .2s"></div><div style="position:absolute;bottom:8px;left:8px;font-family:var(--font-mono);font-size:.6rem;color:var(--muted);background:rgba(5,6,15,.7);padding:2px 6px;border-radius:3px;pointer-events:none"><span class="en">Critical strip: 0 &lt; Re(s) &lt; 1</span><span class="ko">임계 띠: 0 &lt; Re(s) &lt; 1</span></div></div><div class="controls"><button class="btn" onclick="domainReset()"><span class="en">Reset</span><span class="ko">초기화</span></button><div class="stat-box"><span class="en">Drag to pan · Scroll to zoom</span><span class="ko">드래그: 이동 · 스크롤: 확대</span></div></div></div></section><div class="sec-divider"></div>
+
+<!-- §5 CRITICAL LINE — hear the zeros -->
+<section class="section reveal" id="sec5"><div class="sec-label">§ 5</div><h2 class="sec-title"><span class="en">Flight Along the <em>Critical Line</em></span><span class="ko"><em>임계선</em> 위의 비행</span></h2>
+<p class="sec-prose"><span class="en">All known non-trivial zeros of ζ lie on Re(s) = ½. Press play — each zero you cross emits a tone whose pitch rises with the imaginary part. This is the sound of the primes.</span>
+<span class="ko">ζ의 알려진 모든 비자명 영점은 Re(s) = ½ 위에 있습니다. 재생을 누르세요 — 영점을 지날 때마다 허수부에 비례하는 소리가 울립니다. 이것이 소수의 소리입니다.</span></p>
+<div class="demo-card"><div class="demo-canvas-wrap"><canvas id="critCanvas" height="400"></canvas></div><div class="controls"><button class="btn" id="critPlay" onclick="critToggle()"><span class="en">▶ Play</span><span class="ko">▶ 재생</span></button><button class="btn" onclick="critReset()"><span class="en">Reset</span><span class="ko">초기화</span></button><div class="slider-row"><label><span class="en">Speed</span><span class="ko">속도</span></label><input type="range" id="critSpeed" min="1" max="10" value="4"></div><div class="stat-box" id="critStat">t = 0.00</div><div class="stat-box" id="critZeroCount"><span class="en">Zeros: 0</span><span class="ko">영점: 0</span></div></div></div></section><div class="sec-divider"></div>
+
+<!-- §6 THE SYMPHONY — explicit formula, the climax -->
+<section class="section reveal" id="sec6"><div class="sec-label">§ 6</div><h2 class="sec-title"><span class="en">The <em>Symphony</em></span><span class="ko"><em>교향곡</em></span></h2>
+<p class="sec-prose"><span class="en">Here is the heart of it. Riemann's explicit formula decomposes the prime staircase into a superposition of waves — one wave per zero. Each zero is a frequency. Together they compose the distribution of primes, the way overtones compose a musical chord.</span>
+<span class="ko">핵심은 이것입니다. 리만의 명시 공식은 소수 계단함수를 파동의 중첩으로 분해합니다 — 영점 하나가 하나의 진동수. 이것들이 모여 소수의 분포를 작곡합니다, 배음이 화음을 이루듯이.</span></p>
+<div class="demo-card"><div class="demo-canvas-wrap"><canvas id="explCanvas" height="400"></canvas></div><div class="controls"><div class="slider-row" style="flex:1"><label><span class="en">Zeros:</span><span class="ko">영점:</span></label><input type="range" id="explSlider" min="0" max="29" value="0" style="width:180px"><span class="stat-box" id="explCount">0</span></div></div></div><div class="eq-box"><span id="eq5"></span></div></section><div class="sec-divider"></div>
+
+<div class="section reveal" style="text-align:center;padding:3rem 1.5rem">
+<div style="font-family:var(--font-display);font-size:clamp(1rem,2.8vw,1.35rem);color:var(--gold);line-height:1.7;max-width:500px;margin:0 auto .8rem;font-style:italic">
+<span class="en">"But the zeta function is only the beginning of the story…"</span>
+<span class="ko">"그러나 제타 함수는 이야기의 시작에 불과합니다…"</span>
+</div>
+</div>
+
+<!-- §7 THE LARGER UNIVERSE — Dirichlet, automorphic, Langlands -->
+<section class="section reveal" id="sec7"><div class="sec-label">§ 7</div>
+<h2 class="sec-title"><span class="en">The Larger <em>Universe</em></span><span class="ko">더 넓은 <em>우주</em></span></h2>
+<p class="sec-prose"><span class="en">The Riemann zeta function is only the first voice in an immense chorus. Behind it lies a vast family of <b>L-functions</b> — each one attached to a different arithmetic question, each carrying its own zeros on the critical line, each obeying its own Riemann Hypothesis.</span>
+<span class="ko">리만 제타 함수는 거대한 합창의 첫 번째 목소리에 불과합니다. 그 뒤에는 광대한 <b>L-함수</b>의 가족이 있습니다 — 각각 다른 산술적 질문에 연결되어 있고, 각각 임계선 위에 고유한 영점을 가지며, 각각 고유한 리만 가설을 따릅니다.</span></p>
+
+<div class="story-card reveal">
+<div class="story-icon">∞</div>
+<div class="story-text">
+<span class="en"><b>Dirichlet (1837)</b> — To prove infinitely many primes exist in progressions like 1, 5, 9, 13, …, Dirichlet invented <b>L-functions twisted by characters</b>. Each character χ yields a different L(s, χ), each with its own zeros. The Generalized Riemann Hypothesis (GRH) asserts <em>all</em> these zeros lie on Re(s) = ½.</span>
+<span class="ko"><b>디리클레 (1837)</b> — 1, 5, 9, 13, … 같은 등차수열에 소수가 무한히 많음을 증명하기 위해, 디리클레는 <b>지표로 변형된 L-함수</b>를 발명했습니다. 각 지표 χ는 다른 L(s, χ)을 만들고, 각각 고유한 영점을 가집니다. 일반화 리만 가설(GRH)은 이 <em>모든</em> 영점도 Re(s) = ½ 위에 있다고 주장합니다.</span>
+</div></div>
+
+<div class="story-card reveal">
+<div class="story-icon">◯</div>
+<div class="story-text">
+<span class="en"><b>Automorphic forms</b> — L-functions arise naturally from <b>automorphic forms</b>: functions on symmetric spaces with extraordinary symmetry. The zeta function of a modular form carries arithmetic secrets about elliptic curves and Galois representations. Ramanujan's τ-function, the L-function of an elliptic curve — each one another voice in the chorus.</span>
+<span class="ko"><b>보형 형식</b> — L-함수는 <b>보형 형식</b>에서 자연스럽게 생겨납니다: 대칭 공간 위에서 놀라운 대칭성을 가진 함수들. 모듈러 형식의 제타 함수는 타원곡선과 갈루아 표현에 대한 산술적 비밀을 담고 있습니다. 라마누잔의 τ-함수, 타원곡선의 L-함수 — 각각이 합창의 또 다른 목소리입니다.</span>
+</div></div>
+
+<div class="story-card reveal">
+<div class="story-icon">⟷</div>
+<div class="story-text">
+<span class="en"><b>Langlands program</b> — Robert Langlands proposed a breathtaking <b>duality</b>: every L-function from number theory should match one from automorphic forms, and vice versa. If true, this "grand unified theory" of mathematics would settle the Riemann Hypothesis for whole families of L-functions at once. We are still far from the summit — but the path is among the deepest in all of mathematics.</span>
+<span class="ko"><b>랭글랜즈 프로그램</b> — 로버트 랭글랜즈는 숨막히는 <b>쌍대성</b>을 제안했습니다: 정수론의 모든 L-함수는 보형 형식의 것과 짝을 이루어야 하고, 그 역도 성립해야 합니다. 참이라면, 이 수학의 "대통일 이론"은 L-함수의 전체 가족에 대해 리만 가설을 한꺼번에 해결할 것입니다. 정상까지는 아직 멀지만 — 그 길은 수학에서 가장 깊은 것 중 하나입니다.</span>
+</div></div>
+
+<div class="demo-card">
+<div class="demo-canvas-wrap"><canvas id="lFuncCanvas" height="350"></canvas></div>
+<div class="controls">
+<button class="btn lfunc-btn active" data-fn="zeta" onclick="setLFunc('zeta')">ζ(s)</button>
+<button class="btn lfunc-btn" data-fn="chi3" onclick="setLFunc('chi3')">L(s, χ₃)</button>
+<button class="btn lfunc-btn" data-fn="chi4" onclick="setLFunc('chi4')">L(s, χ₄)</button>
+<button class="btn lfunc-btn" data-fn="chi5" onclick="setLFunc('chi5')">L(s, χ₅)</button>
+<div class="stat-box" id="lfuncLabel">Riemann ζ</div>
+</div></div>
+<p class="sec-prose" style="margin-top:1.5rem"><span class="en">Each button reveals a different L-function's zeros on the critical line — different characters, different patterns, but every known zero sits on Re(s) = ½. The GRH is the Riemann Hypothesis writ large across all of number theory.</span>
+<span class="ko">각 버튼은 다른 L-함수의 임계선 위 영점을 보여줍니다 — 다른 지표, 다른 패턴이지만, 알려진 모든 영점은 Re(s) = ½ 위에 있습니다. 일반화 리만 가설은 정수론 전체에 걸쳐 확장된 리만 가설입니다.</span></p>
+</section><div class="sec-divider"></div>
+
+<!-- §8 AWAKEN — consequences, Hardy, closing meditation -->
+<section class="section reveal" id="sec8"><div class="sec-label">§ 8</div>
+<h2 class="sec-title"><span class="en">If I Were to <em>Awaken</em></span><span class="ko">만약 <em>깨어난다면</em></span></h2>
+
+<div class="story-card reveal" style="border-color:rgba(201,168,76,.25)">
+<div class="story-icon" style="color:var(--gold)">★</div>
+<div class="story-text" style="font-size:1.05rem;line-height:1.9">
+<span class="en">G. H. Hardy was once asked what he would do if he fell asleep and woke 500 years later. His answer: <em>"My first question would be — has the Riemann Hypothesis been proved?"</em></span>
+<span class="ko">G. H. 하디는 잠들었다가 500년 뒤에 깨어나면 무엇을 하겠냐는 질문을 받았습니다. 그의 대답: <em>"나의 첫 번째 질문은 — 리만 가설이 증명되었는가? — 일 것이다."</em></span>
+</div></div>
+
+<p class="sec-prose"><span class="en">The hypothesis has resisted proof for over 165 years. It is one of the Clay Millennium Prize Problems. But the million-dollar prize barely hints at the consequences:</span>
+<span class="ko">이 가설은 165년이 넘도록 증명을 거부해 왔습니다. 클레이 밀레니엄 문제 중 하나이지만, 백만 달러의 상금은 그 결과의 실체를 거의 드러내지 못합니다:</span></p>
+
+<div class="consequence-grid">
+<div class="consequence-item reveal"><div class="cons-num">1</div><div class="cons-text">
+<span class="en"><b>Prime gaps.</b> The largest gap between consecutive primes below <i>x</i> would be at most ~√<i>x</i> log <i>x</i>. Primes could never desert too large a stretch.</span>
+<span class="ko"><b>소수 간격.</b> <i>x</i> 이하 연속 소수 사이 최대 간격이 ~√<i>x</i> log <i>x</i> 이하. 소수가 넓은 구간을 결코 비울 수 없습니다.</span>
+</div></div>
+<div class="consequence-item reveal"><div class="cons-num">2</div><div class="cons-text">
+<span class="en"><b>Goldbach & twins.</b> Many results toward the twin prime conjecture and Goldbach's conjecture depend on GRH.</span>
+<span class="ko"><b>골드바흐 & 쌍둥이.</b> 쌍둥이 소수 추측과 골드바흐 추측을 향한 많은 결과가 GRH에 의존합니다.</span>
+</div></div>
+<div class="consequence-item reveal"><div class="cons-num">3</div><div class="cons-text">
+<span class="en"><b>Cryptography.</b> RSA and elliptic curve cryptography rest on the difficulty of factoring. GRH controls the complexity of primality testing and more.</span>
+<span class="ko"><b>암호학.</b> RSA와 타원곡선 암호는 인수분해의 어려움에 기반합니다. GRH는 소수 판정의 복잡도 한계를 지배합니다.</span>
+</div></div>
+<div class="consequence-item reveal"><div class="cons-num">4</div><div class="cons-text">
+<span class="en"><b>Quantum chaos.</b> The spacing of zeta zeros statistically matches quantum energy levels. Montgomery–Odlyzko law: primes whisper the secrets of quantum physics.</span>
+<span class="ko"><b>양자 혼돈.</b> 제타 영점의 간격은 양자 에너지 준위와 통계적으로 일치합니다. 몽고메리–오들리츠코 법칙: 소수는 양자 물리의 비밀을 속삭입니다.</span>
+</div></div>
+</div>
+
+<div style="text-align:center;padding:3rem 1rem 1rem">
+<div style="font-family:var(--font-display);font-size:clamp(1.1rem,3vw,1.45rem);color:var(--gold);line-height:1.7;max-width:540px;margin:0 auto .8rem;font-style:italic">
+<span class="en">"If I could come back after 500 years, my first question would be: has the Riemann Hypothesis been proved?"</span>
+<span class="ko">"만약 500년 뒤에 돌아올 수 있다면, 나의 첫 번째 질문은 이것이다: 리만 가설이 증명되었는가?"</span>
+</div><div style="font-family:var(--font-body);font-size:.85rem;color:var(--muted)">— G. H. Hardy</div>
+</div>
+
+<div style="text-align:center;padding:1rem 1rem 2.5rem">
+<div style="font-family:var(--font-display);font-size:clamp(.95rem,2.5vw,1.15rem);color:var(--muted);line-height:1.9;max-width:500px;margin:0 auto">
+<span class="en">Euclid knew primes were infinite.<br>Euler connected them to analysis.<br>Riemann heard their music.<br><br>Over 10 trillion zeros have been computed.<br>Every single one lies on the critical line.<br><br>The music plays on.<br>No one knows why.</span>
+<span class="ko">유클리드는 소수가 무한함을 알았습니다.<br>오일러는 소수를 해석학과 연결했습니다.<br>리만은 그 음악을 들었습니다.<br><br>10조 개가 넘는 영점이 계산되었습니다.<br>하나도 빠짐없이 임계선 위에 있습니다.<br><br>음악은 계속됩니다.<br>아무도 이유를 모릅니다.</span>
+</div>
+</div>
+</section>
+
+<footer><div class="footer-rule"></div><div class="footer-attr"><div class="footer-name">Sang-hyun Kim</div><div class="footer-inst">Korea Institute for Advanced Study</div><a href="https://kimsh.kr" class="footer-url">kimsh.kr</a></div></footer>
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+<div class="factor-tip" id="factorTip"></div>
+<script>
+function isPrime(n){if(n<2)return false;if(n<4)return true;if(n%2===0||n%3===0)return false;for(let i=5;i*i<=n;i+=6)if(n%i===0||n%(i+2)===0)return false;return true;}
+function factorize(n){const f=[];let d=2,m=n;while(d*d<=m){while(m%d===0){f.push(d);m/=d;}d++;}if(m>1)f.push(m);return f;}
+const ZETA_ZEROS=[14.134725,21.022040,25.010858,30.424876,32.935062,37.586178,40.918719,43.327073,48.005151,49.773832,52.970321,56.446248,59.347044,60.831779,65.112544,67.079811,69.546402,72.067158,75.704691,77.144840,79.337375,82.910381,84.735493,87.425275,88.809111,92.491899,94.651344,95.870634,98.831194,101.317851];
+
+function setLang(l){document.body.lang=l;document.getElementById('langEn').className=l==='en'?'active':'';document.getElementById('langKo').className=l==='ko'?'active':'';updateSieveStat();}
+function dismissNotice(){const n=document.getElementById('audioNotice');n.style.transition='opacity .4s';n.style.opacity='0';setTimeout(()=>n.remove(),400);}
+
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+(function(){const dots=document.querySelectorAll('.nav-dots a');const secs=['hero','sec1','sec2','sec3','sec4','sec5','sec6','sec7','sec8'].map(id=>document.getElementById(id));const no=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const i=secs.indexOf(e.target);dots.forEach((d,j)=>d.classList.toggle('active',j===i));}});},{threshold:.25});secs.forEach(s=>{if(s)no.observe(s)});})();
+
+document.addEventListener('DOMContentLoaded',()=>{
+  katex.render('n = p_1^{a_1}\\, p_2^{a_2} \\cdots p_k^{a_k}\\quad(\\text{unique})',document.getElementById('eq1en'),{displayMode:true});
+  katex.render('n = p_1^{a_1}\\, p_2^{a_2} \\cdots p_k^{a_k}\\quad(\\text{유일})',document.getElementById('eq1ko'),{displayMode:true});
+  katex.render('\\zeta(s)=\\sum_{n=1}^{\\infty}\\frac{1}{n^s}=\\prod_{p\\;\\text{prime}}\\!\\frac{1}{1-p^{-s}}',document.getElementById('eq2'),{displayMode:true});
+  katex.render('\\psi(x)\\;=\\;x \\;-\\; \\sum_{\\rho}\\frac{x^{\\rho}}{\\rho} \\;-\\; \\ln 2\\pi',document.getElementById('eq5'),{displayMode:true});
+  eulerInit();domainInit();critInit();explInit();stakeInit();lFuncInit();
+});
+
+/* HERO */
+(function(){const cv=document.getElementById('heroCanvas'),ctx=cv.getContext('2d');let W,H;function resize(){W=cv.width=cv.offsetWidth;H=cv.height=cv.offsetHeight;}resize();window.addEventListener('resize',resize);const drops=[];function mk(init){const n=Math.floor(Math.random()*997)+2,p=isPrime(n);drops.push({n,prime:p,x:Math.random()*W,y:init?Math.random()*H:-20-Math.random()*200,vy:.12+Math.random()*.35+(p?.1:0),alpha:p?(.45+Math.random()*.5):(.04+Math.random()*.08),size:p?(11+Math.random()*7):(8+Math.random()*4),rip:0,ripM:p?(30+Math.random()*40):0});}for(let i=0;i<90;i++)mk(true);function draw(){ctx.clearRect(0,0,W,H);for(let i=drops.length-1;i>=0;i--){const d=drops[i];d.y+=d.vy;if(d.y>H+30){drops.splice(i,1);mk(false);continue;}if(d.prime&&d.rip<d.ripM){d.rip+=.4;const a=1-d.rip/d.ripM;ctx.beginPath();ctx.arc(d.x,d.y,d.rip,0,Math.PI*2);ctx.strokeStyle='rgba(201,168,76,'+a*.12+')';ctx.lineWidth=.8;ctx.stroke();}ctx.font=d.size+'px "JetBrains Mono",monospace';ctx.textAlign='center';ctx.textBaseline='middle';if(d.prime){ctx.fillStyle='rgba(201,168,76,'+d.alpha+')';ctx.shadowColor='rgba(201,168,76,.25)';ctx.shadowBlur=10;}else{ctx.fillStyle='rgba(100,95,130,'+d.alpha+')';ctx.shadowBlur=0;}ctx.fillText(d.n,d.x,d.y);ctx.shadowBlur=0;}requestAnimationFrame(draw);}draw();})();
+
+/* § 1 SIEVE */
+const SIEVE_N=200;let cells=[],sieveRunning=false,sieveTimer=null;
+function sieveBuild(){const grid=document.getElementById('sieveGrid');grid.innerHTML='';const cols=window.innerWidth<500?10:window.innerWidth<700?14:16;grid.style.gridTemplateColumns='repeat('+cols+',1fr)';cells=[];for(let n=2;n<=SIEVE_N;n++){const div=document.createElement('div');div.className='cell alive';div.textContent=n;div.dataset.n=n;div.addEventListener('click',function(e){const num=parseInt(this.dataset.n);if(isPrime(num))return;const f=factorize(num);const tip=document.getElementById('factorTip');tip.textContent=num+' = '+f.join(' × ');tip.style.left=e.clientX+'px';tip.style.top=(e.clientY-30)+'px';tip.style.opacity='1';setTimeout(()=>tip.style.opacity='0',1800);});grid.appendChild(div);cells.push({el:div,n,alive:true});}updateSieveStat();}
+sieveBuild();window.addEventListener('resize',()=>{if(!sieveRunning)sieveBuild();});
+function updateSieveStat(){const pc=cells.filter(c=>c.el.classList.contains('prime')).length;const el=document.getElementById('sieveStat');el.innerHTML=document.body.lang==='ko'?'<span class="ko">소수: '+pc+'</span><span class="en" style="display:none">Primes: '+pc+'</span>':'<span class="en">Primes: '+pc+'</span><span class="ko" style="display:none">소수: '+pc+'</span>';}
+function sieveStart(){if(sieveRunning)return;sieveReset();sieveRunning=true;document.getElementById('sievePlay').classList.add('active');const primes=[];for(let n=2;n<=SIEVE_N;n++)if(isPrime(n))primes.push(n);const sieved=new Set();let pi=0;const hues=['#c45555','#c47a8a','#6ec49a','#3cb8c3','#9b7ed8','#c9a84c','#e87040','#5599c4'];function step(){if(pi>=primes.length||primes[pi]*primes[pi]>SIEVE_N){cells.forEach(c=>{if(c.alive&&!sieved.has(c.n)){c.el.classList.remove('alive');c.el.classList.add('prime');}});sieveRunning=false;document.getElementById('sievePlay').classList.remove('active');updateSieveStat();return;}const p=primes[pi],color=hues[pi%hues.length];const pc=cells.find(c=>c.n===p);if(pc){pc.el.classList.remove('alive');pc.el.classList.add('prime');pc.alive=false;}const mults=[];for(let m=p*p;m<=SIEVE_N;m+=p)if(!sieved.has(m))mults.push(m);let mi=0;const spd=11-parseInt(document.getElementById('sieveSpeed').value),delay=spd*28+15;function doMult(){if(mi>=mults.length){updateSieveStat();pi++;sieveTimer=setTimeout(step,delay*2);return;}const m=mults[mi];sieved.add(m);const c=cells.find(c=>c.n===m);if(c&&c.alive){c.alive=false;c.el.classList.remove('alive');c.el.classList.add('sieving');c.el.style.borderColor=color;setTimeout(()=>{c.el.classList.remove('sieving');c.el.classList.add('sieved');c.el.style.borderColor='';},140);}mi++;sieveTimer=setTimeout(doMult,delay);}sieveTimer=setTimeout(doMult,delay);}step();}
+function sieveReset(){sieveRunning=false;if(sieveTimer)clearTimeout(sieveTimer);sieveBuild();document.getElementById('sievePlay').classList.remove('active');}
+/* § 2 EULER */
+function eulerInit(){const cv=document.getElementById('eulerCanvas');if(!cv)return;const ctx=cv.getContext('2d');const slider=document.getElementById('eulerS'),sVE=document.getElementById('eulerSVal'),rE=document.getElementById('eulerResult');const prms=[2,3,5,7,11,13,17,19,23,29,31,37,41,43,47];const NT=60;function resize(){cv.width=cv.offsetWidth;cv.height=380;}resize();window.addEventListener('resize',()=>{resize();draw();});function draw(){const W=cv.width,H=cv.height,s=parseInt(slider.value)/100;sVE.textContent='s = '+s.toFixed(2);ctx.clearRect(0,0,W,H);const pS=[];let sum=0;for(let n=1;n<=NT;n++){sum+=Math.pow(n,-s);pS.push(sum);}const pP=[];let prod=1;for(let i=0;i<prms.length;i++){prod/=(1-Math.pow(prms[i],-s));pP.push(prod);}const mx=Math.max(pS[NT-1],pP[prms.length-1],2);const pL=50,pR=20,pT=42,pB=48,gW=W-pL-pR,gH=H-pT-pB;ctx.strokeStyle='rgba(201,168,76,.12)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pL,pT);ctx.lineTo(pL,pT+gH);ctx.lineTo(pL+gW,pT+gH);ctx.stroke();ctx.font='9px "JetBrains Mono"';ctx.fillStyle='rgba(124,118,147,.5)';ctx.textAlign='right';for(let i=1;i<=4;i++){const v=mx*i/4,y=pT+gH-gH*(i/4);ctx.fillText(v.toFixed(1),pL-5,y+3);ctx.beginPath();ctx.moveTo(pL,y);ctx.lineTo(pL+gW,y);ctx.strokeStyle='rgba(201,168,76,.04)';ctx.stroke();}const sW=gW*.47,bW=Math.max(2,sW/NT-1);for(let i=0;i<NT;i++){const bh=(pS[i]/mx)*gH,x=pL+2+(sW/NT)*i,y=pT+gH-bh;const g=ctx.createLinearGradient(x,y,x,pT+gH);g.addColorStop(0,'rgba(201,168,76,.55)');g.addColorStop(1,'rgba(201,168,76,.08)');ctx.fillStyle=g;ctx.fillRect(x,y,bW,bh);}ctx.beginPath();ctx.strokeStyle='var(--gold)';ctx.lineWidth=1.5;for(let i=0;i<NT;i++){const x=pL+2+(sW/NT)*i+bW/2,y=pT+gH-(pS[i]/mx)*gH;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();const pStart=pL+gW*.53,pW2=gW*.47,pbW=Math.max(4,pW2/prms.length-3);for(let i=0;i<prms.length;i++){const bh=(pP[i]/mx)*gH,x=pStart+(pW2/prms.length)*i,y=pT+gH-bh;const g=ctx.createLinearGradient(x,y,x,pT+gH);g.addColorStop(0,'rgba(60,184,195,.6)');g.addColorStop(1,'rgba(60,184,195,.06)');ctx.fillStyle=g;ctx.fillRect(x,y,pbW,bh);ctx.font='8px "JetBrains Mono"';ctx.fillStyle='rgba(60,184,195,.6)';ctx.textAlign='center';ctx.fillText(prms[i],x+pbW/2,pT+gH+13);}ctx.beginPath();ctx.strokeStyle='var(--cyan)';ctx.lineWidth=1.5;for(let i=0;i<prms.length;i++){const x=pStart+(pW2/prms.length)*i+pbW/2,y=pT+gH-(pP[i]/mx)*gH;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);}ctx.stroke();const fS=pS[NT-1],lnY=pT+gH-(fS/mx)*gH;ctx.setLineDash([4,4]);ctx.strokeStyle='rgba(201,168,76,.25)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pL,lnY);ctx.lineTo(pL+gW,lnY);ctx.stroke();ctx.setLineDash([]);ctx.font='bold 22px "Cormorant Garamond"';ctx.textAlign='center';ctx.fillStyle='rgba(201,168,76,.25)';ctx.fillText('=',pL+gW*.5,pT+gH/2);ctx.font='12px "Cormorant Garamond"';ctx.textAlign='center';ctx.fillStyle='var(--gold)';ctx.fillText('\u03a3 1/n\u02e2',pL+sW/2,pT-8);ctx.fillStyle='var(--cyan)';ctx.fillText('\u220f (1\u2212p\u207b\u02e2)\u207b\u00b9',pStart+pW2/2,pT-8);if(s<=1.08){ctx.font='13px "Cormorant Garamond"';ctx.fillStyle='var(--red)';ctx.fillText(document.body.lang==='ko'?'s \u2192 1\u207a : \ubc1c\uc0b0!':'s \u2192 1\u207a : diverges!',W/2,pT+gH/2-15);}const fP=pP[prms.length-1],lang=document.body.lang;rE.innerHTML=lang==='ko'?'<span class="ko">\uae09\uc218 \u2248 '+fS.toFixed(4)+'\u2003\uacf1 \u2248 '+fP.toFixed(4)+'</span>':'<span class="en">Sum \u2248 '+fS.toFixed(4)+'\u2003Product \u2248 '+fP.toFixed(4)+'</span>';}slider.addEventListener('input',draw);draw();}
+
+/* § 3 DOMAIN COLORING */
+function domainInit(){const cv=document.getElementById('domainCanvas');if(!cv)return;const ctx=cv.getContext('2d'),tip=document.getElementById('domainTooltip');let W,H,vCx=0.5,vCy=15,vSc=0.055;const INIT={cx:0.5,cy:15,sc:0.055};function resize(){W=cv.width=cv.offsetWidth;H=cv.height=Math.min(500,Math.round(cv.offsetWidth*.7));render();}function zA(re,im){if(re>1.1){let zr=0,zi=0;for(let n=1;n<=50;n++){const ln=Math.log(n),nr=Math.pow(n,-re);zr+=nr*Math.cos(im*ln);zi-=nr*Math.sin(im*ln);}return[zr,zi];}const N=80;let zr=0,zi=0;for(let n=1;n<=N;n++){const ln=Math.log(n),nr=Math.pow(n,-re);zr+=nr*Math.cos(im*ln);zi-=nr*Math.sin(im*ln);}const lnN=Math.log(N),a=1-re,b=-im,Nr=Math.exp(a*lnN),nR=Nr*Math.cos(b*lnN),nI=Nr*Math.sin(b*lnN),dR=re-1,dI=im,d2=dR*dR+dI*dI;if(d2>1e-12){zr+=(nR*dR+nI*dI)/d2;zi+=(nI*dR-nR*dI)/d2;}const Nr2=Math.pow(N,-re);zr+=.5*Nr2*Math.cos(im*lnN);zi-=.5*Nr2*Math.sin(im*lnN);return[zr,zi];}function h2r(h,s,l){h=((h%360)+360)%360;const c=(1-Math.abs(2*l-1))*s,x=c*(1-Math.abs((h/60)%2-1)),m=l-c/2;let r,g,b;if(h<60){r=c;g=x;b=0;}else if(h<120){r=x;g=c;b=0;}else if(h<180){r=0;g=c;b=x;}else if(h<240){r=0;g=x;b=c;}else if(h<300){r=x;g=0;b=c;}else{r=c;g=0;b=x;}return[(r+m)*255|0,(g+m)*255|0,(b+m)*255|0];}function render(){if(!W||!H)return;const sc=2,rW=Math.ceil(W/sc),rH=Math.ceil(H/sc),buf=new Uint8ClampedArray(rW*rH*4);for(let py=0;py<rH;py++)for(let px=0;px<rW;px++){const re=vCx+(px*sc-W/2)*vSc,im=vCy-(py*sc-H/2)*vSc;const[zr,zi]=zA(re,im),mag=Math.sqrt(zr*zr+zi*zi),ph=Math.atan2(zi,zr)*180/Math.PI;const br=Math.max(.06,Math.min(.88,.42+.13*Math.log(mag+.01)));const[r,g,b]=h2r(ph,.78,br);const i4=(py*rW+px)*4;buf[i4]=r;buf[i4+1]=g;buf[i4+2]=b;buf[i4+3]=255;}const off=new OffscreenCanvas(rW,rH),oc=off.getContext('2d');oc.putImageData(new ImageData(buf,rW,rH),0,0);ctx.imageSmoothingEnabled=true;ctx.drawImage(off,0,0,rW,rH,0,0,W,H);const x0=W/2+(0-vCx)/vSc,x1=W/2+(1-vCx)/vSc,xH=W/2+(.5-vCx)/vSc;ctx.strokeStyle='rgba(201,168,76,.2)';ctx.lineWidth=1;ctx.setLineDash([4,4]);ctx.beginPath();ctx.moveTo(x0,0);ctx.lineTo(x0,H);ctx.stroke();ctx.beginPath();ctx.moveTo(x1,0);ctx.lineTo(x1,H);ctx.stroke();ctx.setLineDash([]);ctx.strokeStyle='rgba(201,168,76,.45)';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(xH,0);ctx.lineTo(xH,H);ctx.stroke();ctx.font='9px "JetBrains Mono"';ctx.textAlign='center';ctx.fillStyle='rgba(201,168,76,.5)';ctx.fillText('Re=\u00bd',xH,H-5);ctx.fillStyle='rgba(124,118,147,.35)';ctx.fillText('Re=0',x0,H-5);ctx.fillText('Re=1',x1,H-5);}let dragging=false,dX,dY;cv.addEventListener('mousedown',e=>{dragging=true;dX=e.clientX;dY=e.clientY;});cv.addEventListener('touchstart',e=>{dragging=true;dX=e.touches[0].clientX;dY=e.touches[0].clientY;},{passive:true});function onMove(cx,cy){if(!dragging)return;vCx-=(cx-dX)*vSc;vCy+=(cy-dY)*vSc;dX=cx;dY=cy;render();}cv.addEventListener('mousemove',e=>{onMove(e.clientX,e.clientY);const r=cv.getBoundingClientRect(),px=e.clientX-r.left,py=e.clientY-r.top;const re=vCx+(px-W/2)*vSc,im=vCy-(py-H/2)*vSc;tip.textContent='s = '+re.toFixed(2)+' + '+im.toFixed(2)+'i';tip.style.opacity='1';});cv.addEventListener('touchmove',e=>{onMove(e.touches[0].clientX,e.touches[0].clientY);},{passive:true});cv.addEventListener('mouseup',()=>dragging=false);cv.addEventListener('touchend',()=>dragging=false);cv.addEventListener('mouseleave',()=>{dragging=false;tip.style.opacity='0';});cv.addEventListener('wheel',e=>{e.preventDefault();vSc*=e.deltaY>0?1.15:.87;vSc=Math.max(.002,Math.min(.5,vSc));render();},{passive:false});let pinchD=0;cv.addEventListener('touchstart',e=>{if(e.touches.length===2){const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY;pinchD=Math.sqrt(dx*dx+dy*dy);}},{passive:true});cv.addEventListener('touchmove',e=>{if(e.touches.length===2){const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY,d=Math.sqrt(dx*dx+dy*dy);if(pinchD>0){vSc*=pinchD/d;vSc=Math.max(.002,Math.min(.5,vSc));render();}pinchD=d;}},{passive:true});window.domainReset=function(){vCx=INIT.cx;vCy=INIT.cy;vSc=INIT.sc;render();};resize();window.addEventListener('resize',resize);}
+/* § 4 CRITICAL LINE */
+function critInit(){const cv=document.getElementById('critCanvas');if(!cv)return;const ctx=cv.getContext('2d');let W,H,t=0,playing=false,animId=null,audioCtx=null,lastZI=-1;function resize(){W=cv.width=cv.offsetWidth;H=cv.height=400;}resize();window.addEventListener('resize',()=>{resize();draw();});function zetaZ(t){if(t<2)return 0;const theta=t/2*Math.log(t/(2*Math.PI*Math.E))-Math.PI/8;const N=Math.max(3,Math.floor(Math.sqrt(t/(2*Math.PI))));let s=0;for(let n=1;n<=Math.max(N,20);n++)s+=Math.cos(theta-t*Math.log(n))/Math.sqrt(n);return 2*s;}function playTone(zT){if(!audioCtx)try{audioCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){return;}const now=audioCtx.currentTime,freq=100+zT*7;const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(.18,now);g.gain.exponentialRampToValueAtTime(.001,now+2);o.connect(g);g.connect(audioCtx.destination);o.start(now);o.stop(now+2);const o2=audioCtx.createOscillator(),g2=audioCtx.createGain();o2.type='sine';o2.frequency.value=freq*1.5;g2.gain.setValueAtTime(.06,now);g2.gain.exponentialRampToValueAtTime(.001,now+1.5);o2.connect(g2);g2.connect(audioCtx.destination);o2.start(now);o2.stop(now+1.5);const o3=audioCtx.createOscillator(),g3=audioCtx.createGain();o3.type='triangle';o3.frequency.value=freq*2;g3.gain.setValueAtTime(.03,now);g3.gain.exponentialRampToValueAtTime(.001,now+1);o3.connect(g3);g3.connect(audioCtx.destination);o3.start(now);o3.stop(now+1);}function draw(){ctx.clearRect(0,0,W,H);const pL=15,pR=15,pT=25,pB=35,gW=W-pL-pR,gH=H-pT-pB;const tMax=Math.max(55,t+30),tMin=Math.max(0,tMax-60),tRange=tMax-tMin;const bg=ctx.createLinearGradient(0,pT,0,pT+gH);bg.addColorStop(0,'rgba(201,168,76,.015)');bg.addColorStop(.5,'rgba(201,168,76,.03)');bg.addColorStop(1,'rgba(201,168,76,.015)');ctx.fillStyle=bg;ctx.fillRect(pL,pT,gW,gH);const zeroY=pT+gH*.5;ctx.strokeStyle='rgba(124,118,147,.12)';ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(pL,zeroY);ctx.lineTo(pL+gW,zeroY);ctx.stroke();ctx.setLineDash([]);ctx.font='8px "JetBrains Mono"';ctx.fillStyle='rgba(124,118,147,.4)';ctx.textAlign='center';for(let tt=Math.ceil(tMin/10)*10;tt<=tMax;tt+=10){const x=pL+(tt-tMin)/tRange*gW;if(x>pL&&x<pL+gW){ctx.fillText(tt,x,pT+gH+14);ctx.beginPath();ctx.moveTo(x,pT);ctx.lineTo(x,pT+gH);ctx.strokeStyle='rgba(201,168,76,.03)';ctx.stroke();}}const amp=gH*.35;ctx.beginPath();ctx.strokeStyle='rgba(60,184,195,.6)';ctx.lineWidth=1.5;let first=true;for(let i=0;i<=300;i++){const tt=tMin+tRange*(i/300);if(tt<2)continue;const z=zetaZ(tt),x=pL+(tt-tMin)/tRange*gW,y=zeroY-z/6*amp;first?(ctx.moveTo(x,y),first=false):ctx.lineTo(x,y);}ctx.stroke();ctx.globalAlpha=.08;ctx.beginPath();first=true;for(let i=0;i<=300;i++){const tt=tMin+tRange*(i/300);if(tt<2)continue;const z=zetaZ(tt),x=pL+(tt-tMin)/tRange*gW,y=zeroY-z/6*amp;first?(ctx.moveTo(x,zeroY),ctx.lineTo(x,y),first=false):ctx.lineTo(x,y);}ctx.lineTo(pL+gW,zeroY);ctx.closePath();ctx.fillStyle='var(--cyan)';ctx.fill();ctx.globalAlpha=1;let zerosHit=0;for(let i=0;i<ZETA_ZEROS.length;i++){const zt=ZETA_ZEROS[i];if(zt<tMin||zt>tMax)continue;const x=pL+(zt-tMin)/tRange*gW,hit=zt<=t;if(hit)zerosHit++;ctx.strokeStyle=hit?'rgba(201,168,76,.2)':'rgba(201,168,76,.06)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,pT);ctx.lineTo(x,pT+gH);ctx.stroke();ctx.beginPath();ctx.arc(x,zeroY,hit?5:3,0,Math.PI*2);ctx.fillStyle=hit?'var(--gold)':'rgba(201,168,76,.25)';ctx.fill();if(hit){ctx.beginPath();ctx.arc(x,zeroY,9,0,Math.PI*2);ctx.strokeStyle='rgba(201,168,76,.2)';ctx.stroke();}ctx.font='7px "JetBrains Mono"';ctx.textAlign='center';ctx.fillStyle=hit?'rgba(232,204,128,.7)':'rgba(124,118,147,.3)';ctx.fillText(zt.toFixed(1),x,pT+gH+24);}if(t>0){const cx=pL+(t-tMin)/tRange*gW;const grd=ctx.createRadialGradient(cx,zeroY,0,cx,zeroY,25);grd.addColorStop(0,'rgba(255,255,255,.15)');grd.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=grd;ctx.fillRect(cx-25,zeroY-25,50,50);ctx.beginPath();ctx.arc(cx,zeroY,3,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();}ctx.font='10px "Cormorant Garamond"';ctx.textAlign='left';ctx.fillStyle='rgba(60,184,195,.5)';ctx.fillText('Z(t)',pL+4,pT+12);ctx.fillStyle='rgba(201,168,76,.4)';ctx.fillText('Re(s) = \u00bd',pL+35,pT+12);document.getElementById('critStat').textContent='t = '+t.toFixed(2);const zcEl=document.getElementById('critZeroCount'),lang=document.body.lang;zcEl.innerHTML=lang==='ko'?'<span class="ko">\uc601\uc810: '+zerosHit+'</span>':'<span class="en">Zeros: '+zerosHit+'</span>';}function animate(){const spd=parseInt(document.getElementById('critSpeed').value)*.05;t+=spd;for(let i=lastZI+1;i<ZETA_ZEROS.length;i++)if(ZETA_ZEROS[i]<=t){playTone(ZETA_ZEROS[i]);lastZI=i;}if(t>110){playing=false;document.getElementById('critPlay').classList.remove('active');draw();return;}draw();animId=requestAnimationFrame(animate);}window.critToggle=function(){if(playing){playing=false;cancelAnimationFrame(animId);document.getElementById('critPlay').classList.remove('active');}else{playing=true;document.getElementById('critPlay').classList.add('active');animate();}};window.critReset=function(){playing=false;if(animId)cancelAnimationFrame(animId);t=0;lastZI=-1;document.getElementById('critPlay').classList.remove('active');draw();};draw();}
+
+/* § 5 EXPLICIT FORMULA */
+function explInit(){const cv=document.getElementById('explCanvas');if(!cv)return;const ctx=cv.getContext('2d'),slider=document.getElementById('explSlider'),cntEl=document.getElementById('explCount');let W,H;function resize(){W=cv.width=cv.offsetWidth;H=cv.height=400;}resize();window.addEventListener('resize',()=>{resize();draw();});function cheb(x){let s=0;for(let p=2;p<=x;p++){if(!isPrime(p))continue;let pk=p;while(pk<=x){s+=Math.log(p);pk*=p;}}return s;}function waveK(x,k){if(x<=1||k>=ZETA_ZEROS.length)return 0;const g=ZETA_ZEROS[k],sq=Math.sqrt(x),ln=Math.log(x),den=.25+g*g;return-2*(sq*Math.cos(g*ln)*(.5/den)-sq*Math.sin(g*ln)*(g/den));}function explA(x,nz){if(x<=1)return 0;let s=x-Math.log(2*Math.PI);for(let k=0;k<nz&&k<ZETA_ZEROS.length;k++)s+=waveK(x,k);return s;}const wC=['#c45555','#c47a8a','#3cb8c3','#6ec49a','#9b7ed8','#c9a84c','#e87040','#5599c4','#d4a0b0','#8ac4a0','#a0a4d4','#d4c08a','#7ac4c4','#c4a07a','#a07ac4'];function draw(){const nZ=parseInt(slider.value);cntEl.textContent=nZ;ctx.clearRect(0,0,W,H);const pL=50,pR=20,pT=28,pB=48,gW=W-pL-pR,gH=H-pT-pB,xMax=100,yMax=xMax*1.1;ctx.strokeStyle='rgba(201,168,76,.1)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pL,pT);ctx.lineTo(pL,pT+gH);ctx.lineTo(pL+gW,pT+gH);ctx.stroke();ctx.font='8px "JetBrains Mono"';ctx.fillStyle='rgba(124,118,147,.4)';ctx.textAlign='center';for(let x=20;x<=xMax;x+=20)ctx.fillText(x,pL+(x/xMax)*gW,pT+gH+14);if(nZ>0){const showW=Math.min(nZ,15);for(let k=0;k<showW;k++){ctx.beginPath();ctx.strokeStyle=wC[k%wC.length];ctx.lineWidth=.7;ctx.globalAlpha=Math.max(.12,.3-k*.012);for(let i=0;i<=280;i++){const x=2+((xMax-2)*i/280),w=waveK(x,k),px=pL+(x/xMax)*gW,py=pT+gH/2-w/yMax*gH;i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);}ctx.stroke();ctx.globalAlpha=1;}}ctx.beginPath();ctx.strokeStyle='rgba(201,168,76,.35)';ctx.lineWidth=1.5;let prev=0;for(let n=2;n<=xMax;n++){const psi=cheb(n),x2=pL+(n/xMax)*gW,y1=pT+gH-prev/yMax*gH,y2=pT+gH-psi/yMax*gH;if(n===2)ctx.moveTo(pL+((n-1)/xMax)*gW,y1);ctx.lineTo(x2,y1);ctx.lineTo(x2,y2);prev=psi;}ctx.stroke();ctx.beginPath();ctx.strokeStyle='var(--cyan)';ctx.lineWidth=2;for(let i=0;i<=350;i++){const x=2+((xMax-2)*i/350),y=explA(x,nZ),px=pL+(x/xMax)*gW,py=pT+gH-y/yMax*gH;i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);}ctx.stroke();for(let p=2;p<=xMax;p++){if(!isPrime(p))continue;const px=pL+(p/xMax)*gW;ctx.beginPath();ctx.arc(px,pT+gH+3,1.5,0,Math.PI*2);ctx.fillStyle='var(--gold)';ctx.fill();}ctx.font='10px "Cormorant Garamond"';ctx.textAlign='left';ctx.fillStyle='rgba(201,168,76,.5)';ctx.fillText('\u03c8(x)',pL+6,pT+12);ctx.fillStyle='var(--cyan)';ctx.fillText(document.body.lang==='ko'?'\uba85\uc2dc \uacf5\uc2dd ('+nZ+'\uc601\uc810)':'explicit ('+nZ+' zeros)',pL+42,pT+12);}slider.addEventListener('input',draw);draw();}
+
+/* § 6 STAKE */
+function stakeInit(){const cv=document.getElementById('stakeCanvas');if(!cv)return;const ctx=cv.getContext('2d'),slN=document.getElementById('stakeN'),nVE=document.getElementById('stakeNVal');let W,H,rhOn=true;function resize(){W=cv.width=cv.offsetWidth;H=cv.height=360;}resize();window.addEventListener('resize',()=>{resize();draw();});function sieveUp(N){const s=new Uint8Array(N+1);s[0]=s[1]=1;for(let i=2;i*i<=N;i++)if(!s[i])for(let j=i*i;j<=N;j+=i)s[j]=1;return s;}function li(x){if(x<=2)return 0;const st=200,dx=(x-2)/st;let s=0;for(let i=0;i<st;i++)s+=dx/Math.log(2+dx*(i+.5));return s;}window.toggleRH=function(){rhOn=!rhOn;const btn=document.getElementById('stakeRH');btn.textContent=rhOn?'RH: ON':'RH: OFF';btn.classList.toggle('active',!rhOn);draw();};function draw(){const lgN=parseFloat(slN.value),N=Math.round(Math.pow(10,lgN));nVE.textContent='N = '+N.toLocaleString();ctx.clearRect(0,0,W,H);const pL=50,pR=18,pT=32,pB=42,gW=W-pL-pR,gH=H-pT-pB;ctx.strokeStyle='rgba(201,168,76,.1)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pL,pT);ctx.lineTo(pL,pT+gH);ctx.lineTo(pL+gW,pT+gH);ctx.stroke();const sv=sieveUp(N),nP=Math.min(400,N),stp=Math.max(1,Math.floor(N/nP));const piV=[],liV=[],xs=[];let pc=0,mxP=0;for(let x=2;x<=N;x++){if(!sv[x])pc++;if(x%stp===0||x===N){xs.push(x);piV.push(pc);const l=li(x);liV.push(l);mxP=Math.max(mxP,pc,l);}}function curve(v,c,w){ctx.beginPath();ctx.strokeStyle=c;ctx.lineWidth=w;for(let i=0;i<xs.length;i++){const px=pL+(xs[i]/N)*gW,py=pT+gH-(v[i]/mxP)*gH*.95;i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);}ctx.stroke();}if(rhOn){ctx.fillStyle='rgba(60,184,195,.06)';ctx.beginPath();for(let i=0;i<xs.length;i++){const b=.8*Math.sqrt(xs[i])*Math.log(xs[i]+1);ctx.lineTo(pL+(xs[i]/N)*gW,pT+gH-((liV[i]+b)/mxP)*gH*.95);}for(let i=xs.length-1;i>=0;i--){const b=.8*Math.sqrt(xs[i])*Math.log(xs[i]+1);ctx.lineTo(pL+(xs[i]/N)*gW,pT+gH-((liV[i]-b)/mxP)*gH*.95);}ctx.closePath();ctx.fill();}else{ctx.fillStyle='rgba(196,85,85,.1)';ctx.beginPath();for(let i=0;i<xs.length;i++){const ch=Math.pow(xs[i],.48)*(2+3*Math.sin(xs[i]*.01));ctx.lineTo(pL+(xs[i]/N)*gW,pT+gH-((liV[i]+ch)/mxP)*gH*.95);}for(let i=xs.length-1;i>=0;i--){const ch=Math.pow(xs[i],.48)*(2+3*Math.cos(xs[i]*.013));ctx.lineTo(pL+(xs[i]/N)*gW,pT+gH-((liV[i]-ch)/mxP)*gH*.95);}ctx.closePath();ctx.fill();ctx.font='13px "Cormorant Garamond"';ctx.fillStyle='var(--red)';ctx.textAlign='center';ctx.fillText(document.body.lang==='ko'?'\uc624\ucc28 \ud3ed\uc8fc \u2014 \uc18c\uc218\uc758 \uc9c8\uc11c\uac00 \ubb34\ub108\uc9c4\ub2e4':'Error explodes \u2014 the order of primes collapses',W/2,pT+20);}curve(piV,'var(--gold)',2);curve(liV,'var(--cyan)',1.5);ctx.font='10px "Cormorant Garamond"';ctx.textAlign='left';ctx.fillStyle='var(--gold)';ctx.fillText('\u03c0(x)',pL+8,pT+12);ctx.fillStyle='var(--cyan)';ctx.fillText('Li(x)',pL+48,pT+12);ctx.fillStyle=rhOn?'rgba(60,184,195,.35)':'rgba(196,85,85,.45)';ctx.fillText(document.body.lang==='ko'?'\uc624\ucc28':'error',pL+90,pT+12);ctx.font='8px "JetBrains Mono"';ctx.fillStyle='rgba(124,118,147,.4)';ctx.textAlign='center';for(let i=1;i<=4;i++){const x=Math.round(N*i/4);ctx.fillText(x.toLocaleString(),pL+(x/N)*gW,pT+gH+14);}}slN.addEventListener('input',draw);draw();}
+
+/* § 7 L-FUNCTION COMPARISON */
+function lFuncInit(){
+  const cv=document.getElementById('lFuncCanvas');if(!cv)return;
+  const ctx=cv.getContext('2d'),labelEl=document.getElementById('lfuncLabel');
+  let W,H,curFn='zeta';
+  function resize(){W=cv.width=cv.offsetWidth;H=cv.height=350;}
+  resize();window.addEventListener('resize',()=>{resize();draw();});
+
+  // Approximate zeros for different L-functions (imaginary parts)
+  const zeros={
+    zeta:ZETA_ZEROS,
+    chi3:[8.0396,13.9768,17.8456,22.7518,25.3255,28.8410,31.7180,34.2780,37.4190,39.9262,42.4700,44.7920,47.7740,49.2790,52.4350,54.1780,56.4370,58.3550,60.3520,62.5960],
+    chi4:[6.0209,10.2437,12.5881,16.2533,19.1302,21.2820,23.7974,26.3143,28.0850,30.7468,32.8150,35.1620,36.7790,39.0690,40.5620,42.4990,44.4960,46.1070,47.8270,49.6150],
+    chi5:[6.1835,9.8302,12.1522,15.4588,17.6737,20.1727,22.5768,24.7644,26.3100,28.8830,30.6060,32.9230,34.4400,36.7530,38.2740,40.4390,42.1050,43.8500,45.7810,47.3900]
+  };
+  const names={zeta:'Riemann \u03b6',chi3:'L(s, \u03c7\u2083)',chi4:'L(s, \u03c7\u2084)',chi5:'L(s, \u03c7\u2085)'};
+  const colors={zeta:'#c9a84c',chi3:'#3cb8c3',chi4:'#9b7ed8',chi5:'#c47a8a'};
+
+  window.setLFunc=function(fn){
+    curFn=fn;
+    document.querySelectorAll('.lfunc-btn').forEach(b=>b.classList.toggle('active',b.dataset.fn===fn));
+    labelEl.textContent=names[fn];
+    draw();
+  };
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const pL=40,pR=20,pT=30,pB=35,gW=W-pL-pR,gH=H-pT-pB;
+    const zs=zeros[curFn],col=colors[curFn];
+    const tMax=zs.length>0?Math.max(55,zs[zs.length-1]+5):55;
+
+    // background
+    ctx.fillStyle='rgba(201,168,76,.015)';ctx.fillRect(pL,pT,gW,gH);
+
+    // subtle critical strip shading
+    const stripGrad=ctx.createLinearGradient(0,pT,0,pT+gH);
+    stripGrad.addColorStop(0,col+'06');stripGrad.addColorStop(.5,col+'0a');stripGrad.addColorStop(1,col+'06');
+    ctx.fillStyle=stripGrad;ctx.fillRect(pL,pT,gW,gH);
+
+    // t-axis
+    ctx.strokeStyle='rgba(201,168,76,.1)';
+    ctx.beginPath();ctx.moveTo(pL,pT+gH);ctx.lineTo(pL+gW,pT+gH);ctx.stroke();
+    ctx.font='8px "JetBrains Mono"';ctx.fillStyle='rgba(124,118,147,.4)';ctx.textAlign='center';
+    for(let tt=10;tt<tMax;tt+=10){
+      const x=pL+(tt/tMax)*gW;
+      ctx.fillText(tt,x,pT+gH+13);
+      ctx.beginPath();ctx.moveTo(x,pT);ctx.lineTo(x,pT+gH);ctx.strokeStyle='rgba(201,168,76,.04)';ctx.stroke();
+    }
+
+    // Draw zeros as glowing dots on the line
+    const lineY=pT+gH/2;
+    // the "line" Re(s)=1/2
+    ctx.strokeStyle='rgba(201,168,76,.15)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(pL,lineY);ctx.lineTo(pL+gW,lineY);ctx.stroke();
+    ctx.font='9px "JetBrains Mono"';ctx.fillStyle='rgba(201,168,76,.3)';ctx.textAlign='left';
+    ctx.fillText('Re(s) = \u00bd',pL+2,lineY-8);
+
+    for(let i=0;i<zs.length;i++){
+      const x=pL+(zs[i]/tMax)*gW;
+      // glow
+      const grd=ctx.createRadialGradient(x,lineY,0,x,lineY,12);
+      grd.addColorStop(0,col+'88');grd.addColorStop(1,col+'00');
+      ctx.fillStyle=grd;ctx.fillRect(x-12,lineY-12,24,24);
+      // dot
+      ctx.beginPath();ctx.arc(x,lineY,3.5,0,Math.PI*2);ctx.fillStyle=col;ctx.fill();
+      // label (every other one to avoid crowding)
+      if(i%2===0||zs.length<15){
+        ctx.font='6.5px "JetBrains Mono"';ctx.fillStyle=col+'99';ctx.textAlign='center';
+        ctx.fillText(zs[i].toFixed(1),x,lineY+(i%2===0?18:-14));
+      }
+    }
+
+    // title
+    ctx.font='12px "Cormorant Garamond"';ctx.textAlign='left';ctx.fillStyle=col;
+    ctx.fillText(names[curFn],pL+4,pT+14);
+    ctx.fillStyle='rgba(124,118,147,.4)';ctx.font='10px "Cormorant Garamond"';
+    const lang=document.body.lang;
+    ctx.fillText(lang==='ko'?zs.length+'\uac1c \uc601\uc810 \ud45c\uc2dc':zs.length+' zeros shown',pL+4+ctx.measureText(names[curFn]).width+12,pT+14);
+  }
+  draw();
+}
+</script>
+</body>
+</html>

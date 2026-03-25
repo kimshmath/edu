@@ -1,711 +1,1035 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-RQVK6SF2E6');
-    </script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Interactive Mathematics — Mellow Math</title>
-<meta name="description" content="Interactive explorations where abstract mathematics becomes something you can see, hear, and touch. 19 chapters across Space, Flow, Sense, and Machine.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-RQVK6SF2E6');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Mathematics — Mellow Math</title>
+  <meta name="description"
+    content="Interactive explorations where abstract mathematics becomes something you can see, hear, and touch. 19 chapters across Space, Flow, Sense, and Machine.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-:root {
-  --bg: #08080a;
-  --surface: rgba(255,255,255,0.022);
-  --border: rgba(255,255,255,0.06);
-  --border-hover: rgba(255,255,255,0.14);
-  --text: #c8ccd8;
-  --muted: #5c6178;
-  --white: #f0f0f0;
-  --f-serif: 'Newsreader', Georgia, serif;
-  --f-body: 'DM Sans', -apple-system, sans-serif;
-  --f-mono: 'JetBrains Mono', monospace;
-  --space: #6C9BFF;
-  --flow: #FFB86C;
-  --sense: #50FA7B;
-  --machine: #FF79C6;
-}
+    :root {
+      --bg: #08080a;
+      --surface: rgba(255, 255, 255, 0.022);
+      --border: rgba(255, 255, 255, 0.06);
+      --border-hover: rgba(255, 255, 255, 0.14);
+      --text: #c8ccd8;
+      --muted: #5c6178;
+      --white: #f0f0f0;
+      --f-serif: 'Newsreader', Georgia, serif;
+      --f-body: 'DM Sans', -apple-system, sans-serif;
+      --f-mono: 'JetBrains Mono', monospace;
+      --space: #6C9BFF;
+      --flow: #FFB86C;
+      --sense: #50FA7B;
+      --machine: #FF79C6;
+    }
 
-html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+    }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--f-body);
-  font-weight: 300;
-  line-height: 1.7;
-  min-height: 100vh;
-}
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--f-body);
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
 
-/* Subtle grain */
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 9999;
-}
+    /* Subtle grain */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
 
-/* ═══ Language Toggle ═══ */
-.lang-toggle {
-  position: fixed;
-  top: 1.4rem;
-  right: 1.4rem;
-  z-index: 100;
-  display: flex;
-  gap: 0;
-  border-radius: 6px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  animation: fadeIn 0.6s 0.5s ease both;
-}
-.lang-toggle button {
-  font-family: var(--f-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.08em;
-  padding: 0.35rem 0.7rem;
-  border: none;
-  cursor: pointer;
-  color: var(--muted);
-  background: rgba(255,255,255,0.02);
-  transition: color 0.2s, background 0.2s;
-  -webkit-tap-highlight-color: transparent;
-}
-.lang-toggle button:first-child { border-right: 1px solid var(--border); }
-.lang-toggle button.active {
-  color: #d4a853;
-  background: rgba(212,168,83,0.08);
-}
-.lang-toggle button:hover:not(.active) {
-  color: var(--white);
-  background: rgba(255,255,255,0.04);
-}
+    /* ═══ Language Toggle ═══ */
+    .lang-toggle {
+      position: fixed;
+      top: 1.4rem;
+      right: 1.4rem;
+      z-index: 100;
+      display: flex;
+      gap: 0;
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      animation: fadeIn 0.6s 0.5s ease both;
+    }
 
-/* ═══ HOME VIEW ═══ */
-#home-view {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  padding: 0 1.5rem;
-}
+    .lang-toggle button {
+      font-family: var(--f-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.08em;
+      padding: 0.35rem 0.7rem;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.02);
+      transition: color 0.2s, background 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-.home-header {
-  text-align: center;
-  padding: 6rem 0 2.5rem;
-  animation: fadeIn 0.8s ease both;
-}
+    .lang-toggle button:first-child {
+      border-right: 1px solid var(--border);
+    }
 
-.home-label {
-  font-family: var(--f-mono);
-  font-size: 0.55rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.2);
-  margin-bottom: 0.75rem;
-}
+    .lang-toggle button.active {
+      color: #d4a853;
+      background: rgba(212, 168, 83, 0.08);
+    }
 
-.home-title {
-  font-family: var(--f-serif);
-  font-size: clamp(1.8rem, 5vw, 2.6rem);
-  font-weight: 300;
-  color: var(--white);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-}
+    .lang-toggle button:hover:not(.active) {
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.04);
+    }
 
-.home-title em {
-  font-weight: 500;
-  font-style: italic;
-}
+    /* ═══ HOME VIEW ═══ */
+    #home-view {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 0 1.5rem;
+    }
 
-/* ─── Category Grid ─── */
-.category-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.9rem;
-  max-width: 460px;
-  width: 100%;
-  margin-bottom: 4rem;
-}
+    .home-header {
+      text-align: center;
+      padding: 6rem 0 2.5rem;
+      animation: fadeIn 0.8s ease both;
+    }
 
-.category-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1.8rem 1rem 1.4rem;
-  border-radius: 18px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  cursor: pointer;
-  transition: transform 0.3s cubic-bezier(.4,0,.2,1), border-color 0.3s, background 0.3s;
-  text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
-  animation: fadeIn 0.6s ease both;
-}
-.category-card:nth-child(1) { animation-delay: 0.15s; }
-.category-card:nth-child(2) { animation-delay: 0.25s; }
-.category-card:nth-child(3) { animation-delay: 0.35s; }
-.category-card:nth-child(4) { animation-delay: 0.45s; }
+    .home-label {
+      font-family: var(--f-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.2);
+      margin-bottom: 0.75rem;
+    }
 
-.category-card:hover {
-  transform: translateY(-3px) scale(1.01);
-  border-color: var(--border-hover);
-}
-.category-card:active {
-  transform: scale(0.97);
-}
-.category-card[data-cat="space"]:hover { border-color: rgba(108,155,255,0.25); background: rgba(108,155,255,0.04); }
-.category-card[data-cat="flow"]:hover { border-color: rgba(255,184,108,0.25); background: rgba(255,184,108,0.04); }
-.category-card[data-cat="sense"]:hover { border-color: rgba(80,250,123,0.25); background: rgba(80,250,123,0.04); }
-.category-card[data-cat="machine"]:hover { border-color: rgba(255,121,198,0.25); background: rgba(255,121,198,0.04); }
+    .home-title {
+      font-family: var(--f-serif);
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
 
-.cat-icon {
-  width: 56px;
-  height: 56px;
-  margin-bottom: 0.9rem;
-}
+    .home-title em {
+      font-weight: 500;
+      font-style: italic;
+    }
 
-.cat-label {
-  font-family: var(--f-serif);
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--white);
-  margin-bottom: 0.15rem;
-}
+    /* ─── Category Grid ─── */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.9rem;
+      max-width: 460px;
+      width: 100%;
+      margin-bottom: 4rem;
+    }
 
-.cat-label-ko {
-  font-size: 0.7rem;
-  margin-bottom: 0.5rem;
-}
+    .category-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.8rem 1rem 1.4rem;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      cursor: pointer;
+      transition: transform 0.3s cubic-bezier(.4, 0, .2, 1), border-color 0.3s, background 0.3s;
+      text-decoration: none;
+      -webkit-tap-highlight-color: transparent;
+      animation: fadeIn 0.6s ease both;
+    }
 
-.cat-desc {
-  font-size: 0.65rem;
-  color: rgba(255,255,255,0.3);
-  text-align: center;
-  line-height: 1.5;
-  margin-bottom: 0.6rem;
-}
+    .category-card:nth-child(1) {
+      animation-delay: 0.15s;
+    }
 
-.cat-count {
-  font-family: var(--f-mono);
-  font-size: 0.55rem;
-  letter-spacing: 0.05em;
-}
+    .category-card:nth-child(2) {
+      animation-delay: 0.25s;
+    }
 
-/* ═══ CATEGORY VIEW ═══ */
-#category-view {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  padding: 0 1.2rem;
-}
+    .category-card:nth-child(3) {
+      animation-delay: 0.35s;
+    }
 
-.cat-back {
-  align-self: flex-start;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-family: var(--f-body);
-  font-size: 0.8rem;
-  color: var(--muted);
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 1.2rem 0.5rem;
-  -webkit-tap-highlight-color: transparent;
-  transition: color 0.2s;
-  max-width: 720px;
-  width: 100%;
-  margin: 0 auto;
-}
-.cat-back:hover { color: var(--white); }
-.cat-back svg { width: 16px; height: 16px; }
+    .category-card:nth-child(4) {
+      animation-delay: 0.45s;
+    }
 
-.cat-hero {
-  text-align: center;
-  padding: 0.5rem 0 2rem;
-  max-width: 560px;
-}
+    .category-card:hover {
+      transform: translateY(-3px) scale(1.01);
+      border-color: var(--border-hover);
+    }
 
-.cat-hero .cat-icon { width: 60px; height: 60px; margin-bottom: 1rem; }
+    .category-card:active {
+      transform: scale(0.97);
+    }
 
-.cat-hero-title {
-  font-family: var(--f-serif);
-  font-size: 1.8rem;
-  font-weight: 600;
-  margin-bottom: 0.6rem;
-}
+    .category-card[data-cat="space"]:hover {
+      border-color: rgba(108, 155, 255, 0.25);
+      background: rgba(108, 155, 255, 0.04);
+    }
 
-.cat-hero-desc {
-  font-family: var(--f-serif);
-  font-size: 0.85rem;
-  font-style: italic;
-  color: rgba(255,255,255,0.35);
-}
+    .category-card[data-cat="flow"]:hover {
+      border-color: rgba(255, 184, 108, 0.25);
+      background: rgba(255, 184, 108, 0.04);
+    }
 
-/* ─── Chapter Icons ─── */
-.ch-icon-wrap {
-  width: 38px;
-  height: 38px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.04);
-  transition: background 0.25s, border-color 0.25s;
-}
-.chapter-card:hover .ch-icon-wrap {
-  background: rgba(255,255,255,0.06);
-  border-color: rgba(255,255,255,0.08);
-}
-.ch-icon-wrap svg { width: 28px; height: 28px; }
+    .category-card[data-cat="sense"]:hover {
+      border-color: rgba(80, 250, 123, 0.25);
+      background: rgba(80, 250, 123, 0.04);
+    }
 
-/* ─── Chapter List ─── */
-.chapter-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  max-width: 620px;
-  width: 100%;
-  margin-bottom: 4rem;
-}
+    .category-card[data-cat="machine"]:hover {
+      border-color: rgba(255, 121, 198, 0.25);
+      background: rgba(255, 121, 198, 0.04);
+    }
 
-.chapter-card {
-  display: flex;
-  align-items: stretch;
-  gap: 0.9rem;
-  padding: 1.1rem 1.2rem;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.04);
-  background: rgba(255,255,255,0.02);
-  text-decoration: none;
-  transition: background 0.25s, border-color 0.25s, transform 0.25s;
-  -webkit-tap-highlight-color: transparent;
-}
-.chapter-card:hover {
-  background: rgba(255,255,255,0.04);
-  border-color: rgba(255,255,255,0.08);
-  transform: translateY(-1px);
-}
-.chapter-card:active { transform: scale(0.99); }
+    /* ═══ ARTISTIC SYMMETRIC GRID (4x4) ═══ */
+    .category-grid {
+      display: grid;
+      /* 1:0.5:0.5:1 ratio ensures Hub is exactly 1/3 of total span */
+      grid-template-columns: 1fr 0.5fr 0.5fr 1fr;
+      grid-template-rows: 1fr 0.5fr 0.5fr 1fr;
+      gap: 0;
+      max-width: 600px;
+      width: 100%;
+      margin-bottom: 4rem;
+      position: relative;
+    }
 
-.ch-accent {
-  width: 3px;
-  border-radius: 2px;
-  flex-shrink: 0;
-  opacity: 0.4;
-}
+    .category-card {
+      margin: 4px;
+      border-radius: 28px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem;
+      box-sizing: border-box;
+      background: rgba(255, 255, 255, 0.03);
+      transition: all 0.3s cubic-bezier(.4, 0, .2, 1);
+    }
 
-.ch-content { flex: 1; min-width: 0; }
+    /* Quadrant Alignment: Push content to outer corners to avoid Hub overlap */
+    .category-card[data-cat="space"] {
+      grid-area: 1 / 1 / 3 / 3;
+      border-bottom-right-radius: 4px;
+      align-items: flex-start; text-align: left;
+      box-shadow: 0 0 25px rgba(108, 155, 255, 0.06);
+    }
+    .category-card[data-cat="flow"] {
+      grid-area: 1 / 3 / 3 / 5;
+      border-bottom-left-radius: 4px;
+      align-items: flex-end; text-align: right;
+      box-shadow: 0 0 25px rgba(255, 184, 108, 0.06);
+    }
+    .category-card[data-cat="sense"] {
+      grid-area: 3 / 1 / 5 / 3;
+      border-top-right-radius: 4px;
+      justify-content: flex-end; align-items: flex-start; text-align: left;
+      box-shadow: 0 0 25px rgba(80, 250, 123, 0.06);
+    }
+    .category-card[data-cat="machine"] {
+      grid-area: 3 / 3 / 5 / 5;
+      border-top-left-radius: 4px;
+      justify-content: flex-end; align-items: flex-end; text-align: right;
+      box-shadow: 0 0 25px rgba(255, 121, 198, 0.06);
+    }
 
-.ch-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-bottom: 0.3rem;
-}
+    .category-card .cat-desc { max-width: 160px; }
 
-.ch-title {
-  font-family: var(--f-serif);
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--white);
-}
-.chapter-card:hover .ch-title { color: inherit; }
+    .suggest-center {
+      grid-area: 2 / 2 / 4 / 4;
+      z-index: 10;
+      margin: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 32px;
+      background: rgba(10,12,20,0.96);
+      border: 1.5px solid rgba(212,168,83,0.45);
+      box-shadow: 0 0 40px rgba(0,0,0,0.95);
+      transition: all 0.3s cubic-bezier(.4,0,.2,1);
+      -webkit-tap-highlight-color: transparent;
+      backdrop-filter: blur(20px);
+    }
 
-.ch-dots {
-  display: flex;
-  gap: 3px;
-  flex-shrink: 0;
-}
-.ch-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-}
+    .suggest-center::before {
+      content: '';
+      position: absolute; inset: -15px;
+      background: radial-gradient(circle, rgba(212,168,83,0.18), transparent 70%);
+      z-index: -1;
+      pointer-events: none;
+    }
 
-.ch-subtitle {
-  font-size: 0.72rem;
-  color: rgba(255,255,255,0.38);
-  margin-bottom: 0.2rem;
-}
+    .suggest-center:hover {
+      transform: scale(1.04);
+      border-color: rgba(212,168,83,0.9);
+      box-shadow: 0 0 60px rgba(212,168,83,0.3);
+    }
 
-.ch-tagline {
-  font-family: var(--f-serif);
-  font-size: 0.65rem;
-  font-style: italic;
-  opacity: 0.5;
-}
+    .suggest-center .cat-icon { width: 50px; height: 50px; margin-bottom: 0.8rem; filter: drop-shadow(0 0 12px rgba(212,168,83,0.5)); }
+    .suggest-center .cat-label { font-size: 0.95rem; color: #d4a853; text-align: center; line-height: 1.2; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+    .suggest-center .cat-label-ko { font-size: 0.65rem; color: rgba(212,168,83,0.55); margin-top: 0.25rem; font-weight: 400; }
 
-.ch-langs {
-  display: flex;
-  gap: 0.3rem;
-  margin-top: 0.6rem;
-}
+    @media (max-width: 520px) {
+      .category-grid {
+        grid-template-columns: 1fr 1.15fr 1.15fr 1fr;
+        max-width: 100%;
+      }
+      .suggest-center { margin: 6px; border-radius: 20px; }
+      .category-card { min-height: 140px; border-radius: 18px; }
+      .suggest-center .cat-icon { width: 36px; height: 36px; }
+      .suggest-center .cat-label { font-size: 0.75rem; }
+    }
 
-.ch-lang {
-  font-family: var(--f-mono);
-  font-size: 0.5rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-  padding: 0.2rem 0.5rem;
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  text-decoration: none;
-  transition: all 0.2s;
-}
-.ch-lang:hover {
-  border-color: rgba(212,168,83,0.45);
-  color: #d4a853;
-  background: rgba(212,168,83,0.08);
-}
+    .cat-icon {
+      width: 56px;
+      height: 56px;
+      margin-bottom: 0.9rem;
+    }
 
-.ch-link-ref {
-  font-family: var(--f-mono);
-  font-size: 0.55rem;
-  color: rgba(255,255,255,0.22);
-  margin-top: 0.5rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid rgba(255,255,255,0.04);
-}
+    .cat-label {
+      font-family: var(--f-serif);
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 0.15rem;
+    }
 
-.ch-chevron {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  color: rgba(255,255,255,0.12);
-}
-.ch-chevron svg { width: 14px; height: 14px; }
+    .cat-label-ko {
+      font-size: 0.7rem;
+      margin-bottom: 0.5rem;
+    }
 
-/* ─── Footer ─── */
-footer {
-  padding: 2rem 0 3rem;
-  width: 100%;
-  max-width: 620px;
-  margin: 0 auto;
-}
-.footer-rule { width: 100%; height: 1px; background: var(--border); margin-bottom: 1.5rem; }
-.footer-attr { display: flex; flex-direction: column; gap: 0.2rem; }
-.footer-name { font-family: var(--f-serif); font-size: 0.85rem; font-weight: 400; color: var(--white); }
-.footer-inst { font-size: 0.72rem; color: var(--muted); }
-.footer-url { font-family: var(--f-mono); font-size: 0.6rem; color: #d4a853; text-decoration: none; margin-top: 0.25rem; display: inline-block; }
-.footer-url:hover { text-decoration: underline; }
+    .cat-desc {
+      font-size: 0.65rem;
+      color: rgba(255, 255, 255, 0.3);
+      text-align: center;
+      line-height: 1.5;
+      margin-bottom: 0.6rem;
+    }
 
-/* ─── Badge ─── */
-.floating-badge {
-  position: fixed; bottom: 1.75rem; left: 1.75rem; z-index: 10000;
-  font-family: var(--f-mono); font-size: 0.6rem; letter-spacing: 0.14em;
-  color: #8db830; text-decoration: none;
-  text-shadow: 0 0 6px rgba(141,184,48,0.4);
-  transition: color 0.25s, transform 0.25s;
-}
-.floating-badge:hover { color: #a8d43a; transform: translateY(-1px); }
+    .cat-count {
+      font-family: var(--f-mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.05em;
+    }
 
-/* ─── Animation ─── */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+    /* ═══ CATEGORY VIEW ═══ */
+    #category-view {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 0 1.2rem;
+    }
 
-@keyframes slideIn {
-  from { opacity: 0; transform: translateX(20px); }
-  to { opacity: 1; transform: translateX(0); }
-}
+    .cat-back {
+      align-self: flex-start;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--f-body);
+      font-size: 0.8rem;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 1.2rem 0.5rem;
+      -webkit-tap-highlight-color: transparent;
+      transition: color 0.2s;
+      max-width: 720px;
+      width: 100%;
+      margin: 0 auto;
+    }
 
-/* ─── Responsive ─── */
-@media (max-width: 480px) {
-  .home-header { padding: 4rem 0 2rem; }
-  .category-grid { gap: 0.7rem; }
-  .category-card { padding: 1.4rem 0.8rem 1.2rem; }
-  .cat-label { font-size: 1.05rem; }
-  .cat-icon { width: 44px; height: 44px; }
-  .cat-desc { font-size: 0.6rem; }
-}
+    .cat-back:hover {
+      color: var(--white);
+    }
 
-@media (min-width: 768px) {
-  .category-grid { max-width: 520px; gap: 1.1rem; }
-  .chapter-list { max-width: 680px; }
-}
-</style>
+    .cat-back svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .cat-hero {
+      text-align: center;
+      padding: 0.5rem 0 2rem;
+      max-width: 560px;
+    }
+
+    .cat-hero .cat-icon {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 1rem;
+    }
+
+    .cat-hero-title {
+      font-family: var(--f-serif);
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin-bottom: 0.6rem;
+    }
+
+    .cat-hero-desc {
+      font-family: var(--f-serif);
+      font-size: 0.85rem;
+      font-style: italic;
+      color: rgba(255, 255, 255, 0.35);
+    }
+
+    /* ─── Chapter Icons ─── */
+    .ch-icon-wrap {
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      transition: background 0.25s, border-color 0.25s;
+    }
+
+    .chapter-card:hover .ch-icon-wrap {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .ch-icon-wrap svg {
+      width: 28px;
+      height: 28px;
+    }
+
+    /* ─── Chapter List ─── */
+    .chapter-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      max-width: 620px;
+      width: 100%;
+      margin-bottom: 4rem;
+    }
+
+    .chapter-card {
+      display: flex;
+      align-items: stretch;
+      gap: 0.9rem;
+      padding: 1.1rem 1.2rem;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.02);
+      text-decoration: none;
+      transition: background 0.25s, border-color 0.25s, transform 0.25s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .chapter-card:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .chapter-card:active {
+      transform: scale(0.99);
+    }
+
+    .ch-accent {
+      width: 3px;
+      border-radius: 2px;
+      flex-shrink: 0;
+      opacity: 0.4;
+    }
+
+    .ch-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .ch-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .ch-title {
+      font-family: var(--f-serif);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .chapter-card:hover .ch-title {
+      color: inherit;
+    }
+
+    .ch-dots {
+      display: flex;
+      gap: 3px;
+      flex-shrink: 0;
+    }
+
+    .ch-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+    }
+
+    .ch-subtitle {
+      font-size: 0.72rem;
+      color: rgba(255, 255, 255, 0.38);
+      margin-bottom: 0.2rem;
+    }
+
+    .ch-tagline {
+      font-family: var(--f-serif);
+      font-size: 0.65rem;
+      font-style: italic;
+      opacity: 0.5;
+    }
+
+    .ch-langs {
+      display: flex;
+      gap: 0.3rem;
+      margin-top: 0.6rem;
+    }
+
+    .ch-lang {
+      font-family: var(--f-mono);
+      font-size: 0.5rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0.2rem 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .ch-lang:hover {
+      border-color: rgba(212, 168, 83, 0.45);
+      color: #d4a853;
+      background: rgba(212, 168, 83, 0.08);
+    }
+
+    .ch-link-ref {
+      font-family: var(--f-mono);
+      font-size: 0.55rem;
+      color: rgba(255, 255, 255, 0.22);
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .ch-chevron {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      color: rgba(255, 255, 255, 0.12);
+    }
+
+    .ch-chevron svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* ─── Footer ─── */
+    footer {
+      padding: 2rem 0 3rem;
+      width: 100%;
+      max-width: 620px;
+      margin: 0 auto;
+    }
+
+    .footer-rule {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-attr {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .footer-name {
+      font-family: var(--f-serif);
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: var(--white);
+    }
+
+    .footer-inst {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .footer-url {
+      font-family: var(--f-mono);
+      font-size: 0.6rem;
+      color: #d4a853;
+      text-decoration: none;
+      margin-top: 0.25rem;
+      display: inline-block;
+    }
+
+    .footer-url:hover {
+      text-decoration: underline;
+    }
+
+    /* ─── Badge ─── */
+    .floating-badge {
+      position: fixed;
+      bottom: 1.75rem;
+      left: 1.75rem;
+      z-index: 10000;
+      font-family: var(--f-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      color: #8db830;
+      text-decoration: none;
+      text-shadow: 0 0 6px rgba(141, 184, 48, 0.4);
+      transition: color 0.25s, transform 0.25s;
+    }
+
+    .floating-badge:hover {
+      color: #a8d43a;
+      transform: translateY(-1px);
+    }
+
+    /* ─── Animation ─── */
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 480px) {
+      .home-header {
+        padding: 4rem 0 2rem;
+      }
+
+      .cat-label {
+        font-size: 1.05rem;
+      }
+
+      .cat-icon {
+        width: 44px;
+        height: 44px;
+      }
+
+      .cat-desc {
+        font-size: 0.6rem;
+      }
+    }
+
+    @media (min-width: 768px) {
+
+      .chapter-list {
+        max-width: 680px;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- ═══════════════════════════════════════════ -->
-<!-- HOME VIEW: 4 Category Cards               -->
-<!-- ═══════════════════════════════════════════ -->
-<div class="lang-toggle">
-  <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
-  <button id="btn-ko" onclick="setLang('ko')">한국어</button>
-</div>
-
-<div id="home-view">
-  <header class="home-header">
-    <div class="home-label">Mellow Math</div>
-    <h1 class="home-title">Interactive <em>Mathematics</em></h1>
-  </header>
-
-  <div class="category-grid">
-    <!-- Space -->
-    <div class="category-card" data-cat="space" onclick="showCategory('space')">
-      <svg class="cat-icon" viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="16" stroke="#6C9BFF" stroke-width="1.4" fill="rgba(108,155,255,0.02)"/>
-        <path d="M8 28 Q20 8 32 28" stroke="#6C9BFF" stroke-width="1" fill="none" opacity="0.55"/>
-        <path d="M6 18 Q20 34 34 18" stroke="#6C9BFF" stroke-width="1" fill="none" opacity="0.55"/>
-        <path d="M12 5 Q30 20 12 35" stroke="#6C9BFF" stroke-width="0.8" fill="none" opacity="0.35"/>
-        <path d="M28 5 Q10 20 28 35" stroke="#6C9BFF" stroke-width="0.8" fill="none" opacity="0.35"/>
-        <circle cx="20" cy="20" r="1.5" fill="#6C9BFF"/>
-      </svg>
-      <div class="cat-label">Space</div>
-      <div class="cat-label-ko" style="color:rgba(108,155,255,0.5)">공간</div>
-      <div class="cat-desc">Geometry, topology, and the structure of space itself</div>
-      <div class="cat-count" style="color:rgba(108,155,255,0.45)">5 chapters</div>
-    </div>
-
-    <!-- Flow -->
-    <div class="category-card" data-cat="flow" onclick="showCategory('flow')">
-      <svg class="cat-icon" viewBox="0 0 40 40" fill="none">
-        <path d="M4 10 Q12 10 16 14 Q20 18 24 18 Q28 18 36 14" stroke="#FFB86C" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-        <path d="M4 18 Q10 18 15 20 Q20 22 25 20 Q30 18 36 20" stroke="#FFB86C" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0.8"/>
-        <path d="M4 26 Q12 26 17 24 Q22 22 26 24 Q30 26 36 28" stroke="#FFB86C" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.6"/>
-        <path d="M4 33 Q14 31 20 30 Q26 29 36 32" stroke="#FFB86C" stroke-width="0.8" fill="none" stroke-linecap="round" opacity="0.35"/>
-        <path d="M33 12.5 L36 14 L33 15" stroke="#FFB86C" stroke-width="1" fill="none" stroke-linecap="round" opacity="0.7"/>
-        <circle cx="20" cy="20" r="2" fill="rgba(255,184,108,0.19)" stroke="#FFB86C" stroke-width="1"/>
-      </svg>
-      <div class="cat-label">Flow</div>
-      <div class="cat-label-ko" style="color:rgba(255,184,108,0.5)">흐름</div>
-      <div class="cat-desc">Convergence, diffusion, and the currents beneath</div>
-      <div class="cat-count" style="color:rgba(255,184,108,0.45)">4 chapters</div>
-    </div>
-
-    <!-- Sense -->
-    <div class="category-card" data-cat="sense" onclick="showCategory('sense')">
-      <svg class="cat-icon" viewBox="0 0 40 40" fill="none">
-        <circle cx="20" cy="20" r="4" stroke="#50FA7B" stroke-width="1.4" fill="rgba(80,250,123,0.09)"/>
-        <circle cx="20" cy="20" r="9" stroke="#50FA7B" stroke-width="1" fill="none" opacity="0.55"/>
-        <circle cx="20" cy="20" r="14" stroke="#50FA7B" stroke-width="0.7" fill="none" opacity="0.3"/>
-        <path d="M3 20 Q6 14 9 20 Q12 26 15 20 Q18 14 21 20 Q24 26 27 20 Q30 14 33 20 Q36 26 39 20" stroke="#50FA7B" stroke-width="0.9" fill="none" opacity="0.45"/>
-      </svg>
-      <div class="cat-label">Sense</div>
-      <div class="cat-label-ko" style="color:rgba(80,250,123,0.5)">감각</div>
-      <div class="cat-desc">Sound, vibration, and the mathematics of perception</div>
-      <div class="cat-count" style="color:rgba(80,250,123,0.45)">4 chapters</div>
-    </div>
-
-    <!-- Machine -->
-    <div class="category-card" data-cat="machine" onclick="showCategory('machine')">
-      <svg class="cat-icon" viewBox="0 0 40 40" fill="none">
-        <circle cx="8" cy="12" r="2.5" fill="rgba(255,121,198,0.21)" stroke="#FF79C6" stroke-width="0.7"/>
-        <circle cx="8" cy="20" r="2.5" fill="rgba(255,121,198,0.21)" stroke="#FF79C6" stroke-width="0.7"/>
-        <circle cx="8" cy="28" r="2.5" fill="rgba(255,121,198,0.21)" stroke="#FF79C6" stroke-width="0.7"/>
-        <circle cx="20" cy="14" r="2.5" fill="rgba(255,121,198,0.21)" stroke="#FF79C6" stroke-width="0.7"/>
-        <circle cx="20" cy="26" r="2.5" fill="rgba(255,121,198,0.21)" stroke="#FF79C6" stroke-width="0.7"/>
-        <circle cx="32" cy="20" r="3" fill="rgba(255,121,198,0.31)" stroke="#FF79C6" stroke-width="0.9"/>
-        <line x1="10.5" y1="12" x2="17.5" y2="14" stroke="#FF79C6" stroke-width="0.6" opacity="0.5"/>
-        <line x1="10.5" y1="12" x2="17.5" y2="26" stroke="#FF79C6" stroke-width="0.6" opacity="0.25"/>
-        <line x1="10.5" y1="20" x2="17.5" y2="14" stroke="#FF79C6" stroke-width="0.6" opacity="0.5"/>
-        <line x1="10.5" y1="20" x2="17.5" y2="26" stroke="#FF79C6" stroke-width="0.6" opacity="0.5"/>
-        <line x1="10.5" y1="28" x2="17.5" y2="14" stroke="#FF79C6" stroke-width="0.6" opacity="0.25"/>
-        <line x1="10.5" y1="28" x2="17.5" y2="26" stroke="#FF79C6" stroke-width="0.6" opacity="0.5"/>
-        <line x1="22.5" y1="14" x2="29" y2="20" stroke="#FF79C6" stroke-width="0.6" opacity="0.65"/>
-        <line x1="22.5" y1="26" x2="29" y2="20" stroke="#FF79C6" stroke-width="0.6" opacity="0.65"/>
-      </svg>
-      <div class="cat-label">Machine</div>
-      <div class="cat-label-ko" style="color:rgba(255,121,198,0.5)">기계</div>
-      <div class="cat-desc">How machines learn, dream, and understand</div>
-      <div class="cat-count" style="color:rgba(255,121,198,0.45)">9 chapters</div>
-    </div>
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- HOME VIEW: 4 Category Cards               -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="lang-toggle">
+    <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
+    <button id="btn-ko" onclick="setLang('ko')">한국어</button>
   </div>
 
-  <footer>
-    <div class="footer-rule"></div>
-    <div class="footer-attr">
-      <div class="footer-name">Sang-hyun Kim</div>
-      <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
-      <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+  <div id="home-view">
+    <header class="home-header">
+      <div class="home-label">Mellow Math</div>
+      <h1 class="home-title">Interactive <em>Mathematics</em></h1>
+    </header>
+
+    <div class="category-grid">
+      <!-- Space -->
+      <div class="category-card" data-cat="space" onclick="showCategory('space')">
+        <svg class="cat-icon" viewBox="0 0 40 40" fill="none">
+          <circle cx="20" cy="20" r="16" stroke="#6C9BFF" stroke-width="1.4" fill="rgba(108,155,255,0.02)" />
+          <path d="M8 28 Q20 8 32 28" stroke="#6C9BFF" stroke-width="1" fill="none" opacity="0.55" />
+          <path d="M6 18 Q20 34 34 18" stroke="#6C9BFF" stroke-width="1" fill="none" opacity="0.55" />
+          <path d="M12 5 Q30 20 12 35" stroke="#6C9BFF" stroke-width="0.8" fill="none" opacity="0.35" />
+          <path d="M28 5 Q10 20 28 35" stroke="#6C9BFF" stroke-width="0.8" fill="none" opacity="0.35" />
+          <circle cx="20" cy="20" r="1.5" fill="#6C9BFF" />
+        </svg>
+        <div class="cat-label">Space</div>
+        <div class="cat-label-ko" style="color:rgba(108,155,255,0.5)">공간</div>
+        <div class="cat-desc">Geometry, topology, and the structure of space itself</div>
+        <div class="cat-count" style="color:rgba(108,155,255,0.45)">5 chapters</div>
+      </div>
+
+      <!-- Flow -->
+      <div class="category-card" data-cat="flow" onclick="showCategory('flow')">
+        <svg class="cat-icon" viewBox="0 0 40 40" fill="none">
+          <path d="M4 10 Q12 10 16 14 Q20 18 24 18 Q28 18 36 14" stroke="#FFB86C" stroke-width="1.2" fill="none"
+            stroke-linecap="round" />
+          <path d="M4 18 Q10 18 15 20 Q20 22 25 20 Q30 18 36 20" stroke="#FFB86C" stroke-width="1.4" fill="none"
+            stroke-linecap="round" opacity="0.8" />
+          <path d="M4 26 Q12 26 17 24 Q22 22 26 24 Q30 26 36 28" stroke="#FFB86C" stroke-width="1.2" fill="none"
+            stroke-linecap="round" opacity="0.6" />
+          <path d="M4 33 Q14 31 20 30 Q26 29 36 32" stroke="#FFB86C" stroke-width="0.8" fill="none"
+            stroke-linecap="round" opacity="0.35" />
+          <path d="M33 12.5 L36 14 L33 15" stroke="#FFB86C" stroke-width="1" fill="none" stroke-linecap="round"
+            opacity="0.7" />
+          <circle cx="20" cy="20" r="2" fill="rgba(255,184,108,0.19)" stroke="#FFB86C" stroke-width="1" />
+        </svg>
+        <div class="cat-label">Flow</div>
+        <div class="cat-label-ko" style="color:rgba(255,184,108,0.5)">흐름</div>
+        <div class="cat-desc">Convergence, diffusion, and the currents beneath</div>
+        <div class="cat-count" style="color:rgba(255,184,108,0.45)">4 chapters</div>
+      </div>
+
+      <!-- Hub: Suggest Random -->
+      <div class="suggest-center" onclick="suggestRandom()">
+        <svg class="cat-icon" viewBox="0 0 40 40" fill="none">
+          <path d="M20 5 L24 16 L35 20 L24 24 L20 35 L16 24 L5 20 L16 16 Z" fill="rgba(212,168,83,0.2)" stroke="#d4a853"
+            stroke-width="1.2" />
+          <circle cx="20" cy="20" r="1.5" fill="#d4a853" />
+        </svg>
+        <div class="cat-label suggest-text">Suggest!</div>
+        <div class="cat-label-ko suggest-text-ko" style="color:rgba(212,168,83,0.6); margin-top:0.2rem; font-size:0.65rem;">추천!</div>
+      </div>
+
+      <!-- Sense -->
+      <div class="category-card" data-cat="sense" onclick="showCategory('sense')">
+        <svg class="cat-icon" viewBox="0 0 40 40" fill="none">
+          <circle cx="20" cy="20" r="4" stroke="#50FA7B" stroke-width="1.4" fill="rgba(80,250,123,0.09)" />
+          <circle cx="20" cy="20" r="9" stroke="#50FA7B" stroke-width="1" fill="none" opacity="0.55" />
+          <circle cx="20" cy="20" r="14" stroke="#50FA7B" stroke-width="0.7" fill="none" opacity="0.3" />
+          <path d="M3 20 Q6 14 9 20 Q12 26 15 20 Q18 14 21 20 Q24 26 27 20 Q30 14 33 20 Q36 26 39 20" stroke="#50FA7B"
+            stroke-width="0.9" fill="none" opacity="0.45" />
+        </svg>
+        <div class="cat-label">Sense</div>
+        <div class="cat-label-ko" style="color:rgba(80,250,123,0.5)">감각</div>
+        <div class="cat-desc">Sound, vibration, and the mathematics of perception</div>
+        <div class="cat-count" style="color:rgba(80,250,123,0.45)">4 chapters</div>
+      </div>
+
+      <!-- Machine -->
+      <div class="category-card" data-cat="machine" onclick="showCategory('machine')">
+        <svg class="cat-icon" viewBox="0 0 40 40" fill="none">
+          <circle cx="8" cy="12" r="2.5" fill="rgba(255,121,198,0.21)" stroke="#FF79C6" stroke-width="0.7" />
+          <circle cx="8" cy="20" r="2.5" fill="rgba(255,121,198,0.21)" stroke="#FF79C6" stroke-width="0.7" />
+          <circle cx="8" cy="28" r="2.5" fill="rgba(255,121,198,0.21)" stroke="#FF79C6" stroke-width="0.7" />
+          <circle cx="20" cy="14" r="2.5" fill="rgba(255,121,198,0.21)" stroke="#FF79C6" stroke-width="0.7" />
+          <circle cx="20" cy="26" r="2.5" fill="rgba(255,121,198,0.21)" stroke="#FF79C6" stroke-width="0.7" />
+          <circle cx="32" cy="20" r="3" fill="rgba(255,121,198,0.31)" stroke="#FF79C6" stroke-width="0.9" />
+          <line x1="10.5" y1="12" x2="17.5" y2="14" stroke="#FF79C6" stroke-width="0.6" opacity="0.5" />
+          <line x1="10.5" y1="12" x2="17.5" y2="26" stroke="#FF79C6" stroke-width="0.6" opacity="0.25" />
+          <line x1="10.5" y1="20" x2="17.5" y2="14" stroke="#FF79C6" stroke-width="0.6" opacity="0.5" />
+          <line x1="10.5" y1="20" x2="17.5" y2="26" stroke="#FF79C6" stroke-width="0.6" opacity="0.5" />
+          <line x1="10.5" y1="28" x2="17.5" y2="14" stroke="#FF79C6" stroke-width="0.6" opacity="0.25" />
+          <line x1="10.5" y1="28" x2="17.5" y2="26" stroke="#FF79C6" stroke-width="0.6" opacity="0.5" />
+          <line x1="22.5" y1="14" x2="29" y2="20" stroke="#FF79C6" stroke-width="0.6" opacity="0.65" />
+          <line x1="22.5" y1="26" x2="29" y2="20" stroke="#FF79C6" stroke-width="0.6" opacity="0.65" />
+        </svg>
+        <div class="cat-label">Machine</div>
+        <div class="cat-label-ko" style="color:rgba(255,121,198,0.5)">기계</div>
+        <div class="cat-desc">How machines learn, dream, and understand</div>
+        <div class="cat-count" style="color:rgba(255,121,198,0.45)">9 chapters</div>
+      </div>
     </div>
-  </footer>
-</div>
 
-<!-- ═══════════════════════════════════════════ -->
-<!-- CATEGORY VIEW: Chapter list                -->
-<!-- ═══════════════════════════════════════════ -->
-<div id="category-view">
-  <button class="cat-back" onclick="showHome()">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-    All Categories
-  </button>
-
-  <div class="cat-hero">
-    <div id="cat-hero-icon"></div>
-    <div class="cat-hero-title" id="cat-hero-title"></div>
-    <div class="cat-hero-desc" id="cat-hero-desc"></div>
+    <footer>
+      <div class="footer-rule"></div>
+      <div class="footer-attr">
+        <div class="footer-name">Sang-hyun Kim</div>
+        <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+        <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+      </div>
+    </footer>
   </div>
 
-  <div class="chapter-list" id="chapter-list"></div>
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- CATEGORY VIEW: Chapter list                -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div id="category-view">
+    <button class="cat-back" onclick="showHome()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+        stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+      All Categories
+    </button>
 
-  <footer>
-    <div class="footer-rule"></div>
-    <div class="footer-attr">
-      <div class="footer-name">Sang-hyun Kim</div>
-      <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
-      <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+    <div class="cat-hero">
+      <div id="cat-hero-icon"></div>
+      <div class="cat-hero-title" id="cat-hero-title"></div>
+      <div class="cat-hero-desc" id="cat-hero-desc"></div>
     </div>
-  </footer>
-</div>
 
-<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+    <div class="chapter-list" id="chapter-list"></div>
 
-<script>
-// ─── Language State ───
-let currentLang = 'en';
-let currentCatId = null;
+    <footer>
+      <div class="footer-rule"></div>
+      <div class="footer-attr">
+        <div class="footer-name">Sang-hyun Kim</div>
+        <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+        <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+      </div>
+    </footer>
+  </div>
 
-// ─── Data ───
-const CATEGORIES = {
-  space: {
-    label: 'Space', labelKo: '공간', color: '#6C9BFF',
-    desc: 'Geometry, topology, and the structure of space itself',
-    descKo: '기하학, 위상수학, 그리고 공간 그 자체의 구조',
-    icon: document.querySelector('[data-cat="space"] .cat-icon').outerHTML,
-    chapters: [
-      { title: 'Hyperbolic Space', titleKo: '쌍곡 공간', tagline: 'Where parallels multiply', taglineKo: '평행선이 무한히 존재하는 세계', difficulty: 3, en: 'hyperbolic.html', ko: 'hyperbolic_ko.html',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="22" stroke="#6C9BFF" stroke-width="1.4" fill="#6C9BFF05"/><path d="M28 10 Q24 27 14 39" stroke="#6C9BFF" stroke-width="1.1" fill="none" opacity="0.75"/><path d="M14 39 Q28 32 42 39" stroke="#6C9BFF" stroke-width="1.1" fill="none" opacity="0.75"/><path d="M42 39 Q32 27 28 10" stroke="#6C9BFF" stroke-width="1.1" fill="none" opacity="0.75"/><path d="M28 10 Q24 27 14 39 Q28 32 42 39 Q32 27 28 10 Z" fill="#6C9BFF10"/></svg>' },
-      { title: 'Making the Sun from a Single Bean', titleKo: '콩 한 알로 태양 만들기', tagline: 'Infinity reshapes the possible', taglineKo: '무한이 가능성을 재편하다', difficulty: 3, en: 'banach-tarski.html', ko: 'banach-tarski-ko.html',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><ellipse cx="10" cy="30" rx="4" ry="5.5" stroke="#6C9BFF" stroke-width="1" fill="#6C9BFF15" transform="rotate(-20 10 30)"/><path d="M17 30 L27 30" stroke="#6C9BFF" stroke-width="0.8" opacity="0.3" stroke-dasharray="1.5 1.5"/><circle cx="40" cy="28" r="12" stroke="#6C9BFF" stroke-width="1.3" fill="#6C9BFF10"/><text x="40" y="31" text-anchor="middle" fill="#6C9BFF" font-size="8" font-family="serif" opacity="0.3">∞</text></svg>' },
-      { title: 'Shapes Have Memories', titleKo: '도형에는 기억이 있다', tagline: 'Counting invisible holes', taglineKo: '보이지 않는 구멍을 세다', difficulty: 3, en: 'homology.html', ko: 'homology_kr.html',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><ellipse cx="28" cy="28" rx="23" ry="14" stroke="#6C9BFF" stroke-width="1.2" fill="#6C9BFF05"/><ellipse cx="28" cy="28" rx="9" ry="5" stroke="#6C9BFF" stroke-width="1" opacity="0.4"/><ellipse cx="40" cy="28" rx="5" ry="11" stroke="#6C9BFF" stroke-width="1.8" opacity="0.7"/><ellipse cx="28" cy="30" rx="16" ry="8" stroke="#6C9BFF" stroke-width="1.4" opacity="0.45" stroke-dasharray="3 2"/></svg>' },
-      { title: 'Through the Symplectic Looking-Glass', titleKo: '심플렉틱 거울 너머로', tagline: 'Dualities connecting worlds', taglineKo: '세계를 잇는 이중성', difficulty: 3, en: 'mirror.html', ko: 'mirror-ko.html',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><ellipse cx="20" cy="28" rx="12" ry="16" stroke="#6C9BFF" stroke-width="0.9" fill="none" opacity="0.6" transform="rotate(-15 20 28)"/><ellipse cx="20" cy="28" rx="8" ry="11" stroke="#6C9BFF" stroke-width="0.7" fill="none" opacity="0.45" transform="rotate(-15 20 28)"/><circle cx="20" cy="28" r="1.5" fill="#6C9BFF" opacity="0.5"/><line x1="28" y1="4" x2="28" y2="52" stroke="#6C9BFF" stroke-width="0.8" opacity="0.25" stroke-dasharray="2 2"/><ellipse cx="36" cy="28" rx="12" ry="16" stroke="#6C9BFF" stroke-width="0.9" fill="none" opacity="0.3" transform="rotate(15 36 28)"/><circle cx="36" cy="28" r="1.5" fill="#6C9BFF" opacity="0.2"/></svg>' },
-      { title: 'Is the Universe Round?', titleKo: '우주는 둥근가?', tagline: 'The shape of everything', taglineKo: '모든 것의 형태', difficulty: 3, en: 'universe.html', ko: 'universe-ko.html',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="20" stroke="#6C9BFF" stroke-width="1.2" fill="#6C9BFF05"/><ellipse cx="28" cy="28" rx="20" ry="8" stroke="#6C9BFF" stroke-width="0.8" opacity="0.4"/><ellipse cx="28" cy="28" rx="8" ry="20" stroke="#6C9BFF" stroke-width="0.8" opacity="0.4"/><circle cx="28" cy="28" r="2" fill="#6C9BFF" opacity="0.3"/></svg>' },
-    ]
-  },
-  flow: {
-    label: 'Flow', labelKo: '흐름', color: '#FFB86C',
-    desc: 'Convergence, diffusion, and the currents beneath',
-    descKo: '수렴, 확산, 그리고 그 아래 흐르는 조류',
-    icon: document.querySelector('[data-cat="flow"] .cat-icon').outerHTML,
-    chapters: [
-      { title: 'Central Limit Theorem', titleKo: '왜 여론조사는 항상 비슷할까?', tagline: 'The inevitable bell curve', taglineKo: '피할 수 없는 종 곡선', difficulty: 1, en: 'clt.html', ko: 'clt_ko.html',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M4 48 L7 48 L10 47.6 L13 46.4 L16 43.4 L19 37.4 L22 28.2 L25 18.4 L28 14 L31 18.4 L34 28.2 L37 37.4 L40 43.4 L43 46.4 L46 47.6 L49 48 L52 48" stroke="#FFB86C" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 48 L7 48 L10 47.6 L13 46.4 L16 43.4 L19 37.4 L22 28.2 L25 18.4 L28 14 L31 18.4 L34 28.2 L37 37.4 L40 43.4 L43 46.4 L46 47.6 L49 48 L52 48 L52 49 L4 49 Z" fill="#FFB86C12"/></svg>' },
-      { title: 'Can You Measure Everything?', titleKo: '모든 것의 크기를 잴 수 있을까?', tagline: 'The paradox of volume', taglineKo: '부피의 역설', difficulty: 2, en: 'volume.html', ko: 'volume-ko.html',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><rect x="8" y="10" width="40" height="5" rx="2" fill="#FFB86C" opacity="0.5"/><rect x="8" y="27" width="6" height="4" rx="1" fill="#FFB86C" opacity="0.35"/><rect x="17" y="27" width="3" height="4" rx="1" fill="#FFB86C" opacity="0.25"/><rect x="23" y="27" width="8" height="4" rx="1" fill="#FFB86C" opacity="0.35"/><rect x="34" y="27" width="2" height="4" rx="1" fill="#FFB86C" opacity="0.2"/><rect x="39" y="27" width="5" height="4" rx="1" fill="#FFB86C" opacity="0.3"/><text x="28" y="45" text-anchor="middle" fill="#FFB86C" font-size="14" font-family="serif" opacity="0.25">?</text></svg>' },
-      { title: 'Diffusion I', titleKo: '정보는 어떻게 퍼지는가?', tagline: 'One equation rules them all', taglineKo: '하나의 방정식이 모든 것을 지배한다', difficulty: 2, en: 'diffusion-1.html', ko: 'diffusion-1-ko.html', linkTo: '→ continues in Machine', linkToKo: '→ Machine에서 계속',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="2.5" fill="#FFB86C" opacity="0.7"/><circle cx="28" cy="28" r="7" stroke="#FFB86C" stroke-width="1.3" opacity="0.55"/><circle cx="28" cy="28" r="12" stroke="#FFB86C" stroke-width="1.1" opacity="0.4"/><circle cx="28" cy="28" r="17" stroke="#FFB86C" stroke-width="0.9" opacity="0.25"/><circle cx="28" cy="28" r="22" stroke="#FFB86C" stroke-width="0.7" opacity="0.13"/></svg>' },
-      { title: 'Is All Moving, Moving?', titleKo: '움직이는 것은 다 움직이는가?', tagline: 'The foundations of calculus', taglineKo: '미적분학의 토대', difficulty: 2, en: 'calculus.html', ko: 'calculus_ko.html',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M8 44 Q18 44 24 36 Q30 28 34 20 Q38 12 48 8" stroke="#FFB86C" stroke-width="1.5" fill="none" stroke-linecap="round"/><line x1="22" y1="26" x2="38" y2="26" stroke="#FFB86C" stroke-width="0.8" opacity="0.3"/><line x1="30" y1="18" x2="30" y2="34" stroke="#FFB86C" stroke-width="0.8" opacity="0.3"/><circle cx="30" cy="26" r="2" fill="#FFB86C" opacity="0.4"/></svg>' },
-      { title: 'Three Stars, No Answer', titleKo: '삼체, 답은 없다', tagline: 'The oldest unsolved problem in physics', taglineKo: '물리학에서 가장 오래된 미해결 문제', difficulty: 3, en: 'threebody.html', ko: 'threebody_ko.html',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="16" r="3.5" fill="#FFB86C" opacity="0.7"/><circle cx="14" cy="40" r="3" fill="#FFB86C" opacity="0.55"/><circle cx="42" cy="40" r="2.5" fill="#FFB86C" opacity="0.45"/><ellipse cx="28" cy="30" rx="18" ry="10" stroke="#FFB86C" stroke-width="0.8" fill="none" opacity="0.2" transform="rotate(-15 28 30)"/><ellipse cx="28" cy="30" rx="16" ry="12" stroke="#FFB86C" stroke-width="0.8" fill="none" opacity="0.2" transform="rotate(25 28 30)"/><path d="M14 40 Q20 28 28 16 Q36 28 42 40" stroke="#FFB86C" stroke-width="0.6" fill="none" opacity="0.15" stroke-dasharray="2 2"/></svg>' },
-    ]
-  },
-  sense: {
-    label: 'Sense', labelKo: '감각', color: '#50FA7B',
-    desc: 'Sound, vibration, and the mathematics of perception',
-    descKo: '소리, 진동, 그리고 지각의 수학',
-    icon: document.querySelector('[data-cat="sense"] .cat-icon').outerHTML,
-    chapters: [
-      { title: 'Shape of a Drum', titleKo: '드럼의 모양을 들을 수 있을까?', tagline: 'Hearing geometry', taglineKo: '기하학을 듣다', difficulty: 2, en: 'drum.html', ko: 'drum_ko.html',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="22" stroke="#50FA7B" stroke-width="1.4" fill="#50FA7B05"/><line x1="28" y1="6" x2="28" y2="50" stroke="#50FA7B" stroke-width="1.1" opacity="0.5"/><circle cx="28" cy="28" r="13.5" stroke="#50FA7B" stroke-width="1" fill="none" opacity="0.45"/></svg>' },
-      { title: 'Mathematics of Sound', titleKo: '피타고라스에서 스마트폰까지', tagline: 'From Pythagoras to your phone', taglineKo: '피타고라스에서 스마트폰까지', difficulty: 1, en: 'sound.html', ko: 'sound_ko.html',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M3 17 Q10 9 17 17 Q24 25 31 17 Q38 9 45 17 Q52 25 56 17" stroke="#50FA7B" stroke-width="1.4" fill="none" opacity="0.7" stroke-linecap="round"/><path d="M3 30 Q6.5 24 10 30 Q13.5 36 17 30 Q20.5 24 24 30 Q27.5 36 31 30 Q34.5 24 38 30 Q41.5 36 45 30 Q48.5 24 52 30 Q55 36 56 30" stroke="#50FA7B" stroke-width="1" fill="none" opacity="0.45" stroke-linecap="round"/><path d="M3 42 Q5 39 7 42 Q9 45 11 42 Q13 39 15 42 Q17 45 19 42 Q21 39 23 42 Q25 45 27 42 Q29 39 31 42 Q33 45 35 42 Q37 39 39 42 Q41 45 43 42 Q45 39 47 42 Q49 45 51 42 Q53 39 56 42" stroke="#50FA7B" stroke-width="0.7" fill="none" opacity="0.25" stroke-linecap="round"/></svg>' },
-      { title: 'Searching for Perfect Illusions', titleKo: '완벽한 환상을 찾아서', tagline: 'The mathematics of vision', taglineKo: '보는 것의 수학', difficulty: 2, en: 'illusion.html', ko: 'illusion.html',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="22" r="2" fill="#50FA7B" opacity="0.6"/><line x1="28" y1="22" x2="4" y2="50" stroke="#50FA7B" stroke-width="0.9" opacity="0.4"/><line x1="28" y1="22" x2="52" y2="50" stroke="#50FA7B" stroke-width="0.9" opacity="0.4"/><line x1="28" y1="22" x2="12" y2="50" stroke="#50FA7B" stroke-width="0.6" opacity="0.25"/><line x1="28" y1="22" x2="44" y2="50" stroke="#50FA7B" stroke-width="0.6" opacity="0.25"/><line x1="28" y1="22" x2="28" y2="50" stroke="#50FA7B" stroke-width="0.7" opacity="0.3"/><path d="M16 22 Q22 14 28 12 Q34 14 40 22" stroke="#50FA7B" stroke-width="1.2" fill="none" opacity="0.55"/><path d="M16 22 Q22 30 28 32 Q34 30 40 22" stroke="#50FA7B" stroke-width="1.2" fill="none" opacity="0.55"/><circle cx="28" cy="22" r="5.5" stroke="#50FA7B" stroke-width="0.7" fill="none" opacity="0.3"/></svg>' },
-      { title: 'The Sound of Mathematics', titleKo: '수학의 소리', tagline: 'Why does a violin sound like a violin?', taglineKo: '바이올린은 왜 바이올린처럼 들릴까?', difficulty: 2, en: 'ghost.html', ko: 'ghost_ko.html',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M22 10 L22 40" stroke="#50FA7B" stroke-width="1.2" opacity="0.5"/><path d="M34 10 L34 40" stroke="#50FA7B" stroke-width="1.2" opacity="0.5"/><path d="M22 10 L34 14" stroke="#50FA7B" stroke-width="1" opacity="0.4"/><path d="M22 16 L34 20" stroke="#50FA7B" stroke-width="1" opacity="0.4"/><circle cx="18" cy="40" r="4" fill="#50FA7B" opacity="0.3"/><circle cx="30" cy="44" r="4" fill="#50FA7B" opacity="0.3"/><path d="M4 28 Q10 20 16 28 Q22 36 28 28 Q34 20 40 28 Q46 36 52 28" stroke="#50FA7B" stroke-width="0.8" fill="none" opacity="0.25" stroke-linecap="round"/></svg>' },
-    ]
-  },
-  machine: {
-    label: 'Machine', labelKo: '기계', color: '#FF79C6',
-    desc: 'How machines learn, dream, and understand',
-    descKo: '기계는 어떻게 배우고, 꿈꾸고, 이해하는가',
-    icon: document.querySelector('[data-cat="machine"] .cat-icon').outerHTML,
-    chapters: [
-      { title: 'Diffusion II', titleKo: '기계는 꿈을 꾸는가?', tagline: 'Images from pure noise', taglineKo: '순수한 노이즈에서 이미지로', difficulty: 2, en: 'diffusion-2.html', ko: 'diffusion-2-ko.html', linkFrom: '← from Flow', linkFromKo: '← Flow에서 이어짐',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="46" cy="20" r="6.5" stroke="#FF79C6" stroke-width="1.3" fill="#FF79C612" opacity="0.8"/><path d="M40 42 L46 31 L52 42 Z" stroke="#FF79C6" stroke-width="1.1" fill="#FF79C608" opacity="0.6"/><path d="M18 28 L38 28" stroke="#FF79C6" stroke-width="0.9" opacity="0.3" stroke-dasharray="2 2"/><path d="M36 26 L39 28 L36 30" stroke="#FF79C6" stroke-width="0.8" fill="none" opacity="0.3" stroke-linecap="round"/></svg>' },
-      { title: 'Transformer', titleKo: '기계는 이해하는가?', tagline: 'Attention is all you need', taglineKo: '어텐션이 전부다', difficulty: 2, en: 'transformer.html', ko: 'transformer_ko.html',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><rect x="13" y="5" width="5.5" height="4" rx="1" fill="#FF79C6" opacity="0.25"/><rect x="20.5" y="5" width="5.5" height="4" rx="1" fill="#FF79C6" opacity="0.3"/><rect x="28" y="5" width="5.5" height="4" rx="1" fill="#FF79C6" opacity="0.35"/><rect x="13" y="13" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.5"/><rect x="20.5" y="13" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.08"/><rect x="28" y="13" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.06"/><rect x="13" y="20.5" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.1"/><rect x="20.5" y="20.5" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.38"/><rect x="28" y="20.5" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.11"/><rect x="13" y="28" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.03"/><rect x="20.5" y="28" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.11"/><rect x="28" y="28" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.44"/></svg>' },
-      { title: 'Does a Machine Think?', titleKo: '기계는 생각하는가?', tagline: 'When thought reduces to multiplication', taglineKo: '사고가 곱셈으로 환원될 때', difficulty: 2, en: 'think.html', ko: 'think_ko.html',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="8" cy="14" r="3" fill="#FF79C625" stroke="#FF79C6" stroke-width="0.7"/><circle cx="8" cy="28" r="3" fill="#FF79C625" stroke="#FF79C6" stroke-width="0.7"/><circle cx="8" cy="42" r="3" fill="#FF79C625" stroke="#FF79C6" stroke-width="0.7"/><line x1="11" y1="14" x2="25" y2="28" stroke="#FF79C6" stroke-width="0.5" opacity="0.3"/><line x1="11" y1="28" x2="25" y2="28" stroke="#FF79C6" stroke-width="1" opacity="0.5"/><line x1="11" y1="42" x2="25" y2="28" stroke="#FF79C6" stroke-width="1" opacity="0.5"/><circle cx="28" cy="28" r="6" stroke="#FF79C6" stroke-width="1.3" fill="#FF79C612"/><text x="28" y="31" text-anchor="middle" fill="#FF79C6" font-size="7" font-family="serif" opacity="0.5">σ</text><line x1="34" y1="28" x2="44" y2="28" stroke="#FF79C6" stroke-width="1" opacity="0.5"/><circle cx="48" cy="28" r="3" fill="#FF79C645" stroke="#FF79C6" stroke-width="0.9"/></svg>' },
-      { title: 'Does a Machine See?', titleKo: '기계는 보는가?', tagline: 'Learning to detect the world', taglineKo: '세상을 감지하는 법을 배우다', difficulty: 2, en: 'see.html', ko: 'see_ko.html',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><rect x="6" y="6" width="6" height="6" rx="1" fill="#FF79C6" opacity="0.5"/><rect x="13" y="6" width="6" height="6" rx="1" fill="#FF79C6" opacity="0.25"/><rect x="6" y="13" width="6" height="6" rx="1" fill="#FF79C6" opacity="0.25"/><rect x="13" y="13" width="6" height="6" rx="1" fill="#FF79C6" opacity="0.5"/><rect x="20" y="6" width="6" height="6" rx="1" fill="#FF79C6" opacity="0.08"/><rect x="20" y="13" width="6" height="6" rx="1" fill="#FF79C6" opacity="0.25"/><rect x="12.5" y="12.5" width="21" height="21" rx="2" stroke="#FF79C6" stroke-width="1.5" fill="none" opacity="0.7"/></svg>' },
-      { title: 'Does a Machine Speak?', titleKo: '기계는 말하는가?', tagline: 'Breaking and making voice', taglineKo: '목소리를 분해하고 만들다', difficulty: 2, en: 'speak.html', ko: 'speak_ko.html',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M4 16 Q7 10 10 16 Q13 22 16 16 Q18 12 20 16 Q23 22 26 14 Q28 10 30 16 Q33 22 36 16 Q38 12 40 16 Q43 20 46 16 Q48 13 50 16" stroke="#FF79C6" stroke-width="1.2" fill="none" opacity="0.6" stroke-linecap="round"/><rect x="14" y="34" width="3" height="12" rx="1" fill="#FF79C6" opacity="0.45"/><rect x="18" y="38" width="3" height="8" rx="1" fill="#FF79C6" opacity="0.3"/><rect x="22" y="32" width="3" height="14" rx="1" fill="#FF79C6" opacity="0.5"/><rect x="26" y="36" width="3" height="10" rx="1" fill="#FF79C6" opacity="0.35"/><rect x="30" y="34" width="3" height="12" rx="1" fill="#FF79C6" opacity="0.4"/><rect x="34" y="40" width="3" height="6" rx="1" fill="#FF79C6" opacity="0.2"/></svg>' },
-      { title: 'Does a Machine Remember?', titleKo: '기계는 기억하는가?', tagline: 'Echoes in silicon', taglineKo: '실리콘 속의 메아리', difficulty: 2, en: 'remember.html', ko: 'remember_ko.html',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="12" r="4" fill="#FF79C630" stroke="#FF79C6" stroke-width="0.8"/><circle cx="14" cy="24" r="4" fill="#FF79C630" stroke="#FF79C6" stroke-width="0.8"/><circle cx="42" cy="24" r="4" fill="#FF79C630" stroke="#FF79C6" stroke-width="0.8"/><circle cx="14" cy="40" r="4" fill="#FF79C630" stroke="#FF79C6" stroke-width="0.8"/><circle cx="42" cy="40" r="4" fill="#FF79C630" stroke="#FF79C6" stroke-width="0.8"/><circle cx="28" cy="48" r="4" fill="#FF79C630" stroke="#FF79C6" stroke-width="0.8"/><line x1="28" y1="16" x2="14" y2="20" stroke="#FF79C6" stroke-width="0.5" opacity="0.2"/><line x1="28" y1="16" x2="42" y2="20" stroke="#FF79C6" stroke-width="0.5" opacity="0.2"/><line x1="14" y1="28" x2="14" y2="36" stroke="#FF79C6" stroke-width="0.5" opacity="0.2"/><line x1="42" y1="28" x2="42" y2="36" stroke="#FF79C6" stroke-width="0.5" opacity="0.2"/><line x1="14" y1="44" x2="28" y2="44" stroke="#FF79C6" stroke-width="0.5" opacity="0.2"/><line x1="42" y1="44" x2="28" y2="44" stroke="#FF79C6" stroke-width="0.5" opacity="0.2"/></svg>' },
-      { title: 'Does a Machine Imagine?', titleKo: '기계는 상상하는가?', tagline: 'Creating the unseen', taglineKo: '보이지 않는 것을 창조하다', difficulty: 2, en: 'imagine.html', ko: 'imagine_ko.html',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="14" cy="28" r="10" stroke="#FF79C6" stroke-width="1.2" fill="#FF79C608"/><text x="14" y="31" text-anchor="middle" fill="#FF79C6" font-size="9" font-family="serif" opacity="0.5" font-style="italic">G</text><circle cx="42" cy="28" r="10" stroke="#FF79C6" stroke-width="1.2" fill="#FF79C608"/><text x="42" y="31" text-anchor="middle" fill="#FF79C6" font-size="9" font-family="serif" opacity="0.5" font-style="italic">D</text><path d="M25 24 L31 24" stroke="#FF79C6" stroke-width="1" opacity="0.5"/><path d="M31 32 L25 32" stroke="#FF79C6" stroke-width="1" opacity="0.5"/></svg>' },
-      { title: 'Does a Machine Judge?', titleKo: '기계는 판단하는가?', tagline: 'Fairness has no formula', taglineKo: '공정성에는 공식이 없다', difficulty: 1, en: 'judge.html', ko: 'judge_ko.html',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M24 44 L28 38 L32 44" stroke="#FF79C6" stroke-width="1" fill="none" opacity="0.4"/><line x1="10" y1="30" x2="46" y2="26" stroke="#FF79C6" stroke-width="1.3" opacity="0.6"/><circle cx="28" cy="28" r="2" fill="#FF79C6" opacity="0.4"/><line x1="8" y1="14" x2="48" y2="14" stroke="#FF79C6" stroke-width="0.7" opacity="0.2" stroke-dasharray="2 2"/></svg>' },
-      { title: 'Does a Machine Suffer?', titleKo: '기계는 고통받는가?', tagline: 'Beyond computation', taglineKo: '계산 너머', difficulty: 1, en: 'suffer.html', ko: 'suffer_ko.html',
-        icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M28 8 C28 8 16 26 16 34 C16 40.6 21.4 46 28 46 C34.6 46 40 40.6 40 34 C40 26 28 8 28 8 Z" stroke="#FF79C6" stroke-width="1.4" fill="#FF79C615"/><path d="M24 32 C24 28 28 18 28 18 C28 18 22 30 22 34 C22 37 24.5 39.5 28 39.5" stroke="#FF79C6" stroke-width="0.6" fill="none" opacity="0.2"/></svg>' },
-    ]
-  }
-};
+  <a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
 
-// ─── Language Toggle ───
-function setLang(lang) {
-  currentLang = lang;
-  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-  document.getElementById('btn-ko').classList.toggle('active', lang === 'ko');
+  <script>
+    // ─── Language State ───
+    let currentLang = 'en';
+    let currentCatId = null;
 
-  // Update home cards
-  document.querySelectorAll('.category-card').forEach(card => {
-    const catId = card.dataset.cat;
-    const cat = CATEGORIES[catId];
-    card.querySelector('.cat-desc').textContent = lang === 'ko' ? cat.descKo : cat.desc;
-    const count = cat.chapters.length;
-    card.querySelector('.cat-count').textContent = lang === 'ko' ? `${count}개 챕터` : `${count} chapters`;
-  });
+    // ─── Data ───
+    const CATEGORIES = {
+      space: {
+        label: 'Space', labelKo: '공간', color: '#6C9BFF',
+        desc: 'Geometry, topology, and the structure of space itself',
+        descKo: '기하학, 위상수학, 그리고 공간 그 자체의 구조',
+        icon: document.querySelector('[data-cat="space"] .cat-icon').outerHTML,
+        chapters: [
+          {
+            title: 'Hyperbolic Space', titleKo: '쌍곡 공간', tagline: 'Where parallels multiply', taglineKo: '평행선이 무한히 존재하는 세계', difficulty: 3, en: 'hyperbolic.html', ko: 'hyperbolic_ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="22" stroke="#6C9BFF" stroke-width="1.4" fill="#6C9BFF05"/><path d="M28 10 Q24 27 14 39" stroke="#6C9BFF" stroke-width="1.1" fill="none" opacity="0.75"/><path d="M14 39 Q28 32 42 39" stroke="#6C9BFF" stroke-width="1.1" fill="none" opacity="0.75"/><path d="M42 39 Q32 27 28 10" stroke="#6C9BFF" stroke-width="1.1" fill="none" opacity="0.75"/><path d="M28 10 Q24 27 14 39 Q28 32 42 39 Q32 27 28 10 Z" fill="#6C9BFF10"/></svg>'
+          },
+          {
+            title: 'Making the Sun from a Single Bean', titleKo: '콩 한 알로 태양 만들기', tagline: 'Infinity reshapes the possible', taglineKo: '무한이 가능성을 재편하다', difficulty: 3, en: 'banach-tarski.html', ko: 'banach-tarski-ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><ellipse cx="10" cy="30" rx="4" ry="5.5" stroke="#6C9BFF" stroke-width="1" fill="#6C9BFF15" transform="rotate(-20 10 30)"/><path d="M17 30 L27 30" stroke="#6C9BFF" stroke-width="0.8" opacity="0.3" stroke-dasharray="1.5 1.5"/><circle cx="40" cy="28" r="12" stroke="#6C9BFF" stroke-width="1.3" fill="#6C9BFF10"/><text x="40" y="31" text-anchor="middle" fill="#6C9BFF" font-size="8" font-family="serif" opacity="0.3">∞</text></svg>'
+          },
+          {
+            title: 'Shapes Have Memories', titleKo: '도형에는 기억이 있다', tagline: 'Counting invisible holes', taglineKo: '보이지 않는 구멍을 세다', difficulty: 3, en: 'homology.html', ko: 'homology_kr.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><ellipse cx="28" cy="28" rx="23" ry="14" stroke="#6C9BFF" stroke-width="1.2" fill="#6C9BFF05"/><ellipse cx="28" cy="28" rx="9" ry="5" stroke="#6C9BFF" stroke-width="1" opacity="0.4"/><ellipse cx="40" cy="28" rx="5" ry="11" stroke="#6C9BFF" stroke-width="1.8" opacity="0.7"/><ellipse cx="28" cy="30" rx="16" ry="8" stroke="#6C9BFF" stroke-width="1.4" opacity="0.45" stroke-dasharray="3 2"/></svg>'
+          },
+          {
+            title: 'Through the Symplectic Looking-Glass', titleKo: '심플렉틱 거울 너머로', tagline: 'Dualities connecting worlds', taglineKo: '세계를 잇는 이중성', difficulty: 3, en: 'mirror.html', ko: 'mirror-ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><ellipse cx="20" cy="28" rx="12" ry="16" stroke="#6C9BFF" stroke-width="0.9" fill="none" opacity="0.6" transform="rotate(-15 20 28)"/><ellipse cx="20" cy="28" rx="8" ry="11" stroke="#6C9BFF" stroke-width="0.7" fill="none" opacity="0.45" transform="rotate(-15 20 28)"/><circle cx="20" cy="28" r="1.5" fill="#6C9BFF" opacity="0.5"/><line x1="28" y1="4" x2="28" y2="52" stroke="#6C9BFF" stroke-width="0.8" opacity="0.25" stroke-dasharray="2 2"/><ellipse cx="36" cy="28" rx="12" ry="16" stroke="#6C9BFF" stroke-width="0.9" fill="none" opacity="0.3" transform="rotate(15 36 28)"/><circle cx="36" cy="28" r="1.5" fill="#6C9BFF" opacity="0.2"/></svg>'
+          },
+          {
+            title: 'Is the Universe Round?', titleKo: '우주는 둥근가?', tagline: 'The shape of everything', taglineKo: '모든 것의 형태', difficulty: 3, en: 'universe.html', ko: 'universe-ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="20" stroke="#6C9BFF" stroke-width="1.2" fill="#6C9BFF05"/><ellipse cx="28" cy="28" rx="20" ry="8" stroke="#6C9BFF" stroke-width="0.8" opacity="0.4"/><ellipse cx="28" cy="28" rx="8" ry="20" stroke="#6C9BFF" stroke-width="0.8" opacity="0.4"/><circle cx="28" cy="28" r="2" fill="#6C9BFF" opacity="0.3"/></svg>'
+          },
+        ]
+      },
+      flow: {
+        label: 'Flow', labelKo: '흐름', color: '#FFB86C',
+        desc: 'Convergence, diffusion, and the currents beneath',
+        descKo: '수렴, 확산, 그리고 그 아래 흐르는 조류',
+        icon: document.querySelector('[data-cat="flow"] .cat-icon').outerHTML,
+        chapters: [
+          {
+            title: 'Central Limit Theorem', titleKo: '왜 여론조사는 항상 비슷할까?', tagline: 'The inevitable bell curve', taglineKo: '피할 수 없는 종 곡선', difficulty: 1, en: 'clt.html', ko: 'clt_ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M4 48 L7 48 L10 47.6 L13 46.4 L16 43.4 L19 37.4 L22 28.2 L25 18.4 L28 14 L31 18.4 L34 28.2 L37 37.4 L40 43.4 L43 46.4 L46 47.6 L49 48 L52 48" stroke="#FFB86C" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 48 L7 48 L10 47.6 L13 46.4 L16 43.4 L19 37.4 L22 28.2 L25 18.4 L28 14 L31 18.4 L34 28.2 L37 37.4 L40 43.4 L43 46.4 L46 47.6 L49 48 L52 48 L52 49 L4 49 Z" fill="#FFB86C12"/></svg>'
+          },
+          {
+            title: 'Can You Measure Everything?', titleKo: '모든 것의 크기를 잴 수 있을까?', tagline: 'The paradox of volume', taglineKo: '부피의 역설', difficulty: 2, en: 'volume.html', ko: 'volume-ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><rect x="8" y="10" width="40" height="5" rx="2" fill="#FFB86C" opacity="0.5"/><rect x="8" y="27" width="6" height="4" rx="1" fill="#FFB86C" opacity="0.35"/><rect x="17" y="27" width="3" height="4" rx="1" fill="#FFB86C" opacity="0.25"/><rect x="23" y="27" width="8" height="4" rx="1" fill="#FFB86C" opacity="0.35"/><rect x="34" y="27" width="2" height="4" rx="1" fill="#FFB86C" opacity="0.2"/><rect x="39" y="27" width="5" height="4" rx="1" fill="#FFB86C" opacity="0.3"/><text x="28" y="45" text-anchor="middle" fill="#FFB86C" font-size="14" font-family="serif" opacity="0.25">?</text></svg>'
+          },
+          {
+            title: 'Diffusion I', titleKo: '정보는 어떻게 퍼지는가?', tagline: 'One equation rules them all', taglineKo: '하나의 방정식이 모든 것을 지배한다', difficulty: 2, en: 'diffusion-1.html', ko: 'diffusion-1-ko.html', linkTo: '→ continues in Machine', linkToKo: '→ Machine에서 계속',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="2.5" fill="#FFB86C" opacity="0.7"/><circle cx="28" cy="28" r="7" stroke="#FFB86C" stroke-width="1.3" opacity="0.55"/><circle cx="28" cy="28" r="12" stroke="#FFB86C" stroke-width="1.1" opacity="0.4"/><circle cx="28" cy="28" r="17" stroke="#FFB86C" stroke-width="0.9" opacity="0.25"/><circle cx="28" cy="28" r="22" stroke="#FFB86C" stroke-width="0.7" opacity="0.13"/></svg>'
+          },
+          {
+            title: 'Is All Moving, Moving?', titleKo: '움직이는 것은 다 움직이는가?', tagline: 'The foundations of calculus', taglineKo: '미적분학의 토대', difficulty: 2, en: 'calculus.html', ko: 'calculus_ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M8 44 Q18 44 24 36 Q30 28 34 20 Q38 12 48 8" stroke="#FFB86C" stroke-width="1.5" fill="none" stroke-linecap="round"/><line x1="22" y1="26" x2="38" y2="26" stroke="#FFB86C" stroke-width="0.8" opacity="0.3"/><line x1="30" y1="18" x2="30" y2="34" stroke="#FFB86C" stroke-width="0.8" opacity="0.3"/><circle cx="30" cy="26" r="2" fill="#FFB86C" opacity="0.4"/></svg>'
+          },
+          {
+            title: 'Three Stars, No Answer', titleKo: '삼체, 답은 없다', tagline: 'The oldest unsolved problem in physics', taglineKo: '물리학에서 가장 오래된 미해결 문제', difficulty: 3, en: 'threebody.html', ko: 'threebody_ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="16" r="3.5" fill="#FFB86C" opacity="0.7"/><circle cx="14" cy="40" r="3" fill="#FFB86C" opacity="0.55"/><circle cx="42" cy="40" r="2.5" fill="#FFB86C" opacity="0.45"/><ellipse cx="28" cy="30" rx="18" ry="10" stroke="#FFB86C" stroke-width="0.8" fill="none" opacity="0.2" transform="rotate(-15 28 30)"/><ellipse cx="28" cy="30" rx="16" ry="12" stroke="#FFB86C" stroke-width="0.8" fill="none" opacity="0.2" transform="rotate(25 28 30)"/><path d="M14 40 Q20 28 28 16 Q36 28 42 40" stroke="#FFB86C" stroke-width="0.6" fill="none" opacity="0.15" stroke-dasharray="2 2"/></svg>'
+          },
+        ]
+      },
+      sense: {
+        label: 'Sense', labelKo: '감각', color: '#50FA7B',
+        desc: 'Sound, vibration, and the mathematics of perception',
+        descKo: '소리, 진동, 그리고 지각의 수학',
+        icon: document.querySelector('[data-cat="sense"] .cat-icon').outerHTML,
+        chapters: [
+          {
+            title: 'Shape of a Drum', titleKo: '드럼의 모양을 들을 수 있을까?', tagline: 'Hearing geometry', taglineKo: '기하학을 듣다', difficulty: 2, en: 'drum.html', ko: 'drum_ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="22" stroke="#50FA7B" stroke-width="1.4" fill="#50FA7B05"/><line x1="28" y1="6" x2="28" y2="50" stroke="#50FA7B" stroke-width="1.1" opacity="0.5"/><circle cx="28" cy="28" r="13.5" stroke="#50FA7B" stroke-width="1" fill="none" opacity="0.45"/></svg>'
+          },
+          {
+            title: 'Mathematics of Sound', titleKo: '피타고라스에서 스마트폰까지', tagline: 'From Pythagoras to your phone', taglineKo: '피타고라스에서 스마트폰까지', difficulty: 1, en: 'sound.html', ko: 'sound_ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M3 17 Q10 9 17 17 Q24 25 31 17 Q38 9 45 17 Q52 25 56 17" stroke="#50FA7B" stroke-width="1.4" fill="none" opacity="0.7" stroke-linecap="round"/><path d="M3 30 Q6.5 24 10 30 Q13.5 36 17 30 Q20.5 24 24 30 Q27.5 36 31 30 Q34.5 24 38 30 Q41.5 36 45 30 Q48.5 24 52 30 Q55 36 56 30" stroke="#50FA7B" stroke-width="1" fill="none" opacity="0.45" stroke-linecap="round"/><path d="M3 42 Q5 39 7 42 Q9 45 11 42 Q13 39 15 42 Q17 45 19 42 Q21 39 23 42 Q25 45 27 42 Q29 39 31 42 Q33 45 35 42 Q37 39 39 42 Q41 45 43 42 Q45 39 47 42 Q49 45 51 42 Q53 39 56 42" stroke="#50FA7B" stroke-width="0.7" fill="none" opacity="0.25" stroke-linecap="round"/></svg>'
+          },
+          {
+            title: 'Searching for Perfect Illusions', titleKo: '완벽한 환상을 찾아서', tagline: 'The mathematics of vision', taglineKo: '보는 것의 수학', difficulty: 2, en: 'illusion.html', ko: 'illusion.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="22" r="2" fill="#50FA7B" opacity="0.6"/><line x1="28" y1="22" x2="4" y2="50" stroke="#50FA7B" stroke-width="0.9" opacity="0.4"/><line x1="28" y1="22" x2="52" y2="50" stroke="#50FA7B" stroke-width="0.9" opacity="0.4"/><line x1="28" y1="22" x2="12" y2="50" stroke="#50FA7B" stroke-width="0.6" opacity="0.25"/><line x1="28" y1="22" x2="44" y2="50" stroke="#50FA7B" stroke-width="0.6" opacity="0.25"/><line x1="28" y1="22" x2="28" y2="50" stroke="#50FA7B" stroke-width="0.7" opacity="0.3"/><path d="M16 22 Q22 14 28 12 Q34 14 40 22" stroke="#50FA7B" stroke-width="1.2" fill="none" opacity="0.55"/><path d="M16 22 Q22 30 28 32 Q34 30 40 22" stroke="#50FA7B" stroke-width="1.2" fill="none" opacity="0.55"/><circle cx="28" cy="22" r="5.5" stroke="#50FA7B" stroke-width="0.7" fill="none" opacity="0.3"/></svg>'
+          },
+          {
+            title: 'The Sound of Mathematics', titleKo: '수학의 소리', tagline: 'Why does a violin sound like a violin?', taglineKo: '바이올린은 왜 바이올린처럼 들릴까?', difficulty: 2, en: 'ghost.html', ko: 'ghost_ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M22 10 L22 40" stroke="#50FA7B" stroke-width="1.2" opacity="0.5"/><path d="M34 10 L34 40" stroke="#50FA7B" stroke-width="1.2" opacity="0.5"/><path d="M22 10 L34 14" stroke="#50FA7B" stroke-width="1" opacity="0.4"/><path d="M22 16 L34 20" stroke="#50FA7B" stroke-width="1" opacity="0.4"/><circle cx="18" cy="40" r="4" fill="#50FA7B" opacity="0.3"/><circle cx="30" cy="44" r="4" fill="#50FA7B" opacity="0.3"/><path d="M4 28 Q10 20 16 28 Q22 36 28 28 Q34 20 40 28 Q46 36 52 28" stroke="#50FA7B" stroke-width="0.8" fill="none" opacity="0.25" stroke-linecap="round"/></svg>'
+          },
+        ]
+      },
+      machine: {
+        label: 'Machine', labelKo: '기계', color: '#FF79C6',
+        desc: 'How machines learn, dream, and understand',
+        descKo: '기계는 어떻게 배우고, 꿈꾸고, 이해하는가',
+        icon: document.querySelector('[data-cat="machine"] .cat-icon').outerHTML,
+        chapters: [
+          {
+            title: 'Diffusion II', titleKo: '기계는 꿈을 꾸는가?', tagline: 'Images from pure noise', taglineKo: '순수한 노이즈에서 이미지로', difficulty: 2, en: 'diffusion-2.html', ko: 'diffusion-2-ko.html', linkFrom: '← from Flow', linkFromKo: '← Flow에서 이어짐',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="46" cy="20" r="6.5" stroke="#FF79C6" stroke-width="1.3" fill="#FF79C612" opacity="0.8"/><path d="M40 42 L46 31 L52 42 Z" stroke="#FF79C6" stroke-width="1.1" fill="#FF79C608" opacity="0.6"/><path d="M18 28 L38 28" stroke="#FF79C6" stroke-width="0.9" opacity="0.3" stroke-dasharray="2 2"/><path d="M36 26 L39 28 L36 30" stroke="#FF79C6" stroke-width="0.8" fill="none" opacity="0.3" stroke-linecap="round"/></svg>'
+          },
+          {
+            title: 'Transformer', titleKo: '기계는 이해하는가?', tagline: 'Attention is all you need', taglineKo: '어텐션이 전부다', difficulty: 2, en: 'transformer.html', ko: 'transformer_ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><rect x="13" y="5" width="5.5" height="4" rx="1" fill="#FF79C6" opacity="0.25"/><rect x="20.5" y="5" width="5.5" height="4" rx="1" fill="#FF79C6" opacity="0.3"/><rect x="28" y="5" width="5.5" height="4" rx="1" fill="#FF79C6" opacity="0.35"/><rect x="13" y="13" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.5"/><rect x="20.5" y="13" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.08"/><rect x="28" y="13" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.06"/><rect x="13" y="20.5" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.1"/><rect x="20.5" y="20.5" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.38"/><rect x="28" y="20.5" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.11"/><rect x="13" y="28" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.03"/><rect x="20.5" y="28" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.11"/><rect x="28" y="28" width="5.5" height="5.5" rx="1" fill="#FF79C6" opacity="0.44"/></svg>'
+          },
+          {
+            title: 'Does a Machine Think?', titleKo: '기계는 생각하는가?', tagline: 'When thought reduces to multiplication', taglineKo: '사고가 곱셈으로 환원될 때', difficulty: 2, en: 'think.html', ko: 'think_ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="8" cy="14" r="3" fill="#FF79C625" stroke="#FF79C6" stroke-width="0.7"/><circle cx="8" cy="28" r="3" fill="#FF79C625" stroke="#FF79C6" stroke-width="0.7"/><circle cx="8" cy="42" r="3" fill="#FF79C625" stroke="#FF79C6" stroke-width="0.7"/><line x1="11" y1="14" x2="25" y2="28" stroke="#FF79C6" stroke-width="0.5" opacity="0.3"/><line x1="11" y1="28" x2="25" y2="28" stroke="#FF79C6" stroke-width="1" opacity="0.5"/><line x1="11" y1="42" x2="25" y2="28" stroke="#FF79C6" stroke-width="1" opacity="0.5"/><circle cx="28" cy="28" r="6" stroke="#FF79C6" stroke-width="1.3" fill="#FF79C612"/><text x="28" y="31" text-anchor="middle" fill="#FF79C6" font-size="7" font-family="serif" opacity="0.5">σ</text><line x1="34" y1="28" x2="44" y2="28" stroke="#FF79C6" stroke-width="1" opacity="0.5"/><circle cx="48" cy="28" r="3" fill="#FF79C645" stroke="#FF79C6" stroke-width="0.9"/></svg>'
+          },
+          {
+            title: 'Does a Machine See?', titleKo: '기계는 보는가?', tagline: 'Learning to detect the world', taglineKo: '세상을 감지하는 법을 배우다', difficulty: 2, en: 'see.html', ko: 'see_ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><rect x="6" y="6" width="6" height="6" rx="1" fill="#FF79C6" opacity="0.5"/><rect x="13" y="6" width="6" height="6" rx="1" fill="#FF79C6" opacity="0.25"/><rect x="6" y="13" width="6" height="6" rx="1" fill="#FF79C6" opacity="0.25"/><rect x="13" y="13" width="6" height="6" rx="1" fill="#FF79C6" opacity="0.5"/><rect x="20" y="6" width="6" height="6" rx="1" fill="#FF79C6" opacity="0.08"/><rect x="20" y="13" width="6" height="6" rx="1" fill="#FF79C6" opacity="0.25"/><rect x="12.5" y="12.5" width="21" height="21" rx="2" stroke="#FF79C6" stroke-width="1.5" fill="none" opacity="0.7"/></svg>'
+          },
+          {
+            title: 'Does a Machine Speak?', titleKo: '기계는 말하는가?', tagline: 'Breaking and making voice', taglineKo: '목소리를 분해하고 만들다', difficulty: 2, en: 'speak.html', ko: 'speak_ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M4 16 Q7 10 10 16 Q13 22 16 16 Q18 12 20 16 Q23 22 26 14 Q28 10 30 16 Q33 22 36 16 Q38 12 40 16 Q43 20 46 16 Q48 13 50 16" stroke="#FF79C6" stroke-width="1.2" fill="none" opacity="0.6" stroke-linecap="round"/><rect x="14" y="34" width="3" height="12" rx="1" fill="#FF79C6" opacity="0.45"/><rect x="18" y="38" width="3" height="8" rx="1" fill="#FF79C6" opacity="0.3"/><rect x="22" y="32" width="3" height="14" rx="1" fill="#FF79C6" opacity="0.5"/><rect x="26" y="36" width="3" height="10" rx="1" fill="#FF79C6" opacity="0.35"/><rect x="30" y="34" width="3" height="12" rx="1" fill="#FF79C6" opacity="0.4"/><rect x="34" y="40" width="3" height="6" rx="1" fill="#FF79C6" opacity="0.2"/></svg>'
+          },
+          {
+            title: 'Does a Machine Remember?', titleKo: '기계는 기억하는가?', tagline: 'Echoes in silicon', taglineKo: '실리콘 속의 메아리', difficulty: 2, en: 'remember.html', ko: 'remember_ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="12" r="4" fill="#FF79C630" stroke="#FF79C6" stroke-width="0.8"/><circle cx="14" cy="24" r="4" fill="#FF79C630" stroke="#FF79C6" stroke-width="0.8"/><circle cx="42" cy="24" r="4" fill="#FF79C630" stroke="#FF79C6" stroke-width="0.8"/><circle cx="14" cy="40" r="4" fill="#FF79C630" stroke="#FF79C6" stroke-width="0.8"/><circle cx="42" cy="40" r="4" fill="#FF79C630" stroke="#FF79C6" stroke-width="0.8"/><circle cx="28" cy="48" r="4" fill="#FF79C630" stroke="#FF79C6" stroke-width="0.8"/><line x1="28" y1="16" x2="14" y2="20" stroke="#FF79C6" stroke-width="0.5" opacity="0.2"/><line x1="28" y1="16" x2="42" y2="20" stroke="#FF79C6" stroke-width="0.5" opacity="0.2"/><line x1="14" y1="28" x2="14" y2="36" stroke="#FF79C6" stroke-width="0.5" opacity="0.2"/><line x1="42" y1="28" x2="42" y2="36" stroke="#FF79C6" stroke-width="0.5" opacity="0.2"/><line x1="14" y1="44" x2="28" y2="44" stroke="#FF79C6" stroke-width="0.5" opacity="0.2"/><line x1="42" y1="44" x2="28" y2="44" stroke="#FF79C6" stroke-width="0.5" opacity="0.2"/></svg>'
+          },
+          {
+            title: 'Does a Machine Imagine?', titleKo: '기계는 상상하는가?', tagline: 'Creating the unseen', taglineKo: '보이지 않는 것을 창조하다', difficulty: 2, en: 'imagine.html', ko: 'imagine_ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="14" cy="28" r="10" stroke="#FF79C6" stroke-width="1.2" fill="#FF79C608"/><text x="14" y="31" text-anchor="middle" fill="#FF79C6" font-size="9" font-family="serif" opacity="0.5" font-style="italic">G</text><circle cx="42" cy="28" r="10" stroke="#FF79C6" stroke-width="1.2" fill="#FF79C608"/><text x="42" y="31" text-anchor="middle" fill="#FF79C6" font-size="9" font-family="serif" opacity="0.5" font-style="italic">D</text><path d="M25 24 L31 24" stroke="#FF79C6" stroke-width="1" opacity="0.5"/><path d="M31 32 L25 32" stroke="#FF79C6" stroke-width="1" opacity="0.5"/></svg>'
+          },
+          {
+            title: 'Does a Machine Judge?', titleKo: '기계는 판단하는가?', tagline: 'Fairness has no formula', taglineKo: '공정성에는 공식이 없다', difficulty: 1, en: 'judge.html', ko: 'judge_ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M24 44 L28 38 L32 44" stroke="#FF79C6" stroke-width="1" fill="none" opacity="0.4"/><line x1="10" y1="30" x2="46" y2="26" stroke="#FF79C6" stroke-width="1.3" opacity="0.6"/><circle cx="28" cy="28" r="2" fill="#FF79C6" opacity="0.4"/><line x1="8" y1="14" x2="48" y2="14" stroke="#FF79C6" stroke-width="0.7" opacity="0.2" stroke-dasharray="2 2"/></svg>'
+          },
+          {
+            title: 'Does a Machine Suffer?', titleKo: '기계는 고통받는가?', tagline: 'Beyond computation', taglineKo: '계산 너머', difficulty: 1, en: 'suffer.html', ko: 'suffer_ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M28 8 C28 8 16 26 16 34 C16 40.6 21.4 46 28 46 C34.6 46 40 40.6 40 34 C40 26 28 8 28 8 Z" stroke="#FF79C6" stroke-width="1.4" fill="#FF79C615"/><path d="M24 32 C24 28 28 18 28 18 C28 18 22 30 22 34 C22 37 24.5 39.5 28 39.5" stroke="#FF79C6" stroke-width="0.6" fill="none" opacity="0.2"/></svg>'
+          },
+        ]
+      }
+    };
 
-  // Update category view if open
-  if (currentCatId) showCategory(currentCatId, true);
-}
+    // ─── Language Toggle ───
+    function setLang(lang) {
+      currentLang = lang;
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.getElementById('btn-ko').classList.toggle('active', lang === 'ko');
 
-function showCategory(catId, skipPush) {
-  currentCatId = catId;
-  const cat = CATEGORIES[catId];
-  const homeView = document.getElementById('home-view');
-  const catView = document.getElementById('category-view');
-  const isKo = currentLang === 'ko';
+      // Update home cards
+      document.querySelectorAll('.category-card').forEach(card => {
+        const catId = card.dataset.cat;
+        const cat = CATEGORIES[catId];
+        card.querySelector('.cat-desc').textContent = lang === 'ko' ? cat.descKo : cat.desc;
+        const count = cat.chapters.length;
+        card.querySelector('.cat-count').textContent = lang === 'ko' ? `${count}개 챕터` : `${count} chapters`;
+      });
 
-  // Update hero
-  document.getElementById('cat-hero-icon').innerHTML = cat.icon.replace(/width="56"/, 'width="60"').replace(/height="56"/, 'height="60"');
-  const heroIcon = document.querySelector('#cat-hero-icon .cat-icon');
-  if (heroIcon) { heroIcon.style.width = '60px'; heroIcon.style.height = '60px'; }
-  document.getElementById('cat-hero-title').textContent = isKo ? cat.labelKo : cat.label;
-  document.getElementById('cat-hero-title').style.color = cat.color;
-  document.getElementById('cat-hero-desc').textContent = isKo ? cat.descKo : cat.desc;
+      // Update suggest card
+      const suggestText = document.querySelector('.suggest-text');
+      const suggestTextKo = document.querySelector('.suggest-text-ko');
+      if (suggestText && suggestTextKo) {
+        suggestText.style.display = lang === 'ko' ? 'none' : 'block';
+        suggestTextKo.style.display = lang === 'ko' ? 'block' : 'none';
+      }
 
-  // Update back button
-  document.querySelector('.cat-back').innerHTML = `
+      // Update category view if open
+      if (currentCatId) showCategory(currentCatId, true);
+    }
+
+    function showCategory(catId, skipPush) {
+      currentCatId = catId;
+      const cat = CATEGORIES[catId];
+      const homeView = document.getElementById('home-view');
+      const catView = document.getElementById('category-view');
+      const isKo = currentLang === 'ko';
+
+      // Update hero
+      document.getElementById('cat-hero-icon').innerHTML = cat.icon.replace(/width="56"/, 'width="60"').replace(/height="56"/, 'height="60"');
+      const heroIcon = document.querySelector('#cat-hero-icon .cat-icon');
+      if (heroIcon) { heroIcon.style.width = '60px'; heroIcon.style.height = '60px'; }
+      document.getElementById('cat-hero-title').textContent = isKo ? cat.labelKo : cat.label;
+      document.getElementById('cat-hero-title').style.color = cat.color;
+      document.getElementById('cat-hero-desc').textContent = isKo ? cat.descKo : cat.desc;
+
+      // Update back button
+      document.querySelector('.cat-back').innerHTML = `
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
     ${isKo ? '전체 카테고리' : 'All Categories'}
   `;
 
-  // Build chapter list
-  const listEl = document.getElementById('chapter-list');
-  listEl.innerHTML = cat.chapters.map((ch, i) => {
-    const title = isKo ? ch.titleKo : ch.title;
-    const tagline = isKo ? ch.taglineKo : ch.tagline;
-    const link = isKo ? ch.ko : ch.en;
-    const linkRef = ch.linkTo ? (isKo ? ch.linkToKo || ch.linkTo : ch.linkTo) : '';
-    const linkRefFrom = ch.linkFrom ? (isKo ? ch.linkFromKo || ch.linkFrom : ch.linkFrom) : '';
-    return `
+      // Build chapter list
+      const listEl = document.getElementById('chapter-list');
+      listEl.innerHTML = cat.chapters.map((ch, i) => {
+        const title = isKo ? ch.titleKo : ch.title;
+        const tagline = isKo ? ch.taglineKo : ch.tagline;
+        const link = isKo ? ch.ko : ch.en;
+        const linkRef = ch.linkTo ? (isKo ? ch.linkToKo || ch.linkTo : ch.linkTo) : '';
+        const linkRefFrom = ch.linkFrom ? (isKo ? ch.linkFromKo || ch.linkFrom : ch.linkFrom) : '';
+        return `
     <a href="${link}" class="chapter-card" style="animation: slideIn 0.4s ${i * 0.06}s ease both;">
       <div class="ch-accent" style="background:${cat.color}"></div>
       ${ch.icon ? `<div class="ch-icon-wrap">${ch.icon}</div>` : ''}
@@ -713,7 +1037,7 @@ function showCategory(catId, skipPush) {
         <div class="ch-top">
           <span class="ch-title">${title}</span>
           <div class="ch-dots">
-            ${[1,2,3].map(d => `<div class="ch-dot" style="background:${d <= ch.difficulty ? cat.color : cat.color + '25'}"></div>`).join('')}
+            ${[1, 2, 3].map(d => `<div class="ch-dot" style="background:${d <= ch.difficulty ? cat.color : cat.color + '25'}"></div>`).join('')}
           </div>
         </div>
         <div class="ch-tagline" style="color:${cat.color}">${tagline}</div>
@@ -724,40 +1048,54 @@ function showCategory(catId, skipPush) {
     </a>
   `}).join('');
 
-  // Transition
-  homeView.style.display = 'none';
-  catView.style.display = 'flex';
-  if (!skipPush) {
-    window.scrollTo(0, 0);
-    history.pushState({ cat: catId }, '', '#' + catId);
-  }
-}
+      // Transition
+      homeView.style.display = 'none';
+      catView.style.display = 'flex';
+      if (!skipPush) {
+        window.scrollTo(0, 0);
+        history.pushState({ cat: catId }, '', '#' + catId);
+      }
+    }
 
-function showHome() {
-  currentCatId = null;
-  document.getElementById('category-view').style.display = 'none';
-  document.getElementById('home-view').style.display = 'flex';
-  window.scrollTo(0, 0);
-  history.pushState({}, '', window.location.pathname);
-}
+    function showHome() {
+      currentCatId = null;
+      document.getElementById('category-view').style.display = 'none';
+      document.getElementById('home-view').style.display = 'flex';
+      window.scrollTo(0, 0);
+      history.pushState({}, '', window.location.pathname);
+    }
 
-// Handle back button
-window.addEventListener('popstate', (e) => {
-  if (e.state && e.state.cat) {
-    showCategory(e.state.cat);
-  } else {
-    showHome();
-  }
-});
+    // Handle back button
+    window.addEventListener('popstate', (e) => {
+      if (e.state && e.state.cat) {
+        showCategory(e.state.cat);
+      } else {
+        showHome();
+      }
+    });
 
-// Handle direct hash navigation
-if (window.location.hash) {
-  const catId = window.location.hash.slice(1);
-  if (CATEGORIES[catId]) {
-    showCategory(catId);
-  }
-}
-</script>
+    // Handle direct hash navigation
+    if (window.location.hash) {
+      const catId = window.location.hash.slice(1);
+      if (CATEGORIES[catId]) {
+        showCategory(catId);
+      }
+    }
+
+    function suggestRandom() {
+      const allChapters = [];
+      Object.values(CATEGORIES).forEach(cat => {
+        cat.chapters.forEach(ch => {
+          allChapters.push(ch);
+        });
+      });
+      if (allChapters.length === 0) return;
+      const randomCh = allChapters[Math.floor(Math.random() * allChapters.length)];
+      const link = currentLang === 'ko' ? randomCh.ko : randomCh.en;
+      window.location.href = link;
+    }
+  </script>
 
 </body>
+
 </html>

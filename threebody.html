@@ -371,8 +371,88 @@ const revealObs = new IntersectionObserver((entries)=>{
 },{threshold:0.1});
 document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
 
+/* ── Reusable zoom/pan for any canvas ── */
+/* Returns {zoom, panX, panY, reset} — call reset() to restore defaults */
+function makeZoomPan(canvas){
+  const state={zoom:1, panX:0, panY:0, dragging:false, moved:false, lastX:0, lastY:0, pinchDist:0};
+  state.reset=()=>{state.zoom=1;state.panX=0;state.panY=0;};
+
+  // Mouse wheel zoom
+  canvas.addEventListener('wheel',e=>{
+    e.preventDefault();
+    const rect=canvas.getBoundingClientRect();
+    const mx=(e.clientX-rect.left)/rect.width, my=(e.clientY-rect.top)/rect.height;
+    const old=state.zoom;
+    if(e.deltaY<0) state.zoom=Math.min(state.zoom*1.15,10);
+    else state.zoom=Math.max(state.zoom/1.15,0.15);
+    const factor=state.zoom/old;
+    state.panX+=(mx-0.5)*(1-1/factor)*2/state.zoom;
+    state.panY+=(my-0.5)*(1-1/factor)*2/state.zoom;
+  },{passive:false});
+
+  // Mouse drag
+  canvas.addEventListener('mousedown',e=>{
+    if(e.button!==0)return;
+    state.dragging=true;state.moved=false;state.lastX=e.clientX;state.lastY=e.clientY;
+    canvas.style.cursor='grabbing';
+  });
+  window.addEventListener('mousemove',e=>{
+    if(!state.dragging)return;
+    const dx=e.clientX-state.lastX, dy=e.clientY-state.lastY;
+    if(Math.abs(dx)+Math.abs(dy)>3) state.moved=true;
+    const rect=canvas.getBoundingClientRect();
+    const scale=Math.min(rect.width,rect.height)*state.zoom;
+    state.panX-=dx/scale;
+    state.panY-=dy/scale;
+    state.lastX=e.clientX;state.lastY=e.clientY;
+  });
+  window.addEventListener('mouseup',()=>{
+    if(state.dragging){state.dragging=false;canvas.style.cursor='grab';}
+  });
+
+  // Touch drag + pinch zoom
+  canvas.addEventListener('touchstart',e=>{
+    if(e.touches.length===1){
+      state.dragging=true;state.moved=false;state.lastX=e.touches[0].clientX;state.lastY=e.touches[0].clientY;
+    } else if(e.touches.length===2){
+      state.dragging=false;
+      const dx=e.touches[0].clientX-e.touches[1].clientX;
+      const dy=e.touches[0].clientY-e.touches[1].clientY;
+      state.pinchDist=Math.sqrt(dx*dx+dy*dy);
+    }
+  },{passive:true});
+  canvas.addEventListener('touchmove',e=>{
+    e.preventDefault();
+    if(e.touches.length===1&&state.dragging){
+      const dx=e.touches[0].clientX-state.lastX, dy=e.touches[0].clientY-state.lastY;
+      if(Math.abs(dx)+Math.abs(dy)>3) state.moved=true;
+      const rect=canvas.getBoundingClientRect();
+      const scale=Math.min(rect.width,rect.height)*state.zoom;
+      state.panX-=dx/scale;
+      state.panY-=dy/scale;
+      state.lastX=e.touches[0].clientX;state.lastY=e.touches[0].clientY;
+    } else if(e.touches.length===2){
+      const dx=e.touches[0].clientX-e.touches[1].clientX;
+      const dy=e.touches[0].clientY-e.touches[1].clientY;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(state.pinchDist>0) state.zoom=Math.max(0.15,Math.min(10,state.zoom*dist/state.pinchDist));
+      state.pinchDist=dist;
+    }
+  },{passive:false});
+  canvas.addEventListener('touchend',()=>{state.dragging=false;state.pinchDist=0;},{passive:true});
+
+  // Double-click/tap to reset
+  canvas.addEventListener('dblclick',e=>{e.preventDefault();state.reset();});
+
+  canvas.style.cursor='grab';
+  return state;
+}
+
 /* ════════════════════════════════════════════════════════════ */
-/*   HERO — Chaotic three-body animation                      */
+/*   HERO — Gravitational Ballet                              */
+/*   Dozens of stars interacting gravitationally — forming     */
+/*   binaries, triple encounters, ejections, spirals.          */
+/*   Trails paint a luminous cosmic tapestry.                  */
 /* ════════════════════════════════════════════════════════════ */
 (function(){
   const c=document.getElementById('heroCanvas');
@@ -382,21 +462,65 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
   function resize(){W=c.offsetWidth;H=c.offsetHeight;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);}
   resize();window.addEventListener('resize',resize);
 
-  // Three bodies — chaotic initial conditions
-  const G=1;
-  const bodies=[
-    {x:-0.5, y:0, vx:0, vy:-0.4, m:1.0, color:'rgba(201,168,76,', trail:[]},
-    {x:0.5,  y:0, vx:0, vy:0.4,  m:1.0, color:'rgba(60,184,195,', trail:[]},
-    {x:0,    y:0.6, vx:0.35, vy:0, m:0.8, color:'rgba(196,122,138,', trail:[]}
+  // Color palette
+  const palette=[
+    [201,168,76],  // gold
+    [60,184,195],  // cyan
+    [196,122,138], // rose
+    [141,184,48],  // lime
+    [180,150,200], // lavender
+    [220,180,100], // warm gold
   ];
-  const maxTrail=600;
 
+  // Spawn bodies in 3 clusters to ensure interesting encounters
+  const N=42;
+  const G=0.8;
+  const bodies=[];
+  const softening=0.003;
+
+  function spawnBodies(){
+    bodies.length=0;
+    // Three gravitational "nuclei" — heavy bodies
+    const nuclei=[
+      {x:-0.6, y:-0.1, vx:0.05, vy:0.15},
+      {x:0.5,  y:0.2,  vx:-0.08, vy:-0.1},
+      {x:0.1,  y:-0.5, vx:0.02, vy:0.05}
+    ];
+    for(let k=0;k<3;k++){
+      const n=nuclei[k];
+      // Heavy central body
+      bodies.push({
+        x:n.x, y:n.y, vx:n.vx, vy:n.vy,
+        m:0.8+Math.random()*0.4,
+        col:palette[k], trail:[], maxTrail:500+Math.random()*300
+      });
+      // Lighter companions orbiting each nucleus
+      const nComp=11+Math.floor(Math.random()*4);
+      for(let i=0;i<nComp;i++){
+        const angle=Math.random()*Math.PI*2;
+        const dist=0.08+Math.random()*0.2;
+        const orbV=Math.sqrt(G*0.8/dist)*0.6;
+        const ci=Math.floor(Math.random()*palette.length);
+        bodies.push({
+          x:n.x+Math.cos(angle)*dist,
+          y:n.y+Math.sin(angle)*dist,
+          vx:n.vx-Math.sin(angle)*orbV+( Math.random()-0.5)*0.03,
+          vy:n.vy+Math.cos(angle)*orbV+(Math.random()-0.5)*0.03,
+          m:0.05+Math.random()*0.15,
+          col:palette[ci], trail:[], maxTrail:300+Math.random()*400
+        });
+      }
+    }
+  }
+  spawnBodies();
+
+  // Acceleration with softening
   function accel(i){
     let ax=0,ay=0;
-    for(let j=0;j<3;j++){
+    for(let j=0;j<bodies.length;j++){
       if(i===j)continue;
       const dx=bodies[j].x-bodies[i].x, dy=bodies[j].y-bodies[i].y;
-      const r2=dx*dx+dy*dy+0.001; // softening
+      const r2=dx*dx+dy*dy+softening;
       const r=Math.sqrt(r2);
       const f=G*bodies[j].m/(r2*r);
       ax+=f*dx; ay+=f*dy;
@@ -404,56 +528,144 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
     return{ax,ay};
   }
 
-  // Velocity Verlet
+  // Leapfrog integrator (symplectic, fast)
+  let firstStep=true;
   function step(dt){
-    const acc=bodies.map((_,i)=>accel(i));
-    for(let i=0;i<3;i++){
-      bodies[i].x+=bodies[i].vx*dt+0.5*acc[i].ax*dt*dt;
-      bodies[i].y+=bodies[i].vy*dt+0.5*acc[i].ay*dt*dt;
+    if(firstStep){
+      // Initialize half-step velocities
+      for(let i=0;i<bodies.length;i++){
+        const a=accel(i);
+        bodies[i].vx+=a.ax*dt*0.5;
+        bodies[i].vy+=a.ay*dt*0.5;
+      }
+      firstStep=false;
     }
-    const accNew=bodies.map((_,i)=>accel(i));
-    for(let i=0;i<3;i++){
-      bodies[i].vx+=0.5*(acc[i].ax+accNew[i].ax)*dt;
-      bodies[i].vy+=0.5*(acc[i].ay+accNew[i].ay)*dt;
+    // Kick-drift-kick
+    for(let i=0;i<bodies.length;i++){
+      bodies[i].x+=bodies[i].vx*dt;
+      bodies[i].y+=bodies[i].vy*dt;
+    }
+    for(let i=0;i<bodies.length;i++){
+      const a=accel(i);
+      bodies[i].vx+=a.ax*dt;
+      bodies[i].vy+=a.ay*dt;
+    }
+  }
+
+  // Respawn if body flies too far
+  function checkBounds(){
+    for(const b of bodies){
+      if(Math.abs(b.x)>4||Math.abs(b.y)>4){
+        // Respawn near a random other body
+        const target=bodies[Math.floor(Math.random()*bodies.length)];
+        const angle=Math.random()*Math.PI*2;
+        b.x=target.x+Math.cos(angle)*0.15;
+        b.y=target.y+Math.sin(angle)*0.15;
+        b.vx=target.vx+(Math.random()-0.5)*0.1;
+        b.vy=target.vy+(Math.random()-0.5)*0.1;
+        b.trail=[];
+      }
     }
   }
 
   function toScreen(x,y){
-    const scale=Math.min(W,H)*0.28;
+    const scale=Math.min(W,H)*0.45;
     return{sx:W/2+x*scale, sy:H/2+y*scale};
   }
 
+  let frameCount=0;
   function draw(){
-    ctx.fillStyle='rgba(5,6,15,0.08)';
+    // Fade: slow fade for rich trail accumulation
+    ctx.fillStyle='rgba(5,6,15,0.04)';
     ctx.fillRect(0,0,W,H);
 
-    const substeps=8;
-    const dt=0.004;
+    // Integration — multiple substeps for stability
+    const substeps=6;
+    const dt=0.003;
     for(let s=0;s<substeps;s++) step(dt);
+    frameCount++;
+    if(frameCount%60===0) checkBounds();
 
+    // Draw all bodies
     for(const b of bodies){
       b.trail.push({x:b.x,y:b.y});
-      if(b.trail.length>maxTrail) b.trail.shift();
+      if(b.trail.length>b.maxTrail) b.trail.shift();
 
-      // Trail
-      for(let i=1;i<b.trail.length;i++){
-        const alpha=(i/b.trail.length)*0.4;
-        const s0=toScreen(b.trail[i-1].x,b.trail[i-1].y);
-        const s1=toScreen(b.trail[i].x,b.trail[i].y);
-        ctx.beginPath();ctx.moveTo(s0.sx,s0.sy);ctx.lineTo(s1.sx,s1.sy);
-        ctx.strokeStyle=b.color+alpha+')';
-        ctx.lineWidth=1.2;ctx.stroke();
+      const [cr,cg,cb]=b.col;
+
+      // Trail — draw as a single path for performance
+      if(b.trail.length>2){
+        ctx.beginPath();
+        const s0=toScreen(b.trail[0].x,b.trail[0].y);
+        ctx.moveTo(s0.sx,s0.sy);
+        // Sample every few points for performance
+        const skip=Math.max(1,Math.floor(b.trail.length/150));
+        for(let i=skip;i<b.trail.length;i+=skip){
+          const s=toScreen(b.trail[i].x,b.trail[i].y);
+          ctx.lineTo(s.sx,s.sy);
+        }
+        const lastS=toScreen(b.trail[b.trail.length-1].x,b.trail[b.trail.length-1].y);
+        ctx.lineTo(lastS.sx,lastS.sy);
+        const trailAlpha=0.12+b.m*0.15;
+        ctx.strokeStyle=`rgba(${cr},${cg},${cb},${trailAlpha})`;
+        ctx.lineWidth=0.6+b.m*0.5;
+        ctx.stroke();
+      }
+
+      // Recent trail — bright
+      const recent=Math.min(30,b.trail.length);
+      if(recent>2){
+        ctx.beginPath();
+        for(let i=b.trail.length-recent;i<b.trail.length;i++){
+          const s=toScreen(b.trail[i].x,b.trail[i].y);
+          if(i===b.trail.length-recent) ctx.moveTo(s.sx,s.sy);
+          else ctx.lineTo(s.sx,s.sy);
+        }
+        ctx.strokeStyle=`rgba(${cr},${cg},${cb},${0.3+b.m*0.3})`;
+        ctx.lineWidth=0.8+b.m*1.0;
+        ctx.stroke();
       }
 
       // Body
       const s=toScreen(b.x,b.y);
-      ctx.beginPath();ctx.arc(s.sx,s.sy,3.5,0,Math.PI*2);
-      ctx.fillStyle=b.color+'0.9)';ctx.fill();
-      // Glow
-      const g=ctx.createRadialGradient(s.sx,s.sy,0,s.sx,s.sy,14);
-      g.addColorStop(0,b.color+'0.2)');g.addColorStop(1,b.color+'0)');
-      ctx.beginPath();ctx.arc(s.sx,s.sy,14,0,Math.PI*2);
+      const radius=1.5+b.m*3;
+
+      // Outer glow (large, faint)
+      const glowR=radius*5;
+      const g=ctx.createRadialGradient(s.sx,s.sy,0,s.sx,s.sy,glowR);
+      g.addColorStop(0,`rgba(${cr},${cg},${cb},${0.08+b.m*0.08})`);
+      g.addColorStop(0.4,`rgba(${cr},${cg},${cb},${0.03})`);
+      g.addColorStop(1,`rgba(${cr},${cg},${cb},0)`);
+      ctx.beginPath();ctx.arc(s.sx,s.sy,glowR,0,Math.PI*2);
       ctx.fillStyle=g;ctx.fill();
+
+      // Core
+      ctx.beginPath();ctx.arc(s.sx,s.sy,radius,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${cr},${cg},${cb},0.9)`;
+      ctx.fill();
+
+      // Hot center (white-ish)
+      if(b.m>0.3){
+        ctx.beginPath();ctx.arc(s.sx,s.sy,radius*0.4,0,Math.PI*2);
+        ctx.fillStyle=`rgba(255,255,255,${0.15+b.m*0.2})`;
+        ctx.fill();
+      }
+    }
+
+    // Gravitational lensing hint: faint connecting lines between close pairs
+    for(let i=0;i<bodies.length;i++){
+      for(let j=i+1;j<bodies.length;j++){
+        const dx=bodies[j].x-bodies[i].x, dy=bodies[j].y-bodies[i].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<0.15 && d>0.02){
+          const s0=toScreen(bodies[i].x,bodies[i].y);
+          const s1=toScreen(bodies[j].x,bodies[j].y);
+          const alpha=0.04*(1-d/0.15)*(bodies[i].m+bodies[j].m);
+          ctx.beginPath();ctx.moveTo(s0.sx,s0.sy);ctx.lineTo(s1.sx,s1.sy);
+          ctx.strokeStyle=`rgba(255,255,255,${Math.min(0.06,alpha)})`;
+          ctx.lineWidth=0.5;ctx.stroke();
+        }
+      }
     }
 
     requestAnimationFrame(draw);
@@ -547,9 +759,11 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
     simTime+=dt;
   }
 
+  const zp1=makeZoomPan(c);
+
   function toScreen(x,y){
-    const scale=Math.min(W,H)*0.15;
-    return{sx:W/2+x*scale, sy:H/2+y*scale};
+    const scale=Math.min(W,H)*0.15*zp1.zoom;
+    return{sx:W/2+(x-zp1.panX)*scale, sy:H/2+(y-zp1.panY)*scale};
   }
 
   function drawBody(b,radius,color,colorBase){
@@ -580,12 +794,10 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
 
     // Subtle grid
     ctx.strokeStyle='rgba(201,168,76,0.03)';ctx.lineWidth=0.5;
-    const sc=Math.min(W,H)*0.15;
-    for(let i=-10;i<=10;i++){
-      const sx=W/2+i*sc*0.5;
-      ctx.beginPath();ctx.moveTo(sx,0);ctx.lineTo(sx,H);ctx.stroke();
-      const sy=H/2+i*sc*0.5;
-      ctx.beginPath();ctx.moveTo(0,sy);ctx.lineTo(W,sy);ctx.stroke();
+    const gridR=Math.ceil(12/zp1.zoom);
+    for(let i=-gridR;i<=gridR;i++){
+      const gs=toScreen(i*0.5,0);if(gs.sx>-10&&gs.sx<W+10){ctx.beginPath();ctx.moveTo(gs.sx,0);ctx.lineTo(gs.sx,H);ctx.stroke();}
+      const gs2=toScreen(0,i*0.5);if(gs2.sy>-10&&gs2.sy<H+10){ctx.beginPath();ctx.moveTo(0,gs2.sy);ctx.lineTo(W,gs2.sy);ctx.stroke();}
     }
 
     // Center of mass marker
@@ -766,20 +978,24 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
     simTime+=dt;
   }
 
+  const zp2=makeZoomPan(c);
+
   function toScreen(x,y){
-    const scale=Math.min(W,H)*0.13;
-    return{sx:W/2+x*scale, sy:H/2+y*scale};
+    const scale=Math.min(W,H)*0.13*zp2.zoom;
+    return{sx:W/2+(x-zp2.panX)*scale, sy:H/2+(y-zp2.panY)*scale};
   }
 
   function animate(){
     ctx.clearRect(0,0,W,H);
 
-    // Subtle grid
+    // Subtle grid (respects zoom/pan)
     ctx.strokeStyle='rgba(201,168,76,0.03)';ctx.lineWidth=0.5;
-    const sc=Math.min(W,H)*0.13;
-    for(let i=-12;i<=12;i++){
-      ctx.beginPath();ctx.moveTo(W/2+i*sc*0.5,0);ctx.lineTo(W/2+i*sc*0.5,H);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(0,H/2+i*sc*0.5);ctx.lineTo(W,H/2+i*sc*0.5);ctx.stroke();
+    const gridRange=Math.ceil(14/zp2.zoom);
+    for(let i=-gridRange;i<=gridRange;i++){
+      const gx=toScreen(i*0.5,0).sx;
+      if(gx>-10&&gx<W+10){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,H);ctx.stroke();}
+      const gy=toScreen(0,i*0.5).sy;
+      if(gy>-10&&gy<H+10){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();}
     }
 
     // Integrate
@@ -857,7 +1073,7 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
   }
 
   btnRelease.addEventListener('click',releaseThird);
-  btnReset.addEventListener('click',init);
+  btnReset.addEventListener('click',()=>{init();zp2.reset();});
   speedSlider.addEventListener('input',()=>{speedVal.textContent=speedSlider.value;});
 
   init();
@@ -931,10 +1147,19 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
     p.vy+=0.5*(a.ay+aN.ay)*dt;
   }
 
-  // Coordinate mapping: rotating frame [-1.8, 2.2] x [-1.8, 1.8] → screen
-  const xMin=-1.8, xMax=2.2, yMin=-1.8, yMax=1.8;
-  function toS(x,y){return{sx:(x-xMin)/(xMax-xMin)*W, sy:(1-(y-yMin)/(yMax-yMin))*H};}
-  function fromS(sx,sy){return{x:xMin+sx/W*(xMax-xMin), y:yMin+(1-sy/H)*(yMax-yMin)};}
+  // Coordinate mapping with zoom/pan
+  const baseXMin=-1.8, baseXMax=2.2, baseYMin=-1.8, baseYMax=1.8;
+  const zpL=makeZoomPan(c);
+  function toS(x,y){
+    const cx=(baseXMin+baseXMax)/2+zpL.panX/zpL.zoom, cy=(baseYMin+baseYMax)/2+zpL.panY/zpL.zoom;
+    const hw=(baseXMax-baseXMin)/2/zpL.zoom, hh=(baseYMax-baseYMin)/2/zpL.zoom;
+    return{sx:((x-(cx-hw))/(2*hw))*W, sy:(1-((y-(cy-hh))/(2*hh)))*H};
+  }
+  function fromS(sx,sy){
+    const cx=(baseXMin+baseXMax)/2+zpL.panX/zpL.zoom, cy=(baseYMin+baseYMax)/2+zpL.panY/zpL.zoom;
+    const hw=(baseXMax-baseXMin)/2/zpL.zoom, hh=(baseYMax-baseYMin)/2/zpL.zoom;
+    return{x:(cx-hw)+sx/W*2*hw, y:(cy-hh)+(1-sy/H)*2*hh};
+  }
 
   // Precompute potential image
   let potImg=null;
@@ -945,8 +1170,8 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
     const vals=[];
     for(let j=0;j<res;j++){
       for(let i=0;i<res;i++){
-        const x=xMin+i/res*(xMax-xMin);
-        const y=yMin+(1-j/res)*(yMax-yMin);
+        const x=baseXMin+i/res*(baseXMax-baseXMin);
+        const y=baseYMin+(1-j/res)*(baseYMax-baseYMin);
         const v=effPotential(x,y);
         const clamped=Math.max(-4,Math.min(-1,v));
         vals.push(clamped);
@@ -975,12 +1200,12 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
     particles.push({x,y,vx,vy,trail:[]});
   }
 
-  // Click to place
+  // Click to place (only if not dragging)
   c.addEventListener('click',e=>{
+    if(zpL.moved) return; // was a drag, not a click
     const rect=c.getBoundingClientRect();
     const sx=e.clientX-rect.left, sy=e.clientY-rect.top;
     const p=fromS(sx,sy);
-    // Small random velocity to break symmetry
     placeAt(p.x,p.y,(Math.random()-0.5)*0.02,(Math.random()-0.5)*0.02);
     elStatus.textContent='particle placed at ('+p.x.toFixed(2)+', '+p.y.toFixed(2)+')';
   });
@@ -1243,10 +1468,12 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
     simTime+=dt;
   }
 
+  const zpC=makeZoomPan(c);
+
   function toS(x,y){
     const ch=choreographies[current];
-    const scale=Math.min(W,H)*ch.scale;
-    return{sx:W/2+x*scale, sy:H/2+y*scale};
+    const scale=Math.min(W,H)*ch.scale*zpC.zoom;
+    return{sx:W/2+(x-zpC.panX)*scale, sy:H/2+(y-zpC.panY)*scale};
   }
 
   function animate(){
@@ -1255,10 +1482,10 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
     // Faint grid
     ctx.strokeStyle='rgba(201,168,76,0.025)';ctx.lineWidth=0.5;
     const ch=choreographies[current];
-    const sc=Math.min(W,H)*ch.scale;
-    for(let i=-8;i<=8;i++){
-      ctx.beginPath();ctx.moveTo(W/2+i*sc*0.5,0);ctx.lineTo(W/2+i*sc*0.5,H);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(0,H/2+i*sc*0.5);ctx.lineTo(W,H/2+i*sc*0.5);ctx.stroke();
+    const gridR4=Math.ceil(10/zpC.zoom);
+    for(let i=-gridR4;i<=gridR4;i++){
+      const gx=toS(i*0.5,0).sx;if(gx>-10&&gx<W+10){ctx.beginPath();ctx.moveTo(gx,0);ctx.lineTo(gx,H);ctx.stroke();}
+      const gy=toS(0,i*0.5).sy;if(gy>-10&&gy<H+10){ctx.beginPath();ctx.moveTo(0,gy);ctx.lineTo(W,gy);ctx.stroke();}
     }
 
     // Integrate
@@ -1441,13 +1668,20 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
     return Math.sqrt(Math.max(0,1+2*eps*h*h/(G_AU*G_AU*sunM*sunM)));
   }
 
-  function toS(x,y){const s=Math.min(W,H)*0.27;return{sx:W/2+x*s,sy:H/2+y*s};}
+  const zpS=makeZoomPan(c);
+
+  function toS(x,y){const s=Math.min(W,H)*0.27*zpS.zoom;return{sx:W/2+(x-zpS.panX)*s,sy:H/2+(y-zpS.panY)*s};}
 
   function draw(){
     ctx.clearRect(0,0,W,H);
-    // Reference orbits
+    // Reference orbits (use toS so they respect zoom/pan)
     ctx.strokeStyle='rgba(201,168,76,0.04)';ctx.lineWidth=.5;
-    for(const pd of planetData){const s0=toS(pd.a,0);ctx.beginPath();ctx.arc(W/2,H/2,Math.abs(s0.sx-W/2),0,Math.PI*2);ctx.stroke();}
+    for(const pd of planetData){
+      // Draw orbit as path through toS
+      ctx.beginPath();
+      for(let i=0;i<=120;i++){const th=i/120*Math.PI*2;const ps=toS(pd.a*Math.cos(th),pd.a*Math.sin(th));i===0?ctx.moveTo(ps.sx,ps.sy):ctx.lineTo(ps.sx,ps.sy);}
+      ctx.closePath();ctx.stroke();
+    }
 
     if(running){
       const sub=parseInt(speedSlider.value);
