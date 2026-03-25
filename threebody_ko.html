@@ -150,17 +150,15 @@ section.wrap{padding-bottom:3rem}
 <body>
 
 <!-- ════════════════════════════════════════════ -->
-<!--                    HERO                     -->
-<!-- ════════════════════════════════════════════ -->
 <div id="hero">
   <canvas id="heroCanvas"></canvas>
   <div class="hero-overlay"></div>
   <div class="hero-content">
     <div class="hero-label">Mellow Math · 제2장</div>
     <h1 class="hero-title">삼체, <em>답은 없다</em></h1>
-    <p class="hero-sub">두 물체는 완벽한 타원 궤도를 그린다. 세 번째를 더하면, 미래는 알 수 없게 된다. 이것은 물리학에서 가장 오래된 미해결 문제이다.</p>
+    <p class="hero-sub">두 별이 완벽한 박자로 왈츠를 춘다, 영원히. 세 번째를 무도회에 초대하면, 음악이 멈춘다. 아무도 더 이상 스텝을 모른다.</p>
     <div class="hero-scroller" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">
-      시작하기
+      Explore
       <div class="scroll-bar"></div>
     </div>
   </div>
@@ -171,11 +169,11 @@ section.wrap{padding-bottom:3rem}
 <!-- ════════════════════════════════════════════ -->
 <hr class="divider" id="s1">
 <section class="wrap reveal">
-  <div class="sec-label">§ 1 — 이체, 완벽한 조화</div>
-  <h2>우주라는 <em>시계</em></h2>
+  <div class="sec-label">§ 1 — 왈츠</div>
+  <h2><em>둘</em>을 위한 춤</h2>
 
-  <p class="prose" style="max-width:700px;margin-bottom:1rem;">중력으로 묶인 두 물체에 대해 우주는 관대합니다. 정확한 해를 내어줍니다. 케플러의 타원. 모든 위치, 모든 속도가, 지금부터 시간의 끝까지, 닫힌 공식으로 적혀 있습니다. 근사도, 시뮬레이션도, 불확실성도 없습니다. 오직 기하학뿐.</p>
-  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">아래에서 두 질량이 공통 무게중심을 돌고 있습니다 — 금빛 별과 청록빛 동반성. 이심률을 늘리고, 질량비를 바꿔보세요. 타원은 스스로 형태를 바꾸지만, 항상 완벽하고, 항상 반복됩니다. 이것이 풀린 문제입니다. 이 평온함을 기억하세요.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:1rem;">Two bodies bound by gravity will dance forever. They trace ellipses around each other — the same path, the same rhythm, the same silent music, from now until the end of time. Newton proved it. Kepler named the steps. Every position, every velocity, written in a single closed formula. No uncertainty. Just an eternal waltz.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">Below, a gold star and a cyan companion orbit their shared center. Stretch the eccentricity and the waltz becomes a breathless swoop; skew the mass ratio and one partner barely moves while the other swings wide. But the dance never falters. It never will. Remember how this feels.</p>
 
   <div class="canvas-wrap" style="max-width:620px;margin:0 auto;">
     <canvas id="twobodyCanvas" height="340"></canvas>
@@ -199,7 +197,7 @@ section.wrap{padding-bottom:3rem}
       <label style="margin-left:auto">궤적</label>
       <input type="range" id="tbTrailLen" min="50" max="800" step="10" value="300">
     </div>
-    <div class="canvas-caption">풀린 문제. 질량비와 이심률을 조정하세요 — 타원은 언제나 완벽합니다.</div>
+    <div class="canvas-caption">영원한 왈츠. Adjust mass ratio and eccentricity — 춤은 절대 흐트러지지 않습니다.</div>
   </div>
 </section>
 
@@ -208,12 +206,12 @@ section.wrap{padding-bottom:3rem}
 <!-- ════════════════════════════════════════════ -->
 <hr class="divider" id="s2">
 <section class="wrap reveal">
-  <div class="sec-label">§ 2 — 세 번째가 등장하다</div>
-  <h2>시계가 <em>부서지다</em></h2>
+  <div class="sec-label">§ 2 — 초대받지 못한 손님</div>
+  <h2>춤이 <em>무너지다</em></h2>
 
-  <p class="prose" style="max-width:700px;margin-bottom:1rem;">1887년, 스웨덴의 오스카르 2세 국왕은 태양계가 안정적임을 증명하는 사람에게 상금을 걸었습니다. 앙리 푸앵카레는 안정성을 증명했다고 주장하는 270쪽의 논문을 제출했고, 수상했습니다. 논문은 인쇄에 들어갔습니다.</p>
-  <p class="prose" style="max-width:700px;margin-bottom:1rem;">그런데 교정을 검토하던 동료 라르스 프라그멘이 실수를 발견했습니다. 푸앵카레는 자기 논문을 재검토하고, 경악 속에서 깨달았습니다 — 그 오류가 오탈자가 아니라 <em>결론을 완전히 뒤집는 것</em>이었다는 사실을. 불가능하다고 무시했던 궤적들이 사실은 어디에나 존재했습니다. 초기 위치의 미세한 차이가 완전히 다른 미래로 이어졌습니다. 그는 카오스를 발견한 것입니다.</p>
-  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">푸앵카레는 인쇄된 모든 부수를 자비로 회수했습니다 — 비용이 상금보다 컸습니다 — 그리고 원래 주장의 정반대를 증명하는 수정된 논문을 출판했습니다. 그것은 수학사에서 가장 중요한 논문 중 하나가 되었습니다.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:1rem;">1887년, 스웨덴의 오스카르 2세 국왕이 상금을 걸었습니다: 태양계의 춤이 영원함을 증명하라. 앙리 푸앵카레는 무용수들이 절대 비틀거리지 않음을 증명하는 270쪽의 논문을 제출하여 수상했습니다. 논문은 인쇄에 들어갔습니다.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:1rem;">그런데 동료 프라그멘이 실수를 발견했습니다. 푸앵카레는 자기 논문을 재검토하고 경악했습니다 — 그 오류가 <em>결론을 완전히 뒤집는 것</em>이었습니다. 무시했던 궤적들이 사실은 어디에나 있었습니다. 스텝이 아주 약간만 달라도 세 번째 무용수가 무도회 전체를 카오스에 빠뜨리는 것입니다.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">푸앵카레는 인쇄된 모든 부수를 자비로 회수했습니다 — 비용이 상금보다 컸습니다 — 그리고 원래 주장의 정반대를 증명하는 논문을 출판했습니다. 아래에서 두 물체가 평화롭게 왈츠를 추고 있습니다. 버튼을 눌러 세 번째 파트너가 춤에 무엇을 하는지 지켜보세요.</p>
 
   <div class="canvas-wrap" style="max-width:620px;margin:0 auto;">
     <canvas id="threeCanvas" height="340"></canvas>
@@ -223,27 +221,17 @@ section.wrap{padding-bottom:3rem}
       <span style="color:var(--muted)">시간: <span id="t3Time">0</span></span>
     </div>
     <div class="ctrl-bar">
-      <button id="t3Release" style="border-color:var(--rose);color:var(--rose);">● 세 번째 물체 투입</button>
+      <button id="t3Release" style="border-color:var(--rose);color:var(--rose);">● 세 번째 무용수 투입</button>
       <button id="t3Reset">↺ 초기화</button>
       <label style="margin-left:auto">속도</label>
       <input type="range" id="t3Speed" min="1" max="20" step="1" value="6">
       <span class="val" id="t3SpeedVal">6</span>
     </div>
-    <div class="ctrl-bar" style="border-top:none;padding-top:0">
-      <button id="t3ZoomIn">+ 확대</button>
-      <button id="t3ZoomOut">− 축소</button>
-      <span style="width:.5rem"></span>
-      <button id="t3PanL">← </button>
-      <button id="t3PanR"> →</button>
-      <button id="t3PanU">↑</button>
-      <button id="t3PanD">↓</button>
-      <button id="t3Center" style="margin-left:auto">⊙ 중심</button>
-    </div>
-    <div class="canvas-caption">세 번째 물체를 투입하세요. 흐릿한 그림자 점은 0.001만큼 떨어져 시작합니다 — 발산을 지켜보세요.</div>
+    <div class="canvas-caption">평화로운 두 무용수. 세 번째를 투입하세요 — 흐릿한 그림자는 0.001만큼 떨어져 시작합니다.</div>
   </div>
 
   <div class="info-box" style="max-width:620px;margin:2rem auto 0;">
-    <strong>"카오스"는 정밀한 용어입니다.</strong> 푸앵카레가 말한 것은 무작위성이 아닙니다. <em>초기 조건에 대한 민감한 의존성</em>입니다: 머리카락 한 올 차이로 시작한 두 시스템이 완전히 다른 상태에 도달합니다. 법칙은 결정론적이지만, 측정의 아주 작은 불확실성이 모든 예측을 넘어서 증폭됩니다.
+    <strong>카오스는 무작위가 아닙니다.</strong> 무도장에는 규칙이 있습니다 — 뉴턴의 법칙은 완벽히 결정론적입니다. 하지만 머리카락 한 올 차이로 시작한 두 무용수가 순식간에 무도장 반대편에 서게 됩니다. 스텝은 정확하나, 미래는 아닙니다. 이것이 푸앵카레가 발견한 것입니다: <em>예측 불가능한 결정론.</em>
   </div>
 </section>
 
@@ -252,16 +240,16 @@ section.wrap{padding-bottom:3rem}
 <!-- ════════════════════════════════════════════ -->
 <hr class="divider" id="s3">
 <section class="wrap reveal">
-  <div class="sec-label">§ 3 — 라그랑주 점</div>
-  <h2><em>고요한</em> 다섯 개의 섬</h2>
+  <div class="sec-label">§ 3 — 벽꽃의 안식처</div>
+  <h2><em>가만히 서 있을 수 있는</em> 다섯 곳</h2>
 
-  <p class="prose" style="max-width:700px;margin-bottom:1rem;">카오스 속에서도 안식처는 있습니다. 1772년, 라그랑주는 두 개의 큰 궤도 물체에 대해 작은 물체가 정확히 다섯 위치에서 균형을 이룰 수 있음을 증명했습니다. 셋은 연결선 위에, 둘은 정삼각형을 이루며 — 하나는 앞서고, 하나는 뒤따릅니다 — 이 둘은 <em>안정</em>합니다.</p>
-  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">제임스 웹 우주망원경은 바로 지금 이 점들 중 하나에 있습니다. 지구 뒤쪽 150만 킬로미터, 중력의 지형 속에서 그릇 바닥의 구슬처럼 균형을 잡고 있습니다. 아래 아무 곳이나 클릭해서 시험 입자를 놓아보고, 중력의 위상을 느껴보세요.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:1rem;">중력의 춤이 소용돌이치는 와중에도, 벽꽃이 완벽히 가만히 서 있을 수 있는 점이 다섯 개 있습니다. 라그랑주가 1772년에 발견했습니다: 셋은 두 거대한 파트너를 잇는 선 위에, 둘은 정삼각형의 꼭짓점에 — 하나는 앞서고, 하나는 뒤따릅니다. 삼각형 점이 기적입니다. 거기 서면, 춤이 당신을 영원히 제자리에 잡아줍니다.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">제임스 웹 우주망원경은 바로 지금 이 점들 중 하나에 서 있습니다 — 태양-지구 L2, 우리 뒤쪽 150만 킬로미터, 회전하는 무도장에서 고요하게. 아래를 클릭해서 작은 무용수를 놓아보세요: L4나 L5 근처에서는 살랑살랑 흔들리지만 절대 떠나지 않습니다. L1이나 L2 근처에서는 비틀거리다 떠나갑니다.</p>
 
   <div class="canvas-wrap" style="max-width:620px;margin:0 auto;">
     <canvas id="lagrangeCanvas" height="350"></canvas>
     <div class="readout" id="lagrangeReadout">
-      <span style="color:var(--gold2)">클릭하여 시험 입자 배치</span> &nbsp;&nbsp;
+      <span style="color:var(--gold2)">클릭하여 작은 무용수 배치</span> &nbsp;&nbsp;
       <span style="color:var(--muted)"><span id="lgStatus"></span></span>
     </div>
     <div class="ctrl-bar">
@@ -273,11 +261,11 @@ section.wrap{padding-bottom:3rem}
       <label style="margin-left:auto">퍼텐셜</label>
       <input type="range" id="lgPotential" min="0" max="1" step="0.01" value="0.3">
     </div>
-    <div class="canvas-caption">클릭하여 시험 입자를 놓으세요. L4와 L5는 영원히 가둡니다. L1, L2, L3은 탈출시킵니다.</div>
+    <div class="canvas-caption">클릭하여 작은 무용수를 놓으세요. L4와 L5는 부드럽게 잡아줍니다. L1, L2, L3은 떠나보냅니다.</div>
   </div>
 
   <div class="info-box" style="max-width:620px;margin:2rem auto 0;">
-    <strong>트로이 소행성군.</strong> 목성의 L4와 L5 점에는 12,000개가 넘는 소행성이 갇혀 있습니다 — 트로이군과 그리스군 — 위에서 본 것과 같은 수학에 의해 수십억 년간 제자리를 지키고 있습니다. 토성, 해왕성, 화성, 심지어 지구도 자체 트로이 소행성을 가지고 있습니다.
+    <strong>만 이천 명의 벽꽃.</strong> 목성의 L4와 L5에는 12,000개가 넘는 소행성이 — 트로이군과 그리스군이 — 수십억 년간 제자리에서 살랑이고 있습니다. 토성, 해왕성, 화성, 심지어 지구도 이 점들에 조용한 동반자를 가지고 있습니다.
   </div>
 </section>
 
@@ -286,11 +274,11 @@ section.wrap{padding-bottom:3rem}
 <!-- ════════════════════════════════════════════ -->
 <hr class="divider" id="s4">
 <section class="wrap reveal">
-  <div class="sec-label">§ 4 — 8자 궤도</div>
-  <h2><em>3세기</em> 동안 숨겨진 춤</h2>
+  <div class="sec-label">§ 4 — 비밀의 안무</div>
+  <h2>아무도 <em>가르치지 않은</em> 춤</h2>
 
-  <p class="prose" style="max-width:700px;margin-bottom:1rem;">1993년, 크리스토퍼 무어는 컴퓨터에서 놀라운 것을 발견했습니다: 세 개의 동일한 질량이 하나의 8자 곡선을 따라 서로를 쫓으며, 줄 위의 구슬처럼 같은 간격으로, 정확히 같은 경로를 그리는 것. 셴시너와 몽고메리가 2000년에 엄밀하게 증명했습니다.</p>
-  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">뉴턴의 방정식 안에 300년간 숨어 있던 비밀 안무입니다. 아래에서 감상하세요. 그리고 파괴할 수도 있습니다: 섭동 슬라이더를 살짝 건드려 완벽함이 얼마나 오래 버티는지 보세요.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:1rem;">1993년, 크리스토퍼 무어는 컴퓨터에서 상상도 못한 것을 발견했습니다: 세 개의 동일한 질량이 하나의 8자를 따라 서로를 쫓으며, 같은 길을 완벽한 박자로 밟는 것 — 마치 세 무용수가 한 박자씩 어긋나며 같은 솔로를 추는 것처럼. 셴시너와 몽고메리가 2000년에 증명했습니다.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">뉴턴의 방정식 안에 300년간, 보아줄 사람을 기다리며 숨어 있던 안무입니다. 아래에서 감상하세요 — 그리고 깨뜨릴 수도 있습니다. 섭동 슬라이더를 건드리면 무용수들이 비틀거립니다. 속삭임 하나면 춤이 무너집니다.</p>
 
   <div class="canvas-wrap" style="max-width:620px;margin:0 auto;">
     <canvas id="choreCanvas" height="320"></canvas>
@@ -311,7 +299,7 @@ section.wrap{padding-bottom:3rem}
       <span class="val" id="chorePertDisp">0%</span>
       <button id="choreReset" style="margin-left:auto">↺ 초기화</button>
     </div>
-    <div class="canvas-caption">세 물체, 하나의 경로. 섭동을 건드리면 완벽함이 무너집니다.</div>
+    <div class="canvas-caption">세 무용수, 하나의 길. 섭동을 건드리면 — 속삭임 하나로 안무가 무너집니다.</div>
   </div>
 </section>
 
@@ -320,18 +308,18 @@ section.wrap{padding-bottom:3rem}
 <!-- ════════════════════════════════════════════ -->
 <hr class="divider" id="s5">
 <section class="wrap reveal">
-  <div class="sec-label">§ 5 — 태양계는 안정한가?</div>
-  <h2>40억 년의 <em>행운</em></h2>
+  <div class="sec-label">§ 5 — 가장 긴 춤</div>
+  <h2><em>스텝 하나</em> 안 빠뜨린 40억 년</h2>
 
-  <p class="prose" style="max-width:700px;margin-bottom:1rem;">이것은 수리물리학에서 가장 오래된 미해결 문제입니다. 라플라스는 태양계가 영원한 시계라고 믿었습니다. 푸앵카레는 아닐 수 있음을 보였습니다. 2009년, 자크 라스카르가 50억 년에 걸친 태양계 시뮬레이션을 수천 번 수행했습니다. 대략 1%에서 수성의 궤도가 금성의 경로와 교차할 때까지 늘어났습니다 — 충돌이든, 심우주로의 추방이든.</p>
-  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">우리 태양계는 시계가 아닙니다. 느린 확률 게임이며, 우리는 그 안에 있습니다. 아래에서 내태양계를 수백만 년 빨리감기하세요. 대부분의 실행은 조용합니다. 일부는 그렇지 않습니다. 오른쪽 수성의 이심률 게이지를 보세요 — 빨간 선 아래에 머물기를 바라면서.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:1rem;">우리 태양계의 춤은 영원할까요? 라플라스는 그렇다고 믿었습니다. 푸앵카레는 의심했습니다. 2009년, 자크 라스카르가 50억 년에 걸친 수천 번의 시뮬레이션을 돌렸습니다. 대략 1%에서 수성이 — 가장 안쪽의, 가장 가벼운, 가장 쉬지 않는 무용수가 — 점점 더 넓게 휘돌다 금성의 길과 교차했습니다. 충돌이든, 어둠 속으로의 추방이든.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">태양계는 왈츠가 아닙니다. 40억 년간 행운과 구별할 수 없는 무언가에 의해 지탱되어 온 즉흥 연주입니다. 재생을 누르고 춤을 빨리감기하세요. 오른쪽의 수성 이심률을 보세요. 빨간 선 아래에 머물기를 바라면서.</p>
 
   <div class="canvas-wrap" style="max-width:620px;margin:0 auto;">
     <canvas id="solarCanvas" height="340"></canvas>
     <div class="readout" id="solarReadout">
       <span style="color:var(--gold2)">연도: <span id="solYear">0</span>백만 년</span> &nbsp;&nbsp;
       <span style="color:var(--cyan)">실행: <span id="solRuns">0</span></span> &nbsp;&nbsp;
-      <span style="color:var(--muted)">안정: <span id="solStable">0</span> · 불안정: <span id="solUnstable" style="color:var(--red)">0</span></span>
+      <span style="color:var(--muted)">안정: <span id="solStable">0</span> · unstable: <span id="solUnstable" style="color:var(--red)">0</span></span>
     </div>
     <div class="ctrl-bar">
       <button id="solRun">▶ 실행</button>
@@ -340,11 +328,11 @@ section.wrap{padding-bottom:3rem}
       <input type="range" id="solSpeed" min="1" max="30" step="1" value="10">
       <span class="val" id="solSpeedVal">10</span>
     </div>
-    <div class="canvas-caption">태양계를 빨리감기합니다. 대부분은 살아남습니다. 일부는 그렇지 않습니다.</div>
+    <div class="canvas-caption">태양계를 빨리감기합니다. 대부분의 춤은 지속됩니다. 일부는 그렇지 않습니다.</div>
   </div>
 
   <div class="info-box" style="max-width:620px;margin:2rem auto 0;">
-    <strong>50억 년 중 1%.</strong> 라스카르의 시뮬레이션은 수성이 태양계의 와일드카드임을 보여주었습니다. 수성의 궤도는 수백만 년 규모에서 카오스적입니다 — 결정론적이지만 예측 불가능한, 푸앵카레가 발견한 바로 그것. 지금까지 우리는 운이 좋았을 뿐입니다.
+    <strong>수성: 쉬지 않는 파트너.</strong> 라스카르의 시뮬레이션은 푸앵카레의 의심을 확인했습니다 — 수성은 수백만 년 규모에서 카오스적입니다. 무작위가 아니라 예측 불가능한: 같은 결정론적 법칙이 아주 작은 불확실성을 전혀 다른 미래로 증폭시킵니다. 춤은 40억 년간 지속되었습니다. 50억 년까지 지속될지는 어떤 수학으로도 완전히 답할 수 없는 질문입니다.
   </div>
 </section>
 
@@ -354,10 +342,10 @@ section.wrap{padding-bottom:3rem}
 <hr class="divider">
 <section class="wrap reveal" style="text-align:center;padding:4rem 2rem 3rem;">
   <p class="prose" style="max-width:620px;margin:0 auto 2rem;font-size:1.15rem;color:var(--muted);font-style:italic;">
-    두 물체는 영원한 타원을 그리며 춤춘다. 세 번째를 더하면, 미래는 어떤 계산으로도 완전히 답할 수 없는 질문이 된다.
+    두 물체는 영원히 왈츠를 춘다. 세 번째를 더하면, 음악은 어떤 악보에도 적을 수 없는 것이 된다.
   </p>
   <p class="prose" style="max-width:620px;margin:0 auto;font-size:1rem;color:var(--muted);">
-    그럼에도 — 카오스 안에 8자 궤도가 있다. 불안정 속에 다섯 개의 정지점이 있다. 40억 년의 주사위 던지기를 견딘 태양계가 있다. 삼체 문제는 물리학의 실패가 아니다. 물리학이 스스로의 지평선과 만나는 곳이다.
+    그럼에도 — 카오스 안에, 아무도 가르치지 않은 8자 궤도가 있다. 비틀거림 속에, 완벽한 고요의 다섯 점이 있다. 40억 년의 즉흥 연주 끝에, 스텝 하나 빠뜨리지 않은 태양계가 있다. 삼체 문제는 춤이 실패하는 곳이 아니다. 춤이 너무 아름다워 어떤 악보에도 담을 수 없는 곳이다.
   </p>
 </section>
 
@@ -376,9 +364,6 @@ section.wrap{padding-bottom:3rem}
 
 <a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
 
-<!-- ════════════════════════════════════════════ -->
-<!--              JAVASCRIPT                     -->
-<!-- ════════════════════════════════════════════ -->
 <script>
 /* ── Scroll Reveal ── */
 const revealObs = new IntersectionObserver((entries)=>{
@@ -915,7 +900,7 @@ function makeZoomPan(canvas){
     thirdReleased=false; simTime=0; shadow=null;
     elCount.textContent='2'; elDiverge.textContent='—';
     btnRelease.style.borderColor='var(--rose)';btnRelease.style.color='var(--rose)';
-    btnRelease.textContent='● Release third body';
+    btnRelease.textContent='● 세 번째 무용수 투입';
     btnRelease.classList.remove('active');
 
     const m1=0.6, m2=0.4, a=1.5;
@@ -931,7 +916,7 @@ function makeZoomPan(canvas){
     thirdReleased=true;
     elCount.textContent='3';
     btnRelease.classList.add('active');
-    btnRelease.textContent='✓ Released';
+    btnRelease.textContent='✓ 투입 완료';
 
     const m3=0.3;
     const third={x:1.5, y:1.2, vx:-0.8, vy:-0.3, m:m3, trail:[], ci:2};
@@ -1211,7 +1196,7 @@ function makeZoomPan(canvas){
     const sx=e.clientX-rect.left, sy=e.clientY-rect.top;
     const p=fromS(sx,sy);
     placeAt(p.x,p.y,(Math.random()-0.5)*0.02,(Math.random()-0.5)*0.02);
-    elStatus.textContent='particle placed at ('+p.x.toFixed(2)+', '+p.y.toFixed(2)+')';
+    elStatus.textContent='입자 배치: ('+p.x.toFixed(2)+', '+p.y.toFixed(2)+')';
   });
 
   // Preset buttons
@@ -1219,7 +1204,7 @@ function makeZoomPan(canvas){
     particles=[];
     // Place near the Lagrange point with tiny offset
     placeAt(lp.x+0.01, lp.y+0.005, 0, 0);
-    elStatus.textContent='near '+lp.label+(lp.stable?' (stable)':' (unstable)');
+    elStatus.textContent='near '+lp.label+(lp.stable?' (안정)':' (불안정)');
     // Highlight button
     document.querySelectorAll('#lgL1,#lgL2,#lgL4,#lgL5').forEach(b=>b.classList.remove('active'));
   }
@@ -1307,9 +1292,9 @@ function makeZoomPan(canvas){
 
     // Labels for Sun and Earth
     ctx.fillStyle='rgba(232,204,128,0.6)';ctx.font='9px "JetBrains Mono"';ctx.textAlign='center';
-    ctx.fillText('Sun',ss.sx,ss.sy+20);
+    ctx.fillText('태양',ss.sx,ss.sy+20);
     ctx.fillStyle='rgba(60,184,195,0.6)';
-    ctx.fillText('Earth',es.sx,es.sy+16);
+    ctx.fillText('지구',es.sx,es.sy+16);
 
     // Draw test particles and their trails
     for(const p of particles){
@@ -1367,7 +1352,7 @@ function makeZoomPan(canvas){
   // Šuvakov-Dmitrašinović classification
   const choreographies={
     fig8:{
-      name:'Figure Eight',
+      name:'8자 궤도',
       // Chenciner-Montgomery figure-eight
       // Body 1 at (-0.97..., 0), Bodies 2,3 at (0.97/2, ±...)
       // Velocity of body 3: (v3x, v3y), body 1: (-2*v3x, -2*v3y) NO — 
@@ -1385,7 +1370,7 @@ function makeZoomPan(canvas){
       scale:0.35
     },
     butterfly:{
-      name:'Butterfly I',
+      name:'나비 I',
       // Šuvakov #6 "butterfly I"
       bodies:[
         {x:-1, y:0, vx:0.30689, vy:0.12551},
@@ -1396,7 +1381,7 @@ function makeZoomPan(canvas){
       scale:0.30
     },
     moth:{
-      name:'Moth I',
+      name:'나방 I',
       // Šuvakov #3 "moth I"
       bodies:[
         {x:-1, y:0, vx:0.46444, vy:0.39606},
@@ -1407,7 +1392,7 @@ function makeZoomPan(canvas){
       scale:0.22
     },
     yarn:{
-      name:'Yarn',
+      name:'실타래',
       // Šuvakov #11 "yarn"
       bodies:[
         {x:-1, y:0, vx:0.55906, vy:0.34919},
@@ -1612,10 +1597,10 @@ function makeZoomPan(canvas){
   const sunM=1;
 
   const planetData=[
-    {a:0.387, e:0.2056, m:1.66e-7, color:'#c47a8a', base:'rgba(196,122,138,', name:'Mercury', mxT:200},
-    {a:0.723, e:0.0068, m:2.45e-6, color:'#e8cc80', base:'rgba(232,204,128,', name:'Venus', mxT:150},
-    {a:1.000, e:0.0167, m:3.00e-6, color:'#3cb8c3', base:'rgba(60,184,195,', name:'Earth', mxT:120},
-    {a:1.524, e:0.0934, m:3.23e-7, color:'#c9a84c', base:'rgba(201,168,76,', name:'Mars', mxT:100}
+    {a:0.387, e:0.2056, m:1.66e-7, color:'#c47a8a', base:'rgba(196,122,138,', name:'수성', mxT:200},
+    {a:0.723, e:0.0068, m:2.45e-6, color:'#e8cc80', base:'rgba(232,204,128,', name:'금성', mxT:150},
+    {a:1.000, e:0.0167, m:3.00e-6, color:'#3cb8c3', base:'rgba(60,184,195,', name:'지구', mxT:120},
+    {a:1.524, e:0.0934, m:3.23e-7, color:'#c9a84c', base:'rgba(201,168,76,', name:'화성', mxT:100}
   ];
 
   let planets=[], running=false;
@@ -1694,7 +1679,7 @@ function makeZoomPan(canvas){
       elYear.textContent=Math.round(simYear);
       for(const p of planets)p.curE=compEcc(p);
       if(planets[0].curE>0.65&&!mercuryUnstable){mercuryUnstable=true;unstableCount++;elUnstable.textContent=unstableCount;}
-      if(simYear>=5000){running=false;totalRuns++;elRuns.textContent=totalRuns;if(!mercuryUnstable){stableCount++;elStable.textContent=stableCount;}btnRun.textContent='▶ Run';}
+      if(simYear>=5000){running=false;totalRuns++;elRuns.textContent=totalRuns;if(!mercuryUnstable){stableCount++;elStable.textContent=stableCount;}btnRun.textContent='▶ 실행';}
     }
 
     for(const p of planets){p.trail.push({x:p.x,y:p.y});if(p.trail.length>p.mxT)p.trail.shift();}
@@ -1739,8 +1724,8 @@ function makeZoomPan(canvas){
         ctx.strokeStyle='rgba(196,85,85,0.35)';ctx.lineWidth=1;ctx.setLineDash([3,3]);
         ctx.beginPath();ctx.moveTo(bx-2,ty);ctx.lineTo(bx+20,ty);ctx.stroke();ctx.setLineDash([]);
         ctx.fillStyle='rgba(201,168,76,0.35)';ctx.font='8px "JetBrains Mono"';ctx.textAlign='center';
-        ctx.fillText('Mercury',bx+9,by-4);ctx.fillText('ecc.',bx+9,by-13);
-        ctx.fillStyle='rgba(196,85,85,0.35)';ctx.fillText('danger',bx+9,ty-3);
+        ctx.fillText('수성',bx+9,by-4);ctx.fillText('이심률',bx+9,by-13);
+        ctx.fillStyle='rgba(196,85,85,0.35)';ctx.fillText('위험',bx+9,ty-3);
         ctx.fillStyle='rgba(201,168,76,0.25)';ctx.fillText(p.curE.toFixed(3),bx+9,by+bh+12);
       }
     }
@@ -1750,16 +1735,18 @@ function makeZoomPan(canvas){
   }
 
   btnRun.addEventListener('click',()=>{
-    if(running){running=false;btnRun.textContent='▶ Run';return;}
+    if(running){running=false;btnRun.textContent='▶ 실행';return;}
     if(simYear>=5000)initPlanets();
-    running=true;btnRun.textContent='⏸ Pause';
+    running=true;btnRun.textContent='⏸ 일시정지';
   });
-  btnReset.addEventListener('click',()=>{running=false;btnRun.textContent='▶ Run';initPlanets();});
+  btnReset.addEventListener('click',()=>{running=false;btnRun.textContent='▶ 실행';initPlanets();});
   speedSlider.addEventListener('input',()=>{speedValEl.textContent=speedSlider.value;});
 
   initPlanets();
   requestAnimationFrame(draw);
 })();
 </script>
+</body>
+</html>
 </body>
 </html>

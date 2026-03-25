@@ -2339,11 +2339,11 @@ function chime(f=440,d=.35,v=.12){const c=ac(),o=c.createOscillator(),g=c.create
 
   // Buttons
   if(btnMinus) btnMinus.addEventListener('click',function(e){
-    e.stopPropagation(); halfTwists=Math.max(0,halfTwists-1);
+    e.stopPropagation(); halfTwists=Math.max(1,halfTwists-2);
     rebuild(); chime(halfTwists%2?392:523,.25,.08);
   });
   if(btnPlus) btnPlus.addEventListener('click',function(e){
-    e.stopPropagation(); halfTwists=Math.min(6,halfTwists+1);
+    e.stopPropagation(); halfTwists=Math.min(5,halfTwists+2);
     rebuild(); chime(halfTwists%2?392:523,.25,.08);
   });
 
@@ -2623,8 +2623,6 @@ function chime(f=440,d=.35,v=.12){const c=ac(),o=c.createOscillator(),g=c.create
   setTimeout(onResize,150);
 })();
 
-/* ── ambient drone ── */
-{let s=false;function d(){if(s)return;s=true;try{const c=ac(),o1=c.createOscillator(),o2=c.createOscillator(),g=c.createGain();o1.type='sine';o1.frequency.value=55;o2.type='sine';o2.frequency.value=82.5;g.gain.setValueAtTime(0,c.currentTime);g.gain.linearRampToValueAtTime(.025,c.currentTime+4);o1.connect(g);o2.connect(g);g.connect(c.destination);o1.start();o2.start()}catch(e){}}document.addEventListener('click',d,{once:true});document.addEventListener('keydown',d,{once:true})}
 </script>
 </body>
 </html>

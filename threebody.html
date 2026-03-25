@@ -158,7 +158,7 @@ section.wrap{padding-bottom:3rem}
   <div class="hero-content">
     <div class="hero-label">Mellow Math · Chapter II</div>
     <h1 class="hero-title">Three Stars, <em>No Answer</em></h1>
-    <p class="hero-sub">Two bodies orbit in perfect ellipses. Add a third, and the future becomes unknowable. This is the oldest unsolved problem in physics.</p>
+    <p class="hero-sub">Two stars waltz in perfect time, forever. Invite a third to the dance, and the music turns to silence. No one knows the steps anymore.</p>
     <div class="hero-scroller" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">
       Explore
       <div class="scroll-bar"></div>
@@ -171,11 +171,11 @@ section.wrap{padding-bottom:3rem}
 <!-- ════════════════════════════════════════════ -->
 <hr class="divider" id="s1">
 <section class="wrap reveal">
-  <div class="sec-label">§ 1 — Two Bodies, Perfect Harmony</div>
-  <h2>The universe as a <em>clock</em></h2>
+  <div class="sec-label">§ 1 — The Waltz</div>
+  <h2>A dance for <em>two</em></h2>
 
-  <p class="prose" style="max-width:700px;margin-bottom:1rem;">For two bodies bound by gravity, the universe is generous: it hands you an exact solution. Kepler's ellipses. Every position, every velocity, from now until the end of time, written in a closed formula. No approximation, no simulation, no uncertainty. Just geometry.</p>
-  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">Below, two masses orbit their shared center of gravity — a gold star and a cyan companion. Stretch the eccentricity, skew the mass ratio, and the ellipses reshape themselves, always perfect, always repeating. This is the solved problem. Remember how calm it feels.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:1rem;">Two bodies bound by gravity will dance forever. They trace ellipses around each other — the same path, the same rhythm, the same silent music, from now until the end of time. Newton proved it. Kepler named the steps. Every position, every velocity, written in a single closed formula. No uncertainty. Just an eternal waltz.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">Below, a gold star and a cyan companion orbit their shared center. Stretch the eccentricity and the waltz becomes a breathless swoop; skew the mass ratio and one partner barely moves while the other swings wide. But the dance never falters. It never will. Remember how this feels.</p>
 
   <div class="canvas-wrap" style="max-width:620px;margin:0 auto;">
     <canvas id="twobodyCanvas" height="340"></canvas>
@@ -199,7 +199,7 @@ section.wrap{padding-bottom:3rem}
       <label style="margin-left:auto">trails</label>
       <input type="range" id="tbTrailLen" min="50" max="800" step="10" value="300">
     </div>
-    <div class="canvas-caption">The solved problem. Adjust mass ratio and eccentricity — the ellipses are always perfect.</div>
+    <div class="canvas-caption">An eternal waltz. Adjust mass ratio and eccentricity — the dance never breaks.</div>
   </div>
 </section>
 
@@ -208,12 +208,12 @@ section.wrap{padding-bottom:3rem}
 <!-- ════════════════════════════════════════════ -->
 <hr class="divider" id="s2">
 <section class="wrap reveal">
-  <div class="sec-label">§ 2 — Enter the Third</div>
-  <h2>The clock <em>shatters</em></h2>
+  <div class="sec-label">§ 2 — The Uninvited Guest</div>
+  <h2>The dance <em>falls apart</em></h2>
 
-  <p class="prose" style="max-width:700px;margin-bottom:1rem;">In 1887, King Oscar II of Sweden offered a prize for proving the solar system is stable. Henri Poincaré submitted a brilliant 270-page memoir claiming to prove stability — and won. The paper was sent to the printers.</p>
-  <p class="prose" style="max-width:700px;margin-bottom:1rem;">Then, while reviewing the proofs, his colleague Lars Phragmén found a mistake. Poincaré re-examined his own work and realized, to his horror, that the error was not a typo — <em>it reversed his conclusion entirely.</em> The trajectories he had dismissed as impossible were in fact everywhere. Tiny changes in starting position led to wildly different futures. He had discovered chaos.</p>
-  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">Poincaré recalled every printed copy at his own expense — the cost exceeded the prize money — and published a corrected memoir proving the opposite of what he had originally claimed. It became one of the most important papers in the history of mathematics.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:1rem;">In 1887, King Oscar II of Sweden offered a prize: prove the solar system's dance is eternal. Henri Poincaré submitted a 270-page memoir claiming the dancers never stumble — and won. The paper was sent to the printers.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:1rem;">Then his colleague Phragmén found a mistake. Poincaré re-examined his work and realized, with horror, that the error <em>reversed his conclusion entirely.</em> The trajectories he had dismissed were everywhere. A third dancer, arriving with even the slightest difference in step, would send the whole ballroom into chaos.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">Poincaré recalled every printed copy at his own expense — the cost exceeded the prize money — and published a corrected paper proving the opposite of what he'd claimed. Below, two bodies waltz in peace. Press the button and watch what a third partner does to the dance.</p>
 
   <div class="canvas-wrap" style="max-width:620px;margin:0 auto;">
     <canvas id="threeCanvas" height="340"></canvas>
@@ -229,11 +229,11 @@ section.wrap{padding-bottom:3rem}
       <input type="range" id="t3Speed" min="1" max="20" step="1" value="6">
       <span class="val" id="t3SpeedVal">6</span>
     </div>
-    <div class="canvas-caption">Release the third body. The faint shadow dot starts 0.001 apart — watch it diverge.</div>
+    <div class="canvas-caption">Two dancers in peace. Release the third — the faint shadow starts 0.001 apart. Watch the divergence.</div>
   </div>
 
   <div class="info-box" style="max-width:620px;margin:2rem auto 0;">
-    <strong>Why "chaos" is a precise word.</strong> Poincaré didn't mean randomness. He meant <em>sensitive dependence on initial conditions</em>: two systems starting a hair's breadth apart end up in completely different states. The laws are deterministic — the same inputs always produce the same outputs — but the slightest uncertainty in measurement gets amplified beyond all prediction.
+    <strong>Chaos is not randomness.</strong> The dance floor has rules — Newton's law is perfectly deterministic. But two dancers starting a hair's breadth apart will, within moments, be on opposite sides of the room. The steps are exact. The future is not. This is what Poincaré discovered: <em>determinism without predictability.</em>
   </div>
 </section>
 
@@ -242,11 +242,11 @@ section.wrap{padding-bottom:3rem}
 <!-- ════════════════════════════════════════════ -->
 <hr class="divider" id="s3">
 <section class="wrap reveal">
-  <div class="sec-label">§ 3 — Lagrange Points</div>
-  <h2>Five islands of <em>calm</em></h2>
+  <div class="sec-label">§ 3 — The Wallflower's Refuge</div>
+  <h2>Five places to <em>stand still</em></h2>
 
-  <p class="prose" style="max-width:700px;margin-bottom:1rem;">Even in the chaos, there are sanctuaries. In 1772, Lagrange proved that a small object can balance in exactly five positions relative to two large orbiting bodies. Three lie along the line connecting them. Two form equilateral triangles — one leading, one trailing — and these are <em>stable</em>.</p>
-  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">The James Webb Space Telescope sits at one of these points right now, 1.5 million kilometers behind Earth, balanced in the gravitational landscape like a marble at the bottom of a bowl. Click anywhere below to drop a test particle and feel the topology of gravity.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:1rem;">In the swirl of the gravitational dance, there are five points where a wallflower can stand perfectly still. Lagrange found them in 1772: three along the line between two great partners, two at the tips of equilateral triangles — one leading, one trailing. The triangular points are the miracle. Stand there, and the dance holds you in place forever.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">The James Webb Space Telescope is standing at one of these points right now — Sun–Earth L2, 1.5 million kilometers behind us, motionless in the spinning ballroom. Click below to place a small dancer and watch: near L4 or L5, it sways gently but never leaves. Near L1 or L2, it stumbles and drifts away.</p>
 
   <div class="canvas-wrap" style="max-width:620px;margin:0 auto;">
     <canvas id="lagrangeCanvas" height="350"></canvas>
@@ -263,11 +263,11 @@ section.wrap{padding-bottom:3rem}
       <label style="margin-left:auto">potential</label>
       <input type="range" id="lgPotential" min="0" max="1" step="0.01" value="0.3">
     </div>
-    <div class="canvas-caption">Click to drop test particles. L4 and L5 trap them forever. L1, L2, L3 let them escape.</div>
+    <div class="canvas-caption">Click to place a small dancer. L4 and L5 hold them gently. L1, L2, L3 let them drift.</div>
   </div>
 
   <div class="info-box" style="max-width:620px;margin:2rem auto 0;">
-    <strong>The Trojan asteroids.</strong> Jupiter's L4 and L5 points trap over 12,000 asteroids — the Trojans and the Greeks — held in place for billions of years by the same mathematics you see above. Saturn, Neptune, Mars, and even Earth have their own Trojans.
+    <strong>Twelve thousand wallflowers.</strong> Jupiter's L4 and L5 points hold over 12,000 asteroids — the Trojans and the Greeks — swaying in place for billions of years. Saturn, Neptune, Mars, and even Earth have their own quiet companions at these points.
   </div>
 </section>
 
@@ -276,11 +276,11 @@ section.wrap{padding-bottom:3rem}
 <!-- ════════════════════════════════════════════ -->
 <hr class="divider" id="s4">
 <section class="wrap reveal">
-  <div class="sec-label">§ 4 — The Figure Eight</div>
-  <h2>A dance hidden for <em>three centuries</em></h2>
+  <div class="sec-label">§ 4 — The Secret Choreography</div>
+  <h2>A dance no one <em>taught them</em></h2>
 
-  <p class="prose" style="max-width:700px;margin-bottom:1rem;">In 1993, Cristopher Moore found something astonishing on a computer: three equal masses chasing each other along a single figure-eight curve, each body tracing the exact same path, equally spaced like beads on a wire. Chenciner and Montgomery proved it rigorously in 2000.</p>
-  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">It had been hiding inside Newton's equations for three hundred years — a secret choreography. Below, you can watch it. You can also destroy it: nudge the perturbation slider and see how long perfection survives.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:1rem;">In 1993, Cristopher Moore discovered on a computer something no one had imagined: three equal masses, chasing each other along a single figure-eight, tracing the same path in perfect time — like three dancers performing the same solo, staggered by a beat. Chenciner and Montgomery proved it was real in 2000.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">For three hundred years, this choreography was hiding inside Newton's equations, waiting to be seen. Below, you can watch it — and then break it. Nudge the perturbation slider and the dancers stumble. Even a whisper is enough to ruin the dance.</p>
 
   <div class="canvas-wrap" style="max-width:620px;margin:0 auto;">
     <canvas id="choreCanvas" height="320"></canvas>
@@ -301,7 +301,7 @@ section.wrap{padding-bottom:3rem}
       <span class="val" id="chorePertDisp">0%</span>
       <button id="choreReset" style="margin-left:auto">↺ Reset</button>
     </div>
-    <div class="canvas-caption">Three bodies, one path. Nudge the perturbation and watch perfection dissolve.</div>
+    <div class="canvas-caption">Three dancers, one path. Nudge the perturbation — even a whisper breaks the choreography.</div>
   </div>
 </section>
 
@@ -310,11 +310,11 @@ section.wrap{padding-bottom:3rem}
 <!-- ════════════════════════════════════════════ -->
 <hr class="divider" id="s5">
 <section class="wrap reveal">
-  <div class="sec-label">§ 5 — Is the Solar System Stable?</div>
-  <h2>Four billion years of <em>luck</em></h2>
+  <div class="sec-label">§ 5 — The Longest Dance</div>
+  <h2>Four billion years without <em>missing a step</em></h2>
 
-  <p class="prose" style="max-width:700px;margin-bottom:1rem;">This is the oldest open question in mathematical physics. Laplace believed the solar system was eternal clockwork. Poincaré showed it might not be. In 2009, Jacques Laskar ran thousands of simulations over five billion years. In roughly 1% of them, Mercury's orbit stretched until it crossed Venus's path — collision, or ejection into deep space.</p>
-  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">Our solar system is not a clock. It is a slow game of chance, and we are inside it. Below, the inner solar system fast-forwards through millions of years. Most runs are quiet. Some are not. Watch Mercury's eccentricity gauge on the right — and hope it stays below the red line.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:1rem;">Is our solar system's dance eternal? Laplace thought so. Poincaré doubted it. In 2009, Jacques Laskar ran thousands of simulations across five billion years. In roughly 1% of them, Mercury — the innermost, lightest, most restless dancer — swung wider and wider until its path crossed Venus's. A collision. Or an ejection into the dark.</p>
+  <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">The solar system is not a waltz. It is an improvisation that has held together for four billion years by something indistinguishable from luck. Press play and fast-forward the dance. Watch Mercury's eccentricity on the right. Hope it stays below the red line.</p>
 
   <div class="canvas-wrap" style="max-width:620px;margin:0 auto;">
     <canvas id="solarCanvas" height="340"></canvas>
@@ -330,11 +330,11 @@ section.wrap{padding-bottom:3rem}
       <input type="range" id="solSpeed" min="1" max="30" step="1" value="10">
       <span class="val" id="solSpeedVal">10</span>
     </div>
-    <div class="canvas-caption">Fast-forward the solar system. Most runs survive. Some don't.</div>
+    <div class="canvas-caption">The solar system, fast-forwarded. Most dances last. Some don't.</div>
   </div>
 
   <div class="info-box" style="max-width:620px;margin:2rem auto 0;">
-    <strong>1% in five billion years.</strong> Laskar's simulations showed that Mercury is the solar system's wild card. Its orbit is chaotic on timescales of millions of years — deterministic but unpredictable, just as Poincaré discovered. We have been lucky so far.
+    <strong>Mercury: the restless partner.</strong> Laskar's simulations confirmed what Poincaré suspected — Mercury is chaotic on timescales of millions of years. Not random, but unpredictable: the same deterministic laws, amplifying the tiniest uncertainties into utterly different futures. The dance has held for four billion years. Whether it holds for five is a question no mathematics can fully answer.
   </div>
 </section>
 
@@ -344,10 +344,10 @@ section.wrap{padding-bottom:3rem}
 <hr class="divider">
 <section class="wrap reveal" style="text-align:center;padding:4rem 2rem 3rem;">
   <p class="prose" style="max-width:620px;margin:0 auto 2rem;font-size:1.15rem;color:var(--muted);font-style:italic;">
-    Two bodies dance in eternal ellipses. Add a third, and the future becomes a question that no amount of computation can fully answer.
+    Two bodies waltz forever. Add a third, and the music turns to something no one can write down.
   </p>
   <p class="prose" style="max-width:620px;margin:0 auto;font-size:1rem;color:var(--muted);">
-    And yet — inside the chaos, a figure-eight. Among the instabilities, five still points. Across four billion years of dice-rolls, a solar system that held. The three-body problem is not a failure of physics. It is where physics meets its own horizon.
+    And yet — in the chaos, a figure-eight that no one taught them. Among the stumbling, five points of perfect stillness. Across four billion years of improvisation, a solar system that hasn't missed a step. The three-body problem is not where the dance fails. It is where the dance becomes too beautiful for any score to contain.
   </p>
 </section>
 
