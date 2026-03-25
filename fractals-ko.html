@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>자연은 어떻게 스스로를 반복하는가 — Mellow Math</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400&family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#04050c;--bg2:#090b18;--bg3:#0e1128;--text:#b8b4ac;--cream:#ece8e0;--muted:#52566a;--gold:#c9a84c;--gold2:#d4a853;--gold-dim:rgba(201,168,76,.08);--violet:#8a6abf;--fern:#5a9a72;--fern-glow:#7cc89a;--border:rgba(255,255,255,.04);--font-display:'Fraunces',Georgia,serif;--font-body:'DM Sans',sans-serif;--font-kr:'Noto Serif KR',serif;--font-mono:'JetBrains Mono',monospace}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px;scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.8;overflow-x:hidden}
+body::after{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:200px}
+.floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;font-family:var(--font-mono);font-size:.58rem;letter-spacing:.14em;text-transform:lowercase;color:#8db830;background:transparent;padding:.35rem .7rem;text-decoration:none;transition:color .25s,text-shadow .25s,transform .25s;text-shadow:0 0 6px rgba(141,184,48,.4),0 0 16px rgba(141,184,48,.15)}
+.floating-badge:hover{color:#a8d43a;transform:translateY(-1px);text-shadow:0 0 8px rgba(141,184,48,.65),0 0 22px rgba(141,184,48,.28)}
+footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--border);margin-top:4rem}
+.footer-attr{display:flex;flex-direction:column;gap:.25rem;align-items:center}
+.footer-name{font-family:var(--font-display);font-size:.85rem;font-weight:400;color:var(--cream);letter-spacing:-.01em}
+.footer-inst{font-family:var(--font-body);font-size:.7rem;font-weight:300;color:var(--muted);letter-spacing:.01em}
+.footer-url{font-family:var(--font-mono);font-size:.58rem;letter-spacing:.08em;color:var(--gold2);text-decoration:none;margin-top:.3rem}
+.footer-url:hover{text-decoration:underline}
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.particle{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(90,154,114,.3),transparent 70%);animation:drift linear infinite}
+@keyframes drift{0%{transform:translateY(110vh) scale(1);opacity:0}8%{opacity:1}92%{opacity:1}100%{transform:translateY(-10vh) scale(.2);opacity:0}}
+#hero{position:relative;width:100%;height:100vh;min-height:650px;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;opacity:.5;mix-blend-mode:screen}
+.hero-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 60% at 50% 55%,transparent 0%,rgba(4,5,12,.6) 50%,var(--bg) 80%),linear-gradient(to bottom,rgba(4,5,12,0) 60%,var(--bg) 100%)}
+.hero-content{position:relative;z-index:10;text-align:center;padding:0 2rem;max-width:780px}
+.hero-label{font-family:var(--font-display);font-size:.72rem;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:1.8rem;opacity:0;animation:fadeUp 1.4s cubic-bezier(.23,1,.32,1) .3s both}
+.hero-category{font-family:var(--font-mono);font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem;opacity:0;animation:fadeUp 1.4s cubic-bezier(.23,1,.32,1) .5s both}
+.hero-title{font-family:var(--font-display);font-weight:300;font-size:clamp(2.4rem,6vw,4.6rem);line-height:1.1;letter-spacing:-.025em;color:var(--cream);margin-bottom:.8rem;opacity:0;animation:fadeUp 1.4s cubic-bezier(.23,1,.32,1) .7s both}
+.hero-title em{font-style:italic;color:var(--fern-glow)}
+.hero-sub-kr{font-family:var(--font-kr);font-weight:300;font-size:1rem;color:var(--muted);margin-bottom:2.5rem;opacity:0;animation:fadeUp 1.4s cubic-bezier(.23,1,.32,1) .9s both}
+.hero-tagline{font-family:var(--font-display);font-size:1rem;font-weight:300;font-style:italic;color:var(--muted);line-height:1.9;max-width:440px;margin:0 auto 3.5rem;opacity:0;animation:fadeUp 1.4s cubic-bezier(.23,1,.32,1) 1.1s both}
+.hero-scroll{display:inline-flex;flex-direction:column;align-items:center;gap:.7rem;color:var(--muted);font-family:var(--font-mono);font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:color .3s;opacity:0;animation:fadeUp 1.4s cubic-bezier(.23,1,.32,1) 1.4s both}
+.hero-scroll:hover{color:var(--gold)}
+.hero-scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--gold),transparent);animation:breathe 3s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:.3;transform:scaleY(.7);transform-origin:top}50%{opacity:1;transform:scaleY(1)}}
+.chapter-section{padding:7rem 2rem 5rem;max-width:800px;margin:0 auto;position:relative;z-index:1}
+.sec-num{font-family:var(--font-mono);font-weight:300;font-size:.68rem;color:var(--gold);letter-spacing:.25em;margin-bottom:1.2rem;opacity:0;transform:translateY(24px);transition:all 1s cubic-bezier(.23,1,.32,1)}
+.sec-title{font-family:var(--font-display);font-weight:300;font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.2;color:var(--cream);margin-bottom:.5rem;opacity:0;transform:translateY(24px);transition:all 1s cubic-bezier(.23,1,.32,1) .1s}
+.sec-title-kr{font-family:var(--font-kr);font-weight:300;font-size:.9rem;color:var(--muted);margin-bottom:3rem;opacity:0;transform:translateY(24px);transition:all 1s cubic-bezier(.23,1,.32,1) .15s}
+.prose{font-family:var(--font-kr);font-size:1.02rem;font-weight:300;line-height:2.15;color:var(--text);margin-bottom:2.2rem;opacity:0;transform:translateY(24px);transition:all 1s cubic-bezier(.23,1,.32,1) .2s}
+.prose .hi{color:var(--cream);font-weight:400}
+.prose .ac{color:var(--gold);font-weight:400}
+.prose em{font-style:italic}
+.prose-drop::first-letter{font-family:var(--font-display);font-weight:400;float:left;font-size:3.8rem;line-height:.8;margin:.08em .18em 0 0;color:var(--gold)}
+.visible .sec-num,.visible .sec-title,.visible .sec-title-kr,.visible .prose,.visible .ibox,.visible .quote-block,.visible .pull-quote{opacity:1;transform:translateY(0)}
+.quote-block{border-left:2px solid var(--gold);padding:2rem 2.5rem;margin:3.5rem 0;background:var(--gold-dim);border-radius:0 12px 12px 0;opacity:0;transform:translateY(24px);transition:all 1s cubic-bezier(.23,1,.32,1) .25s}
+.quote-text{font-family:var(--font-display);font-style:italic;font-size:1.12rem;font-weight:400;color:var(--cream);line-height:1.9;margin-bottom:.8rem}
+.quote-attr{font-family:var(--font-body);font-size:.78rem;color:var(--muted)}
+.pull-quote{text-align:center;padding:3rem 1rem;margin:3rem 0;opacity:0;transform:translateY(24px);transition:all 1s cubic-bezier(.23,1,.32,1) .25s}
+.pull-quote-text{font-family:var(--font-display);font-style:italic;font-size:clamp(1.2rem,2.5vw,1.5rem);font-weight:300;color:var(--cream);line-height:1.8;max-width:560px;margin:0 auto}
+.pull-quote-rule{width:50px;height:1px;margin:1.5rem auto 0;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.5}
+.ibox{background:var(--bg3);border:1px solid var(--border);border-radius:16px;padding:2.5rem;margin:3.5rem 0;position:relative;overflow:hidden;opacity:0;transform:translateY(24px);transition:all 1s cubic-bezier(.23,1,.32,1) .3s}
+.ibox::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 10%,rgba(201,168,76,.12) 50%,transparent 90%)}
+.ibox-label{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--font-mono);font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem}
+.ibox-label .dot{width:5px;height:5px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px rgba(201,168,76,.4);animation:glow-pulse 2.5s ease-in-out infinite}
+@keyframes glow-pulse{0%,100%{opacity:.4;box-shadow:0 0 4px rgba(201,168,76,.2)}50%{opacity:1;box-shadow:0 0 12px rgba(201,168,76,.5)}}
+.ibox-title{font-family:var(--font-display);font-size:1.15rem;font-weight:400;color:var(--cream);margin-bottom:.4rem;letter-spacing:-.01em}
+.ibox-desc{font-family:var(--font-body);font-size:.82rem;font-weight:300;color:var(--text);margin-bottom:1.8rem;line-height:1.75;opacity:.8;max-width:580px}
+.canvas-wrap{position:relative;width:100%;background:rgba(0,0,0,.2);border-radius:12px;overflow:hidden;margin-bottom:1.5rem;border:1px solid rgba(255,255,255,.025)}
+.canvas-wrap canvas{width:100%;height:100%;display:block}
+.slider-row{display:flex;align-items:center;gap:1rem;margin-bottom:.5rem;flex-wrap:wrap}
+.slider-label{font-family:var(--font-mono);font-size:.68rem;color:var(--muted);letter-spacing:.06em;min-width:96px}
+.slider-val{font-family:var(--font-mono);font-size:.78rem;color:var(--gold);min-width:56px;text-align:right}
+input[type="range"]{-webkit-appearance:none;appearance:none;flex:1;height:1px;background:rgba(201,168,76,.15);border-radius:1px;outline:none;cursor:pointer}
+input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 40% 40%,var(--gold2),var(--gold));box-shadow:0 0 16px rgba(201,168,76,.25),0 2px 8px rgba(0,0,0,.4);cursor:pointer;transition:transform .2s,box-shadow .2s}
+input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.15);box-shadow:0 0 24px rgba(201,168,76,.4),0 2px 8px rgba(0,0,0,.4)}
+input[type="range"]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--gold);box-shadow:0 0 16px rgba(201,168,76,.25);border:none;cursor:pointer}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.6rem;margin-top:1.5rem}
+.stat{background:rgba(0,0,0,.18);border-radius:12px;padding:1rem;text-align:center;border:1px solid rgba(255,255,255,.02)}
+.stat-label{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem}
+.stat-val{font-family:var(--font-mono);font-size:1.5rem;color:var(--gold2);font-weight:300;transition:all .3s}
+.stat-unit{font-family:var(--font-mono);font-size:.55rem;color:var(--muted);margin-top:.15rem}
+.btn-row{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:1.2rem}
+.btn{font-family:var(--font-mono);font-size:.65rem;padding:.5rem 1.15rem;border:1px solid rgba(201,168,76,.15);background:transparent;color:var(--muted);border-radius:8px;cursor:pointer;transition:all .35s cubic-bezier(.23,1,.32,1);letter-spacing:.03em}
+.btn:hover{border-color:rgba(201,168,76,.35);color:var(--gold);background:rgba(201,168,76,.03)}
+.btn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06);box-shadow:0 0 12px rgba(201,168,76,.08)}
+.section-sep{width:50px;height:1px;margin:4rem auto;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.35}
+.next-teaser{text-align:center;padding:4rem 2rem 2rem;max-width:800px;margin:0 auto}
+.next-label{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.35em;text-transform:uppercase;color:var(--muted);margin-bottom:.7rem}
+.next-title{font-family:var(--font-display);font-size:1.1rem;font-weight:300;color:var(--text);font-style:italic;opacity:.6}
+@keyframes fadeUp{from{opacity:0;transform:translateY(35px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:768px){.chapter-section{padding:4rem 1.5rem 3rem}.ibox{padding:1.5rem}.stats{grid-template-columns:1fr 1fr}.quote-block{padding:1.5rem 1.8rem}.prose-drop::first-letter{font-size:3rem}}
+@media(max-width:480px){.hero-title{font-size:2rem}.sec-title{font-size:1.5rem}.prose{font-size:.95rem}.stats{grid-template-columns:1fr}}
+.particle{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.2),transparent 70%);animation:drift linear infinite}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;opacity:.45;mix-blend-mode:screen}
+.hero-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 60% at 50% 50%,transparent 0%,rgba(4,5,12,.6) 50%,var(--bg) 80%),linear-gradient(to bottom,rgba(4,5,12,0) 60%,var(--bg) 100%)}
+.hero-number{font-family:var(--font-mono);font-size:.7rem;color:var(--gold);letter-spacing:.3em;margin-bottom:1rem;opacity:0;animation:fadeUp 1.4s cubic-bezier(.23,1,.32,1) .5s both}
+.hero-title{font-family:var(--font-display);font-weight:300;font-size:clamp(2.2rem,5.5vw,4.2rem);line-height:1.1;letter-spacing:-.025em;color:var(--cream);margin-bottom:.8rem;opacity:0;animation:fadeUp 1.4s cubic-bezier(.23,1,.32,1) .7s both}
+.hero-title em{font-style:italic;color:var(--gold2)}
+.hero-tagline{font-family:var(--font-display);font-size:1rem;font-weight:300;font-style:italic;color:var(--muted);line-height:1.9;max-width:460px;margin:0 auto 3.5rem;opacity:0;animation:fadeUp 1.4s cubic-bezier(.23,1,.32,1) 1.1s both}
+.visible .sec-num,.visible .sec-title,.visible .sec-title-kr,.visible .prose,.visible .ibox,.visible .quote-block,.visible .pull-quote,.visible .eq-block{opacity:1;transform:translateY(0)}
+.pull-quote-text{font-family:var(--font-display);font-style:italic;font-size:clamp(1.15rem,2.5vw,1.4rem);font-weight:300;color:var(--cream);line-height:1.85;max-width:540px;margin:0 auto}
+.eq-block{text-align:center;padding:2.5rem 1rem;margin:3rem 0;opacity:0;transform:translateY(24px);transition:all 1s cubic-bezier(.23,1,.32,1) .25s}
+.eq{font-family:var(--font-display);font-style:italic;font-size:clamp(1.5rem,3.5vw,2.2rem);color:var(--gold2);letter-spacing:.02em}
+.eq-cap{font-family:var(--font-body);font-size:.74rem;color:var(--muted);margin-top:.8rem}
+.plot-wrap{display:flex;gap:1.5rem;align-items:stretch;margin-bottom:1rem}
+.plot-wrap .canvas-wrap{flex:1}
+@media(max-width:600px){.plot-wrap{flex-direction:column}}
+.ctrl-row{display:flex;align-items:center;gap:1rem;margin-bottom:.5rem;flex-wrap:wrap}
+.ctrl-label{font-family:var(--font-mono);font-size:.68rem;color:var(--muted);letter-spacing:.06em;min-width:80px}
+.ctrl-val{font-family:var(--font-mono);font-size:.78rem;color:var(--gold)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.6rem;margin-top:1.5rem}
+.stat-val{font-family:var(--font-mono);font-size:1.3rem;color:var(--gold2);font-weight:300;transition:all .3s}
+.tab-bar{display:flex;border-bottom:1px solid var(--border);margin-bottom:0}
+.tab{font-family:var(--font-mono);font-size:.62rem;padding:.7rem 1.2rem;background:transparent;border:none;color:var(--muted);cursor:pointer;letter-spacing:.1em;transition:all .3s;border-bottom:2px solid transparent;position:relative;top:1px}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-content{display:none;padding-top:1.5rem}
+.tab-content.active{display:block}
+:root{--bg:#04050c;--bg2:#090b18;--bg3:#0e1128;--text:#b8b4ac;--cream:#ece8e0;--muted:#52566a;--gold:#c9a84c;--gold2:#d4a853;--gold-dim:rgba(201,168,76,.08);--violet:#8a6abf;--violet-glow:#a88ae0;--fern:#5a9a72;--border:rgba(255,255,255,.04);--font-display:'Fraunces',Georgia,serif;--font-body:'DM Sans',sans-serif;--font-kr:'Noto Serif KR',serif;--font-mono:'JetBrains Mono',monospace}
+.particle{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(138,106,191,.25),transparent 70%);animation:drift linear infinite}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;opacity:.55}
+.hero-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 55% 55% at 50% 50%,transparent 0%,rgba(4,5,12,.55) 50%,var(--bg) 78%),linear-gradient(to bottom,rgba(4,5,12,0) 55%,var(--bg) 100%)}
+.hero-title em{font-style:italic;color:var(--violet-glow)}
+.hero-scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--violet),transparent);animation:breathe 3s ease-in-out infinite}
+.prose-drop::first-letter{font-family:var(--font-display);font-weight:400;float:left;font-size:3.8rem;line-height:.8;margin:.08em .18em 0 0;color:var(--violet-glow)}
+.quote-block{border-left:2px solid var(--violet);padding:2rem 2.5rem;margin:3.5rem 0;background:rgba(138,106,191,.04);border-radius:0 12px 12px 0;opacity:0;transform:translateY(24px);transition:all 1s cubic-bezier(.23,1,.32,1) .25s}
+.pull-quote-rule{width:50px;height:1px;margin:1.5rem auto 0;background:linear-gradient(90deg,transparent,var(--violet),transparent);opacity:.5}
+.eq{font-family:var(--font-display);font-style:italic;font-size:clamp(1.6rem,4vw,2.4rem);color:var(--violet-glow);letter-spacing:.02em}
+.ibox::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 10%,rgba(138,106,191,.12) 50%,transparent 90%)}
+.canvas-wrap{position:relative;width:100%;background:rgba(0,0,0,.2);border-radius:12px;overflow:hidden;margin-bottom:1rem;border:1px solid rgba(255,255,255,.025)}
+.canvas-wrap canvas{width:100%;height:100%;display:block;cursor:crosshair}
+.btn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.06)}
+.stat-val{font-family:var(--font-mono);font-size:1.1rem;color:var(--gold2);font-weight:300;word-break:break-all}
+.mb-layout{display:flex;gap:1.5rem;align-items:flex-start}
+.mb-main{flex:1;min-width:0}
+.mb-side{width:200px;flex-shrink:0}
+.orbit-mini{width:100%;aspect-ratio:1;background:rgba(0,0,0,.3);border-radius:12px;overflow:hidden;margin-bottom:.75rem;border:1px solid rgba(255,255,255,.02)}
+.orbit-mini canvas{width:100%;height:100%}
+.pal-strip{display:flex;gap:3px;margin-bottom:.5rem}
+.pal-sw{flex:1;height:20px;border-radius:4px;cursor:pointer;border:2px solid transparent;transition:border-color .2s,transform .2s}
+.pal-sw:hover{transform:scaleY(1.35)}
+.pal-sw.active{border-color:rgba(255,255,255,.5)}
+.pal-label{font-family:var(--font-mono);font-size:.55rem;color:var(--muted);text-align:center;letter-spacing:.1em}
+.zoom-info{font-family:var(--font-mono);font-size:.6rem;color:var(--muted);line-height:1.7;margin-top:.75rem}
+.zoom-info span{color:var(--gold)}
+@media(max-width:700px){.mb-layout{flex-direction:column}.mb-side{width:100%;display:flex;gap:1rem;flex-wrap:wrap}.orbit-mini{width:140px}}
+.section-sep{width:50px;height:1px;margin:4rem auto;background:linear-gradient(90deg,transparent,var(--violet),transparent);opacity:.35}
+:root{--bg:#04050c;--bg2:#090b18;--bg3:#0e1128;--text:#b8b4ac;--cream:#ece8e0;--muted:#52566a;--gold:#c9a84c;--gold2:#d4a853;--gold-dim:rgba(201,168,76,.08);--violet:#8a6abf;--rose:#c0687a;--rose-glow:#e08898;--rose-dim:rgba(192,104,122,.06);--fern:#5a9a72;--border:rgba(255,255,255,.04);--font-display:'Fraunces',Georgia,serif;--font-body:'DM Sans',sans-serif;--font-kr:'Noto Serif KR',serif;--font-mono:'JetBrains Mono',monospace}
+.particle{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(192,104,122,.22),transparent 70%);animation:drift linear infinite}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;opacity:.5}
+.hero-title em{font-style:italic;color:var(--rose-glow)}
+.hero-scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--rose),transparent);animation:breathe 3s ease-in-out infinite}
+.prose-drop::first-letter{font-family:var(--font-display);font-weight:400;float:left;font-size:3.8rem;line-height:.8;margin:.08em .18em 0 0;color:var(--rose-glow)}
+.quote-block{border-left:2px solid var(--rose);padding:2rem 2.5rem;margin:3.5rem 0;background:var(--rose-dim);border-radius:0 12px 12px 0;opacity:0;transform:translateY(24px);transition:all 1s cubic-bezier(.23,1,.32,1) .25s}
+.pull-quote-rule{width:50px;height:1px;margin:1.5rem auto 0;background:linear-gradient(90deg,transparent,var(--rose),transparent);opacity:.5}
+.ibox::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 10%,rgba(192,104,122,.12) 50%,transparent 90%)}
+.dual-view{display:flex;gap:1.5rem;align-items:flex-start}
+.dual-view .panel{flex:1;min-width:0}
+.panel-label{font-family:var(--font-mono);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:.6rem;text-align:center}
+.stat-val{font-family:var(--font-mono);font-size:1rem;color:var(--gold2);font-weight:300;word-break:break-all}
+.crosshair-hint{font-family:var(--font-mono);font-size:.55rem;color:var(--muted);text-align:center;margin-top:.75rem;opacity:.5}
+.section-sep{width:50px;height:1px;margin:4rem auto;background:linear-gradient(90deg,transparent,var(--rose),transparent);opacity:.35}
+@media(max-width:700px){.dual-view{flex-direction:column}}
+footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--border);margin-top:2rem}
+.particle{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(90,154,114,.25),transparent 70%);animation:drift linear infinite}
+#heroCanvas{position:absolute;inset:0;width:100%;height:100%;opacity:.4;mix-blend-mode:screen}
+.hero-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 55% at 50% 55%,transparent 0%,rgba(4,5,12,.55) 50%,var(--bg) 78%),linear-gradient(to bottom,rgba(4,5,12,0) 55%,var(--bg) 100%)}
+.hero-scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--fern-glow),transparent);animation:breathe 3s ease-in-out infinite}
+.prose-drop::first-letter{font-family:var(--font-display);font-weight:400;float:left;font-size:3.8rem;line-height:.8;margin:.08em .18em 0 0;color:var(--fern-glow)}
+.visible .sec-num,.visible .sec-title,.visible .sec-title-kr,.visible .prose,.visible .ibox,.visible .quote-block,.visible .pull-quote,.visible .ref-section,.visible .coda-section{opacity:1;transform:translateY(0)}
+.ibox::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent 10%,rgba(90,154,114,.12) 50%,transparent 90%)}
+.section-sep{width:50px;height:1px;margin:4rem auto;background:linear-gradient(90deg,transparent,var(--fern-glow),transparent);opacity:.35}
+/* Coda */
+.coda-section{padding:5rem 2rem 3rem;max-width:640px;margin:0 auto;text-align:center;position:relative;z-index:1;opacity:0;transform:translateY(24px);transition:all 1s cubic-bezier(.23,1,.32,1) .2s}
+.coda-text{font-family:var(--font-display);font-size:1.12rem;line-height:2.2;color:var(--cream);font-weight:300;font-style:italic;margin-bottom:2rem}
+.coda-close{font-family:var(--font-display);font-size:.9rem;color:var(--muted);font-style:italic;opacity:.6;line-height:1.9}
+/* References */
+.ref-section{max-width:800px;margin:0 auto;padding:4rem 2rem 2rem;opacity:0;transform:translateY(24px);transition:all 1s cubic-bezier(.23,1,.32,1) .2s}
+.ref-heading{font-family:var(--font-display);font-size:1.2rem;font-weight:400;color:var(--cream);margin-bottom:2rem;letter-spacing:-.01em}
+.ref-list{list-style:none;padding:0}
+.ref-list li{font-family:var(--font-body);font-size:.82rem;color:var(--text);line-height:1.85;margin-bottom:.9rem;padding-left:1.5rem;position:relative;transition:opacity .3s}
+.ref-list li::before{content:'';position:absolute;left:0;top:.65rem;width:5px;height:5px;border-radius:50%;background:rgba(201,168,76,.25)}
+.ref-list li:hover{opacity:1}
+.ref-list li:hover::before{background:rgba(201,168,76,.6)}
+.ref-author{color:var(--cream);font-weight:400}
+.ref-title{font-style:italic;color:var(--gold)}
+.ref-detail{color:var(--muted);font-size:.78rem}
+@media(max-width:768px){.chapter-section{padding:4rem 1.5rem 3rem}.ibox{padding:1.5rem}.prose-drop::first-letter{font-size:3rem}}
+@media(max-width:480px){.hero-title{font-size:2rem}.sec-title{font-size:1.5rem}.prose{font-size:.95rem}}
+
+/* ═══ PAN / ZOOM OVERLAY ═══ */
+.canvas-wrap{position:relative}
+.pz-controls{position:absolute;top:8px;right:8px;display:flex;flex-direction:column;gap:3px;opacity:0;transition:opacity .3s;z-index:20;pointer-events:none}
+.canvas-wrap:hover .pz-controls{opacity:1;pointer-events:auto}
+.pz-btn{width:28px;height:28px;border:1px solid rgba(201,168,76,.2);background:rgba(4,5,12,.7);color:rgba(201,168,76,.7);font-family:var(--font-mono);font-size:.7rem;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;backdrop-filter:blur(6px);line-height:1;padding:0}
+.pz-btn:hover{border-color:rgba(201,168,76,.5);color:var(--gold);background:rgba(14,17,40,.85)}
+.pz-row{display:flex;gap:3px}
+
+</style>
+</head>
+<body>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+<div class="particles" id="particles"></div>
+
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 1
+     ══════════════════════════════════════════════════ -->
+
+
+
+<section id="s1_hero">
+  <canvas id="s1_heroCanvas"></canvas>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-label">Mellow Math</div>
+    <div class="hero-category">공간 · Space</div>
+    <h1 class="hero-title">자연은 어떻게<br><em>스스로를 반복</em>하는가</h1>
+    <p class="hero-sub-kr">Fractal Geometry — How Nature Learned to Repeat Itself</p>
+    <p class="hero-tagline">양치식물이 펼쳐진다. 그 잎사귀 안에 또 하나의 양치식물.<br>확대하라. 끝이 없다.</p>
+    <a class="hero-scroll" onclick="document.getElementById('s1_ch01').scrollIntoView({behavior:'smooth'})">
+      <span>시작</span>
+      <div class="hero-scroll-line"></div>
+    </a>
+  </div>
+</section>
+
+<section class="chapter-section" id="s1_ch01">
+  <div class="sec-num">01</div>
+  <h2 class="sec-title">구름은 구가 아니다</h2>
+  <p class="sec-title-kr">Clouds Are Not Spheres</p>
+
+  <div class="quote-block">
+    <p class="quote-text">"Clouds are not spheres, mountains are not cones, coastlines are not circles, and bark is not smooth, nor does lightning travel in a straight line."</p>
+    <p class="quote-attr">— Benoît Mandelbrot, <em>The Fractal Geometry of Nature</em> (1982)</p>
+  </div>
+
+  <p class="prose prose-drop">이천 년 동안 기하학은 <span class="hi">매끄러움</span>의 언어를 사용했다. 직선, 원, 구, 원뿔 — 유클리드의 어휘는 다듬어진 대리석과 완벽한 모서리의 세계를 묘사했다. 장엄하고, 강력했다. 일식을 예측했고, 대성당을 세웠고, 우주선을 외행성까지 보냈다. 그러나 구름 하나는 묘사하지 못했다.</p>
+
+  <p class="prose">구름 하나, 나무 하나, 해안선 하나, 강의 분기나 번개의 갈라짐조차. 자연을 채우는 거칠고 들쭉날쭉하며 끝없이 세밀한 형상들은 고전 기하학의 범위 밖에 있었다. 수 세기 동안 수학자들은 그저 외면했을 뿐이었다.</p>
+
+  <p class="prose">그러다 1967년, 폴란드 태생의 수학자 브누아 만델브로가 수수께끼 같은 제목의 논문을 발표했다: <span class="ac">"영국 해안선의 길이는 얼마인가?"</span> 그가 내놓은 답은 기하학의 기초를 뒤흔들었다.</p>
+
+  <div class="pull-quote">
+    <p class="pull-quote-text">해안선의 길이는 자의 길이에 따라 달라진다.<br>자가 0을 향해 줄어들수록, 측정된 길이는 한없이 커진다.</p>
+    <div class="pull-quote-rule"></div>
+  </div>
+
+  <p class="prose">직접 해 보라. 200 km 자는 만을 성큼 건너뛰고 하나의 수를 보고한다. 50 km 자는 해안을 더 따라가며 더 큰 수를 보고한다. 1 km 자는 더 크고, 1 m 자는 터무니없이 더 크다. 수렴은 없다. 해안선에는 <span class="hi">확정된 길이가 없다</span>.</p>
+
+  <div class="ibox">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">자의 역설</div>
+    <div class="ibox-desc">슬라이더를 움직여 자의 길이를 줄여 보세요. 측정된 길이가 올라가는 것을 확인하세요 — 작은 자일수록 큰 자가 건너뛴 세부를 발견합니다.</div>
+    <div class="canvas-wrap" style="aspect-ratio:16/9"><canvas id="s1_coastCanvas"></canvas></div>
+    <div class="slider-row"><span class="slider-label">자의 길이</span><input type="range" id="s1_rulerSlider" min="4" max="80" value="40" step="1"><span class="slider-val" id="s1_rulerVal">40 px</span></div>
+    <div class="stats" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="stat"><div class="stat-label">사용된 자</div><div class="stat-val" id="s1_rulerCount">—</div></div>
+      <div class="stat"><div class="stat-label">측정된 길이</div><div class="stat-val" id="s1_measuredLen">—</div><div class="stat-unit">pixels</div></div>
+      <div class="stat"><div class="stat-label">Dimension ≈</div><div class="stat-val" id="s1_fractalDim">—</div></div>
+    </div>
+  </div>
+
+  <p class="prose">이것이 조용한 혁명의 시작이었다. 고전 기하학은 모든 곡선에 명확한 길이가 있다고 가정했다 — 측정하면 끝이라고. 만델브로는 거칠고 자기유사적인 형상에서는 <span class="hi">길이가 숫자가 아니라 스케일의 함수</span>임을 보였다. 태어나기를 기다리던 개념은 더 나은 자가 아니었다. 완전히 새로운 종류의 <span class="ac">차원</span>이었다.</p>
+
+  <div class="section-sep"></div>
+
+  <div class="ibox">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">삼각형에서 눈송이로</div>
+    <div class="ibox-desc">코흐 눈송이는 삼각형에서 시작합니다. 각 단계마다 모든 변에 작은 삼각형이 솟아나며 둘레는 매번 4/3배 증가합니다. 무한히 반복하면: 무한한 길이를 가지면서 유한한 면적을 둘러싸는 곡선이 됩니다.</div>
+    <div class="btn-row" id="s1_kochBtns">
+      <button class="btn active" data-n="0">n = 0</button><button class="btn" data-n="1">n = 1</button><button class="btn" data-n="2">n = 2</button><button class="btn" data-n="3">n = 3</button><button class="btn" data-n="4">n = 4</button><button class="btn" data-n="5">n = 5</button>
+    </div>
+    <div class="canvas-wrap" style="aspect-ratio:4/3"><canvas id="s1_kochCanvas"></canvas></div>
+    <div class="stats" style="grid-template-columns:1fr 1fr">
+      <div class="stat"><div class="stat-label">선분 수</div><div class="stat-val" id="s1_kochSegs">3</div></div>
+      <div class="stat"><div class="stat-label">둘레</div><div class="stat-val" id="s1_kochPerim">1.00</div><div class="stat-unit">× original</div></div>
+    </div>
+  </div>
+
+  <p class="prose">헬게 폰 코흐는 1904년에 이 구성을 의도적 도발로 발표했다 — 어떤 점에서도 접선이 없는 연속 곡선. 당시 해석학자들은 이를 <em>병리적</em>이라고 불렀다. 그러나 이 곡선의 프랙탈 차원은 <span class="hi">log 4 / log 3 ≈ 1.26</span>: 선보다 복잡하고, 채워진 면보다 단순한. 진정으로, 아름답게, 그 사이에 있는 무언가.</p>
+
+  <p class="prose">이 형상들을 일컫는 단어 — <span class="ac">프랙탈(fractal)</span> — 은 1975년 만델브로가 라틴어 <em>fractus</em>(부서진, 산산조각 난)에서 만들었다. 유클리드 기하학은 우리가 <em>짓는</em> 세계를 묘사했다: 벽, 바퀴, 다리. 프랙탈 기하학은 <span class="hi">자라나는</span> 세계를 묘사한다: 잎사귀의 잎맥, 강의 지류, 부서지는 파도의 거품, 여름 하늘을 가르는 번개의 갈라짐.</p>
+</section>
+
+
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 2
+     ══════════════════════════════════════════════════ -->
+
+
+
+<section id="s2_hero">
+  <canvas id="s2_heroCanvas"></canvas>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-label">Mellow Math</div>
+    <div class="hero-number">02</div>
+    <h1 class="hero-title">측정할 수 없는 것을<br><em>측정하다</em></h1>
+    <p class="hero-sub-kr">Measuring the Unmeasurable — What Is Dimension?</p>
+    <p class="hero-tagline">직선은 1차원에 산다. 평면은 2차원에.<br>1.585차원에 사는 대상은 어떤 것일까?</p>
+    <a class="hero-scroll" onclick="document.getElementById('s2_ch02a').scrollIntoView({behavior:'smooth'})">
+      <span>시작</span>
+      <div class="hero-scroll-line"></div>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ 02-A ═══ -->
+<section class="chapter-section" id="s2_ch02a">
+  <div class="sec-num">02 · A</div>
+  <h2 class="sec-title">선과 면 사이에서</h2>
+  <p class="sec-title-kr">Between the Lines</p>
+
+  <p class="prose prose-drop">우리는 모두 차원이 무엇인지 안다고 생각한다. 직선은 1차원: 하나의 수가 위치를 알려준다. 평면은 두 개, 공간은 세 개가 필요하다. 수천 년 동안 이것이 전부였다. 차원은 손가락처럼 자연스러운 자연수였다.</p>
+
+  <p class="prose">하지만 앞 장의 코흐 눈송이를 생각해 보자. 하나의 끊기지 않는 선으로 그려진다 — 직선처럼. 그러나 너무나 촘촘히 구부러져 평면의 한 영역을 거의 채운다. 1차원이라 하기엔 너무 거칠고, 2차원이라 하기엔 너무 얇다. 1918년, 독일 수학자 펠릭스 하우스도르프는 형상 자체가 속삭이는 듯한 말을 용기 있게 꺼냈다: <span class="hi">차원은 분수가 될 수 있다</span>.</p>
+
+  <div class="quote-block">
+    <p class="quote-text">"The notion of dimension that everyone finds intuitive — 1, 2, 3 — is too crude for the shapes that nature actually produces."</p>
+    <p class="quote-attr">— Kenneth Falconer, <em>Fractal Geometry: Mathematical Foundations and Applications</em></p>
+  </div>
+
+  <p class="prose">이 아이디어는 아름답게 단순한 질문에 기반한다. 대상을 <span class="hi">2배로 확대</span>하면, 확대된 버전을 채우는 데 몇 개의 복사본이 필요한가? 선분: 2개 — 즉 2¹. 정사각형: 4개 — 2². 정육면체: 8개 — 2³. 이 지수가 곧 차원이다. 이제 시에르핀스키 삼각형을 생각하자: 2배로 확대하면 정확히 <span class="ac">3</span>개의 복사본이 필요하다. 차원은 log 3 / log 2 ≈ 1.585 — 유클리드의 어떤 페이지에도 없는 수.</p>
+
+  <div class="eq-block">
+    <div class="eq">D = log N / log S</div>
+    <div class="eq-cap">N개의 복사본, 스케일 인수 S — 자기유사 차원</div>
+  </div>
+
+  <div class="pull-quote">
+    <p class="pull-quote-text">직선은 1. 평면은 2. 정육면체는 3.<br>시에르핀스키 삼각형은 1.585. 코흐 눈송이는 1.262.<br>차원은 세는 문제가 아니다. 스케일링의 문제이다.</p>
+    <div class="pull-quote-rule"></div>
+  </div>
+</section>
+
+<!-- ═══ 02-B ═══ -->
+<section class="chapter-section" id="s2_ch02b">
+  <div class="sec-num">02 · B</div>
+  <h2 class="sec-title">상자 세기</h2>
+  <p class="sec-title-kr">Counting Boxes — Experimenting with Dimension</p>
+
+  <p class="prose">완벽하게 자기유사적인 형상은 드문 사치다. 해안선, 나무 껍질, 난류 — 모든 스케일에서 거칠지만 정확히 반복하지는 않는다. 이런 형상을 위해 수학자들은 더 관대한 도구인 <span class="hi">상자 세기(box-counting)</span>를 사용한다. 절차는 거의 아이처럼 단순하다: 형상 위에 작은 상자 격자를 놓는다. 형상에 닿는 상자를 센다. 상자를 줄이고 다시 센다. 결과를 로그-로그 그래프에 점을 찍는다. 그 <span class="ac">직선의 기울기</span>가 프랙탈 차원이다.</p>
+
+  <div class="ibox">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">상자 세기 실험실</div>
+    <div class="ibox-desc">프랙탈 형상을 선택하세요. 격자 해상도를 조절하세요. 오른쪽의 로그-로그 그래프가 실시간으로 완성됩니다 — 기울기가 거칠음 속에 숨은 차원을 드러냅니다.</div>
+
+    <div class="btn-row" id="s2_shapeButtons">
+      <button class="btn active" data-shape="koch">Koch Curve</button>
+      <button class="btn" data-shape="sierpinski">Sierpiński</button>
+      <button class="btn" data-shape="cantor">Cantor Set</button>
+      <button class="btn" data-shape="circle">Circle <span style="opacity:.4">(D = 1)</span></button>
+    </div>
+
+    <div class="plot-wrap">
+      <div class="canvas-wrap" style="aspect-ratio:1/1;max-width:420px"><canvas id="s2_boxCanvas"></canvas></div>
+      <div class="canvas-wrap" style="aspect-ratio:1/1;max-width:300px"><canvas id="s2_loglogCanvas"></canvas></div>
+    </div>
+
+    <div class="ctrl-row">
+      <span class="ctrl-label">격자 크기</span>
+      <input type="range" id="s2_gridSlider" min="2" max="7" value="3" step="1">
+      <span class="ctrl-val" id="s2_gridVal">8 × 8</span>
+    </div>
+
+    <div class="stats" style="grid-template-columns:1fr 1fr 1fr 1fr">
+      <div class="stat"><div class="stat-label">ε</div><div class="stat-val" id="s2_boxEps">—</div></div>
+      <div class="stat"><div class="stat-label">N(ε)</div><div class="stat-val" id="s2_boxCount">—</div></div>
+      <div class="stat"><div class="stat-label">추정 D</div><div class="stat-val" id="s2_boxDim">—</div></div>
+      <div class="stat"><div class="stat-label">정확한 D</div><div class="stat-val" id="s2_trueDim">—</div></div>
+    </div>
+  </div>
+
+  <p class="prose">루이스 프라이 리처드슨은 1950년대에 이 방법을 해안선에 적용했다. 만델브로는 면화 가격의 변동에 적용했다. 물리학자들은 난류를, 우주학자들은 은하단의 거품 구조를 측정한다. 상자 세기 차원은 <span class="hi">거칠음 자체의 질감</span>을 측정하는 보편적 도구다.</p>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ═══ 02-C ═══ -->
+<section class="chapter-section" id="s2_ch02c">
+  <div class="sec-num">02 · C</div>
+  <h2 class="sec-title">괴물들의 박물관</h2>
+  <p class="sec-title-kr">The Monsters in the Museum</p>
+
+  <p class="prose prose-drop">앙리 푸앵카레는 이것들을 <span class="ac">"괴물들의 전시실"</span>이라 불렀다 — 19세기 해석학자들이 미적분학의 기초를 시험하기 위해 만든 병리적 곡선들. 연속이지만 어디에서도 미분불가능. 무한한 둘레이지만 유한한 면적. 비가산 무한개의 점이지만 총 길이는 0. 수십 년간 이 생물들은 수학적 호기심거리로 치부되었다. 그러다 자연이 밝혀냈다 — 처음부터 이 형상들을 그리고 있었다는 것을.</p>
+
+  <!-- Sierpiński Three Ways -->
+  <div class="ibox">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">시에르핀스키 삼각형, 세 가지 방법</div>
+    <div class="ibox-desc">완전히 다른 세 가지 과정 — 기하학적, 확률적, 정수론적 — 에서 동일한 형상이 나타납니다. 우연이 아닙니다. 정리(theorem)입니다.</div>
+
+    <div class="tab-bar">
+      <button class="tab active" data-tab="removal">제거</button>
+      <button class="tab" data-tab="chaos">카오스 게임</button>
+      <button class="tab" data-tab="pascal">Pascal mod 2</button>
+    </div>
+
+    <div class="tab-content active" id="s2_tab-removal">
+      <div class="ibox-desc" style="margin-top:0;opacity:.55;font-size:.78rem">채워진 삼각형으로 시작합니다. 중앙 1/4을 제거합니다. 남은 조각에서 다시 중앙 1/4을 제거합니다. 영원히 반복합니다.</div>
+      <div class="canvas-wrap" style="aspect-ratio:4/3"><canvas id="s2_removalCanvas"></canvas></div>
+      <div class="btn-row" id="s2_remBtns">
+        <button class="btn active" data-rn="0">n = 0</button><button class="btn" data-rn="1">1</button><button class="btn" data-rn="2">2</button><button class="btn" data-rn="3">3</button><button class="btn" data-rn="4">4</button><button class="btn" data-rn="5">5</button><button class="btn" data-rn="6">6</button><button class="btn" data-rn="7">7</button>
+      </div>
+      <div class="stats" style="grid-template-columns:1fr 1fr">
+        <div class="stat"><div class="stat-label">삼각형 수</div><div class="stat-val" id="s2_remCount">1</div></div>
+        <div class="stat"><div class="stat-label">남은 면적</div><div class="stat-val" id="s2_remArea">100%</div></div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="s2_tab-chaos">
+      <div class="ibox-desc" style="margin-top:0;opacity:.55;font-size:.78rem">아무 시작점을 고릅니다. 3면 주사위를 던집니다. 선택된 꼭짓점까지 절반을 점프합니다. 만 번 반복합니다. 순수한 우연에서 질서가.</div>
+      <div class="canvas-wrap" style="aspect-ratio:4/3"><canvas id="s2_chaosCanvas"></canvas></div>
+      <div class="ctrl-row">
+        <button class="btn" id="s2_chaosStart">▶ 실행</button>
+        <button class="btn" id="s2_chaosReset">초기화</button>
+        <span class="ctrl-val" id="s2_chaosCount" style="margin-left:auto">0 points</span>
+      </div>
+    </div>
+
+    <div class="tab-content" id="s2_tab-pascal">
+      <div class="ibox-desc" style="margin-top:0;opacity:.55;font-size:.78rem">파스칼의 삼각형을 씁니다. 각 수를 색칠합니다: 홀수면 밝게, 짝수면 어둡게. 산술이 기하학을 드러냅니다.</div>
+      <div class="canvas-wrap" style="aspect-ratio:4/3"><canvas id="s2_pascalCanvas"></canvas></div>
+      <div class="ctrl-row">
+        <span class="ctrl-label">행</span>
+        <input type="range" id="s2_pascalSlider" min="4" max="256" value="64" step="1">
+        <span class="ctrl-val" id="s2_pascalVal">64</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="prose">바츠와프 시에르핀스키가 1915년에 제거 구성을 처음 기술했다. 카오스 게임과의 연결은 1980년대에 마이클 반슬리가 널리 알렸다. 파스칼 삼각형 패턴은 더 일찍 알려졌다. 관련 없는 방법에 의한 세 가지 독립적 발견이 <span class="hi">같은 형상</span>으로 수렴한다. 수학에서 이런 수렴은 호기심거리가 아니다 — 무언가 근본적인 것이 작동하고 있다는 신호다.</p>
+
+  <div class="section-sep"></div>
+
+  <!-- Cantor's Dust -->
+  <div class="ibox">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">칸토어의 먼지</div>
+    <div class="ibox-desc">선분으로 시작합니다. 가운데 1/3을 제거합니다. 남은 조각에서 다시 가운데 1/3을 제거합니다. 무한히 반복하면 무엇이 남을까? 비가산 무한개의 점, 먼지처럼 흩어진 — 총 길이는 0.</div>
+
+    <div class="canvas-wrap" style="aspect-ratio:5/2"><canvas id="s2_cantorCanvas"></canvas></div>
+    <div class="btn-row" id="s2_cantorBtns">
+      <button class="btn active" data-cn="0">n = 0</button><button class="btn" data-cn="1">1</button><button class="btn" data-cn="2">2</button><button class="btn" data-cn="3">3</button><button class="btn" data-cn="4">4</button><button class="btn" data-cn="5">5</button><button class="btn" data-cn="6">6</button><button class="btn" data-cn="7">7</button><button class="btn" data-cn="8">8</button>
+    </div>
+    <div class="stats" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="stat"><div class="stat-label">선분 수</div><div class="stat-val" id="s2_cantorSegs">1</div></div>
+      <div class="stat"><div class="stat-label">남은 길이</div><div class="stat-val" id="s2_cantorLen">100%</div></div>
+      <div class="stat"><div class="stat-label">차원</div><div class="stat-val">0.631</div><div class="stat-unit">log 2 / log 3</div></div>
+    </div>
+  </div>
+
+  <p class="prose">게오르크 칸토어는 1883년에 이 집합을 소개했다 — 기하학적 대상이 아닌 논리적 대상으로, 무한을 이해하기 위한 전쟁의 무기로. 실수 직선 전체와 같은 크기(cardinality)를 가지면서도 공간을 전혀 차지하지 않는다. 프랙탈 차원 약 0.631은 직관이 말하는 바로 그 위치에 놓인다: <span class="hi">고립된 점들보다는 많고</span>, <span class="hi">선보다는 적은</span>. 연속체의 유령. 구조를 가진 먼지. 한때 온전했던 것의 뼈대.</p>
+</section>
+
+
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 3
+     ══════════════════════════════════════════════════ -->
+
+
+
+<section id="s3_hero">
+  <canvas id="s3_heroCanvas"></canvas>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-label">Mellow Math</div>
+    <div class="hero-number">03</div>
+    <h1 class="hero-title"><em>만델브로</em> 집합</h1>
+    <p class="hero-sub-kr">The Mandelbrot Set — The Most Complex Object in Mathematics</p>
+    <p class="hero-tagline">하나의 방정식. 무한한 디테일.<br>z² + c 안에 숨겨진 우주.</p>
+    <a class="hero-scroll" onclick="document.getElementById('s3_ch03a').scrollIntoView({behavior:'smooth'})">
+      <span>시작</span>
+      <div class="hero-scroll-line"></div>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ 03-A ═══ -->
+<section class="chapter-section" id="s3_ch03a">
+  <div class="sec-num">03 · A</div>
+  <h2 class="sec-title">하나의 방정식, 무한한 세계</h2>
+  <p class="sec-title-kr">One Equation, Infinite Worlds</p>
+
+  <p class="prose prose-drop">복소수 <span class="ac">c</span>를 하나 고르자. 0에서 시작한다. 제곱하고 c를 더한다. 결과를 다시 제곱하고 c를 더한다. 영원히 계속한다. 어떤 c에서는 숫자들이 작은 채로 남아, 안정된 궤도의 행성처럼 원점 근처를 맴돈다. 다른 c에서는 무한대를 향해 소용돌이치며 돌아오지 않는다. <span class="hi">만델브로 집합</span>은 궤도가 유계인 모든 c의 모임이다.</p>
+
+  <div class="eq-block">
+    <div class="eq">z<sub>n+1</sub> = z<sub>n</sub>² + c</div>
+    <div class="eq-cap">Start with z₀ = 0. The Mandelbrot set M = {c ∈ ℂ : the orbit of 0 remains bounded}.</div>
+  </div>
+
+  <p class="prose">이것이 정의의 전부다. 숨겨진 기계도, 고급 선수과목도 없다 — 그저 제곱하고 더하기를 반복할 뿐. 그런데 이 규칙에서 많은 수학자들이 <span class="hi">지금까지 발견된 가장 복잡한 대상</span>이라 부르는 것이 떠오른다: 나선, 필라멘트, 해마, 그리고 모든 스케일에서 끝없이 중첩되는 자기 자신의 축소 복사본으로 장식된 무한히 세밀한 경계.</p>
+
+  <div class="quote-block">
+    <p class="quote-text">"The Mandelbrot set is the most complicated object in mathematics — its boundary is a fractal curve of infinite complexity, any portion of which can be blown up to reveal ever more outstanding detail."</p>
+    <p class="quote-attr">— Roger Penrose, <em>The Emperor's New Mind</em> (1989)</p>
+  </div>
+
+  <p class="prose">브누아 만델브로는 1980년, 뉴욕 요크타운하이츠의 IBM 토마스 J. 왓슨 연구소에서 조잡한 도트매트릭스 단말기로 이것을 처음 보았다. 최초의 출판된 이미지 — 1978년 로버트 브룩스와 J. 피터 마텔스키에 의한 — 는 인쇄물 위의 거친 별표 격자였다. 아무도 그 안에 무엇이 있는지 상상하지 못했다. 더 빠른 컴퓨터가 경계를 전해상도로 드러냈을 때, 노련한 수학자들도 경악했다. 이 형상은 <span class="ac">가능한 모든 역학적 행동의 백과사전</span>을, 복소평면 자체가 색인하고 분류한 채로, 담고 있는 듯했다.</p>
+
+  <div class="pull-quote">
+    <p class="pull-quote-text">가장 단순한 반복 — 제곱하고 더하기 — 에서 태어난 형상이<br>무한한 복잡성을 담고 있다.<br>수학에서 이것에 대비할 수 있었던 것은 아무것도 없었다.</p>
+    <div class="pull-quote-rule"></div>
+  </div>
+</section>
+
+<!-- ═══ 03-B: Explorer ═══ -->
+<section class="chapter-section" id="s3_ch03b">
+  <div class="sec-num">03 · B</div>
+  <h2 class="sec-title">탐험</h2>
+  <p class="sec-title-kr">Explore</p>
+
+  <div class="ibox">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">만델브로 탐험기</div>
+    <div class="ibox-desc">아무 곳이나 클릭하면 확대됩니다. 마우스를 올리면 오른쪽 패널에 z₀, z₁, z₂, … 의 궤도가 표시됩니다. 아래에서 색상 팔레트를 선택하세요. 우클릭 또는 버튼으로 축소합니다.</div>
+
+    <div class="mb-layout">
+      <div class="mb-main">
+        <div class="canvas-wrap" style="aspect-ratio:3/2"><canvas id="s3_mbCanvas"></canvas></div>
+        <div class="ctrl-row">
+          <button class="btn" id="s3_zoomOutBtn">⊖ 축소</button>
+          <button class="btn" id="s3_resetBtn">초기화</button>
+          <span class="ctrl-val" id="s3_zoomLevel" style="margin-left:auto">1×</span>
+        </div>
+      </div>
+      <div class="mb-side">
+        <div class="orbit-mini"><canvas id="s3_orbitCanvas"></canvas></div>
+        <div class="pal-label" style="margin-bottom:.5rem">색상 팔레트</div>
+        <div id="s3_palContainer"></div>
+        <div class="zoom-info">
+          <div>중심: <span id="s3_infoCenter">−0.5 + 0i</span></div>
+          <div>커서: <span id="s3_infoCursor">—</span></div>
+          <div>반복: <span id="s3_infoIter">—</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="prose">깊이 확대할수록 <span class="hi">자기유사성</span>을 주목하라: 경계를 따라 어디에나 완전한 만델브로 집합의 축소 복사본이 나타나며, 각각은 픽셀로도 표현할 수 없을 만큼 가느다란 필라멘트로 연결되어 있다. 각 아기 만델브로는 자신만의 소용돌이 은하 중심에 앉아 있다. 집합은 <span class="ac">연결</span>되어 있다 — 하나의 끊기지 않는 조각 — 그러면서도 경계의 프랙탈 차원은 2, 즉 채워진 면만큼이나 거칠다. 거의 평면인 곡선.</p>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ═══ 03-C: Anatomy ═══ -->
+<section class="chapter-section" id="s3_ch03c">
+  <div class="sec-num">03 · C</div>
+  <h2 class="sec-title">집합의 해부</h2>
+  <p class="sec-title-kr">Anatomy of the Set</p>
+
+  <p class="prose prose-drop">만델브로 집합은 무작위 형상이 아니다. 반복 z → z² + c의 <span class="hi">가능한 모든 역학적 행동의 지도</span>다. 큰 중앙 심장형(cardioid)은 궤도가 고정점에 안착하는 c 값 — 주기 1 — 을 담는다. 왼쪽의 큰 원형 볼록이는 두 값 사이를 오가는 주기-2 궤도를 담는다. 더 작은 볼록이들은 주기 3, 4, 5, …에 대응하며, 경계를 따라 정밀한 순서로 배열되어 있다.</p>
+
+  <div class="ibox">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">주기 지도</div>
+    <div class="ibox-desc">만델브로 집합 위에 마우스를 올려 보세요. 궤도가 거의 반복되기까지의 단계 수 — 주기 — 가 탐지되어 표시됩니다. 각 주기에는 고유한 색이 있습니다.</div>
+
+    <div class="canvas-wrap" style="aspect-ratio:3/2"><canvas id="s3_periodCanvas"></canvas></div>
+    <div class="stats" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="stat"><div class="stat-label">점 c</div><div class="stat-val" id="s3_periodC">—</div></div>
+      <div class="stat"><div class="stat-label">주기</div><div class="stat-val" id="s3_periodVal">—</div></div>
+      <div class="stat"><div class="stat-label">집합 내?</div><div class="stat-val" id="s3_periodIn">—</div></div>
+    </div>
+  </div>
+
+  <p class="prose">1980년대에 아드리앵 두아디와 존 허바드는 심장형에 붙은 모든 볼록이가 정확한 유리수 <span class="ac">회전수</span>를 가지며, 이것이 파레이 수열과 동일한 순서로 배열됨을 증명했다 — 연분수, 스턴-브로코 나무, 행성 궤도의 공명 패턴을 지배하는 바로 그 구조. 만델브로 집합은 <span class="hi">정수론, 복소해석학, 위상수학</span>이 만나는 교차로다.</p>
+
+  <p class="prose">역학계의 위대한 미해결 문제 중 하나: <span class="ac">만델브로 집합은 국소적으로 연결인가?</span> 이것이 두아디와 허바드가 제기한 MLC 추측이다. 참이라면, 집합은 원에서의 연속 전사로 완전히 기술될 수 있다 — 무한한 복잡성 아래에 일종의 위상적 단순함이 존재한다는 뜻. 요코즈, 류비치, 칸 등의 40년에 걸친 연구 뒤에도 MLC는 열린 문제다. 만델브로 집합은 여전히 가장 깊은 비밀을 지키고 있다.</p>
+</section>
+
+
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 4
+     ══════════════════════════════════════════════════ -->
+
+
+
+<section id="s4_hero">
+  <canvas id="s4_heroCanvas"></canvas>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-label">Mellow Math</div>
+    <div class="hero-number">04</div>
+    <h1 class="hero-title">줄리아의 <em>꿈</em></h1>
+    <p class="hero-sub-kr">Julia's Dream — One Universe for Every Point</p>
+    <p class="hero-tagline">젊은 군인, 저격수의 총알에 산산이 부서진 얼굴,<br>어떤 눈도 본 적 없는 형상을 상상했다.</p>
+    <a class="hero-scroll" onclick="document.getElementById('s4_ch04a').scrollIntoView({behavior:'smooth'})">
+      <span>시작</span>
+      <div class="hero-scroll-line"></div>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ 04-A ═══ -->
+<section class="chapter-section" id="s4_ch04a">
+  <div class="sec-num">04 · A</div>
+  <h2 class="sec-title">컴퓨터 이전의 상상력</h2>
+  <p class="sec-title-kr">Before the Computer</p>
+
+  <p class="prose prose-drop">1918년 1월, 가스통 줄리아는 스물다섯 살이었다. 슈맹데담 전투에서 독일군의 총탄에 코를 잃었고, 남은 생애 동안 상처 위에 가죽 마스크를 쓰게 되었다. 군 병원에서 회복하는 동안 그는 — 손으로, 199쪽의 치밀한 수학적 논증으로 — 복소평면에서 유리함수의 반복에 관한 논문을 썼다. 단 하나의 컴퓨터도, 단 하나의 이미지도 없이, 오직 종이와 비범한 정신만으로, 단순한 공식 z → z² + c의 반복이 경이로운 정교함의 경계를 만들어냄을 증명했다.</p>
+
+  <p class="prose">그는 그것들을 볼 수 없었다. 증명의 논리에서, 그것들이 존재해야 한다고 추론할 수 있었을 뿐 — 무한한 디테일의 형상들, 복소수 안에 살며, 누군가가 보기를 기다리는.</p>
+
+  <div class="quote-block">
+    <p class="quote-text">"Each complex number c determines a Julia set — the boundary between order and chaos for the iteration z → z² + c. The Mandelbrot set is the atlas that indexes them all."</p>
+    <p class="quote-attr">— John Milnor, <em>Dynamics in One Complex Variable</em></p>
+  </div>
+
+  <p class="prose">핵심 통찰: 복소수 <span class="ac">c</span>를 고정하고 모든 가능한 초기점 z₀에서 z → z² + c를 반복한다. 어떤 시작점은 무한대로 탈출하는 궤도를, 다른 시작점은 영원히 유계인 궤도를 만든다. <span class="hi">줄리아 집합</span>은 이 두 운명의 경계 — 갇힌 것과 자유로운 것을 가르는 면도날 같은 변경이다. c의 모든 값에 대해 다른 형상이며, 어떤 둘도 같지 않다.</p>
+
+  <p class="prose">같은 시기에 파리에서 독립적으로 작업하던 피에르 파투는 다른 방법으로 놀라울 정도로 유사한 결론에 도달했다. 둘 사이에서 줄리아와 파투는 오늘날 <span class="hi">복소역학</span>이라 부르는 것의 기초를 세웠다 — 컴퓨터가 보여주기까지 60년 동안 아무도 실제로 <em>보지</em> 못할 형상들 위에 세워진 수학의 한 분야.</p>
+
+  <div class="pull-quote">
+    <p class="pull-quote-text">전쟁 부상 위에 가죽 마스크를 쓴 채,<br>군 병원에서 손으로 글을 쓰며,<br>무한히 정교한 형상의 존재를 증명했다.</p>
+    <div class="pull-quote-rule"></div>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ═══ 04-B ═══ -->
+<section class="chapter-section" id="s4_ch04b">
+  <div class="sec-num">04 · B</div>
+  <h2 class="sec-title">모든 점에 하나의 집합</h2>
+  <p class="sec-title-kr">One Set for Every Point</p>
+
+  <div class="ibox">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">만델브로-줄리아 대응</div>
+    <div class="ibox-desc">만델브로 집합(왼쪽)의 아무 점이나 클릭하면 해당 줄리아 집합(오른쪽)을 볼 수 있습니다. M 내부의 점은 연결된 형상을, 외부의 점은 비연결 먼지를 만듭니다. 경계가 가장 극적인 형태가 사는 곳입니다.</div>
+
+    <div class="dual-view">
+      <div class="panel">
+        <div class="panel-label">만델브로 — c 선택</div>
+        <div class="canvas-wrap" style="aspect-ratio:1/1"><canvas id="s4_mbCanvas"></canvas></div>
+      </div>
+      <div class="panel">
+        <div class="panel-label">c에 대한 줄리아 집합</div>
+        <div class="canvas-wrap" style="aspect-ratio:1/1"><canvas id="s4_juliaCanvas"></canvas></div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn" data-c="-0.7269,0.1889">해마</button>
+      <button class="btn" data-c="-0.8,0.156">나선</button>
+      <button class="btn" data-c="0.285,0.01">눈송이</button>
+      <button class="btn" data-c="-0.4,0.6">토끼</button>
+      <button class="btn" data-c="0.355,0.355">먼지</button>
+      <button class="btn" data-c="-1.25,0">수지상</button>
+      <button class="btn active" data-c="-0.7454,0.1130">경계</button>
+    </div>
+
+    <div class="stats" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="stat"><div class="stat-label">c 값</div><div class="stat-val" id="s4_juliaC">−0.7454 + 0.1130i</div></div>
+      <div class="stat"><div class="stat-label">연결?</div><div class="stat-val" id="s4_juliaConn">Yes</div></div>
+      <div class="stat"><div class="stat-label">c는 M 내부?</div><div class="stat-val" id="s4_juliaInM">Yes</div></div>
+    </div>
+    <div class="crosshair-hint">만델브로 집합을 클릭하거나 위의 프리셋을 사용하세요</div>
+  </div>
+
+  <p class="prose">이것이 1980년대에 두아디와 허바드가 증명한 깊은 정리다: <span class="hi">줄리아 집합이 연결일 필요충분조건은 c가 만델브로 집합에 속하는 것</span>이다. 만델브로 집합은 말 그대로 <span class="ac">모든 줄리아 집합의 지도</span> — 매개변수 c로 색인된, z² + c의 가능한 모든 역학적 행동의 카탈로그. M 내부: 연결된, 정교한 형상. M 외부: 평면에 재처럼 흩어진 칸토어 먼지. 경계 위: 연결된 형태가 산산조각 나기 직전의, 무한히 복잡한 전이.</p>
+</section>
+
+<!-- ═══ 04-C ═══ -->
+<section class="chapter-section" id="s4_ch04c">
+  <div class="sec-num">04 · C</div>
+  <h2 class="sec-title">형태의 사전</h2>
+  <p class="sec-title-kr">A Dictionary of Forms</p>
+
+  <p class="prose prose-drop">만델브로 집합의 각 영역은 독특한 성격의 줄리아 집합을 만든다. 주 심장형 근처에서는 매끄럽고 살짝 뒤틀린 타원 — 온순한 생물들. 주기-2 볼록이 근처에서는 줄리아 집합이 허리에서 조여 8자가 된다. 더 작은 볼록이 근처에서는 팔과 촉수가 돋아난다. 그리고 영역 간 경계 근처에서는 형상이 미친 듯이 가지 치는 <span class="ac">수지상(dendrite)</span>이 된다 — 연결과 해체 사이에 걸쳐 있는 무한한 복잡성의 나무 형태.</p>
+
+  <p class="prose"><span class="hi">만델브로 집합은 보편적</span>이다 — 정확한 수학적 의미에서: 임계점을 가진 <em>모든</em> 정칙함수 족의 매개변수 공간에 그 윤곽이 나타난다. 만델브로가 추측하고 커티스 맥멀런이 부분적으로 증명한 이 보편성 — 맥멀런은 이 연구로 1998년 필즈상을 받았다 — 은 만델브로 집합이 특정 공식의 산물이 아님을 뜻한다. 복소역학 자체의 구조적 필연이다.</p>
+
+  <p class="prose">직접 해 보라: 만델브로 집합의 경계를 따라 커서를 천천히 움직이며 줄리아 집합이 변하는 것을 지켜보라. 연결된 형상이 늘어나고, 조이고, 먼지로 산산조각 나고, 다시 새로운 형태로 응결한다. 당신은 <span class="ac">무한한 수학적 형태의 갤러리</span>를 관통하는 연속적 여정을 목도하고 있다 — 모두 같은 단순한 규칙 z → z² + c가 결정하지만, 각각은 군중 속의 얼굴처럼 고유하다.</p>
+
+  <p class="prose">줄리아가 1918년에 군 병원에서 연필과 천재성만으로 상상한 형상들은, 20세기 가장 깊은 수학으로 들어가는 관문이었다. 그는 한 번도 렌더링된 것을 보지 못했다. 컴퓨터가 처음으로 그것들을 그리기 시작한 바로 그때, 1978년에 세상을 떠났다.</p>
+</section>
+
+
+
+<!-- ══════════════════════════════════════════════════
+     SECTION 5
+     ══════════════════════════════════════════════════ -->
+
+
+
+<section id="s5_hero">
+  <canvas id="s5_heroCanvas"></canvas>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-label">Mellow Math</div>
+    <div class="hero-number">05</div>
+    <h1 class="hero-title">프랙탈은 <em>어디에나</em> 있다</h1>
+    <p class="hero-sub-kr">Fractals Are Everywhere</p>
+    <p class="hero-tagline">하나의 양치식물에서 우주의 구조까지,<br>자연의 문법은 자기유사적이다.</p>
+    <a class="hero-scroll" onclick="document.getElementById('s5_ch05a').scrollIntoView({behavior:'smooth'})">
+      <span>시작</span>
+      <div class="hero-scroll-line"></div>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ 05-A ═══ -->
+<section class="chapter-section" id="s5_ch05a">
+  <div class="sec-num">05 · A</div>
+  <h2 class="sec-title">스스로를 만든 양치식물</h2>
+  <p class="sec-title-kr">The Fern That Built Itself</p>
+
+  <p class="prose prose-drop">1988년, 수학자 마이클 반슬리는 조용히 경이로운 것을 보여주었다: 줄기, 잎사귀, 작은 잎사귀를 갖춘 사실적인 양치식물이 단 네 개의 간단한 아핀 변환에서 나타날 수 있다는 것. 설계도는 필요 없다. 계획도, 템플릿도, 설계자도 없다. 오직 <span class="hi">자기참조의 레시피</span>: "자신을 복사하고, 축소하고, 회전시키고, 놓아라"라고 말하는 규칙들. 이것이 <span class="ac">반복 함수계(IFS)</span>의 핵심 — 프랙탈 기하학에서 가장 우아한 메커니즘일 것이다.</p>
+
+  <div class="ibox">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">반슬리의 양치식물</div>
+    <div class="ibox-desc">아핀 변환의 확률을 조절하여 양치식물의 모습을 바꿔 보세요. 12만 개의 무작위 점이 네 가지 단순한 규칙을 따라 살아있는 형상으로 모입니다.</div>
+    <div class="canvas-wrap" style="aspect-ratio:3/4;max-width:400px;margin:0 auto 1.5rem"><canvas id="s5_fernCanvas"></canvas></div>
+    <div class="ctrl-row"><span class="ctrl-label">줄기 곡률</span><input type="range" id="s5_fernP2" min="0" max="30" value="7" step="1"><span class="ctrl-val" id="s5_fernP2Val">7%</span></div>
+    <div class="ctrl-row"><span class="ctrl-label">우측 기울기</span><input type="range" id="s5_fernP3" min="0" max="30" value="7" step="1"><span class="ctrl-val" id="s5_fernP3Val">7%</span></div>
+    <div class="ctrl-row"><button class="btn" id="s5_fernReset">다시 그리기</button></div>
+  </div>
+
+  <p class="prose">교훈은 심오하다: 자연은 화가처럼 잎사귀 하나하나를 그리지 않는다. <span class="hi">모든 스케일에서 동일한 분기 규칙</span>을 적용하여 성장시킨다. 각 잎맥은 전체 잎사귀의 구조를 반복하고, 잎사귀는 전체 식물을 반복한다. 자기유사성은 장식이 아니다. <span class="ac">구성 방법</span> 그 자체이다.</p>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ═══ 05-B ═══ -->
+<section class="chapter-section" id="s5_ch05b">
+  <div class="sec-num">05 · B</div>
+  <h2 class="sec-title">분기의 법칙</h2>
+  <p class="sec-title-kr">The Branching Code</p>
+
+  <p class="prose prose-drop">나무, 혈관, 강의 삼각주, 번개의 분기 — 자연이 공간을 효율적으로 채워야 할 곳마다 가지가 뻗는다. 1968년 헝가리의 생물학자 아리스티드 린덴마이어는 이 통찰을 <span class="hi">L-시스템</span>으로 형식화했다: 스스로를 다시 쓰는 기호의 문법, 하나의 씨앗과 한두 개의 생성 규칙에서 복잡한 분기 패턴을 만든다. 분기 각도를 몇 도만 바꾸면 참나무에서 버드나무로 간다. 길이 비율을 바꾸면 나무에서 양치식물로 간다.</p>
+
+  <div class="ibox">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">프랙탈 나무</div>
+    <div class="ibox-desc">분기 각도와 재귀 깊이를 조절하세요. 이 2차원 매개변수 공간 어딘가에 자연이 키운 모든 나무가 살고 있습니다.</div>
+    <div class="canvas-wrap" style="aspect-ratio:3/2"><canvas id="s5_treeCanvas"></canvas></div>
+    <div class="ctrl-row"><span class="ctrl-label">각도</span><input type="range" id="s5_treeAngle" min="5" max="60" value="25" step="1"><span class="ctrl-val" id="s5_treeAngleVal">25°</span></div>
+    <div class="ctrl-row"><span class="ctrl-label">깊이</span><input type="range" id="s5_treeDepth" min="2" max="12" value="9" step="1"><span class="ctrl-val" id="s5_treeDepthVal">9</span></div>
+  </div>
+</section>
+
+<div class="section-sep"></div>
+
+<!-- ═══ 05-C ═══ -->
+<section class="chapter-section" id="s5_ch05c">
+  <div class="sec-num">05 · C</div>
+  <h2 class="sec-title">혼돈에서 질서로</h2>
+  <p class="sec-title-kr">Order from Chaos</p>
+
+  <p class="prose prose-drop">로지스틱 사상 x → rx(1 − x)는 상상할 수 있는 가장 단순한 비선형 방정식 중 하나 — 변수 하나, 매개변수 하나. 그런데 매개변수 r을 천천히 올리면, 이 순진한 공식의 행동이 누구도 예상하지 못한 방식으로 변한다. 하나의 안정 상태가 두 값 사이의 진동으로, 그 다음 네 개, 여덟 개로 — 혼돈을 향해 가속하는 <span class="hi">주기배가 분기</span>의 폭포.</p>
+
+  <p class="prose">1975년, 로스앨러모스의 물리학자 미첼 파이겐바움은 특별한 것을 발견했다: 연속적인 분기 폭의 비율이 보편 상수 <span class="ac">δ ≈ 4.66920…</span>에 수렴한다. 이 수는 로지스틱 사상만의 산물이 아니다. 주기배가가 일어나는 <em>모든</em> 시스템에 나타난다 — 유체 난류, 레이저 역학, 개체군 생태학, 전자 회로. π나 e만큼 근본적이면서도 훨씬 덜 유명하다. 그리고 분기 다이어그램 자체 — 질서에서 혼돈으로의 지도 — 가 프랙탈이다.</p>
+
+  <div class="ibox">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">분기 다이어그램</div>
+    <div class="ibox-desc">가로축은 매개변수 r입니다. 각 r에 대해 세로축은 시스템이 장기적으로 방문하는 값을 보여줍니다. 가로로 클릭-드래그하여 프랙탈 자기유사성으로 확대하세요.</div>
+    <div class="canvas-wrap" style="aspect-ratio:2/1"><canvas id="s5_bifCanvas"></canvas></div>
+    <div class="ctrl-row"><button class="btn" id="s5_bifReset">줌 초기화</button><span class="ctrl-val" id="s5_bifRange" style="margin-left:auto">r ∈ [2.5, 4.0]</span></div>
+  </div>
+
+  <p class="prose">자기유사성은 기하학적 호기심거리가 아니다. 복잡한 시스템이 모든 스케일에서 스스로를 조직하는 방식으로의 창 — 난류가 큰 소용돌이에서 작은 것으로 흘러내리는 방식, 폐가 테니스 코트만한 표면적을 가슴에 담는 방식, 금융 시장이 분 단위에서 수십 년 단위까지 반복되는 패턴으로 붕괴하는 방식. 만델브로, 줄리아, 칸토어, 시에르핀스키, 코흐의 프랙탈은 수학 동물원의 표본이 아니다. 자연이 접고, 가지 치고, 부수고, 자라날 때 만드는 <span class="hi">형상들</span> — 거칠고 아름다운 세계의 깊은 문법이다.</p>
+</section>
+
+<!-- ═══ CODA ═══ -->
+<div class="coda-section">
+  <p class="coda-text">
+    양치식물이 펼쳐진다. 각 잎사귀 안에 또 하나의 양치식물.<br>
+    그 양치식물 안에 또 하나. 규칙은 단순하다;<br>
+    결과는 무한하다. 이것이 이천 년 동안<br>
+    숨겨져 있던 비밀의 기하학 —<br>
+    충분히 가까이 볼 누군가를 기다리며.
+  </p>
+  <div class="section-sep" style="margin:2rem auto"></div>
+  <p class="coda-close">
+    가까이 보라. 더 가까이 보라.<br>
+    볼 것은 언제나 더 있다.
+  </p>
+</div>
+
+<!-- ═══ REFERENCES ═══ -->
+<div class="ref-section">
+  <h3 class="ref-heading">참고문헌</h3>
+  <ul class="ref-list">
+    <li><span class="ref-author">Benoît B. Mandelbrot,</span> <span class="ref-title">The Fractal Geometry of Nature,</span> <span class="ref-detail">W. H. Freeman, 1982.</span></li>
+    <li><span class="ref-author">Kenneth Falconer,</span> <span class="ref-title">Fractal Geometry: Mathematical Foundations and Applications,</span> <span class="ref-detail">3rd ed., Wiley, 2014.</span></li>
+    <li><span class="ref-author">Robert L. Devaney,</span> <span class="ref-title">An Introduction to Chaotic Dynamical Systems,</span> <span class="ref-detail">3rd ed., CRC Press, 2021.</span></li>
+    <li><span class="ref-author">John Milnor,</span> <span class="ref-title">Dynamics in One Complex Variable,</span> <span class="ref-detail">3rd ed., Annals of Mathematics Studies 160, Princeton, 2006.</span></li>
+    <li><span class="ref-author">Adrien Douady &amp; John H. Hubbard,</span> <span class="ref-title">Étude dynamique des polynômes complexes (Orsay Notes),</span> <span class="ref-detail">Parts I &amp; II, 1984–85.</span></li>
+    <li><span class="ref-author">Michael F. Barnsley,</span> <span class="ref-title">Fractals Everywhere,</span> <span class="ref-detail">Academic Press, 1988.</span></li>
+    <li><span class="ref-author">Heinz-Otto Peitgen &amp; Peter H. Richter,</span> <span class="ref-title">The Beauty of Fractals,</span> <span class="ref-detail">Springer, 1986.</span></li>
+    <li><span class="ref-author">Mitchell J. Feigenbaum,</span> <span class="ref-title">"Quantitative universality for a class of nonlinear transformations,"</span> <span class="ref-detail">J. Stat. Phys. 19 (1978), 25–52.</span></li>
+    <li><span class="ref-author">Gaston Julia,</span> <span class="ref-title">"Mémoire sur l'itération des fonctions rationnelles,"</span> <span class="ref-detail">J. Math. Pures Appl. 8 (1918), 47–245.</span></li>
+    <li><span class="ref-author">Benoît B. Mandelbrot,</span> <span class="ref-title">"How long is the coast of Britain?"</span> <span class="ref-detail">Science 156 (1967), 636–638.</span></li>
+    <li><span class="ref-author">Robert Brooks &amp; J. Peter Matelski,</span> <span class="ref-title">"The dynamics of 2-generator subgroups of PSL(2, ℂ),"</span> <span class="ref-detail">in Riemann Surfaces and Related Topics, Ann. Math. Studies 97, Princeton, 1981.</span></li>
+    <li><span class="ref-author">Curtis T. McMullen,</span> <span class="ref-title">"Renormalization and 3-Manifolds Which Fiber over the Circle,"</span> <span class="ref-detail">Annals of Mathematics Studies 142, Princeton, 1996.</span></li>
+  </ul>
+</div>
+
+
+
+<footer><div class="footer-attr"><div class="footer-name">Sang-hyun Kim</div><div class="footer-inst">Korea Institute for Advanced Study</div><a class="footer-url" href="https://kimsh.kr">kimsh.kr</a></div></footer>
+
+<script>
+/* ═══ PARTICLES (global, single init) ═══ */
+(function(){const c=document.getElementById('particles');for(let i=0;i<24;i++){const p=document.createElement('div');p.className='particle';const s=2+Math.random()*4;p.style.width=p.style.height=s+'px';p.style.left=Math.random()*100+'%';p.style.animationDuration=(22+Math.random()*35)+'s';p.style.animationDelay=(-Math.random()*40)+'s';c.appendChild(p)}})();
+
+
+/* ══════════════════════════════════════════════════
+   SECTION 1
+   ══════════════════════════════════════════════════ */
+/* ═══ PARTICLES ═══ */
+(function(){const c=document.getElementById('particles');for(let i=0;i<24;i++){const p=document.createElement('div');p.className='particle';const s=2+Math.random()*4;p.style.width=p.style.height=s+'px';p.style.left=Math.random()*100+'%';p.style.animationDuration=(20+Math.random()*35)+'s';p.style.animationDelay=(-Math.random()*40)+'s';c.appendChild(p)}})();
+
+/* ═══ BARNSLEY FERN HERO ═══ */
+(function(){const c=document.getElementById('s1_heroCanvas'),ctx=c.getContext('2d');let w,h,pts=[];
+function resize(){const d=Math.min(devicePixelRatio||1,2);w=c.clientWidth;h=c.clientHeight;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0)}resize();
+function barnsley(x,y){const r=Math.random();if(r<.01)return[0,.16*y];if(r<.86)return[.85*x+.04*y,-.04*x+.85*y+1.6];if(r<.93)return[.2*x-.26*y,.23*x+.22*y+1.6];return[-.15*x+.28*y,.26*x+.24*y+.44]}
+function gen(){let x=0,y=0;pts=[];for(let i=0;i<180000;i++){[x,y]=barnsley(x,y);pts.push({x,y})}}gen();
+let drawn=0;
+function draw(){const batch=Math.ceil(pts.length/600),end=Math.min(drawn+batch,pts.length);const sx=w/12,sy=h/11.5,ox=w*.5,oy=h*.96;
+for(let i=drawn;i<end;i++){const p=pts[i],px=ox+p.x*sx,py=oy-p.y*sy;const hue=130+Math.random()*30,sat=35+Math.random()*25,lit=30+Math.random()*25,a=.18+Math.random()*.25;ctx.fillStyle=`hsla(${hue},${sat}%,${lit}%,${a})`;ctx.fillRect(px,py,1.4,1.4)}
+drawn=end;if(drawn<pts.length)requestAnimationFrame(draw)}draw();
+window.addEventListener('resize',()=>{resize();ctx.clearRect(0,0,w,h);pts=[];gen();drawn=0;draw()})})();
+
+/* ═══ COASTLINE ═══ */
+const coastMod=(function(){const c=document.getElementById('s1_coastCanvas'),ctx=c.getContext('2d');let w,h;
+function resize(){const d=Math.min(devicePixelRatio||1,2);w=c.clientWidth;h=c.clientHeight;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0)}
+function kochPts(ax,ay,bx,by,depth){if(depth===0)return[{x:ax,y:ay}];const dx=bx-ax,dy=by-ay,p1x=ax+dx/3,p1y=ay+dy/3,p2x=ax+2*dx/3,p2y=ay+2*dy/3,mx=(ax+bx)/2+dy*(.28+Math.random()*.05),my=(ay+by)/2-dx*(.28+Math.random()*.05);return[...kochPts(ax,ay,p1x,p1y,depth-1),...kochPts(p1x,p1y,mx,my,depth-1),...kochPts(mx,my,p2x,p2y,depth-1),...kochPts(p2x,p2y,bx,by,depth-1)]}
+let coastPts=[];
+function gen(){resize();coastPts=kochPts(40,h*.52,w-40,h*.48,5);coastPts.push({x:w-40,y:h*.48})}
+function measure(rl){if(coastPts.length<2)return{count:0,length:0,rulers:[]};const rulers=[];let idx=0,cx=coastPts[0].x,cy=coastPts[0].y,count=0;
+while(idx<coastPts.length-1){let rem=rl,sx=cx,sy=cy;while(rem>0&&idx<coastPts.length-1){const nx=coastPts[idx+1].x,ny=coastPts[idx+1].y,sd=Math.hypot(nx-cx,ny-cy);if(sd<=rem){rem-=sd;cx=nx;cy=ny;idx++}else{const t=rem/sd;cx+=t*(nx-cx);cy+=t*(ny-cy);rem=0}}if(Math.hypot(cx-sx,cy-sy)>.5){rulers.push({x1:sx,y1:sy,x2:cx,y2:cy});count++}if(rem>0)break}return{count,length:count*rl,rulers}}
+function draw(rl){ctx.clearRect(0,0,w,h);
+const og=ctx.createRadialGradient(w*.3,h*.3,0,w*.5,h*.5,w*.8);og.addColorStop(0,'rgba(12,20,45,.5)');og.addColorStop(1,'rgba(6,10,25,.7)');ctx.fillStyle=og;ctx.fillRect(0,0,w,h);
+ctx.globalAlpha=.025;for(let y=0;y<h;y+=6){ctx.beginPath();ctx.moveTo(0,y+Math.sin(y*.08)*3);for(let x=0;x<w;x+=20)ctx.lineTo(x,y+Math.sin((y+x)*.04)*2);ctx.strokeStyle='#5577aa';ctx.lineWidth=.5;ctx.stroke()}ctx.globalAlpha=1;
+if(coastPts.length>1){ctx.beginPath();ctx.moveTo(coastPts[0].x,coastPts[0].y);for(let i=1;i<coastPts.length;i++)ctx.lineTo(coastPts[i].x,coastPts[i].y);ctx.lineTo(w+10,h+10);ctx.lineTo(-10,h+10);ctx.closePath();const lg=ctx.createLinearGradient(0,h*.3,0,h);lg.addColorStop(0,'rgba(18,32,25,.75)');lg.addColorStop(1,'rgba(12,22,18,.95)');ctx.fillStyle=lg;ctx.fill()}
+ctx.beginPath();ctx.moveTo(coastPts[0].x,coastPts[0].y);for(let i=1;i<coastPts.length;i++)ctx.lineTo(coastPts[i].x,coastPts[i].y);ctx.shadowColor='rgba(90,154,114,.35)';ctx.shadowBlur=8;ctx.strokeStyle='rgba(90,154,114,.4)';ctx.lineWidth=1.2;ctx.stroke();ctx.shadowBlur=0;
+const m=measure(rl);m.rulers.forEach((r,i)=>{const a=.4+.35*Math.sin(i*.35);ctx.beginPath();ctx.moveTo(r.x1,r.y1);ctx.lineTo(r.x2,r.y2);ctx.strokeStyle=`rgba(201,168,76,${a})`;ctx.lineWidth=1.5;ctx.stroke();ctx.beginPath();ctx.arc(r.x1,r.y1,2,0,Math.PI*2);ctx.fillStyle=`rgba(212,168,106,${a+.2})`;ctx.fill()});
+if(m.rulers.length>0){const l=m.rulers[m.rulers.length-1];ctx.beginPath();ctx.arc(l.x2,l.y2,2,0,Math.PI*2);ctx.fillStyle='rgba(212,168,106,.8)';ctx.fill()}
+document.getElementById('s1_rulerCount').textContent=m.count;document.getElementById('s1_measuredLen').textContent=Math.round(m.length);
+const m2=measure(rl*2);if(m2.count>0&&m.count>0&&m.count!==m2.count)document.getElementById('s1_fractalDim').textContent=(Math.log(m.count/m2.count)/Math.log(2)).toFixed(2)}
+return{gen,draw}})();
+coastMod.gen();coastMod.draw(40);
+document.getElementById('s1_rulerSlider').addEventListener('input',function(){const v=parseInt(this.value);document.getElementById('s1_rulerVal').textContent=v+' px';coastMod.draw(v)});
+window.addEventListener('resize',()=>{coastMod.gen();coastMod.draw(parseInt(document.getElementById('s1_rulerSlider').value))});
+
+/* ═══ KOCH SNOWFLAKE (full triangle) ═══ */
+const kochMod=(function(){const c=document.getElementById('s1_kochCanvas'),ctx=c.getContext('2d');let w,h;
+function resize(){const d=Math.min(devicePixelRatio||1,2);w=c.clientWidth;h=c.clientHeight;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0)}
+function kochEdge(ax,ay,bx,by,depth){if(depth===0)return[{x:ax,y:ay}];const dx=bx-ax,dy=by-ay,p1x=ax+dx/3,p1y=ay+dy/3,p2x=ax+2*dx/3,p2y=ay+2*dy/3,cos60=.5,sin60=Math.sqrt(3)/2,ddx=dx/3,ddy=dy/3,mx=p1x+ddx*cos60-ddy*sin60,my=p1y+ddx*sin60+ddy*cos60;return[...kochEdge(ax,ay,p1x,p1y,depth-1),...kochEdge(p1x,p1y,mx,my,depth-1),...kochEdge(mx,my,p2x,p2y,depth-1),...kochEdge(p2x,p2y,bx,by,depth-1)]}
+function draw(n){resize();ctx.clearRect(0,0,w,h);
+const cx=w/2,size=Math.min(w-60,h-60)*.82,triH=size*Math.sqrt(3)/2,topY=(h-triH)/2;
+const ax=cx,ay=topY,bx=cx+size/2,by=topY+triH,ccx=cx-size/2,cy=topY+triH;
+const allPts=[...kochEdge(ax,ay,bx,by,n),...kochEdge(bx,by,ccx,cy,n),...kochEdge(ccx,cy,ax,ay,n)];
+ctx.beginPath();ctx.moveTo(allPts[0].x,allPts[0].y);for(let i=1;i<allPts.length;i++)ctx.lineTo(allPts[i].x,allPts[i].y);ctx.closePath();
+const fg=ctx.createRadialGradient(cx,h*.45,0,cx,h*.45,size*.6);fg.addColorStop(0,'rgba(90,154,114,.12)');fg.addColorStop(1,'rgba(90,154,114,.03)');ctx.fillStyle=fg;ctx.fill();
+ctx.shadowColor='rgba(90,154,114,.3)';ctx.shadowBlur=10;ctx.strokeStyle=`rgba(90,154,114,${n>3?.5:.7})`;ctx.lineWidth=n>4?.5:n>2?.8:1.5;ctx.stroke();ctx.shadowBlur=0;
+document.getElementById('s1_kochSegs').textContent=(3*Math.pow(4,n)).toLocaleString();document.getElementById('s1_kochPerim').textContent=Math.pow(4/3,n).toFixed(2)}
+return{draw}})();
+kochMod.draw(0);
+document.querySelectorAll('#s1_kochBtns .btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('#s1_kochBtns .btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');kochMod.draw(parseInt(b.dataset.n))})});
+
+/* ═══ SCROLL REVEAL ═══ */
+
+
+/* ══════════════════════════════════════════════════
+   SECTION 2
+   ══════════════════════════════════════════════════ */
+/* ═══ PARTICLES ═══ */
+
+
+/* ═══ HERO BG — Sierpiński chaos game ═══ */
+(function(){const c=document.getElementById('s2_heroCanvas'),ctx=c.getContext('2d');let w,h;
+function resize(){const d=Math.min(devicePixelRatio||1,2);w=c.clientWidth;h=c.clientHeight;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0)}resize();
+const verts=[];function setV(){const cx=w/2,s=Math.min(w,h)*.88;verts.length=0;verts.push({x:cx,y:h*.5-s*.43},{x:cx-s*.5,y:h*.5+s*.43},{x:cx+s*.5,y:h*.5+s*.43})}setV();
+let px=w/2,py=h/2,count=0;
+function draw(){if(count>=100000)return;for(let i=0;i<250&&count<100000;i++,count++){const v=verts[Math.floor(Math.random()*3)];px=(px+v.x)/2;py=(py+v.y)/2;
+const hue=35+Math.random()*20,sat=30+Math.random()*20,lit=50+Math.random()*20,a=.1+Math.random()*.15;
+ctx.fillStyle=`hsla(${hue},${sat}%,${lit}%,${a})`;ctx.fillRect(px,py,1.2,1.2)}requestAnimationFrame(draw)}draw();
+window.addEventListener('resize',()=>{resize();setV();ctx.clearRect(0,0,w,h);px=w/2;py=h/2;count=0;draw()})})();
+
+/* ═══ BOX-COUNTING ═══ */
+const boxMod=(function(){const canvas=document.getElementById('s2_boxCanvas'),ctx=canvas.getContext('2d'),lc=document.getElementById('s2_loglogCanvas'),lctx=lc.getContext('2d');
+let w,h,lw,lh,curShape='koch';
+const trueDims={koch:1.2619,sierpinski:1.585,cantor:.6309,circle:1.0};
+function resize(){const d=Math.min(devicePixelRatio||1,2);w=canvas.clientWidth;h=canvas.clientHeight;canvas.width=w*d;canvas.height=h*d;ctx.setTransform(d,0,0,d,0,0);lw=lc.clientWidth;lh=lc.clientHeight;lc.width=lw*d;lc.height=lh*d;lctx.setTransform(d,0,0,d,0,0)}
+function kochPts(ax,ay,bx,by,d){if(d===0)return[{x:ax,y:ay}];const dx=bx-ax,dy=by-ay,p1x=ax+dx/3,p1y=ay+dy/3,p2x=ax+2*dx/3,p2y=ay+2*dy/3,cos60=.5,sin60=Math.sqrt(3)/2,ddx=dx/3,ddy=dy/3,mx=p1x+ddx*cos60-ddy*sin60,my=p1y+ddx*sin60+ddy*cos60;return[...kochPts(ax,ay,p1x,p1y,d-1),...kochPts(p1x,p1y,mx,my,d-1),...kochPts(mx,my,p2x,p2y,d-1),...kochPts(p2x,p2y,bx,by,d-1)]}
+function sierpTri(ax,ay,bx,by,cx,cy,d){if(d===0)return[[ax,ay,bx,by,cx,cy]];const m1x=(ax+bx)/2,m1y=(ay+by)/2,m2x=(bx+cx)/2,m2y=(by+cy)/2,m3x=(ax+cx)/2,m3y=(ay+cy)/2;return[...sierpTri(ax,ay,m1x,m1y,m3x,m3y,d-1),...sierpTri(m1x,m1y,bx,by,m2x,m2y,d-1),...sierpTri(m3x,m3y,m2x,m2y,cx,cy,d-1)]}
+function getOcc(shape,s){const occ=new Set(),cW=w/s,cH=h/s,m=.08,xMin=w*m,xMax=w*(1-m),yMin=h*m,yMax=h*(1-m),sw=xMax-xMin,sh=yMax-yMin;
+if(shape==='koch'){const pts=kochPts(xMin,yMin+sh*.6,xMax,yMin+sh*.6,6);pts.push({x:xMax,y:yMin+sh*.6});for(let i=0;i<pts.length-1;i++){const st=Math.max(5,Math.ceil(Math.hypot(pts[i+1].x-pts[i].x,pts[i+1].y-pts[i].y)));for(let t=0;t<=st;t++){const f=t/st,px=pts[i].x+f*(pts[i+1].x-pts[i].x),py=pts[i].y+f*(pts[i+1].y-pts[i].y),col=Math.floor(px/cW),row=Math.floor(py/cH);if(col>=0&&col<s&&row>=0&&row<s)occ.add(row+','+col)}}}
+else if(shape==='sierpinski'){const cx=xMin+sw/2,tris=sierpTri(cx,yMin+sh*.05,xMin,yMax-sh*.05,xMax,yMax-sh*.05,7);tris.forEach(tri=>{const[ax,ay,bx,by,ccx,ccy]=tri,minY=Math.min(ay,by,ccy),maxY=Math.max(ay,by,ccy);for(let y=minY;y<=maxY;y+=.5){const edges=[[ax,ay,bx,by],[bx,by,ccx,ccy],[ccx,ccy,ax,ay]],xs=[];edges.forEach(([x1,y1,x2,y2])=>{if((y1<=y&&y2>=y)||(y2<=y&&y1>=y)){if(Math.abs(y2-y1)>.001)xs.push(x1+(y-y1)/(y2-y1)*(x2-x1))}});if(xs.length>=2){const lo=Math.min(...xs),hi=Math.max(...xs);for(let x=lo;x<=hi;x+=.5){const col=Math.floor(x/cW),row=Math.floor(y/cH);if(col>=0&&col<s&&row>=0&&row<s)occ.add(row+','+col)}}}})}
+else if(shape==='cantor'){function cs(a,b,d){if(d===0)return[[a,b]];const th=(b-a)/3;return[...cs(a,a+th,d-1),...cs(b-th,b,d-1)]}const segs=cs(xMin,xMax,8),yC=h/2;segs.forEach(([a,b])=>{for(let x=a;x<=b;x+=.3){const col=Math.floor(x/cW),row=Math.floor(yC/cH);if(col>=0&&col<s&&row>=0&&row<s)occ.add(row+','+col)}})}
+else if(shape==='circle'){const ccx=w/2,ccy=h/2,r=Math.min(sw,sh)*.42;for(let a=0;a<Math.PI*2;a+=.002){const px=ccx+r*Math.cos(a),py=ccy+r*Math.sin(a),col=Math.floor(px/cW),row=Math.floor(py/cH);if(col>=0&&col<s&&row>=0&&row<s)occ.add(row+','+col)}}
+return occ}
+let logData=[];
+function collectLog(){logData=[];for(let e=2;e<=7;e++){const s=Math.pow(2,e),o=getOcc(curShape,s);logData.push({s,n:o.size,lx:Math.log(s),ly:Math.log(o.size||1)})}}
+function drawLog(curExp){lctx.clearRect(0,0,lw,lh);if(logData.length<2)return;const pad=40,pW=lw-pad*2,pH=lh-pad*2;
+lctx.strokeStyle='rgba(201,168,76,.12)';lctx.lineWidth=.5;lctx.beginPath();lctx.moveTo(pad,pad);lctx.lineTo(pad,lh-pad);lctx.lineTo(lw-pad,lh-pad);lctx.stroke();
+lctx.fillStyle='rgba(82,86,106,.7)';lctx.font='9px "JetBrains Mono",monospace';lctx.textAlign='center';lctx.fillText('log(1/ε)',lw/2,lh-8);
+lctx.save();lctx.translate(10,lh/2);lctx.rotate(-Math.PI/2);lctx.fillText('log N(ε)',0,0);lctx.restore();
+const xMin=logData[0].lx,xMax=logData[logData.length-1].lx,yMin=logData[0].ly,yMax=logData[logData.length-1].ly,xR=xMax-xMin||1,yR=yMax-yMin||1;
+function toP(lx,ly){return{x:pad+(lx-xMin)/xR*pW,y:(lh-pad)-(ly-yMin)/yR*pH}}
+let sX=0,sY=0,sXY=0,sXX=0,n=logData.length;logData.forEach(d=>{sX+=d.lx;sY+=d.ly;sXY+=d.lx*d.ly;sXX+=d.lx*d.lx});
+const slope=(n*sXY-sX*sY)/(n*sXX-sX*sX),inter=(sY-slope*sX)/n;
+const p1=toP(xMin,slope*xMin+inter),p2=toP(xMax,slope*xMax+inter);
+lctx.strokeStyle='rgba(201,168,76,.18)';lctx.setLineDash([4,4]);lctx.beginPath();lctx.moveTo(p1.x,p1.y);lctx.lineTo(p2.x,p2.y);lctx.stroke();lctx.setLineDash([]);
+lctx.fillStyle='rgba(212,168,83,.6)';lctx.font='10px "JetBrains Mono",monospace';lctx.textAlign='left';lctx.fillText('D ≈ '+slope.toFixed(3),pad+5,pad+14);
+logData.forEach(d=>{const p=toP(d.lx,d.ly),isCur=Math.round(Math.log2(d.s))===curExp;lctx.beginPath();lctx.arc(p.x,p.y,isCur?5:3,0,Math.PI*2);lctx.fillStyle=isCur?'rgba(201,168,76,1)':'rgba(201,168,76,.3)';lctx.fill();if(isCur){lctx.strokeStyle='rgba(201,168,76,.35)';lctx.lineWidth=1;lctx.beginPath();lctx.arc(p.x,p.y,10,0,Math.PI*2);lctx.stroke()}})}
+function drawShape(shape){const m=.08,xMin=w*m,xMax=w*(1-m),yMin=h*m,yMax=h*(1-m),sw=xMax-xMin,sh=yMax-yMin;
+ctx.shadowColor='rgba(90,154,114,.25)';ctx.shadowBlur=6;ctx.strokeStyle='rgba(90,154,114,.45)';ctx.lineWidth=1.2;
+if(shape==='koch'){const pts=kochPts(xMin,yMin+sh*.6,xMax,yMin+sh*.6,6);pts.push({x:xMax,y:yMin+sh*.6});ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i].x,pts[i].y);ctx.stroke()}
+else if(shape==='sierpinski'){const cx=xMin+sw/2,tris=sierpTri(cx,yMin+sh*.05,xMin,yMax-sh*.05,xMax,yMax-sh*.05,7);tris.forEach(t=>{const[ax,ay,bx,by,cx,cy]=t;ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.lineTo(cx,cy);ctx.closePath();ctx.fillStyle='rgba(90,154,114,.1)';ctx.fill()})}
+else if(shape==='cantor'){function cs(a,b,d){if(d===0)return[[a,b]];const th=(b-a)/3;return[...cs(a,a+th,d-1),...cs(b-th,b,d-1)]}const segs=cs(xMin,xMax,8),yC=h/2;ctx.lineWidth=3;segs.forEach(([a,b])=>{ctx.beginPath();ctx.moveTo(a,yC);ctx.lineTo(b,yC);ctx.stroke()})}
+else if(shape==='circle'){ctx.beginPath();ctx.arc(w/2,h/2,Math.min(sw,sh)*.42,0,Math.PI*2);ctx.stroke()}
+ctx.shadowBlur=0}
+function draw(gExp){resize();const s=Math.pow(2,gExp),cW=w/s,cH=h/s,occ=getOcc(curShape,s);
+ctx.clearRect(0,0,w,h);ctx.strokeStyle='rgba(201,168,76,.04)';ctx.lineWidth=.5;
+for(let i=0;i<=s;i++){ctx.beginPath();ctx.moveTo(i*cW,0);ctx.lineTo(i*cW,h);ctx.stroke();ctx.beginPath();ctx.moveTo(0,i*cH);ctx.lineTo(w,i*cH);ctx.stroke()}
+occ.forEach(k=>{const[r,c]=k.split(',').map(Number);ctx.fillStyle='rgba(201,168,76,.06)';ctx.fillRect(c*cW,r*cH,cW,cH);ctx.strokeStyle='rgba(201,168,76,.15)';ctx.lineWidth=.5;ctx.strokeRect(c*cW,r*cH,cW,cH)});
+drawShape(curShape);
+document.getElementById('s2_boxEps').textContent='1/'+s;document.getElementById('s2_boxCount').textContent=occ.size;document.getElementById('s2_trueDim').textContent=trueDims[curShape].toFixed(3);
+collectLog();let sX=0,sY=0,sXY=0,sXX=0,n=logData.length;logData.forEach(d=>{sX+=d.lx;sY+=d.ly;sXY+=d.lx*d.ly;sXX+=d.lx*d.lx});
+document.getElementById('s2_boxDim').textContent=((n*sXY-sX*sY)/(n*sXX-sX*sX)).toFixed(3);
+document.getElementById('s2_gridVal').textContent=s+' × '+s;drawLog(gExp)}
+return{draw,setShape(s){curShape=s}}})();
+boxMod.draw(3);
+document.getElementById('s2_gridSlider').addEventListener('input',function(){boxMod.draw(parseInt(this.value))});
+document.querySelectorAll('#s2_shapeButtons .btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('#s2_shapeButtons .btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');boxMod.setShape(b.dataset.shape);boxMod.draw(parseInt(document.getElementById('s2_gridSlider').value))})});
+window.addEventListener('resize',()=>{boxMod.draw(parseInt(document.getElementById('s2_gridSlider').value))});
+
+/* ═══ SIERPIŃSKI REMOVAL ═══ */
+const remMod=(function(){const c=document.getElementById('s2_removalCanvas'),ctx=c.getContext('2d');let w,h;
+function resize(){const d=Math.min(devicePixelRatio||1,2);w=c.clientWidth;h=c.clientHeight;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0)}
+function drawT(ax,ay,bx,by,cx,cy,d,mx){if(d>=mx){ctx.beginPath();ctx.moveTo(ax,ay);ctx.lineTo(bx,by);ctx.lineTo(cx,cy);ctx.closePath();
+const hue=145+d*3,alpha=.2+.06*Math.min(d,6);ctx.fillStyle=`hsla(${hue},40%,40%,${alpha})`;ctx.fill();return}
+const m1x=(ax+bx)/2,m1y=(ay+by)/2,m2x=(bx+cx)/2,m2y=(by+cy)/2,m3x=(ax+cx)/2,m3y=(ay+cy)/2;
+drawT(ax,ay,m1x,m1y,m3x,m3y,d+1,mx);drawT(m1x,m1y,bx,by,m2x,m2y,d+1,mx);drawT(m3x,m3y,m2x,m2y,cx,cy,d+1,mx)}
+function draw(n){resize();ctx.clearRect(0,0,w,h);const s=Math.min(w-40,(h-40)/(Math.sqrt(3)/2)),cx=w/2,ty=(h-s*Math.sqrt(3)/2)/2;
+drawT(cx,ty,cx-s/2,ty+s*Math.sqrt(3)/2,cx+s/2,ty+s*Math.sqrt(3)/2,0,n);
+document.getElementById('s2_remCount').textContent=Math.pow(3,n).toLocaleString();document.getElementById('s2_remArea').textContent=(Math.pow(3/4,n)*100).toFixed(1)+'%'}
+return{draw}})();
+remMod.draw(0);
+document.querySelectorAll('#s2_remBtns .btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('#s2_remBtns .btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');remMod.draw(parseInt(b.dataset.rn))})});
+
+/* ═══ CHAOS GAME ═══ */
+const chaosMod=(function(){const c=document.getElementById('s2_chaosCanvas'),ctx=c.getContext('2d');let w,h,running=false,animId=null,count=0,px,py,verts=[];
+function resize(){const d=Math.min(devicePixelRatio||1,2);w=c.clientWidth;h=c.clientHeight;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0);
+const s=Math.min(w-40,(h-40)/(Math.sqrt(3)/2)),cx=w/2,ty=(h-s*Math.sqrt(3)/2)/2;
+verts=[{x:cx,y:ty},{x:cx-s/2,y:ty+s*Math.sqrt(3)/2},{x:cx+s/2,y:ty+s*Math.sqrt(3)/2}];px=w/2+Math.random()*20;py=h/2+Math.random()*20}
+function reset(){if(animId)cancelAnimationFrame(animId);running=false;count=0;resize();ctx.clearRect(0,0,w,h);
+verts.forEach(v=>{ctx.beginPath();ctx.arc(v.x,v.y,3.5,0,Math.PI*2);ctx.fillStyle='rgba(201,168,76,.6)';ctx.fill()});
+document.getElementById('s2_chaosCount').textContent='0 points';document.getElementById('s2_chaosStart').textContent='▶ Run'}
+function step(){for(let i=0;i<180;i++){const v=verts[Math.floor(Math.random()*3)];px=(px+v.x)/2;py=(py+v.y)/2;if(count>5){
+const hue=140+Math.random()*25,a=.2+Math.random()*.28;
+ctx.fillStyle=`hsla(${hue},38%,45%,${a})`;ctx.fillRect(px,py,1.1,1.1)}count++}
+document.getElementById('s2_chaosCount').textContent=count.toLocaleString()+' points';
+if(count<130000&&running)animId=requestAnimationFrame(step);else{running=false;document.getElementById('s2_chaosStart').textContent='▶ Run'}}
+reset();
+document.getElementById('s2_chaosStart').addEventListener('click',()=>{if(running){running=false;if(animId)cancelAnimationFrame(animId);document.getElementById('s2_chaosStart').textContent='▶ Run'}else{running=true;document.getElementById('s2_chaosStart').textContent='⏸ Pause';step()}});
+document.getElementById('s2_chaosReset').addEventListener('click',reset);
+return{reset}})();
+
+/* ═══ PASCAL mod 2 ═══ */
+const pascalMod=(function(){const c=document.getElementById('s2_pascalCanvas'),ctx=c.getContext('2d');let w,h;
+function resize(){const d=Math.min(devicePixelRatio||1,2);w=c.clientWidth;h=c.clientHeight;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0)}
+function draw(rows){resize();ctx.clearRect(0,0,w,h);const sz=Math.min(w/rows,h/rows);
+for(let n=0;n<rows;n++)for(let k=0;k<=n;k++){if((k&n)===k){const x=w/2+(k-n/2)*sz,y=n*sz;
+const alpha=.25+.45*(1-n/rows);ctx.fillStyle=`hsla(150,35%,45%,${alpha})`;
+ctx.fillRect(x,y,Math.max(sz-.3,.8),Math.max(sz-.3,.8))}}}
+return{draw}})();
+pascalMod.draw(64);
+document.getElementById('s2_pascalSlider').addEventListener('input',function(){const v=parseInt(this.value);document.getElementById('s2_pascalVal').textContent=v;pascalMod.draw(v)});
+
+document.querySelectorAll('.tab').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.getElementById('tab-'+t.dataset.tab).classList.add('active');
+if(t.dataset.tab==='pascal')pascalMod.draw(parseInt(document.getElementById('s2_pascalSlider').value));
+if(t.dataset.tab==='removal'){const a=document.querySelector('#s2_remBtns .btn.active');remMod.draw(parseInt(a?.dataset.rn||0))}})});
+
+/* ═══ CANTOR SET ═══ */
+const cantorMod=(function(){const c=document.getElementById('s2_cantorCanvas'),ctx=c.getContext('2d');let w,h;
+function resize(){const d=Math.min(devicePixelRatio||1,2);w=c.clientWidth;h=c.clientHeight;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0)}
+function draw(n){resize();ctx.clearRect(0,0,w,h);const rH=Math.min(20,(h-20)/(n+1));
+function drawLvl(a,b,d,mx,y){if(d>mx)return;const bH=Math.max(4,rH*.6);
+if(b-a<.3)return;
+const alpha=.3+.5*(1-d/Math.max(mx,1));
+const grad=ctx.createLinearGradient(a,0,b,0);
+grad.addColorStop(0,`hsla(150,35%,40%,${alpha*.7})`);
+grad.addColorStop(.5,`hsla(150,40%,48%,${alpha})`);
+grad.addColorStop(1,`hsla(150,35%,40%,${alpha*.7})`);
+ctx.fillStyle=grad;
+ctx.beginPath();ctx.roundRect(a,y-bH/2,b-a,bH,Math.min(bH/2,3));ctx.fill();
+if(d<mx){const th=(b-a)/3;drawLvl(a,a+th,d+1,mx,y+rH);drawLvl(b-th,b,d+1,mx,y+rH)}}
+drawLvl(24,w-24,0,n,16+rH*.3);
+document.getElementById('s2_cantorSegs').textContent=Math.pow(2,n).toLocaleString();document.getElementById('s2_cantorLen').textContent=(Math.pow(2/3,n)*100).toFixed(1)+'%'}
+return{draw}})();
+cantorMod.draw(0);
+document.querySelectorAll('#s2_cantorBtns .btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('#s2_cantorBtns .btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');cantorMod.draw(parseInt(b.dataset.cn))})});
+
+/* ═══ SCROLL REVEAL ═══ */
+
+
+
+window.addEventListener('resize',()=>{const ar=document.querySelector('#s2_remBtns .btn.active');if(ar)remMod.draw(parseInt(ar.dataset.rn));pascalMod.draw(parseInt(document.getElementById('s2_pascalSlider').value));const ac=document.querySelector('#s2_cantorBtns .btn.active');if(ac)cantorMod.draw(parseInt(ac.dataset.cn));chaosMod.reset()});
+/* ══════════════════════════════════════════════════
+   SECTION 3
+   ══════════════════════════════════════════════════ */
+/* ═══ PARTICLES ═══ */
+
+
+/* ═══ PALETTES ═══ */
+const palettes={
+  twilight:{name:'Twilight',fn:t=>{const r=Math.floor(9*(1-t)*t*t*t*255),g=Math.floor(15*(1-t)*(1-t)*t*t*255),b=Math.floor(8.5*(1-t)*(1-t)*(1-t)*t*255);return[Math.min(255,r+30),Math.min(255,g+10),Math.min(255,b+60)]}},
+  ocean:{name:'Ocean',fn:t=>[Math.floor(20+60*Math.sin(Math.PI*t)),Math.floor(40+120*t),Math.floor(80+175*Math.sqrt(t))]},
+  ember:{name:'Ember',fn:t=>[Math.floor(30+225*Math.pow(t,.6)),Math.floor(15+140*Math.pow(t,1.5)),Math.floor(10+50*Math.pow(t,3))]},
+  frost:{name:'Frost',fn:t=>[Math.floor(200+55*Math.sin(t*Math.PI*2)),Math.floor(210+45*Math.sin(t*Math.PI*2+1)),Math.min(255,Math.floor(230+25*Math.sin(t*Math.PI*2+2)))]},
+  violet:{name:'Violet',fn:t=>[Math.floor(40+180*Math.pow(t,.8)),Math.floor(10+60*t),Math.min(255,Math.floor(60+195*Math.sqrt(t)))]}
+};
+let curPal='twilight';
+const palC=document.getElementById('s3_palContainer');
+Object.keys(palettes).forEach(key=>{
+  const strip=document.createElement('div');strip.className='pal-strip';
+  for(let i=0;i<12;i++){const t=i/11,[r,g,b]=palettes[key].fn(t);const sw=document.createElement('div');sw.className='pal-sw'+(key===curPal?' active':'');sw.style.background=`rgb(${r},${g},${b})`;sw.addEventListener('click',()=>{document.querySelectorAll('.pal-sw').forEach(s=>s.classList.remove('active'));strip.querySelectorAll('.pal-sw').forEach(s=>s.classList.add('active'));curPal=key;mbMod.render();periodMod.render()});strip.appendChild(sw)}
+  const lbl=document.createElement('div');lbl.className='pal-label';lbl.textContent=palettes[key].name;
+  const w=document.createElement('div');w.style.marginBottom='8px';w.appendChild(strip);w.appendChild(lbl);palC.appendChild(w)
+});
+
+/* ═══ HERO BG — deep Mandelbrot zoom ═══ */
+(function(){const c=document.getElementById('s3_heroCanvas'),ctx=c.getContext('2d');let w,h;
+function resize(){const d=Math.min(devicePixelRatio||1,1.5);w=c.clientWidth;h=c.clientHeight;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0)}resize();
+function render(){const id=ctx.createImageData(Math.ceil(w),Math.ceil(h)),d=id.data,mx=100,cx=-.7453,cy=.1127,span=.006;
+for(let py=0;py<h;py++)for(let px=0;px<w;px++){const x0=cx+(px/w-.5)*span*(w/h),y0=cy+(py/h-.5)*span;let x=0,y=0,it=0;
+while(x*x+y*y<=4&&it<mx){const xt=x*x-y*y+x0;y=2*x*y+y0;x=xt;it++}const i=(py*Math.ceil(w)+px)*4;
+if(it===mx){d[i]=4;d[i+1]=5;d[i+2]=12;d[i+3]=255}
+else{const lz=Math.log(x*x+y*y)/2,nu=Math.log(lz/Math.log(2))/Math.log(2),t=Math.max(0,Math.min(1,((it+1-nu)/mx)*3%1));
+const[r,g,b]=palettes.violet.fn(t);d[i]=r;d[i+1]=g;d[i+2]=b;d[i+3]=255}}
+ctx.putImageData(id,0,0)}render();window.addEventListener('resize',()=>{resize();render()})})();
+
+/* ═══ MANDELBROT EXPLORER ═══ */
+const mbMod=(function(){const canvas=document.getElementById('s3_mbCanvas'),ctx=canvas.getContext('2d');let w,h,cX=-.5,cY=0,spanX=3.5,maxIt=200;
+function resize(){const d=Math.min(devicePixelRatio||1,2);w=canvas.clientWidth;h=canvas.clientHeight;canvas.width=w*d;canvas.height=h*d;ctx.setTransform(d,0,0,d,0,0)}
+function render(){resize();const spanY=spanX*(h/w),id=ctx.createImageData(Math.ceil(w),Math.ceil(h)),d=id.data,cw=Math.ceil(w),ch=Math.ceil(h),fn=palettes[curPal].fn;
+for(let py=0;py<ch;py++)for(let px=0;px<cw;px++){const x0=cX+(px/cw-.5)*spanX,y0=cY+(py/ch-.5)*spanY;let x=0,y=0,it=0;
+while(x*x+y*y<=256&&it<maxIt){const xt=x*x-y*y+x0;y=2*x*y+y0;x=xt;it++}const i=(py*cw+px)*4;
+if(it===maxIt){d[i]=4;d[i+1]=5;d[i+2]=12;d[i+3]=255}
+else{const lz=Math.log(x*x+y*y)/2,nu=Math.log(lz/Math.log(2))/Math.log(2),t=Math.max(0,Math.min(1,((it+1-nu)/maxIt)*4%1));const[r,g,b]=fn(t);d[i]=r;d[i+1]=g;d[i+2]=b;d[i+3]=255}}
+ctx.putImageData(id,0,0);document.getElementById('s3_zoomLevel').textContent=(3.5/spanX).toFixed(0)+'×';
+document.getElementById('s3_infoCenter').textContent=cX.toFixed(6)+' '+(cY>=0?'+':'−')+' '+Math.abs(cY).toFixed(6)+'i'}
+render();
+canvas.addEventListener('click',e=>{const r=canvas.getBoundingClientRect(),mx=(e.clientX-r.left)/r.width,my=(e.clientY-r.top)/r.height,spanY=spanX*(h/w);cX+=(mx-.5)*spanX;cY+=(my-.5)*spanY;spanX*=.35;maxIt=Math.min(1500,maxIt+80);render()});
+canvas.addEventListener('contextmenu',e=>{e.preventDefault();zoomOut()});
+canvas.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0],r=canvas.getBoundingClientRect(),mx=(t.clientX-r.left)/r.width,my=(t.clientY-r.top)/r.height,spanY=spanX*(h/w);cX+=(mx-.5)*spanX;cY+=(my-.5)*spanY;spanX*=.35;maxIt=Math.min(1500,maxIt+80);render()},{passive:false});
+function zoomOut(){spanX*=2.5;maxIt=Math.max(200,maxIt-60);if(spanX>4){cX=-.5;cY=0;spanX=3.5;maxIt=200}render()}
+function reset(){cX=-.5;cY=0;spanX=3.5;maxIt=200;render()}
+document.getElementById('s3_zoomOutBtn').addEventListener('click',zoomOut);
+document.getElementById('s3_resetBtn').addEventListener('click',reset);
+
+/* Orbit viz */
+const oc=document.getElementById('s3_orbitCanvas'),octx=oc.getContext('2d');let ow,oh;
+function resizeO(){const d=Math.min(devicePixelRatio||1,2);ow=oc.clientWidth;oh=oc.clientHeight;oc.width=ow*d;oc.height=oh*d;octx.setTransform(d,0,0,d,0,0)}resizeO();
+canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect(),mx=(e.clientX-r.left)/r.width,my=(e.clientY-r.top)/r.height,spanY=spanX*(h/w),cr=cX+(mx-.5)*spanX,ci=cY+(my-.5)*spanY;
+document.getElementById('s3_infoCursor').textContent=cr.toFixed(6)+' '+(ci>=0?'+':'−')+' '+Math.abs(ci).toFixed(6)+'i';
+const orbit=[];let x=0,y=0;for(let i=0;i<Math.min(maxIt,200);i++){orbit.push({x,y});const xt=x*x-y*y+cr;y=2*x*y+ci;x=xt;if(x*x+y*y>100)break}
+document.getElementById('s3_infoIter').textContent=orbit.length>=Math.min(maxIt,200)?'∞ (bounded)':orbit.length;
+resizeO();octx.clearRect(0,0,ow,oh);
+/* Axes */
+octx.strokeStyle='rgba(138,106,191,.08)';octx.lineWidth=.5;
+octx.beginPath();octx.moveTo(ow/2,0);octx.lineTo(ow/2,oh);octx.stroke();
+octx.beginPath();octx.moveTo(0,oh/2);octx.lineTo(ow,oh/2);octx.stroke();
+if(orbit.length<2)return;
+let maxR=2;orbit.forEach(p=>{maxR=Math.max(maxR,Math.abs(p.x),Math.abs(p.y))});const sc=(ow*.42)/maxR;
+/* Path with gradient-like opacity */
+for(let i=1;i<orbit.length;i++){const a=.15+.5*(i/orbit.length);octx.beginPath();octx.moveTo(ow/2+orbit[i-1].x*sc,oh/2+orbit[i-1].y*sc);octx.lineTo(ow/2+orbit[i].x*sc,oh/2+orbit[i].y*sc);octx.strokeStyle=`rgba(138,106,191,${a})`;octx.lineWidth=.8;octx.stroke()}
+/* Dots */
+orbit.forEach((p,i)=>{const r=i===0?3.5:1+1.5*(i/orbit.length);octx.beginPath();octx.arc(ow/2+p.x*sc,oh/2+p.y*sc,r,0,Math.PI*2);
+if(i===0){octx.fillStyle='rgba(201,168,76,.9)';octx.shadowColor='rgba(201,168,76,.4)';octx.shadowBlur=6}
+else{octx.fillStyle=`rgba(168,138,224,${.25+.65*(i/orbit.length)})`;octx.shadowBlur=0}
+octx.fill();octx.shadowBlur=0})});
+canvas.addEventListener('mouseleave',()=>{resizeO();octx.clearRect(0,0,ow,oh);document.getElementById('s3_infoCursor').textContent='—';document.getElementById('s3_infoIter').textContent='—'});
+window.addEventListener('resize',()=>{render();resizeO()});
+return{render}})();
+
+/* ═══ PERIOD MAP ═══ */
+const periodMod=(function(){const canvas=document.getElementById('s3_periodCanvas'),ctx=canvas.getContext('2d');let w,h;const maxIt=300;
+function resize(){const d=Math.min(devicePixelRatio||1,1.5);w=canvas.clientWidth;h=canvas.clientHeight;canvas.width=w*d;canvas.height=h*d;ctx.setTransform(d,0,0,d,0,0)}
+/* HSL-based period colors for richer look */
+const pHues=[0,270,210,150,45,0,300,180,30];
+function detectPeriod(cr,ci){let x=0,y=0;for(let i=0;i<500;i++){const xt=x*x-y*y+cr;y=2*x*y+ci;x=xt;if(x*x+y*y>4)return{inSet:false,period:0,iter:i}}const rx=x,ry=y;for(let p=1;p<=64;p++){const xt=x*x-y*y+cr;y=2*x*y+ci;x=xt;if(Math.abs(x-rx)<1e-10&&Math.abs(y-ry)<1e-10)return{inSet:true,period:p}}return{inSet:true,period:-1}}
+function hslToRgb(h,s,l){s/=100;l/=100;const a=s*Math.min(l,1-l);const f=n=>{const k=(n+h/30)%12;return l-a*Math.max(Math.min(k-3,9-k,1),-1)};return[Math.round(f(0)*255),Math.round(f(8)*255),Math.round(f(4)*255)]}
+function render(){resize();const id=ctx.createImageData(Math.ceil(w),Math.ceil(h)),d=id.data,cw=Math.ceil(w),ch=Math.ceil(h),fn=palettes[curPal].fn,sx=3.5,sy=sx*(h/w),cx=-.5,cy=0;
+for(let py=0;py<ch;py++)for(let px=0;px<cw;px++){const x0=cx+(px/cw-.5)*sx,y0=cy+(py/ch-.5)*sy;let x=0,y=0,it=0;
+while(x*x+y*y<=4&&it<maxIt){const xt=x*x-y*y+x0;y=2*x*y+y0;x=xt;it++}const i=(py*cw+px)*4;
+if(it===maxIt){const res=detectPeriod(x0,y0);if(res.period>0&&res.period<=8){const[r,g,b]=hslToRgb(pHues[res.period],45,38);d[i]=r;d[i+1]=g;d[i+2]=b;d[i+3]=255}
+else{d[i]=18;d[i+1]=15;d[i+2]=30;d[i+3]=255}}
+else{const t=Math.max(0,Math.min(1,(it/maxIt)*5%1));const[r,g,b]=fn(t);d[i]=Math.floor(r*.35);d[i+1]=Math.floor(g*.35);d[i+2]=Math.floor(b*.35);d[i+3]=255}}
+ctx.putImageData(id,0,0)}render();
+canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect(),mx=(e.clientX-r.left)/r.width,my=(e.clientY-r.top)/r.height,sx=3.5,sy=sx*(h/w),cr=-.5+(mx-.5)*sx,ci=(my-.5)*sy;
+document.getElementById('s3_periodC').textContent=cr.toFixed(4)+' '+(ci>=0?'+':'−')+' '+Math.abs(ci).toFixed(4)+'i';
+const res=detectPeriod(cr,ci);document.getElementById('s3_periodIn').textContent=res.inSet?'Yes':'No';document.getElementById('s3_periodVal').textContent=res.inSet?(res.period>0?res.period:'>64'):'—'});
+canvas.addEventListener('mouseleave',()=>{document.getElementById('s3_periodC').textContent='—';document.getElementById('s3_periodVal').textContent='—';document.getElementById('s3_periodIn').textContent='—'});
+window.addEventListener('resize',render);return{render}})();
+
+/* ═══ SCROLL REVEAL ═══ */
+
+
+/* ══════════════════════════════════════════════════
+   SECTION 4
+   ══════════════════════════════════════════════════ */
+/* ═══ PARTICLES ═══ */
+
+
+/* ═══ PALETTES ═══ */
+const palTwilight=t=>{const r=Math.floor(9*(1-t)*t*t*t*255),g=Math.floor(15*(1-t)*(1-t)*t*t*255),b=Math.floor(8.5*(1-t)*(1-t)*(1-t)*t*255);return[Math.min(255,r+30),Math.min(255,g+10),Math.min(255,b+60)]};
+const palRose=t=>[Math.floor(35+200*Math.pow(t,.65)),Math.floor(12+85*Math.pow(t,1.1)),Math.min(255,Math.floor(50+155*Math.sqrt(t)))];
+
+/* ═══ HERO BG — Julia set c = -0.7454 + 0.113i ═══ */
+(function(){const c=document.getElementById('s4_heroCanvas'),ctx=c.getContext('2d');let w,h;
+function resize(){const d=Math.min(devicePixelRatio||1,1.5);w=c.clientWidth;h=c.clientHeight;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0)}resize();
+function render(){const id=ctx.createImageData(Math.ceil(w),Math.ceil(h)),d=id.data,mx=140,cr=-.7454,ci=.113;
+for(let py=0;py<h;py++)for(let px=0;px<w;px++){
+let x=(px/w-.5)*3,y=(py/h-.5)*3*(h/w),it=0;
+while(x*x+y*y<=4&&it<mx){const xt=x*x-y*y+cr;y=2*x*y+ci;x=xt;it++}
+const i=(py*Math.ceil(w)+px)*4;
+if(it===mx){d[i]=4;d[i+1]=4;d[i+2]=12;d[i+3]=255}
+else{const lz=Math.log(x*x+y*y)/2,nu=Math.log(lz/Math.log(2))/Math.log(2),t=Math.max(0,Math.min(1,((it+1-nu)/mx)*3.5%1));
+const[r,g,b]=palRose(t);d[i]=r;d[i+1]=g;d[i+2]=b;d[i+3]=255}}
+ctx.putImageData(id,0,0)}render();window.addEventListener('resize',()=>{resize();render()})})();
+
+/* ═══ MANDELBROT (left panel) ═══ */
+const mbC=document.getElementById('s4_mbCanvas'),mbCtx=mbC.getContext('2d');
+let mbW,mbH,mbImageData=null;
+function resizeMB(){const d=Math.min(devicePixelRatio||1,2);mbW=mbC.clientWidth;mbH=mbC.clientHeight;mbC.width=mbW*d;mbC.height=mbH*d;mbCtx.setTransform(d,0,0,d,0,0)}
+function renderMB(){resizeMB();
+const id=mbCtx.createImageData(Math.ceil(mbW),Math.ceil(mbH)),d=id.data,cw=Math.ceil(mbW),ch=Math.ceil(mbH),mx=200,sx=3.2,cy=0,cx=-.5;
+for(let py=0;py<ch;py++)for(let px=0;px<cw;px++){
+const x0=cx+(px/cw-.5)*sx,y0=cy+(py/ch-.5)*sx;let x=0,y=0,it=0;
+while(x*x+y*y<=4&&it<mx){const xt=x*x-y*y+x0;y=2*x*y+y0;x=xt;it++}
+const i=(py*cw+px)*4;
+if(it===mx){d[i]=15;d[i+1]=12;d[i+2]=28;d[i+3]=255}
+else{const lz=Math.log(x*x+y*y)/2,nu=Math.log(lz/Math.log(2))/Math.log(2),t=Math.max(0,Math.min(1,((it+1-nu)/mx)*4%1));
+const[r,g,b]=palTwilight(t);d[i]=Math.floor(r*.45);d[i+1]=Math.floor(g*.45);d[i+2]=Math.floor(b*.45);d[i+3]=255}}
+mbCtx.putImageData(id,0,0);mbImageData=id}
+renderMB();
+
+function drawMarker(cr,ci){
+mbCtx.putImageData(mbImageData,0,0);
+const sx=3.2,cx=-.5;
+const px=((cr-cx)/sx+.5)*mbW,py=((ci)/sx+.5)*mbH;
+/* Glow ring */
+mbCtx.shadowColor='rgba(224,136,152,.5)';mbCtx.shadowBlur=10;
+mbCtx.strokeStyle='rgba(224,136,152,.7)';mbCtx.lineWidth=1.5;
+mbCtx.beginPath();mbCtx.arc(px,py,7,0,Math.PI*2);mbCtx.stroke();
+mbCtx.shadowBlur=0;
+/* Crosshair */
+mbCtx.strokeStyle='rgba(255,255,255,.25)';mbCtx.lineWidth=.5;
+mbCtx.beginPath();mbCtx.moveTo(px-12,py);mbCtx.lineTo(px+12,py);mbCtx.moveTo(px,py-12);mbCtx.lineTo(px,py+12);mbCtx.stroke()}
+
+/* ═══ JULIA SET (right panel) ═══ */
+const jC=document.getElementById('s4_juliaCanvas'),jCtx=jC.getContext('2d');
+let jW,jH;
+function resizeJ(){const d=Math.min(devicePixelRatio||1,2);jW=jC.clientWidth;jH=jC.clientHeight;jC.width=jW*d;jC.height=jH*d;jCtx.setTransform(d,0,0,d,0,0)}
+
+function renderJulia(cr,ci){resizeJ();
+const id=jCtx.createImageData(Math.ceil(jW),Math.ceil(jH)),d=id.data,cw=Math.ceil(jW),ch=Math.ceil(jH),mx=350,span=3;
+for(let py=0;py<ch;py++)for(let px=0;px<cw;px++){
+let x=(px/cw-.5)*span,y=(py/ch-.5)*span,it=0;
+while(x*x+y*y<=4&&it<mx){const xt=x*x-y*y+cr;y=2*x*y+ci;x=xt;it++}
+const i=(py*cw+px)*4;
+if(it===mx){d[i]=6;d[i+1]=5;d[i+2]=14;d[i+3]=255}
+else{const lz=Math.log(x*x+y*y)/2,nu=Math.log(lz/Math.log(2))/Math.log(2),t=Math.max(0,Math.min(1,((it+1-nu)/mx)*4%1));
+const[r,g,b]=palRose(t);d[i]=r;d[i+1]=g;d[i+2]=b;d[i+3]=255}}
+jCtx.putImageData(id,0,0);
+drawMarker(cr,ci);
+document.getElementById('s4_juliaC').textContent=cr.toFixed(4)+' '+(ci>=0?'+':'−')+' '+Math.abs(ci).toFixed(4)+'i';
+let x=0,y=0;for(let i=0;i<500;i++){const xt=x*x-y*y+cr;y=2*x*y+ci;x=xt;if(x*x+y*y>4){document.getElementById('s4_juliaConn').textContent='No';document.getElementById('s4_juliaInM').textContent='No';return}}
+document.getElementById('s4_juliaConn').textContent='Yes';document.getElementById('s4_juliaInM').textContent='Yes'}
+
+renderJulia(-.7454,.113);
+
+mbC.addEventListener('click',e=>{const r=mbC.getBoundingClientRect(),mx=(e.clientX-r.left)/r.width,my=(e.clientY-r.top)/r.height;
+const sx=3.2,cr=-.5+(mx-.5)*sx,ci=(my-.5)*sx;
+document.querySelectorAll('.btn-row .btn').forEach(b=>b.classList.remove('active'));renderJulia(cr,ci)});
+mbC.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0],r=mbC.getBoundingClientRect(),mx=(t.clientX-r.left)/r.width,my=(t.clientY-r.top)/r.height;
+const sx=3.2,cr=-.5+(mx-.5)*sx,ci=(my-.5)*sx;renderJulia(cr,ci)},{passive:false});
+
+document.querySelectorAll('[data-c]').forEach(b=>{b.addEventListener('click',()=>{
+document.querySelectorAll('.btn-row .btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+const[cr,ci]=b.dataset.c.split(',').map(Number);renderJulia(cr,ci)})});
+
+window.addEventListener('resize',()=>{renderMB();renderJulia(-.7454,.113)});
+
+
+
+/* ══════════════════════════════════════════════════
+   SECTION 5
+   ══════════════════════════════════════════════════ */
+/* ═══ PARTICLES ═══ */
+
+
+/* ═══ HERO BG — twin fractal trees ═══ */
+(function(){const c=document.getElementById('s5_heroCanvas'),ctx=c.getContext('2d');let w,h;
+function resize(){const d=Math.min(devicePixelRatio||1,1.5);w=c.clientWidth;h=c.clientHeight;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0)}resize();
+function drawTree(x,y,len,angle,depth,maxD){
+if(depth<=0||len<.5)return;
+const x2=x+len*Math.cos(angle),y2=y+len*Math.sin(angle);
+const t=depth/maxD;
+const hue=130+30*(1-t);const sat=30+20*t;const lit=25+20*t;const alpha=.08+.2*t;
+ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);
+ctx.strokeStyle=`hsla(${hue},${sat}%,${lit}%,${alpha})`;ctx.lineWidth=Math.max(.3,depth*.35);ctx.stroke();
+drawTree(x2,y2,len*.72,angle-.4,depth-1,maxD);drawTree(x2,y2,len*.72,angle+.4,depth-1,maxD)}
+function render(){ctx.clearRect(0,0,w,h);drawTree(w*.35,h*.9,h*.2,-Math.PI/2,12,12);drawTree(w*.65,h*.9,h*.18,-Math.PI/2,11,11)}
+render();window.addEventListener('resize',()=>{resize();render()})})();
+
+/* ═══ BARNSLEY FERN ═══ */
+(function(){const c=document.getElementById('s5_fernCanvas'),ctx=c.getContext('2d');let w,h;
+function resize(){const d=Math.min(devicePixelRatio||1,2);w=c.clientWidth;h=c.clientHeight;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0)}
+function draw(){resize();ctx.clearRect(0,0,w,h);
+const p2=parseInt(document.getElementById('s5_fernP2').value)/100;
+const p3=parseInt(document.getElementById('s5_fernP3').value)/100;
+const p1=.01,p4=Math.max(.01,1-p1-p2-p3);
+const total=p1+p2+p3+p4;const pp=[p1/total,(p1+p4)/total,(p1+p4+p2)/total,1];
+let x=0,y=0;const sx=w/12,sy=h/11.5,ox=w*.5,oy=h*.98;
+for(let i=0;i<120000;i++){
+const r=Math.random();let nx,ny;
+if(r<pp[0]){nx=0;ny=.16*y}
+else if(r<pp[1]){nx=.85*x+.04*y;ny=-.04*x+.85*y+1.6}
+else if(r<pp[2]){nx=.2*x-.26*y;ny=.23*x+.22*y+1.6}
+else{nx=-.15*x+.28*y;ny=.26*x+.24*y+.44}
+x=nx;y=ny;
+if(i>10){const px=ox+x*sx,py=oy-y*sy;
+const hue=125+Math.random()*35;const sat=30+Math.random()*30;const lit=28+Math.random()*25;const a=.2+Math.random()*.3;
+ctx.fillStyle=`hsla(${hue},${sat}%,${lit}%,${a})`;ctx.fillRect(px,py,1.3,1.3)}}}
+draw();
+document.getElementById('s5_fernP2').addEventListener('input',function(){document.getElementById('s5_fernP2Val').textContent=this.value+'%';draw()});
+document.getElementById('s5_fernP3').addEventListener('input',function(){document.getElementById('s5_fernP3Val').textContent=this.value+'%';draw()});
+document.getElementById('s5_fernReset').addEventListener('click',draw);
+window.addEventListener('resize',draw)})();
+
+/* ═══ FRACTAL TREE — HSL with gradient branches ═══ */
+(function(){const c=document.getElementById('s5_treeCanvas'),ctx=c.getContext('2d');let w,h;
+function resize(){const d=Math.min(devicePixelRatio||1,2);w=c.clientWidth;h=c.clientHeight;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0)}
+function drawBranch(x,y,len,angle,depth,maxD){if(depth<=0||len<.5)return;
+const x2=x+len*Math.cos(angle),y2=y+len*Math.sin(angle);
+const t=depth/maxD;
+const hue=25+110*t;const sat=25+25*t;const lit=22+28*t;const alpha=.15+.65*t;
+ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);
+ctx.strokeStyle=`hsla(${hue},${sat}%,${lit}%,${alpha})`;ctx.lineWidth=Math.max(.4,depth*1.1);ctx.stroke();
+/* Leaf tips */
+if(depth<=2&&len<8){ctx.beginPath();ctx.arc(x2,y2,1+Math.random()*1.5,0,Math.PI*2);ctx.fillStyle=`hsla(140,40%,45%,${.15+Math.random()*.15})`;ctx.fill()}
+const a=parseFloat(document.getElementById('s5_treeAngle').value)*Math.PI/180;
+drawBranch(x2,y2,len*.7,angle-a,depth-1,maxD);drawBranch(x2,y2,len*.7,angle+a,depth-1,maxD)}
+function draw(){resize();ctx.clearRect(0,0,w,h);const d=parseInt(document.getElementById('s5_treeDepth').value);
+drawBranch(w/2,h*.93,h*.24,-Math.PI/2,d,d)}
+draw();
+document.getElementById('s5_treeAngle').addEventListener('input',function(){document.getElementById('s5_treeAngleVal').textContent=this.value+'°';draw()});
+document.getElementById('s5_treeDepth').addEventListener('input',function(){document.getElementById('s5_treeDepthVal').textContent=this.value;draw()});
+window.addEventListener('resize',draw)})();
+
+/* ═══ BIFURCATION — warm HSL palette ═══ */
+(function(){const c=document.getElementById('s5_bifCanvas'),ctx=c.getContext('2d');let w,h;
+let rMin=2.5,rMax=4.0;
+function resize(){const d=Math.min(devicePixelRatio||1,2);w=c.clientWidth;h=c.clientHeight;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0)}
+function draw(){resize();ctx.clearRect(0,0,w,h);
+const steps=Math.min(w*2,900),settle=350,plot=250;
+for(let i=0;i<steps;i++){const r=rMin+(rMax-rMin)*i/steps;let x=.5;
+for(let j=0;j<settle;j++)x=r*x*(1-x);
+for(let j=0;j<plot;j++){x=r*x*(1-x);
+const px=i/steps*w,py=h-x*h;
+/* Hue shifts from gold (chaotic regions) to cool (periodic) */
+const hue=35+15*x;const alpha=.12+.06*Math.sin(j*.3);
+ctx.fillStyle=`hsla(${hue},50%,55%,${alpha})`;ctx.fillRect(px,py,.8,.8)}}
+document.getElementById('s5_bifRange').textContent='r ∈ ['+rMin.toFixed(3)+', '+rMax.toFixed(3)+']'}
+draw();
+let dragging=false,startX=0,selRect=null;
+c.addEventListener('mousedown',e=>{dragging=true;startX=(e.clientX-c.getBoundingClientRect().left)/c.clientWidth;selRect=null});
+c.addEventListener('mousemove',e=>{if(!dragging)return;const curX=(e.clientX-c.getBoundingClientRect().left)/c.clientWidth;
+/* Draw selection rectangle */
+draw();const lo=Math.min(startX,curX)*w,hi=Math.max(startX,curX)*w;
+ctx.fillStyle='rgba(201,168,76,.06)';ctx.fillRect(lo,0,hi-lo,h);
+ctx.strokeStyle='rgba(201,168,76,.25)';ctx.lineWidth=1;ctx.setLineDash([4,4]);ctx.strokeRect(lo,0,hi-lo,h);ctx.setLineDash([])});
+c.addEventListener('mouseup',e=>{if(!dragging)return;dragging=false;
+const endX=(e.clientX-c.getBoundingClientRect().left)/c.clientWidth;
+const lo=Math.min(startX,endX),hi=Math.max(startX,endX);
+if(hi-lo<.02){draw();return}
+const newRMin=rMin+lo*(rMax-rMin),newRMax=rMin+hi*(rMax-rMin);
+rMin=newRMin;rMax=newRMax;draw()});
+document.getElementById('s5_bifReset').addEventListener('click',()=>{rMin=2.5;rMax=4;draw()});
+window.addEventListener('resize',draw)})();
+
+/* ═══ SCROLL REVEAL ═══ */
+
+
+
+/* ═══ GLOBAL SCROLL REVEAL ═══ */
+const globalObs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});},{threshold:.08});
+document.querySelectorAll('.chapter-section, .ref-section, .coda-section').forEach(s=>globalObs.observe(s));
+
+
+/* ═══ PAN / ZOOM SYSTEM ═══ */
+(function(){
+  document.querySelectorAll('.ibox .canvas-wrap').forEach(wrap=>{
+    const canvas = wrap.querySelector('canvas');
+    if(!canvas) return;
+    
+    let scale=1, tx=0, ty=0;
+    const ZOOM_STEP=.25, PAN_STEP=40;
+    
+    function apply(){
+      canvas.style.transformOrigin='center center';
+      canvas.style.transform=`scale(${scale}) translate(${tx}px, ${ty}px)`;
+    }
+    
+    // Build control overlay
+    const ctrl=document.createElement('div');ctrl.className='pz-controls';
+    const mkBtn=(label,fn)=>{const b=document.createElement('button');b.className='pz-btn';b.innerHTML=label;b.addEventListener('click',e=>{e.stopPropagation();fn()});return b};
+    
+    const zoomIn=mkBtn('+',()=>{scale=Math.min(8,scale+ZOOM_STEP);apply()});
+    const zoomOut=mkBtn('−',()=>{scale=Math.max(.25,scale-ZOOM_STEP);apply()});
+    const reset=mkBtn('⟲',()=>{scale=1;tx=0;ty=0;apply()});
+    const up=mkBtn('↑',()=>{ty+=PAN_STEP/scale;apply()});
+    const down=mkBtn('↓',()=>{ty-=PAN_STEP/scale;apply()});
+    const left=mkBtn('←',()=>{tx+=PAN_STEP/scale;apply()});
+    const right=mkBtn('→',()=>{tx-=PAN_STEP/scale;apply()});
+    
+    const row1=document.createElement('div');row1.className='pz-row';
+    row1.append(zoomIn,zoomOut,reset);
+    const row2=document.createElement('div');row2.className='pz-row';
+    row2.append(left,up,right);
+    const row3=document.createElement('div');row3.className='pz-row';
+    const spacer=document.createElement('div');spacer.style.width='28px';
+    row3.append(spacer,down);
+    
+    ctrl.append(row1,row2,row3);
+    wrap.appendChild(ctrl);
+    
+    // Mouse wheel zoom
+    wrap.addEventListener('wheel',e=>{
+      e.preventDefault();
+      if(e.deltaY<0) scale=Math.min(8,scale+ZOOM_STEP);
+      else scale=Math.max(.25,scale-ZOOM_STEP);
+      apply();
+    },{passive:false});
+    
+    // Touch pinch zoom
+    let lastDist=0;
+    wrap.addEventListener('touchstart',e=>{
+      if(e.touches.length===2){
+        lastDist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+      }
+    },{passive:true});
+    wrap.addEventListener('touchmove',e=>{
+      if(e.touches.length===2){
+        e.preventDefault();
+        const dist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+        if(lastDist>0){
+          const delta=(dist-lastDist)*.005;
+          scale=Math.max(.25,Math.min(8,scale+delta));
+          apply();
+        }
+        lastDist=dist;
+      }
+    },{passive:false});
+    wrap.addEventListener('touchend',()=>{lastDist=0},{passive:true});
+  });
+})();
+
+</script>
+</body>
+</html>
