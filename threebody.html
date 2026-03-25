@@ -23,8 +23,10 @@ body{background:var(--bg);color:var(--text);font-family:'EB Garamond',Georgia,se
   align-items:center;justify-content:center;overflow:hidden}
 #heroCanvas{position:absolute;inset:0;width:100%;height:100%}
 .hero-overlay{position:absolute;inset:0;
-  background:radial-gradient(ellipse 60% 60% at 50% 50%,
-    rgba(5,6,15,0.0) 0%,rgba(5,6,15,0.55) 65%,rgba(5,6,15,0.92) 100%);
+  background:
+    linear-gradient(to bottom, rgba(5,6,15,0.55) 0%, rgba(5,6,15,0.15) 45%, rgba(5,6,15,0.0) 60%, rgba(5,6,15,0.3) 100%),
+    radial-gradient(ellipse 70% 50% at 50% 65%,
+      rgba(5,6,15,0.0) 0%,rgba(5,6,15,0.5) 70%,rgba(5,6,15,0.92) 100%);
   pointer-events:none}
 .hero-content{position:relative;z-index:10;text-align:center;padding:2rem;max-width:800px}
 .hero-label{font-family:'Cormorant Garamond',serif;font-size:.8rem;letter-spacing:.35em;
@@ -118,27 +120,30 @@ footer p{font-size:.85rem;color:var(--muted);margin-bottom:.3rem}
 
 /* ── RESPONSIVE ── */
 @media(max-width:800px){
-  .wrap{padding:3rem 1.2rem}
-  .hero-title{font-size:clamp(2rem,7vw,3.5rem)}
-  .hero-sub{font-size:1rem;max-width:90vw}
-  .canvas-wrap canvas{height:280px!important}
-  .info-box{font-size:.88rem;padding:1rem 1.2rem}
-  h2{font-size:clamp(1.6rem,5vw,2.4rem);margin-bottom:1.5rem}
-  .prose{font-size:.98rem}
-}
-section.wrap{padding-bottom:3.5rem}
-@media(max-width:600px){
-  .ctrl-bar{gap:.4rem;padding:.5rem .7rem}
-  .ctrl-bar button{font-size:.52rem;padding:.3rem .55rem;letter-spacing:.05em}
-  .ctrl-bar label{font-size:.55rem}
-  .ctrl-bar .val{font-size:.6rem;min-width:35px}
-  .readout{font-size:.65rem;padding:.5rem .8rem}
-  .canvas-caption{font-size:.52rem;padding:.5rem .8rem}
-  .canvas-wrap canvas{height:240px!important}
-  .sec-label{font-size:.6rem;margin-bottom:.8rem}
   .wrap{padding:2.5rem 1rem}
-  .hero-sub{font-size:.9rem}
-  .info-box{margin:1.5rem 0;font-size:.85rem}
+  .hero-title{font-size:clamp(1.8rem,7vw,3rem)}
+  .hero-sub{font-size:.95rem;max-width:90vw}
+  .canvas-wrap canvas{height:260px!important}
+  .info-box{font-size:.88rem;padding:.9rem 1rem}
+  h2{font-size:clamp(1.5rem,5vw,2.2rem);margin-bottom:1.2rem}
+  .prose{font-size:.95rem}
+}
+section.wrap{padding-bottom:3rem}
+@media(max-width:500px){
+  .ctrl-bar{gap:.35rem;padding:.45rem .6rem}
+  .ctrl-bar button{font-size:.5rem;padding:.25rem .45rem;letter-spacing:.04em}
+  .ctrl-bar label{font-size:.5rem}
+  .ctrl-bar .val{font-size:.55rem;min-width:28px}
+  .readout{font-size:.6rem;padding:.4rem .6rem}
+  .canvas-caption{font-size:.48rem;padding:.4rem .6rem}
+  .canvas-wrap canvas{height:220px!important}
+  .sec-label{font-size:.55rem;margin-bottom:.7rem}
+  .wrap{padding:2rem .8rem}
+  .hero-sub{font-size:.82rem}
+  .hero-title{font-size:clamp(1.5rem,6vw,2.2rem)}
+  .info-box{margin:1.2rem 0;font-size:.8rem;padding:.8rem .9rem}
+  .prose{font-size:.88rem}
+  h2{margin-bottom:1rem}
 }
 </style>
 </head>
@@ -172,8 +177,8 @@ section.wrap{padding-bottom:3.5rem}
   <p class="prose" style="max-width:700px;margin-bottom:1rem;">For two bodies bound by gravity, the universe is generous: it hands you an exact solution. Kepler's ellipses. Every position, every velocity, from now until the end of time, written in a closed formula. No approximation, no simulation, no uncertainty. Just geometry.</p>
   <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">Below, two masses orbit their shared center of gravity — a gold star and a cyan companion. Stretch the eccentricity, skew the mass ratio, and the ellipses reshape themselves, always perfect, always repeating. This is the solved problem. Remember how calm it feels.</p>
 
-  <div class="canvas-wrap" style="max-width:720px;margin:0 auto;">
-    <canvas id="twobodyCanvas" height="400"></canvas>
+  <div class="canvas-wrap" style="max-width:620px;margin:0 auto;">
+    <canvas id="twobodyCanvas" height="340"></canvas>
     <div class="readout" id="twobodyReadout">
       <span style="color:var(--gold2)">period: <span id="tbPeriod">—</span></span> &nbsp;&nbsp;
       <span style="color:var(--cyan)">energy: <span id="tbEnergy">—</span></span> &nbsp;&nbsp;
@@ -210,8 +215,8 @@ section.wrap{padding-bottom:3.5rem}
   <p class="prose" style="max-width:700px;margin-bottom:1rem;">Then, while reviewing the proofs, his colleague Lars Phragmén found a mistake. Poincaré re-examined his own work and realized, to his horror, that the error was not a typo — <em>it reversed his conclusion entirely.</em> The trajectories he had dismissed as impossible were in fact everywhere. Tiny changes in starting position led to wildly different futures. He had discovered chaos.</p>
   <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">Poincaré recalled every printed copy at his own expense — the cost exceeded the prize money — and published a corrected memoir proving the opposite of what he had originally claimed. It became one of the most important papers in the history of mathematics.</p>
 
-  <div class="canvas-wrap" style="max-width:720px;margin:0 auto;">
-    <canvas id="threeCanvas" height="400"></canvas>
+  <div class="canvas-wrap" style="max-width:620px;margin:0 auto;">
+    <canvas id="threeCanvas" height="340"></canvas>
     <div class="readout" id="threeReadout">
       <span style="color:var(--gold2)">bodies: <span id="t3Count">2</span></span> &nbsp;&nbsp;
       <span style="color:var(--rose)">divergence: <span id="t3Diverge">—</span></span> &nbsp;&nbsp;
@@ -227,7 +232,7 @@ section.wrap{padding-bottom:3.5rem}
     <div class="canvas-caption">Release the third body. The faint shadow dot starts 0.001 apart — watch it diverge.</div>
   </div>
 
-  <div class="info-box" style="max-width:720px;margin:2rem auto 0;">
+  <div class="info-box" style="max-width:620px;margin:2rem auto 0;">
     <strong>Why "chaos" is a precise word.</strong> Poincaré didn't mean randomness. He meant <em>sensitive dependence on initial conditions</em>: two systems starting a hair's breadth apart end up in completely different states. The laws are deterministic — the same inputs always produce the same outputs — but the slightest uncertainty in measurement gets amplified beyond all prediction.
   </div>
 </section>
@@ -243,8 +248,8 @@ section.wrap{padding-bottom:3.5rem}
   <p class="prose" style="max-width:700px;margin-bottom:1rem;">Even in the chaos, there are sanctuaries. In 1772, Lagrange proved that a small object can balance in exactly five positions relative to two large orbiting bodies. Three lie along the line connecting them. Two form equilateral triangles — one leading, one trailing — and these are <em>stable</em>.</p>
   <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">The James Webb Space Telescope sits at one of these points right now, 1.5 million kilometers behind Earth, balanced in the gravitational landscape like a marble at the bottom of a bowl. Click anywhere below to drop a test particle and feel the topology of gravity.</p>
 
-  <div class="canvas-wrap" style="max-width:720px;margin:0 auto;">
-    <canvas id="lagrangeCanvas" height="420"></canvas>
+  <div class="canvas-wrap" style="max-width:620px;margin:0 auto;">
+    <canvas id="lagrangeCanvas" height="350"></canvas>
     <div class="readout" id="lagrangeReadout">
       <span style="color:var(--gold2)">click to place a test particle</span> &nbsp;&nbsp;
       <span style="color:var(--muted)"><span id="lgStatus"></span></span>
@@ -261,7 +266,7 @@ section.wrap{padding-bottom:3.5rem}
     <div class="canvas-caption">Click to drop test particles. L4 and L5 trap them forever. L1, L2, L3 let them escape.</div>
   </div>
 
-  <div class="info-box" style="max-width:720px;margin:2rem auto 0;">
+  <div class="info-box" style="max-width:620px;margin:2rem auto 0;">
     <strong>The Trojan asteroids.</strong> Jupiter's L4 and L5 points trap over 12,000 asteroids — the Trojans and the Greeks — held in place for billions of years by the same mathematics you see above. Saturn, Neptune, Mars, and even Earth have their own Trojans.
   </div>
 </section>
@@ -277,8 +282,8 @@ section.wrap{padding-bottom:3.5rem}
   <p class="prose" style="max-width:700px;margin-bottom:1rem;">In 1993, Cristopher Moore found something astonishing on a computer: three equal masses chasing each other along a single figure-eight curve, each body tracing the exact same path, equally spaced like beads on a wire. Chenciner and Montgomery proved it rigorously in 2000.</p>
   <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">It had been hiding inside Newton's equations for three hundred years — a secret choreography. Below, you can watch it. You can also destroy it: nudge the perturbation slider and see how long perfection survives.</p>
 
-  <div class="canvas-wrap" style="max-width:720px;margin:0 auto;">
-    <canvas id="choreCanvas" height="380"></canvas>
+  <div class="canvas-wrap" style="max-width:620px;margin:0 auto;">
+    <canvas id="choreCanvas" height="320"></canvas>
     <div class="readout" id="choreReadout">
       <span style="color:var(--gold2)"><span id="choreName">Figure Eight</span></span> &nbsp;&nbsp;
       <span style="color:var(--cyan)">period: <span id="chorePeriod">—</span></span> &nbsp;&nbsp;
@@ -311,8 +316,8 @@ section.wrap{padding-bottom:3.5rem}
   <p class="prose" style="max-width:700px;margin-bottom:1rem;">This is the oldest open question in mathematical physics. Laplace believed the solar system was eternal clockwork. Poincaré showed it might not be. In 2009, Jacques Laskar ran thousands of simulations over five billion years. In roughly 1% of them, Mercury's orbit stretched until it crossed Venus's path — collision, or ejection into deep space.</p>
   <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">Our solar system is not a clock. It is a slow game of chance, and we are inside it. Below, the inner solar system fast-forwards through millions of years. Most runs are quiet. Some are not. Watch Mercury's eccentricity gauge on the right — and hope it stays below the red line.</p>
 
-  <div class="canvas-wrap" style="max-width:720px;margin:0 auto;">
-    <canvas id="solarCanvas" height="400"></canvas>
+  <div class="canvas-wrap" style="max-width:620px;margin:0 auto;">
+    <canvas id="solarCanvas" height="340"></canvas>
     <div class="readout" id="solarReadout">
       <span style="color:var(--gold2)">year: <span id="solYear">0</span> million</span> &nbsp;&nbsp;
       <span style="color:var(--cyan)">runs: <span id="solRuns">0</span></span> &nbsp;&nbsp;
@@ -328,7 +333,7 @@ section.wrap{padding-bottom:3.5rem}
     <div class="canvas-caption">Fast-forward the solar system. Most runs survive. Some don't.</div>
   </div>
 
-  <div class="info-box" style="max-width:720px;margin:2rem auto 0;">
+  <div class="info-box" style="max-width:620px;margin:2rem auto 0;">
     <strong>1% in five billion years.</strong> Laskar's simulations showed that Mercury is the solar system's wild card. Its orbit is chaotic on timescales of millions of years — deterministic but unpredictable, just as Poincaré discovered. We have been lucky so far.
   </div>
 </section>
@@ -482,9 +487,9 @@ function makeZoomPan(canvas){
     bodies.length=0;
     // Three gravitational "nuclei" — heavy bodies
     const nuclei=[
-      {x:-0.6, y:-0.1, vx:0.05, vy:0.15},
-      {x:0.5,  y:0.2,  vx:-0.08, vy:-0.1},
-      {x:0.1,  y:-0.5, vx:0.02, vy:0.05}
+      {x:-0.5, y:0.2, vx:0.05, vy:0.12},
+      {x:0.5,  y:0.5, vx:-0.08, vy:-0.08},
+      {x:0.0,  y:-0.2, vx:0.02, vy:0.05}
     ];
     for(let k=0;k<3;k++){
       const n=nuclei[k];
@@ -569,8 +574,8 @@ function makeZoomPan(canvas){
   }
 
   function toScreen(x,y){
-    const scale=Math.min(W,H)*0.45;
-    return{sx:W/2+x*scale, sy:H/2+y*scale};
+    const scale=Math.min(W,H)*0.42;
+    return{sx:W/2+x*scale, sy:H*0.58+y*scale};
   }
 
   let frameCount=0;
@@ -882,20 +887,18 @@ function makeZoomPan(canvas){
   const elDiverge=document.getElementById('t3Diverge');
   const elTime=document.getElementById('t3Time');
 
-  const G=40;
+  const G=20; // reduced from 40 for stability with 3 bodies
   let thirdReleased=false;
   let simTime=0;
   let substepsPerFrame=6;
 
-  // Bodies array: initially 2, third added on release
-  // Also a "shadow" third body starting 0.001 away — for divergence demo
   let bodies=[], shadow=null;
   const maxTrail=500;
 
   const colors=[
-    {fill:'rgba(201,168,76,0.9)',trail:'rgba(201,168,76,'},   // gold
-    {fill:'rgba(60,184,195,0.9)',trail:'rgba(60,184,195,'},    // cyan
-    {fill:'rgba(196,122,138,0.9)',trail:'rgba(196,122,138,'} // rose
+    {fill:'rgba(201,168,76,0.9)',trail:'rgba(201,168,76,'},
+    {fill:'rgba(60,184,195,0.9)',trail:'rgba(60,184,195,'},
+    {fill:'rgba(196,122,138,0.9)',trail:'rgba(196,122,138,'}
   ];
 
   function init(){
@@ -903,14 +906,13 @@ function makeZoomPan(canvas){
     elCount.textContent='2'; elDiverge.textContent='—';
     btnRelease.style.borderColor='var(--rose)';btnRelease.style.color='var(--rose)';
     btnRelease.textContent='● Release third body';
+    btnRelease.classList.remove('active');
 
-    // Two bodies in a nice circular orbit
-    const m1=0.6, m2=0.4, a=1.8;
-    const rPeri=a;
+    const m1=0.6, m2=0.4, a=1.5;
     const v=Math.sqrt(G*(m1+m2)/a);
     bodies=[
-      {x:-m2*rPeri, y:0, vx:0, vy:-m2*v, m:m1, trail:[], ci:0},
-      {x: m1*rPeri, y:0, vx:0, vy: m1*v, m:m2, trail:[], ci:1}
+      {x:-m2*a, y:0, vx:0, vy:-m2*v, m:m1, trail:[], ci:0},
+      {x: m1*a, y:0, vx:0, vy: m1*v, m:m2, trail:[], ci:1}
     ];
   }
 
@@ -921,12 +923,9 @@ function makeZoomPan(canvas){
     btnRelease.classList.add('active');
     btnRelease.textContent='✓ Released';
 
-    // Third body enters from the upper right — close enough to be visible
-    const m3=0.35;
-    const third={x:1.8, y:1.2, vx:-1.0, vy:-0.5, m:m3, trail:[], ci:2};
+    const m3=0.3;
+    const third={x:1.5, y:1.2, vx:-0.8, vy:-0.3, m:m3, trail:[], ci:2};
     bodies.push(third);
-
-    // Shadow copy of third body, offset by 0.001 in x — for divergence
     shadow={x:third.x+0.001, y:third.y, vx:third.vx, vy:third.vy, m:m3};
   }
 
@@ -935,7 +934,7 @@ function makeZoomPan(canvas){
     for(let j=0;j<bodies_arr.length;j++){
       if(j===skipIdx)continue;
       const dx=bodies_arr[j].x-bx, dy=bodies_arr[j].y-by;
-      const r2=dx*dx+dy*dy+0.05; // larger softening for stability
+      const r2=dx*dx+dy*dy+0.08; // generous softening
       const r=Math.sqrt(r2);
       const f=G*bodies_arr[j].m/(r2*r);
       ax+=f*dx; ay+=f*dy;
@@ -943,39 +942,34 @@ function makeZoomPan(canvas){
     return{ax,ay};
   }
 
+  function clampVel(obj){
+    const vMax=10;
+    const v=Math.sqrt(obj.vx*obj.vx+obj.vy*obj.vy);
+    if(v>vMax||isNaN(v)){obj.vx=(isNaN(obj.vx)?0:obj.vx*vMax/(v||1));obj.vy=(isNaN(obj.vy)?0:obj.vy*vMax/(v||1));}
+    if(isNaN(obj.x)){obj.x=0;obj.y=0;obj.vx=0;obj.vy=0;}
+  }
+
   function step(dt){
     const n=bodies.length;
     const acc=[];
     for(let i=0;i<n;i++) acc.push(accelOn(bodies[i].x,bodies[i].y,bodies,i));
-
     for(let i=0;i<n;i++){
       bodies[i].x+=bodies[i].vx*dt+0.5*acc[i].ax*dt*dt;
       bodies[i].y+=bodies[i].vy*dt+0.5*acc[i].ay*dt*dt;
     }
-
     const accN=[];
     for(let i=0;i<n;i++) accN.push(accelOn(bodies[i].x,bodies[i].y,bodies,i));
-
     for(let i=0;i<n;i++){
       bodies[i].vx+=0.5*(acc[i].ax+accN[i].ax)*dt;
       bodies[i].vy+=0.5*(acc[i].ay+accN[i].ay)*dt;
-      // Velocity clamping to prevent divergence
-      const vMax=15;
-      const v=Math.sqrt(bodies[i].vx*bodies[i].vx+bodies[i].vy*bodies[i].vy);
-      if(v>vMax){bodies[i].vx*=vMax/v;bodies[i].vy*=vMax/v;}
+      clampVel(bodies[i]);
     }
-
     if(shadow){
       const sa=accelOn(shadow.x,shadow.y,bodies,-1);
-      shadow.vx+=sa.ax*dt;
-      shadow.vy+=sa.ay*dt;
-      shadow.x+=shadow.vx*dt;
-      shadow.y+=shadow.vy*dt;
-      // Clamp shadow too
-      const sv=Math.sqrt(shadow.vx*shadow.vx+shadow.vy*shadow.vy);
-      if(sv>15){shadow.vx*=15/sv;shadow.vy*=15/sv;}
+      shadow.vx+=sa.ax*dt; shadow.vy+=sa.ay*dt;
+      shadow.x+=shadow.vx*dt; shadow.y+=shadow.vy*dt;
+      clampVel(shadow);
     }
-
     simTime+=dt;
   }
 
@@ -1026,22 +1020,21 @@ function makeZoomPan(canvas){
       }
     }
 
-    // Draw shadow trail (faint gold, slightly offset — shows divergence)
-    if(shadow && thirdReleased){
+    // Draw shadow (shows divergence)
+    if(shadow && thirdReleased && bodies.length>=3){
       const ss=toScreen(shadow.x,shadow.y);
       ctx.beginPath();ctx.arc(ss.sx,ss.sy,3,0,Math.PI*2);
       ctx.fillStyle='rgba(196,122,138,0.3)';ctx.fill();
-      // Dashed line from third body to shadow
       const tb=bodies[2];
       const ts=toScreen(tb.x,tb.y);
       const dist=Math.sqrt((tb.x-shadow.x)**2+(tb.y-shadow.y)**2);
-      if(dist*sc<W*0.5){
+      // Dashed connector if close enough on screen
+      const screenDist=Math.sqrt((ts.sx-ss.sx)**2+(ts.sy-ss.sy)**2);
+      if(screenDist<W*0.5 && screenDist>2){
         ctx.setLineDash([3,3]);ctx.strokeStyle='rgba(196,122,138,0.2)';ctx.lineWidth=0.8;
         ctx.beginPath();ctx.moveTo(ts.sx,ts.sy);ctx.lineTo(ss.sx,ss.sy);ctx.stroke();
         ctx.setLineDash([]);
       }
-      // Divergence readout
-      const logDiv=Math.log10(Math.max(dist,1e-10));
       elDiverge.textContent=dist<0.01?dist.toExponential(1):dist.toFixed(2);
       elDiverge.style.color=dist>1?'#c45555':dist>0.1?'#c9a84c':'#3cb8c3';
     }

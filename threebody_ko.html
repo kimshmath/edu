@@ -23,8 +23,10 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Serif KR','EB Gara
   align-items:center;justify-content:center;overflow:hidden}
 #heroCanvas{position:absolute;inset:0;width:100%;height:100%}
 .hero-overlay{position:absolute;inset:0;
-  background:radial-gradient(ellipse 60% 60% at 50% 50%,
-    rgba(5,6,15,0.0) 0%,rgba(5,6,15,0.55) 65%,rgba(5,6,15,0.92) 100%);
+  background:
+    linear-gradient(to bottom, rgba(5,6,15,0.55) 0%, rgba(5,6,15,0.15) 45%, rgba(5,6,15,0.0) 60%, rgba(5,6,15,0.3) 100%),
+    radial-gradient(ellipse 70% 50% at 50% 65%,
+      rgba(5,6,15,0.0) 0%,rgba(5,6,15,0.5) 70%,rgba(5,6,15,0.92) 100%);
   pointer-events:none}
 .hero-content{position:relative;z-index:10;text-align:center;padding:2rem;max-width:800px}
 .hero-label{font-family:'Cormorant Garamond',serif;font-size:.8rem;letter-spacing:.35em;
@@ -118,27 +120,30 @@ footer p{font-size:.85rem;color:var(--muted);margin-bottom:.3rem}
 
 /* ── RESPONSIVE ── */
 @media(max-width:800px){
-  .wrap{padding:3rem 1.2rem}
-  .hero-title{font-size:clamp(2rem,7vw,3.5rem)}
-  .hero-sub{font-size:1rem;max-width:90vw}
-  .canvas-wrap canvas{height:280px!important}
-  .info-box{font-size:.88rem;padding:1rem 1.2rem}
-  h2{font-size:clamp(1.6rem,5vw,2.4rem);margin-bottom:1.5rem}
-  .prose{font-size:.98rem}
-}
-section.wrap{padding-bottom:3.5rem}
-@media(max-width:600px){
-  .ctrl-bar{gap:.4rem;padding:.5rem .7rem}
-  .ctrl-bar button{font-size:.52rem;padding:.3rem .55rem;letter-spacing:.05em}
-  .ctrl-bar label{font-size:.55rem}
-  .ctrl-bar .val{font-size:.6rem;min-width:35px}
-  .readout{font-size:.65rem;padding:.5rem .8rem}
-  .canvas-caption{font-size:.52rem;padding:.5rem .8rem}
-  .canvas-wrap canvas{height:240px!important}
-  .sec-label{font-size:.6rem;margin-bottom:.8rem}
   .wrap{padding:2.5rem 1rem}
-  .hero-sub{font-size:.9rem}
-  .info-box{margin:1.5rem 0;font-size:.85rem}
+  .hero-title{font-size:clamp(1.8rem,7vw,3rem)}
+  .hero-sub{font-size:.95rem;max-width:90vw}
+  .canvas-wrap canvas{height:260px!important}
+  .info-box{font-size:.88rem;padding:.9rem 1rem}
+  h2{font-size:clamp(1.5rem,5vw,2.2rem);margin-bottom:1.2rem}
+  .prose{font-size:.95rem}
+}
+section.wrap{padding-bottom:3rem}
+@media(max-width:500px){
+  .ctrl-bar{gap:.35rem;padding:.45rem .6rem}
+  .ctrl-bar button{font-size:.5rem;padding:.25rem .45rem;letter-spacing:.04em}
+  .ctrl-bar label{font-size:.5rem}
+  .ctrl-bar .val{font-size:.55rem;min-width:28px}
+  .readout{font-size:.6rem;padding:.4rem .6rem}
+  .canvas-caption{font-size:.48rem;padding:.4rem .6rem}
+  .canvas-wrap canvas{height:220px!important}
+  .sec-label{font-size:.55rem;margin-bottom:.7rem}
+  .wrap{padding:2rem .8rem}
+  .hero-sub{font-size:.82rem}
+  .hero-title{font-size:clamp(1.5rem,6vw,2.2rem)}
+  .info-box{margin:1.2rem 0;font-size:.8rem;padding:.8rem .9rem}
+  .prose{font-size:.88rem}
+  h2{margin-bottom:1rem}
 }
 </style>
 </head>
@@ -172,8 +177,8 @@ section.wrap{padding-bottom:3.5rem}
   <p class="prose" style="max-width:700px;margin-bottom:1rem;">중력으로 묶인 두 물체에 대해 우주는 관대합니다. 정확한 해를 내어줍니다. 케플러의 타원. 모든 위치, 모든 속도가, 지금부터 시간의 끝까지, 닫힌 공식으로 적혀 있습니다. 근사도, 시뮬레이션도, 불확실성도 없습니다. 오직 기하학뿐.</p>
   <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">아래에서 두 질량이 공통 무게중심을 돌고 있습니다 — 금빛 별과 청록빛 동반성. 이심률을 늘리고, 질량비를 바꿔보세요. 타원은 스스로 형태를 바꾸지만, 항상 완벽하고, 항상 반복됩니다. 이것이 풀린 문제입니다. 이 평온함을 기억하세요.</p>
 
-  <div class="canvas-wrap" style="max-width:720px;margin:0 auto;">
-    <canvas id="twobodyCanvas" height="400"></canvas>
+  <div class="canvas-wrap" style="max-width:620px;margin:0 auto;">
+    <canvas id="twobodyCanvas" height="340"></canvas>
     <div class="readout" id="twobodyReadout">
       <span style="color:var(--gold2)">주기: <span id="tbPeriod">—</span></span> &nbsp;&nbsp;
       <span style="color:var(--cyan)">에너지: <span id="tbEnergy">—</span></span> &nbsp;&nbsp;
@@ -210,8 +215,8 @@ section.wrap{padding-bottom:3.5rem}
   <p class="prose" style="max-width:700px;margin-bottom:1rem;">그런데 교정을 검토하던 동료 라르스 프라그멘이 실수를 발견했습니다. 푸앵카레는 자기 논문을 재검토하고, 경악 속에서 깨달았습니다 — 그 오류가 오탈자가 아니라 <em>결론을 완전히 뒤집는 것</em>이었다는 사실을. 불가능하다고 무시했던 궤적들이 사실은 어디에나 존재했습니다. 초기 위치의 미세한 차이가 완전히 다른 미래로 이어졌습니다. 그는 카오스를 발견한 것입니다.</p>
   <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">푸앵카레는 인쇄된 모든 부수를 자비로 회수했습니다 — 비용이 상금보다 컸습니다 — 그리고 원래 주장의 정반대를 증명하는 수정된 논문을 출판했습니다. 그것은 수학사에서 가장 중요한 논문 중 하나가 되었습니다.</p>
 
-  <div class="canvas-wrap" style="max-width:720px;margin:0 auto;">
-    <canvas id="threeCanvas" height="400"></canvas>
+  <div class="canvas-wrap" style="max-width:620px;margin:0 auto;">
+    <canvas id="threeCanvas" height="340"></canvas>
     <div class="readout" id="threeReadout">
       <span style="color:var(--gold2)">물체 수: <span id="t3Count">2</span></span> &nbsp;&nbsp;
       <span style="color:var(--rose)">발산: <span id="t3Diverge">—</span></span> &nbsp;&nbsp;
@@ -237,7 +242,7 @@ section.wrap{padding-bottom:3.5rem}
     <div class="canvas-caption">세 번째 물체를 투입하세요. 흐릿한 그림자 점은 0.001만큼 떨어져 시작합니다 — 발산을 지켜보세요.</div>
   </div>
 
-  <div class="info-box" style="max-width:720px;margin:2rem auto 0;">
+  <div class="info-box" style="max-width:620px;margin:2rem auto 0;">
     <strong>"카오스"는 정밀한 용어입니다.</strong> 푸앵카레가 말한 것은 무작위성이 아닙니다. <em>초기 조건에 대한 민감한 의존성</em>입니다: 머리카락 한 올 차이로 시작한 두 시스템이 완전히 다른 상태에 도달합니다. 법칙은 결정론적이지만, 측정의 아주 작은 불확실성이 모든 예측을 넘어서 증폭됩니다.
   </div>
 </section>
@@ -253,8 +258,8 @@ section.wrap{padding-bottom:3.5rem}
   <p class="prose" style="max-width:700px;margin-bottom:1rem;">카오스 속에서도 안식처는 있습니다. 1772년, 라그랑주는 두 개의 큰 궤도 물체에 대해 작은 물체가 정확히 다섯 위치에서 균형을 이룰 수 있음을 증명했습니다. 셋은 연결선 위에, 둘은 정삼각형을 이루며 — 하나는 앞서고, 하나는 뒤따릅니다 — 이 둘은 <em>안정</em>합니다.</p>
   <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">제임스 웹 우주망원경은 바로 지금 이 점들 중 하나에 있습니다. 지구 뒤쪽 150만 킬로미터, 중력의 지형 속에서 그릇 바닥의 구슬처럼 균형을 잡고 있습니다. 아래 아무 곳이나 클릭해서 시험 입자를 놓아보고, 중력의 위상을 느껴보세요.</p>
 
-  <div class="canvas-wrap" style="max-width:720px;margin:0 auto;">
-    <canvas id="lagrangeCanvas" height="420"></canvas>
+  <div class="canvas-wrap" style="max-width:620px;margin:0 auto;">
+    <canvas id="lagrangeCanvas" height="350"></canvas>
     <div class="readout" id="lagrangeReadout">
       <span style="color:var(--gold2)">클릭하여 시험 입자 배치</span> &nbsp;&nbsp;
       <span style="color:var(--muted)"><span id="lgStatus"></span></span>
@@ -271,7 +276,7 @@ section.wrap{padding-bottom:3.5rem}
     <div class="canvas-caption">클릭하여 시험 입자를 놓으세요. L4와 L5는 영원히 가둡니다. L1, L2, L3은 탈출시킵니다.</div>
   </div>
 
-  <div class="info-box" style="max-width:720px;margin:2rem auto 0;">
+  <div class="info-box" style="max-width:620px;margin:2rem auto 0;">
     <strong>트로이 소행성군.</strong> 목성의 L4와 L5 점에는 12,000개가 넘는 소행성이 갇혀 있습니다 — 트로이군과 그리스군 — 위에서 본 것과 같은 수학에 의해 수십억 년간 제자리를 지키고 있습니다. 토성, 해왕성, 화성, 심지어 지구도 자체 트로이 소행성을 가지고 있습니다.
   </div>
 </section>
@@ -287,8 +292,8 @@ section.wrap{padding-bottom:3.5rem}
   <p class="prose" style="max-width:700px;margin-bottom:1rem;">1993년, 크리스토퍼 무어는 컴퓨터에서 놀라운 것을 발견했습니다: 세 개의 동일한 질량이 하나의 8자 곡선을 따라 서로를 쫓으며, 줄 위의 구슬처럼 같은 간격으로, 정확히 같은 경로를 그리는 것. 셴시너와 몽고메리가 2000년에 엄밀하게 증명했습니다.</p>
   <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">뉴턴의 방정식 안에 300년간 숨어 있던 비밀 안무입니다. 아래에서 감상하세요. 그리고 파괴할 수도 있습니다: 섭동 슬라이더를 살짝 건드려 완벽함이 얼마나 오래 버티는지 보세요.</p>
 
-  <div class="canvas-wrap" style="max-width:720px;margin:0 auto;">
-    <canvas id="choreCanvas" height="380"></canvas>
+  <div class="canvas-wrap" style="max-width:620px;margin:0 auto;">
+    <canvas id="choreCanvas" height="320"></canvas>
     <div class="readout" id="choreReadout">
       <span style="color:var(--gold2)"><span id="choreName">8자 궤도</span></span> &nbsp;&nbsp;
       <span style="color:var(--cyan)">주기: <span id="chorePeriod">—</span></span> &nbsp;&nbsp;
@@ -321,8 +326,8 @@ section.wrap{padding-bottom:3.5rem}
   <p class="prose" style="max-width:700px;margin-bottom:1rem;">이것은 수리물리학에서 가장 오래된 미해결 문제입니다. 라플라스는 태양계가 영원한 시계라고 믿었습니다. 푸앵카레는 아닐 수 있음을 보였습니다. 2009년, 자크 라스카르가 50억 년에 걸친 태양계 시뮬레이션을 수천 번 수행했습니다. 대략 1%에서 수성의 궤도가 금성의 경로와 교차할 때까지 늘어났습니다 — 충돌이든, 심우주로의 추방이든.</p>
   <p class="prose" style="max-width:700px;margin-bottom:2.5rem;">우리 태양계는 시계가 아닙니다. 느린 확률 게임이며, 우리는 그 안에 있습니다. 아래에서 내태양계를 수백만 년 빨리감기하세요. 대부분의 실행은 조용합니다. 일부는 그렇지 않습니다. 오른쪽 수성의 이심률 게이지를 보세요 — 빨간 선 아래에 머물기를 바라면서.</p>
 
-  <div class="canvas-wrap" style="max-width:720px;margin:0 auto;">
-    <canvas id="solarCanvas" height="400"></canvas>
+  <div class="canvas-wrap" style="max-width:620px;margin:0 auto;">
+    <canvas id="solarCanvas" height="340"></canvas>
     <div class="readout" id="solarReadout">
       <span style="color:var(--gold2)">연도: <span id="solYear">0</span>백만 년</span> &nbsp;&nbsp;
       <span style="color:var(--cyan)">실행: <span id="solRuns">0</span></span> &nbsp;&nbsp;
@@ -338,7 +343,7 @@ section.wrap{padding-bottom:3.5rem}
     <div class="canvas-caption">태양계를 빨리감기합니다. 대부분은 살아남습니다. 일부는 그렇지 않습니다.</div>
   </div>
 
-  <div class="info-box" style="max-width:720px;margin:2rem auto 0;">
+  <div class="info-box" style="max-width:620px;margin:2rem auto 0;">
     <strong>50억 년 중 1%.</strong> 라스카르의 시뮬레이션은 수성이 태양계의 와일드카드임을 보여주었습니다. 수성의 궤도는 수백만 년 규모에서 카오스적입니다 — 결정론적이지만 예측 불가능한, 푸앵카레가 발견한 바로 그것. 지금까지 우리는 운이 좋았을 뿐입니다.
   </div>
 </section>
@@ -492,9 +497,9 @@ function makeZoomPan(canvas){
     bodies.length=0;
     // Three gravitational "nuclei" — heavy bodies
     const nuclei=[
-      {x:-0.6, y:-0.1, vx:0.05, vy:0.15},
-      {x:0.5,  y:0.2,  vx:-0.08, vy:-0.1},
-      {x:0.1,  y:-0.5, vx:0.02, vy:0.05}
+      {x:-0.5, y:0.2, vx:0.05, vy:0.12},
+      {x:0.5,  y:0.5, vx:-0.08, vy:-0.08},
+      {x:0.0,  y:-0.2, vx:0.02, vy:0.05}
     ];
     for(let k=0;k<3;k++){
       const n=nuclei[k];
@@ -579,8 +584,8 @@ function makeZoomPan(canvas){
   }
 
   function toScreen(x,y){
-    const scale=Math.min(W,H)*0.45;
-    return{sx:W/2+x*scale, sy:H/2+y*scale};
+    const scale=Math.min(W,H)*0.42;
+    return{sx:W/2+x*scale, sy:H*0.58+y*scale};
   }
 
   let frameCount=0;
@@ -892,20 +897,18 @@ function makeZoomPan(canvas){
   const elDiverge=document.getElementById('t3Diverge');
   const elTime=document.getElementById('t3Time');
 
-  const G=40;
+  const G=20; // reduced from 40 for stability with 3 bodies
   let thirdReleased=false;
   let simTime=0;
   let substepsPerFrame=6;
 
-  // Bodies array: initially 2, third added on release
-  // Also a "shadow" third body starting 0.001 away — for divergence demo
   let bodies=[], shadow=null;
   const maxTrail=500;
 
   const colors=[
-    {fill:'rgba(201,168,76,0.9)',trail:'rgba(201,168,76,'},   // gold
-    {fill:'rgba(60,184,195,0.9)',trail:'rgba(60,184,195,'},    // cyan
-    {fill:'rgba(196,122,138,0.9)',trail:'rgba(196,122,138,'} // rose
+    {fill:'rgba(201,168,76,0.9)',trail:'rgba(201,168,76,'},
+    {fill:'rgba(60,184,195,0.9)',trail:'rgba(60,184,195,'},
+    {fill:'rgba(196,122,138,0.9)',trail:'rgba(196,122,138,'}
   ];
 
   function init(){
@@ -913,14 +916,13 @@ function makeZoomPan(canvas){
     elCount.textContent='2'; elDiverge.textContent='—';
     btnRelease.style.borderColor='var(--rose)';btnRelease.style.color='var(--rose)';
     btnRelease.textContent='● Release third body';
+    btnRelease.classList.remove('active');
 
-    // Two bodies in a nice circular orbit
-    const m1=0.6, m2=0.4, a=1.8;
-    const rPeri=a;
+    const m1=0.6, m2=0.4, a=1.5;
     const v=Math.sqrt(G*(m1+m2)/a);
     bodies=[
-      {x:-m2*rPeri, y:0, vx:0, vy:-m2*v, m:m1, trail:[], ci:0},
-      {x: m1*rPeri, y:0, vx:0, vy: m1*v, m:m2, trail:[], ci:1}
+      {x:-m2*a, y:0, vx:0, vy:-m2*v, m:m1, trail:[], ci:0},
+      {x: m1*a, y:0, vx:0, vy: m1*v, m:m2, trail:[], ci:1}
     ];
   }
 
@@ -931,12 +933,9 @@ function makeZoomPan(canvas){
     btnRelease.classList.add('active');
     btnRelease.textContent='✓ Released';
 
-    // Third body enters from the upper right — close enough to be visible
-    const m3=0.35;
-    const third={x:1.8, y:1.2, vx:-1.0, vy:-0.5, m:m3, trail:[], ci:2};
+    const m3=0.3;
+    const third={x:1.5, y:1.2, vx:-0.8, vy:-0.3, m:m3, trail:[], ci:2};
     bodies.push(third);
-
-    // Shadow copy of third body, offset by 0.001 in x — for divergence
     shadow={x:third.x+0.001, y:third.y, vx:third.vx, vy:third.vy, m:m3};
   }
 
@@ -945,7 +944,7 @@ function makeZoomPan(canvas){
     for(let j=0;j<bodies_arr.length;j++){
       if(j===skipIdx)continue;
       const dx=bodies_arr[j].x-bx, dy=bodies_arr[j].y-by;
-      const r2=dx*dx+dy*dy+0.05; // larger softening for stability
+      const r2=dx*dx+dy*dy+0.08; // generous softening
       const r=Math.sqrt(r2);
       const f=G*bodies_arr[j].m/(r2*r);
       ax+=f*dx; ay+=f*dy;
@@ -953,39 +952,34 @@ function makeZoomPan(canvas){
     return{ax,ay};
   }
 
+  function clampVel(obj){
+    const vMax=10;
+    const v=Math.sqrt(obj.vx*obj.vx+obj.vy*obj.vy);
+    if(v>vMax||isNaN(v)){obj.vx=(isNaN(obj.vx)?0:obj.vx*vMax/(v||1));obj.vy=(isNaN(obj.vy)?0:obj.vy*vMax/(v||1));}
+    if(isNaN(obj.x)){obj.x=0;obj.y=0;obj.vx=0;obj.vy=0;}
+  }
+
   function step(dt){
     const n=bodies.length;
     const acc=[];
     for(let i=0;i<n;i++) acc.push(accelOn(bodies[i].x,bodies[i].y,bodies,i));
-
     for(let i=0;i<n;i++){
       bodies[i].x+=bodies[i].vx*dt+0.5*acc[i].ax*dt*dt;
       bodies[i].y+=bodies[i].vy*dt+0.5*acc[i].ay*dt*dt;
     }
-
     const accN=[];
     for(let i=0;i<n;i++) accN.push(accelOn(bodies[i].x,bodies[i].y,bodies,i));
-
     for(let i=0;i<n;i++){
       bodies[i].vx+=0.5*(acc[i].ax+accN[i].ax)*dt;
       bodies[i].vy+=0.5*(acc[i].ay+accN[i].ay)*dt;
-      // Velocity clamping to prevent divergence
-      const vMax=15;
-      const v=Math.sqrt(bodies[i].vx*bodies[i].vx+bodies[i].vy*bodies[i].vy);
-      if(v>vMax){bodies[i].vx*=vMax/v;bodies[i].vy*=vMax/v;}
+      clampVel(bodies[i]);
     }
-
     if(shadow){
       const sa=accelOn(shadow.x,shadow.y,bodies,-1);
-      shadow.vx+=sa.ax*dt;
-      shadow.vy+=sa.ay*dt;
-      shadow.x+=shadow.vx*dt;
-      shadow.y+=shadow.vy*dt;
-      // Clamp shadow too
-      const sv=Math.sqrt(shadow.vx*shadow.vx+shadow.vy*shadow.vy);
-      if(sv>15){shadow.vx*=15/sv;shadow.vy*=15/sv;}
+      shadow.vx+=sa.ax*dt; shadow.vy+=sa.ay*dt;
+      shadow.x+=shadow.vx*dt; shadow.y+=shadow.vy*dt;
+      clampVel(shadow);
     }
-
     simTime+=dt;
   }
 
@@ -1036,22 +1030,21 @@ function makeZoomPan(canvas){
       }
     }
 
-    // Draw shadow trail (faint gold, slightly offset — shows divergence)
-    if(shadow && thirdReleased){
+    // Draw shadow (shows divergence)
+    if(shadow && thirdReleased && bodies.length>=3){
       const ss=toScreen(shadow.x,shadow.y);
       ctx.beginPath();ctx.arc(ss.sx,ss.sy,3,0,Math.PI*2);
       ctx.fillStyle='rgba(196,122,138,0.3)';ctx.fill();
-      // Dashed line from third body to shadow
       const tb=bodies[2];
       const ts=toScreen(tb.x,tb.y);
       const dist=Math.sqrt((tb.x-shadow.x)**2+(tb.y-shadow.y)**2);
-      if(dist*sc<W*0.5){
+      // Dashed connector if close enough on screen
+      const screenDist=Math.sqrt((ts.sx-ss.sx)**2+(ts.sy-ss.sy)**2);
+      if(screenDist<W*0.5 && screenDist>2){
         ctx.setLineDash([3,3]);ctx.strokeStyle='rgba(196,122,138,0.2)';ctx.lineWidth=0.8;
         ctx.beginPath();ctx.moveTo(ts.sx,ts.sy);ctx.lineTo(ss.sx,ss.sy);ctx.stroke();
         ctx.setLineDash([]);
       }
-      // Divergence readout
-      const logDiv=Math.log10(Math.max(dist,1e-10));
       elDiverge.textContent=dist<0.01?dist.toExponential(1):dist.toFixed(2);
       elDiverge.style.color=dist>1?'#c45555':dist>0.1?'#c9a84c':'#3cb8c3';
     }
@@ -1768,7 +1761,5 @@ function makeZoomPan(canvas){
   requestAnimationFrame(draw);
 })();
 </script>
-</body>
-</html>
 </body>
 </html>
