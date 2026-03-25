@@ -184,9 +184,23 @@ footer{padding:3rem 0 4rem;max-width:720px;margin:0 auto;padding-left:2rem;paddi
 <div class="story-card reveal">
 <div class="story-icon">⟷</div>
 <div class="story-text">
-<span class="en"><b>Langlands program</b> — Robert Langlands proposed a breathtaking <b>duality</b>: every L-function from number theory should match one from automorphic forms, and vice versa. If true, this "grand unified theory" of mathematics would settle the Riemann Hypothesis for whole families of L-functions at once. We are still far from the summit — but the path is among the deepest in all of mathematics.</span>
-<span class="ko"><b>랭글랜즈 프로그램</b> — 로버트 랭글랜즈는 숨막히는 <b>쌍대성</b>을 제안했습니다: 정수론의 모든 L-함수는 보형 형식의 것과 짝을 이루어야 하고, 그 역도 성립해야 합니다. 참이라면, 이 수학의 "대통일 이론"은 L-함수의 전체 가족에 대해 리만 가설을 한꺼번에 해결할 것입니다. 정상까지는 아직 멀지만 — 그 길은 수학에서 가장 깊은 것 중 하나입니다.</span>
+<span class="en"><b>The Langlands program</b> — In 1967, Robert Langlands wrote a letter to André Weil that would reshape mathematics. He proposed a vast web of dualities: for every <b>Galois representation</b> — an algebraic object encoding how prime numbers split in number fields — there should exist a matching <b>automorphic form</b> — an analytic object living on a symmetric space — and their L-functions should be identical. Two utterly different mathematical worlds, speaking the same language through their zeros.</span>
+<span class="ko"><b>랭글랜즈 프로그램</b> — 1967년, 로버트 랭글랜즈는 앙드레 베유에게 수학을 재편할 편지를 썼습니다. 그는 광대한 쌍대성의 그물을 제안했습니다: 모든 <b>갈루아 표현</b> — 소수가 수체에서 어떻게 분해되는지를 암호화한 대수적 대상 — 에는 짝이 되는 <b>보형 형식</b> — 대칭 공간 위에 사는 해석적 대상 — 이 존재해야 하고, 둘의 L-함수는 동일해야 합니다. 완전히 다른 두 수학 세계가, 영점이라는 공통 언어로 대화합니다.</span>
 </div></div>
+
+<p class="sec-prose"><span class="en">Think of it as a mirror. On one side: the arithmetic of equations, primes splitting, Galois groups acting. On the other: waves on symmetric spaces, harmonic analysis, spectral decomposition. The Langlands correspondence says these two reflections are of the <em>same</em> object.</span>
+<span class="ko">거울이라고 생각하세요. 한쪽에는: 방정식의 산술, 소수의 분해, 갈루아 군의 작용. 다른 쪽에는: 대칭 공간 위의 파동, 조화 해석, 스펙트럼 분해. 랭글랜즈 대응은 이 두 반영이 <em>같은</em> 대상의 것이라고 말합니다.</span></p>
+
+<div class="demo-card">
+<div class="demo-canvas-wrap"><canvas id="langlandsCanvas" height="480"></canvas></div>
+<div class="controls">
+<button class="btn" id="langlandsAnim" onclick="langlandsToggle()"><span class="en">▶ Animate</span><span class="ko">▶ 애니메이션</span></button>
+<button class="btn" onclick="langlandsReset()"><span class="en">Reset</span><span class="ko">초기화</span></button>
+<div class="stat-box" id="langlandsStat"><span class="en">Hover to explore</span><span class="ko">마우스를 올려 탐색</span></div>
+</div></div>
+
+<p class="sec-prose" style="margin-top:1rem"><span class="en">Proven cases of this correspondence include some of the greatest theorems of the last century: Langlands himself for GL(1), the proof of Fermat's Last Theorem (Wiles, via modularity of elliptic curves), and the recent work of Fargues–Scholze on the geometrization of the local Langlands program. Yet the full vision remains one of the deepest open frontiers in mathematics.</span>
+<span class="ko">이 대응의 증명된 경우들은 지난 세기 최고의 정리들을 포함합니다: 랭글랜즈 본인의 GL(1)에 대한 증명, 페르마의 마지막 정리(와일즈, 타원곡선의 모듈러성을 경유), 그리고 파르그-숄체의 국소 랭글랜즈 기하화에 대한 최근 연구. 그러나 전체 비전은 여전히 수학에서 가장 깊은 미개척 영역 중 하나입니다.</span></p>
 
 <div class="demo-card">
 <div class="demo-canvas-wrap"><canvas id="lFuncCanvas" height="350"></canvas></div>
@@ -269,7 +283,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   katex.render('n = p_1^{a_1}\\, p_2^{a_2} \\cdots p_k^{a_k}\\quad(\\text{유일})',document.getElementById('eq1ko'),{displayMode:true});
   katex.render('\\zeta(s)=\\sum_{n=1}^{\\infty}\\frac{1}{n^s}=\\prod_{p\\;\\text{prime}}\\!\\frac{1}{1-p^{-s}}',document.getElementById('eq2'),{displayMode:true});
   katex.render('\\psi(x)\\;=\\;x \\;-\\; \\sum_{\\rho}\\frac{x^{\\rho}}{\\rho} \\;-\\; \\ln 2\\pi',document.getElementById('eq5'),{displayMode:true});
-  eulerInit();domainInit();critInit();explInit();stakeInit();lFuncInit();
+  eulerInit();domainInit();critInit();explInit();stakeInit();lFuncInit();langlandsInit();
 });
 
 /* HERO */
@@ -375,6 +389,163 @@ function lFuncInit(){
     const lang=document.body.lang;
     ctx.fillText(lang==='ko'?zs.length+'\uac1c \uc601\uc810 \ud45c\uc2dc':zs.length+' zeros shown',pL+4+ctx.measureText(names[curFn]).width+12,pT+14);
   }
+  draw();
+}
+
+/* § 7 LANGLANDS DUALITY MIRROR */
+function langlandsInit(){
+  const cv=document.getElementById('langlandsCanvas');if(!cv)return;
+  const ctx=cv.getContext('2d');
+  let W,H,animating=false,animId=null,time=0,hoverIdx=-1;
+  function resize(){W=cv.width=cv.offsetWidth;H=cv.height=480;}
+  resize();window.addEventListener('resize',()=>{resize();draw();});
+
+  const pairs=[
+    {g:'Trivial rep.',a:'Eisenstein series',l:'ζ(s)',c:'#c9a84c',ok:true,
+     gk:'자명한 표현',ak:'아이젠슈타인 급수'},
+    {g:'Dirichlet char. χ',a:'GL(1) automorphic form',l:'L(s, χ)',c:'#3cb8c3',ok:true,
+     gk:'디리클레 지표 χ',ak:'GL(1) 보형 형식'},
+    {g:'Elliptic curve E/ℚ',a:'Weight-2 modular form',l:'L(s, E)',c:'#c47a8a',ok:true,
+     gk:'타원곡선 E/ℚ',ak:'무게 2 모듈러 형식'},
+    {g:'Artin rep. ρ',a:'Maass form',l:'L(s, ρ)',c:'#9b7ed8',ok:false,
+     gk:'아르틴 표현 ρ',ak:'마스 형식'},
+    {g:'ℓ-adic cohomology',a:'GL(n) automorphic rep.',l:'L(s, π)',c:'#6ec49a',ok:false,
+     gk:'ℓ-진 코호몰로지',ak:'GL(n) 보형 표현'},
+    {g:'Motive M',a:'Automorphic form on G',l:'L(s, M)',c:'#e87040',ok:false,
+     gk:'모티브 M',ak:'군 G 위의 보형 형식'},
+  ];
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const ko=document.body.lang==='ko';
+    const midX=W/2,padT=52,padB=25,uH=H-padT-padB;
+
+    // Mirror line glow
+    for(let r=30;r>0;r-=5){
+      ctx.fillStyle='rgba(201,168,76,'+(0.01+0.005*(30-r))+')';
+      ctx.fillRect(midX-r,padT,r*2,uH);
+    }
+    ctx.fillStyle='rgba(201,168,76,.45)';ctx.fillRect(midX-.5,padT,1,uH);
+
+    // Headers
+    ctx.textAlign='center';
+    ctx.font='12px "Cormorant Garamond"';
+    ctx.fillStyle='var(--cyan)';ctx.fillText(ko?'갈루아 표현':'Galois Representations',midX*.42,padT-12);
+    ctx.fillStyle='var(--rose)';ctx.fillText(ko?'보형 형식':'Automorphic Forms',midX+midX*.58,padT-12);
+    ctx.fillStyle='var(--gold)';ctx.font='10px "Cormorant Garamond"';
+    ctx.fillText(ko?'L-함수':'L-functions',midX,padT-12);
+
+    // Particle field (floating dots in background)
+    if(animating){
+      for(let i=0;i<20;i++){
+        const px=midX+(Math.sin(time*0.3+i*1.7)*midX*0.4);
+        const py=padT+uH*(0.1+0.8*((Math.sin(time*0.2+i*2.3)*0.5+0.5)));
+        const a=0.1+0.08*Math.sin(time+i);
+        ctx.beginPath();ctx.arc(px,py,1,0,Math.PI*2);
+        ctx.fillStyle='rgba(201,168,76,'+a+')';ctx.fill();
+      }
+    }
+
+    const rowH=uH/pairs.length;
+    for(let i=0;i<pairs.length;i++){
+      const p=pairs[i];
+      const cy=padT+rowH*i+rowH/2;
+      const lx=midX*0.42, rx=midX+midX*0.58;
+      const isH=hoverIdx===i;
+      const pulse=animating?0.5+0.5*Math.abs(Math.sin(time*1.5+i*0.9)):0.5;
+      const al=isH?1:(.35+pulse*0.4);
+
+      // Connection bezier through the mirror
+      ctx.beginPath();
+      ctx.moveTo(lx+8,cy);
+      ctx.bezierCurveTo(midX-20,cy-12*Math.sin(time*0.8+i),midX+20,cy+12*Math.sin(time*0.8+i+1),rx-8,cy);
+      ctx.strokeStyle=p.c+(isH?'aa':'44');
+      ctx.lineWidth=isH?2.5:1.2;
+      ctx.setLineDash(p.ok?[]:[4,3]);
+      ctx.stroke();ctx.setLineDash([]);
+
+      // Traveling particle along the curve
+      if(animating){
+        const t2=((time*0.4+i*0.5)%1);
+        const t3=t2;
+        const x0=lx+8,y0=cy,x3=rx-8,y3=cy;
+        const cx1=midX-20,cy1=cy-12*Math.sin(time*0.8+i);
+        const cx2=midX+20,cy2=cy+12*Math.sin(time*0.8+i+1);
+        const u=1-t3;
+        const px2=u*u*u*x0+3*u*u*t3*cx1+3*u*t3*t3*cx2+t3*t3*t3*x3;
+        const py2=u*u*u*y0+3*u*u*t3*cy1+3*u*t3*t3*cy2+t3*t3*t3*y3;
+        const grd=ctx.createRadialGradient(px2,py2,0,px2,py2,6);
+        grd.addColorStop(0,p.c+'cc');grd.addColorStop(1,p.c+'00');
+        ctx.fillStyle=grd;ctx.fillRect(px2-6,py2-6,12,12);
+        ctx.beginPath();ctx.arc(px2,py2,2,0,Math.PI*2);ctx.fillStyle=p.c;ctx.fill();
+      }
+
+      // Left node (Galois)
+      ctx.beginPath();ctx.arc(lx,cy,isH?7:5,0,Math.PI*2);
+      ctx.fillStyle=p.c+(isH?'cc':'55');ctx.fill();
+      if(isH||animating){
+        ctx.beginPath();ctx.arc(lx,cy,isH?11:8,0,Math.PI*2);
+        ctx.strokeStyle=p.c+'33';ctx.lineWidth=1;ctx.stroke();
+      }
+
+      // Right node (Automorphic)
+      ctx.beginPath();ctx.arc(rx,cy,isH?7:5,0,Math.PI*2);
+      ctx.fillStyle=p.c+(isH?'cc':'55');ctx.fill();
+      if(isH||animating){
+        ctx.beginPath();ctx.arc(rx,cy,isH?11:8,0,Math.PI*2);
+        ctx.strokeStyle=p.c+'33';ctx.lineWidth=1;ctx.stroke();
+      }
+
+      // Labels
+      ctx.font=(isH?'bold ':'')+' 9px "JetBrains Mono"';
+      ctx.textAlign='right';ctx.fillStyle=p.c+(isH?'ee':'88');
+      ctx.fillText(ko?p.gk:p.g,lx-14,cy+3);
+      ctx.textAlign='left';
+      ctx.fillText(ko?p.ak:p.a,rx+14,cy+3);
+
+      // Center L-function label
+      ctx.textAlign='center';ctx.font='10px "JetBrains Mono"';
+      ctx.fillStyle='rgba(201,168,76,'+(isH?.9:.4)+')';
+      ctx.fillText(p.l,midX,cy-10);
+
+      // Proven badge
+      if(p.ok){
+        ctx.font='7px "DM Sans"';ctx.fillStyle='rgba(110,196,154,'+(isH?.9:.5)+')';
+        ctx.fillText(ko?'증명됨':'proven',midX,cy+14);
+      }else{
+        ctx.font='7px "DM Sans"';ctx.fillStyle='rgba(196,122,138,'+(isH?.8:.4)+')';
+        ctx.fillText(ko?'미해결':'open',midX,cy+14);
+      }
+    }
+  }
+
+  // Hover detection
+  cv.addEventListener('mousemove',function(e){
+    const rect=cv.getBoundingClientRect();
+    const my=e.clientY-rect.top;
+    const padT=52,uH=H-52-25,rowH=uH/pairs.length;
+    hoverIdx=-1;
+    for(let i=0;i<pairs.length;i++){
+      const cy=padT+rowH*i+rowH/2;
+      if(Math.abs(my-cy)<rowH/2){hoverIdx=i;break;}
+    }
+    if(!animating)draw();
+  });
+  cv.addEventListener('mouseleave',function(){hoverIdx=-1;if(!animating)draw();});
+
+  function animate(){
+    time+=0.016;draw();
+    if(animating)animId=requestAnimationFrame(animate);
+  }
+
+  window.langlandsToggle=function(){
+    if(animating){animating=false;cancelAnimationFrame(animId);document.getElementById('langlandsAnim').classList.remove('active');}
+    else{animating=true;document.getElementById('langlandsAnim').classList.add('active');animate();}
+  };
+  window.langlandsReset=function(){
+    animating=false;if(animId)cancelAnimationFrame(animId);time=0;hoverIdx=-1;
+    document.getElementById('langlandsAnim').classList.remove('active');draw();
+  };
   draw();
 }
 </script>

@@ -921,9 +921,9 @@ function makeZoomPan(canvas){
     btnRelease.classList.add('active');
     btnRelease.textContent='✓ Released';
 
-    // Third body enters from the side
+    // Third body enters from the upper right — close enough to be visible
     const m3=0.35;
-    const third={x:2.5, y:1.0, vx:-1.8, vy:-0.6, m:m3, trail:[], ci:2};
+    const third={x:1.8, y:1.2, vx:-1.0, vy:-0.5, m:m3, trail:[], ci:2};
     bodies.push(third);
 
     // Shadow copy of third body, offset by 0.001 in x — for divergence
@@ -935,7 +935,7 @@ function makeZoomPan(canvas){
     for(let j=0;j<bodies_arr.length;j++){
       if(j===skipIdx)continue;
       const dx=bodies_arr[j].x-bx, dy=bodies_arr[j].y-by;
-      const r2=dx*dx+dy*dy+0.01;
+      const r2=dx*dx+dy*dy+0.05; // larger softening for stability
       const r=Math.sqrt(r2);
       const f=G*bodies_arr[j].m/(r2*r);
       ax+=f*dx; ay+=f*dy;
@@ -945,34 +945,35 @@ function makeZoomPan(canvas){
 
   function step(dt){
     const n=bodies.length;
-    // Compute accelerations
     const acc=[];
     for(let i=0;i<n;i++) acc.push(accelOn(bodies[i].x,bodies[i].y,bodies,i));
 
-    // Position update
     for(let i=0;i<n;i++){
       bodies[i].x+=bodies[i].vx*dt+0.5*acc[i].ax*dt*dt;
       bodies[i].y+=bodies[i].vy*dt+0.5*acc[i].ay*dt*dt;
     }
 
-    // New accelerations
     const accN=[];
     for(let i=0;i<n;i++) accN.push(accelOn(bodies[i].x,bodies[i].y,bodies,i));
 
-    // Velocity update
     for(let i=0;i<n;i++){
       bodies[i].vx+=0.5*(acc[i].ax+accN[i].ax)*dt;
       bodies[i].vy+=0.5*(acc[i].ay+accN[i].ay)*dt;
+      // Velocity clamping to prevent divergence
+      const vMax=15;
+      const v=Math.sqrt(bodies[i].vx*bodies[i].vx+bodies[i].vy*bodies[i].vy);
+      if(v>vMax){bodies[i].vx*=vMax/v;bodies[i].vy*=vMax/v;}
     }
 
-    // Shadow third body (same forces, but from slightly different position)
     if(shadow){
       const sa=accelOn(shadow.x,shadow.y,bodies,-1);
-      // Use simplified Euler for shadow (doesn't need Verlet precision)
       shadow.vx+=sa.ax*dt;
       shadow.vy+=sa.ay*dt;
       shadow.x+=shadow.vx*dt;
       shadow.y+=shadow.vy*dt;
+      // Clamp shadow too
+      const sv=Math.sqrt(shadow.vx*shadow.vx+shadow.vy*shadow.vy);
+      if(sv>15){shadow.vx*=15/sv;shadow.vy*=15/sv;}
     }
 
     simTime+=dt;
