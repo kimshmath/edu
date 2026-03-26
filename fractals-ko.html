@@ -23,9 +23,14 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 .particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 .particle{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(90,154,114,.3),transparent 70%);animation:drift linear infinite}
 @keyframes drift{0%{transform:translateY(110vh) scale(1);opacity:0}8%{opacity:1}92%{opacity:1}100%{transform:translateY(-10vh) scale(.2);opacity:0}}
-#hero{position:relative;width:100%;height:100vh;min-height:650px;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden}
-#heroCanvas{position:absolute;inset:0;width:100%;height:100%;opacity:.5;mix-blend-mode:screen}
-.hero-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 60% at 50% 55%,transparent 0%,rgba(4,5,12,.6) 50%,var(--bg) 80%),linear-gradient(to bottom,rgba(4,5,12,0) 60%,var(--bg) 100%)}
+.hero-section{position:relative;width:100%;height:100vh;min-height:650px;display:flex;flex-direction:column;justify-content:center;align-items:center;overflow:hidden}
+.hero-canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.5}
+#s1_heroCanvas{opacity:1}
+#s2_heroCanvas{opacity:.45}
+#s3_heroCanvas{opacity:.55;mix-blend-mode:normal}
+#s4_heroCanvas{opacity:.5;mix-blend-mode:normal}
+#s5_heroCanvas{opacity:.4}
+.hero-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 80% 75% at 50% 50%,transparent 20%,rgba(4,5,12,.35) 60%,var(--bg) 85%),linear-gradient(to bottom,rgba(4,5,12,0) 70%,var(--bg) 100%)}
 .hero-content{position:relative;z-index:10;text-align:center;padding:0 2rem;max-width:780px}
 .hero-label{font-family:var(--font-display);font-size:.72rem;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:1.8rem;opacity:0;animation:fadeUp 1.4s cubic-bezier(.23,1,.32,1) .3s both}
 .hero-category{font-family:var(--font-mono);font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem;opacity:0;animation:fadeUp 1.4s cubic-bezier(.23,1,.32,1) .5s both}
@@ -86,7 +91,6 @@ input[type="range"]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;b
 @media(max-width:768px){.chapter-section{padding:4rem 1.5rem 3rem}.ibox{padding:1.5rem}.stats{grid-template-columns:1fr 1fr}.quote-block{padding:1.5rem 1.8rem}.prose-drop::first-letter{font-size:3rem}}
 @media(max-width:480px){.hero-title{font-size:2rem}.sec-title{font-size:1.5rem}.prose{font-size:.95rem}.stats{grid-template-columns:1fr}}
 .particle{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.2),transparent 70%);animation:drift linear infinite}
-#heroCanvas{position:absolute;inset:0;width:100%;height:100%;opacity:.45;mix-blend-mode:screen}
 .hero-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 60% at 50% 50%,transparent 0%,rgba(4,5,12,.6) 50%,var(--bg) 80%),linear-gradient(to bottom,rgba(4,5,12,0) 60%,var(--bg) 100%)}
 .hero-number{font-family:var(--font-mono);font-size:.7rem;color:var(--gold);letter-spacing:.3em;margin-bottom:1rem;opacity:0;animation:fadeUp 1.4s cubic-bezier(.23,1,.32,1) .5s both}
 .hero-title{font-family:var(--font-display);font-weight:300;font-size:clamp(2.2rem,5.5vw,4.2rem);line-height:1.1;letter-spacing:-.025em;color:var(--cream);margin-bottom:.8rem;opacity:0;animation:fadeUp 1.4s cubic-bezier(.23,1,.32,1) .7s both}
@@ -113,7 +117,6 @@ input[type="range"]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;b
 .tab-content.active{display:block}
 :root{--bg:#04050c;--bg2:#090b18;--bg3:#0e1128;--text:#b8b4ac;--cream:#ece8e0;--muted:#52566a;--gold:#c9a84c;--gold2:#d4a853;--gold-dim:rgba(201,168,76,.08);--violet:#8a6abf;--violet-glow:#a88ae0;--fern:#5a9a72;--border:rgba(255,255,255,.04);--font-display:'Fraunces',Georgia,serif;--font-body:'DM Sans',sans-serif;--font-kr:'Noto Serif KR',serif;--font-mono:'JetBrains Mono',monospace}
 .particle{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(138,106,191,.25),transparent 70%);animation:drift linear infinite}
-#heroCanvas{position:absolute;inset:0;width:100%;height:100%;opacity:.55}
 .hero-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 55% 55% at 50% 50%,transparent 0%,rgba(4,5,12,.55) 50%,var(--bg) 78%),linear-gradient(to bottom,rgba(4,5,12,0) 55%,var(--bg) 100%)}
 .hero-title em{font-style:italic;color:var(--violet-glow)}
 .hero-scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--violet),transparent);animation:breathe 3s ease-in-out infinite}
@@ -142,7 +145,6 @@ input[type="range"]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;b
 .section-sep{width:50px;height:1px;margin:4rem auto;background:linear-gradient(90deg,transparent,var(--violet),transparent);opacity:.35}
 :root{--bg:#04050c;--bg2:#090b18;--bg3:#0e1128;--text:#b8b4ac;--cream:#ece8e0;--muted:#52566a;--gold:#c9a84c;--gold2:#d4a853;--gold-dim:rgba(201,168,76,.08);--violet:#8a6abf;--rose:#c0687a;--rose-glow:#e08898;--rose-dim:rgba(192,104,122,.06);--fern:#5a9a72;--border:rgba(255,255,255,.04);--font-display:'Fraunces',Georgia,serif;--font-body:'DM Sans',sans-serif;--font-kr:'Noto Serif KR',serif;--font-mono:'JetBrains Mono',monospace}
 .particle{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(192,104,122,.22),transparent 70%);animation:drift linear infinite}
-#heroCanvas{position:absolute;inset:0;width:100%;height:100%;opacity:.5}
 .hero-title em{font-style:italic;color:var(--rose-glow)}
 .hero-scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--rose),transparent);animation:breathe 3s ease-in-out infinite}
 .prose-drop::first-letter{font-family:var(--font-display);font-weight:400;float:left;font-size:3.8rem;line-height:.8;margin:.08em .18em 0 0;color:var(--rose-glow)}
@@ -158,7 +160,6 @@ input[type="range"]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;b
 @media(max-width:700px){.dual-view{flex-direction:column}}
 footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--border);margin-top:2rem}
 .particle{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(90,154,114,.25),transparent 70%);animation:drift linear infinite}
-#heroCanvas{position:absolute;inset:0;width:100%;height:100%;opacity:.4;mix-blend-mode:screen}
 .hero-vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 55% at 50% 55%,transparent 0%,rgba(4,5,12,.55) 50%,var(--bg) 78%),linear-gradient(to bottom,rgba(4,5,12,0) 55%,var(--bg) 100%)}
 .hero-scroll-line{width:1px;height:50px;background:linear-gradient(to bottom,var(--fern-glow),transparent);animation:breathe 3s ease-in-out infinite}
 .prose-drop::first-letter{font-family:var(--font-display);font-weight:400;float:left;font-size:3.8rem;line-height:.8;margin:.08em .18em 0 0;color:var(--fern-glow)}
@@ -205,15 +206,14 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 
 
 
-<section id="s1_hero">
-  <canvas id="s1_heroCanvas"></canvas>
+<section class="hero-section" id="s1_hero">
+  <canvas class="hero-canvas" id="s1_heroCanvas"></canvas>
   <div class="hero-vignette"></div>
   <div class="hero-content">
     <div class="hero-label">Mellow Math</div>
-    <div class="hero-category">공간 · Space</div>
+    <div class="hero-category">Space · 공간</div>
     <h1 class="hero-title">자연은 어떻게<br><em>스스로를 반복</em>하는가</h1>
-    <p class="hero-sub-kr">Fractal Geometry — How Nature Learned to Repeat Itself</p>
-    <p class="hero-tagline">양치식물이 펼쳐진다. 그 잎사귀 안에 또 하나의 양치식물.<br>확대하라. 끝이 없다.</p>
+    <p class="hero-tagline">가장 단순한 규칙에서 태어난, 결코 반복하지 않는 형상.<br>z² + c. 그것이 전부다.</p>
     <a class="hero-scroll" onclick="document.getElementById('s1_ch01').scrollIntoView({behavior:'smooth'})">
       <span>시작</span>
       <div class="hero-scroll-line"></div>
@@ -224,16 +224,16 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 <section class="chapter-section" id="s1_ch01">
   <div class="sec-num">01</div>
   <h2 class="sec-title">구름은 구가 아니다</h2>
-  <p class="sec-title-kr">Clouds Are Not Spheres</p>
+  <p class="sec-title-kr">구름은 구가 아니다</p>
 
   <div class="quote-block">
     <p class="quote-text">"Clouds are not spheres, mountains are not cones, coastlines are not circles, and bark is not smooth, nor does lightning travel in a straight line."</p>
     <p class="quote-attr">— Benoît Mandelbrot, <em>The Fractal Geometry of Nature</em> (1982)</p>
   </div>
 
-  <p class="prose prose-drop">이천 년 동안 기하학은 <span class="hi">매끄러움</span>의 언어를 사용했다. 직선, 원, 구, 원뿔 — 유클리드의 어휘는 다듬어진 대리석과 완벽한 모서리의 세계를 묘사했다. 장엄하고, 강력했다. 일식을 예측했고, 대성당을 세웠고, 우주선을 외행성까지 보냈다. 그러나 구름 하나는 묘사하지 못했다.</p>
+  <p class="prose prose-drop">이천 년 동안 기하학은 매끄러움의 언어를 사용했다. 직선, 원, 구, 원뿔 — 유클리드의 어휘는 다듬어진 대리석과 완벽한 모서리의 세계를 묘사했다. 장엄하고, 강력했다. 일식을 예측했고, 대성당을 세웠고, 우주선을 외행성까지 보냈다. 그러나 구름 하나는 묘사하지 못했다.</p>
 
-  <p class="prose">구름 하나, 나무 하나, 해안선 하나, 강의 분기나 번개의 갈라짐조차. 자연을 채우는 거칠고 들쭉날쭉하며 끝없이 세밀한 형상들은 고전 기하학의 범위 밖에 있었다. 수 세기 동안 수학자들은 그저 외면했을 뿐이었다.</p>
+  <p class="prose">구름 하나, 나무 하나, 해안선 하나조차. 강의 분기도, 번개의 갈라짐도. 자연을 채우는 거칠고 들쭉날쭉하며 끝없이 세밀한 형상들은 고전 기하학의 범위 밖에 있었다. 수 세기 동안 수학자들은 그저 외면했다.</p>
 
   <p class="prose">그러다 1967년, 폴란드 태생의 수학자 브누아 만델브로가 수수께끼 같은 제목의 논문을 발표했다: <span class="ac">"영국 해안선의 길이는 얼마인가?"</span> 그가 내놓은 답은 기하학의 기초를 뒤흔들었다.</p>
 
@@ -257,14 +257,14 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
     </div>
   </div>
 
-  <p class="prose">이것이 조용한 혁명의 시작이었다. 고전 기하학은 모든 곡선에 명확한 길이가 있다고 가정했다 — 측정하면 끝이라고. 만델브로는 거칠고 자기유사적인 형상에서는 <span class="hi">길이가 숫자가 아니라 스케일의 함수</span>임을 보였다. 태어나기를 기다리던 개념은 더 나은 자가 아니었다. 완전히 새로운 종류의 <span class="ac">차원</span>이었다.</p>
+  <p class="prose">이것이 조용한 혁명의 시작이었다. 고전 기하학은 모든 곡선에 명확한 길이가 있다고 가정했다. 만델브로는 거칠고 자기유사적인 형상에서는 <span class="hi">길이가 숫자가 아니라 스케일의 함수</span>임을 보였다. 태어나기를 기다리던 개념은 더 나은 자가 아니었다. 완전히 새로운 종류의 <span class="ac">차원</span>이었다.</p>
 
   <div class="section-sep"></div>
 
   <div class="ibox">
     <div class="ibox-label"><span class="dot"></span> Interactive</div>
     <div class="ibox-title">삼각형에서 눈송이로</div>
-    <div class="ibox-desc">코흐 눈송이는 삼각형에서 시작합니다. 각 단계마다 모든 변에 작은 삼각형이 솟아나며 둘레는 매번 4/3배 증가합니다. 무한히 반복하면: 무한한 길이를 가지면서 유한한 면적을 둘러싸는 곡선이 됩니다.</div>
+    <div class="ibox-desc">코흐 눈송이는 삼각형에서 시작합니다. 각 단계마다 모든 변에 작은 삼각형이 솟아나며 둘레는 매번 4/3배 증가합니다. 무한히 반복하면: 유한한 면적을 둘러싸는 무한한 길이의 곡선이 됩니다.</div>
     <div class="btn-row" id="s1_kochBtns">
       <button class="btn active" data-n="0">n = 0</button><button class="btn" data-n="1">n = 1</button><button class="btn" data-n="2">n = 2</button><button class="btn" data-n="3">n = 3</button><button class="btn" data-n="4">n = 4</button><button class="btn" data-n="5">n = 5</button>
     </div>
@@ -275,7 +275,7 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
     </div>
   </div>
 
-  <p class="prose">헬게 폰 코흐는 1904년에 이 구성을 의도적 도발로 발표했다 — 어떤 점에서도 접선이 없는 연속 곡선. 당시 해석학자들은 이를 <em>병리적</em>이라고 불렀다. 그러나 이 곡선의 프랙탈 차원은 <span class="hi">log 4 / log 3 ≈ 1.26</span>: 선보다 복잡하고, 채워진 면보다 단순한. 진정으로, 아름답게, 그 사이에 있는 무언가.</p>
+  <p class="prose">헬게 폰 코흐는 1904년에 이 구성을 의도적 도발로 발표했다 — 어떤 점에서도 접선이 없는 연속 곡선. 당시 해석학자들은 이를 <em>병리적</em>이라 불렀다. 그러나 프랙탈 차원은 <span class="hi">log 4 / log 3 ≈ 1.26</span>: 선보다 복잡하고, 면보다 단순한. 진정으로, 아름답게, 그 사이에 있는 무언가.</p>
 
   <p class="prose">이 형상들을 일컫는 단어 — <span class="ac">프랙탈(fractal)</span> — 은 1975년 만델브로가 라틴어 <em>fractus</em>(부서진, 산산조각 난)에서 만들었다. 유클리드 기하학은 우리가 <em>짓는</em> 세계를 묘사했다: 벽, 바퀴, 다리. 프랙탈 기하학은 <span class="hi">자라나는</span> 세계를 묘사한다: 잎사귀의 잎맥, 강의 지류, 부서지는 파도의 거품, 여름 하늘을 가르는 번개의 갈라짐.</p>
 </section>
@@ -288,14 +288,14 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 
 
 
-<section id="s2_hero">
-  <canvas id="s2_heroCanvas"></canvas>
+<section class="hero-section" id="s2_hero">
+  <canvas class="hero-canvas" id="s2_heroCanvas"></canvas>
   <div class="hero-vignette"></div>
   <div class="hero-content">
     <div class="hero-label">Mellow Math</div>
     <div class="hero-number">02</div>
     <h1 class="hero-title">측정할 수 없는 것을<br><em>측정하다</em></h1>
-    <p class="hero-sub-kr">Measuring the Unmeasurable — What Is Dimension?</p>
+    <p class="hero-sub-kr">측정할 수 없는 것을 측정하다 — 차원이란 무엇인가</p>
     <p class="hero-tagline">직선은 1차원에 산다. 평면은 2차원에.<br>1.585차원에 사는 대상은 어떤 것일까?</p>
     <a class="hero-scroll" onclick="document.getElementById('s2_ch02a').scrollIntoView({behavior:'smooth'})">
       <span>시작</span>
@@ -308,11 +308,11 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 <section class="chapter-section" id="s2_ch02a">
   <div class="sec-num">02 · A</div>
   <h2 class="sec-title">선과 면 사이에서</h2>
-  <p class="sec-title-kr">Between the Lines</p>
+  <p class="sec-title-kr">선과 면 사이에서</p>
 
   <p class="prose prose-drop">우리는 모두 차원이 무엇인지 안다고 생각한다. 직선은 1차원: 하나의 수가 위치를 알려준다. 평면은 두 개, 공간은 세 개가 필요하다. 수천 년 동안 이것이 전부였다. 차원은 손가락처럼 자연스러운 자연수였다.</p>
 
-  <p class="prose">하지만 앞 장의 코흐 눈송이를 생각해 보자. 하나의 끊기지 않는 선으로 그려진다 — 직선처럼. 그러나 너무나 촘촘히 구부러져 평면의 한 영역을 거의 채운다. 1차원이라 하기엔 너무 거칠고, 2차원이라 하기엔 너무 얇다. 1918년, 독일 수학자 펠릭스 하우스도르프는 형상 자체가 속삭이는 듯한 말을 용기 있게 꺼냈다: <span class="hi">차원은 분수가 될 수 있다</span>.</p>
+  <p class="prose">하지만 앞 장의 코흐 눈송이를 생각해 보자. 하나의 끊기지 않는 선으로 그려진다. 그러나 너무나 촘촘히 구부러져 평면의 한 영역을 거의 채운다. 1차원이라 하기엔 너무 거칠고, 2차원이라 하기엔 너무 얇다. 1918년, 독일 수학자 펠릭스 하우스도르프는 형상 자체가 속삭이는 듯한 말을 용기 있게 꺼냈다: <span class="hi">차원은 분수가 될 수 있다</span>.</p>
 
   <div class="quote-block">
     <p class="quote-text">"The notion of dimension that everyone finds intuitive — 1, 2, 3 — is too crude for the shapes that nature actually produces."</p>
@@ -336,9 +336,9 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 <section class="chapter-section" id="s2_ch02b">
   <div class="sec-num">02 · B</div>
   <h2 class="sec-title">상자 세기</h2>
-  <p class="sec-title-kr">Counting Boxes — Experimenting with Dimension</p>
+  <p class="sec-title-kr">상자 세기 — 차원을 실험하다</p>
 
-  <p class="prose">완벽하게 자기유사적인 형상은 드문 사치다. 해안선, 나무 껍질, 난류 — 모든 스케일에서 거칠지만 정확히 반복하지는 않는다. 이런 형상을 위해 수학자들은 더 관대한 도구인 <span class="hi">상자 세기(box-counting)</span>를 사용한다. 절차는 거의 아이처럼 단순하다: 형상 위에 작은 상자 격자를 놓는다. 형상에 닿는 상자를 센다. 상자를 줄이고 다시 센다. 결과를 로그-로그 그래프에 점을 찍는다. 그 <span class="ac">직선의 기울기</span>가 프랙탈 차원이다.</p>
+  <p class="prose">완벽하게 자기유사적인 형상은 드문 사치다. 해안선, 나무 껍질, 난류 — 모든 스케일에서 거칠지만 정확히 반복하지는 않는다. 이런 형상을 위해 수학자들은 <span class="hi">상자 세기(box-counting)</span>라는 도구를 사용한다. 절차는 거의 아이처럼 단순하다: 형상 위에 작은 상자 격자를 놓고, 닿는 상자를 센다. 상자를 줄이고 다시 센다. 로그-로그 그래프에 점을 찍으면, 그 <span class="ac">직선의 기울기</span>가 프랙탈 차원이다.</p>
 
   <div class="ibox">
     <div class="ibox-label"><span class="dot"></span> Interactive</div>
@@ -380,7 +380,7 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 <section class="chapter-section" id="s2_ch02c">
   <div class="sec-num">02 · C</div>
   <h2 class="sec-title">괴물들의 박물관</h2>
-  <p class="sec-title-kr">The Monsters in the Museum</p>
+  <p class="sec-title-kr">괴물들의 박물관</p>
 
   <p class="prose prose-drop">앙리 푸앵카레는 이것들을 <span class="ac">"괴물들의 전시실"</span>이라 불렀다 — 19세기 해석학자들이 미적분학의 기초를 시험하기 위해 만든 병리적 곡선들. 연속이지만 어디에서도 미분불가능. 무한한 둘레이지만 유한한 면적. 비가산 무한개의 점이지만 총 길이는 0. 수십 년간 이 생물들은 수학적 호기심거리로 치부되었다. 그러다 자연이 밝혀냈다 — 처음부터 이 형상들을 그리고 있었다는 것을.</p>
 
@@ -450,7 +450,7 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
     </div>
   </div>
 
-  <p class="prose">게오르크 칸토어는 1883년에 이 집합을 소개했다 — 기하학적 대상이 아닌 논리적 대상으로, 무한을 이해하기 위한 전쟁의 무기로. 실수 직선 전체와 같은 크기(cardinality)를 가지면서도 공간을 전혀 차지하지 않는다. 프랙탈 차원 약 0.631은 직관이 말하는 바로 그 위치에 놓인다: <span class="hi">고립된 점들보다는 많고</span>, <span class="hi">선보다는 적은</span>. 연속체의 유령. 구조를 가진 먼지. 한때 온전했던 것의 뼈대.</p>
+  <p class="prose">게오르크 칸토어는 1883년에 이 집합을 소개했다 — 기하학적 대상이 아닌 논리적 대상으로, 무한을 이해하기 위한 전쟁의 무기로. 실수 직선 전체와 같은 크기를 가지면서도 공간을 전혀 차지하지 않는다. 프랙탈 차원 약 0.631은 직관이 말하는 바로 그 위치에 놓인다: <span class="hi">고립된 점들보다는 많고</span>, <span class="hi">선보다는 적은</span>. 연속체의 유령. 구조를 가진 먼지. 한때 온전했던 것의 뼈대.</p>
 </section>
 
 
@@ -461,14 +461,14 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 
 
 
-<section id="s3_hero">
-  <canvas id="s3_heroCanvas"></canvas>
+<section class="hero-section" id="s3_hero">
+  <canvas class="hero-canvas" id="s3_heroCanvas"></canvas>
   <div class="hero-vignette"></div>
   <div class="hero-content">
     <div class="hero-label">Mellow Math</div>
     <div class="hero-number">03</div>
     <h1 class="hero-title"><em>만델브로</em> 집합</h1>
-    <p class="hero-sub-kr">The Mandelbrot Set — The Most Complex Object in Mathematics</p>
+    <p class="hero-sub-kr">만델브로 집합 — 수학에서 가장 복잡한 대상</p>
     <p class="hero-tagline">하나의 방정식. 무한한 디테일.<br>z² + c 안에 숨겨진 우주.</p>
     <a class="hero-scroll" onclick="document.getElementById('s3_ch03a').scrollIntoView({behavior:'smooth'})">
       <span>시작</span>
@@ -481,7 +481,7 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 <section class="chapter-section" id="s3_ch03a">
   <div class="sec-num">03 · A</div>
   <h2 class="sec-title">하나의 방정식, 무한한 세계</h2>
-  <p class="sec-title-kr">One Equation, Infinite Worlds</p>
+  <p class="sec-title-kr">하나의 방정식, 무한한 세계</p>
 
   <p class="prose prose-drop">복소수 <span class="ac">c</span>를 하나 고르자. 0에서 시작한다. 제곱하고 c를 더한다. 결과를 다시 제곱하고 c를 더한다. 영원히 계속한다. 어떤 c에서는 숫자들이 작은 채로 남아, 안정된 궤도의 행성처럼 원점 근처를 맴돈다. 다른 c에서는 무한대를 향해 소용돌이치며 돌아오지 않는다. <span class="hi">만델브로 집합</span>은 궤도가 유계인 모든 c의 모임이다.</p>
 
@@ -497,7 +497,7 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
     <p class="quote-attr">— Roger Penrose, <em>The Emperor's New Mind</em> (1989)</p>
   </div>
 
-  <p class="prose">브누아 만델브로는 1980년, 뉴욕 요크타운하이츠의 IBM 토마스 J. 왓슨 연구소에서 조잡한 도트매트릭스 단말기로 이것을 처음 보았다. 최초의 출판된 이미지 — 1978년 로버트 브룩스와 J. 피터 마텔스키에 의한 — 는 인쇄물 위의 거친 별표 격자였다. 아무도 그 안에 무엇이 있는지 상상하지 못했다. 더 빠른 컴퓨터가 경계를 전해상도로 드러냈을 때, 노련한 수학자들도 경악했다. 이 형상은 <span class="ac">가능한 모든 역학적 행동의 백과사전</span>을, 복소평면 자체가 색인하고 분류한 채로, 담고 있는 듯했다.</p>
+  <p class="prose">브누아 만델브로는 1980년, 뉴욕 요크타운하이츠의 IBM 왓슨 연구소에서 조잡한 도트매트릭스 단말기로 이것을 처음 보았다. 최초의 출판된 이미지 — 1978년 로버트 브룩스와 J. 피터 마텔스키 — 는 인쇄물 위의 거친 별표 격자였다. 아무도 그 안에 무엇이 있는지 상상하지 못했다. 더 빠른 컴퓨터가 경계를 전해상도로 드러냈을 때, 노련한 수학자들도 경악했다. 이 형상은 <span class="ac">가능한 모든 역학적 행동의 백과사전</span>을, 복소평면이 색인한 채로, 담고 있는 듯했다.</p>
 
   <div class="pull-quote">
     <p class="pull-quote-text">가장 단순한 반복 — 제곱하고 더하기 — 에서 태어난 형상이<br>무한한 복잡성을 담고 있다.<br>수학에서 이것에 대비할 수 있었던 것은 아무것도 없었다.</p>
@@ -509,16 +509,16 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 <section class="chapter-section" id="s3_ch03b">
   <div class="sec-num">03 · B</div>
   <h2 class="sec-title">탐험</h2>
-  <p class="sec-title-kr">Explore</p>
+  <p class="sec-title-kr">탐험하다</p>
 
   <div class="ibox">
     <div class="ibox-label"><span class="dot"></span> Interactive</div>
     <div class="ibox-title">만델브로 탐험기</div>
-    <div class="ibox-desc">아무 곳이나 클릭하면 확대됩니다. 마우스를 올리면 오른쪽 패널에 z₀, z₁, z₂, … 의 궤도가 표시됩니다. 아래에서 색상 팔레트를 선택하세요. 우클릭 또는 버튼으로 축소합니다.</div>
+    <div class="ibox-desc">아무 곳이나 더블클릭하면 확대됩니다. 마우스를 올리면 오른쪽 패널에 궤도가 표시됩니다. 드래그로 이동, 휠로 줌. 우클릭으로 축소.</div>
 
     <div class="mb-layout">
       <div class="mb-main">
-        <div class="canvas-wrap" style="aspect-ratio:3/2"><canvas id="s3_mbCanvas"></canvas></div>
+        <div class="canvas-wrap" style="aspect-ratio:3/2" data-nopz><canvas id="s3_mbCanvas"></canvas></div>
         <div class="ctrl-row">
           <button class="btn" id="s3_zoomOutBtn">⊖ 축소</button>
           <button class="btn" id="s3_resetBtn">초기화</button>
@@ -527,8 +527,6 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
       </div>
       <div class="mb-side">
         <div class="orbit-mini"><canvas id="s3_orbitCanvas"></canvas></div>
-        <div class="pal-label" style="margin-bottom:.5rem">색상 팔레트</div>
-        <div id="s3_palContainer"></div>
         <div class="zoom-info">
           <div>중심: <span id="s3_infoCenter">−0.5 + 0i</span></div>
           <div>커서: <span id="s3_infoCursor">—</span></div>
@@ -538,7 +536,7 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
     </div>
   </div>
 
-  <p class="prose">깊이 확대할수록 <span class="hi">자기유사성</span>을 주목하라: 경계를 따라 어디에나 완전한 만델브로 집합의 축소 복사본이 나타나며, 각각은 픽셀로도 표현할 수 없을 만큼 가느다란 필라멘트로 연결되어 있다. 각 아기 만델브로는 자신만의 소용돌이 은하 중심에 앉아 있다. 집합은 <span class="ac">연결</span>되어 있다 — 하나의 끊기지 않는 조각 — 그러면서도 경계의 프랙탈 차원은 2, 즉 채워진 면만큼이나 거칠다. 거의 평면인 곡선.</p>
+  <p class="prose">깊이 확대할수록 <span class="hi">자기유사성</span>을 주목하라: 경계를 따라 어디에나 완전한 만델브로 집합의 축소 복사본이 나타나며, 각각은 픽셀로도 표현할 수 없을 만큼 가느다란 필라멘트로 연결되어 있다. 각 아기 만델브로는 자신만의 소용돌이 은하 중심에 앉아 있다. 집합은 <span class="ac">연결</span>되어 있다 — 하나의 끊기지 않는 조각 — 그러면서도 경계의 프랙탈 차원은 2. 거의 평면인 곡선.</p>
 </section>
 
 <div class="section-sep"></div>
@@ -547,16 +545,16 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 <section class="chapter-section" id="s3_ch03c">
   <div class="sec-num">03 · C</div>
   <h2 class="sec-title">집합의 해부</h2>
-  <p class="sec-title-kr">Anatomy of the Set</p>
+  <p class="sec-title-kr">만델브로 집합의 해부</p>
 
-  <p class="prose prose-drop">만델브로 집합은 무작위 형상이 아니다. 반복 z → z² + c의 <span class="hi">가능한 모든 역학적 행동의 지도</span>다. 큰 중앙 심장형(cardioid)은 궤도가 고정점에 안착하는 c 값 — 주기 1 — 을 담는다. 왼쪽의 큰 원형 볼록이는 두 값 사이를 오가는 주기-2 궤도를 담는다. 더 작은 볼록이들은 주기 3, 4, 5, …에 대응하며, 경계를 따라 정밀한 순서로 배열되어 있다.</p>
+  <p class="prose prose-drop">만델브로 집합은 무작위 형상이 아니다. 반복 z → z² + c의 <span class="hi">가능한 모든 역학적 행동의 지도</span>다. 큰 중앙 심장형은 궤도가 고정점에 안착하는 c 값(주기 1)을 담는다. 왼쪽의 큰 볼록이는 주기-2 궤도를 담는다. 더 작은 볼록이들은 주기 3, 4, 5, …에 대응하며, 경계를 따라 정밀한 순서로 배열되어 있다.</p>
 
   <div class="ibox">
     <div class="ibox-label"><span class="dot"></span> Interactive</div>
     <div class="ibox-title">주기 지도</div>
-    <div class="ibox-desc">만델브로 집합 위에 마우스를 올려 보세요. 궤도가 거의 반복되기까지의 단계 수 — 주기 — 가 탐지되어 표시됩니다. 각 주기에는 고유한 색이 있습니다.</div>
+    <div class="ibox-desc">만델브로 집합 위에 마우스를 올려 보세요. 궤도의 주기가 탐지되어 표시됩니다. 각 주기에는 고유한 색이 있습니다.</div>
 
-    <div class="canvas-wrap" style="aspect-ratio:3/2"><canvas id="s3_periodCanvas"></canvas></div>
+    <div class="canvas-wrap" style="aspect-ratio:3/2" data-nopz><canvas id="s3_periodCanvas"></canvas></div>
     <div class="stats" style="grid-template-columns:1fr 1fr 1fr">
       <div class="stat"><div class="stat-label">점 c</div><div class="stat-val" id="s3_periodC">—</div></div>
       <div class="stat"><div class="stat-label">주기</div><div class="stat-val" id="s3_periodVal">—</div></div>
@@ -564,11 +562,98 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
     </div>
   </div>
 
-  <p class="prose">1980년대에 아드리앵 두아디와 존 허바드는 심장형에 붙은 모든 볼록이가 정확한 유리수 <span class="ac">회전수</span>를 가지며, 이것이 파레이 수열과 동일한 순서로 배열됨을 증명했다 — 연분수, 스턴-브로코 나무, 행성 궤도의 공명 패턴을 지배하는 바로 그 구조. 만델브로 집합은 <span class="hi">정수론, 복소해석학, 위상수학</span>이 만나는 교차로다.</p>
+  <p class="prose">1980년대에 아드리앵 두아디와 존 허바드는 심장형에 붙은 모든 볼록이가 정확한 유리수 <span class="ac">회전수</span>를 가지며, 파레이 수열과 동일한 순서로 배열됨을 증명했다 — 연분수, 스턴-브로코 나무, 행성 궤도의 공명 패턴을 지배하는 바로 그 구조. 만델브로 집합은 <span class="hi">정수론, 복소해석학, 위상수학</span>이 만나는 교차로다.</p>
 
-  <p class="prose">역학계의 위대한 미해결 문제 중 하나: <span class="ac">만델브로 집합은 국소적으로 연결인가?</span> 이것이 두아디와 허바드가 제기한 MLC 추측이다. 참이라면, 집합은 원에서의 연속 전사로 완전히 기술될 수 있다 — 무한한 복잡성 아래에 일종의 위상적 단순함이 존재한다는 뜻. 요코즈, 류비치, 칸 등의 40년에 걸친 연구 뒤에도 MLC는 열린 문제다. 만델브로 집합은 여전히 가장 깊은 비밀을 지키고 있다.</p>
+  <p class="prose">수학 전체에서 가장 위대한 미해결 문제 중 하나가 이 형상 안에 숨어 있다. 이해하기 위해, 만델브로 집합의 경계 위 아무 점에 서서 자기 주위에 아주 작은 원을 그린다고 상상하자. 그 원 안에 들어온 경계 조각이 — 원을 아무리 작게 그려도 — 항상 <span class="hi">하나로 이어진 조각</span>이면, 그 점에서 집합이 <span class="ac">국소적으로 연결(locally connected)</span>이라 한다. 해안선에 비유하면: 충분히 확대하면 해안을 따라 항상 연속적으로 걸을 수 있는가? 아니면 해안이 무한히 많은 비연결 파편으로 부서지는 곳이 있는가?</p>
+
+  <p class="prose">이것이 1980년대에 두아디와 허바드가 제기한 <span class="ac">MLC 추측</span>이다. 만델브로 집합이 모든 곳에서 국소적으로 연결이라면, 무한한 복잡성에도 불구하고 하나의 연속적 획으로 그릴 수 있다 — 원에서 완벽하게 사상된다. 깊은 위상적 의미에서, 집합이 <span class="hi">무한히 정교한 의상을 입은 원만큼이나 단순하다</span>는 뜻. 요코즈, 류비치, 칸 등의 40년에 걸친 연구 뒤에도 MLC는 열린 문제다. 만델브로 집합은 여전히 가장 깊은 비밀을 지키고 있다.</p>
+
+  <p class="prose">아래의 인터랙티브로 이 미스터리를 탐험해 보자. 만델브로 집합은 경계를 따라 흩어진 자기 자신의 축소 복사본 — <span class="ac">위성(satellite)</span> — 을 담고 있다. 각 위성은 고유한 심장형, 볼록이, 필라멘트를 완비한 미니 만델브로 집합이다. 이 위성들은 <span class="ac">필라멘트(filament)</span>로 주 몸체에 연결되어 있다: 집합의 일부인 머리카락처럼 가느다란 실. 필라멘트로 줌인하면 단순한 선이 아님을 알 수 있다 — 모든 스케일에서 더 많은 싹과 하위-위성으로 장식되어 있다. MLC 추측은 이 필라멘트들이 진정한 연속 경로인지, 아니면 충분히 작은 스케일에서 무한히 파편화된 먼지로 녹아내리는지를 묻는다.</p>
+
+  <div class="ibox">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">MLC 추측</div>
+    <div class="ibox-desc">위성 — 완전한 만델브로 집합의 축소 복사본 — 과 그것을 주 몸체에 연결하는 가느다란 필라멘트를 탐험하세요. 스크롤 휠로 줌, 드래그로 이동, 더블클릭으로 확대, 우클릭으로 축소.</div>
+
+    <div class="canvas-wrap" style="aspect-ratio:3/2" data-nopz><canvas id="s3_mlcCanvas"></canvas></div>
+    <div class="ctrl-row">
+      <button class="btn" id="s3_mlcReset">초기화</button>
+      <button class="btn" id="s3_mlcFilament">필라멘트 — 연결하는 실</button>
+      <button class="btn" id="s3_mlcSatellite">위성 — 축소 복사본</button>
+      <span class="ctrl-val" id="s3_mlcZoom" style="margin-left:auto">1×</span>
+    </div>
+    <div class="stats" style="grid-template-columns:1fr 1fr">
+      <div class="stat"><div class="stat-label">Center</div><div class="stat-val" id="s3_mlcCenter">—</div></div>
+      <div class="stat"><div class="stat-label">줌 깊이</div><div class="stat-val" id="s3_mlcDepth">—</div></div>
+    </div>
+  </div>
+
 </section>
 
+<div class="section-sep"></div>
+
+<section class="chapter-section" id="s3_ch03d">
+  <div class="sec-num">03 · D</div>
+  <h2 class="sec-title">뉴턴이 몰랐던 프랙탈</h2>
+  <p class="sec-title-kr">Newton's Hidden Fractal</p>
+
+  <p class="prose prose-drop">미적분학을 배운 사람이라면 뉴턴의 방법을 안다: 함수가 0이 되는 점을 찾기 위해 추측을 하고, 접선을 그리고, x축까지 따라간다. 반복한다. 놀라운 속도로 근에 수렴한다. 수학에서 가장 실용적인 알고리즘이다 — 공학자, 물리학자, 컴퓨터 과학자가 하루에도 수백만 번 사용한다. 뉴턴이 상상조차 못했을 것은, 이 믿음직한 알고리즘을 복소평면의 단순한 다항식에 적용하면 놀라운 정교함의 프랙탈이 만들어진다는 사실이다.</p>
+
+  <p class="prose">방정식 <span class="ac">z³ = 1</span>을 생각하자. 단위원 위에 등간격으로 놓인 세 개의 근 — 1의 세제곱근 — 을 가진다. 복소평면의 각 시작점 z₀에 대해 뉴턴법은 이 세 근 중 하나로 수렴한다. 각 점을 어느 근에 도달하는지에 따라 색칠하면, 세 색 영역의 경계는 매끄러운 곡선이 아니다 — <span class="hi">무한히 정교한 프랙탈 필라멘트</span>이며, 모든 경계점에서 세 가지 색이 만난다. 아무리 깊이 확대해도 얽힘은 절대 단순해지지 않는다.</p>
+
+  <div class="ibox">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">뉴턴의 프랙탈 — z³ = 1</div>
+    <div class="ibox-desc">각 점은 뉴턴법이 어느 세제곱근으로 수렴하는지에 따라 색칠됩니다. 밝기는 수렴 속도를 나타냅니다. 스크롤로 줌, 드래그로 이동, 더블클릭으로 확대. 깊이 볼수록 경계는 더욱 정교해집니다.</div>
+
+    <div class="canvas-wrap" style="aspect-ratio:3/2" data-nopz><canvas id="s3_newtonCanvas"></canvas></div>
+    <div class="ctrl-row">
+      <button class="btn" id="s3_newtonReset">초기화</button>
+      <button class="btn" id="s3_newtonBoundary">경계로 줌</button>
+      <button class="btn" id="s3_newtonSpiral">나선으로 줌</button>
+      <span class="ctrl-val" id="s3_newtonZoom" style="margin-left:auto">1×</span>
+    </div>
+    <div class="stats" style="grid-template-columns:1fr 1fr">
+      <div class="stat"><div class="stat-label">Center</div><div class="stat-val" id="s3_newtonCenter">0 + 0i</div></div>
+      <div class="stat"><div class="stat-label">Iterations</div><div class="stat-val" id="s3_newtonIter">—</div></div>
+    </div>
+  </div>
+
+  <p class="prose">이것은 깊이 불안한 사실이다. 뉴턴법은 <em>결정론적</em>이다 — 같은 시작점은 항상 같은 수열을 만든다. 그러나 초기 추측의 아주 미세한 변동이 반복을 완전히 다른 근으로 보낼 수 있다. 프랙탈 경계는 이 민감성이 <span class="hi">무한</span>한 점들의 집합이다: 규칙이 완벽히 알려져 있는데도 예측이 불가능해지는 곳.</p>
+
+  <p class="prose">아서 케일리는 1879년에 이 문제를 제기했다 — 어떤 시작점이 어떤 근으로 수렴하는가? — 그리고 3차 다항식에 대해서조차 풀 수 없다고 고백했다. 왜 그런지 보려면 한 세기와 컴퓨터의 등장이 필요했다: 답이 프랙탈이었기 때문이다. 뉴턴 프랙탈의 <span class="ac">와다 성질(Wada property)</span> — 모든 경계점이 세 개의 흡인 영역에 동시에 접한다는 것 — 은 역학계에서 가장 놀라운 현상 중 하나다. 단순한 규칙. 결정론적 반복. 그러나 <span class="hi">운명 사이의 경계는 무한히 복잡하다</span>.</p>
+</section>
+<div class="section-sep"></div>
+
+<section class="chapter-section" id="s3_ch03e">
+  <div class="sec-num">03 · E</div>
+  <h2 class="sec-title">The Burning Ship</h2>
+  <p class="sec-title-kr">불타는 배</p>
+
+  <p class="prose prose-drop">What happens when you change a single symbol in the Mandelbrot equation? Replace z² + c with |Re(z)|² − |Im(z)|² + 2i|Re(z)||Im(z)| + c — in other words, take the <span class="hi">absolute value</span> of the real and imaginary parts before squaring. This tiny act of violence to the formula — stripping away the sign, folding the complex plane onto itself — shatters every curve in the Mandelbrot set into something angular, jagged, and utterly alien.</p>
+
+  <p class="prose">The result was discovered by Michael Michelitsch and Otto Rössler in 1992 and named the <span class="ac">Burning Ship fractal</span>. Where the Mandelbrot set is all spirals and cardioids, the Burning Ship is all towers, masts, and flames. Zoom into the left antenna and you find an entire <span class="hi">armada of miniature ships</span>, each with its own sails, hull, and burning rigging. The self-similarity is still there — but it speaks a completely different visual language.</p>
+
+  <div class="ibox">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">The Burning Ship</div>
+    <div class="ibox-desc">The same escape-time algorithm as the Mandelbrot set, with one small twist: absolute values. Scroll to zoom. Drag to pan. Double-click to center. Try zooming into the left antenna — an armada of ships awaits.</div>
+
+    <div class="canvas-wrap" style="aspect-ratio:3/2" data-nopz><canvas id="s3_bshipCanvas"></canvas></div>
+    <div class="ctrl-row">
+      <button class="btn" id="s3_bshipReset">초기화</button>
+      <button class="btn" id="s3_bshipArmada">Armada</button>
+      <button class="btn" id="s3_bshipFlame">Flame tower</button>
+      <span class="ctrl-val" id="s3_bshipZoom" style="margin-left:auto">1×</span>
+    </div>
+    <div class="stats" style="grid-template-columns:1fr 1fr">
+      <div class="stat"><div class="stat-label">Center</div><div class="stat-val" id="s3_bshipCenter">—</div></div>
+      <div class="stat"><div class="stat-label">Iterations</div><div class="stat-val" id="s3_bshipIter">—</div></div>
+    </div>
+  </div>
+
+  <p class="prose">The mathematical lesson is profound: the Mandelbrot set's beauty depends not just on iteration, but on the <span class="hi">analyticity</span> of the map z → z² + c — the fact that it treats the complex number as a single, indivisible entity. The absolute value operation breaks this analyticity, folding the plane along the real and imaginary axes. The result is a fractal that trades smooth spirals for <span class="ac">sharp angles, towers, and ghost ships</span> — proof that in the world of iteration, the smallest change to the rules can remake the entire universe.</p>
+</section>
 
 
 <!-- ══════════════════════════════════════════════════
@@ -577,14 +662,14 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 
 
 
-<section id="s4_hero">
-  <canvas id="s4_heroCanvas"></canvas>
+<section class="hero-section" id="s4_hero">
+  <canvas class="hero-canvas" id="s4_heroCanvas"></canvas>
   <div class="hero-vignette"></div>
   <div class="hero-content">
     <div class="hero-label">Mellow Math</div>
     <div class="hero-number">04</div>
     <h1 class="hero-title">줄리아의 <em>꿈</em></h1>
-    <p class="hero-sub-kr">Julia's Dream — One Universe for Every Point</p>
+    <p class="hero-sub-kr">줄리아의 꿈 — 모든 점에 하나의 세계</p>
     <p class="hero-tagline">젊은 군인, 저격수의 총알에 산산이 부서진 얼굴,<br>어떤 눈도 본 적 없는 형상을 상상했다.</p>
     <a class="hero-scroll" onclick="document.getElementById('s4_ch04a').scrollIntoView({behavior:'smooth'})">
       <span>시작</span>
@@ -597,9 +682,9 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 <section class="chapter-section" id="s4_ch04a">
   <div class="sec-num">04 · A</div>
   <h2 class="sec-title">컴퓨터 이전의 상상력</h2>
-  <p class="sec-title-kr">Before the Computer</p>
+  <p class="sec-title-kr">컴퓨터 이전의 상상력</p>
 
-  <p class="prose prose-drop">1918년 1월, 가스통 줄리아는 스물다섯 살이었다. 슈맹데담 전투에서 독일군의 총탄에 코를 잃었고, 남은 생애 동안 상처 위에 가죽 마스크를 쓰게 되었다. 군 병원에서 회복하는 동안 그는 — 손으로, 199쪽의 치밀한 수학적 논증으로 — 복소평면에서 유리함수의 반복에 관한 논문을 썼다. 단 하나의 컴퓨터도, 단 하나의 이미지도 없이, 오직 종이와 비범한 정신만으로, 단순한 공식 z → z² + c의 반복이 경이로운 정교함의 경계를 만들어냄을 증명했다.</p>
+  <p class="prose prose-drop">1918년 1월, 가스통 줄리아는 스물다섯 살이었다. 슈맹데담 전투에서 독일군의 총탄에 코를 잃었고, 남은 생애 동안 가죽 마스크를 쓰게 되었다. 군 병원에서 회복하는 동안 그는 — 손으로, 199쪽의 치밀한 수학적 논증으로 — 복소평면에서 유리함수의 반복에 관한 논문을 썼다. 단 하나의 컴퓨터도, 단 하나의 이미지도 없이, 오직 종이와 비범한 정신만으로, z → z² + c의 반복이 경이로운 정교함의 경계를 만들어냄을 증명했다.</p>
 
   <p class="prose">그는 그것들을 볼 수 없었다. 증명의 논리에서, 그것들이 존재해야 한다고 추론할 수 있었을 뿐 — 무한한 디테일의 형상들, 복소수 안에 살며, 누군가가 보기를 기다리는.</p>
 
@@ -610,7 +695,7 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 
   <p class="prose">핵심 통찰: 복소수 <span class="ac">c</span>를 고정하고 모든 가능한 초기점 z₀에서 z → z² + c를 반복한다. 어떤 시작점은 무한대로 탈출하는 궤도를, 다른 시작점은 영원히 유계인 궤도를 만든다. <span class="hi">줄리아 집합</span>은 이 두 운명의 경계 — 갇힌 것과 자유로운 것을 가르는 면도날 같은 변경이다. c의 모든 값에 대해 다른 형상이며, 어떤 둘도 같지 않다.</p>
 
-  <p class="prose">같은 시기에 파리에서 독립적으로 작업하던 피에르 파투는 다른 방법으로 놀라울 정도로 유사한 결론에 도달했다. 둘 사이에서 줄리아와 파투는 오늘날 <span class="hi">복소역학</span>이라 부르는 것의 기초를 세웠다 — 컴퓨터가 보여주기까지 60년 동안 아무도 실제로 <em>보지</em> 못할 형상들 위에 세워진 수학의 한 분야.</p>
+  <p class="prose">같은 시기에 파리에서 독립적으로 작업하던 피에르 파투는 다른 방법으로 놀라울 정도로 유사한 결론에 도달했다. 줄리아와 파투는 오늘날 <span class="hi">복소역학</span>이라 부르는 것의 기초를 세웠다 — 컴퓨터가 보여주기까지 60년 동안 아무도 <em>보지</em> 못할 형상들 위에 세워진 수학의 한 분야.</p>
 
   <div class="pull-quote">
     <p class="pull-quote-text">전쟁 부상 위에 가죽 마스크를 쓴 채,<br>군 병원에서 손으로 글을 쓰며,<br>무한히 정교한 형상의 존재를 증명했다.</p>
@@ -624,21 +709,21 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 <section class="chapter-section" id="s4_ch04b">
   <div class="sec-num">04 · B</div>
   <h2 class="sec-title">모든 점에 하나의 집합</h2>
-  <p class="sec-title-kr">One Set for Every Point</p>
+  <p class="sec-title-kr">모든 점에 하나의 집합</p>
 
   <div class="ibox">
     <div class="ibox-label"><span class="dot"></span> Interactive</div>
     <div class="ibox-title">만델브로-줄리아 대응</div>
-    <div class="ibox-desc">만델브로 집합(왼쪽)의 아무 점이나 클릭하면 해당 줄리아 집합(오른쪽)을 볼 수 있습니다. M 내부의 점은 연결된 형상을, 외부의 점은 비연결 먼지를 만듭니다. 경계가 가장 극적인 형태가 사는 곳입니다.</div>
+    <div class="ibox-desc">만델브로 집합(왼쪽)을 클릭하면 해당 줄리아 집합(오른쪽)이 표시됩니다. M 내부의 점은 연결된 형상을, 외부의 점은 먼지를 만듭니다. 경계가 가장 극적인 형태가 사는 곳입니다.</div>
 
     <div class="dual-view">
       <div class="panel">
         <div class="panel-label">만델브로 — c 선택</div>
-        <div class="canvas-wrap" style="aspect-ratio:1/1"><canvas id="s4_mbCanvas"></canvas></div>
+        <div class="canvas-wrap" style="aspect-ratio:1/1" data-nopz><canvas id="s4_mbCanvas"></canvas></div>
       </div>
       <div class="panel">
         <div class="panel-label">c에 대한 줄리아 집합</div>
-        <div class="canvas-wrap" style="aspect-ratio:1/1"><canvas id="s4_juliaCanvas"></canvas></div>
+        <div class="canvas-wrap" style="aspect-ratio:1/1" data-nopz><canvas id="s4_juliaCanvas"></canvas></div>
       </div>
     </div>
 
@@ -650,6 +735,7 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
       <button class="btn" data-c="0.355,0.355">먼지</button>
       <button class="btn" data-c="-1.25,0">수지상</button>
       <button class="btn active" data-c="-0.7454,0.1130">경계</button>
+      <button class="btn" id="s4_resetDual">⟲ 초기화</button>
     </div>
 
     <div class="stats" style="grid-template-columns:1fr 1fr 1fr">
@@ -660,20 +746,20 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
     <div class="crosshair-hint">만델브로 집합을 클릭하거나 위의 프리셋을 사용하세요</div>
   </div>
 
-  <p class="prose">이것이 1980년대에 두아디와 허바드가 증명한 깊은 정리다: <span class="hi">줄리아 집합이 연결일 필요충분조건은 c가 만델브로 집합에 속하는 것</span>이다. 만델브로 집합은 말 그대로 <span class="ac">모든 줄리아 집합의 지도</span> — 매개변수 c로 색인된, z² + c의 가능한 모든 역학적 행동의 카탈로그. M 내부: 연결된, 정교한 형상. M 외부: 평면에 재처럼 흩어진 칸토어 먼지. 경계 위: 연결된 형태가 산산조각 나기 직전의, 무한히 복잡한 전이.</p>
+  <p class="prose">1980년대에 두아디와 허바드가 증명한 깊은 정리: <span class="hi">줄리아 집합이 연결일 필요충분조건은 c가 만델브로 집합에 속하는 것</span>이다. 만델브로 집합은 말 그대로 <span class="ac">모든 줄리아 집합의 지도</span>다. M 내부: 연결된, 정교한 형상. M 외부: 재처럼 흩어진 칸토어 먼지. 경계 위: 연결된 형태가 산산조각 나기 직전의, 무한히 복잡한 전이.</p>
 </section>
 
 <!-- ═══ 04-C ═══ -->
 <section class="chapter-section" id="s4_ch04c">
   <div class="sec-num">04 · C</div>
   <h2 class="sec-title">형태의 사전</h2>
-  <p class="sec-title-kr">A Dictionary of Forms</p>
+  <p class="sec-title-kr">형태의 사전</p>
 
-  <p class="prose prose-drop">만델브로 집합의 각 영역은 독특한 성격의 줄리아 집합을 만든다. 주 심장형 근처에서는 매끄럽고 살짝 뒤틀린 타원 — 온순한 생물들. 주기-2 볼록이 근처에서는 줄리아 집합이 허리에서 조여 8자가 된다. 더 작은 볼록이 근처에서는 팔과 촉수가 돋아난다. 그리고 영역 간 경계 근처에서는 형상이 미친 듯이 가지 치는 <span class="ac">수지상(dendrite)</span>이 된다 — 연결과 해체 사이에 걸쳐 있는 무한한 복잡성의 나무 형태.</p>
+  <p class="prose prose-drop">만델브로 집합의 각 영역은 독특한 성격의 줄리아 집합을 만든다. 주 심장형 근처에서는 매끄러운 타원 — 온순한 생물들. 주기-2 볼록이 근처에서는 허리에서 조여 8자가 된다. 더 작은 볼록이에서는 팔과 촉수가 돋아난다. 영역 간 경계에서는 미친 듯이 가지 치는 <span class="ac">수지상(dendrite)</span>이 된다 — 연결과 해체 사이에 걸쳐 있는 무한한 복잡성의 나무 형태.</p>
 
-  <p class="prose"><span class="hi">만델브로 집합은 보편적</span>이다 — 정확한 수학적 의미에서: 임계점을 가진 <em>모든</em> 정칙함수 족의 매개변수 공간에 그 윤곽이 나타난다. 만델브로가 추측하고 커티스 맥멀런이 부분적으로 증명한 이 보편성 — 맥멀런은 이 연구로 1998년 필즈상을 받았다 — 은 만델브로 집합이 특정 공식의 산물이 아님을 뜻한다. 복소역학 자체의 구조적 필연이다.</p>
+  <p class="prose"><span class="hi">만델브로 집합은 보편적</span>이다: 임계점을 가진 <em>모든</em> 정칙함수 족의 매개변수 공간에 그 윤곽이 나타난다. 만델브로가 추측하고 커티스 맥멀런이 부분적으로 증명한 이 보편성 — 맥멀런은 1998년 필즈상을 받았다 — 은 만델브로 집합이 특정 공식의 산물이 아님을 뜻한다. 복소역학 자체의 구조적 필연이다.</p>
 
-  <p class="prose">직접 해 보라: 만델브로 집합의 경계를 따라 커서를 천천히 움직이며 줄리아 집합이 변하는 것을 지켜보라. 연결된 형상이 늘어나고, 조이고, 먼지로 산산조각 나고, 다시 새로운 형태로 응결한다. 당신은 <span class="ac">무한한 수학적 형태의 갤러리</span>를 관통하는 연속적 여정을 목도하고 있다 — 모두 같은 단순한 규칙 z → z² + c가 결정하지만, 각각은 군중 속의 얼굴처럼 고유하다.</p>
+  <p class="prose">직접 해 보라: 만델브로 집합의 경계를 따라 커서를 천천히 움직이며 줄리아 집합이 변하는 것을 지켜보라. 연결된 형상이 늘어나고, 조이고, 먼지로 산산조각 나고, 다시 새로운 형태로 응결한다. 당신은 <span class="ac">무한한 수학적 형태의 갤러리</span>를 관통하는 여정을 목도하고 있다 — 모두 같은 규칙이 결정하지만, 각각은 군중 속의 얼굴처럼 고유하다.</p>
 
   <p class="prose">줄리아가 1918년에 군 병원에서 연필과 천재성만으로 상상한 형상들은, 20세기 가장 깊은 수학으로 들어가는 관문이었다. 그는 한 번도 렌더링된 것을 보지 못했다. 컴퓨터가 처음으로 그것들을 그리기 시작한 바로 그때, 1978년에 세상을 떠났다.</p>
 </section>
@@ -686,14 +772,14 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 
 
 
-<section id="s5_hero">
-  <canvas id="s5_heroCanvas"></canvas>
+<section class="hero-section" id="s5_hero">
+  <canvas class="hero-canvas" id="s5_heroCanvas"></canvas>
   <div class="hero-vignette"></div>
   <div class="hero-content">
     <div class="hero-label">Mellow Math</div>
     <div class="hero-number">05</div>
     <h1 class="hero-title">프랙탈은 <em>어디에나</em> 있다</h1>
-    <p class="hero-sub-kr">Fractals Are Everywhere</p>
+    <p class="hero-sub-kr">프랙탈은 어디에나 있다</p>
     <p class="hero-tagline">하나의 양치식물에서 우주의 구조까지,<br>자연의 문법은 자기유사적이다.</p>
     <a class="hero-scroll" onclick="document.getElementById('s5_ch05a').scrollIntoView({behavior:'smooth'})">
       <span>시작</span>
@@ -706,9 +792,9 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 <section class="chapter-section" id="s5_ch05a">
   <div class="sec-num">05 · A</div>
   <h2 class="sec-title">스스로를 만든 양치식물</h2>
-  <p class="sec-title-kr">The Fern That Built Itself</p>
+  <p class="sec-title-kr">스스로를 만든 양치식물</p>
 
-  <p class="prose prose-drop">1988년, 수학자 마이클 반슬리는 조용히 경이로운 것을 보여주었다: 줄기, 잎사귀, 작은 잎사귀를 갖춘 사실적인 양치식물이 단 네 개의 간단한 아핀 변환에서 나타날 수 있다는 것. 설계도는 필요 없다. 계획도, 템플릿도, 설계자도 없다. 오직 <span class="hi">자기참조의 레시피</span>: "자신을 복사하고, 축소하고, 회전시키고, 놓아라"라고 말하는 규칙들. 이것이 <span class="ac">반복 함수계(IFS)</span>의 핵심 — 프랙탈 기하학에서 가장 우아한 메커니즘일 것이다.</p>
+  <p class="prose prose-drop">1988년, 수학자 마이클 반슬리는 조용히 경이로운 것을 보여주었다: 줄기, 잎사귀, 작은 잎사귀를 갖춘 사실적인 양치식물이 단 네 개의 간단한 아핀 변환에서 나타날 수 있다는 것. 설계도도, 계획도, 템플릿도, 설계자도 필요 없다. 오직 <span class="hi">자기참조의 레시피</span>: "자신을 복사하고, 축소하고, 회전시키고, 놓아라." 이것이 <span class="ac">반복 함수계(IFS)</span>의 핵심 — 프랙탈 기하학에서 가장 우아한 메커니즘이다.</p>
 
   <div class="ibox">
     <div class="ibox-label"><span class="dot"></span> Interactive</div>
@@ -720,7 +806,7 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
     <div class="ctrl-row"><button class="btn" id="s5_fernReset">다시 그리기</button></div>
   </div>
 
-  <p class="prose">교훈은 심오하다: 자연은 화가처럼 잎사귀 하나하나를 그리지 않는다. <span class="hi">모든 스케일에서 동일한 분기 규칙</span>을 적용하여 성장시킨다. 각 잎맥은 전체 잎사귀의 구조를 반복하고, 잎사귀는 전체 식물을 반복한다. 자기유사성은 장식이 아니다. <span class="ac">구성 방법</span> 그 자체이다.</p>
+  <p class="prose">교훈은 심오하다: 자연은 화가처럼 잎사귀 하나하나를 그리지 않는다. <span class="hi">모든 스케일에서 동일한 분기 규칙</span>을 적용하여 성장시킨다. 각 잎맥은 전체 잎사귀를, 잎사귀는 전체 식물을 반복한다. 자기유사성은 장식이 아니다. <span class="ac">구성 방법</span> 그 자체이다.</p>
 </section>
 
 <div class="section-sep"></div>
@@ -729,9 +815,9 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 <section class="chapter-section" id="s5_ch05b">
   <div class="sec-num">05 · B</div>
   <h2 class="sec-title">분기의 법칙</h2>
-  <p class="sec-title-kr">The Branching Code</p>
+  <p class="sec-title-kr">분기의 법칙</p>
 
-  <p class="prose prose-drop">나무, 혈관, 강의 삼각주, 번개의 분기 — 자연이 공간을 효율적으로 채워야 할 곳마다 가지가 뻗는다. 1968년 헝가리의 생물학자 아리스티드 린덴마이어는 이 통찰을 <span class="hi">L-시스템</span>으로 형식화했다: 스스로를 다시 쓰는 기호의 문법, 하나의 씨앗과 한두 개의 생성 규칙에서 복잡한 분기 패턴을 만든다. 분기 각도를 몇 도만 바꾸면 참나무에서 버드나무로 간다. 길이 비율을 바꾸면 나무에서 양치식물로 간다.</p>
+  <p class="prose prose-drop">나무, 혈관, 강의 삼각주, 번개의 분기 — 자연이 공간을 효율적으로 채워야 할 곳마다 가지가 뻗는다. 1968년 헝가리의 생물학자 아리스티드 린덴마이어는 <span class="hi">L-시스템</span>으로 이를 형식화했다: 스스로를 다시 쓰는 기호의 문법. 분기 각도를 몇 도만 바꾸면 참나무에서 버드나무로, 길이 비율을 바꾸면 나무에서 양치식물로 간다.</p>
 
   <div class="ibox">
     <div class="ibox-label"><span class="dot"></span> Interactive</div>
@@ -749,21 +835,21 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 <section class="chapter-section" id="s5_ch05c">
   <div class="sec-num">05 · C</div>
   <h2 class="sec-title">혼돈에서 질서로</h2>
-  <p class="sec-title-kr">Order from Chaos</p>
+  <p class="sec-title-kr">혼돈에서 질서로</p>
 
-  <p class="prose prose-drop">로지스틱 사상 x → rx(1 − x)는 상상할 수 있는 가장 단순한 비선형 방정식 중 하나 — 변수 하나, 매개변수 하나. 그런데 매개변수 r을 천천히 올리면, 이 순진한 공식의 행동이 누구도 예상하지 못한 방식으로 변한다. 하나의 안정 상태가 두 값 사이의 진동으로, 그 다음 네 개, 여덟 개로 — 혼돈을 향해 가속하는 <span class="hi">주기배가 분기</span>의 폭포.</p>
+  <p class="prose prose-drop">로지스틱 사상 x → rx(1 − x)는 상상할 수 있는 가장 단순한 비선형 방정식 중 하나다. 그런데 매개변수 r을 천천히 올리면, 이 순진한 공식의 행동이 누구도 예상하지 못한 방식으로 변한다. 하나의 안정 상태가 두 값 사이의 진동으로, 네 개, 여덟 개로 — 혼돈을 향해 가속하는 <span class="hi">주기배가 분기</span>의 폭포.</p>
 
-  <p class="prose">1975년, 로스앨러모스의 물리학자 미첼 파이겐바움은 특별한 것을 발견했다: 연속적인 분기 폭의 비율이 보편 상수 <span class="ac">δ ≈ 4.66920…</span>에 수렴한다. 이 수는 로지스틱 사상만의 산물이 아니다. 주기배가가 일어나는 <em>모든</em> 시스템에 나타난다 — 유체 난류, 레이저 역학, 개체군 생태학, 전자 회로. π나 e만큼 근본적이면서도 훨씬 덜 유명하다. 그리고 분기 다이어그램 자체 — 질서에서 혼돈으로의 지도 — 가 프랙탈이다.</p>
+  <p class="prose">1975년, 로스앨러모스의 물리학자 미첼 파이겐바움은 특별한 것을 발견했다: 연속적인 분기 폭의 비율이 보편 상수 <span class="ac">δ ≈ 4.66920…</span>에 수렴한다. 이 수는 로지스틱 사상만의 산물이 아니다. 주기배가가 일어나는 <em>모든</em> 시스템에 나타난다. π나 e만큼 근본적이면서도 훨씬 덜 유명하다. 그리고 분기 다이어그램 자체 — 질서에서 혼돈으로의 지도 — 가 프랙탈이다.</p>
 
   <div class="ibox">
     <div class="ibox-label"><span class="dot"></span> Interactive</div>
     <div class="ibox-title">분기 다이어그램</div>
-    <div class="ibox-desc">가로축은 매개변수 r입니다. 각 r에 대해 세로축은 시스템이 장기적으로 방문하는 값을 보여줍니다. 가로로 클릭-드래그하여 프랙탈 자기유사성으로 확대하세요.</div>
+    <div class="ibox-desc">가로축은 매개변수 r입니다. 각 r에 대해 세로축은 시스템이 장기적으로 방문하는 값을 보여줍니다. 드래그하여 프랙탈 자기유사성으로 확대하세요.</div>
     <div class="canvas-wrap" style="aspect-ratio:2/1"><canvas id="s5_bifCanvas"></canvas></div>
     <div class="ctrl-row"><button class="btn" id="s5_bifReset">줌 초기화</button><span class="ctrl-val" id="s5_bifRange" style="margin-left:auto">r ∈ [2.5, 4.0]</span></div>
   </div>
 
-  <p class="prose">자기유사성은 기하학적 호기심거리가 아니다. 복잡한 시스템이 모든 스케일에서 스스로를 조직하는 방식으로의 창 — 난류가 큰 소용돌이에서 작은 것으로 흘러내리는 방식, 폐가 테니스 코트만한 표면적을 가슴에 담는 방식, 금융 시장이 분 단위에서 수십 년 단위까지 반복되는 패턴으로 붕괴하는 방식. 만델브로, 줄리아, 칸토어, 시에르핀스키, 코흐의 프랙탈은 수학 동물원의 표본이 아니다. 자연이 접고, 가지 치고, 부수고, 자라날 때 만드는 <span class="hi">형상들</span> — 거칠고 아름다운 세계의 깊은 문법이다.</p>
+  <p class="prose">자기유사성은 기하학적 호기심거리가 아니다. 복잡한 시스템이 모든 스케일에서 스스로를 조직하는 방식의 창 — 난류가 큰 소용돌이에서 작은 것으로 흘러내리는 방식, 폐가 테니스 코트만한 표면적을 가슴에 담는 방식, 금융 시장이 분 단위에서 수십 년까지 반복하는 패턴으로 붕괴하는 방식. 만델브로, 줄리아, 칸토어, 시에르핀스키, 코흐의 프랙탈은 수학 동물원의 표본이 아니다. 자연이 접고, 가지 치고, 부수고, 자라날 때 만드는 <span class="hi">형상들</span> — 거칠고 아름다운 세계의 깊은 문법이다.</p>
 </section>
 
 <!-- ═══ CODA ═══ -->
@@ -803,9 +889,23 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 
 
 
-<footer><div class="footer-attr"><div class="footer-name">Sang-hyun Kim</div><div class="footer-inst">Korea Institute for Advanced Study</div><a class="footer-url" href="https://kimsh.kr">kimsh.kr</a></div></footer>
+<footer><div class="footer-attr"><div class="footer-name">Sang-hyun Kim</div><div class="footer-inst">Korea Institute for Advanced Study</div><div class="footer-inst">AI4MATH, KAIST</div><a class="footer-url" href="https://kimsh.kr">kimsh.kr</a></div></footer>
 
 <script>
+
+/* ═══ GLOBAL IDLE SYSTEM — 10s for heavy anims, 300s for hero ═══ */
+let _idleTimer=null,_paused=false,_onResume=[];
+let _heroTimer=null,_heroPaused=false,_onHeroResume=[];
+function _resetIdle(){
+if(_paused){_paused=false;_onResume.forEach(fn=>fn())}
+if(_heroPaused){_heroPaused=false;_onHeroResume.forEach(fn=>fn())}
+clearTimeout(_idleTimer);clearTimeout(_heroTimer);
+_idleTimer=setTimeout(()=>{_paused=true},10000);
+_heroTimer=setTimeout(()=>{_heroPaused=true},300000)}
+['mousemove','mousedown','keydown','scroll','touchstart','wheel'].forEach(
+ev=>document.addEventListener(ev,_resetIdle,{passive:true}));
+_resetIdle();
+
 /* ═══ PARTICLES (global, single init) ═══ */
 (function(){const c=document.getElementById('particles');for(let i=0;i<24;i++){const p=document.createElement('div');p.className='particle';const s=2+Math.random()*4;p.style.width=p.style.height=s+'px';p.style.left=Math.random()*100+'%';p.style.animationDuration=(22+Math.random()*35)+'s';p.style.animationDelay=(-Math.random()*40)+'s';c.appendChild(p)}})();
 
@@ -816,16 +916,63 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 /* ═══ PARTICLES ═══ */
 (function(){const c=document.getElementById('particles');for(let i=0;i<24;i++){const p=document.createElement('div');p.className='particle';const s=2+Math.random()*4;p.style.width=p.style.height=s+'px';p.style.left=Math.random()*100+'%';p.style.animationDuration=(20+Math.random()*35)+'s';p.style.animationDelay=(-Math.random()*40)+'s';c.appendChild(p)}})();
 
-/* ═══ BARNSLEY FERN HERO ═══ */
-(function(){const c=document.getElementById('s1_heroCanvas'),ctx=c.getContext('2d');let w,h,pts=[];
-function resize(){const d=Math.min(devicePixelRatio||1,2);w=c.clientWidth;h=c.clientHeight;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0)}resize();
-function barnsley(x,y){const r=Math.random();if(r<.01)return[0,.16*y];if(r<.86)return[.85*x+.04*y,-.04*x+.85*y+1.6];if(r<.93)return[.2*x-.26*y,.23*x+.22*y+1.6];return[-.15*x+.28*y,.26*x+.24*y+.44]}
-function gen(){let x=0,y=0;pts=[];for(let i=0;i<180000;i++){[x,y]=barnsley(x,y);pts.push({x,y})}}gen();
-let drawn=0;
-function draw(){const batch=Math.ceil(pts.length/600),end=Math.min(drawn+batch,pts.length);const sx=w/12,sy=h/11.5,ox=w*.5,oy=h*.96;
-for(let i=drawn;i<end;i++){const p=pts[i],px=ox+p.x*sx,py=oy-p.y*sy;const hue=130+Math.random()*30,sat=35+Math.random()*25,lit=30+Math.random()*25,a=.18+Math.random()*.25;ctx.fillStyle=`hsla(${hue},${sat}%,${lit}%,${a})`;ctx.fillRect(px,py,1.4,1.4)}
-drawn=end;if(drawn<pts.length)requestAnimationFrame(draw)}draw();
-window.addEventListener('resize',()=>{resize();ctx.clearRect(0,0,w,h);pts=[];gen();drawn=0;draw()})})();
+/* ═══ ANIMATED JULIA SET HERO — zoomed in, bright, mesmerizing ═══ */
+(function(){const c=document.getElementById('s1_heroCanvas'),ctx=c.getContext('2d');
+let cw,ch,animId,FW,FH;
+function resize(){const dpr=Math.min(devicePixelRatio||1,2);
+FW=c.clientWidth*dpr;FH=c.clientHeight*dpr;
+cw=Math.floor(FW*.55);ch=Math.floor(FH*.55);
+c.width=FW;c.height=FH;ctx.setTransform(1,0,0,1,0,0)}
+resize();
+/* Orbit near seahorse valley — the most intricate region */
+function getC(t){
+const a=2*Math.PI*t;
+const base_r=-.745,base_i=.186;
+const radius=.025;
+return[base_r+radius*Math.cos(a),base_i+radius*Math.sin(a*.7)*.6]}
+/* Bright, luminous palette */
+function pal(t,ph){
+const h=(200+300*t+ph*120)%360;
+const s=70+25*Math.sin(t*3.14);
+const l=12+68*Math.pow(t,.55);
+const c2=s/100*(1-Math.abs(2*l/100-1));
+const x2=c2*(1-Math.abs((h/60)%2-1));
+const m=l/100-c2/2;
+let r,g,b;
+if(h<60){r=c2;g=x2;b=0}else if(h<120){r=x2;g=c2;b=0}
+else if(h<180){r=0;g=c2;b=x2}else if(h<240){r=0;g=x2;b=c2}
+else if(h<300){r=x2;g=0;b=c2}else{r=c2;g=0;b=x2}
+return[(r+m)*255|0,(g+m)*255|0,(b+m)*255|0]}
+let phase=0;
+function render(){
+const[cr,ci]=getC(phase);
+const mx=150,span=1.8;
+const id=ctx.createImageData(cw,ch),d=id.data;
+for(let py=0;py<ch;py++)for(let px=0;px<cw;px++){
+let x=(px/cw-.5)*span,y=(py/ch-.5)*span*(ch/cw),xx=x*x,yy=y*y,it=0;
+while(xx+yy<=256&&it<mx){y=2*x*y+ci;x=xx-yy+cr;xx=x*x;yy=y*y;it++}
+const i=(py*cw+px)*4;
+if(it===mx){d[i]=3;d[i+1]=3;d[i+2]=8;d[i+3]=255}
+else{const lz=Math.log(xx+yy)/2,nu=Math.log(lz/Math.LN2)/Math.LN2;
+const sm=Math.max(0,(it+1-nu)/mx);const t=sm-Math.floor(sm);
+const[r,g,b]=pal(t,phase);
+d[i]=r;d[i+1]=g;d[i+2]=b;d[i+3]=255}}
+const tmp=document.createElement('canvas');tmp.width=cw;tmp.height=ch;
+tmp.getContext('2d').putImageData(id,0,0);
+ctx.clearRect(0,0,FW,FH);
+ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+ctx.drawImage(tmp,0,0,FW,FH);
+phase+=.0004;if(phase>1)phase-=1;
+if(!_heroPaused&&_heroVisible)animId=requestAnimationFrame(render)}
+_onHeroResume.push(()=>{if(_heroVisible)render()});
+let _heroVisible=true;
+const _heroVisObs=new IntersectionObserver(es=>{es.forEach(e=>{
+_heroVisible=e.isIntersecting;
+if(_heroVisible&&!_heroPaused){cancelAnimationFrame(animId);render()}
+else if(!_heroVisible){cancelAnimationFrame(animId)}})},{threshold:0.01});
+_heroVisObs.observe(c.closest('.hero-section')||c);
+render();
+window.addEventListener('resize',()=>{cancelAnimationFrame(animId);resize();if(_heroVisible)render()})})();
 
 /* ═══ COASTLINE ═══ */
 const coastMod=(function(){const c=document.getElementById('s1_coastCanvas'),ctx=c.getContext('2d');let w,h;
@@ -878,7 +1025,7 @@ document.querySelectorAll('#s1_kochBtns .btn').forEach(b=>{b.addEventListener('c
 (function(){const c=document.getElementById('s2_heroCanvas'),ctx=c.getContext('2d');let w,h;
 function resize(){const d=Math.min(devicePixelRatio||1,2);w=c.clientWidth;h=c.clientHeight;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0)}resize();
 const verts=[];function setV(){const cx=w/2,s=Math.min(w,h)*.88;verts.length=0;verts.push({x:cx,y:h*.5-s*.43},{x:cx-s*.5,y:h*.5+s*.43},{x:cx+s*.5,y:h*.5+s*.43})}setV();
-let px=w/2,py=h/2,count=0;
+let px=w/2,py=h/2,count=0,s2started=false;
 function draw(){if(count>=100000)return;for(let i=0;i<250&&count<100000;i++,count++){const v=verts[Math.floor(Math.random()*3)];px=(px+v.x)/2;py=(py+v.y)/2;
 const hue=35+Math.random()*20,sat=30+Math.random()*20,lit=50+Math.random()*20,a=.1+Math.random()*.15;
 ctx.fillStyle=`hsla(${hue},${sat}%,${lit}%,${a})`;ctx.fillRect(px,py,1.2,1.2)}requestAnimationFrame(draw)}draw();
@@ -1020,51 +1167,71 @@ const palettes={
   violet:{name:'Violet',fn:t=>[Math.floor(40+180*Math.pow(t,.8)),Math.floor(10+60*t),Math.min(255,Math.floor(60+195*Math.sqrt(t)))]}
 };
 let curPal='twilight';
-const palC=document.getElementById('s3_palContainer');
-Object.keys(palettes).forEach(key=>{
-  const strip=document.createElement('div');strip.className='pal-strip';
-  for(let i=0;i<12;i++){const t=i/11,[r,g,b]=palettes[key].fn(t);const sw=document.createElement('div');sw.className='pal-sw'+(key===curPal?' active':'');sw.style.background=`rgb(${r},${g},${b})`;sw.addEventListener('click',()=>{document.querySelectorAll('.pal-sw').forEach(s=>s.classList.remove('active'));strip.querySelectorAll('.pal-sw').forEach(s=>s.classList.add('active'));curPal=key;mbMod.render();periodMod.render()});strip.appendChild(sw)}
-  const lbl=document.createElement('div');lbl.className='pal-label';lbl.textContent=palettes[key].name;
-  const w=document.createElement('div');w.style.marginBottom='8px';w.appendChild(strip);w.appendChild(lbl);palC.appendChild(w)
-});
 
 /* ═══ HERO BG — deep Mandelbrot zoom ═══ */
 (function(){const c=document.getElementById('s3_heroCanvas'),ctx=c.getContext('2d');let w,h;
-function resize(){const d=Math.min(devicePixelRatio||1,1.5);w=c.clientWidth;h=c.clientHeight;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0)}resize();
-function render(){const id=ctx.createImageData(Math.ceil(w),Math.ceil(h)),d=id.data,mx=100,cx=-.7453,cy=.1127,span=.006;
-for(let py=0;py<h;py++)for(let px=0;px<w;px++){const x0=cx+(px/w-.5)*span*(w/h),y0=cy+(py/h-.5)*span;let x=0,y=0,it=0;
+function resize(){const d=Math.min(devicePixelRatio||1,1.5);w=c.clientWidth;h=c.clientHeight;c.width=w*d;c.height=h*d;ctx.setTransform(1,0,0,1,0,0)}resize();
+function render(){const cw=c.width,ch=c.height,id=ctx.createImageData(cw,ch),d=id.data,mx=100,cx=-.7453,cy=.1127,span=.006;
+for(let py=0;py<ch;py++)for(let px=0;px<cw;px++){const x0=cx+(px/cw-.5)*span*(w/h),y0=cy+(py/ch-.5)*span;let x=0,y=0,it=0;
 while(x*x+y*y<=4&&it<mx){const xt=x*x-y*y+x0;y=2*x*y+y0;x=xt;it++}const i=(py*Math.ceil(w)+px)*4;
 if(it===mx){d[i]=4;d[i+1]=5;d[i+2]=12;d[i+3]=255}
 else{const lz=Math.log(x*x+y*y)/2,nu=Math.log(lz/Math.log(2))/Math.log(2),t=Math.max(0,Math.min(1,((it+1-nu)/mx)*3%1));
 const[r,g,b]=palettes.violet.fn(t);d[i]=r;d[i+1]=g;d[i+2]=b;d[i+3]=255}}
-ctx.putImageData(id,0,0)}render();window.addEventListener('resize',()=>{resize();render()})})();
+ctx.putImageData(id,0,0)}
+let _s3hDone=false;
+const _s3hObs=new IntersectionObserver(es=>{es.forEach(e=>{
+if(e.isIntersecting&&!_s3hDone){_s3hDone=true;render()}})},{threshold:0.01});
+_s3hObs.observe(c.closest('.hero-section')||c);
+window.addEventListener('resize',()=>{resize();if(_s3hDone)render()})})();
 
-/* ═══ MANDELBROT EXPLORER ═══ */
-const mbMod=(function(){const canvas=document.getElementById('s3_mbCanvas'),ctx=canvas.getContext('2d');let w,h,cX=-.5,cY=0,spanX=3.5,maxIt=200;
+/* ═══ MANDELBROT EXPLORER — infinite zoom, adaptive iterations ═══ */
+const mbMod=(function(){const canvas=document.getElementById('s3_mbCanvas'),ctx=canvas.getContext('2d');let w,h,cX=-.55,cY=0,spanX=2.8;
 function resize(){const d=Math.min(devicePixelRatio||1,2);w=canvas.clientWidth;h=canvas.clientHeight;canvas.width=w*d;canvas.height=h*d;ctx.setTransform(d,0,0,d,0,0)}
-function render(){resize();const spanY=spanX*(h/w),id=ctx.createImageData(Math.ceil(w),Math.ceil(h)),d=id.data,cw=Math.ceil(w),ch=Math.ceil(h),fn=palettes[curPal].fn;
-for(let py=0;py<ch;py++)for(let px=0;px<cw;px++){const x0=cX+(px/cw-.5)*spanX,y0=cY+(py/ch-.5)*spanY;let x=0,y=0,it=0;
-while(x*x+y*y<=256&&it<maxIt){const xt=x*x-y*y+x0;y=2*x*y+y0;x=xt;it++}const i=(py*cw+px)*4;
+function getMaxIt(){return Math.floor(200+180*Math.log2(Math.max(1,2.8/spanX)))}
+function renderAt(scale){const dpr=Math.min(devicePixelRatio||1,2);
+const cw0=canvas.clientWidth,ch0=canvas.clientHeight;
+canvas.width=cw0*dpr;canvas.height=ch0*dpr;
+w=cw0;h=ch0;ctx.setTransform(1,0,0,1,0,0);
+const fn=palettes[curPal].fn,maxIt=getMaxIt();
+const rw=Math.ceil(cw0*dpr*scale),rh=Math.ceil(ch0*dpr*scale),spanY=spanX*(ch0/cw0);
+const id=ctx.createImageData(rw,rh),d=id.data;
+for(let py=0;py<rh;py++)for(let px=0;px<rw;px++){
+const x0=cX+(px/rw-.5)*spanX,y0=cY+(py/rh-.5)*spanY;let x=0,y=0,xx=0,yy=0,it=0;
+while(xx+yy<=256&&it<maxIt){y=2*x*y+y0;x=xx-yy+x0;xx=x*x;yy=y*y;it++}
+const i=(py*rw+px)*4;
 if(it===maxIt){d[i]=4;d[i+1]=5;d[i+2]=12;d[i+3]=255}
-else{const lz=Math.log(x*x+y*y)/2,nu=Math.log(lz/Math.log(2))/Math.log(2),t=Math.max(0,Math.min(1,((it+1-nu)/maxIt)*4%1));const[r,g,b]=fn(t);d[i]=r;d[i+1]=g;d[i+2]=b;d[i+3]=255}}
-ctx.putImageData(id,0,0);document.getElementById('s3_zoomLevel').textContent=(3.5/spanX).toFixed(0)+'×';
-document.getElementById('s3_infoCenter').textContent=cX.toFixed(6)+' '+(cY>=0?'+':'−')+' '+Math.abs(cY).toFixed(6)+'i'}
+else{const lz=Math.log(xx+yy)/2,nu=Math.log(lz/Math.LN2)/Math.LN2;
+const sm=(it+1-nu)/maxIt;const t=sm-Math.floor(sm);
+const[r,g,b]=fn(t);d[i]=r;d[i+1]=g;d[i+2]=b;d[i+3]=255}}
+const tmp=document.createElement('canvas');tmp.width=rw;tmp.height=rh;
+tmp.getContext('2d').putImageData(id,0,0);
+ctx.imageSmoothingEnabled=scale<1;ctx.drawImage(tmp,0,0,canvas.width,canvas.height);
+document.getElementById('s3_zoomLevel').textContent=(2.8/spanX<10?(2.8/spanX).toFixed(1):(2.8/spanX).toFixed(0))+'×';
+document.getElementById('s3_infoCenter').textContent=cX.toFixed(8)+' '+(cY>=0?'+':'')+cY.toFixed(8)+'i'}
+let renderTimer=null;
+function render(){renderAt(.5);clearTimeout(renderTimer);renderTimer=setTimeout(()=>renderAt(1),80)}
 render();
-canvas.addEventListener('click',e=>{const r=canvas.getBoundingClientRect(),mx=(e.clientX-r.left)/r.width,my=(e.clientY-r.top)/r.height,spanY=spanX*(h/w);cX+=(mx-.5)*spanX;cY+=(my-.5)*spanY;spanX*=.35;maxIt=Math.min(1500,maxIt+80);render()});
+function zoomTo(mx,my,factor){const spanY=spanX*(h/w);cX+=(mx-.5)*spanX;cY+=(my-.5)*spanY;spanX*=factor;render()}
+canvas.addEventListener('dblclick',e=>{const r=canvas.getBoundingClientRect();zoomTo((e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height,.35)});
 canvas.addEventListener('contextmenu',e=>{e.preventDefault();zoomOut()});
-canvas.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0],r=canvas.getBoundingClientRect(),mx=(t.clientX-r.left)/r.width,my=(t.clientY-r.top)/r.height,spanY=spanX*(h/w);cX+=(mx-.5)*spanX;cY+=(my-.5)*spanY;spanX*=.35;maxIt=Math.min(1500,maxIt+80);render()},{passive:false});
-function zoomOut(){spanX*=2.5;maxIt=Math.max(200,maxIt-60);if(spanX>4){cX=-.5;cY=0;spanX=3.5;maxIt=200}render()}
-function reset(){cX=-.5;cY=0;spanX=3.5;maxIt=200;render()}
+canvas.addEventListener('wheel',e=>{e.preventDefault();const r=canvas.getBoundingClientRect(),mx=(e.clientX-r.left)/r.width,my=(e.clientY-r.top)/r.height;
+const factor=e.deltaY>0?1.5:.65;const spanY=spanX*(h/w);
+const cx0=cX+(mx-.5)*spanX,cy0=cY+(my-.5)*spanY;spanX*=factor;
+cX=cx0-(mx-.5)*spanX;cY=cy0-(my-.5)*spanY;render()},{passive:false});
+canvas.addEventListener('touchstart',e=>{if(e.touches.length===1){e.preventDefault();const t=e.touches[0],r=canvas.getBoundingClientRect();zoomTo((t.clientX-r.left)/r.width,(t.clientY-r.top)/r.height,.35)}},{passive:false});
+function zoomOut(){spanX*=2.5;if(spanX>3.5){cX=-.55;cY=0;spanX=2.8}render()}
+function reset(){cX=-.55;cY=0;spanX=2.8;render()}
 document.getElementById('s3_zoomOutBtn').addEventListener('click',zoomOut);
 document.getElementById('s3_resetBtn').addEventListener('click',reset);
+addDragPan(canvas,()=>({cX,cY,spanX}),st=>{cX=st.cX;cY=st.cY;spanX=st.spanX},render);
 
 /* Orbit viz */
 const oc=document.getElementById('s3_orbitCanvas'),octx=oc.getContext('2d');let ow,oh;
 function resizeO(){const d=Math.min(devicePixelRatio||1,2);ow=oc.clientWidth;oh=oc.clientHeight;oc.width=ow*d;oc.height=oh*d;octx.setTransform(d,0,0,d,0,0)}resizeO();
 canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect(),mx=(e.clientX-r.left)/r.width,my=(e.clientY-r.top)/r.height,spanY=spanX*(h/w),cr=cX+(mx-.5)*spanX,ci=cY+(my-.5)*spanY;
 document.getElementById('s3_infoCursor').textContent=cr.toFixed(6)+' '+(ci>=0?'+':'−')+' '+Math.abs(ci).toFixed(6)+'i';
-const orbit=[];let x=0,y=0;for(let i=0;i<Math.min(maxIt,200);i++){orbit.push({x,y});const xt=x*x-y*y+cr;y=2*x*y+ci;x=xt;if(x*x+y*y>100)break}
-document.getElementById('s3_infoIter').textContent=orbit.length>=Math.min(maxIt,200)?'∞ (bounded)':orbit.length;
+const orbit=[];let x=0,y=0;const _mi=getMaxIt();for(let i=0;i<Math.min(_mi,200);i++){orbit.push({x,y});const xt=x*x-y*y+cr;y=2*x*y+ci;x=xt;if(x*x+y*y>100)break}
+document.getElementById('s3_infoIter').textContent=orbit.length>=Math.min(_mi,200)?'∞ (bounded)':orbit.length;
 resizeO();octx.clearRect(0,0,ow,oh);
 /* Axes */
 octx.strokeStyle='rgba(138,106,191,.08)';octx.lineWidth=.5;
@@ -1083,25 +1250,80 @@ canvas.addEventListener('mouseleave',()=>{resizeO();octx.clearRect(0,0,ow,oh);do
 window.addEventListener('resize',()=>{render();resizeO()});
 return{render}})();
 
-/* ═══ PERIOD MAP ═══ */
-const periodMod=(function(){const canvas=document.getElementById('s3_periodCanvas'),ctx=canvas.getContext('2d');let w,h;const maxIt=300;
-function resize(){const d=Math.min(devicePixelRatio||1,1.5);w=canvas.clientWidth;h=canvas.clientHeight;canvas.width=w*d;canvas.height=h*d;ctx.setTransform(d,0,0,d,0,0)}
-/* HSL-based period colors for richer look */
+/* ═══ PERIOD MAP — zoomable, pannable, hi-res ═══ */
+const periodMod=(function(){const canvas=document.getElementById('s3_periodCanvas'),ctx=canvas.getContext('2d');
+let w,h,FW,FH,pCX=-.55,pCY=0,pSpan=2.8;
+function getMaxIt(){return Math.floor(300+200*Math.log2(Math.max(1,2.8/pSpan)))}
 const pHues=[0,270,210,150,45,0,300,180,30];
-function detectPeriod(cr,ci){let x=0,y=0;for(let i=0;i<500;i++){const xt=x*x-y*y+cr;y=2*x*y+ci;x=xt;if(x*x+y*y>4)return{inSet:false,period:0,iter:i}}const rx=x,ry=y;for(let p=1;p<=64;p++){const xt=x*x-y*y+cr;y=2*x*y+ci;x=xt;if(Math.abs(x-rx)<1e-10&&Math.abs(y-ry)<1e-10)return{inSet:true,period:p}}return{inSet:true,period:-1}}
+function detectPeriod(cr,ci){let x=0,y=0;for(let i=0;i<600;i++){const xt=x*x-y*y+cr;y=2*x*y+ci;x=xt;if(x*x+y*y>4)return{inSet:false,period:0,iter:i}}const rx=x,ry=y;for(let p=1;p<=64;p++){const xt=x*x-y*y+cr;y=2*x*y+ci;x=xt;if(Math.abs(x-rx)<1e-10&&Math.abs(y-ry)<1e-10)return{inSet:true,period:p}}return{inSet:true,period:-1}}
 function hslToRgb(h,s,l){s/=100;l/=100;const a=s*Math.min(l,1-l);const f=n=>{const k=(n+h/30)%12;return l-a*Math.max(Math.min(k-3,9-k,1),-1)};return[Math.round(f(0)*255),Math.round(f(8)*255),Math.round(f(4)*255)]}
-function render(){resize();const id=ctx.createImageData(Math.ceil(w),Math.ceil(h)),d=id.data,cw=Math.ceil(w),ch=Math.ceil(h),fn=palettes[curPal].fn,sx=3.5,sy=sx*(h/w),cx=-.5,cy=0;
-for(let py=0;py<ch;py++)for(let px=0;px<cw;px++){const x0=cx+(px/cw-.5)*sx,y0=cy+(py/ch-.5)*sy;let x=0,y=0,it=0;
-while(x*x+y*y<=4&&it<maxIt){const xt=x*x-y*y+x0;y=2*x*y+y0;x=xt;it++}const i=(py*cw+px)*4;
-if(it===maxIt){const res=detectPeriod(x0,y0);if(res.period>0&&res.period<=8){const[r,g,b]=hslToRgb(pHues[res.period],45,38);d[i]=r;d[i+1]=g;d[i+2]=b;d[i+3]=255}
+function render(){const dpr=Math.min(devicePixelRatio||1,2);
+const cw0=canvas.clientWidth,ch0=canvas.clientHeight;
+FW=cw0*dpr;FH=ch0*dpr;canvas.width=FW;canvas.height=FH;
+w=cw0;h=ch0;ctx.setTransform(1,0,0,1,0,0);
+const maxIt=getMaxIt(),fn=palettes[curPal].fn,spanY=pSpan*(ch0/cw0);
+const id=ctx.createImageData(FW,FH),d=id.data;
+for(let py=0;py<FH;py++)for(let px=0;px<FW;px++){
+const x0=pCX+(px/FW-.5)*pSpan,y0=pCY+(py/FH-.5)*spanY;let x=0,y=0,xx=0,yy=0,it=0;
+while(xx+yy<=256&&it<maxIt){y=2*x*y+y0;x=xx-yy+x0;xx=x*x;yy=y*y;it++}
+const i=(py*FW+px)*4;
+if(it===maxIt){const res=detectPeriod(x0,y0);
+if(res.period>0&&res.period<=8){const[r,g,b]=hslToRgb(pHues[res.period],50,42);d[i]=r;d[i+1]=g;d[i+2]=b;d[i+3]=255}
 else{d[i]=18;d[i+1]=15;d[i+2]=30;d[i+3]=255}}
-else{const t=Math.max(0,Math.min(1,(it/maxIt)*5%1));const[r,g,b]=fn(t);d[i]=Math.floor(r*.35);d[i+1]=Math.floor(g*.35);d[i+2]=Math.floor(b*.35);d[i+3]=255}}
-ctx.putImageData(id,0,0)}render();
-canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect(),mx=(e.clientX-r.left)/r.width,my=(e.clientY-r.top)/r.height,sx=3.5,sy=sx*(h/w),cr=-.5+(mx-.5)*sx,ci=(my-.5)*sy;
+else{const lz=Math.log(xx+yy)/2,nu=Math.log(lz/Math.LN2)/Math.LN2;
+const sm=(it+1-nu)/maxIt;const t=sm-Math.floor(sm);
+const[r,g,b]=fn(t);d[i]=Math.floor(r*.3);d[i+1]=Math.floor(g*.3);d[i+2]=Math.floor(b*.3);d[i+3]=255}}
+ctx.putImageData(id,0,0)}
+let periodImg=null;
+function renderAndSave(){render();periodImg=ctx.getImageData(0,0,FW,FH)}
+renderAndSave();
+function drawOrbit(cr,ci,period){
+if(!periodImg)return;
+ctx.putImageData(periodImg,0,0);
+if(!period||period<=0)return;
+const spanY=pSpan*(h/w);
+let x=0,y=0;
+for(let i=0;i<600;i++){const xt=x*x-y*y+cr;y=2*x*y+ci;x=xt}
+const pts=[];
+for(let i=0;i<period;i++){const xt=x*x-y*y+cr;y=2*x*y+ci;x=xt;pts.push({x,y})}
+if(pts.length<1)return;
+function toScr(zr,zi){return{px:((zr-pCX)/pSpan+.5)*FW,py:((zi-pCY)/spanY+.5)*FH}}
+const hue=pHues[Math.min(period,8)]||200;
+ctx.lineWidth=2*(FW/w);ctx.lineCap='round';
+ctx.shadowColor=`hsla(${hue},70%,60%,.6)`;ctx.shadowBlur=8*(FW/w);
+ctx.strokeStyle=`hsla(${hue},65%,55%,.7)`;
+ctx.beginPath();const p0=toScr(pts[0].x,pts[0].y);ctx.moveTo(p0.px,p0.py);
+for(let i=1;i<pts.length;i++){const p=toScr(pts[i].x,pts[i].y);ctx.lineTo(p.px,p.py)}
+ctx.closePath();ctx.stroke();ctx.shadowBlur=0;
+pts.forEach((pt,i)=>{const p=toScr(pt.x,pt.y);const dpr=FW/w;
+ctx.beginPath();ctx.arc(p.px,p.py,4*dpr,0,Math.PI*2);
+ctx.fillStyle=`hsla(${hue},80%,70%,.9)`;ctx.fill();
+ctx.beginPath();ctx.arc(p.px,p.py,7*dpr,0,Math.PI*2);
+ctx.strokeStyle=`hsla(${hue},70%,60%,.3)`;ctx.lineWidth=1.5*dpr;ctx.stroke();
+ctx.fillStyle='rgba(255,255,255,.8)';ctx.font=`${9*dpr}px "JetBrains Mono",monospace`;
+ctx.textAlign='center';ctx.fillText(i+1,p.px,p.py-10*dpr)})}
+/* Wheel zoom — re-render at full res */
+canvas.addEventListener('wheel',e=>{e.preventDefault();
+const rect=canvas.getBoundingClientRect(),mx=(e.clientX-rect.left)/rect.width,my=(e.clientY-rect.top)/rect.height;
+const factor=e.deltaY>0?1.5:.6;const spanY=pSpan*(h/w);
+const cx0=pCX+(mx-.5)*pSpan,cy0=pCY+(my-.5)*spanY;
+pSpan*=factor;pCX=cx0-(mx-.5)*pSpan;pCY=cy0-(my-.5)*pSpan;
+if(pSpan>3.5){pCX=-.55;pCY=0;pSpan=2.8}
+renderAndSave()},{passive:false});
+/* Dblclick to zoom in */
+canvas.addEventListener('dblclick',e=>{const rect=canvas.getBoundingClientRect(),mx=(e.clientX-rect.left)/rect.width,my=(e.clientY-rect.top)/rect.height;
+const spanY=pSpan*(h/w);pCX+=(mx-.5)*pSpan;pCY+=(my-.5)*spanY;pSpan*=.4;renderAndSave()});
+canvas.addEventListener('contextmenu',e=>{e.preventDefault();pSpan*=2.5;if(pSpan>3.5){pCX=-.55;pCY=0;pSpan=2.8}renderAndSave()});
+/* Hover orbit drawing */
+canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect(),mx=(e.clientX-r.left)/r.width,my=(e.clientY-r.top)/r.height;
+const spanY=pSpan*(h/w),cr=pCX+(mx-.5)*pSpan,ci=pCY+(my-.5)*spanY;
 document.getElementById('s3_periodC').textContent=cr.toFixed(4)+' '+(ci>=0?'+':'−')+' '+Math.abs(ci).toFixed(4)+'i';
-const res=detectPeriod(cr,ci);document.getElementById('s3_periodIn').textContent=res.inSet?'Yes':'No';document.getElementById('s3_periodVal').textContent=res.inSet?(res.period>0?res.period:'>64'):'—'});
-canvas.addEventListener('mouseleave',()=>{document.getElementById('s3_periodC').textContent='—';document.getElementById('s3_periodVal').textContent='—';document.getElementById('s3_periodIn').textContent='—'});
-window.addEventListener('resize',render);return{render}})();
+const res=detectPeriod(cr,ci);document.getElementById('s3_periodIn').textContent=res.inSet?'Yes':'No';document.getElementById('s3_periodVal').textContent=res.inSet?(res.period>0?res.period:'>64'):'—';
+drawOrbit(cr,ci,res.inSet?res.period:0)});
+canvas.addEventListener('mouseleave',()=>{if(periodImg)ctx.putImageData(periodImg,0,0);
+document.getElementById('s3_periodC').textContent='—';document.getElementById('s3_periodVal').textContent='—';document.getElementById('s3_periodIn').textContent='—'});
+addDragPan(canvas,()=>({cX:pCX,cY:pCY,spanX:pSpan}),st=>{pCX=st.cX;pCY=st.cY;pSpan=st.spanX},renderAndSave);
+window.addEventListener('resize',renderAndSave);return{render:renderAndSave}})();
 
 /* ═══ SCROLL REVEAL ═══ */
 
@@ -1118,37 +1340,53 @@ const palRose=t=>[Math.floor(35+200*Math.pow(t,.65)),Math.floor(12+85*Math.pow(t
 
 /* ═══ HERO BG — Julia set c = -0.7454 + 0.113i ═══ */
 (function(){const c=document.getElementById('s4_heroCanvas'),ctx=c.getContext('2d');let w,h;
-function resize(){const d=Math.min(devicePixelRatio||1,1.5);w=c.clientWidth;h=c.clientHeight;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0)}resize();
-function render(){const id=ctx.createImageData(Math.ceil(w),Math.ceil(h)),d=id.data,mx=140,cr=-.7454,ci=.113;
-for(let py=0;py<h;py++)for(let px=0;px<w;px++){
-let x=(px/w-.5)*3,y=(py/h-.5)*3*(h/w),it=0;
+function resize(){const d=Math.min(devicePixelRatio||1,1.5);w=c.clientWidth;h=c.clientHeight;c.width=w*d;c.height=h*d;ctx.setTransform(1,0,0,1,0,0)}resize();
+function render(){const cw=c.width,ch=c.height,id=ctx.createImageData(cw,ch),d=id.data,mx=140,cr=-.7454,ci=.113;
+for(let py=0;py<ch;py++)for(let px=0;px<cw;px++){
+let x=(px/cw-.5)*3,y=(py/ch-.5)*3*(h/w),it=0;
 while(x*x+y*y<=4&&it<mx){const xt=x*x-y*y+cr;y=2*x*y+ci;x=xt;it++}
-const i=(py*Math.ceil(w)+px)*4;
+const i=(py*cw+px)*4;
 if(it===mx){d[i]=4;d[i+1]=4;d[i+2]=12;d[i+3]=255}
 else{const lz=Math.log(x*x+y*y)/2,nu=Math.log(lz/Math.log(2))/Math.log(2),t=Math.max(0,Math.min(1,((it+1-nu)/mx)*3.5%1));
 const[r,g,b]=palRose(t);d[i]=r;d[i+1]=g;d[i+2]=b;d[i+3]=255}}
-ctx.putImageData(id,0,0)}render();window.addEventListener('resize',()=>{resize();render()})})();
+ctx.putImageData(id,0,0)}
+let s4hDone=false;
+const s4hObs=new IntersectionObserver(es=>{es.forEach(e=>{
+if(e.isIntersecting&&!s4hDone){s4hDone=true;render()}})},{threshold:0.01});
+s4hObs.observe(c.closest('.hero-section')||c);
+window.addEventListener('resize',()=>{resize();if(s4hDone)render()})})();
 
-/* ═══ MANDELBROT (left panel) ═══ */
+/* ═══ MANDELBROT (left panel) — zoomable, adaptive iterations ═══ */
 const mbC=document.getElementById('s4_mbCanvas'),mbCtx=mbC.getContext('2d');
-let mbW,mbH,mbImageData=null;
+let mbW,mbH,mbImageData=null,mb4cX=-.55,mb4cY=0,mb4span=2.8;
 function resizeMB(){const d=Math.min(devicePixelRatio||1,2);mbW=mbC.clientWidth;mbH=mbC.clientHeight;mbC.width=mbW*d;mbC.height=mbH*d;mbCtx.setTransform(d,0,0,d,0,0)}
-function renderMB(){resizeMB();
-const id=mbCtx.createImageData(Math.ceil(mbW),Math.ceil(mbH)),d=id.data,cw=Math.ceil(mbW),ch=Math.ceil(mbH),mx=200,sx=3.2,cy=0,cx=-.5;
+function renderMB(){const dpr=Math.min(devicePixelRatio||1,2);
+const cw0=mbC.clientWidth,ch0=mbC.clientHeight;
+mbC.width=cw0*dpr;mbC.height=ch0*dpr;mbW=cw0;mbH=ch0;
+mbCtx.setTransform(1,0,0,1,0,0);
+const maxIt=Math.floor(200+180*Math.log2(Math.max(1,2.8/mb4span)));
+const cw=Math.ceil(cw0*dpr),ch=Math.ceil(ch0*dpr);
+const id=mbCtx.createImageData(cw,ch),d=id.data;
 for(let py=0;py<ch;py++)for(let px=0;px<cw;px++){
-const x0=cx+(px/cw-.5)*sx,y0=cy+(py/ch-.5)*sx;let x=0,y=0,it=0;
-while(x*x+y*y<=4&&it<mx){const xt=x*x-y*y+x0;y=2*x*y+y0;x=xt;it++}
+const x0=mb4cX+(px/cw-.5)*mb4span,y0=mb4cY+(py/ch-.5)*mb4span;let x=0,y=0,xx=0,yy=0,it=0;
+while(xx+yy<=256&&it<maxIt){y=2*x*y+y0;x=xx-yy+x0;xx=x*x;yy=y*y;it++}
 const i=(py*cw+px)*4;
-if(it===mx){d[i]=15;d[i+1]=12;d[i+2]=28;d[i+3]=255}
-else{const lz=Math.log(x*x+y*y)/2,nu=Math.log(lz/Math.log(2))/Math.log(2),t=Math.max(0,Math.min(1,((it+1-nu)/mx)*4%1));
+if(it===maxIt){d[i]=15;d[i+1]=12;d[i+2]=28;d[i+3]=255}
+else{const lz=Math.log(xx+yy)/2,nu=Math.log(lz/Math.LN2)/Math.LN2;
+const sm=(it+1-nu)/maxIt;const t=sm-Math.floor(sm);
 const[r,g,b]=palTwilight(t);d[i]=Math.floor(r*.45);d[i+1]=Math.floor(g*.45);d[i+2]=Math.floor(b*.45);d[i+3]=255}}
-mbCtx.putImageData(id,0,0);mbImageData=id}
+mbCtx.putImageData(id,0,0);mbImageData=mbCtx.getImageData(0,0,cw,ch)}
 renderMB();
+mbC.addEventListener('wheel',e=>{e.preventDefault();const r=mbC.getBoundingClientRect(),mx=(e.clientX-r.left)/r.width,my=(e.clientY-r.top)/r.height;
+const factor=e.deltaY>0?1.4:.7;const cx0=mb4cX+(mx-.5)*mb4span,cy0=mb4cY+(my-.5)*mb4span;
+mb4span*=factor;mb4cX=cx0-(mx-.5)*mb4span;mb4cY=cy0-(my-.5)*mb4span;renderMB()},{passive:false});
+addDragPan(mbC,()=>({cX:mb4cX,cY:mb4cY,spanX:mb4span}),st=>{mb4cX=st.cX;mb4cY=st.cY;mb4span=st.spanX},renderMB);
 
 function drawMarker(cr,ci){
 mbCtx.putImageData(mbImageData,0,0);
-const sx=3.2,cx=-.5;
-const px=((cr-cx)/sx+.5)*mbW,py=((ci)/sx+.5)*mbH;
+const dpr=Math.min(devicePixelRatio||1,2);
+const px=((cr-mb4cX)/mb4span+.5)*mbW*dpr,py=((ci-mb4cY)/mb4span+.5)*mbH*dpr;
+mbCtx.setTransform(1,0,0,1,0,0);
 /* Glow ring */
 mbCtx.shadowColor='rgba(224,136,152,.5)';mbCtx.shadowBlur=10;
 mbCtx.strokeStyle='rgba(224,136,152,.7)';mbCtx.lineWidth=1.5;
@@ -1158,39 +1396,56 @@ mbCtx.shadowBlur=0;
 mbCtx.strokeStyle='rgba(255,255,255,.25)';mbCtx.lineWidth=.5;
 mbCtx.beginPath();mbCtx.moveTo(px-12,py);mbCtx.lineTo(px+12,py);mbCtx.moveTo(px,py-12);mbCtx.lineTo(px,py+12);mbCtx.stroke()}
 
-/* ═══ JULIA SET (right panel) ═══ */
+/* ═══ JULIA SET (right panel) — zoomable, adaptive iterations ═══ */
 const jC=document.getElementById('s4_juliaCanvas'),jCtx=jC.getContext('2d');
-let jW,jH;
+let jW,jH,jCX=0,jCY=0,jSpan=3,curJCr=-.7454,curJCi=.113;
 function resizeJ(){const d=Math.min(devicePixelRatio||1,2);jW=jC.clientWidth;jH=jC.clientHeight;jC.width=jW*d;jC.height=jH*d;jCtx.setTransform(d,0,0,d,0,0)}
 
-function renderJulia(cr,ci){resizeJ();
-const id=jCtx.createImageData(Math.ceil(jW),Math.ceil(jH)),d=id.data,cw=Math.ceil(jW),ch=Math.ceil(jH),mx=350,span=3;
+function renderJulia(cr,ci){if(cr!==undefined){curJCr=cr;curJCi=ci;jCX=0;jCY=0;jSpan=3}
+const dpr=Math.min(devicePixelRatio||1,2);
+const cw0=jC.clientWidth,ch0=jC.clientHeight;
+jC.width=cw0*dpr;jC.height=ch0*dpr;jW=cw0;jH=ch0;
+jCtx.setTransform(1,0,0,1,0,0);
+const maxIt=Math.floor(350+200*Math.log2(Math.max(1,3/jSpan)));
+const cw=Math.ceil(cw0*dpr),ch=Math.ceil(ch0*dpr);
+const id=jCtx.createImageData(cw,ch),d=id.data;
 for(let py=0;py<ch;py++)for(let px=0;px<cw;px++){
-let x=(px/cw-.5)*span,y=(py/ch-.5)*span,it=0;
-while(x*x+y*y<=4&&it<mx){const xt=x*x-y*y+cr;y=2*x*y+ci;x=xt;it++}
+let x=jCX+(px/cw-.5)*jSpan,y=jCY+(py/ch-.5)*jSpan,xx=x*x,yy=y*y,it=0;
+while(xx+yy<=256&&it<maxIt){y=2*x*y+curJCi;x=xx-yy+curJCr;xx=x*x;yy=y*y;it++}
 const i=(py*cw+px)*4;
-if(it===mx){d[i]=6;d[i+1]=5;d[i+2]=14;d[i+3]=255}
-else{const lz=Math.log(x*x+y*y)/2,nu=Math.log(lz/Math.log(2))/Math.log(2),t=Math.max(0,Math.min(1,((it+1-nu)/mx)*4%1));
+if(it===maxIt){d[i]=6;d[i+1]=5;d[i+2]=14;d[i+3]=255}
+else{const lz=Math.log(xx+yy)/2,nu=Math.log(lz/Math.LN2)/Math.LN2;
+const sm=(it+1-nu)/maxIt;const t=sm-Math.floor(sm);
 const[r,g,b]=palRose(t);d[i]=r;d[i+1]=g;d[i+2]=b;d[i+3]=255}}
 jCtx.putImageData(id,0,0);
-drawMarker(cr,ci);
-document.getElementById('s4_juliaC').textContent=cr.toFixed(4)+' '+(ci>=0?'+':'−')+' '+Math.abs(ci).toFixed(4)+'i';
-let x=0,y=0;for(let i=0;i<500;i++){const xt=x*x-y*y+cr;y=2*x*y+ci;x=xt;if(x*x+y*y>4){document.getElementById('s4_juliaConn').textContent='No';document.getElementById('s4_juliaInM').textContent='No';return}}
+drawMarker(curJCr,curJCi);
+document.getElementById('s4_juliaC').textContent=curJCr.toFixed(4)+' '+(curJCi>=0?'+':'−')+' '+Math.abs(curJCi).toFixed(4)+'i';
+let x=0,y=0;for(let i=0;i<500;i++){const xt=x*x-y*y+curJCr;y=2*x*y+curJCi;x=xt;if(x*x+y*y>4){document.getElementById('s4_juliaConn').textContent='No';document.getElementById('s4_juliaInM').textContent='No';return}}
 document.getElementById('s4_juliaConn').textContent='Yes';document.getElementById('s4_juliaInM').textContent='Yes'}
 
 renderJulia(-.7454,.113);
 
+/* Wheel zoom on Julia panel */
+jC.addEventListener('wheel',e=>{e.preventDefault();const r=jC.getBoundingClientRect(),mx=(e.clientX-r.left)/r.width,my=(e.clientY-r.top)/r.height;
+const factor=e.deltaY>0?1.4:.7;const cx0=jCX+(mx-.5)*jSpan,cy0=jCY+(my-.5)*jSpan;
+jSpan*=factor;jCX=cx0-(mx-.5)*jSpan;jCY=cy0-(my-.5)*jSpan;renderJulia()},{passive:false});
+addDragPan(jC,()=>({cX:jCX,cY:jCY,spanX:jSpan}),st=>{jCX=st.cX;jCY=st.cY;jSpan=st.spanX},()=>renderJulia());
+
 mbC.addEventListener('click',e=>{const r=mbC.getBoundingClientRect(),mx=(e.clientX-r.left)/r.width,my=(e.clientY-r.top)/r.height;
-const sx=3.2,cr=-.5+(mx-.5)*sx,ci=(my-.5)*sx;
+const cr=mb4cX+(mx-.5)*mb4span,ci=mb4cY+(my-.5)*mb4span;
 document.querySelectorAll('.btn-row .btn').forEach(b=>b.classList.remove('active'));renderJulia(cr,ci)});
-mbC.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0],r=mbC.getBoundingClientRect(),mx=(t.clientX-r.left)/r.width,my=(t.clientY-r.top)/r.height;
-const sx=3.2,cr=-.5+(mx-.5)*sx,ci=(my-.5)*sx;renderJulia(cr,ci)},{passive:false});
+mbC.addEventListener('touchstart',e=>{if(e.touches.length===1){e.preventDefault();const t=e.touches[0],r=mbC.getBoundingClientRect(),mx=(t.clientX-r.left)/r.width,my=(t.clientY-r.top)/r.height;
+const cr=mb4cX+(mx-.5)*mb4span,ci=mb4cY+(my-.5)*mb4span;renderJulia(cr,ci)}},{passive:false});
 
 document.querySelectorAll('[data-c]').forEach(b=>{b.addEventListener('click',()=>{
 document.querySelectorAll('.btn-row .btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');
 const[cr,ci]=b.dataset.c.split(',').map(Number);renderJulia(cr,ci)})});
 
-window.addEventListener('resize',()=>{renderMB();renderJulia(-.7454,.113)});
+window.addEventListener('resize',()=>{renderMB();renderJulia()});
+document.getElementById('s4_resetDual').addEventListener('click',()=>{
+mb4cX=-.55;mb4cY=0;mb4span=2.8;jCX=0;jCY=0;jSpan=3;renderMB();renderJulia(-.7454,.113);
+document.querySelectorAll('[data-c]').forEach(b=>b.classList.remove('active'));
+document.querySelector('[data-c="-0.7454,0.1130"]').classList.add('active')});
 
 
 
@@ -1212,7 +1467,11 @@ ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);
 ctx.strokeStyle=`hsla(${hue},${sat}%,${lit}%,${alpha})`;ctx.lineWidth=Math.max(.3,depth*.35);ctx.stroke();
 drawTree(x2,y2,len*.72,angle-.4,depth-1,maxD);drawTree(x2,y2,len*.72,angle+.4,depth-1,maxD)}
 function render(){ctx.clearRect(0,0,w,h);drawTree(w*.35,h*.9,h*.2,-Math.PI/2,12,12);drawTree(w*.65,h*.9,h*.18,-Math.PI/2,11,11)}
-render();window.addEventListener('resize',()=>{resize();render()})})();
+let s5hDone=false;
+const s5hObs=new IntersectionObserver(es=>{es.forEach(e=>{
+if(e.isIntersecting&&!s5hDone){s5hDone=true;render()}})},{threshold:0.01});
+s5hObs.observe(c.closest('.hero-section')||c);
+window.addEventListener('resize',()=>{resize();if(s5hDone)render()})})();
 
 /* ═══ BARNSLEY FERN ═══ */
 (function(){const c=document.getElementById('s5_fernCanvas'),ctx=c.getContext('2d');let w,h;
@@ -1259,40 +1518,296 @@ document.getElementById('s5_treeAngle').addEventListener('input',function(){docu
 document.getElementById('s5_treeDepth').addEventListener('input',function(){document.getElementById('s5_treeDepthVal').textContent=this.value;draw()});
 window.addEventListener('resize',draw)})();
 
-/* ═══ BIFURCATION — warm HSL palette ═══ */
-(function(){const c=document.getElementById('s5_bifCanvas'),ctx=c.getContext('2d');let w,h;
-let rMin=2.5,rMax=4.0;
-function resize(){const d=Math.min(devicePixelRatio||1,2);w=c.clientWidth;h=c.clientHeight;c.width=w*d;c.height=h*d;ctx.setTransform(d,0,0,d,0,0)}
-function draw(){resize();ctx.clearRect(0,0,w,h);
-const steps=Math.min(w*2,900),settle=350,plot=250;
+/* ═══ BIFURCATION — hi-res, animated sweep, wheel zoom ═══ */
+(function(){const c=document.getElementById('s5_bifCanvas'),ctx=c.getContext('2d');
+let rMin=2.5,rMax=4.0,xMin=0,xMax=1,FW,FH;
+function resize(){const dpr=Math.min(devicePixelRatio||1,2);
+FW=c.clientWidth*dpr;FH=c.clientHeight*dpr;
+c.width=FW;c.height=FH;ctx.setTransform(1,0,0,1,0,0)}
+let bifImg=null;
+function draw(){resize();ctx.clearRect(0,0,FW,FH);
+const steps=Math.min(FW,1200),settle=400,plot=300;
+const id=ctx.createImageData(FW,FH),d=id.data;
 for(let i=0;i<steps;i++){const r=rMin+(rMax-rMin)*i/steps;let x=.5;
 for(let j=0;j<settle;j++)x=r*x*(1-x);
 for(let j=0;j<plot;j++){x=r*x*(1-x);
-const px=i/steps*w,py=h-x*h;
-/* Hue shifts from gold (chaotic regions) to cool (periodic) */
-const hue=35+15*x;const alpha=.12+.06*Math.sin(j*.3);
-ctx.fillStyle=`hsla(${hue},50%,55%,${alpha})`;ctx.fillRect(px,py,.8,.8)}}
-document.getElementById('s5_bifRange').textContent='r ∈ ['+rMin.toFixed(3)+', '+rMax.toFixed(3)+']'}
+const px=Math.floor(i/steps*FW),py=Math.floor(FH-(x-xMin)/(xMax-xMin)*FH);
+if(py>=0&&py<FH&&px>=0&&px<FW){
+const idx=(py*FW+px)*4;
+const hue=30+20*x,bri=Math.min(255,(d[idx+1]||0)+35);
+d[idx]=Math.min(255,(d[idx]||0)+25+Math.floor(30*x));
+d[idx+1]=bri;d[idx+2]=Math.min(255,(d[idx+2]||0)+12);
+d[idx+3]=255}}}
+ctx.putImageData(id,0,0);bifImg=ctx.getImageData(0,0,FW,FH);
+document.getElementById('s5_bifRange').textContent='r ∈ ['+rMin.toFixed(4)+', '+rMax.toFixed(4)+']'}
 draw();
-let dragging=false,startX=0,selRect=null;
-c.addEventListener('mousedown',e=>{dragging=true;startX=(e.clientX-c.getBoundingClientRect().left)/c.clientWidth;selRect=null});
+/* Animated sweep line — shows the orbit in real time */
+let sweepR=rMin,sweepAnim=null,sweeping=false;
+function drawSweep(){
+if(!bifImg||!sweeping)return;
+ctx.putImageData(bifImg,0,0);
+const rx=(sweepR-rMin)/(rMax-rMin)*FW;
+/* Vertical line */
+ctx.strokeStyle='rgba(201,168,76,.5)';ctx.lineWidth=1;ctx.setLineDash([4,4]);
+ctx.beginPath();ctx.moveTo(rx,0);ctx.lineTo(rx,FH);ctx.stroke();ctx.setLineDash([]);
+/* Compute and draw the orbit at this r */
+let x=.5;for(let i=0;i<500;i++)x=sweepR*x*(1-x);
+const pts=[];for(let i=0;i<64;i++){x=sweepR*x*(1-x);pts.push(x)}
+const unique=[];pts.forEach(p=>{if(!unique.some(u=>Math.abs(u-p)<.001))unique.push(p)});
+unique.forEach(p=>{
+const py=FH-(p-xMin)/(xMax-xMin)*FH;
+ctx.beginPath();ctx.arc(rx,py,4,0,Math.PI*2);
+ctx.fillStyle='rgba(212,168,83,.9)';ctx.shadowColor='rgba(212,168,83,.5)';ctx.shadowBlur=8;
+ctx.fill();ctx.shadowBlur=0});
+/* r label */
+ctx.fillStyle='rgba(212,168,83,.8)';ctx.font=`${11*FW/c.clientWidth}px "JetBrains Mono",monospace`;
+ctx.textAlign='center';ctx.fillText('r = '+sweepR.toFixed(4),rx,15*FW/c.clientWidth);
+sweepR+=.0008*(rMax-rMin);
+if(sweepR>rMax)sweepR=rMin;
+if(!_paused&&sweeping)sweepAnim=requestAnimationFrame(drawSweep)}
+_onResume.push(()=>{if(sweeping)drawSweep()});
+/* Start sweep when visible */
+const bifObs=new IntersectionObserver(es=>{es.forEach(e=>{
+if(e.isIntersecting&&!sweeping){sweeping=true;sweepR=rMin;drawSweep()}
+else if(!e.isIntersecting){sweeping=false;if(sweepAnim)cancelAnimationFrame(sweepAnim)}})},{threshold:.3});
+bifObs.observe(c);
+/* Wheel zoom — re-render at full resolution */
+c.addEventListener('wheel',e=>{e.preventDefault();
+const rect=c.getBoundingClientRect(),mx=(e.clientX-rect.left)/rect.width;
+const factor=e.deltaY>0?1.3:.7;
+const rAt=rMin+mx*(rMax-rMin);
+const newSpan=(rMax-rMin)*factor;
+rMin=rAt-mx*newSpan;rMax=rAt+(1-mx)*newSpan;
+if(rMax-rMin>2){rMin=2.5;rMax=4;xMin=0;xMax=1}
+draw();},{passive:false});
+/* Drag to zoom */
+let dragging=false,startX=0;
+c.addEventListener('mousedown',e=>{dragging=true;startX=(e.clientX-c.getBoundingClientRect().left)/c.clientWidth});
 c.addEventListener('mousemove',e=>{if(!dragging)return;const curX=(e.clientX-c.getBoundingClientRect().left)/c.clientWidth;
-/* Draw selection rectangle */
-draw();const lo=Math.min(startX,curX)*w,hi=Math.max(startX,curX)*w;
-ctx.fillStyle='rgba(201,168,76,.06)';ctx.fillRect(lo,0,hi-lo,h);
-ctx.strokeStyle='rgba(201,168,76,.25)';ctx.lineWidth=1;ctx.setLineDash([4,4]);ctx.strokeRect(lo,0,hi-lo,h);ctx.setLineDash([])});
+if(bifImg)ctx.putImageData(bifImg,0,0);
+const lo=Math.min(startX,curX)*FW,hi=Math.max(startX,curX)*FW;
+ctx.fillStyle='rgba(201,168,76,.06)';ctx.fillRect(lo,0,hi-lo,FH);
+ctx.strokeStyle='rgba(201,168,76,.3)';ctx.lineWidth=1;ctx.setLineDash([4,4]);ctx.strokeRect(lo,0,hi-lo,FH);ctx.setLineDash([])});
 c.addEventListener('mouseup',e=>{if(!dragging)return;dragging=false;
 const endX=(e.clientX-c.getBoundingClientRect().left)/c.clientWidth;
 const lo=Math.min(startX,endX),hi=Math.max(startX,endX);
-if(hi-lo<.02){draw();return}
-const newRMin=rMin+lo*(rMax-rMin),newRMax=rMin+hi*(rMax-rMin);
-rMin=newRMin;rMax=newRMax;draw()});
-document.getElementById('s5_bifReset').addEventListener('click',()=>{rMin=2.5;rMax=4;draw()});
+if(hi-lo<.02){return}
+const nr0=rMin+lo*(rMax-rMin),nr1=rMin+hi*(rMax-rMin);
+rMin=nr0;rMax=nr1;draw()});
+document.getElementById('s5_bifReset').addEventListener('click',()=>{rMin=2.5;rMax=4;xMin=0;xMax=1;draw()});
 window.addEventListener('resize',draw)})();
 
 /* ═══ SCROLL REVEAL ═══ */
 
 
+
+
+/* ═══ MLC CONJECTURE INTERACTIVE — deep zoom into satellite ═══ */
+(function(){const canvas=document.getElementById('s3_mlcCanvas'),ctx=canvas.getContext('2d');
+let FW,FH,cX=-.1528,cY=1.0397,spanX=.15;
+/* A satellite mini-Mandelbrot near the tip of a filament */
+const presets={
+reset:{x:-.55,y:0,s:2.8},
+filament:{x:-.1011,y:.9563,s:.025},
+satellite:{x:-.1528,y:1.0397,s:.003}};
+function getMaxIt(){return Math.floor(300+250*Math.log2(Math.max(1,2.8/spanX)))}
+function resize(){const dpr=Math.min(devicePixelRatio||1,2);
+FW=canvas.clientWidth*dpr;FH=canvas.clientHeight*dpr;
+canvas.width=FW;canvas.height=FH;ctx.setTransform(1,0,0,1,0,0)}
+function render(){resize();const maxIt=getMaxIt(),spanY=spanX*(canvas.clientHeight/canvas.clientWidth);
+const id=ctx.createImageData(FW,FH),d=id.data;
+for(let py=0;py<FH;py++)for(let px=0;px<FW;px++){
+const x0=cX+(px/FW-.5)*spanX,y0=cY+(py/FH-.5)*spanY;
+let x=0,y=0,xx=0,yy=0,it=0;
+while(xx+yy<=256&&it<maxIt){y=2*x*y+y0;x=xx-yy+x0;xx=x*x;yy=y*y;it++}
+const i=(py*FW+px)*4;
+if(it===maxIt){d[i]=6;d[i+1]=5;d[i+2]=18;d[i+3]=255}
+else{const lz=Math.log(xx+yy)/2,nu=Math.log(lz/Math.LN2)/Math.LN2;
+const sm=(it+1-nu)/maxIt;const t=sm-Math.floor(sm);
+/* Cool blue-violet palette for MLC */
+const h=(220+180*t)%360,s2=60+30*Math.sin(t*3.14),l2=10+60*Math.pow(t,.6);
+const c2=s2/100*(1-Math.abs(2*l2/100-1)),x2=c2*(1-Math.abs((h/60)%2-1)),m=l2/100-c2/2;
+let r,g,b;
+if(h<60){r=c2;g=x2;b=0}else if(h<120){r=x2;g=c2;b=0}
+else if(h<180){r=0;g=c2;b=x2}else if(h<240){r=0;g=x2;b=c2}
+else if(h<300){r=x2;g=0;b=c2}else{r=c2;g=0;b=x2}
+d[i]=(r+m)*255|0;d[i+1]=(g+m)*255|0;d[i+2]=(b+m)*255|0;d[i+3]=255}}
+ctx.putImageData(id,0,0);
+const zoom=(2.8/spanX);
+document.getElementById('s3_mlcZoom').textContent=(zoom<10?zoom.toFixed(1):zoom.toExponential(1))+'×';
+document.getElementById('s3_mlcCenter').textContent=cX.toFixed(6)+' + '+cY.toFixed(6)+'i';
+document.getElementById('s3_mlcDepth').textContent=maxIt+' iterations'}
+render();
+canvas.addEventListener('wheel',e=>{e.preventDefault();
+const rect=canvas.getBoundingClientRect(),mx=(e.clientX-rect.left)/rect.width,my=(e.clientY-rect.top)/rect.height;
+const factor=e.deltaY>0?1.5:.6;const spanY=spanX*(canvas.clientHeight/canvas.clientWidth);
+const cx0=cX+(mx-.5)*spanX,cy0=cY+(my-.5)*spanY;
+spanX*=factor;cX=cx0-(mx-.5)*spanX;cY=cy0-(my-.5)*spanY;render()},{passive:false});
+canvas.addEventListener('dblclick',e=>{const rect=canvas.getBoundingClientRect(),mx=(e.clientX-rect.left)/rect.width,my=(e.clientY-rect.top)/rect.height;
+const spanY=spanX*(canvas.clientHeight/canvas.clientWidth);
+cX+=(mx-.5)*spanX;cY+=(my-.5)*spanY;spanX*=.4;render()});
+canvas.addEventListener('contextmenu',e=>{e.preventDefault();spanX*=2.5;render()});
+addDragPan(canvas,()=>({cX,cY,spanX}),st=>{cX=st.cX;cY=st.cY;spanX=st.spanX},render);
+function goTo(p){cX=p.x;cY=p.y;spanX=p.s;render()}
+document.getElementById('s3_mlcReset').addEventListener('click',()=>goTo(presets.reset));
+document.getElementById('s3_mlcFilament').addEventListener('click',()=>goTo(presets.filament));
+document.getElementById('s3_mlcSatellite').addEventListener('click',()=>goTo(presets.satellite));
+window.addEventListener('resize',render)})();
+
+
+/* ═══ DRAG-TO-PAN UTILITY ═══ */
+function addDragPan(canvas,getState,setState,onDone){
+let dragging=false,lastX=0,lastY=0;
+canvas.addEventListener('mousedown',e=>{
+if(e.button!==0)return;dragging=true;lastX=e.clientX;lastY=e.clientY;canvas.style.cursor='grabbing';e.preventDefault()});
+window.addEventListener('mousemove',e=>{if(!dragging)return;
+const dx=e.clientX-lastX,dy=e.clientY-lastY;lastX=e.clientX;lastY=e.clientY;
+const st=getState(),rect=canvas.getBoundingClientRect();
+const spanY=st.spanX*(rect.height/rect.width);
+st.cX-=dx/rect.width*st.spanX;st.cY-=dy/rect.height*spanY;
+setState(st);if(onDone)onDone()});
+window.addEventListener('mouseup',()=>{if(dragging){dragging=false;canvas.style.cursor='crosshair'}})}
+
+
+/* ═══ NEWTON FRACTAL — z³ = 1, infinite zoom ═══ */
+(function(){const canvas=document.getElementById('s3_newtonCanvas'),ctx=canvas.getContext('2d');
+let FW,FH,nCX=0,nCY=0,nSpan=3.5;
+const roots=[[1,0],[-.5,Math.sqrt(3)/2],[-.5,-Math.sqrt(3)/2]];
+/* Vivid colors for 3 roots — teal, gold, rose */
+const rootColors=[
+  [20,180,170],[200,165,60],[190,75,100]
+];
+function getMaxIt(){return Math.floor(40+30*Math.log2(Math.max(1,3.5/nSpan)))}
+function resize(){const dpr=Math.min(devicePixelRatio||1,2);
+FW=canvas.clientWidth*dpr;FH=canvas.clientHeight*dpr;
+canvas.width=FW;canvas.height=FH;ctx.setTransform(1,0,0,1,0,0)}
+
+function render(){resize();const maxIt=getMaxIt(),spanY=nSpan*(canvas.clientHeight/canvas.clientWidth);
+const id=ctx.createImageData(FW,FH),d=id.data;
+const tol=1e-6;
+for(let py=0;py<FH;py++)for(let px=0;px<FW;px++){
+let zr=nCX+(px/FW-.5)*nSpan,zi=nCY+(py/FH-.5)*spanY;
+let it=0,root=-1;
+for(;it<maxIt;it++){
+  /* Newton step for f(z)=z³-1: z_new = z - f(z)/f'(z) = z - (z³-1)/(3z²) = (2z³+1)/(3z²) */
+  const zr2=zr*zr,zi2=zi*zi,zr3=zr*zr2-3*zr*zi2,zi3=3*zr2*zi-zi*zi2;
+  /* f(z) = z³-1 */
+  const fr=zr3-1,fi=zi3;
+  /* f'(z) = 3z² */
+  const dr=3*(zr2-zi2),di=6*zr*zi;
+  /* f/f' division: (fr+fi*i)/(dr+di*i) */
+  const denom=dr*dr+di*di;
+  if(denom<1e-30)break;
+  const qr=(fr*dr+fi*di)/denom,qi=(fi*dr-fr*di)/denom;
+  zr-=qr;zi-=qi;
+  /* Check convergence to roots */
+  for(let k=0;k<3;k++){
+    const dx=zr-roots[k][0],dy=zi-roots[k][1];
+    if(dx*dx+dy*dy<tol){root=k;break}}
+  if(root>=0)break}
+const i=(py*FW+px)*4;
+if(root>=0){
+  const t=1-it/maxIt;
+  const bright=.3+.7*Math.pow(t,.5);
+  d[i]=Math.floor(rootColors[root][0]*bright);
+  d[i+1]=Math.floor(rootColors[root][1]*bright);
+  d[i+2]=Math.floor(rootColors[root][2]*bright);
+  d[i+3]=255}
+else{d[i]=8;d[i+1]=8;d[i+2]=15;d[i+3]=255}}
+ctx.putImageData(id,0,0);
+const zoom=3.5/nSpan;
+document.getElementById('s3_newtonZoom').textContent=(zoom<10?zoom.toFixed(1):zoom.toExponential(1))+'×';
+document.getElementById('s3_newtonCenter').textContent=nCX.toFixed(6)+' + '+nCY.toFixed(6)+'i';
+document.getElementById('s3_newtonIter').textContent=maxIt}
+
+/* Lazy load */
+let _nDone=false;
+const _nObs=new IntersectionObserver(es=>{es.forEach(e=>{
+if(e.isIntersecting&&!_nDone){_nDone=true;render()}})},{threshold:0.01});
+_nObs.observe(canvas.closest('.chapter-section')||canvas);
+
+/* Wheel zoom */
+canvas.addEventListener('wheel',e=>{e.preventDefault();
+const rect=canvas.getBoundingClientRect(),mx=(e.clientX-rect.left)/rect.width,my=(e.clientY-rect.top)/rect.height;
+const factor=e.deltaY>0?1.5:.6;const spanY=nSpan*(canvas.clientHeight/canvas.clientWidth);
+const cx0=nCX+(mx-.5)*nSpan,cy0=nCY+(my-.5)*spanY;
+nSpan*=factor;nCX=cx0-(mx-.5)*nSpan;nCY=cy0-(my-.5)*spanY;render()},{passive:false});
+/* Dblclick zoom */
+canvas.addEventListener('dblclick',e=>{const rect=canvas.getBoundingClientRect(),mx=(e.clientX-rect.left)/rect.width,my=(e.clientY-rect.top)/rect.height;
+const spanY=nSpan*(canvas.clientHeight/canvas.clientWidth);
+nCX+=(mx-.5)*nSpan;nCY+=(my-.5)*spanY;nSpan*=.4;render()});
+canvas.addEventListener('contextmenu',e=>{e.preventDefault();nSpan*=2.5;if(nSpan>4){nCX=0;nCY=0;nSpan=3.5}render()});
+/* Drag pan */
+addDragPan(canvas,()=>({cX:nCX,cY:nCY,spanX:nSpan}),st=>{nCX=st.cX;nCY=st.cY;nSpan=st.spanX},render);
+/* Presets */
+const nPresets={
+reset:{x:0,y:0,s:3.5},
+boundary:{x:.4,y:.35,s:.15},
+spiral:{x:-.15,y:.86,s:.02}};
+function goTo(p){nCX=p.x;nCY=p.y;nSpan=p.s;render()}
+document.getElementById('s3_newtonReset').addEventListener('click',()=>goTo(nPresets.reset));
+document.getElementById('s3_newtonBoundary').addEventListener('click',()=>goTo(nPresets.boundary));
+document.getElementById('s3_newtonSpiral').addEventListener('click',()=>goTo(nPresets.spiral));
+window.addEventListener('resize',()=>{if(_nDone)render()})})();
+
+/* ═══ BURNING SHIP FRACTAL — zoomable, adaptive iterations ═══ */
+(function(){const canvas=document.getElementById('s3_bshipCanvas'),ctx=canvas.getContext('2d');
+let FW,FH,cX=-.45,cY=-.55,spanX=3.5;
+const presets={
+reset:{x:-.45,y:-.55,s:3.5},
+armada:{x:-1.756,y:-.028,s:.06},
+flame:{x:-1.762,y:-.028,s:.008}};
+function getMaxIt(){return Math.floor(200+200*Math.log2(Math.max(1,3.5/spanX)))}
+function render(){const dpr=Math.min(devicePixelRatio||1,2);
+const cw0=canvas.clientWidth,ch0=canvas.clientHeight;
+FW=cw0*dpr;FH=ch0*dpr;canvas.width=FW;canvas.height=FH;
+ctx.setTransform(1,0,0,1,0,0);
+const maxIt=getMaxIt(),spanY=spanX*(ch0/cw0);
+const id=ctx.createImageData(FW,FH),d=id.data;
+for(let py=0;py<FH;py++)for(let px=0;px<FW;px++){
+const x0=cX+(px/FW-.5)*spanX,y0=cY+(py/FH-.5)*spanY;
+let x=0,y=0,it=0;
+while(x*x+y*y<=256&&it<maxIt){
+const xn=x*x-y*y+x0;
+y=Math.abs(2*x*y)+y0;
+x=xn;it++}
+const i=(py*FW+px)*4;
+if(it===maxIt){d[i]=4;d[i+1]=3;d[i+2]=10;d[i+3]=255}
+else{const lz=Math.log(x*x+y*y)/2,nu=Math.log(lz/Math.LN2)/Math.LN2;
+const sm=(it+1-nu)/maxIt;const t=sm-Math.floor(sm);
+/* Warm ember palette — oranges, crimsons, golds */
+const h=(30+60*t)%360,s2=60+35*Math.sin(t*3.14),l2=8+62*Math.pow(t,.55);
+const c2=s2/100*(1-Math.abs(2*l2/100-1)),x2=c2*(1-Math.abs((h/60)%2-1)),m=l2/100-c2/2;
+let r,g,b;
+if(h<60){r=c2;g=x2;b=0}else if(h<120){r=x2;g=c2;b=0}
+else if(h<180){r=0;g=c2;b=x2}else if(h<240){r=0;g=x2;b=c2}
+else if(h<300){r=x2;g=0;b=c2}else{r=c2;g=0;b=x2}
+d[i]=(r+m)*255|0;d[i+1]=(g+m)*255|0;d[i+2]=(b+m)*255|0;d[i+3]=255}}
+ctx.putImageData(id,0,0);
+const zoom=(3.5/spanX);
+document.getElementById('s3_bshipZoom').textContent=(zoom<10?zoom.toFixed(1):zoom.toExponential(1))+'×';
+document.getElementById('s3_bshipCenter').textContent=cX.toFixed(6)+' + '+cY.toFixed(6)+'i';
+document.getElementById('s3_bshipIter').textContent=maxIt}
+render();
+/* Wheel zoom */
+canvas.addEventListener('wheel',e=>{e.preventDefault();
+const rect=canvas.getBoundingClientRect(),mx=(e.clientX-rect.left)/rect.width,my=(e.clientY-rect.top)/rect.height;
+const factor=e.deltaY>0?1.5:.6;const spanY=spanX*(canvas.clientHeight/canvas.clientWidth);
+const cx0=cX+(mx-.5)*spanX,cy0=cY+(my-.5)*spanY;
+spanX*=factor;cX=cx0-(mx-.5)*spanX;cY=cy0-(my-.5)*spanY;render()},{passive:false});
+/* Dblclick zoom */
+canvas.addEventListener('dblclick',e=>{const rect=canvas.getBoundingClientRect(),mx=(e.clientX-rect.left)/rect.width,my=(e.clientY-rect.top)/rect.height;
+const spanY=spanX*(canvas.clientHeight/canvas.clientWidth);
+cX+=(mx-.5)*spanX;cY+=(my-.5)*spanY;spanX*=.4;render()});
+canvas.addEventListener('contextmenu',e=>{e.preventDefault();spanX*=2.5;render()});
+/* Drag pan */
+addDragPan(canvas,()=>({cX,cY,spanX}),st=>{cX=st.cX;cY=st.cY;spanX=st.spanX},render);
+/* Presets */
+function goTo(p){cX=p.x;cY=p.y;spanX=p.s;render()}
+document.getElementById('s3_bshipReset').addEventListener('click',()=>goTo(presets.reset));
+document.getElementById('s3_bshipArmada').addEventListener('click',()=>goTo(presets.armada));
+document.getElementById('s3_bshipFlame').addEventListener('click',()=>goTo(presets.flame));
+window.addEventListener('resize',render)})();
 
 /* ═══ GLOBAL SCROLL REVEAL ═══ */
 const globalObs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});},{threshold:.08});
@@ -1302,6 +1817,7 @@ document.querySelectorAll('.chapter-section, .ref-section, .coda-section').forEa
 /* ═══ PAN / ZOOM SYSTEM ═══ */
 (function(){
   document.querySelectorAll('.ibox .canvas-wrap').forEach(wrap=>{
+    if(wrap.dataset.nopz!==undefined)return;
     const canvas = wrap.querySelector('canvas');
     if(!canvas) return;
     
