@@ -1,0 +1,2171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>The Quantum Shortcut — Mellow Math</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-deep: #05060b;
+  --bg-mid: #0a0d18;
+  --bg-card: rgba(255,255,255,0.02);
+  --bg-card-hover: rgba(255,255,255,0.04);
+  --border-subtle: rgba(255,255,255,0.06);
+  --border-hover: rgba(111, 168, 220, 0.2);
+  --text-primary: #e8e4df;
+  --text-secondary: rgba(232, 228, 223, 0.55);
+  --text-dim: rgba(232, 228, 223, 0.3);
+  --accent-quantum: #6fa8dc;
+  --accent-warm: #d4a574;
+  --accent-glow: #88c0f0;
+  --accent-entangle: #c084fc;
+  --accent-measure: #f09070;
+  --accent-green: #7ecf8b;
+  --serif: 'Cormorant Garamond', 'Georgia', serif;
+  --sans: 'DM Sans', 'Helvetica Neue', sans-serif;
+}
+
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+body { background: var(--bg-deep); color: var(--text-primary); font-family: var(--sans); overflow-x: hidden; min-height: 100vh; }
+
+/* ═══ READING PROGRESS BAR ═══ */
+.progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(to right, var(--accent-quantum), var(--accent-entangle)); z-index: 100; width: 0%; transition: width 0.1s linear; pointer-events: none; }
+
+/* ═══ SECTION DIVIDER GLOW ═══ */
+.section-transition { width: 100%; height: 1px; background: linear-gradient(to right, transparent, rgba(111,168,220,0.08) 30%, rgba(192,132,252,0.06) 70%, transparent); margin: 0; }
+
+/* ═══ DROP CAP ═══ */
+.prose.drop-cap::first-letter { font-family: var(--serif); float: left; font-size: 3.2em; line-height: 0.8; padding-right: 0.08em; padding-top: 0.07em; color: var(--accent-glow); font-weight: 300; }
+
+/* ═══ FLOATING BRAND BADGE (matches edu.kimsh.kr/threebody.html) ═══ */
+.floating-brand { position: fixed; bottom: 1.5rem; left: 1.5rem; z-index: 90; pointer-events: auto; }
+.floating-brand a { font-family: var(--sans); font-size: 0.68rem; font-weight: 500; letter-spacing: 0.08em; color: #a0ffcc; text-decoration: none; text-shadow: 0 0 12px rgba(160,255,204,0.3), 0 0 30px rgba(160,255,204,0.1); transition: all 0.3s; opacity: 0.7; }
+.floating-brand a:hover { opacity: 1; text-shadow: 0 0 16px rgba(160,255,204,0.5), 0 0 40px rgba(160,255,204,0.2); }
+@media (max-width: 600px) { .floating-brand { bottom: 1rem; left: 1rem; } .floating-brand a { font-size: 0.6rem; } }
+
+/* ═══ TOP BAR (matches threebody.html) ═══ */
+.top-bar { position: absolute; top: 0; left: 0; right: 0; z-index: 10; display: flex; justify-content: center; align-items: center; padding: 1.5rem 2rem; opacity: 0; animation: fadeIn 1.5s ease 0.5s forwards; }
+.top-chapter { font-family: var(--sans); font-size: 0.7rem; font-weight: 400; letter-spacing: 0.14em; color: var(--text-dim); opacity: 0.6; }
+
+/* ═══ HERO ═══ */
+.hero { position: relative; width: 100%; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; justify-content: center; align-items: center; overflow: hidden; }
+.hero-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+.hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 40%, transparent 0%, var(--bg-deep) 100%), radial-gradient(ellipse 40% 30% at 30% 60%, rgba(111,168,220,0.03) 0%, transparent 70%), radial-gradient(ellipse 35% 25% at 70% 35%, rgba(192,132,252,0.03) 0%, transparent 70%); z-index: 1; pointer-events: none; }
+.hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 30vh; background: linear-gradient(to top, var(--bg-deep) 0%, transparent 100%); z-index: 1; pointer-events: none; }
+
+
+
+.hero-content { position: relative; z-index: 5; text-align: center; max-width: 860px; padding: 0 2rem; display: flex; flex-direction: column; align-items: center; }
+.hero-overline { font-family: var(--sans); font-size: 0.7rem; font-weight: 400; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent-quantum); opacity: 0; animation: fadeSlideUp 1.2s ease 1.0s forwards; margin-bottom: 1.6rem; }
+.hero-title { font-family: var(--serif); font-weight: 300; font-size: clamp(2.4rem, 6vw, 5rem); line-height: 1.15; color: var(--text-primary); opacity: 0; animation: fadeSlideUp 1.4s ease 1.3s forwards; margin-bottom: 0.3rem; }
+.hero-title em { font-style: italic; font-weight: 400; color: var(--accent-glow); text-shadow: 0 0 40px rgba(136,192,240,0.15); }
+.hero-title-line2 { font-family: var(--serif); font-weight: 300; font-size: clamp(1.4rem, 3.2vw, 2.6rem); line-height: 1.3; color: var(--text-secondary); opacity: 0; animation: fadeSlideUp 1.4s ease 1.6s forwards; margin-bottom: 2.5rem; }
+.hero-description { font-family: var(--sans); font-size: clamp(0.85rem, 1.5vw, 1rem); font-weight: 300; line-height: 1.8; color: var(--text-secondary); max-width: 540px; opacity: 0; animation: fadeSlideUp 1.2s ease 2.0s forwards; margin-bottom: 2.8rem; }
+.qubit-counter { display: flex; align-items: center; gap: 1.2rem; opacity: 0; animation: fadeSlideUp 1.0s ease 2.4s forwards; margin-bottom: 3rem; }
+.qubit-orb { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-quantum); box-shadow: 0 0 12px rgba(111,168,220,0.5); animation: pulse 3s ease-in-out infinite; }
+.qubit-orb:nth-child(2) { animation-delay: 0.5s; background: var(--accent-entangle); box-shadow: 0 0 12px rgba(192,132,252,0.5); }
+.qubit-orb:nth-child(4) { animation-delay: 1.0s; background: var(--accent-measure); box-shadow: 0 0 12px rgba(240,144,112,0.5); }
+.qubit-label { font-family: var(--sans); font-size: 0.7rem; letter-spacing: 0.1em; color: var(--text-dim); text-transform: uppercase; }
+
+.scroll-indicator { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 0.6rem; opacity: 0; animation: fadeIn 1.0s ease 3.0s forwards; }
+.scroll-indicator span { font-family: var(--sans); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-dim); }
+.scroll-line { width: 1px; height: 40px; background: linear-gradient(to bottom, var(--text-dim), transparent); animation: scrollPulse 2.5s ease-in-out infinite; }
+
+.hero-footer { position: absolute; bottom: 0; left: 0; right: 0; z-index: 10; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: flex-end; opacity: 0; animation: fadeIn 1.5s ease 2.8s forwards; pointer-events: none; }
+.author-info { pointer-events: auto; }
+.author-name { font-family: var(--serif); font-size: 0.95rem; font-weight: 400; color: var(--text-secondary); margin-bottom: 0.2rem; }
+.author-affiliation { font-family: var(--sans); font-size: 0.65rem; font-weight: 300; color: var(--text-dim); line-height: 1.6; }
+.author-affiliation a { color: var(--text-dim); text-decoration: none; transition: color 0.3s; }
+.author-affiliation a:hover { color: var(--text-secondary); }
+.hero-footer-right { text-align: right; pointer-events: auto; }
+.sound-toggle { background: none; border: 1px solid rgba(232,228,223,0.15); border-radius: 100px; padding: 0.35rem 0.9rem; font-family: var(--sans); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); cursor: pointer; transition: all 0.3s; }
+.sound-toggle:hover { border-color: rgba(232,228,223,0.3); color: var(--text-secondary); }
+.sound-toggle.active { border-color: rgba(111,168,220,0.4); color: var(--accent-quantum); }
+
+/* ═══ TEASER ═══ */
+.teaser-section { position: relative; padding: 8rem 2rem 6rem; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.teaser-quote { font-family: var(--serif); font-size: clamp(1.3rem, 3vw, 2.2rem); font-weight: 300; font-style: italic; line-height: 1.6; color: var(--text-primary); max-width: 680px; margin-bottom: 1.5rem; }
+.teaser-attribution { font-family: var(--sans); font-size: 0.8rem; font-weight: 400; color: var(--text-dim); letter-spacing: 0.05em; margin-bottom: 4rem; }
+.teaser-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; max-width: 800px; width: 100%; }
+.teaser-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 2rem 1.5rem; text-align: left; transition: all 0.4s ease; cursor: default; }
+.teaser-card:hover { background: var(--bg-card-hover); border-color: var(--border-hover); transform: translateY(-4px); }
+.teaser-card-icon { font-size: 1.5rem; margin-bottom: 1rem; display: block; }
+.teaser-card-title { font-family: var(--serif); font-size: 1.1rem; font-weight: 500; color: var(--text-primary); margin-bottom: 0.5rem; }
+.teaser-card-desc { font-family: var(--sans); font-size: 0.78rem; font-weight: 300; color: var(--text-dim); line-height: 1.6; }
+
+/* ═══ SECTION LAYOUT ═══ */
+.section { position: relative; padding: 7rem 2rem 8rem; max-width: 900px; margin: 0 auto; }
+.section::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 200vw; height: 100%; pointer-events: none; z-index: -1; }
+#section1::before { background: radial-gradient(ellipse 60% 40% at 50% 20%, rgba(111,168,220,0.015) 0%, transparent 70%); }
+#section2::before { background: radial-gradient(ellipse 60% 40% at 40% 50%, rgba(192,132,252,0.012) 0%, transparent 70%); }
+#section3::before { background: radial-gradient(ellipse 60% 40% at 60% 30%, rgba(126,207,139,0.012) 0%, transparent 70%); }
+#section4::before { background: radial-gradient(ellipse 60% 40% at 50% 40%, rgba(240,144,112,0.012) 0%, transparent 70%); }
+#section5::before { background: radial-gradient(ellipse 60% 40% at 50% 30%, rgba(192,132,252,0.01) 0%, transparent 70%); }
+#section6::before { background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(111,168,220,0.015) 0%, transparent 70%); }
+.section-number { font-family: var(--sans); font-size: 0.72rem; font-weight: 400; letter-spacing: 0.1em; color: var(--text-dim); opacity: 0.5; margin-bottom: 1.2rem; }
+.section-title { font-family: var(--serif); font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 300; line-height: 1.25; color: var(--text-primary); margin-bottom: 2.8rem; }
+.section-title em { font-style: italic; font-weight: 400; color: var(--accent-glow); }
+.prose { font-family: var(--sans); font-size: clamp(0.9rem, 1.4vw, 1.02rem); font-weight: 300; line-height: 2; color: var(--text-secondary); max-width: 640px; margin-bottom: 2.5rem; }
+.prose strong { font-weight: 500; color: var(--text-primary); }
+.prose .highlight { color: var(--accent-glow); font-weight: 400; }
+.section-divider { width: 40px; height: 1px; background: linear-gradient(to right, var(--border-subtle), rgba(111,168,220,0.15), var(--border-subtle)); margin: 4rem 0; }
+
+/* ═══ SECTION NEXT PROMPT ═══ */
+.next-prompt { color: var(--text-dim); font-size: 0.82rem; margin-top: 3.5rem; font-family: var(--serif); font-style: italic; letter-spacing: 0.02em; }
+.next-prompt .arrow { display: inline-block; animation: bobDown 2.5s ease-in-out infinite; margin-left: 0.3rem; font-style: normal; }
+@keyframes bobDown { 0%,100% { transform: translateY(0); } 50% { transform: translateY(4px); } }
+
+/* ═══ INTERACTIVE MODULES ═══ */
+.interactive-module { background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border: 1px solid var(--border-subtle); border-radius: 20px; padding: 2.5rem 2rem; margin: 3.5rem 0; transition: border-color 0.4s, box-shadow 0.4s; backdrop-filter: blur(1px); }
+.interactive-module:hover { border-color: rgba(111,168,220,0.12); box-shadow: 0 0 40px rgba(111,168,220,0.02); }
+.module-label { font-family: var(--sans); font-size: 0.58rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-quantum); opacity: 0.6; margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.6rem; }
+.module-label::before { content: ''; width: 12px; height: 1px; background: var(--accent-quantum); opacity: 0.4; }
+.module-title { font-family: var(--serif); font-size: clamp(1.1rem, 2.5vw, 1.5rem); font-weight: 400; color: var(--text-primary); margin-bottom: 0.6rem; }
+.module-desc { font-family: var(--sans); font-size: 0.8rem; font-weight: 300; color: var(--text-dim); line-height: 1.7; margin-bottom: 2rem; max-width: 560px; }
+
+/* Search Race */
+.race-lanes { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.race-lane { text-align: center; }
+.race-lane-label { font-family: var(--sans); font-size: 0.7rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1rem; }
+.race-lane-label.classical { color: var(--accent-warm); }
+.race-lane-label.quantum { color: var(--accent-quantum); }
+.card-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; margin-bottom: 1rem; }
+.search-card { aspect-ratio: 1; border-radius: 4px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); transition: all 0.15s ease; display: flex; align-items: center; justify-content: center; font-size: 0.55rem; color: transparent; }
+.search-card.checking { background: rgba(212,165,116,0.15); border-color: rgba(212,165,116,0.4); box-shadow: 0 0 8px rgba(212,165,116,0.2); }
+.search-card.superposed { background: rgba(111,168,220,0.1); border-color: rgba(111,168,220,0.25); box-shadow: 0 0 6px rgba(111,168,220,0.15); }
+.search-card.found { background: rgba(126,207,139,0.2); border-color: rgba(126,207,139,0.5); box-shadow: 0 0 12px rgba(126,207,139,0.3); color: var(--accent-green); font-weight: 600; font-size: 0.7rem; }
+.search-card.dimmed { opacity: 0.15; }
+.race-counter { font-family: var(--sans); font-size: 0.75rem; color: var(--text-dim); min-height: 1.2em; }
+.race-counter .count { font-weight: 500; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.race-controls { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
+
+.btn { font-family: var(--sans); font-size: 0.72rem; font-weight: 400; letter-spacing: 0.06em; padding: 0.6rem 1.4rem; border-radius: 100px; border: 1px solid var(--border-subtle); background: transparent; color: var(--text-secondary); cursor: pointer; transition: all 0.3s; white-space: nowrap; }
+.btn:hover { border-color: var(--border-hover); color: var(--text-primary); background: rgba(111,168,220,0.05); }
+.btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.btn.primary { background: rgba(111,168,220,0.1); border-color: rgba(111,168,220,0.3); color: var(--accent-quantum); }
+.btn.primary:hover { background: rgba(111,168,220,0.18); }
+
+/* Bit vs Qubit */
+.bit-qubit-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+.compare-panel { text-align: center; padding: 1.5rem 1rem; }
+.compare-panel-label { font-family: var(--sans); font-size: 0.65rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem; }
+.bit-switch { width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; font-family: var(--serif); font-size: 1.8rem; font-weight: 500; user-select: none; -webkit-tap-highlight-color: transparent; }
+.bit-switch.off { background: rgba(255,255,255,0.04); border: 2px solid rgba(255,255,255,0.1); color: var(--text-dim); }
+.bit-switch.on { background: rgba(212,165,116,0.12); border: 2px solid rgba(212,165,116,0.4); color: var(--accent-warm); box-shadow: 0 0 20px rgba(212,165,116,0.15); }
+.bit-caption { font-family: var(--sans); font-size: 0.75rem; color: var(--text-dim); line-height: 1.6; }
+
+.qubit-demo-canvas { display: block; width: 160px; height: 160px; margin: 0 auto 1rem; cursor: grab; }
+.qubit-demo-canvas:active { cursor: grabbing; }
+.qubit-state-readout { font-family: var(--sans); font-size: 0.72rem; color: var(--text-dim); margin-bottom: 0.5rem; min-height: 1.4em; font-variant-numeric: tabular-nums; }
+.qubit-state-readout .ket { color: var(--accent-quantum); font-weight: 500; }
+
+/* Measurement */
+.measurement-area { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+.measure-btn { width: 100px; height: 100px; border-radius: 50%; border: 2px solid rgba(240,144,112,0.3); background: rgba(240,144,112,0.05); color: var(--accent-measure); font-family: var(--sans); font-size: 0.65rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: all 0.3s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.3rem; -webkit-tap-highlight-color: transparent; }
+.measure-btn:hover { border-color: rgba(240,144,112,0.6); background: rgba(240,144,112,0.1); box-shadow: 0 0 20px rgba(240,144,112,0.15); }
+.measure-btn .icon { font-size: 1.3rem; }
+.measure-btn.collapsing { animation: measureFlash 0.4s ease; }
+@keyframes measureFlash { 0% { transform: scale(1); } 30% { transform: scale(0.9); border-color: rgba(240,144,112,0.8); background: rgba(240,144,112,0.2); } 100% { transform: scale(1); } }
+
+.histogram-container { display: flex; align-items: flex-end; gap: 2rem; height: 120px; padding: 0 1rem; }
+.histo-bar-group { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+.histo-bar-wrapper { width: 50px; height: 100px; background: rgba(255,255,255,0.02); border-radius: 6px; display: flex; align-items: flex-end; overflow: hidden; border: 1px solid rgba(255,255,255,0.04); }
+.histo-bar { width: 100%; transition: height 0.3s ease; border-radius: 4px 4px 0 0; }
+.histo-bar.zero { background: linear-gradient(to top, rgba(111,168,220,0.4), rgba(111,168,220,0.15)); }
+.histo-bar.one { background: linear-gradient(to top, rgba(240,144,112,0.4), rgba(240,144,112,0.15)); }
+.histo-label { font-family: var(--sans); font-size: 0.75rem; font-weight: 500; }
+.histo-label.zero-label { color: var(--accent-quantum); }
+.histo-label.one-label { color: var(--accent-measure); }
+.histo-count { font-family: var(--sans); font-size: 0.65rem; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+.measure-total { font-family: var(--sans); font-size: 0.7rem; color: var(--text-dim); }
+.measure-insight { font-family: var(--serif); font-style: italic; font-size: 0.9rem; color: var(--text-secondary); text-align: center; max-width: 400px; line-height: 1.6; min-height: 2em; }
+
+/* Equation */
+.equation-display { text-align: center; padding: 2rem 0; margin: 2rem 0; }
+.equation { font-family: var(--serif); font-size: clamp(1.3rem, 3vw, 2rem); font-weight: 300; color: var(--text-primary); letter-spacing: 0.02em; }
+.equation .ket { color: var(--accent-quantum); }
+.equation .alpha { color: var(--accent-entangle); font-style: italic; }
+.equation .beta { color: var(--accent-measure); font-style: italic; }
+.equation-caption { font-family: var(--sans); font-size: 0.72rem; color: var(--text-dim); margin-top: 0.8rem; line-height: 1.6; }
+
+/* ═══ SECTION 2: Wave Pool ═══ */
+.wave-pool-wrap { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.wave-pool-canvas { width: 100%; max-width: 600px; aspect-ratio: 3/2; border-radius: 12px; cursor: crosshair; border: 1px solid rgba(111,168,220,0.1); background: #060a14; display: block; }
+.wave-pool-controls { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+.wave-pool-hint { font-family: var(--sans); font-size: 0.7rem; color: var(--text-dim); }
+
+/* Amplitude Sculpting */
+.amp-sculpt-area { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+.amp-bars { display: flex; align-items: flex-end; gap: 6px; height: 200px; padding: 0 0.5rem; }
+.amp-bar-col { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; flex: 1; min-width: 0; }
+.amp-bar-wrap { width: 100%; max-width: 56px; height: 160px; background: rgba(255,255,255,0.015); border-radius: 6px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; overflow: hidden; border: 1px solid rgba(255,255,255,0.03); position: relative; }
+.amp-bar-fill { width: 80%; border-radius: 4px 4px 0 0; transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); min-height: 2px; }
+.amp-bar-fill.correct { background: linear-gradient(to top, rgba(126,207,139,0.6), rgba(126,207,139,0.2)); }
+.amp-bar-fill.wrong { background: linear-gradient(to top, rgba(111,168,220,0.35), rgba(111,168,220,0.1)); }
+.amp-bar-label { font-family: var(--sans); font-size: 0.6rem; color: var(--text-dim); text-align: center; }
+.amp-bar-label.marked { color: var(--accent-green); font-weight: 500; }
+.amp-bar-value { font-family: var(--sans); font-size: 0.55rem; color: var(--text-dim); font-variant-numeric: tabular-nums; position: absolute; top: 4px; opacity: 0.6; }
+.amp-controls { display: flex; gap: 0.8rem; }
+.amp-status { font-family: var(--serif); font-style: italic; font-size: 0.85rem; color: var(--text-secondary); text-align: center; max-width: 460px; line-height: 1.6; min-height: 1.4em; }
+
+/* Metaphor box */
+.metaphor-box { background: rgba(111,168,220,0.04); border-left: 2px solid rgba(111,168,220,0.25); border-radius: 0 12px 12px 0; padding: 2rem 2rem 2rem 1.8rem; margin: 3rem 0; display: flex; align-items: flex-start; gap: 1.2rem; }
+.metaphor-icon { font-size: 1.4rem; color: var(--accent-quantum); opacity: 0.5; flex-shrink: 0; line-height: 1.6; }
+.metaphor-text { font-family: var(--serif); font-size: clamp(1rem, 2vw, 1.2rem); font-weight: 300; color: var(--text-primary); line-height: 1.7; }
+
+/* ═══ SECTION 3: √N Calculator ═══ */
+.sqrt-calc { display: flex; flex-direction: column; gap: 1.8rem; }
+.sqrt-slider-row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.sqrt-label { font-family: var(--sans); font-size: 0.78rem; color: var(--text-secondary); white-space: nowrap; }
+.sqrt-slider { flex: 1; min-width: 120px; -webkit-appearance: none; appearance: none; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; outline: none; cursor: pointer; }
+.sqrt-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--accent-quantum); border: 2px solid var(--bg-deep); cursor: pointer; box-shadow: 0 0 10px rgba(111,168,220,0.3); }
+.sqrt-slider::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: var(--accent-quantum); border: 2px solid var(--bg-deep); cursor: pointer; }
+.sqrt-n-display { font-family: var(--sans); font-size: 1rem; font-weight: 500; color: var(--text-primary); min-width: 90px; text-align: right; font-variant-numeric: tabular-nums; }
+
+.sqrt-comparison { display: flex; flex-direction: column; gap: 1rem; }
+.sqrt-bar-group { display: flex; align-items: center; gap: 0.8rem; }
+.sqrt-bar-label { font-family: var(--sans); font-size: 0.68rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; min-width: 120px; text-align: right; }
+.classical-label { color: var(--accent-warm); }
+.quantum-label { color: var(--accent-quantum); }
+.sqrt-bar-track { flex: 1; height: 24px; background: rgba(255,255,255,0.02); border-radius: 6px; overflow: hidden; border: 1px solid rgba(255,255,255,0.03); }
+.sqrt-bar-fill { height: 100%; border-radius: 5px; transition: width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+.classical-fill { background: linear-gradient(to right, rgba(212,165,116,0.25), rgba(212,165,116,0.5)); }
+.quantum-fill { background: linear-gradient(to right, rgba(111,168,220,0.25), rgba(111,168,220,0.6)); }
+.sqrt-bar-value { font-family: var(--sans); font-size: 0.72rem; color: var(--text-dim); min-width: 100px; font-variant-numeric: tabular-nums; }
+.sqrt-ratio { font-family: var(--serif); font-size: 0.95rem; color: var(--text-secondary); text-align: center; }
+.sqrt-ratio strong { color: var(--accent-glow); }
+
+/* Grover Step-by-Step */
+.grover-viz { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+.grover-canvas-wrap { width: 100%; max-width: 700px; overflow-x: auto; }
+.grover-canvas-wrap canvas { display: block; width: 100%; height: auto; }
+.grover-step-info { text-align: center; max-width: 520px; }
+.grover-step-label { font-family: var(--sans); font-size: 0.7rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-quantum); margin-bottom: 0.5rem; }
+.grover-step-desc { font-family: var(--sans); font-size: 0.82rem; font-weight: 300; color: var(--text-secondary); line-height: 1.7; min-height: 3em; }
+.grover-controls { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; justify-content: center; }
+.grover-step-counter { font-family: var(--sans); font-size: 0.72rem; color: var(--text-dim); font-variant-numeric: tabular-nums; min-width: 80px; text-align: center; }
+
+/* ═══ SECTION 4: Shor's Algorithm ═══ */
+/* Factoring Challenge */
+.factor-challenge { display: flex; flex-direction: column; gap: 1.2rem; align-items: center; }
+.factor-levels { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin-bottom: 0.5rem; }
+.factor-level-btn { font-family: var(--sans); font-size: 0.7rem; padding: 0.4rem 0.9rem; border-radius: 100px; border: 1px solid rgba(255,255,255,0.08); background: transparent; color: var(--text-dim); cursor: pointer; transition: all 0.3s; }
+.factor-level-btn:hover { border-color: var(--border-hover); color: var(--text-secondary); }
+.factor-level-btn.active { border-color: rgba(111,168,220,0.4); color: var(--accent-quantum); background: rgba(111,168,220,0.08); }
+.factor-level-btn.solved { border-color: rgba(126,207,139,0.4); color: var(--accent-green); }
+
+.factor-input-row { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; justify-content: center; font-family: var(--sans); font-size: 0.9rem; color: var(--text-secondary); }
+.factor-prompt { white-space: nowrap; }
+.factor-prompt strong { color: var(--text-primary); font-size: 1.1rem; }
+.factor-input { width: 60px; padding: 0.45rem 0.5rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); color: var(--text-primary); font-family: var(--sans); font-size: 0.9rem; text-align: center; outline: none; -moz-appearance: textfield; }
+.factor-input::-webkit-outer-spin-button, .factor-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.factor-input:focus { border-color: rgba(111,168,220,0.4); }
+.factor-feedback { font-family: var(--sans); font-size: 0.8rem; min-height: 1.2em; text-align: center; }
+.factor-feedback.correct { color: var(--accent-green); }
+.factor-feedback.wrong { color: var(--accent-measure); }
+
+.factor-rsa-note { background: rgba(240,144,112,0.05); border: 1px solid rgba(240,144,112,0.15); border-radius: 12px; padding: 1.2rem 1.5rem; font-family: var(--sans); font-size: 0.82rem; color: var(--text-secondary); line-height: 1.7; max-width: 560px; text-align: center; margin-top: 0.5rem; }
+.factor-rsa-note strong { color: var(--accent-measure); }
+
+/* Period Finding */
+.period-viz { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.period-controls-row { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; justify-content: center; }
+.period-label { font-family: var(--sans); font-size: 0.82rem; color: var(--text-secondary); }
+.period-a-buttons { display: flex; gap: 0.4rem; }
+.period-a-btn { font-family: var(--sans); font-size: 0.75rem; width: 32px; height: 32px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); background: transparent; color: var(--text-dim); cursor: pointer; transition: all 0.3s; display: flex; align-items: center; justify-content: center; }
+.period-a-btn:hover { border-color: var(--border-hover); color: var(--text-secondary); }
+.period-a-btn.active { border-color: rgba(192,132,252,0.5); color: var(--accent-entangle); background: rgba(192,132,252,0.08); }
+#periodCanvas { width: 100%; max-width: 650px; height: auto; display: block; }
+.period-info { font-family: var(--sans); font-size: 0.78rem; color: var(--text-dim); text-align: center; line-height: 1.6; min-height: 1.4em; }
+.period-info em { color: var(--accent-entangle); font-style: normal; font-weight: 500; }
+
+/* Shor Pipeline */
+.shor-pipeline { display: flex; flex-direction: column; gap: 1.5rem; }
+.shor-steps { display: flex; gap: 2px; width: 100%; }
+.shor-step-pip { flex: 1; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.06); transition: background 0.4s, box-shadow 0.4s; cursor: pointer; }
+.shor-step-pip.done { background: rgba(111,168,220,0.4); }
+.shor-step-pip.current { background: var(--accent-quantum); box-shadow: 0 0 8px rgba(111,168,220,0.3); }
+.shor-step-detail { min-height: 180px; background: rgba(255,255,255,0.015); border-radius: 12px; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.03); }
+.shor-step-title { font-family: var(--serif); font-size: 1.1rem; font-weight: 400; color: var(--text-primary); margin-bottom: 0.8rem; }
+.shor-step-body { font-family: var(--sans); font-size: 0.82rem; font-weight: 300; color: var(--text-secondary); line-height: 1.8; }
+.shor-step-body strong { font-weight: 500; color: var(--text-primary); }
+.shor-step-body .shor-val { color: var(--accent-quantum); font-weight: 500; font-family: var(--sans); }
+.shor-step-body .shor-result { color: var(--accent-green); font-weight: 500; }
+.shor-step-body .shor-computation { display: block; margin: 0.8rem 0; padding: 0.8rem 1rem; background: rgba(255,255,255,0.02); border-radius: 8px; font-family: var(--sans); font-size: 0.85rem; color: var(--text-primary); letter-spacing: 0.02em; text-align: center; }
+.shor-nav { display: flex; justify-content: center; gap: 0.8rem; }
+
+/* ═══ SECTION 5: Frontier Cards ═══ */
+.frontier-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin: 2rem 0; }
+@media (max-width: 700px) { .frontier-grid { grid-template-columns: 1fr; } }
+
+.frontier-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; padding: 1.5rem; transition: all 0.4s; cursor: default; }
+.frontier-card:hover { border-color: rgba(111,168,220,0.15); background: var(--bg-card-hover); }
+.frontier-card-top { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; }
+.frontier-icon-canvas { width: 52px; height: 52px; flex-shrink: 0; }
+.frontier-card-header { flex: 1; }
+.frontier-card-title { font-family: var(--serif); font-size: 1.05rem; font-weight: 500; color: var(--text-primary); margin-bottom: 0.15rem; }
+.frontier-card-year { font-family: var(--sans); font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.04em; }
+.frontier-card-body { font-family: var(--sans); font-size: 0.78rem; font-weight: 300; color: var(--text-dim); line-height: 1.7; margin-bottom: 1rem; }
+.frontier-card-status { font-family: var(--sans); font-size: 0.68rem; color: var(--text-dim); display: flex; align-items: center; gap: 0.5rem; }
+.frontier-status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.frontier-status-dot.active { background: var(--accent-green); box-shadow: 0 0 6px rgba(126,207,139,0.4); }
+.frontier-status-dot.research { background: var(--accent-quantum); box-shadow: 0 0 6px rgba(111,168,220,0.4); }
+.frontier-status-dot.milestone { background: var(--accent-entangle); box-shadow: 0 0 6px rgba(192,132,252,0.4); }
+
+/* Quiz — Quantum or Classical? */
+.quiz-area { display: flex; flex-direction: column; align-items: center; gap: 1.2rem; }
+.quiz-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 1.5rem 2rem; text-align: center; max-width: 500px; width: 100%; min-height: 70px; display: flex; align-items: center; justify-content: center; transition: border-color 0.4s; }
+.quiz-problem { font-family: var(--serif); font-size: clamp(1rem, 2.2vw, 1.25rem); font-weight: 400; color: var(--text-primary); line-height: 1.5; }
+.quiz-choices { display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; }
+.quiz-choice-btn { font-family: var(--sans); font-size: 0.78rem; font-weight: 400; padding: 0.55rem 1.3rem; border-radius: 100px; border: 1px solid rgba(255,255,255,0.08); background: transparent; color: var(--text-secondary); cursor: pointer; transition: all 0.3s; white-space: nowrap; -webkit-tap-highlight-color: transparent; }
+.quiz-choice-btn:hover { border-color: var(--border-hover); color: var(--text-primary); background: rgba(111,168,220,0.05); }
+.quiz-choice-btn.correct { border-color: rgba(126,207,139,0.5)!important; background: rgba(126,207,139,0.08)!important; color: var(--accent-green)!important; }
+.quiz-choice-btn.wrong { border-color: rgba(240,100,100,0.4)!important; background: rgba(240,100,100,0.06)!important; color: rgba(240,100,100,0.8)!important; }
+.quiz-choice-btn.faded { opacity: 0.3; pointer-events: none; }
+.quiz-feedback { font-family: var(--sans); font-size: 0.8rem; font-weight: 300; color: var(--text-secondary); text-align: center; max-width: 480px; line-height: 1.7; min-height: 3em; }
+.quiz-score { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+.quiz-score-item { font-family: var(--sans); font-size: 0.72rem; color: var(--text-dim); }
+.quiz-score-item strong { color: var(--text-primary); }
+.quiz-progress-dots { display: flex; gap: 5px; }
+.quiz-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.06); transition: background 0.3s, box-shadow 0.3s; }
+.quiz-dot.right { background: var(--accent-green); box-shadow: 0 0 5px rgba(126,207,139,0.3); }
+.quiz-dot.miss { background: rgba(240,100,100,0.5); }
+.quiz-dot.active { background: rgba(111,168,220,0.35); }
+
+/* ═══ SECTION 7: References ═══ */
+.references { display: flex; flex-direction: column; gap: 2rem; }
+
+/* Error Correction Game */
+.error-game { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; }
+.error-game-display { display: flex; flex-direction: column; align-items: center; gap: 1.2rem; }
+.error-game-logical { text-align: center; padding: 1rem 2rem; border-radius: 12px; border: 2px solid rgba(111,168,220,0.25); background: rgba(111,168,220,0.04); transition: all 0.3s; }
+.error-game-logical.danger { border-color: rgba(240,144,112,0.5); background: rgba(240,144,112,0.06); }
+.error-game-logical.dead { border-color: rgba(240,80,80,0.5); background: rgba(240,80,80,0.08); }
+.logical-label { font-family: var(--sans); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.3rem; }
+.logical-state { font-family: var(--serif); font-size: 1.1rem; color: var(--accent-quantum); transition: color 0.3s; }
+.error-game-logical.danger .logical-state { color: var(--accent-measure); }
+.error-game-logical.dead .logical-state { color: rgba(240,80,80,0.8); }
+.error-game-physical { display: grid; grid-template-columns: repeat(9, 1fr); gap: 6px; }
+.phys-qubit { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid rgba(111,168,220,0.2); background: rgba(111,168,220,0.05); display: flex; align-items: center; justify-content: center; font-family: var(--sans); font-size: 0.6rem; color: var(--accent-quantum); cursor: default; transition: all 0.2s; user-select: none; -webkit-tap-highlight-color: transparent; }
+.phys-qubit.error { border-color: rgba(240,100,100,0.6); background: rgba(240,100,100,0.12); color: rgba(240,100,100,0.9); cursor: pointer; animation: errorPulse 0.8s ease-in-out infinite; }
+.phys-qubit.fixed { border-color: rgba(126,207,139,0.5); background: rgba(126,207,139,0.1); color: var(--accent-green); }
+@keyframes errorPulse { 0%,100% { box-shadow: 0 0 0 rgba(240,100,100,0); } 50% { box-shadow: 0 0 10px rgba(240,100,100,0.25); } }
+.error-game-stats { display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center; }
+.error-stat { font-family: var(--sans); font-size: 0.72rem; color: var(--text-dim); }
+.error-stat strong { color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.error-game-controls { display: flex; gap: 0.8rem; }
+.error-game-msg { font-family: var(--serif); font-style: italic; font-size: 0.82rem; color: var(--text-dim); text-align: center; max-width: 440px; line-height: 1.6; min-height: 1.4em; }
+
+/* Complexity Landscape */
+.complexity-map { display: flex; flex-direction: column; align-items: center; gap: 1.2rem; }
+.complexity-map canvas { width: 100%; max-width: 600px; height: auto; display: block; cursor: crosshair; border-radius: 12px; }
+.complexity-info { text-align: center; max-width: 500px; min-height: 4em; }
+.complexity-info-title { font-family: var(--serif); font-size: 1rem; font-weight: 500; color: var(--text-primary); margin-bottom: 0.4rem; transition: color 0.3s; }
+.complexity-info-body { font-family: var(--sans); font-size: 0.78rem; font-weight: 300; color: var(--text-dim); line-height: 1.7; }
+.ref-group-title { font-family: var(--sans); font-size: 0.65rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent-quantum); opacity: 0.6; margin-bottom: 0.8rem; }
+.ref-item { font-family: var(--sans); font-size: 0.78rem; font-weight: 300; color: var(--text-dim); line-height: 1.7; margin-bottom: 0.5rem; padding-left: 1rem; border-left: 1px solid rgba(255,255,255,0.04); }
+.ref-item em { font-style: italic; color: var(--text-secondary); }
+
+/* ═══ FOOTER (matches threebody.html) ═══ */
+.site-footer { padding: 4rem 2rem 3rem; border-top: 1px solid rgba(255,255,255,0.04); }
+.footer-inner { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 2.5rem; text-align: center; }
+.footer-note { font-family: var(--sans); font-size: 0.72rem; color: var(--text-dim); line-height: 1.8; }
+.footer-author { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; }
+.footer-name { font-family: var(--serif); font-size: 1rem; font-weight: 400; color: var(--text-secondary); }
+.footer-affil { font-family: var(--sans); font-size: 0.72rem; font-weight: 300; color: var(--text-dim); }
+.footer-links { display: flex; gap: 1.2rem; margin-top: 0.5rem; }
+.footer-links a { font-family: var(--sans); font-size: 0.72rem; color: var(--text-dim); text-decoration: none; transition: color 0.3s; }
+.footer-links a:hover { color: var(--text-secondary); }
+
+/* Scroll reveal */
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity 1s ease, transform 1s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-d1 { transition-delay: 0.15s; }
+.reveal-d2 { transition-delay: 0.3s; }
+.reveal-d3 { transition-delay: 0.45s; }
+.reveal-d4 { transition-delay: 0.6s; }
+
+/* Keyframes */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeSlideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%, 100% { opacity: 0.5; transform: scale(1); } 50% { opacity: 1; transform: scale(1.4); } }
+@keyframes scrollPulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .top-bar { padding: 1rem 1.2rem; }
+  .hero-content { padding: 0 1.2rem; }
+  .hero-footer { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1rem 1.2rem 5rem; }
+  .hero-footer-right { text-align: left; }
+  .teaser-section { padding: 5rem 1.2rem 4rem; }
+  .qubit-counter { gap: 0.8rem; }
+  .scroll-indicator { bottom: 1.5rem; }
+  .section { padding: 5rem 1.2rem 5rem; }
+  .interactive-module { padding: 1.8rem 1.2rem; border-radius: 16px; }
+  .race-lanes { grid-template-columns: 1fr; }
+  .bit-qubit-compare { grid-template-columns: 1fr; }
+  .metaphor-box { padding: 1.5rem 1.2rem 1.5rem 1.2rem; }
+  .prose.drop-cap::first-letter { font-size: 2.6em; }
+}
+@media (max-width: 480px) {
+  .brand { font-size: 0.65rem; letter-spacing: 0.08em; }
+  .chapter-badge { font-size: 0.55rem; padding: 0.25rem 0.6rem; }
+  .card-grid { gap: 2px; }
+  .histogram-container { gap: 1.5rem; }
+  .histo-bar-wrapper { width: 40px; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<div class="floating-brand"><a href="https://edu.kimsh.kr">edu.kimsh.kr</a></div>
+
+<!-- ════════ SECTION 0: HERO ════════ -->
+<section class="hero" id="hero">
+  <canvas class="hero-canvas" id="quantumCanvas"></canvas>
+  <div class="top-bar">
+    <div class="top-chapter">Mellow Math · Chapter X</div>
+  </div>
+  <div class="hero-content">
+    <h1 class="hero-title">The <em>Quantum</em> Shortcut</h1>
+    <p class="hero-title-line2">How Nature Computes the Impossible</p>
+    <p class="hero-description">What if you could try every path at once — and let the wrong ones cancel themselves out? This is the strange, beautiful idea behind quantum algorithms.</p>
+    <div class="qubit-counter">
+      <div class="qubit-orb"></div><span class="qubit-label">Superposition</span>
+      <div class="qubit-orb"></div><span class="qubit-label">Entanglement</span>
+      <div class="qubit-orb"></div><span class="qubit-label">Interference</span>
+    </div>
+  </div>
+  <div class="scroll-indicator"><span>Explore</span><div class="scroll-line"></div></div>
+  <div class="hero-footer">
+    <div class="author-info">
+      <div class="author-name">Sang-hyun Kim</div>
+      <div class="author-affiliation">Korea Institute for Advanced Study<br>AI4Math, KAIST &nbsp;·&nbsp; <a href="https://kimsh.kr">kimsh.kr</a></div>
+    </div>
+    <div class="hero-footer-right">
+      <button class="sound-toggle" id="soundToggle" aria-label="Toggle ambient sound">♪ Sound Off</button>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ TEASER ════════ -->
+<section class="teaser-section" id="teaser">
+  <blockquote class="teaser-quote reveal">"Nature isn't classical, dammit, and if you want to make a simulation of nature, you'd better make it quantum mechanical."</blockquote>
+  <p class="teaser-attribution reveal reveal-d1">— Richard Feynman, Simulating Physics with Computers, 1981</p>
+  <div class="teaser-cards reveal reveal-d2">
+    <div class="teaser-card">
+      <span class="teaser-card-icon">◈</span>
+      <div class="teaser-card-title">Shor's Algorithm</div>
+      <div class="teaser-card-desc">Factor enormous numbers. Break codes that would take classical computers longer than the age of the universe.</div>
+    </div>
+    <div class="teaser-card">
+      <span class="teaser-card-icon">◇</span>
+      <div class="teaser-card-title">Grover's Search</div>
+      <div class="teaser-card-desc">Find a needle in a haystack — with the square root of the work. A universal speedup for unstructured search.</div>
+    </div>
+    <div class="teaser-card">
+      <span class="teaser-card-icon">◎</span>
+      <div class="teaser-card-title">The Frontier</div>
+      <div class="teaser-card-desc">Quantum simulation, optimization, and error correction — the algorithms shaping the next decade of science.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ SECTION 1: SUPERPOSITION ════════ -->
+<div class="section-transition"></div>
+<section class="section" id="section1">
+  <div class="section-number reveal">§ 1</div>
+  <h2 class="section-title reveal reveal-d1">What if you could check <em>every answer</em> at once?</h2>
+
+  <p class="prose drop-cap reveal reveal-d2">Imagine a library with a million books, and you need to find one specific title. A classical computer is like a very fast, very patient librarian — picking up each book, reading the spine, putting it back, moving to the next.</p>
+  <p class="prose reveal reveal-d3">A quantum computer does something that sounds impossible. It consults <strong class="highlight">all the books simultaneously</strong> — not by being faster, but by exploiting a deep feature of nature itself. The trick is called <strong>superposition</strong>.</p>
+
+  <!-- ─── Search Race ─── -->
+  <div class="interactive-module reveal reveal-d4" id="searchRaceModule">
+    <div class="module-label">Interactive</div>
+    <div class="module-title">The Search Race</div>
+    <div class="module-desc">64 cards. One is the ace. Watch a classical search check them one by one, then see a quantum approach light them all up at once.</div>
+    <div class="race-lanes">
+      <div class="race-lane">
+        <div class="race-lane-label classical">Classical Search</div>
+        <div class="card-grid" id="classicalGrid"></div>
+        <div class="race-counter" id="classicalCounter">&nbsp;</div>
+      </div>
+      <div class="race-lane">
+        <div class="race-lane-label quantum">Quantum Search</div>
+        <div class="card-grid" id="quantumGrid"></div>
+        <div class="race-counter" id="quantumCounter">&nbsp;</div>
+      </div>
+    </div>
+    <div class="race-controls">
+      <button class="btn primary" id="raceStartBtn">Start the Race</button>
+      <button class="btn" id="raceResetBtn" disabled>Reset</button>
+    </div>
+  </div>
+
+  <p class="prose reveal">The classical search checked dozens of cards. The quantum search seemed to know the answer almost instantly. But the quantum computer didn't peek at the answer — it used the laws of physics to make the right answer <strong>louder</strong> and the wrong answers <strong>quieter</strong>.</p>
+
+  <div class="section-divider reveal"></div>
+
+  <p class="prose reveal">To understand how, we first need to meet the <strong>qubit</strong> — the quantum version of a classical bit. A classical bit is a light switch: it's either off (0) or on (1). A qubit is something stranger.</p>
+
+  <!-- ─── Bit vs Qubit ─── -->
+  <div class="interactive-module reveal" id="bitQubitModule">
+    <div class="module-label">Interactive</div>
+    <div class="module-title">A Bit and a Qubit</div>
+    <div class="module-desc">Click the bit to toggle it. Drag the qubit to rotate its state on the Bloch sphere. A bit lives at the poles. A qubit lives anywhere on the sphere.</div>
+    <div class="bit-qubit-compare">
+      <div class="compare-panel">
+        <div class="compare-panel-label" style="color: var(--accent-warm);">Classical Bit</div>
+        <div class="bit-switch off" id="bitSwitch">0</div>
+        <div class="bit-caption">Click to flip. It's always exactly 0 or exactly 1 — nothing in between.</div>
+      </div>
+      <div class="compare-panel">
+        <div class="compare-panel-label" style="color: var(--accent-quantum);">Qubit</div>
+        <canvas class="qubit-demo-canvas" id="qubitDemoCanvas" width="320" height="320"></canvas>
+        <div class="qubit-state-readout" id="qubitReadout"><span class="ket">|ψ⟩</span> = 0.71 <span class="ket">|0⟩</span> + 0.71 <span class="ket">|1⟩</span></div>
+        <div class="bit-caption">Drag to rotate. The arrow can point anywhere — a blend of 0 and 1.</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="prose reveal">A qubit in superposition isn't secretly 0 or 1 waiting to be revealed. It is genuinely <strong>both</strong>, described by two amplitudes — call them <em>α</em> and <em>β</em> — that together capture the full state.</p>
+
+  <div class="equation-display reveal">
+    <div class="equation"><span class="ket">|ψ⟩</span> = <span class="alpha">α</span> <span class="ket">|0⟩</span> + <span class="beta">β</span> <span class="ket">|1⟩</span></div>
+    <div class="equation-caption">The state of a single qubit. When measured, the probability of seeing 0 is |α|², and 1 is |β|².</div>
+  </div>
+
+  <p class="prose reveal">But here's the catch. The moment you <strong>measure</strong> a qubit, the superposition collapses. You get 0 or 1 — never both. The amplitudes only determine the <em>probability</em> of each outcome. Try it yourself.</p>
+
+  <!-- ─── Measurement Experiment ─── -->
+  <div class="interactive-module reveal" id="measureModule">
+    <div class="module-label">Interactive</div>
+    <div class="module-title">The Measurement Experiment</div>
+    <div class="module-desc">This qubit is in an equal superposition — 50% chance of |0⟩ and 50% chance of |1⟩. Click "Measure" over and over and watch the statistics emerge.</div>
+    <div class="measurement-area">
+      <button class="measure-btn" id="measureBtn"><span class="icon">◉</span>Measure</button>
+      <div class="histogram-container">
+        <div class="histo-bar-group">
+          <div class="histo-count" id="countZero">0</div>
+          <div class="histo-bar-wrapper"><div class="histo-bar zero" id="barZero" style="height: 0%;"></div></div>
+          <div class="histo-label zero-label">|0⟩</div>
+        </div>
+        <div class="histo-bar-group">
+          <div class="histo-count" id="countOne">0</div>
+          <div class="histo-bar-wrapper"><div class="histo-bar one" id="barOne" style="height: 0%;"></div></div>
+          <div class="histo-label one-label">|1⟩</div>
+        </div>
+      </div>
+      <div class="measure-total" id="measureTotal">0 measurements</div>
+      <div class="measure-insight" id="measureInsight">&nbsp;</div>
+    </div>
+  </div>
+
+  <p class="prose reveal">Each single measurement is random. But run enough of them, and the pattern becomes clear: the probabilities are real. This is <strong>Born's rule</strong>, proposed by Max Born in 1926 and confirmed by every quantum experiment since.</p>
+
+  <p class="prose reveal">So superposition alone can't give you an answer — measuring destroys it. The real magic of quantum algorithms lies in what happens <em>before</em> measurement: carefully arranged <strong>interference</strong>, where quantum amplitudes add up to boost the right answer and cancel the wrong ones.</p>
+
+  <p class="prose next-prompt reveal">The secret weapon of quantum algorithms awaits. <span class="arrow">↓</span></p>
+</section>
+
+
+<!-- ════════ SECTION 2: INTERFERENCE ════════ -->
+<div class="section-transition"></div>
+<section class="section" id="section2">
+  <div class="section-number reveal">§ 2</div>
+  <h2 class="section-title reveal reveal-d1">Interference: the <em>Secret Weapon</em></h2>
+
+  <p class="prose drop-cap reveal reveal-d2">Here is the deepest idea in quantum computing, and it has nothing to do with speed. A quantum computer is not a faster classical computer. It is a <strong>different kind of machine</strong> — one that computes using <em>waves</em>.</p>
+
+  <p class="prose reveal reveal-d3">Waves have a remarkable property: they can <strong>add up</strong> or <strong>cancel out</strong>. Drop two stones in a pond. Where two crests meet, the water rises higher. Where a crest meets a trough, the water goes flat. This is <strong>interference</strong>.</p>
+
+  <!-- ─── Wave Interference Pool ─── -->
+  <div class="interactive-module reveal" id="wavePoolModule">
+    <div class="module-label">Interactive</div>
+    <div class="module-title">The Wave Pool</div>
+    <div class="module-desc">Click anywhere in the pool to drop a stone. Watch how the circular waves interact — bright where crests meet, dark where they cancel. This is exactly what happens to quantum amplitudes inside a quantum computer.</div>
+    <div class="wave-pool-wrap">
+      <canvas class="wave-pool-canvas" id="wavePoolCanvas"></canvas>
+      <div class="wave-pool-controls">
+        <button class="btn" id="waveResetBtn">Clear Pool</button>
+        <span class="wave-pool-hint" id="waveHint">Click the pool to add wave sources</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="prose reveal">In the wave pool, you can see constructive interference (bright spots where waves reinforce each other) and destructive interference (dark lines where waves cancel). Quantum amplitudes work in exactly the same way — they are complex numbers that add and subtract like waves.</p>
+
+  <div class="section-divider reveal"></div>
+
+  <p class="prose reveal">A quantum algorithm is a carefully designed sequence of operations — called <strong>quantum gates</strong> — that sculpt the interference pattern of amplitudes so that the correct answer receives constructive interference and every wrong answer receives destructive interference.</p>
+
+  <!-- ─── Amplitude Sculpting ─── -->
+  <div class="interactive-module reveal" id="ampSculptModule">
+    <div class="module-label">Interactive</div>
+    <div class="module-title">Sculpting Amplitudes</div>
+    <div class="module-desc">Eight possible answers, one correct (marked with ★). Start in equal superposition, then click "Apply Interference" to see how a quantum algorithm reshapes the amplitudes — boosting the right answer, suppressing the rest.</div>
+    <div class="amp-sculpt-area">
+      <div class="amp-bars" id="ampBars"></div>
+      <div class="amp-controls">
+        <button class="btn primary" id="ampStepBtn">Apply Interference</button>
+        <button class="btn" id="ampResetBtn">Reset</button>
+      </div>
+      <div class="amp-status" id="ampStatus">Equal superposition — every answer equally likely</div>
+    </div>
+  </div>
+
+  <p class="prose reveal">After enough rounds of interference, the correct answer's amplitude towers above the rest. Now when you measure, you almost certainly get the right answer. This is the essence of every quantum algorithm — from Grover's search to Shor's factoring.</p>
+
+  <p class="prose reveal">The physicist David Deutsch put it this way: a quantum computer works by exploring many computational paths in parallel, then using interference to make the paths leading to the right answer reinforce each other. It is not brute force. It is <strong>choreography</strong>.</p>
+
+  <!-- ─── The Metaphor ─── -->
+  <div class="metaphor-box reveal">
+    <div class="metaphor-icon">〰</div>
+    <div class="metaphor-text">
+      <em>"A quantum algorithm is like designing a pond so that all the ripples concentrate at exactly the right spot."</em>
+    </div>
+  </div>
+
+  <p class="prose reveal">With superposition, entanglement, and interference in hand, we're ready to see real quantum algorithms at work. First up: Grover's search — the algorithm that finds a needle in a haystack using the square root of the effort.</p>
+
+  <p class="prose next-prompt reveal">The first real quantum algorithm awaits. <span class="arrow">↓</span></p>
+</section>
+
+
+<!-- ════════ SECTION 3: GROVER'S ALGORITHM ════════ -->
+<div class="section-transition"></div>
+<section class="section" id="section3">
+  <div class="section-number reveal">§ 3</div>
+  <h2 class="section-title reveal reveal-d1">Grover's Search: <em>Needle in a Haystack</em></h2>
+
+  <p class="prose drop-cap reveal reveal-d2">In 1996, Lov Grover, a computer scientist at Bell Labs, discovered something remarkable. Given a completely unstructured search problem — a database with no sorting, no index, no clues — a quantum computer can find the answer using roughly <strong>the square root</strong> of the work a classical computer needs.</p>
+
+  <p class="prose reveal reveal-d3">A million items? A classical computer checks about 500,000 on average. Grover's algorithm checks about <strong>785</strong>.</p>
+
+  <!-- ─── The √N Calculator ─── -->
+  <div class="interactive-module reveal" id="sqrtCalcModule">
+    <div class="module-label">Interactive</div>
+    <div class="module-title">The √N Speedup</div>
+    <div class="module-desc">Drag the slider to change the database size. Watch the gap between classical and quantum search explode.</div>
+    <div class="sqrt-calc">
+      <div class="sqrt-slider-row">
+        <label class="sqrt-label" for="sqrtSlider">Database size (N):</label>
+        <input type="range" id="sqrtSlider" class="sqrt-slider" min="2" max="20" value="10" step="1">
+        <span class="sqrt-n-display" id="sqrtNDisplay">1,024</span>
+      </div>
+      <div class="sqrt-comparison">
+        <div class="sqrt-bar-group">
+          <div class="sqrt-bar-label classical-label">Classical</div>
+          <div class="sqrt-bar-track">
+            <div class="sqrt-bar-fill classical-fill" id="classicalBar" style="width:100%"></div>
+          </div>
+          <div class="sqrt-bar-value" id="classicalValue">~512 steps</div>
+        </div>
+        <div class="sqrt-bar-group">
+          <div class="sqrt-bar-label quantum-label">Quantum (Grover)</div>
+          <div class="sqrt-bar-track">
+            <div class="sqrt-bar-fill quantum-fill" id="quantumBar" style="width:6%"></div>
+          </div>
+          <div class="sqrt-bar-value" id="quantumValue">~25 steps</div>
+        </div>
+      </div>
+      <div class="sqrt-ratio" id="sqrtRatio">Quantum is <strong>~20×</strong> faster</div>
+    </div>
+  </div>
+
+  <p class="prose reveal">The speedup is quadratic — not exponential. But for truly enormous search spaces, a quadratic speedup is the difference between impossible and feasible. Grover himself proved that no quantum algorithm can do better for unstructured search: √N is the fundamental quantum speed limit.</p>
+
+  <div class="section-divider reveal"></div>
+
+  <p class="prose reveal">So how does it work? Grover's algorithm repeats a two-step dance about √N times. Each round nudges the amplitude of the correct answer a little higher and pushes the wrong answers a little lower. The steps are remarkably simple.</p>
+
+  <!-- ─── Grover Step-by-Step ─── -->
+  <div class="interactive-module reveal" id="groverStepsModule">
+    <div class="module-label">Interactive</div>
+    <div class="module-title">Grover's Algorithm, Step by Step</div>
+    <div class="module-desc">16 items, one marked. Step through the algorithm and watch the amplitudes evolve. The two operations — the Oracle and the Diffusion — are the entire algorithm.</div>
+    <div class="grover-viz">
+      <div class="grover-canvas-wrap">
+        <canvas id="groverCanvas" width="800" height="360"></canvas>
+      </div>
+      <div class="grover-step-info" id="groverInfo">
+        <div class="grover-step-label" id="groverStepLabel">Initial State</div>
+        <div class="grover-step-desc" id="groverStepDesc">All 16 amplitudes are equal. Every item is equally likely to be measured. The marked item (★) is indistinguishable.</div>
+      </div>
+      <div class="grover-controls">
+        <button class="btn" id="groverPrevBtn" disabled>← Back</button>
+        <span class="grover-step-counter" id="groverCounter">Step 0 / 8</span>
+        <button class="btn primary" id="groverNextBtn">Next Step →</button>
+        <button class="btn" id="groverAutoBtn">▶ Auto-play</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="prose reveal">Two operations, repeated. That's the whole algorithm. The <strong>Oracle</strong> is the only part that knows the answer — it flips the sign of the marked item's amplitude. The <strong>Diffusion</strong> reflects all amplitudes about their mean, which has the effect of transferring amplitude from the majority to the minority. Together, they create the interference pattern that amplifies the correct answer.</p>
+
+  <p class="prose reveal">After about π/4 × √N iterations, the marked item's amplitude peaks. Measure at that exact moment, and you get the answer with near certainty. Wait too long, and the amplitude oscillates back down — a beautiful and counter-intuitive feature of quantum mechanics.</p>
+
+  <div class="metaphor-box reveal">
+    <div class="metaphor-icon">◇</div>
+    <div class="metaphor-text">
+      <em>Grover's algorithm was one of the first clear demonstrations that quantum computers are not just faster classical machines — they operate by different rules entirely.</em>
+      <span style="display:block; margin-top:0.5rem; font-style:normal; font-family: var(--sans); font-size:0.75rem; color: var(--text-dim);">— Based on Lov K. Grover, "A Fast Quantum Mechanical Algorithm for Database Search," 1996</span>
+    </div>
+  </div>
+
+  <p class="prose reveal">As of 2025, Grover's algorithm has been demonstrated on real quantum hardware with up to 5 qubits, achieving better-than-classical success rates through error suppression techniques. Scaling it to cryptographically relevant sizes remains a challenge — but the mathematics is exact and the principle is universal.</p>
+
+  <p class="prose next-prompt reveal">Now for the algorithm that shook the world. <span class="arrow">↓</span></p>
+</section>
+
+
+<!-- ════════ SECTION 4: SHOR'S ALGORITHM ════════ -->
+<div class="section-transition"></div>
+<section class="section" id="section4">
+  <div class="section-number reveal">§ 4</div>
+  <h2 class="section-title reveal reveal-d1">Shor's Algorithm: <em>Breaking the Unbreakable</em></h2>
+
+  <p class="prose drop-cap reveal reveal-d2">In 1994, Peter Shor, a mathematician at Bell Labs, proved that a quantum computer could factor large integers in polynomial time. The announcement sent shockwaves through mathematics and cryptography — because the entire security of the internet depends on factoring being <strong>hard</strong>.</p>
+
+  <p class="prose reveal reveal-d3">Every time you make an online purchase, send a private message, or log into your bank, a protocol called <strong>RSA</strong> protects your data. Its security rests on a single assumption: that multiplying two large prime numbers is easy, but reversing the process — finding those primes from their product — is essentially impossible for classical computers.</p>
+
+  <!-- ─── Factoring Challenge ─── -->
+  <div class="interactive-module reveal" id="factorChallengeModule">
+    <div class="module-label">Interactive</div>
+    <div class="module-title">Why Factoring is Hard</div>
+    <div class="module-desc">Try to factor these numbers into two primes. Easy at first — but notice how quickly it gets difficult.</div>
+    <div class="factor-challenge">
+      <div class="factor-levels" id="factorLevels"></div>
+      <div class="factor-input-row" id="factorInputRow">
+        <span class="factor-prompt" id="factorPrompt">Factor: <strong id="factorTarget">15</strong> = </span>
+        <input type="number" class="factor-input" id="factorA" placeholder="?" min="2"> × 
+        <input type="number" class="factor-input" id="factorB" placeholder="?" min="2">
+        <button class="btn primary" id="factorCheckBtn">Check</button>
+      </div>
+      <div class="factor-feedback" id="factorFeedback">&nbsp;</div>
+      <div class="factor-rsa-note reveal" id="factorNote" style="display:none;">
+        <strong>RSA-2048</strong> uses a number with <strong>617 digits</strong>. The best classical algorithms would take longer than the age of the universe. Shor's algorithm could do it in hours — on a quantum computer that doesn't yet exist.
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider reveal"></div>
+
+  <p class="prose reveal">Shor's insight was to reduce factoring to a different problem: <strong>finding the period</strong> of a function. And period-finding is something a quantum computer does exponentially faster than a classical one, using the <strong>Quantum Fourier Transform</strong>.</p>
+
+  <p class="prose reveal">Here is the key idea. Pick a random number <em>a</em> less than N. Compute the function f(x) = aˣ mod N. This function is periodic — it repeats with some period <em>r</em>. If you find <em>r</em>, simple classical arithmetic gives you the factors.</p>
+
+  <!-- ─── Period Finding ─── -->
+  <div class="interactive-module reveal" id="periodModule">
+    <div class="module-label">Interactive</div>
+    <div class="module-title">The Hidden Period</div>
+    <div class="module-desc">Watch f(x) = aˣ mod N. The function repeats — but as N grows, finding the period classically becomes impossibly hard. Choose different values of <em>a</em> to see different periods.</div>
+    <div class="period-viz">
+      <div class="period-controls-row">
+        <span class="period-label">N = 15, &nbsp; a = </span>
+        <div class="period-a-buttons" id="periodAButtons"></div>
+      </div>
+      <canvas id="periodCanvas" width="800" height="260"></canvas>
+      <div class="period-info" id="periodInfo">Select a value of <em>a</em> above</div>
+    </div>
+  </div>
+
+  <p class="prose reveal">A classical computer would need to compute f(x) for many values of x and search for the repeating pattern. A quantum computer puts all x-values into <strong>superposition</strong>, computes f(x) for all of them at once, then applies the <strong>Quantum Fourier Transform</strong> — which converts periodicity in the function into sharp peaks in the measurement, revealing the period directly.</p>
+
+  <!-- ─── Shor Pipeline ─── -->
+  <div class="interactive-module reveal" id="shorPipelineModule">
+    <div class="module-label">Interactive</div>
+    <div class="module-title">Shor's Algorithm for N = 15</div>
+    <div class="module-desc">Walk through the algorithm step by step. Watch how quantum period-finding leads to factoring.</div>
+    <div class="shor-pipeline">
+      <div class="shor-steps" id="shorSteps"></div>
+      <div class="shor-step-detail" id="shorDetail">
+        <div class="shor-step-title" id="shorStepTitle">Click a step to begin</div>
+        <div class="shor-step-body" id="shorStepBody"></div>
+      </div>
+      <div class="shor-nav">
+        <button class="btn" id="shorPrevBtn" disabled>← Previous</button>
+        <button class="btn primary" id="shorNextBtn">Start →</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="prose reveal">That is the entire algorithm. The classical parts — picking a random <em>a</em>, computing GCDs — are trivial. The quantum part — finding the period via the Quantum Fourier Transform — is where the exponential speedup lives.</p>
+
+  <p class="prose reveal">In 2001, an IBM team factored 15 = 3 × 5 using a 7-qubit NMR quantum computer — the first experimental demonstration. In 2021, researchers factored 21 on IBM's quantum processors using only 5 qubits. To factor RSA-2048, current estimates suggest roughly 20 million noisy qubits running for about 8 hours. As of 2025, the largest quantum processors have about 1,000 qubits — so we are still orders of magnitude away, but the mathematics is settled.</p>
+
+  <div class="metaphor-box reveal">
+    <div class="metaphor-icon">◈</div>
+    <div class="metaphor-text">
+      <em>Shor's algorithm didn't just threaten cryptography — it proved that quantum computers can solve certain problems exponentially faster than any known classical method. It changed what we believe is computable.</em>
+      <span style="display:block; margin-top:0.5rem; font-style:normal; font-family: var(--sans); font-size:0.75rem; color: var(--text-dim);">— Peter W. Shor, "Algorithms for Quantum Computation: Discrete Logarithms and Factoring," 1994</span>
+    </div>
+  </div>
+
+  <p class="prose next-prompt reveal">What comes after Shor and Grover? <span class="arrow">↓</span></p>
+</section>
+
+
+<!-- ════════ SECTION 5: THE QUANTUM FRONTIER ════════ -->
+<div class="section-transition"></div>
+<section class="section" id="section5">
+  <div class="section-number reveal">§ 5</div>
+  <h2 class="section-title reveal reveal-d1">Beyond Shor and Grover: <em>The Quantum Frontier</em></h2>
+
+  <p class="prose drop-cap reveal reveal-d2">Shor's and Grover's algorithms were the opening act. Today, a new generation of quantum algorithms is being designed for problems across science, engineering, and artificial intelligence. Here are four frontiers where quantum computing may transform what we can calculate.</p>
+
+  <!-- ─── Frontier Cards ─── -->
+  <div class="frontier-grid reveal" id="frontierGrid">
+
+    <div class="frontier-card" id="frontier0">
+      <div class="frontier-card-top">
+        <canvas class="frontier-icon-canvas" id="frontierCanvas0" width="120" height="120"></canvas>
+        <div class="frontier-card-header">
+          <div class="frontier-card-title">Quantum Simulation</div>
+          <div class="frontier-card-year">Feynman, 1982</div>
+        </div>
+      </div>
+      <div class="frontier-card-body">Richard Feynman's original dream: use a quantum computer to simulate quantum physics itself. Classical computers struggle exponentially with many-body quantum systems — each additional particle doubles the memory needed. A quantum simulator handles this naturally. Applications include designing new drugs, understanding superconductivity, and modeling chemical reactions at the molecular level.</div>
+      <div class="frontier-card-status">
+        <span class="frontier-status-dot active"></span>
+        Active research — near-term quantum advantage candidate
+      </div>
+    </div>
+
+    <div class="frontier-card" id="frontier1">
+      <div class="frontier-card-top">
+        <canvas class="frontier-icon-canvas" id="frontierCanvas1" width="120" height="120"></canvas>
+        <div class="frontier-card-header">
+          <div class="frontier-card-title">Variational Quantum Eigensolver</div>
+          <div class="frontier-card-year">Peruzzo et al., 2014</div>
+        </div>
+      </div>
+      <div class="frontier-card-body">A hybrid algorithm: a quantum computer proposes trial wavefunctions, and a classical computer optimizes the parameters. Together they descend an energy landscape to find the ground state of a molecule — a problem central to chemistry, materials science, and drug discovery. VQE is designed for today's noisy, limited quantum hardware.</div>
+      <div class="frontier-card-status">
+        <span class="frontier-status-dot active"></span>
+        Demonstrated on molecules like LiH and H₂O
+      </div>
+    </div>
+
+    <div class="frontier-card" id="frontier2">
+      <div class="frontier-card-top">
+        <canvas class="frontier-icon-canvas" id="frontierCanvas2" width="120" height="120"></canvas>
+        <div class="frontier-card-header">
+          <div class="frontier-card-title">Quantum Optimization (QAOA)</div>
+          <div class="frontier-card-year">Farhi, Goldstone & Gutmann, 2014</div>
+        </div>
+      </div>
+      <div class="frontier-card-body">Many real-world problems — scheduling, logistics, network routing — reduce to combinatorial optimization. QAOA (Quantum Approximate Optimization Algorithm) uses alternating quantum operations to explore solution landscapes, potentially finding near-optimal solutions faster than classical heuristics for specific problem families.</div>
+      <div class="frontier-card-status">
+        <span class="frontier-status-dot research"></span>
+        Theoretical promise — practical advantage still unproven
+      </div>
+    </div>
+
+    <div class="frontier-card" id="frontier3">
+      <div class="frontier-card-top">
+        <canvas class="frontier-icon-canvas" id="frontierCanvas3" width="120" height="120"></canvas>
+        <div class="frontier-card-header">
+          <div class="frontier-card-title">Quantum Error Correction</div>
+          <div class="frontier-card-year">Shor, 1995 · Kitaev, 1997</div>
+        </div>
+      </div>
+      <div class="frontier-card-body">Qubits are fragile — environmental noise causes errors constantly. Quantum error correction encodes logical qubits across many physical qubits, detecting and fixing errors without destroying the quantum state. This is the key enabling technology: without it, large-scale quantum computation is impossible. The surface code and related schemes are the leading candidates.</div>
+      <div class="frontier-card-status">
+        <span class="frontier-status-dot milestone"></span>
+        Major milestone: Google demonstrated below-threshold error correction (2024)
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider reveal"></div>
+
+  <!-- ─── Quantum or Classical Quiz ─── -->
+  <div class="interactive-module reveal" id="quizModule">
+    <div class="module-label">Interactive</div>
+    <div class="module-title">Quantum or Classical?</div>
+    <div class="module-desc">For each problem, guess: would a quantum computer be faster? Tap your answer — you might be surprised.</div>
+    <div class="quiz-area">
+      <div class="quiz-card" id="quizCard">
+        <div class="quiz-problem" id="quizProblem">Loading...</div>
+      </div>
+      <div class="quiz-choices" id="quizChoices"></div>
+      <div class="quiz-feedback" id="quizFeedback">&nbsp;</div>
+      <div class="quiz-score">
+        <span class="quiz-score-item">Score: <strong id="quizScore">0</strong> / <strong id="quizTotal">0</strong></span>
+        <span class="quiz-progress-dots" id="quizDots"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider reveal"></div>
+
+  <!-- ─── Error Correction Game ─── -->
+  <div class="interactive-module reveal" id="errorGameModule">
+    <div class="module-label">Interactive</div>
+    <div class="module-title">Protect the Qubit</div>
+    <div class="module-desc">Qubits are fragile — noise from the environment constantly flips them. Click the corrupted qubits to fix them before the logical qubit is destroyed. How long can you keep it alive?</div>
+    <div class="error-game">
+      <div class="error-game-display">
+        <div class="error-game-logical" id="logicalQubit">
+          <div class="logical-label">Logical Qubit</div>
+          <div class="logical-state" id="logicalState">|ψ⟩ intact</div>
+        </div>
+        <div class="error-game-physical" id="physicalQubits"></div>
+      </div>
+      <div class="error-game-stats">
+        <span class="error-stat">Survived: <strong id="errorSurvived">0.0s</strong></span>
+        <span class="error-stat">Errors fixed: <strong id="errorsFixed">0</strong></span>
+        <span class="error-stat">Best: <strong id="errorBest">0.0s</strong></span>
+      </div>
+      <div class="error-game-controls">
+        <button class="btn primary" id="errorStartBtn">Start</button>
+      </div>
+      <div class="error-game-msg" id="errorMsg">Press Start, then click red qubits to fix errors before too many accumulate.</div>
+    </div>
+  </div>
+</section>
+<div class="section-transition"></div>
+<section class="section" id="section6">
+  <div class="section-number reveal">§ 6</div>
+  <h2 class="section-title reveal reveal-d1">Why <em>This</em> Matters</h2>
+
+  <p class="prose drop-cap reveal reveal-d2">Quantum algorithms are not just faster classical algorithms. They represent a fundamentally different relationship between <strong>mathematics</strong> and <strong>physical reality</strong>.</p>
+
+  <p class="prose reveal">A classical computer manipulates bits — abstract symbols that could be etched in sand or encoded in voltage. A quantum computer manipulates <em>amplitudes</em> — the very fabric of quantum mechanics, the same physics that holds atoms together and makes stars shine. When we design a quantum algorithm, we are programming nature itself.</p>
+
+  <p class="prose reveal">The deepest open question in the field remains: <strong>what other problems have hidden quantum structure?</strong> The complexity class BQP — the set of problems efficiently solvable by quantum computers — is still not fully understood. We don't even know whether it's strictly larger than classical polynomial time. Every new quantum algorithm is a small step toward mapping this unknown territory.</p>
+
+  <!-- ─── Complexity Landscape ─── -->
+  <div class="interactive-module reveal" id="complexityModule">
+    <div class="module-label">Interactive</div>
+    <div class="module-title">The Landscape of Computation</div>
+    <div class="module-desc">Hover over each region to discover what kinds of problems live there — and where quantum computers give an advantage.</div>
+    <div class="complexity-map">
+      <canvas id="complexityCanvas" width="1200" height="700"></canvas>
+      <div class="complexity-info" id="complexityInfo">
+        <div class="complexity-info-title" id="complexityTitle">Explore the map</div>
+        <div class="complexity-info-body" id="complexityBody">Each colored region represents a complexity class — a set of problems grouped by how hard they are to solve. Hover to learn more.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="metaphor-box reveal">
+    <div class="metaphor-icon">∿</div>
+    <div class="metaphor-text">
+      <em>"Quantum computing is not about brute force. It is about the discovery that certain mathematical problems are secretly connected to the physics of interference."</em>
+      <span style="display:block; margin-top:0.5rem; font-style:normal; font-family: var(--sans); font-size:0.75rem; color: var(--text-dim);">— Paraphrase of Scott Aaronson, Quantum Computing Since Democritus, 2013</span>
+    </div>
+  </div>
+
+  <p class="prose reveal">We are living in the early days. The quantum computers of 2025 are roughly where classical computers were in the 1950s — room-sized, unreliable, and expensive. But the mathematics is already here, beautiful and exact. The algorithms we explored tonight — Grover's search, Shor's factoring, the Quantum Fourier Transform — these are permanent contributions to human knowledge. They will remain true long after the hardware catches up.</p>
+
+  <p class="prose reveal">And that, perhaps, is the most remarkable thing about quantum algorithms: they are theorems about the physical universe, proved with mathematics, waiting to be realized in silicon and light.</p>
+</section>
+
+
+<!-- ════════ SECTION 7: REFERENCES ════════ -->
+<div class="section-transition"></div>
+<section class="section" id="section7" style="padding-bottom: 4rem;">
+  <div class="section-number reveal">References</div>
+  <h2 class="section-title reveal reveal-d1" style="font-size: clamp(1.4rem, 3vw, 2rem);">Further Reading</h2>
+
+  <div class="references reveal">
+    <div class="ref-group">
+      <div class="ref-group-title">Foundational Papers</div>
+      <div class="ref-item">P. W. Shor, "Algorithms for Quantum Computation: Discrete Logarithms and Factoring," <em>Proceedings of the 35th Annual Symposium on Foundations of Computer Science</em>, 1994.</div>
+      <div class="ref-item">L. K. Grover, "A Fast Quantum Mechanical Algorithm for Database Search," <em>Proceedings of the 28th Annual ACM Symposium on Theory of Computing</em>, 1996.</div>
+      <div class="ref-item">R. P. Feynman, "Simulating Physics with Computers," <em>International Journal of Theoretical Physics</em>, 21(6–7), 1982.</div>
+      <div class="ref-item">A. Yu. Kitaev, "Quantum Measurements and the Abelian Stabilizer Problem," <em>arXiv:quant-ph/9511026</em>, 1995.</div>
+    </div>
+    <div class="ref-group">
+      <div class="ref-group-title">Textbooks & Surveys</div>
+      <div class="ref-item">M. A. Nielsen and I. L. Chuang, <em>Quantum Computation and Quantum Information</em>, Cambridge University Press, 2000 (10th anniversary edition, 2010).</div>
+      <div class="ref-item">S. Aaronson, <em>Quantum Computing Since Democritus</em>, Cambridge University Press, 2013.</div>
+      <div class="ref-item">J. Watrous, "Fundamentals of Quantum Algorithms," IBM Quantum Learning course, 2024–2025.</div>
+    </div>
+    <div class="ref-group">
+      <div class="ref-group-title">Experimental Milestones</div>
+      <div class="ref-item">L. M. K. Vandersypen et al., "Experimental Realization of Shor's Quantum Factoring Algorithm Using Nuclear Magnetic Resonance," <em>Nature</em> 414, 2001.</div>
+      <div class="ref-item">U. Skosana and M. Tame, "Demonstration of Shor's Factoring Algorithm for N=21 on IBM Quantum Processors," <em>Scientific Reports</em> 11, 2021.</div>
+      <div class="ref-item">Google Quantum AI, "Quantum Error Correction Below the Surface Code Threshold," <em>Nature</em>, 2024.</div>
+      <div class="ref-item">D. A. Lidar et al., "Better-than-Classical Grover Search via Quantum Error Detection and Suppression," <em>npj Quantum Information</em> 9, 2023.</div>
+      <div class="ref-item">C. Gidney and M. Ekerå, "How to Factor 2048-bit RSA Integers in 8 Hours Using 20 Million Noisy Qubits," <em>Quantum</em> 5, 2021.</div>
+    </div>
+    <div class="ref-group">
+      <div class="ref-group-title">Industry</div>
+      <div class="ref-item">IBM Quantum, "IBM Delivers Quantum Processors, Software, and Algorithm Breakthroughs on Path to Advantage," IBM Newsroom, November 2025.</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════ FOOTER ════════ -->
+<div class="section-transition"></div>
+<footer class="site-footer reveal">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-name">Sang-hyun Kim</div>
+      <div class="footer-affil">Korea Institute for Advanced Study</div>
+    </div>
+    <div class="footer-links">
+      <a href="https://kimsh.kr">kimsh.kr</a>
+      <a href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+    </div>
+    <div class="footer-right">
+      <a href="#hero" class="back-to-top">Return to top ↑</a>
+      <div class="footer-copy">
+        Mellow Math · Interactive Mathematics<br>
+        <span style="opacity:0.5;">The Quantum Shortcut — How Nature Computes the Impossible</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════════════════════════════════
+     SCRIPTS
+     ═══════════════════════════════════ -->
+<script>
+// ═══ HERO CANVAS ═══
+(function(){
+const canvas=document.getElementById('quantumCanvas'),ctx=canvas.getContext('2d');
+let W,H,dpr,mouse={x:-1e3,y:-1e3},time=0,qubits=[],particles=[];
+let audioCtx=null,isAudioOn=false,gainNode=null,oscillators=[];
+
+function resize(){dpr=Math.min(devicePixelRatio||1,2);W=canvas.clientWidth;H=canvas.clientHeight;canvas.width=W*dpr;canvas.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
+
+class Q{
+  constructor(x,y){this.x=x;this.y=y;this.bx=x;this.by=y;this.r=18+Math.random()*14;this.th=Math.random()*Math.PI;this.ph=Math.random()*Math.PI*2;this.ts=(Math.random()-.5)*.008;this.ps=.005+Math.random()*.015;this.op=.3+Math.random()*.4;this.hue=Math.random()<.5?210:(Math.random()<.5?270:20);this.dp=Math.random()*Math.PI*2;this.da=8+Math.random()*15}
+  update(t){this.th+=this.ts;this.ph+=this.ps;this.th=Math.max(.01,Math.min(Math.PI-.01,this.th));this.x=this.bx+Math.sin(t*.3+this.dp)*this.da;this.y=this.by+Math.cos(t*.2+this.dp*1.3)*this.da*.6;const dx=mouse.x-this.x,dy=mouse.y-this.y,d=Math.hypot(dx,dy);if(d<200){const p=(200-d)/200*.15;this.x-=dx*p*.05;this.y-=dy*p*.05}}
+  draw(c){const r=this.r,cx=this.x,cy=this.y,bc=this.hue===210?'111,168,220':(this.hue===270?'192,132,252':'240,144,112');
+    const g=c.createRadialGradient(cx,cy,r*.3,cx,cy,r*2.5);g.addColorStop(0,`rgba(${bc},${this.op*.15})`);g.addColorStop(.5,`rgba(${bc},${this.op*.04})`);g.addColorStop(1,'rgba(0,0,0,0)');c.fillStyle=g;c.beginPath();c.arc(cx,cy,r*2.5,0,Math.PI*2);c.fill();
+    c.save();c.globalAlpha=this.op*.3;c.strokeStyle=`rgba(${bc},.4)`;c.lineWidth=.5;c.beginPath();c.ellipse(cx,cy,r,r*.35,0,0,Math.PI*2);c.stroke();c.beginPath();c.ellipse(cx,cy,r*.35,r,0,0,Math.PI*2);c.stroke();c.globalAlpha=this.op*.2;c.lineWidth=.8;c.beginPath();c.arc(cx,cy,r,0,Math.PI*2);c.stroke();c.restore();
+    const sx=Math.sin(this.th)*Math.cos(this.ph),sz=Math.cos(this.th),sy=Math.sin(this.th)*Math.sin(this.ph),px=cx+sx*r,py=cy-sz*r+sy*r*.3;
+    c.save();c.globalAlpha=this.op*.8;c.strokeStyle=`rgba(${bc},.9)`;c.lineWidth=1.5;c.beginPath();c.moveTo(cx,cy);c.lineTo(px,py);c.stroke();
+    const tg=c.createRadialGradient(px,py,0,px,py,6);tg.addColorStop(0,`rgba(${bc},1)`);tg.addColorStop(1,`rgba(${bc},0)`);c.fillStyle=tg;c.beginPath();c.arc(px,py,6,0,Math.PI*2);c.fill();c.fillStyle=`rgba(${bc},1)`;c.beginPath();c.arc(px,py,2,0,Math.PI*2);c.fill();c.restore();
+    c.save();c.globalAlpha=this.op*.18;c.font=`${Math.max(8,r*.4)}px "DM Sans",sans-serif`;c.fillStyle=`rgba(${bc},.6)`;c.textAlign='center';c.fillText('|0⟩',cx,cy-r-5);c.fillText('|1⟩',cx,cy+r+12);c.restore()}
+}
+
+class P{
+  constructor(){this.reset()}
+  reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.vx=(Math.random()-.5)*.3;this.vy=(Math.random()-.5)*.2;this.sz=.5+Math.random()*1.5;this.op=.1+Math.random()*.25;this.l=0;this.ml=300+Math.random()*500}
+  update(){this.x+=this.vx;this.y+=this.vy;this.l++;if(this.l>this.ml||this.x<-20||this.x>W+20||this.y<-20||this.y>H+20)this.reset()}
+  draw(c){const f=this.l<60?this.l/60:(this.ml-this.l)<60?(this.ml-this.l)/60:1;c.save();c.globalAlpha=this.op*f;c.fillStyle='#c8dff0';c.beginPath();c.arc(this.x,this.y,this.sz,0,Math.PI*2);c.fill();c.restore()}
+}
+
+function init(){resize();qubits=[];particles=[];const n=W<600?8:W<1e3?14:20,m=80;for(let i=0;i<n;i++){let x,y,ok,a=0;do{x=m+Math.random()*(W-m*2);y=m+Math.random()*(H-m*2);ok=!qubits.some(q=>Math.hypot(q.bx-x,q.by-y)<90);a++}while(!ok&&a<50);qubits.push(new Q(x,y))}for(let i=0;i<(W<600?40:80);i++)particles.push(new P())}
+
+function drawE(t){const md=W<600?200:280;for(let i=0;i<qubits.length;i++)for(let j=i+1;j<qubits.length;j++){const a=qubits[i],b=qubits[j],d=Math.hypot(a.x-b.x,a.y-b.y);if(d<md){const s=1-d/md,w=Math.sin(t*1.5+i*.7+j*.3)*.5+.5;ctx.save();ctx.globalAlpha=s*.12*w;const g=ctx.createLinearGradient(a.x,a.y,b.x,b.y);g.addColorStop(0,'rgba(192,132,252,.8)');g.addColorStop(.5,'rgba(136,192,240,.6)');g.addColorStop(1,'rgba(192,132,252,.8)');ctx.strokeStyle=g;ctx.lineWidth=1;const mx=(a.x+b.x)/2+Math.sin(t+i)*10,my=(a.y+b.y)/2+Math.cos(t+j)*10;ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.quadraticCurveTo(mx,my,b.x,b.y);ctx.stroke();if(s>.4&&w>.6){const pt=(t*.5+i*2)%1,ip=1-pt,px=ip*ip*a.x+2*ip*pt*mx+pt*pt*b.x,py=ip*ip*a.y+2*ip*pt*my+pt*pt*b.y,pg=ctx.createRadialGradient(px,py,0,px,py,4);pg.addColorStop(0,`rgba(200,180,255,${s*.6})`);pg.addColorStop(1,'rgba(200,180,255,0)');ctx.fillStyle=pg;ctx.beginPath();ctx.arc(px,py,4,0,Math.PI*2);ctx.fill()}ctx.restore()}}}
+
+function animate(){time+=.016;ctx.clearRect(0,0,W,H);const bg=ctx.createRadialGradient(W/2,H*.4,0,W/2,H*.4,Math.max(W,H)*.7);bg.addColorStop(0,'#0c1020');bg.addColorStop(1,'#05060b');ctx.fillStyle=bg;ctx.fillRect(0,0,W,H);for(const p of particles){p.update();p.draw(ctx)}drawE(time);for(const q of qubits){q.update(time);q.draw(ctx)}requestAnimationFrame(animate)}
+
+canvas.addEventListener('mousemove',e=>{const r=canvas.getBoundingClientRect();mouse.x=e.clientX-r.left;mouse.y=e.clientY-r.top});
+canvas.addEventListener('mouseleave',()=>{mouse.x=-1e3;mouse.y=-1e3});
+canvas.addEventListener('touchmove',e=>{const r=canvas.getBoundingClientRect();mouse.x=e.touches[0].clientX-r.left;mouse.y=e.touches[0].clientY-r.top},{passive:true});
+canvas.addEventListener('touchend',()=>{mouse.x=-1e3;mouse.y=-1e3});
+window.addEventListener('resize',()=>{resize();init()});
+
+function createAmbient(){audioCtx=new(window.AudioContext||window.webkitAudioContext)();gainNode=audioCtx.createGain();gainNode.gain.value=0;gainNode.connect(audioCtx.destination);[110,164.81,220,329.63,440].forEach((f,i)=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.value=f;g.gain.value=.015/(i+1);o.connect(g);g.connect(gainNode);o.start();const o2=audioCtx.createOscillator(),g2=audioCtx.createGain();o2.type='sine';o2.frequency.value=f*1.003;g2.gain.value=.01/(i+1);o2.connect(g2);g2.connect(gainNode);o2.start()})}
+const soundBtn=document.getElementById('soundToggle');
+soundBtn.addEventListener('click',()=>{if(!audioCtx)createAmbient();isAudioOn=!isAudioOn;if(isAudioOn){audioCtx.resume();gainNode.gain.linearRampToValueAtTime(1,audioCtx.currentTime+2);soundBtn.textContent='♪ Sound On';soundBtn.classList.add('active')}else{gainNode.gain.linearRampToValueAtTime(0,audioCtx.currentTime+1);soundBtn.textContent='♪ Sound Off';soundBtn.classList.remove('active')}});
+
+init();animate();
+})();
+
+// ═══ SCROLL REVEAL ═══
+(function(){
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:.12,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+})();
+
+// ═══ SEARCH RACE ═══
+(function(){
+const N=64;let target=Math.floor(Math.random()*N),cCards=[],qCards=[],running=false;
+const cG=document.getElementById('classicalGrid'),qG=document.getElementById('quantumGrid'),cC=document.getElementById('classicalCounter'),qC=document.getElementById('quantumCounter'),sBtn=document.getElementById('raceStartBtn'),rBtn=document.getElementById('raceResetBtn');
+
+function build(){cG.innerHTML='';qG.innerHTML='';cCards=[];qCards=[];for(let i=0;i<N;i++){const c=document.createElement('div');c.className='search-card';cG.appendChild(c);cCards.push(c);const q=document.createElement('div');q.className='search-card';qG.appendChild(q);qCards.push(q)}cC.innerHTML='&nbsp;';qC.innerHTML='&nbsp;'}
+
+function run(){
+  if(running)return;running=true;sBtn.disabled=true;rBtn.disabled=true;
+  let step=0,order=Array.from({length:N},(_,i)=>i),cFound=false,qDone=false;
+  for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]]}
+
+  const ci=setInterval(()=>{if(cFound)return;cCards.forEach(c=>c.classList.remove('checking'));const idx=order[step];cCards[idx].classList.add('checking');step++;cC.innerHTML=`Steps: <span class="count">${step}</span>`;if(idx===target){cFound=true;clearInterval(ci);cCards[idx].classList.remove('checking');cCards[idx].classList.add('found');cCards[idx].textContent='★';cCards.forEach((c,i)=>{if(i!==target)c.classList.add('dimmed')});cC.innerHTML=`Found in <span class="count">${step}</span> steps`;done()}},70);
+
+  setTimeout(()=>{qCards.forEach((c,i)=>{setTimeout(()=>c.classList.add('superposed'),i*8)});qC.innerHTML=`Superposition: <span class="count">all ${N}</span>`},200);
+
+  setTimeout(()=>{qC.innerHTML='Interference: amplifying...';const dists=qCards.map((_,i)=>{const r1=Math.floor(i/8),c1=i%8,r2=Math.floor(target/8),c2=target%8;return Math.abs(r1-r2)+Math.abs(c1-c2)});const mx=Math.max(...dists);
+  for(let w=mx;w>=0;w--){setTimeout(()=>{qCards.forEach((c,i)=>{if(dists[i]>=w&&i!==target){c.classList.remove('superposed');c.classList.add('dimmed')}});if(w<=1){qCards[target].classList.remove('superposed');qCards[target].classList.add('found');qCards[target].textContent='★';qC.innerHTML='Found in ~<span class="count">√64 ≈ 8</span> steps';qDone=true;done()}},(mx-w)*120)}},200+N*8+600);
+
+  function done(){if((cFound||qDone)){rBtn.disabled=false;if(cFound&&qDone)running=false}}
+}
+
+sBtn.addEventListener('click',run);
+rBtn.addEventListener('click',()=>{running=false;sBtn.disabled=false;rBtn.disabled=true;target=Math.floor(Math.random()*N);build()});
+build();
+})();
+
+// ═══ BIT SWITCH ═══
+(function(){const s=document.getElementById('bitSwitch');let on=false;s.addEventListener('click',()=>{on=!on;s.textContent=on?'1':'0';s.className='bit-switch '+(on?'on':'off')})})();
+
+// ═══ QUBIT DEMO ═══
+(function(){
+const cv=document.getElementById('qubitDemoCanvas'),c=cv.getContext('2d'),ro=document.getElementById('qubitReadout');
+const S=160,R=60,CX=S/2,CY=S/2;let th=Math.PI/4,ph=0,drag=false,last=null,auto=true;
+
+function draw(){
+  c.setTransform(2,0,0,2,0,0);c.clearRect(0,0,S,S);
+  c.strokeStyle='rgba(111,168,220,.2)';c.lineWidth=.8;c.beginPath();c.arc(CX,CY,R,0,Math.PI*2);c.stroke();
+  c.strokeStyle='rgba(111,168,220,.12)';c.lineWidth=.5;c.beginPath();c.ellipse(CX,CY,R,R*.32,0,0,Math.PI*2);c.stroke();c.beginPath();c.ellipse(CX,CY,R*.32,R,0,0,Math.PI*2);c.stroke();
+  c.font='10px "DM Sans",sans-serif';c.fillStyle='rgba(111,168,220,.4)';c.textAlign='center';c.fillText('|0⟩',CX,CY-R-8);c.fillText('|1⟩',CX,CY+R+14);
+  const sx=Math.sin(th)*Math.cos(ph),sz=Math.cos(th),sy=Math.sin(th)*Math.sin(ph),px=CX+sx*R,py=CY-sz*R+sy*R*.3;
+  c.strokeStyle='rgba(111,168,220,.15)';c.lineWidth=.5;c.setLineDash([3,3]);c.beginPath();c.moveTo(CX,CY);c.lineTo(CX+sx*R,CY+sy*R*.3);c.stroke();c.setLineDash([]);
+  c.strokeStyle='rgba(111,168,220,.9)';c.lineWidth=2;c.beginPath();c.moveTo(CX,CY);c.lineTo(px,py);c.stroke();
+  const g=c.createRadialGradient(px,py,0,px,py,8);g.addColorStop(0,'rgba(136,192,240,.8)');g.addColorStop(1,'rgba(136,192,240,0)');c.fillStyle=g;c.beginPath();c.arc(px,py,8,0,Math.PI*2);c.fill();
+  c.fillStyle='rgba(136,192,240,1)';c.beginPath();c.arc(px,py,2.5,0,Math.PI*2);c.fill();
+  const a=Math.cos(th/2),b=Math.sin(th/2);
+  ro.innerHTML=`<span class="ket">|ψ⟩</span> = ${a.toFixed(2)} <span class="ket">|0⟩</span> + ${b.toFixed(2)} <span class="ket">|1⟩</span>`;
+}
+
+function gp(e){const r=cv.getBoundingClientRect(),sx=S/r.width,sy=S/r.height,cx=e.touches?e.touches[0].clientX:e.clientX,cy=e.touches?e.touches[0].clientY:e.clientY;return{x:(cx-r.left)*sx,y:(cy-r.top)*sy}}
+cv.addEventListener('mousedown',e=>{drag=true;auto=false;last=gp(e)});
+cv.addEventListener('touchstart',e=>{drag=true;auto=false;last=gp(e);e.preventDefault()},{passive:false});
+function mv(e){if(!drag)return;const p=gp(e);if(last){ph+=( p.x-last.x)*.03;th=Math.max(.05,Math.min(Math.PI-.05,th+(p.y-last.y)*.03))}last=p}
+cv.addEventListener('mousemove',mv);cv.addEventListener('touchmove',e=>{mv(e);e.preventDefault()},{passive:false});
+function up(){drag=false;last=null}window.addEventListener('mouseup',up);window.addEventListener('touchend',up);
+function loop(){if(auto)ph+=.01;draw();requestAnimationFrame(loop)}loop();
+})();
+
+// ═══ MEASUREMENT ═══
+(function(){
+const btn=document.getElementById('measureBtn'),bZ=document.getElementById('barZero'),bO=document.getElementById('barOne'),cZ=document.getElementById('countZero'),cO=document.getElementById('countOne'),tot=document.getElementById('measureTotal'),ins=document.getElementById('measureInsight');
+let z=0,o=0;
+const msgs=[{n:1,t:"Each measurement is truly random — a coin flip by nature itself."},{n:6,t:"Keep going. The pattern is starting to emerge."},{n:16,t:"The bars are converging toward equal. That's Born's rule at work."},{n:31,t:"The more you measure, the closer to 50/50. Probability becomes certainty in the aggregate."},{n:61,t:"The law of large numbers in action. Quantum randomness, classical statistics."}];
+
+btn.addEventListener('click',()=>{
+  if(Math.random()<.5)z++;else o++;const n=z+o,mx=Math.max(z,o,1);
+  bZ.style.height=(z/mx*100)+'%';bO.style.height=(o/mx*100)+'%';
+  cZ.textContent=z;cO.textContent=o;tot.textContent=`${n} measurement${n!==1?'s':''}`;
+  btn.classList.add('collapsing');setTimeout(()=>btn.classList.remove('collapsing'),400);
+  const m=msgs.slice().reverse().find(m=>n>=m.n);if(m)ins.textContent=m.t;
+});
+})();
+
+// ═══ WAVE POOL ═══
+(function(){
+const cv=document.getElementById('wavePoolCanvas'),ctx=cv.getContext('2d');
+const hint=document.getElementById('waveHint');
+let W,H,dpr,sources=[],time=0;
+
+function resize(){
+  dpr=Math.min(devicePixelRatio||1,2);
+  W=cv.clientWidth;H=cv.clientHeight;
+  cv.width=W*dpr;cv.height=H*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+
+function addSource(x,y){
+  sources.push({x,y,t:time});
+  if(sources.length===1)hint.textContent='Add more to see interference';
+  else if(sources.length===2)hint.textContent='Bright = constructive, dark = destructive';
+  else hint.textContent=sources.length+' wave sources';
+}
+
+cv.addEventListener('click',e=>{
+  const r=cv.getBoundingClientRect();
+  addSource((e.clientX-r.left)/r.width*W,(e.clientY-r.top)/r.height*H);
+});
+cv.addEventListener('touchstart',e=>{
+  e.preventDefault();const r=cv.getBoundingClientRect();const t=e.touches[0];
+  addSource((t.clientX-r.left)/r.width*W,(t.clientY-r.top)/r.height*H);
+},{passive:false});
+
+document.getElementById('waveResetBtn').addEventListener('click',()=>{
+  sources=[];hint.textContent='Click the pool to add wave sources';
+});
+
+// Render wave field using pixel sampling (efficient approach)
+const STEP=4; // sample every 4px
+function draw(){
+  time+=0.04;
+  ctx.fillStyle='#060a14';
+  ctx.fillRect(0,0,W,H);
+
+  if(sources.length===0){
+    // Draw subtle "click here" cue
+    ctx.save();ctx.globalAlpha=0.15;
+    ctx.fillStyle=`rgba(111,168,220,${0.08+Math.sin(time*2)*0.04})`;
+    ctx.beginPath();ctx.arc(W/2,H/2,40+Math.sin(time)*5,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+    requestAnimationFrame(draw);return;
+  }
+
+  const imgData=ctx.createImageData(Math.ceil(W/STEP),Math.ceil(H/STEP));
+  const d=imgData.data;
+  const speed=120,decay=0.0025;
+
+  for(let py=0;py<Math.ceil(H/STEP);py++){
+    for(let px=0;px<Math.ceil(W/STEP);px++){
+      const wx=px*STEP,wy=py*STEP;
+      let val=0;
+      for(const s of sources){
+        const dist=Math.hypot(wx-s.x,wy-s.y);
+        const age=time-s.t;
+        const wavefront=age*speed;
+        if(dist<wavefront){
+          const amplitude=Math.exp(-dist*decay)*Math.exp(-(age)*0.15);
+          val+=amplitude*Math.sin(dist*0.08-age*4);
+        }
+      }
+      const idx=(py*Math.ceil(W/STEP)+px)*4;
+      // Map val to color: blue for positive, dim for negative
+      if(val>0){
+        const v=Math.min(val*0.7,1);
+        d[idx]=Math.floor(50+v*90);   // R
+        d[idx+1]=Math.floor(80+v*140); // G
+        d[idx+2]=Math.floor(140+v*115); // B
+        d[idx+3]=Math.floor(40+v*180); // A
+      } else {
+        const v=Math.min(-val*0.5,1);
+        d[idx]=Math.floor(15+v*30);
+        d[idx+1]=Math.floor(10+v*15);
+        d[idx+2]=Math.floor(40+v*30);
+        d[idx+3]=Math.floor(30+v*60);
+      }
+    }
+  }
+
+  // Draw scaled up
+  const tmpCv=document.createElement('canvas');
+  tmpCv.width=Math.ceil(W/STEP);tmpCv.height=Math.ceil(H/STEP);
+  tmpCv.getContext('2d').putImageData(imgData,0,0);
+  ctx.imageSmoothingEnabled=true;
+  ctx.drawImage(tmpCv,0,0,W,H);
+
+  // Draw source points
+  for(const s of sources){
+    const age=time-s.t;
+    const fade=Math.max(0,1-age*0.08);
+    ctx.save();ctx.globalAlpha=0.3+fade*0.5;
+    const g=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,8);
+    g.addColorStop(0,'rgba(200,220,255,0.9)');g.addColorStop(1,'rgba(200,220,255,0)');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(s.x,s.y,8,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  }
+
+  // Remove very old sources
+  sources=sources.filter(s=>(time-s.t)<15);
+  if(sources.length===0)hint.textContent='Click the pool to add wave sources';
+
+  requestAnimationFrame(draw);
+}
+
+resize();
+window.addEventListener('resize',resize);
+draw();
+})();
+
+// ═══ AMPLITUDE SCULPTING ═══
+(function(){
+const N=8,target=3; // answer index 3 is the "correct" one
+let amps=new Array(N).fill(1/Math.sqrt(N)); // equal superposition
+let step=0;
+const container=document.getElementById('ampBars');
+const stepBtn=document.getElementById('ampStepBtn');
+const resetBtn=document.getElementById('ampResetBtn');
+const status=document.getElementById('ampStatus');
+const labels=['000','001','010','011','100','101','110','111'];
+
+function build(){
+  container.innerHTML='';
+  for(let i=0;i<N;i++){
+    const col=document.createElement('div');col.className='amp-bar-col';
+    const wrap=document.createElement('div');wrap.className='amp-bar-wrap';
+    const fill=document.createElement('div');
+    fill.className='amp-bar-fill '+(i===target?'correct':'wrong');
+    fill.id='ampFill'+i;
+    const val=document.createElement('div');val.className='amp-bar-value';val.id='ampVal'+i;
+    wrap.appendChild(val);wrap.appendChild(fill);
+    const lbl=document.createElement('div');
+    lbl.className='amp-bar-label'+(i===target?' marked':'');
+    lbl.textContent=i===target?'★ '+labels[i]:labels[i];
+    col.appendChild(wrap);col.appendChild(lbl);
+    container.appendChild(col);
+  }
+  updateBars();
+}
+
+function updateBars(){
+  const maxA=Math.max(...amps.map(Math.abs),0.01);
+  for(let i=0;i<N;i++){
+    const fill=document.getElementById('ampFill'+i);
+    const val=document.getElementById('ampVal'+i);
+    const h=Math.abs(amps[i])/maxA*140;
+    fill.style.height=h+'px';
+    val.textContent=(amps[i]*amps[i]*100).toFixed(0)+'%';
+  }
+}
+
+// Grover-like iteration: Oracle + Diffusion
+function groverStep(){
+  // Oracle: flip amplitude of target
+  amps[target]*=-1;
+  // Diffusion: reflect about mean
+  const mean=amps.reduce((a,b)=>a+b,0)/N;
+  for(let i=0;i<N;i++) amps[i]=2*mean-amps[i];
+  // Normalize (shouldn't change much but safety)
+  const norm=Math.sqrt(amps.reduce((s,a)=>s+a*a,0));
+  for(let i=0;i<N;i++) amps[i]/=norm;
+}
+
+const statusMsgs=[
+  'Equal superposition — every answer equally likely',
+  'After 1 round: the correct answer is already growing',
+  'After 2 rounds: interference concentrates probability',
+  'Optimal! The correct answer now dominates. Time to measure.',
+  'Past optimal — further iterations begin to overshoot'
+];
+
+stepBtn.addEventListener('click',()=>{
+  if(step>=5)return;
+  step++;
+  groverStep();
+  updateBars();
+  status.textContent=statusMsgs[Math.min(step,4)];
+  if(step>=3)stepBtn.textContent='Keep Going...';
+  if(step>=5){stepBtn.disabled=true;stepBtn.textContent='Done';}
+});
+
+resetBtn.addEventListener('click',()=>{
+  step=0;
+  amps=new Array(N).fill(1/Math.sqrt(N));
+  stepBtn.disabled=false;stepBtn.textContent='Apply Interference';
+  status.textContent=statusMsgs[0];
+  updateBars();
+});
+
+build();
+})();
+
+// ═══ √N SPEEDUP CALCULATOR ═══
+(function(){
+const slider=document.getElementById('sqrtSlider');
+const nDisp=document.getElementById('sqrtNDisplay');
+const cBar=document.getElementById('classicalBar');
+const qBar=document.getElementById('quantumBar');
+const cVal=document.getElementById('classicalValue');
+const qVal=document.getElementById('quantumValue');
+const ratio=document.getElementById('sqrtRatio');
+
+function fmt(n){
+  if(n>=1e9)return (n/1e9).toFixed(1)+'B';
+  if(n>=1e6)return (n/1e6).toFixed(1)+'M';
+  if(n>=1e3)return Math.round(n).toLocaleString();
+  return Math.round(n).toString();
+}
+
+function update(){
+  const exp=parseInt(slider.value);
+  const N=Math.pow(2,exp);
+  const classical=N/2;
+  const quantum=Math.round(Math.PI/4*Math.sqrt(N));
+  const speedup=classical/quantum;
+
+  nDisp.textContent='2^'+exp+' = '+fmt(N);
+  cVal.textContent='~'+fmt(classical)+' steps';
+  qVal.textContent='~'+fmt(quantum)+' steps';
+
+  // Bar widths: classical is always 100%, quantum is proportional
+  cBar.style.width='100%';
+  const qPct=Math.max(1,quantum/classical*100);
+  qBar.style.width=qPct+'%';
+
+  ratio.innerHTML='Quantum is <strong>~'+fmt(speedup)+'×</strong> faster';
+}
+
+slider.addEventListener('input',update);
+update();
+})();
+
+// ═══ GROVER STEP-BY-STEP (Canvas) ═══
+(function(){
+const cv=document.getElementById('groverCanvas');
+const ctx=cv.getContext('2d');
+const N=16,target=5;
+const optimalSteps=Math.round(Math.PI/4*Math.sqrt(N)); // ~3
+
+// Pre-compute all states
+let states=[]; // each state is array of N amplitudes
+let amps=new Array(N).fill(1/Math.sqrt(N));
+states.push([...amps]);
+
+for(let i=0;i<8;i++){
+  // Oracle
+  amps[target]*=-1;
+  states.push([...amps]);
+  // Diffusion
+  const mean=amps.reduce((a,b)=>a+b,0)/N;
+  amps=amps.map(a=>2*mean-a);
+  const norm=Math.sqrt(amps.reduce((s,a)=>s+a*a,0));
+  amps=amps.map(a=>a/norm);
+  states.push([...amps]);
+}
+
+const stepDescriptions=[
+  {label:'Initial State',desc:'All 16 amplitudes are equal (1/4 each). Every item is equally likely. The marked item (★) is hiding in plain sight.'},
+  {label:'Oracle (Round 1)',desc:'The Oracle flips the sign of the marked item\'s amplitude. It goes from +1/4 to −1/4. Nothing else changes. This alone doesn\'t help — but it sets up the interference.'},
+  {label:'Diffusion (Round 1)',desc:'The Diffusion operator reflects all amplitudes about their mean. The marked item\'s negative amplitude bounces up; the others shrink slightly. After one round, the marked item already stands taller.'},
+  {label:'Oracle (Round 2)',desc:'Oracle flips the marked item\'s sign again. The larger amplitude becomes a large negative — a bigger "lever" for the next diffusion.'},
+  {label:'Diffusion (Round 2)',desc:'Diffusion reflects about the mean again. The marked item surges higher. The wrong answers get quieter. The interference pattern is sharpening.'},
+  {label:'Oracle (Round 3)',desc:'Third oracle flip. The marked item is now far from the others, so this creates a dramatic asymmetry around the mean.'},
+  {label:'Diffusion (Round 3) — Optimal!',desc:'Peak amplitude! The marked item has ~96% probability. If you measure NOW, you almost certainly get the right answer. This is the sweet spot: π/4 × √16 ≈ 3 rounds.'},
+  {label:'Oracle (Round 4)',desc:'Continuing past the optimum. The oracle flips the sign of the now-dominant amplitude, which begins to overshoot.'},
+  {label:'Diffusion (Round 4) — Overshooting',desc:'The marked item\'s probability has decreased! Grover\'s algorithm oscillates — running too long is just as bad as not running long enough. Knowing when to stop is part of the algorithm.'},
+];
+
+let currentStep=0;
+const infoLabel=document.getElementById('groverStepLabel');
+const infoDesc=document.getElementById('groverStepDesc');
+const counter=document.getElementById('groverCounter');
+const prevBtn=document.getElementById('groverPrevBtn');
+const nextBtn=document.getElementById('groverNextBtn');
+const autoBtn=document.getElementById('groverAutoBtn');
+let autoInterval=null;
+
+function drawState(idx){
+  const dpr=Math.min(devicePixelRatio||1,2);
+  const W=700,H=180;
+  cv.width=W*dpr;cv.height=H*dpr;
+  cv.style.width=W+'px';cv.style.height=H+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,W,H);
+
+  const state=states[idx];
+  const barW=32,gap=10,totalW=N*(barW+gap)-gap;
+  const startX=(W-totalW)/2;
+  const baseline=H*0.65;
+  const maxH=H*0.55;
+
+  // Zero line
+  ctx.strokeStyle='rgba(255,255,255,0.06)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(startX-10,baseline);ctx.lineTo(startX+totalW+10,baseline);ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,0.15)';ctx.font='9px "DM Sans",sans-serif';ctx.textAlign='right';
+  ctx.fillText('0',startX-14,baseline+3);
+
+  // Find max for scaling
+  const maxA=Math.max(...state.map(Math.abs),0.01);
+
+  for(let i=0;i<N;i++){
+    const x=startX+i*(barW+gap);
+    const a=state[i];
+    const h=(a/maxA)*maxH;
+    const isTarget=i===target;
+
+    // Bar
+    if(a>=0){
+      const grad=ctx.createLinearGradient(x,baseline-h,x,baseline);
+      if(isTarget){grad.addColorStop(0,'rgba(126,207,139,0.7)');grad.addColorStop(1,'rgba(126,207,139,0.2)');}
+      else{grad.addColorStop(0,'rgba(111,168,220,0.45)');grad.addColorStop(1,'rgba(111,168,220,0.1)');}
+      ctx.fillStyle=grad;
+      ctx.beginPath();
+      ctx.roundRect(x,baseline-h,barW,h,3);
+      ctx.fill();
+    } else {
+      const absH=Math.abs(h);
+      const grad=ctx.createLinearGradient(x,baseline,x,baseline+absH);
+      if(isTarget){grad.addColorStop(0,'rgba(240,144,112,0.3)');grad.addColorStop(1,'rgba(240,144,112,0.6)');}
+      else{grad.addColorStop(0,'rgba(111,168,220,0.1)');grad.addColorStop(1,'rgba(111,168,220,0.3)');}
+      ctx.fillStyle=grad;
+      ctx.beginPath();
+      ctx.roundRect(x,baseline,barW,absH,3);
+      ctx.fill();
+    }
+
+    // Glow for target
+    if(isTarget && a>0){
+      ctx.save();ctx.globalAlpha=0.15;
+      ctx.fillStyle='rgba(126,207,139,1)';
+      ctx.shadowColor='rgba(126,207,139,0.5)';ctx.shadowBlur=12;
+      ctx.beginPath();ctx.roundRect(x,baseline-h,barW,h,3);ctx.fill();
+      ctx.restore();
+    }
+
+    // Label
+    ctx.fillStyle=isTarget?'rgba(126,207,139,0.8)':'rgba(255,255,255,0.2)';
+    ctx.font=(isTarget?'bold ':'')+'9px "DM Sans",sans-serif';
+    ctx.textAlign='center';
+    ctx.fillText(isTarget?'★':i.toString(),x+barW/2,H-4);
+
+    // Probability text on top
+    const prob=(a*a*100);
+    if(prob>1){
+      ctx.fillStyle=isTarget?'rgba(126,207,139,0.7)':'rgba(255,255,255,0.25)';
+      ctx.font='8px "DM Sans",sans-serif';
+      ctx.textAlign='center';
+      const ty=a>=0?baseline-h-6:baseline+Math.abs(h)+12;
+      ctx.fillText(prob.toFixed(0)+'%',x+barW/2,ty);
+    }
+  }
+}
+
+function updateUI(){
+  drawState(currentStep);
+  const d=stepDescriptions[currentStep]||{label:'Step '+currentStep,desc:''};
+  infoLabel.textContent=d.label;
+  infoDesc.textContent=d.desc;
+  counter.textContent='Step '+currentStep+' / '+(states.length-1);
+  prevBtn.disabled=currentStep===0;
+  nextBtn.disabled=currentStep>=states.length-1;
+}
+
+prevBtn.addEventListener('click',()=>{if(currentStep>0){currentStep--;updateUI()}});
+nextBtn.addEventListener('click',()=>{if(currentStep<states.length-1){currentStep++;updateUI()}});
+
+autoBtn.addEventListener('click',()=>{
+  if(autoInterval){clearInterval(autoInterval);autoInterval=null;autoBtn.textContent='▶ Auto-play';return}
+  currentStep=0;updateUI();
+  autoBtn.textContent='⏸ Pause';
+  autoInterval=setInterval(()=>{
+    if(currentStep>=states.length-1){clearInterval(autoInterval);autoInterval=null;autoBtn.textContent='▶ Auto-play';return}
+    currentStep++;updateUI();
+  },1200);
+});
+
+updateUI();
+
+// Redraw on resize
+let rto;window.addEventListener('resize',()=>{clearTimeout(rto);rto=setTimeout(()=>drawState(currentStep),200)});
+})();
+
+// ═══ FACTORING CHALLENGE ═══
+(function(){
+const levels=[
+  {n:15,a:3,b:5},{n:21,a:3,b:7},{n:35,a:5,b:7},{n:77,a:7,b:11},
+  {n:143,a:11,b:13},{n:323,a:17,b:19},{n:899,a:29,b:31},{n:2021,a:43,b:47}
+];
+let current=0,solved=new Set();
+const levelsEl=document.getElementById('factorLevels');
+const targetEl=document.getElementById('factorTarget');
+const inputA=document.getElementById('factorA');
+const inputB=document.getElementById('factorB');
+const checkBtn=document.getElementById('factorCheckBtn');
+const feedback=document.getElementById('factorFeedback');
+const noteEl=document.getElementById('factorNote');
+
+function buildLevels(){
+  levelsEl.innerHTML='';
+  levels.forEach((l,i)=>{
+    const b=document.createElement('button');
+    b.className='factor-level-btn'+(i===current?' active':'')+(solved.has(i)?' solved':'');
+    b.textContent=l.n;
+    b.addEventListener('click',()=>{current=i;selectLevel()});
+    levelsEl.appendChild(b);
+  });
+}
+
+function selectLevel(){
+  const l=levels[current];
+  targetEl.textContent=l.n;
+  inputA.value='';inputB.value='';
+  feedback.innerHTML='&nbsp;';feedback.className='factor-feedback';
+  buildLevels();
+  if(current>=3&&!noteEl.style.display!=='block'){noteEl.style.display='block';noteEl.classList.add('visible');}
+}
+
+checkBtn.addEventListener('click',()=>{
+  const l=levels[current];
+  const a=parseInt(inputA.value),b=parseInt(inputB.value);
+  if(!a||!b){feedback.textContent='Enter two numbers';feedback.className='factor-feedback wrong';return}
+  if((a===l.a&&b===l.b)||(a===l.b&&b===l.a)){
+    feedback.textContent='Correct! '+l.n+' = '+l.a+' × '+l.b;
+    feedback.className='factor-feedback correct';
+    solved.add(current);
+    buildLevels();
+    if(current<levels.length-1){
+      setTimeout(()=>{current++;selectLevel()},1200);
+    } else {
+      noteEl.style.display='block';noteEl.classList.add('visible');
+    }
+  } else if(a*b===l.n&&a>1&&b>1){
+    feedback.textContent='That works too! '+a+' × '+b+' = '+l.n;
+    feedback.className='factor-feedback correct';
+    solved.add(current);buildLevels();
+    if(current<levels.length-1)setTimeout(()=>{current++;selectLevel()},1200);
+  } else {
+    feedback.textContent=a+' × '+b+' = '+(a*b)+' — not quite';
+    feedback.className='factor-feedback wrong';
+  }
+});
+
+// Enter key
+[inputA,inputB].forEach(el=>el.addEventListener('keydown',e=>{if(e.key==='Enter')checkBtn.click()}));
+
+buildLevels();selectLevel();
+})();
+
+// ═══ PERIOD FINDING ═══
+(function(){
+const N_val=15;
+const validA=[2,4,7,8,11,13,14]; // coprime to 15
+const cv=document.getElementById('periodCanvas');
+const ctx=cv.getContext('2d');
+const btnsEl=document.getElementById('periodAButtons');
+const infoEl=document.getElementById('periodInfo');
+let selectedA=null;
+
+validA.forEach(a=>{
+  const btn=document.createElement('button');
+  btn.className='period-a-btn';btn.textContent=a;
+  btn.addEventListener('click',()=>{
+    selectedA=a;
+    btnsEl.querySelectorAll('.period-a-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    drawPeriod(a);
+  });
+  btnsEl.appendChild(btn);
+});
+
+function modPow(base,exp,mod){let r=1;base%=mod;for(let i=0;i<exp;i++){r=(r*base)%mod}return r}
+
+function findPeriod(a){
+  for(let r=1;r<=N_val;r++){if(modPow(a,r,N_val)===1)return r}
+  return N_val;
+}
+
+function drawPeriod(a){
+  const dpr=Math.min(devicePixelRatio||1,2);
+  const W=650,H=130;
+  cv.width=W*dpr;cv.height=H*dpr;
+  cv.style.width=W+'px';cv.style.height=H+'px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,W,H);
+
+  const period=findPeriod(a);
+  const nPoints=24;
+  const vals=[];
+  for(let x=0;x<nPoints;x++)vals.push(modPow(a,x,N_val));
+  const maxVal=N_val;
+  const padL=40,padR=20,padT=15,padB=30;
+  const plotW=W-padL-padR,plotH=H-padT-padB;
+
+  // Axes
+  ctx.strokeStyle='rgba(255,255,255,0.08)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(padL,padT);ctx.lineTo(padL,H-padB);ctx.lineTo(W-padR,H-padB);ctx.stroke();
+  ctx.font='9px "DM Sans",sans-serif';ctx.fillStyle='rgba(255,255,255,0.2)';ctx.textAlign='right';
+  ctx.fillText('N',padL-6,padT+10);ctx.fillText('0',padL-6,H-padB+3);
+  ctx.textAlign='center';ctx.fillText('x',W-padR+10,H-padB+3);
+
+  // Plot
+  const barW=plotW/nPoints*0.7;
+  for(let x=0;x<nPoints;x++){
+    const px=padL+x*(plotW/nPoints)+plotW/nPoints*0.15;
+    const v=vals[x];
+    const h=(v/maxVal)*plotH;
+    const isFirstPeriod=x<period;
+    const hue=isFirstPeriod?'192,132,252':'111,168,220';
+    const op=isFirstPeriod?0.7:0.3;
+
+    const grad=ctx.createLinearGradient(px,H-padB-h,px,H-padB);
+    grad.addColorStop(0,`rgba(${hue},${op})`);
+    grad.addColorStop(1,`rgba(${hue},${op*0.3})`);
+    ctx.fillStyle=grad;
+    ctx.beginPath();ctx.roundRect(px,H-padB-h,barW,h,2);ctx.fill();
+
+    // Value label
+    if(x<16){
+      ctx.fillStyle=`rgba(255,255,255,${isFirstPeriod?0.5:0.15})`;
+      ctx.font='8px "DM Sans",sans-serif';ctx.textAlign='center';
+      ctx.fillText(v,px+barW/2,H-padB-h-4);
+    }
+
+    // x-axis label
+    if(x%period===0&&x<nPoints){
+      ctx.fillStyle='rgba(192,132,252,0.5)';
+      ctx.font='8px "DM Sans",sans-serif';ctx.textAlign='center';
+      ctx.fillText(x,px+barW/2,H-padB+14);
+      // Period marker line
+      if(x>0){
+        ctx.strokeStyle='rgba(192,132,252,0.2)';ctx.lineWidth=1;ctx.setLineDash([3,3]);
+        ctx.beginPath();ctx.moveTo(px,padT);ctx.lineTo(px,H-padB);ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    }
+  }
+
+  // Bracket for period
+  const p1x=padL+plotW/nPoints*0.15;
+  const p2x=padL+period*(plotW/nPoints)+plotW/nPoints*0.15;
+  const by=H-padB+22;
+  ctx.strokeStyle='rgba(192,132,252,0.4)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(p1x,by);ctx.lineTo(p1x,by+4);ctx.moveTo(p1x,by+4);ctx.lineTo(p2x,by+4);ctx.moveTo(p2x,by+4);ctx.lineTo(p2x,by);ctx.stroke();
+  ctx.fillStyle='rgba(192,132,252,0.6)';ctx.font='10px "DM Sans",sans-serif';ctx.textAlign='center';
+  ctx.fillText('r = '+period,(p1x+p2x)/2,by+15);
+
+  infoEl.innerHTML='f(x) = '+a+'<sup>x</sup> mod 15 &nbsp;→&nbsp; period <em>r = '+period+'</em>. &nbsp; The Quantum Fourier Transform finds this period exponentially faster.';
+}
+
+// Draw initial placeholder
+(function(){
+  const dpr=Math.min(devicePixelRatio||1,2);
+  cv.width=650*dpr;cv.height=130*dpr;cv.style.width='650px';cv.style.height='130px';
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.fillStyle='rgba(255,255,255,0.06)';ctx.font='13px "DM Sans",sans-serif';ctx.textAlign='center';
+  ctx.fillText('← Select a value of a',325,70);
+})();
+})();
+
+// ═══ SHOR PIPELINE ═══
+(function(){
+const steps=[
+  {title:'Step 1: Pick a random number',body:'We choose <span class="shor-val">a = 7</span> (any number between 2 and 14 that shares no common factor with N = 15). We check: gcd(7, 15) = 1 — good, they\'re coprime. <span class="shor-computation">a = 7, &nbsp; N = 15, &nbsp; gcd(7, 15) = 1 ✓</span>'},
+  {title:'Step 2: Build the quantum superposition',body:'Prepare a quantum register in a superposition of all x values from 0 to Q−1, where Q ≥ N². For N = 15, we use Q = 256 (8 qubits). The quantum register now holds <strong>all 256 values simultaneously</strong>.<span class="shor-computation">|ψ⟩ = (1/√256) · ( |0⟩ + |1⟩ + |2⟩ + ... + |255⟩ )</span>'},
+  {title:'Step 3: Compute f(x) = 7ˣ mod 15',body:'A quantum circuit computes <span class="shor-val">7ˣ mod 15</span> for all x in parallel, entangling the input register with an output register. The function is periodic with some unknown period r.<span class="shor-computation">7⁰=1, 7¹=7, 7²=4, 7³=13, 7⁴=1, 7⁵=7, ... &nbsp; (repeats!)</span>'},
+  {title:'Step 4: Apply the Quantum Fourier Transform',body:'The QFT transforms the periodicity in the x-register into sharp frequency peaks. This is the quantum magic — it extracts the period without checking every value. The measurement will yield a multiple of Q/r.<span class="shor-computation">QFT converts periodicity → frequency peaks at multiples of 256/4 = 64</span>'},
+  {title:'Step 5: Measure and extract the period',body:'We measure the quantum register and get a value near a multiple of 64 (e.g., 0, 64, 128, or 192). Using the continued fractions algorithm, we deduce <span class="shor-val">r = 4</span>.<span class="shor-computation">Measured: 192 &nbsp;→&nbsp; 192/256 = 3/4 &nbsp;→&nbsp; r = 4</span>'},
+  {title:'Step 6: Extract the factors',body:'Now classical arithmetic finishes the job. Since r = 4 is even, compute 7^(r/2) = 7² = 49. Then:<span class="shor-computation">gcd(49 + 1, 15) = gcd(50, 15) = <span class="shor-result">5</span><br>gcd(49 − 1, 15) = gcd(48, 15) = <span class="shor-result">3</span></span>The factors of 15 are <span class="shor-result">3 × 5</span>. &nbsp;Done. ✓'},
+];
+
+let current=-1;
+const pipsEl=document.getElementById('shorSteps');
+const titleEl=document.getElementById('shorStepTitle');
+const bodyEl=document.getElementById('shorStepBody');
+const prevBtn=document.getElementById('shorPrevBtn');
+const nextBtn=document.getElementById('shorNextBtn');
+
+// Build pips
+steps.forEach((_,i)=>{
+  const pip=document.createElement('div');
+  pip.className='shor-step-pip';
+  pip.addEventListener('click',()=>{current=i;updateShor()});
+  pipsEl.appendChild(pip);
+});
+
+function updateShor(){
+  const pips=pipsEl.querySelectorAll('.shor-step-pip');
+  pips.forEach((p,i)=>{
+    p.classList.toggle('done',i<current);
+    p.classList.toggle('current',i===current);
+  });
+  if(current<0){
+    titleEl.textContent='Click "Start" to begin';bodyEl.innerHTML='Walk through the six steps of Shor\'s algorithm applied to factoring N = 15.';
+  } else {
+    titleEl.textContent=steps[current].title;
+    bodyEl.innerHTML=steps[current].body;
+  }
+  prevBtn.disabled=current<=0;
+  nextBtn.disabled=current>=steps.length-1;
+  nextBtn.textContent=current<0?'Start →':'Next Step →';
+}
+
+prevBtn.addEventListener('click',()=>{if(current>0){current--;updateShor()}});
+nextBtn.addEventListener('click',()=>{if(current<steps.length-1){current++;updateShor()}});
+updateShor();
+})();
+
+// ═══ FRONTIER CARD ICONS (Animated Canvas) ═══
+(function(){
+const icons=[
+  // 0: Quantum Simulation — spinning lattice of particles
+  function(cv,t){
+    const c=cv.getContext('2d');const s=60;c.clearRect(0,0,s,s);
+    const n=3;const sp=14;const ox=s/2-(n-1)*sp/2;const oy=s/2-(n-1)*sp/2;
+    for(let i=0;i<n;i++)for(let j=0;j<n;j++){
+      const x=ox+i*sp+Math.sin(t*2+i+j)*2;
+      const y=oy+j*sp+Math.cos(t*2+i*0.7+j)*2;
+      const spin=Math.sin(t*3+i*2+j*3)>0;
+      c.fillStyle=spin?'rgba(111,168,220,0.6)':'rgba(240,144,112,0.5)';
+      c.beginPath();c.arc(x,y,3,0,Math.PI*2);c.fill();
+      // bonds
+      if(i<n-1){c.strokeStyle='rgba(255,255,255,0.08)';c.lineWidth=0.5;c.beginPath();c.moveTo(x,y);c.lineTo(ox+(i+1)*sp+Math.sin(t*2+(i+1)+j)*2,y);c.stroke()}
+      if(j<n-1){c.beginPath();c.moveTo(x,y);c.lineTo(x,oy+j*sp+sp+Math.cos(t*2+i*0.7+(j+1))*2);c.stroke()}
+    }
+  },
+  // 1: VQE — energy landscape descent
+  function(cv,t){
+    const c=cv.getContext('2d');const s=60;c.clearRect(0,0,s,s);
+    // Draw energy curve
+    c.strokeStyle='rgba(192,132,252,0.3)';c.lineWidth=1;c.beginPath();
+    for(let x=0;x<s;x++){const y=s/2+Math.sin(x*0.15-1.5)*12+Math.sin(x*0.08)*6-5;if(x===0)c.moveTo(x,y);else c.lineTo(x,y)}c.stroke();
+    // Ball rolling to minimum
+    const bx=s*0.35+Math.sin(t*0.8)*s*0.15;
+    const by=s/2+Math.sin(bx*0.15-1.5)*12+Math.sin(bx*0.08)*6-5;
+    const g=c.createRadialGradient(bx,by-1,0,bx,by-1,5);g.addColorStop(0,'rgba(126,207,139,0.8)');g.addColorStop(1,'rgba(126,207,139,0)');
+    c.fillStyle=g;c.beginPath();c.arc(bx,by-1,5,0,Math.PI*2);c.fill();
+    c.fillStyle='rgba(126,207,139,1)';c.beginPath();c.arc(bx,by-1,2,0,Math.PI*2);c.fill();
+  },
+  // 2: QAOA — connected graph
+  function(cv,t){
+    const c=cv.getContext('2d');const s=60;c.clearRect(0,0,s,s);
+    const pts=[{x:s/2,y:12},{x:12,y:s-14},{x:s-12,y:s-14},{x:s/2-14,y:s/2},{x:s/2+14,y:s/2}];
+    const edges=[[0,1],[0,2],[1,3],[2,4],[3,4],[0,3],[0,4]];
+    edges.forEach(([a,b])=>{
+      c.strokeStyle='rgba(255,255,255,0.07)';c.lineWidth=0.5;
+      c.beginPath();c.moveTo(pts[a].x,pts[a].y);c.lineTo(pts[b].x,pts[b].y);c.stroke();
+    });
+    const colors=['rgba(111,168,220,0.7)','rgba(240,144,112,0.6)','rgba(111,168,220,0.7)','rgba(240,144,112,0.6)','rgba(126,207,139,0.6)'];
+    pts.forEach((p,i)=>{
+      const phase=(t*1.5+i)%(Math.PI*2);const pulse=1+Math.sin(phase)*0.3;
+      c.fillStyle=colors[i];c.beginPath();c.arc(p.x,p.y,3*pulse,0,Math.PI*2);c.fill();
+    });
+  },
+  // 3: Error Correction — protective cage around qubit
+  function(cv,t){
+    const c=cv.getContext('2d');const s=60;c.clearRect(0,0,s,s);
+    const cx=s/2,cy=s/2,r=16;
+    // Cage (hexagon rotating)
+    c.strokeStyle='rgba(192,132,252,0.25)';c.lineWidth=0.8;
+    for(let i=0;i<6;i++){
+      const a1=t*0.5+i*Math.PI/3,a2=t*0.5+(i+1)*Math.PI/3;
+      c.beginPath();c.moveTo(cx+Math.cos(a1)*r,cy+Math.sin(a1)*r);c.lineTo(cx+Math.cos(a2)*r,cy+Math.sin(a2)*r);c.stroke();
+    }
+    // Inner qubit
+    const g=c.createRadialGradient(cx,cy,0,cx,cy,6);g.addColorStop(0,'rgba(111,168,220,0.7)');g.addColorStop(1,'rgba(111,168,220,0)');
+    c.fillStyle=g;c.beginPath();c.arc(cx,cy,6,0,Math.PI*2);c.fill();
+    c.fillStyle='rgba(111,168,220,1)';c.beginPath();c.arc(cx,cy,2,0,Math.PI*2);c.fill();
+    // Error sparks
+    if(Math.sin(t*4)>0.7){
+      const ex=cx+Math.cos(t*3)*r*1.2,ey=cy+Math.sin(t*3)*r*1.2;
+      c.fillStyle='rgba(240,144,112,0.4)';c.beginPath();c.arc(ex,ey,2,0,Math.PI*2);c.fill();
+    }
+  }
+];
+
+let t=0;
+function animateIcons(){
+  t+=0.016;
+  icons.forEach((draw,i)=>{
+    const cv=document.getElementById('frontierCanvas'+i);
+    if(cv){
+      const dpr=Math.min(devicePixelRatio||1,2);
+      cv.width=60*dpr;cv.height=60*dpr;cv.style.width='52px';cv.style.height='52px';
+      const c=cv.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);
+      draw(cv,t);
+    }
+  });
+  requestAnimationFrame(animateIcons);
+}
+animateIcons();
+})();
+
+// ═══ ERROR CORRECTION GAME ═══
+(function(){
+const N=9; // 9 physical qubits encoding 1 logical qubit
+const grid=document.getElementById('physicalQubits');
+const logEl=document.getElementById('logicalQubit');
+const stateEl=document.getElementById('logicalState');
+const survivedEl=document.getElementById('errorSurvived');
+const fixedEl=document.getElementById('errorsFixed');
+const bestEl=document.getElementById('errorBest');
+const startBtn=document.getElementById('errorStartBtn');
+const msgEl=document.getElementById('errorMsg');
+
+let qubits=[],running=false,timer=null,errorTimer=null;
+let startTime=0,fixed=0,best=0;
+
+function build(){
+  grid.innerHTML='';qubits=[];
+  for(let i=0;i<N;i++){
+    const el=document.createElement('div');
+    el.className='phys-qubit';el.textContent='✓';
+    el.addEventListener('click',()=>fixQubit(i));
+    el.addEventListener('touchstart',e=>{e.preventDefault();fixQubit(i)},{passive:false});
+    grid.appendChild(el);
+    qubits.push({el,error:false});
+  }
+}
+
+function fixQubit(i){
+  if(!running||!qubits[i].error)return;
+  qubits[i].error=false;
+  qubits[i].el.className='phys-qubit fixed';
+  qubits[i].el.textContent='✓';
+  fixed++;fixedEl.textContent=fixed;
+  setTimeout(()=>{if(!qubits[i].error)qubits[i].el.className='phys-qubit';},400);
+  updateLogical();
+  if(window._clickSound)window._clickSound();
+}
+
+function introduceError(){
+  if(!running)return;
+  const healthy=qubits.map((q,i)=>q.error?-1:i).filter(i=>i>=0);
+  if(healthy.length===0)return;
+  const idx=healthy[Math.floor(Math.random()*healthy.length)];
+  qubits[idx].error=true;
+  qubits[idx].el.className='phys-qubit error';
+  qubits[idx].el.textContent='✗';
+  updateLogical();
+}
+
+function updateLogical(){
+  const errs=qubits.filter(q=>q.error).length;
+  if(errs===0){logEl.className='error-game-logical';stateEl.textContent='|ψ⟩ intact';}
+  else if(errs<=2){logEl.className='error-game-logical';stateEl.textContent='|ψ⟩ correctable ('+errs+' error'+(errs>1?'s':'')+')'; }
+  else if(errs<=4){logEl.className='error-game-logical danger';stateEl.textContent='|ψ⟩ at risk! ('+errs+' errors)';}
+  else{gameOver();}
+}
+
+function gameOver(){
+  running=false;clearInterval(timer);clearInterval(errorTimer);
+  logEl.className='error-game-logical dead';stateEl.textContent='|ψ⟩ destroyed';
+  const elapsed=((Date.now()-startTime)/1000);
+  if(elapsed>best){best=elapsed;bestEl.textContent=best.toFixed(1)+'s';}
+  startBtn.textContent='Try Again';startBtn.disabled=false;
+  const msgs=['The qubit lasted '+elapsed.toFixed(1)+'s. Noise is relentless.',
+    'You fixed '+fixed+' errors. Real error correction must handle billions.',
+    elapsed>8?'Impressive! You kept it alive for '+elapsed.toFixed(1)+'s.':'Noise won. In a real quantum computer, errors arrive millions of times per second.'];
+  msgEl.textContent=msgs[Math.min(Math.floor(elapsed/5),msgs.length-1)];
+}
+
+function startGame(){
+  build();running=true;fixed=0;fixedEl.textContent='0';startTime=Date.now();
+  startBtn.disabled=true;startBtn.textContent='Running...';
+  logEl.className='error-game-logical';stateEl.textContent='|ψ⟩ intact';
+  msgEl.textContent='Click the red qubits! Don\'t let 5 errors accumulate.';
+
+  // Update survived time
+  timer=setInterval(()=>{
+    if(!running)return;
+    survivedEl.textContent=((Date.now()-startTime)/1000).toFixed(1)+'s';
+  },100);
+
+  // Introduce errors with accelerating rate
+  let delay=1500;
+  function scheduleError(){
+    if(!running)return;
+    errorTimer=setTimeout(()=>{
+      introduceError();
+      delay=Math.max(300,delay*0.92); // gets faster
+      scheduleError();
+    },delay+Math.random()*500);
+  }
+  scheduleError();
+}
+
+startBtn.addEventListener('click',startGame);
+build();
+})();
+
+// ═══ COMPLEXITY LANDSCAPE (click/tap to explore) ═══
+(function(){
+const cv=document.getElementById('complexityCanvas');
+const ctx=cv.getContext('2d');
+const titleEl=document.getElementById('complexityTitle');
+const bodyEl=document.getElementById('complexityBody');
+
+const W=600,H=350;
+const dpr=Math.min(devicePixelRatio||1,2);
+cv.width=W*dpr;cv.height=H*dpr;
+cv.style.width=W+'px';cv.style.height=H+'px';
+ctx.setTransform(dpr,0,0,dpr,0,0);
+
+const regions=[
+  {cx:W/2,cy:H/2,rx:W*0.46,ry:H*0.46,color:'rgba(240,144,112,0.06)',border:'rgba(240,144,112,0.15)',
+   label:'PSPACE',info:'PSPACE',desc:'Problems solvable with polynomial memory. Includes incredibly hard problems like generalized chess and Go. Both classical and quantum computers can solve these, but may need exponential time.'},
+  {cx:W/2-10,cy:H/2+5,rx:W*0.34,ry:H*0.35,color:'rgba(192,132,252,0.06)',border:'rgba(192,132,252,0.15)',
+   label:'NP',info:'NP',desc:'Problems whose solutions can be verified quickly, but finding them may be extremely hard. Includes the traveling salesman, protein folding, and satisfiability. Quantum computers probably can\'t solve all NP problems efficiently.'},
+  {cx:W/2+25,cy:H/2+10,rx:W*0.22,ry:H*0.25,color:'rgba(111,168,220,0.08)',border:'rgba(111,168,220,0.2)',
+   label:'BQP',info:'BQP — Quantum territory',desc:'Problems efficiently solvable by a quantum computer. Includes integer factoring (Shor) and simulating quantum physics. BQP almost certainly extends beyond P, but probably doesn\'t contain all of NP. This is where quantum algorithms live.'},
+  {cx:W/2-5,cy:H/2+15,rx:W*0.14,ry:H*0.16,color:'rgba(126,207,139,0.08)',border:'rgba(126,207,139,0.2)',
+   label:'P',info:'P — Classical efficiency',desc:'Problems solvable efficiently by a classical computer: sorting, shortest paths, linear equations. A quantum computer offers no fundamental advantage here.'},
+];
+
+const problems=[
+  {x:W/2-5,y:H/2+15,label:'Sorting'},{x:W/2+15,y:H/2+25,label:'Shortest path'},
+  {x:W/2+45,y:H/2-5,label:'Factoring'},{x:W/2+60,y:H/2+20,label:'Quantum sim.'},
+  {x:W/2-50,y:H/2-20,label:'TSP'},{x:W/2-30,y:H/2-40,label:'Protein folding'},
+  {x:W/2+10,y:H/2-60,label:'Graph iso.'},{x:W/2-70,y:H/2-70,label:'Gen. chess'},
+];
+
+let selected=null;
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  regions.forEach((r,i)=>{
+    const sel=selected===i;
+    ctx.fillStyle=sel?r.color.replace(/[\d.]+\)$/,m=>parseFloat(m)*3.5+')'):r.color;
+    ctx.beginPath();ctx.ellipse(r.cx,r.cy,r.rx,r.ry,0,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=sel?r.border.replace(/[\d.]+\)$/,m=>Math.min(1,parseFloat(m)*2.5)+')'):r.border;
+    ctx.lineWidth=sel?2:0.8;
+    ctx.beginPath();ctx.ellipse(r.cx,r.cy,r.rx,r.ry,0,0,Math.PI*2);ctx.stroke();
+    ctx.font=(sel?'600 ':'500 ')+'11px "DM Sans",sans-serif';
+    ctx.fillStyle=sel?r.border.replace(/[\d.]+\)$/,'0.95)'):r.border.replace(/[\d.]+\)$/,'0.45)');
+    ctx.textAlign='center';
+    ctx.fillText(r.label,r.cx,r.cy-r.ry+14);
+  });
+  problems.forEach(p=>{
+    ctx.fillStyle='rgba(255,255,255,0.3)';ctx.beginPath();ctx.arc(p.x,p.y,2.5,0,Math.PI*2);ctx.fill();
+    ctx.font='8px "DM Sans",sans-serif';ctx.fillStyle='rgba(255,255,255,0.22)';
+    ctx.textAlign='center';ctx.fillText(p.label,p.x,p.y-6);
+  });
+  ctx.font='italic 12px "Cormorant Garamond",serif';ctx.fillStyle='rgba(255,255,255,0.08)';
+  ctx.textAlign='center';ctx.fillText('P ≠ NP ???',W/2-40,H*0.12);
+  ctx.fillText('BQP ⊆ NP ???',W/2+80,H*0.18);
+}
+
+function hitTest(mx,my){
+  for(let i=regions.length-1;i>=0;i--){
+    const r=regions[i],dx=(mx-r.cx)/r.rx,dy=(my-r.cy)/r.ry;
+    if(dx*dx+dy*dy<=1)return i;
+  }
+  return null;
+}
+
+function selectRegion(mx,my){
+  const h=hitTest(mx,my);
+  selected=(h===selected)?null:h; // toggle
+  draw();
+  if(selected!==null){
+    titleEl.textContent=regions[selected].info;
+    bodyEl.textContent=regions[selected].desc;
+    titleEl.style.color=regions[selected].border.replace(/[\d.]+\)$/,'0.9)');
+  } else {
+    titleEl.textContent='Tap a region to explore';titleEl.style.color='';
+    bodyEl.textContent='Each colored region is a complexity class — problems grouped by how hard they are to solve.';
+  }
+  if(window._clickSound)window._clickSound();
+}
+
+// Mouse hover for desktop
+cv.addEventListener('mousemove',e=>{
+  const rect=cv.getBoundingClientRect();
+  const mx=(e.clientX-rect.left)/rect.width*W,my=(e.clientY-rect.top)/rect.height*H;
+  cv.style.cursor=hitTest(mx,my)!==null?'pointer':'default';
+});
+
+// Click/tap to select (works on both desktop and mobile)
+cv.addEventListener('click',e=>{
+  const rect=cv.getBoundingClientRect();
+  selectRegion((e.clientX-rect.left)/rect.width*W,(e.clientY-rect.top)/rect.height*H);
+});
+cv.addEventListener('touchstart',e=>{
+  e.preventDefault();const t=e.touches[0];const rect=cv.getBoundingClientRect();
+  selectRegion((t.clientX-rect.left)/rect.width*W,(t.clientY-rect.top)/rect.height*H);
+},{passive:false});
+
+draw();
+})();
+
+// ═══ QUANTUM OR CLASSICAL QUIZ ═══
+(function(){
+const questions=[
+  {q:'Sorting a list of 1 million names',answer:0,choices:['Classical wins','Quantum wins','About the same'],
+   explain:'Classical sorting (like merge sort) runs in O(N log N). No known quantum algorithm beats this significantly. Classical wins here.'},
+  {q:'Factoring a 600-digit number into primes',answer:1,choices:['Classical wins','Quantum wins','About the same'],
+   explain:'Shor\'s algorithm factors in polynomial time. The best classical algorithms take sub-exponential time. For large numbers, quantum wins exponentially.'},
+  {q:'Searching an unsorted database of 1 billion entries',answer:1,choices:['Classical wins','Quantum wins','About the same'],
+   explain:'Grover\'s algorithm needs ~31,623 queries vs ~500 million classically. Quadratic speedup — quantum wins, though not as dramatically as Shor\'s.'},
+  {q:'Training a large neural network',answer:0,choices:['Classical wins','Quantum wins','About the same'],
+   explain:'No known quantum algorithm offers a clear advantage for gradient descent on neural networks. GPUs remain dominant. This may change, but for now, classical wins.'},
+  {q:'Simulating a 50-atom quantum chemistry system',answer:1,choices:['Classical wins','Quantum wins','About the same'],
+   explain:'Simulating quantum systems is exponentially hard classically — the state space doubles with each atom. This is exactly what quantum computers were invented for. Feynman\'s dream.'},
+  {q:'Breaking AES-256 encryption',answer:2,choices:['Classical wins','Quantum wins','About the same'],
+   explain:'Grover\'s algorithm would reduce AES-256 to AES-128 strength (still secure). Neither classical nor quantum can practically break AES-256. About the same — both lose.'},
+  {q:'Finding the shortest route visiting 1,000 cities',answer:2,choices:['Classical wins','Quantum wins','About the same'],
+   explain:'The Traveling Salesman Problem is NP-hard. Quantum computers offer some speedup via Grover-like methods, but no exponential advantage is known. Both struggle roughly equally.'},
+  {q:'Generating truly random numbers',answer:1,choices:['Classical wins','Quantum wins','About the same'],
+   explain:'Classical computers can only produce pseudo-random numbers. A single qubit measurement produces genuine quantum randomness — certified by the laws of physics.'},
+];
+
+let current=0,score=0;
+const problemEl=document.getElementById('quizProblem');
+const choicesEl=document.getElementById('quizChoices');
+const feedbackEl=document.getElementById('quizFeedback');
+const scoreEl=document.getElementById('quizScore');
+const totalEl=document.getElementById('quizTotal');
+const dotsEl=document.getElementById('quizDots');
+
+// Build dots
+questions.forEach((_,i)=>{
+  const d=document.createElement('div');d.className='quiz-dot'+(i===0?' active':'');
+  d.id='quizDot'+i;dotsEl.appendChild(d);
+});
+
+function showQuestion(){
+  if(current>=questions.length){
+    problemEl.textContent='Quiz complete!';
+    choicesEl.innerHTML='';
+    feedbackEl.textContent='You got '+score+' out of '+questions.length+'. '+
+      (score>=6?'Excellent intuition for quantum advantage!':
+       score>=4?'Good sense of where quantum helps.':
+       'Quantum advantage is counter-intuitive — that\'s what makes it fascinating.');
+    return;
+  }
+  const q=questions[current];
+  problemEl.textContent=q.q;
+  feedbackEl.innerHTML='&nbsp;';
+  choicesEl.innerHTML='';
+  q.choices.forEach((c,i)=>{
+    const btn=document.createElement('button');
+    btn.className='quiz-choice-btn';btn.textContent=c;
+    btn.addEventListener('click',()=>answer(i));
+    choicesEl.appendChild(btn);
+  });
+  totalEl.textContent=questions.length;
+  // Update dots
+  questions.forEach((_,i)=>{
+    const d=document.getElementById('quizDot'+i);
+    if(d)d.className='quiz-dot'+(i===current?' active':'');
+  });
+}
+
+function answer(choice){
+  const q=questions[current];
+  const btns=choicesEl.querySelectorAll('.quiz-choice-btn');
+  btns.forEach((b,i)=>{
+    if(i===q.answer)b.classList.add('correct');
+    else if(i===choice&&choice!==q.answer)b.classList.add('wrong');
+    else b.classList.add('faded');
+  });
+  const dot=document.getElementById('quizDot'+current);
+  if(choice===q.answer){score++;scoreEl.textContent=score;if(dot)dot.className='quiz-dot right';}
+  else{if(dot)dot.className='quiz-dot miss';}
+  feedbackEl.textContent=q.explain;
+  if(window._clickSound)window._clickSound();
+
+  // Auto advance after delay
+  setTimeout(()=>{current++;showQuestion();},3000);
+}
+
+showQuestion();
+})();
+
+// ═══ READING PROGRESS BAR ═══
+(function(){
+const bar=document.getElementById('progressBar');
+function update(){
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  const pct=h>0?(window.scrollY/h)*100:0;
+  bar.style.width=pct+'%';
+}
+window.addEventListener('scroll',update,{passive:true});
+update();
+})();
+
+// ═══ SUBTLE CLICK SOUND ═══
+(function(){
+window._clickSound=function(){
+  try{
+    const a=new(window.AudioContext||window.webkitAudioContext)();
+    const o=a.createOscillator();const g=a.createGain();
+    o.type='sine';o.frequency.value=880;
+    g.gain.value=0.03;g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.08);
+    o.connect(g);g.connect(a.destination);
+    o.start();o.stop(a.currentTime+0.08);
+  }catch(e){}
+};
+// Attach to all buttons
+document.querySelectorAll('.btn,.measure-btn,.bit-switch,.factor-level-btn,.period-a-btn,.shor-step-pip,.phys-qubit').forEach(el=>{
+  el.addEventListener('click',window._clickSound);
+});
+})();
+</script>
+</body>
+</html>
