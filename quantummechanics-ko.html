@@ -1,0 +1,5402 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>신은 주사위를 던진다 — Mellow Math</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #080d1a;
+  --bg2: #0c1326;
+  --bg3: #111b38;
+  --card: #131f42;
+  --gold: #f0b429;
+  --gold2: #d4a853;
+  --gold-dim: #c4912080;
+  --sky: #38bdf8;
+  --purple: #a78bfa;
+  --coral: #fb7185;
+  --mint: #34d399;
+  --text: #e0e6f0;
+  --muted: #7b8db5;
+  --border: rgba(255,255,255,.06);
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+
+/* Noise overlay */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999;
+}
+
+/* Progress bar */
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--sky), var(--purple), var(--gold));
+  z-index: 10001;
+  transition: width .1s linear;
+}
+
+/* ── HERO ── */
+#hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#heroCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-vignette {
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 55% at 50% 48%, transparent 0%, rgba(5,6,15,.4) 60%, rgba(5,6,15,.92) 100%),
+    linear-gradient(to bottom, rgba(5,6,15,0) 70%, var(--bg) 100%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 2rem;
+  max-width: 800px;
+}
+
+.hero-label {
+  font-family: var(--font-display);
+  font-size: .78rem;
+  letter-spacing: .4em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 2.2rem;
+  opacity: .8;
+  animation: fadeUp 1.2s ease .2s both;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 8.5vw, 7rem);
+  font-weight: 300;
+  line-height: 1.04;
+  letter-spacing: -.015em;
+  margin-bottom: 1.6rem;
+  color: var(--text);
+  text-shadow: 0 0 60px rgba(56,189,248,.15), 0 2px 40px rgba(0,0,0,.5);
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--sky);
+}
+
+.hero-sub {
+  font-size: 1.12rem;
+  color: var(--muted);
+  max-width: 560px;
+  margin: 0 auto 3.5rem;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+.hero-scroll {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .6rem;
+  color: var(--muted);
+  font-family: var(--font-display);
+  font-size: .7rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  animation: fadeUp 1.2s ease 1.3s both;
+}
+
+.hero-scroll:hover { color: var(--gold); }
+
+.hero-scroll-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--sky), transparent);
+  animation: float 2.4s ease-in-out infinite;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+/* ── DOUBLE-SLIT INTERACTIVE (below hero) ── */
+#experiment {
+  position: relative;
+  min-height: 100vh;
+  padding: 6rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.section-inner {
+  max-width: 880px;
+  width: 100%;
+}
+
+.sec-label {
+  font-family: var(--font-mono);
+  font-size: .65rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: .7;
+  margin-bottom: 1.2rem;
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+  margin-bottom: 1.5rem;
+}
+
+h2 em { font-style: italic; color: var(--sky); font-weight: 400; }
+
+.sec-prose {
+  font-family: var(--font-body);
+  font-size: 1.02rem;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.85;
+  max-width: 660px;
+  margin-bottom: 2rem;
+}
+
+.sec-prose strong {
+  color: #fff;
+  font-weight: 500;
+}
+
+/* Experiment container */
+.experiment-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.experiment-box::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: -1px; right: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--sky), transparent);
+  opacity: .4;
+}
+
+.experiment-canvas-wrap {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  background: #050810;
+}
+
+.experiment-canvas-wrap canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.experiment-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.ctrl-btn {
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  font-weight: 400;
+  letter-spacing: .04em;
+  padding: .55rem 1.3rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.02);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .3s;
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+}
+
+.ctrl-btn:hover {
+  border-color: var(--sky);
+  color: var(--text);
+  background: rgba(56,189,248,.06);
+}
+
+.ctrl-btn.active {
+  border-color: var(--sky);
+  background: rgba(56,189,248,.1);
+  color: #fff;
+  box-shadow: 0 0 15px rgba(56,189,248,.1);
+}
+
+.ctrl-btn .icon { font-size: 1rem; }
+
+/* Section separator */
+.sec-sep {
+  width: 50px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 0 auto;
+  opacity: .3;
+}
+
+.photon-counter {
+  font-family: var(--font-mono);
+  font-size: .75rem;
+  color: var(--muted);
+  letter-spacing: .05em;
+}
+
+.photon-counter span {
+  color: var(--sky);
+  font-weight: 500;
+}
+
+/* (quote-block and insight-card styles defined below in the refined section) */
+
+/* ── SECTION 1: CLOCKWORK ── */
+.clockwork-section {
+  position: relative;
+  min-height: 100vh;
+  padding: 6rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.clockwork-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 40%, rgba(240,180,41,.03), transparent);
+  pointer-events: none;
+}
+
+/* Billiard table */
+.billiard-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  aspect-ratio: 7/4;
+  margin: 2rem auto;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(0,0,0,.5), inset 0 0 80px rgba(0,80,30,.08);
+  border: 3px solid #2a1a0a;
+}
+
+.billiard-wrap canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Table felt texture via CSS */
+.billiard-felt {
+  position: absolute;
+  inset: 0;
+  background: #0a3d1f;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+.billiard-instructions {
+  text-align: center;
+  margin-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: .72rem;
+  color: var(--muted);
+  letter-spacing: .04em;
+  opacity: .7;
+  transition: opacity .5s;
+}
+
+.billiard-instructions.hidden { opacity: 0; }
+
+/* Timeline */
+.timeline-block {
+  display: flex;
+  gap: 2rem;
+  margin: 3rem 0;
+  padding: 0;
+  position: relative;
+}
+
+.timeline-block::before {
+  content: '';
+  position: absolute;
+  left: 18px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--gold), transparent);
+}
+
+.timeline-item {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.timeline-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--gold);
+  flex-shrink: 0;
+  margin-top: .45rem;
+  box-shadow: 0 0 8px rgba(240,180,41,.4);
+}
+
+.timeline-content h4 {
+  font-family: var(--font-display);
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: .3rem;
+}
+
+.timeline-content .year {
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  color: var(--gold);
+  letter-spacing: .06em;
+  margin-bottom: .4rem;
+  display: block;
+}
+
+.timeline-content p {
+  font-size: .88rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* Laplace's demon visualization */
+.demon-viz {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem;
+  margin: 2.5rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.demon-viz::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: -1px; right: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: .4;
+}
+
+.demon-canvas-wrap {
+  width: 100%;
+  aspect-ratio: 16/7;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #050810;
+  margin-bottom: 1rem;
+}
+
+.demon-canvas-wrap canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.demon-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .8rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+/* Shatter transition */
+.shatter-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .6s;
+}
+
+.shatter-overlay.active {
+  opacity: 1;
+}
+
+/* ── GENERIC SECTION ── */
+.q-section {
+  position: relative;
+  min-height: 100vh;
+  padding: 6rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Interactive viz containers */
+.viz-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem;
+  margin: 2rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.viz-box::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: -1px; right: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--sky), transparent);
+  opacity: .4;
+}
+
+.viz-canvas-wrap {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #050810;
+}
+
+.viz-canvas-wrap canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.viz-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .8rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1.2rem;
+}
+
+/* Slider styling */
+.q-slider-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .3rem;
+}
+
+.q-slider-label {
+  font-family: var(--font-mono);
+  font-size: .7rem;
+  color: var(--muted);
+  letter-spacing: .04em;
+}
+
+.q-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 200px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--bg3);
+  outline: none;
+}
+
+.q-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--sky);
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(56,189,248,.4);
+}
+
+.q-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--sky);
+  cursor: pointer;
+  border: none;
+}
+
+/* Debate cards */
+.debate-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.2rem;
+  margin: 2rem 0;
+}
+
+.debate-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all .35s;
+  position: relative;
+  overflow: hidden;
+}
+
+.debate-card:hover {
+  border-color: var(--sky);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(56,189,248,.1);
+}
+
+.debate-card.selected {
+  border-color: var(--gold);
+  box-shadow: 0 0 25px rgba(240,180,41,.15);
+}
+
+.debate-card .card-icon {
+  font-size: 2rem;
+  margin-bottom: .8rem;
+  display: block;
+}
+
+.debate-card h4 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: .5rem;
+}
+
+.debate-card .card-year {
+  font-family: var(--font-mono);
+  font-size: .65rem;
+  color: var(--gold);
+  letter-spacing: .06em;
+  margin-bottom: .6rem;
+  display: block;
+}
+
+.debate-card p {
+  font-size: .85rem;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.debate-card .advocates {
+  margin-top: .8rem;
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  color: var(--sky);
+  letter-spacing: .03em;
+}
+
+.debate-result {
+  text-align: center;
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, rgba(240,180,41,.05), rgba(56,189,248,.05));
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  display: none;
+}
+
+.debate-result.show { display: block; }
+
+.debate-result h4 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--gold);
+  margin-bottom: .6rem;
+}
+
+.debate-result p {
+  font-size: .88rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.poll-bar-wrap {
+  margin-top: 1rem;
+}
+
+.poll-row {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-bottom: .5rem;
+}
+
+.poll-label {
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  color: var(--muted);
+  width: 100px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.poll-bar {
+  height: 8px;
+  border-radius: 4px;
+  transition: width 1s ease;
+}
+
+.poll-pct {
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  color: var(--text);
+  width: 40px;
+  flex-shrink: 0;
+}
+
+/* Reference list */
+.ref-list {
+  list-style: none;
+  padding: 0;
+}
+
+.ref-list li {
+  font-family: var(--font-body);
+  font-size: .82rem;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.7;
+  padding: .55rem 0;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  padding-left: 2rem;
+}
+
+.ref-list li::before {
+  content: attr(data-num);
+  position: absolute;
+  left: 0;
+  font-family: var(--font-mono);
+  font-size: .65rem;
+  color: var(--gold);
+}
+
+.ref-list li em {
+  color: var(--text);
+  font-style: italic;
+}
+
+.ref-list li a {
+  color: var(--sky);
+  text-decoration: none;
+}
+
+.ref-list li a:hover { text-decoration: underline; }
+
+/* ── FLOATING BADGE ── */
+.floating-badge {
+  position: fixed;
+  bottom: 1.75rem;
+  left: 1.75rem;
+  z-index: 10000;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: .12em;
+  text-transform: lowercase;
+  color: #8db830;
+  background: transparent;
+  padding: .35rem .7rem;
+  text-decoration: none;
+  transition: color .25s, text-shadow .25s, transform .25s;
+  text-shadow: 0 0 12px rgba(141,184,48,.4), 0 0 16px rgba(141,184,48,.15);
+}
+
+.floating-badge:hover {
+  color: #a8e030;
+  transform: translateY(-1px);
+  text-shadow: 0 0 18px rgba(141,184,48,.7);
+}
+
+/* ── FOOTER ── */
+footer {
+  text-align: center;
+  padding: 4rem 2rem 5rem;
+  border-top: 1px solid rgba(255,255,255,.04);
+  margin-top: 4rem;
+}
+
+.footer-attr {
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.footer-name {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: .85rem;
+  font-weight: 400;
+  color: #edeef2;
+  letter-spacing: -.01em;
+}
+
+.footer-inst {
+  font-family: 'DM Sans', sans-serif;
+  font-size: .72rem;
+  font-weight: 300;
+  color: #5c6178;
+  letter-spacing: .01em;
+}
+
+.footer-link {
+  font-family: var(--font-mono);
+  font-size: .6rem;
+  letter-spacing: .08em;
+  color: #d4a853;
+  text-decoration: none;
+  margin-top: .25rem;
+}
+
+.footer-link:hover { color: var(--gold); }
+
+/* ── REVEAL ANIMATIONS ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Section separator */
+.sec-sep {
+  width: 60px;
+  height: 1px;
+  margin: 0 auto;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: .35;
+}
+
+/* Ambient section glow */
+.q-section::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 400px;
+  background: radial-gradient(ellipse at center, rgba(56,189,248,.02) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Chapter number pill */
+.sec-label {
+  font-family: var(--font-mono);
+  font-size: .62rem;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  opacity: .65;
+  margin-bottom: 1.2rem;
+  display: inline-block;
+  padding: .25rem .8rem;
+  border: 1px solid rgba(240,180,41,.15);
+  border-radius: 20px;
+}
+
+/* Prose paragraphs — tighten for reading flow */
+.sec-prose + .sec-prose { margin-top: 0; }
+
+/* Quote block refinement */
+.quote-block {
+  margin: 2.5rem 0;
+  padding: 1.8rem 2.2rem;
+  border-left: 2px solid var(--gold);
+  background: linear-gradient(135deg, rgba(240,180,41,.02), transparent 60%);
+  border-radius: 0 14px 14px 0;
+  position: relative;
+}
+
+.quote-block::after {
+  content: '"';
+  position: absolute;
+  top: -.2rem; left: .8rem;
+  font-family: var(--font-display);
+  font-size: 3rem;
+  color: var(--gold);
+  opacity: .1;
+  line-height: 1;
+}
+
+.quote-text {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text);
+  line-height: 1.75;
+  margin-bottom: .6rem;
+}
+
+.quote-attr {
+  font-family: var(--font-body);
+  font-size: .75rem;
+  color: var(--gold2);
+  font-weight: 400;
+  letter-spacing: .02em;
+}
+
+/* Insight card refinement */
+.insight-card {
+  background: linear-gradient(135deg, rgba(56,189,248,.04), rgba(167,139,250,.02));
+  border: 1px solid rgba(56,189,248,.08);
+  border-radius: 16px;
+  padding: 1.8rem 2rem;
+  margin-top: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.insight-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--sky), var(--purple));
+  border-radius: 3px 0 0 3px;
+}
+
+.insight-card h3 {
+  font-family: var(--font-display);
+  font-size: .95rem;
+  color: var(--sky);
+  margin-bottom: .7rem;
+  font-weight: 600;
+  letter-spacing: .01em;
+}
+
+.insight-card p {
+  font-size: .9rem;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  #experiment { padding: 4rem 1.2rem; }
+  .experiment-box { padding: 1.2rem; }
+  .experiment-canvas-wrap { aspect-ratio: 4/3; }
+  .quote-block { padding: 1.4rem 1.5rem; }
+  .clockwork-section { padding: 4rem 1.2rem; }
+  .billiard-wrap { aspect-ratio: 5/3; }
+  .demon-viz { padding: 1.2rem; }
+  .demon-canvas-wrap { aspect-ratio: 16/9; }
+  .q-section { padding: 4rem 1.2rem; }
+  .viz-box { padding: 1.2rem; }
+  .debate-grid { grid-template-columns: 1fr; }
+  .q-slider { width: 150px; }
+  .insight-card { padding: 1.4rem 1.5rem; }
+}
+
+@media (max-width: 480px) {
+  .hero-label { font-size: .6rem; letter-spacing: .25em; }
+  .hero-sub { font-size: .95rem; }
+  .experiment-controls { flex-direction: column; }
+  .demon-controls { flex-direction: column; }
+  .billiard-wrap { aspect-ratio: 4/3; }
+  .viz-controls { flex-direction: column; }
+  .q-slider { width: 180px; }
+  .sec-prose { font-size: .95rem; }
+  .quote-text { font-size: .95rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- Progress bar -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- ════════════════ HERO ════════════════ -->
+<section id="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-label">Mellow Math · Flow</div>
+    <h1 class="hero-title">신은 주사위를 <em>던진다</em></h1>
+    <p class="hero-sub">
+      백 년 전, 물리학자들은 우주가 시계태엽이 아니라
+      카지노라는 사실을 발견했다. 확실성이 죽고,
+      그 자리를 차지한 것의 이야기.
+    </p>
+    <a href="#experiment" class="hero-scroll">
+      Begin
+      <span class="hero-scroll-line"></span>
+    </a>
+  </div>
+</section>
+
+<div class="sec-sep"></div>
+
+<!-- ════════════════ SECTION 0: THE DOUBLE-SLIT ════════════════ -->
+<section id="experiment">
+  <div class="section-inner">
+    <div class="sec-label reveal">Chapter 0</div>
+    <h2 class="reveal">현실을 <em>산산조각</em> 낸 실험</h2>
+    <p class="sec-prose reveal">
+      1801년, 토머스 영은 빛을 두 개의 좁은 틈으로 통과시켜
+      불가능한 것을 보았다 — <strong>간섭 무늬</strong> — 빛이
+      파동이라는 증거였다. 한 세기 뒤, 물리학자들은
+      <strong>한 번에 광자 하나</strong>씩 쏘며 실험을 반복했다.
+      각 광자는 하나의 점으로 도착했다. 그러나 수천 개가 쌓이자,
+      간섭 무늬가 다시 나타났다.
+    </p>
+    <p class="sec-prose reveal">
+      하나의 입자가, 어떻게든 <strong>자기 자신</strong>과 간섭하고 있었다.
+      더 이상한 일이 벌어졌다: 광자가 어느 틈을 지나갔는지
+      검출기를 설치하자, 무늬가 사라졌다.
+      <strong>관찰 자체</strong>가 결과를 바꾼 것이다.
+    </p>
+
+    <!-- Interactive experiment -->
+    <div class="experiment-box reveal">
+      <div class="experiment-canvas-wrap">
+        <canvas id="slitCanvas"></canvas>
+      </div>
+      <div class="experiment-controls">
+        <button class="ctrl-btn" id="btnToggleDetector">
+          <span class="icon">👁</span> 검출기 설치
+        </button>
+        <button class="ctrl-btn" id="btnSpeed">
+          <span class="icon">⚡</span> Faster
+        </button>
+        <button class="ctrl-btn" id="btnReset">
+          <span class="icon">↺</span> Reset
+        </button>
+        <div class="photon-counter">
+          광자: <span id="photonCount">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="quote-block reveal">
+      <p class="quote-text">
+        "양자역학을 이해했다고 생각한다면, 양자역학을 이해하지 못한 것이다."
+      </p>
+      <p class="quote-attr">— 리처드 파인만</p>
+    </div>
+
+    <div class="insight-card reveal">
+      <h3>왜 이것이 중요한가</h3>
+      <p>
+        이중 슬릿 실험은 단순한 호기심이 아니다.
+        자연의 근본 구조가 확률적이라는 것을 말해준다.
+        입자는 측정 사이에 확정된 궤적을 갖지 않는다.
+        우리가 "현실"이라 부르는 것은 관찰의 순간에만 결정화된다.
+        이것은 철학이 아니다 — 수학이 요구하는 바이다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="sec-sep"></div>
+
+<!-- ════════════════ SECTION 1: THE CLOCKWORK UNIVERSE ════════════════ -->
+<section id="clockwork" class="clockwork-section">
+  <div class="section-inner">
+    <div class="sec-label reveal">Chapter 1</div>
+    <h2 class="reveal">우주는 <em>완벽</em>했다</h2>
+
+    <p class="sec-prose reveal">
+      이백 년 동안, 물리학은 확실성의 승리였다.
+      뉴턴의 법칙은 모든 행성, 모든 포탄,
+      모든 모래알의 운동을 예측할 수 있었다 — 초기 조건만 알면.
+      우주는 <strong>태엽 장치</strong>였고, 물리 법칙은
+      그 톱니바퀴였다.
+    </p>
+
+    <!-- Interactive billiard table -->
+    <div class="billiard-wrap reveal">
+      <div class="billiard-felt"></div>
+      <canvas id="billiardCanvas"></canvas>
+    </div>
+    <div class="billiard-instructions" id="billiardHint">
+      공을 드래그하고 놓으면 발사 — 완벽한 뉴턴 역학을 감상하세요
+    </div>
+
+    <p class="sec-prose reveal" style="margin-top:2.5rem">
+      Every collision obeys conservation of momentum and energy exactly.
+      No surprises. No randomness. Given the positions and velocities of
+      every particle in the universe, <strong>the entire future</strong> is
+      already determined.
+    </p>
+
+    <div class="quote-block reveal">
+      <p class="quote-text">
+        "어떤 순간에 모든 힘과…
+        자연을 구성하는 모든 존재의
+        위치를 알 수 있는 지성이 있다면 — 불확실한 것은
+        아무것도 없을 것이며, 미래도 과거와 마찬가지로
+        그의 눈앞에 펼쳐질 것이다."
+      </p>
+      <p class="quote-attr">— 피에르-시몽 라플라스, 1814</p>
+    </div>
+
+    <p class="sec-prose reveal">
+      This hypothetical being — <strong>Laplace's demon</strong> — could, in principle,
+      compute the future of the entire cosmos from a single snapshot. Free will,
+      surprise, novelty: all illusions in a deterministic universe.
+    </p>
+
+    <!-- Laplace's Demon: a mini solar system that you can rewind/fast-forward -->
+    <div class="demon-viz reveal">
+      <div class="demon-canvas-wrap">
+        <canvas id="demonCanvas"></canvas>
+      </div>
+      <div class="demon-controls">
+        <button class="ctrl-btn" id="btnDemon되감기">
+          <span class="icon">⏪</span> 되감기
+        </button>
+        <button class="ctrl-btn active" id="btnDemonPlay">
+          <span class="icon">▶</span> Play
+        </button>
+        <button class="ctrl-btn" id="btnDemonFast">
+          <span class="icon">⏩</span> Future
+        </button>
+        <div class="photon-counter" id="demonTime">
+          t = <span>0.00</span>
+        </div>
+      </div>
+      <p style="margin-top:1rem;font-size:.82rem;color:var(--muted);line-height:1.6">
+        A deterministic Newtonian solar system. Every orbit is perfectly predictable.
+        되감기 and fast-forward — the demon sees past and future alike.
+      </p>
+    </div>
+
+    <p class="sec-prose reveal">
+      이것이 20세기 여명기에 물리학자들이 믿었던 세계였다.
+      우아하고, 완전하고, <strong>아름다웠다.</strong>
+    </p>
+
+    <p class="sec-prose reveal">
+      그리고 1900년 12월 14일, 막스 플랑크라는 조용한 독일 물리학자가
+      베를린 물리학회 앞에 서서, 거의 마지못해,
+      그것을 <strong>깨뜨렸다</strong>.
+    </p>
+
+    <div class="insight-card reveal">
+      <h3>무엇이 잘못되었는가?</h3>
+      <p>
+        Classical physics could not explain the glow of a hot oven. The equations
+        predicted that a heated cavity should radiate infinite energy at high
+        frequencies — the "<strong>ultraviolet catastrophe</strong>." Planck's
+        radical fix: energy is not continuous. It comes in discrete packets —
+        <em>quanta</em>. That single word would unravel two centuries of certainty.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Placeholder for subsequent sections -->
+
+<div class="sec-sep"></div>
+
+<!-- ════════════════ SECTION 2: THE ULTRAVIOLET CATASTROPHE ════════════════ -->
+<section id="catastrophe" class="q-section">
+  <div class="section-inner">
+    <div class="sec-label reveal">Chapter 2</div>
+    <h2 class="reveal">물리학을 <em>깨뜨린</em> 오븐</h2>
+
+    <p class="sec-prose reveal">
+      In 1859, Gustav Kirchhoff posed a challenge: determine the
+      spectrum of light emitted by a heated cavity. By the 1890s,
+      experimentalists had mapped the curve precisely. But no theory
+      could explain it.
+    </p>
+
+    <p class="sec-prose reveal">
+      Classical physics made a terrifying prediction. The Rayleigh–Jeans
+      law — derived honestly from Maxwell's electromagnetism and Boltzmann's
+      thermodynamics — said that the energy radiated should grow without
+      bound at high frequencies. A warm oven should emit
+      <strong>infinite energy</strong> in the ultraviolet. This was absurd.
+      The physicist Paul Ehrenfest gave it a name:
+      <strong>the ultraviolet catastrophe</strong>.
+    </p>
+
+    <!-- Interactive 1: Glowing cavity with bouncing photons -->
+    <div class="viz-box reveal">
+      <div class="viz-canvas-wrap" style="aspect-ratio:16/9;">
+        <canvas id="cavityCanvas"></canvas>
+      </div>
+      <div class="viz-controls">
+        <div class="q-slider-group">
+          <label class="q-slider-label">온도: <span id="cavityTempLabel">3000</span> K</label>
+          <input type="range" class="q-slider" id="cavityTemp" min="800" max="12000" value="3000" step="100">
+        </div>
+      </div>
+      <p style="margin-top:.8rem;font-size:.78rem;color:var(--muted);text-align:center;line-height:1.5">
+        A heated cavity. Photons bounce inside, reaching thermal equilibrium.
+        As temperature rises, the color shifts from red to orange to white to blue —
+        and higher-energy photons appear. Drag the slider to heat it up.
+      </p>
+    </div>
+
+    <p class="sec-prose reveal">
+      On the evening of October 19, 1900, Max Planck found a formula that
+      fit the experimental data perfectly. But there was a catch: to derive
+      it, he had to assume that energy is emitted not in a continuous stream,
+      but in discrete lumps — <strong>quanta</strong> — each carrying energy
+      proportional to its frequency.
+    </p>
+
+    <div class="quote-block reveal">
+      <p class="quote-text" style="font-size:1.5rem;text-align:center;margin-bottom:1.2rem;font-style:normal;font-family:var(--font-display);">
+        E = hν
+      </p>
+      <p class="quote-attr">
+        에너지는 플랑크 상수 곱하기 주파수.<br>
+        혁명을 시작한 방정식 — December 14, 1900.
+      </p>
+    </div>
+
+    <p class="sec-prose reveal">
+      Planck himself did not believe nature was truly quantized. He called it
+      "an act of desperation." He spent the next decade trying to undo his
+      own discovery — to re-derive his formula without quanta. He failed.
+    </p>
+
+    <!-- Interactive 2: Blackbody spectrum — Planck vs Rayleigh-Jeans -->
+    <div class="viz-box reveal">
+      <div class="viz-canvas-wrap" style="aspect-ratio:16/8;">
+        <canvas id="bbCanvas"></canvas>
+      </div>
+      <div class="viz-controls">
+        <div class="q-slider-group">
+          <label class="q-slider-label">온도: <span id="bbTempLabel">5000</span> K</label>
+          <input type="range" class="q-slider" id="bbTemp" min="1000" max="15000" value="5000" step="100">
+        </div>
+        <button class="ctrl-btn" id="btnShowClassical">
+          <span class="icon">💥</span> 고전 예측 보기
+        </button>
+      </div>
+      <p style="margin-top:.8rem;font-size:.78rem;color:var(--muted);text-align:center;line-height:1.5">
+        The <strong style="color:var(--sky)">blue curve</strong> is Planck's quantum formula — it matches experiment perfectly.
+        Toggle the <strong style="color:var(--coral)">classical prediction</strong> to see it diverge to infinity.
+        That divergence is the catastrophe.
+      </p>
+    </div>
+
+    <div class="quote-block reveal">
+      <p class="quote-text">
+        "간단히 요약하면, 내가 한 것은 단순히 절박한 행위로
+        묘사될 수 있다."
+      </p>
+      <p class="quote-attr">— 막스 플랑크, R.W. Wood에게 보낸 편지, 1931</p>
+    </div>
+
+    <p class="sec-prose reveal">
+      Five years later, a young patent clerk in Bern took Planck's quanta
+      seriously. Einstein proposed that light itself comes in particles —
+      <strong>photons</strong>. His explanation of the photoelectric effect
+      proved it: below a certain frequency, no amount of intense light can
+      eject electrons from a metal. Only individual photons with enough
+      energy can do the job.
+    </p>
+
+    <!-- Interactive 3: Photoelectric effect -->
+    <div class="viz-box reveal">
+      <div class="viz-canvas-wrap" style="aspect-ratio:16/7;">
+        <canvas id="photoCanvas"></canvas>
+      </div>
+      <div class="viz-controls">
+        <div class="q-slider-group">
+          <label class="q-slider-label">주파수: <span id="photoFreqLabel">medium</span></label>
+          <input type="range" class="q-slider" id="photoFreq" min="0" max="100" value="30">
+        </div>
+        <div class="q-slider-group">
+          <label class="q-slider-label">세기: <span id="photoIntLabel">50</span>%</label>
+          <input type="range" class="q-slider" id="photoInt" min="10" max="100" value="50">
+        </div>
+      </div>
+      <p style="margin-top:.8rem;font-size:.78rem;color:var(--muted);text-align:center;line-height:1.5">
+        Shine light on a metal plate. Below the threshold frequency,
+        <strong style="color:var(--text)">no electrons are ejected</strong> — no matter how bright the light.
+        Above the threshold, even dim light ejects electrons.
+        <strong style="color:var(--gold)">Frequency matters, not intensity.</strong> This is what won Einstein his Nobel Prize.
+      </p>
+    </div>
+
+    <div class="insight-card reveal">
+      <h3>마지못한 혁명가와 대담한 혁명가</h3>
+      <p>
+        Planck introduced quanta as a mathematical trick and spent years
+        trying to take it back. Einstein took the idea literally and
+        changed physics forever. Their contrast reveals something
+        about how science works: sometimes the right idea appears before
+        anyone — even its discoverer — is ready to believe it.
+        Einstein's Nobel Prize in 1921 was not for relativity.
+        It was for the photoelectric effect — for showing that light
+        is made of particles.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="sec-sep"></div>
+
+<!-- ════════════════ SECTION 3: THE UNCERTAINTY PRINCIPLE ════════════════ -->
+<section id="uncertainty" class="q-section">
+  <div class="section-inner">
+    <div class="sec-label reveal">Chapter 3</div>
+    <h2 class="reveal">더 많이 알수록, <em>더 적게 알게 된다</em></h2>
+
+    <p class="sec-prose reveal">
+      Imagine trying to locate an electron. You shine light on it. But light
+      carries momentum — to see something small, you need short-wavelength
+      (high-energy) light, which kicks the electron unpredictably. Use gentle
+      long-wavelength light, and you cannot see where it is. This was
+      Heisenberg's <strong>gamma-ray microscope</strong> thought experiment,
+      published in 1927.
+    </p>
+
+    <p class="sec-prose reveal">
+      But the uncertainty principle goes deeper than clumsy measurements.
+      It is not that we <em>disturb</em> the particle by looking. The particle
+      genuinely does not <em>have</em> a definite position and momentum
+      simultaneously. The wave function — the mathematical object that
+      describes a quantum particle — simply cannot be both narrow in position
+      and narrow in momentum at the same time.
+    </p>
+
+    <!-- Interactive 1: Wave packet / Fourier uncertainty -->
+    <div class="viz-box reveal">
+      <div class="viz-canvas-wrap" style="aspect-ratio:16/7;">
+        <canvas id="uncCanvas"></canvas>
+      </div>
+      <div class="viz-controls">
+        <div class="q-slider-group">
+          <label class="q-slider-label">위치 확정도: <span id="uncLabel">50</span>%</label>
+          <input type="range" class="q-slider" id="uncSlider" min="5" max="95" value="50">
+        </div>
+        <div class="photon-counter">
+          Δx · Δp ≥ <span id="uncProduct" style="color:var(--gold)">ℏ/2</span>
+        </div>
+      </div>
+      <p style="margin-top:.8rem;font-size:.78rem;color:var(--muted);text-align:center;line-height:1.5">
+        <strong style="color:var(--sky)">Left:</strong> position space — where the particle might be. &nbsp;
+        <strong style="color:var(--coral)">Right:</strong> momentum space — how fast it might be going.<br>
+        Squeeze one and watch the other spread. This is Fourier duality made visible.
+      </p>
+    </div>
+
+    <p class="sec-prose reveal">
+      The mathematical reason is beautiful: position and momentum are
+      <strong>Fourier duals</strong>. A wave tightly peaked in position
+      is built from many different frequencies — many different momenta.
+      A wave with a single definite momentum is a perfect sine wave, spread
+      across all of space. You cannot have both. This is the same mathematics
+      behind MP3 compression, MRI imaging, and the bandwidth theorem in
+      telecommunications.
+    </p>
+
+    <div class="quote-block reveal">
+      <p class="quote-text">
+        "위치가 더 정확하게 결정될수록, 그 순간 운동량은
+        덜 정확하게 알려지며, 그 역도 성립한다."
+      </p>
+      <p class="quote-attr">— 베르너 하이젠베르크, 1927</p>
+    </div>
+
+    <!-- Interactive 2: Particle in a box -->
+    <div class="viz-box reveal">
+      <div class="viz-canvas-wrap" style="aspect-ratio:16/7;">
+        <canvas id="boxCanvas"></canvas>
+      </div>
+      <div class="viz-controls">
+        <div class="q-slider-group">
+          <label class="q-slider-label">상자 너비: <span id="boxWidthLabel">medium</span></label>
+          <input type="range" class="q-slider" id="boxWidth" min="8" max="92" value="50">
+        </div>
+        <button class="ctrl-btn" id="btnBoxMode">
+          <span class="icon">〰</span> 파동함수 보기
+        </button>
+      </div>
+      <p style="margin-top:.8rem;font-size:.78rem;color:var(--muted);text-align:center;line-height:1.5">
+        A quantum particle confined to a box. Make the box smaller — the particle's position is
+        more certain, but it <strong style="color:var(--text)">bounces faster and more wildly</strong>.
+        Confine it tightly and its kinetic energy skyrockets. Toggle to see the standing wave
+        that the particle <em>actually is</em>.
+      </p>
+    </div>
+
+    <p class="sec-prose reveal">
+      Einstein never accepted the uncertainty principle as fundamental.
+      He believed it concealed a deeper, deterministic reality — that
+      there were <strong>"hidden variables"</strong> we hadn't found yet.
+      At the 1927 Solvay Conference, he challenged Bohr with ever-more-clever
+      thought experiments. Bohr refuted each one — once, famously, using
+      Einstein's own general relativity against him.
+    </p>
+
+    <div class="quote-block reveal">
+      <p class="quote-text">
+        "신은 우주와 주사위 놀이를 하지 않는다."
+      </p>
+      <p class="quote-attr">— 알베르트 아인슈타인</p>
+    </div>
+
+    <div class="quote-block reveal" style="border-left-color:var(--sky);margin-top:1.5rem;">
+      <p class="quote-text">
+        "아인슈타인, 신에게 이래라저래라 하지 마시오."
+      </p>
+      <p class="quote-attr">— 닐스 보어의 유명한 대답</p>
+    </div>
+
+    <div class="insight-card reveal">
+      <h3>진공은 비어 있지 않다</h3>
+      <p>
+        The uncertainty principle applies to all conjugate pairs — including
+        energy and time. A system can briefly violate conservation of energy
+        by borrowing ΔE for a time Δt, as long as ΔE · Δt ≥ ℏ/2. This
+        means the vacuum itself seethes with <strong>virtual particles</strong>
+        — electron-positron pairs flickering in and out of existence for
+        unimaginably brief instants. This is not speculation: the Casimir
+        effect (1948) and the Lamb shift are direct, measured consequences of
+        vacuum fluctuations. Empty space is the most violent place in the universe.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="sec-sep"></div>
+
+<!-- ════════════════ SECTION 4: SUPERPOSITION & MEASUREMENT ════════════════ -->
+<section id="superposition" class="q-section">
+  <div class="section-inner">
+    <div class="sec-label reveal">Chapter 4</div>
+    <h2 class="reveal">동시에 앞면이자 <em>뒷면</em>인 동전</h2>
+
+    <p class="sec-prose reveal">
+      Imagine flipping a coin that is, genuinely, both heads and tails at once —
+      not because you haven't looked, but because it has no single value
+      until you do. A quantum particle in a <strong>superposition</strong>
+      does not simply have an unknown state. It exists in all possible
+      states simultaneously. When we measure, the superposition
+      <strong>collapses</strong> to a single definite outcome.
+    </p>
+
+    <p class="sec-prose reveal">
+      In 1922, Otto Stern and Walther Gerlach sent silver atoms through an
+      inhomogeneous magnetic field. Classically, the atoms should have spread
+      into a continuous smear. Instead, they split into exactly two beams —
+      spin up and spin down. Nature gives only discrete answers.
+    </p>
+
+    <!-- Interactive 1: Stern-Gerlach apparatus -->
+    <div class="viz-box reveal">
+      <div class="viz-canvas-wrap" style="aspect-ratio:16/7;">
+        <canvas id="sgCanvas"></canvas>
+      </div>
+      <div class="viz-controls">
+        <button class="ctrl-btn" id="btnSGFire">
+          <span class="icon">⚛</span> 원자 발사
+        </button>
+        <button class="ctrl-btn" id="btnSGReset">
+          <span class="icon">↺</span> Reset
+        </button>
+        <div class="photon-counter">
+          ↑ <span id="sgUp" style="color:var(--sky)">0</span>
+          &nbsp; ↓ <span id="sgDown" style="color:var(--coral)">0</span>
+        </div>
+      </div>
+      <p style="margin-top:.8rem;font-size:.78rem;color:var(--muted);text-align:center;line-height:1.5">
+        Silver atoms enter a magnetic field. Classically, they should spread smoothly.
+        Instead, they split into <strong style="color:var(--sky)">exactly two</strong> discrete beams.
+        Nature is quantized. Click to fire more atoms and watch the statistics build.
+      </p>
+    </div>
+
+    <p class="sec-prose reveal">
+      The Bloch sphere is the mathematician's way of visualizing a quantum
+      bit — a <strong>qubit</strong>. The north pole is state |0⟩, the south
+      pole is |1⟩, and every other point on the sphere is a superposition
+      of both. The angle determines the probability of each outcome.
+    </p>
+
+    <!-- Interactive 2: Bloch sphere -->
+    <div class="viz-box reveal">
+      <div class="viz-canvas-wrap" style="aspect-ratio:4/3;max-width:500px;margin:0 auto;">
+        <canvas id="blochCanvas"></canvas>
+      </div>
+      <div class="viz-controls">
+        <button class="ctrl-btn" id="btnMeasure">
+          <span class="icon">📐</span> 측정!
+        </button>
+        <button class="ctrl-btn" id="btn중첩">
+          <span class="icon">🌊</span> 중첩
+        </button>
+        <button class="ctrl-btn" id="btnBlochReset">
+          <span class="icon">↺</span> 통계 초기화
+        </button>
+        <div class="photon-counter">
+          |0⟩: <span id="blochUp" style="color:var(--sky)">0</span>
+          &nbsp; |1⟩: <span id="blochDown" style="color:var(--coral)">0</span>
+        </div>
+      </div>
+      <p style="margin-top:.8rem;font-size:.78rem;color:var(--muted);text-align:center;line-height:1.5">
+        Drag to rotate the quantum state on the Bloch sphere.
+        The gold arrow shows the state vector — the poles are |0⟩ and |1⟩.
+        Click <strong style="color:var(--text)">Measure</strong> to collapse
+        it. Repeat many times and watch the Born rule emerge from the statistics.
+      </p>
+    </div>
+
+    <p class="sec-prose reveal">
+      This is the <strong>measurement problem</strong> — arguably the deepest
+      unsolved puzzle in all of physics. The Schrödinger equation evolves the
+      wave function smoothly and deterministically. But when we "measure,"
+      the function suddenly jumps to a definite value. What triggers this
+      jump? What counts as a measurement? Does the wave function
+      <em>really</em> collapse, or does something else happen?
+    </p>
+
+    <div class="quote-block reveal">
+      <p class="quote-text">
+        "양자역학을 이해하는 사람은 아무도 없다."
+      </p>
+      <p class="quote-attr">— 리처드 파인만, <em>물리 법칙의 특성</em>, 1965</p>
+    </div>
+
+    <p class="sec-prose reveal">
+      Erwin Schrödinger devised his famous thought experiment in 1935 —
+      not to celebrate quantum weirdness, but to <strong>ridicule it</strong>.
+      A cat in a sealed box is entangled with a radioactive atom. If the atom
+      decays, poison is released. Quantum mechanics says the atom is in a
+      superposition of decayed and not-decayed. Therefore the cat is
+      simultaneously alive and dead. Schrödinger found this conclusion
+      absurd — and that was exactly his point.
+    </p>
+
+    <div class="quote-block reveal">
+      <p class="quote-text">
+        "아주 우스꽝스러운 경우를 설정할 수도 있다. 고양이 한 마리가
+        강철 상자에 갇혀 있다…"
+      </p>
+      <p class="quote-attr">— 에르빈 슈뢰딩거, 1935</p>
+    </div>
+
+    <p class="sec-prose reveal">
+      Eugene Wigner pushed this further with <strong>Wigner's friend</strong>:
+      if a physicist inside a lab measures the cat, they see a definite result.
+      But from outside, Wigner describes the entire lab — physicist included — as
+      being in superposition. Who is right? When does collapse happen?
+      This paradox remains unanswered. A 2019 experiment by Proietti et al.
+      demonstrated that two observers can indeed have contradictory yet
+      internally consistent records of the same quantum event.
+    </p>
+
+    <div class="insight-card reveal">
+      <h3>양자역학의 난제</h3>
+      <p>
+        The measurement problem is sometimes called the "hard problem" of
+        physics, by analogy with the hard problem of consciousness. In both
+        cases, we have successful mathematical descriptions (the Schrödinger
+        equation; neuroscience) that seem to leave out something essential
+        about subjective experience. Some physicists — including Penrose and
+        Wigner himself — have speculated that consciousness and quantum
+        mechanics are connected. Most physicists are skeptical, but the
+        question refuses to go away. What <em>is</em> observation?
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="sec-sep"></div>
+
+<!-- ════════════════ SECTION 5: ENTANGLEMENT & BELL ════════════════ -->
+<section id="entanglement" class="q-section">
+  <div class="section-inner">
+    <div class="sec-label reveal">Chapter 5</div>
+    <h2 class="reveal">으스스한 <em>원격 작용</em></h2>
+
+    <p class="sec-prose reveal">
+      In May 1935, Einstein, Podolsky, and Rosen published a paper with an
+      innocent title and an explosive argument. Two particles, once
+      entangled, remain correlated no matter how far apart. Measure one —
+      the other's state is instantly determined. Einstein saw only two
+      options: either information travels faster than light (impossible),
+      or the particles always "knew" their values in advance through
+      <strong>hidden variables</strong>. He concluded quantum mechanics
+      must be incomplete.
+    </p>
+
+    <p class="sec-prose reveal">
+      Bohr's response, published months later, was characteristically opaque.
+      He argued that one cannot speak of the properties of a particle
+      independently of the measurement context. Einstein was unconvinced.
+      The debate seemed philosophical, untestable — until John Bell, an
+      Irish physicist working at CERN, changed everything.
+    </p>
+
+    <!-- Interactive 1: Entanglement visualizer -->
+    <div class="viz-box reveal">
+      <div class="viz-canvas-wrap" style="aspect-ratio:16/7;">
+        <canvas id="entangleCanvas"></canvas>
+      </div>
+      <div class="viz-controls">
+        <button class="ctrl-btn" id="btnEntanglePair">
+          <span class="icon">⚛</span> 얽힌 쌍 생성
+        </button>
+        <button class="ctrl-btn" id="btnEntangleMeasure">
+          <span class="icon">👁</span> Alice 입자 측정
+        </button>
+      </div>
+      <p style="margin-top:.8rem;font-size:.78rem;color:var(--muted);text-align:center;line-height:1.5">
+        Create an entangled pair. The particles fly apart in superposition
+        (shown as both colors). Alice 입자 측정 — and watch
+        Bob's <strong style="color:var(--text)">instantly</strong> resolve
+        to the correlated state, no matter the distance.
+      </p>
+    </div>
+
+    <p class="sec-prose reveal">
+      In 1964, Bell proved a theorem of extraordinary elegance and power.
+      He showed that if hidden variables exist, then the correlations
+      between entangled particles must satisfy a mathematical inequality.
+      Quantum mechanics predicts correlations that <strong>violate</strong>
+      this inequality. The question was no longer philosophical — it was
+      experimental.
+    </p>
+
+    <div class="quote-block reveal">
+      <p class="quote-text">
+        "나는 [양자역학을] 진심으로 믿을 수 없다 because the
+        theory cannot be reconciled with the idea that physics should
+        represent a reality in time and space, free from spooky actions
+        작용으로부터 자유로운 현실이라는 생각과 양립할 수 없기 때문이다."
+      </p>
+      <p class="quote-attr">— 알베르트 아인슈타인, 막스 보른에게 보낸 편지, 1947</p>
+    </div>
+
+    <!-- Interactive 2: Bell test -->
+    <div class="viz-box reveal">
+      <div class="viz-canvas-wrap" style="aspect-ratio:16/8;">
+        <canvas id="bellCanvas"></canvas>
+      </div>
+      <div class="viz-controls">
+        <div class="q-slider-group">
+          <label class="q-slider-label">Alice 각도: <span id="aliceAngleLabel">0</span>°</label>
+          <input type="range" class="q-slider" id="aliceAngle" min="0" max="360" value="0">
+        </div>
+        <div class="q-slider-group">
+          <label class="q-slider-label">Bob 각도: <span id="bobAngleLabel">45</span>°</label>
+          <input type="range" class="q-slider" id="bobAngle" min="0" max="360" value="45">
+        </div>
+        <button class="ctrl-btn" id="btnBellRun">
+          <span class="icon">⚛</span> 100회 시행
+        </button>
+        <button class="ctrl-btn" id="btnBellReset">
+          <span class="icon">↺</span> Reset
+        </button>
+      </div>
+      <p style="margin-top:.8rem;font-size:.78rem;color:var(--muted);text-align:center;line-height:1.5">
+        The Bell test. Alice and Bob each choose a measurement angle for their
+        entangled photon. Quantum mechanics predicts correlation =
+        <strong style="color:var(--sky)">cos²(θ<sub>A</sub> − θ<sub>B</sub>)</strong>.
+        Hidden variable theories predict less. Try 0° vs 22.5°, then 0° vs 67.5°
+        — watch the <strong style="color:var(--gold)">Bell inequality break</strong>.
+      </p>
+    </div>
+
+    <p class="sec-prose reveal">
+      Alain Aspect performed the first convincing Bell test in Paris in 1982,
+      switching detector settings while the photons were already in flight —
+      closing the "locality loophole." In 2015, Hensen et al. at Delft achieved
+      the first fully loophole-free Bell test, confirming the violation with
+      no possible classical escape. Nature is not locally real.
+    </p>
+
+    <div class="quote-block reveal">
+      <p class="quote-text">
+        "우주는 우리가 상상하는 것보다 기이할 뿐 아니라,
+        우리가 상상<em>할 수 있는</em> 것보다도 기이하다."
+      </p>
+      <p class="quote-attr">— J.B.S. 홀데인 (양자 맥락에서 자주 인용)</p>
+    </div>
+
+    <p class="sec-prose reveal">
+      There is one remaining loophole: <strong>superdeterminism</strong>.
+      If the entire universe — including Alice and Bob's "free" choices of
+      measurement angles — was determined from the Big Bang onward, then Bell's
+      theorem does not apply. This is logically possible but philosophically
+      devastating: it would mean no experiment can ever teach us anything,
+      because every experimental choice was predetermined. Most physicists
+      reject it — but it cannot be disproven.
+    </p>
+
+    <div class="insight-card reveal">
+      <h3>2022년 노벨상</h3>
+      <p>
+        Alain Aspect, John Clauser, and Anton Zeilinger were awarded the
+        2022 Nobel Prize in Physics "for experiments with entangled photons,
+        establishing the violation of Bell inequalities and pioneering
+        quantum information science." Their work confirmed that entanglement
+        is not just a theoretical curiosity — it is a resource.
+        Quantum teleportation, quantum cryptography, and quantum computing
+        all depend on this "spooky action" being real.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="sec-sep"></div>
+
+<!-- ════════════════ SECTION 6: THE GREAT DEBATE ════════════════ -->
+<section id="debate" class="q-section">
+  <div class="section-inner">
+    <div class="sec-label reveal">Chapter 6</div>
+    <h2 class="reveal">이 모든 것은 무엇을 <em>의미</em>하는가?</h2>
+
+    <p class="sec-prose reveal">
+      Quantum mechanics is, by any measure, the most successful theory in
+      the history of science. It predicts the behavior of atoms, molecules,
+      semiconductors, lasers, and nuclear reactions with staggering accuracy.
+      But after a century, physicists still cannot agree on what the theory
+      <em>says about reality</em>.
+    </p>
+
+    <p class="sec-prose reveal">
+      The fight began at the fifth Solvay Conference in October 1927 —
+      perhaps the most extraordinary gathering of minds in history.
+      Twenty-nine physicists, seventeen of whom were or would become Nobel
+      laureates, met in Brussels to discuss the newly born quantum theory.
+      Einstein and Bohr squared off. The debate would define physics
+      for the next century.
+    </p>
+
+    <!-- Interactive 1: Solvay debate timeline -->
+    <div class="viz-box reveal">
+      <div class="viz-canvas-wrap" style="aspect-ratio:16/6;">
+        <canvas id="solvayCanvas"></canvas>
+      </div>
+      <div style="padding:1rem;font-size:.82rem;color:var(--muted);line-height:1.7;" id="solvayText">
+        <strong style="color:var(--gold)">Click a moment on the timeline</strong>
+        to explore the Einstein–Bohr debates — the greatest intellectual duel in the history of science.
+      </div>
+    </div>
+
+    <div class="quote-block reveal">
+      <p class="quote-text">
+        "아무도 보지 않을 때 달은 거기 있는가?"
+      </p>
+      <p class="quote-attr">— 아브라함 파이스, 코펜하겐 해석에 대한 아인슈타인의 반론을 빗대어</p>
+    </div>
+
+    <p class="sec-prose reveal" style="margin-bottom:1rem">
+      A century later, the debate is unresolved.
+      <strong>Choose your interpretation</strong> — click one to see what it
+      means, who championed it, and what it costs.
+    </p>
+
+    <!-- Interactive 2: Interpretation voter -->
+    <div class="debate-grid reveal" id="debateGrid">
+      <div class="debate-card" data-interp="copenhagen">
+        <span class="card-icon">🇩🇰</span>
+        <h4>Copenhagen</h4>
+        <span class="card-year">Bohr & Heisenberg, 1927</span>
+        <p>
+          The wave function encodes our knowledge, not reality.
+          Measurement causes collapse. Don't ask what happens between
+          measurements. "Shut up and calculate."
+        </p>
+        <div class="advocates">Bohr · Heisenberg · Dirac · Born</div>
+      </div>
+
+      <div class="debate-card" data-interp="manyworlds">
+        <span class="card-icon">🌌</span>
+        <h4>Many Worlds</h4>
+        <span class="card-year">Everett, 1957</span>
+        <p>
+          The wave function is real and never collapses.
+          Every measurement splits the universe into branches.
+          All outcomes happen. You just experience one branch.
+        </p>
+        <div class="advocates">Everett · DeWitt · Deutsch · Carroll</div>
+      </div>
+
+      <div class="debate-card" data-interp="bohm">
+        <span class="card-icon">🌊</span>
+        <h4>Pilot Wave</h4>
+        <span class="card-year">de Broglie 1927, Bohm 1952</span>
+        <p>
+          Particles are real and always have definite positions,
+          guided by a "pilot wave." Deterministic but non-local.
+          Bell himself was a secret Bohmian.
+        </p>
+        <div class="advocates">de Broglie · Bohm · Bell · Valentini</div>
+      </div>
+
+      <div class="debate-card" data-interp="qbism">
+        <span class="card-icon">🧠</span>
+        <h4>QBism</h4>
+        <span class="card-year">Fuchs, Caves, Schack, 2002</span>
+        <p>
+          Quantum states are an agent's personal beliefs about
+          future experiences. The wave function is about <em>you</em>,
+          not the world. Radical subjectivism.
+        </p>
+        <div class="advocates">Fuchs · Caves · Schack · Mermin</div>
+      </div>
+    </div>
+
+    <div class="debate-result" id="debateResult">
+      <h4 id="debateResultTitle"></h4>
+      <p id="debateResultText"></p>
+      <div class="poll-bar-wrap" id="debatePoll"></div>
+    </div>
+
+    <p class="sec-prose reveal" style="margin-top:2.5rem">
+      In a 2013 poll of 33 physicists at a quantum foundations conference
+      (Schlosshauer, Kofler &amp; Zeilinger), the results were striking:
+      Copenhagen 42%, Information-based 24%, Many Worlds 18%, other 16%.
+      There was no majority. The measurement problem remains, in the words
+      of physicist Steven Weinberg, <strong>"the most important unsolved
+      problem in the foundations of physics."</strong>
+    </p>
+
+    <div class="insight-card reveal">
+      <h3>논쟁의 미래</h3>
+      <p>
+        The debate is not merely philosophical — it shapes research programs.
+        <strong>Decoherence theory</strong> explains <em>why</em>
+        superpositions vanish at macroscopic scales, but does not solve
+        the measurement problem. <strong>Quantum Darwinism</strong>
+        (Zurek) asks how objective classical reality <em>emerges</em>
+        from a quantum universe. <strong>Objective collapse theories</strong>
+        (Penrose, Ghirardi–Rimini–Weber) modify the Schrödinger equation
+        to make collapse physical and testable. And the quest for
+        <strong>quantum gravity</strong> — unifying quantum mechanics
+        with general relativity — may ultimately demand we revise our
+        understanding of space, time, and the nature of observation itself.
+        The story of quantum mechanics is far from over.
+      </p>
+    </div>
+  </div>
+</section>
+
+<div class="sec-sep"></div>
+
+<!-- ════════════════ SECTION 7: REFERENCES ════════════════ -->
+<section id="references" class="q-section" style="min-height:auto;padding:4rem 2rem 2rem;">
+  <div class="section-inner">
+    <div class="sec-label reveal">References</div>
+    <h2 class="reveal" style="font-size:clamp(1.4rem,3vw,2rem)">참고 문헌</h2>
+    <ul class="ref-list reveal">
+      <li data-num="[1]"><em>QED: The Strange Theory of Light and Matter</em>, R. Feynman. Princeton University Press, 1985.</li>
+      <li data-num="[2]">M. Planck, "On the Law of Distribution of Energy in the Normal Spectrum," <em>Annalen der Physik</em>, vol. 4, 1901.</li>
+      <li data-num="[3]">W. Heisenberg, "Über den anschaulichen Inhalt der quantentheoretischen Kinematik und Mechanik," <em>Zeitschrift für Physik</em>, 43, 1927.</li>
+      <li data-num="[4]">A. Einstein, B. Podolsky, N. Rosen, "Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?" <em>Physical Review</em>, 47(10), 1935.</li>
+      <li data-num="[5]">J. S. Bell, "On the Einstein Podolsky Rosen Paradox," <em>Physics Physique Fizika</em>, 1(3), 1964.</li>
+      <li data-num="[6]">A. Aspect, P. Grangier, G. Roger, "Experimental Realization of EPR-Bohm Gedankenexperiment," <em>Physical Review Letters</em>, 49(2), 1982.</li>
+      <li data-num="[7]">H. Everett III, "'Relative State' Formulation of Quantum Mechanics," <em>Reviews of Modern Physics</em>, 29(3), 1957.</li>
+      <li data-num="[8]">D. Bohm, "A Suggested Interpretation of the Quantum Theory in Terms of 'Hidden' Variables," <em>Physical Review</em>, 85(2), 1952.</li>
+      <li data-num="[9]">C. A. Fuchs, "QBism, the Perimeter of Quantum Bayesianism," arXiv:1003.5209, 2010.</li>
+      <li data-num="[10]">M. Schlosshauer, J. Kofler, A. Zeilinger, "A Snapshot of Foundational Attitudes Toward Quantum Mechanics," <em>Studies in History and Philosophy of Science Part B</em>, 44(3), 2013.</li>
+      <li data-num="[11]"><em>Something Deeply Hidden: Quantum Worlds and the Emergence of Spacetime</em>, S. Carroll. Dutton, 2019.</li>
+      <li data-num="[12]">B. Hensen et al., "Loophole-free Bell inequality violation using electron spins," <em>Nature</em>, 526, 2015.</li>
+      <li data-num="[13]">Nobel Prize in Physics 2022: A. Aspect, J. F. Clauser, A. Zeilinger. <a href="https://www.nobelprize.org/prizes/physics/2022/" target="_blank">nobelprize.org</a></li>
+      <li data-num="[14]">E. Schrödinger, "Die gegenwärtige Situation in der Quantenmechanik," <em>Naturwissenschaften</em>, 23, 1935.</li>
+      <li data-num="[15]">N. Bohr, "Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?" <em>Physical Review</em>, 48(8), 1935.</li>
+      <li data-num="[16]">M. Proietti et al., "Experimental test of local observer independence," <em>Science Advances</em>, 5(9), 2019.</li>
+      <li data-num="[17]"><em>The Quantum World: Quantum Physics for Everyone</em>, K. Ford. Harvard University Press, 2004.</li>
+      <li data-num="[18]">S. Weinberg, "The Trouble with Quantum Mechanics," <em>The New York Review of Books</em>, January 2017.</li>
+    </ul>
+  </div>
+</section>
+
+<div style="min-height:2vh;"></div>
+
+<!-- ════════════════ FOOTER ════════════════ -->
+<footer>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study</div>
+    <div class="footer-inst">AI4Math, KAIST</div>
+    <a class="footer-link" href="https://kimsh.kr" target="_blank">kimsh.kr</a>
+  </div>
+</footer>
+
+<!-- ════════════════ FLOATING BADGE ════════════════ -->
+<a class="floating-badge" href="https://edu.kimsh.kr" target="_blank">edu.kimsh.kr</a>
+
+<script>
+// ═══════════════════════════════════════
+// REVEAL OBSERVER — must run first to make content visible
+// ═══════════════════════════════════════
+(function() {
+  const revealObs = new IntersectionObserver(entries => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        const delay = Array.from(e.target.parentElement.querySelectorAll('.reveal'))
+          .indexOf(e.target) * 80;
+        setTimeout(() => e.target.classList.add('visible'), Math.min(delay, 400));
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  // Progress bar
+  const progressBar = document.getElementById('progressBar');
+  if (progressBar) {
+    window.addEventListener('scroll', () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight;
+      progressBar.style.width = (h > 0 ? (window.scrollY / h) * 100 : 0) + '%';
+    }, { passive: true });
+  }
+})();
+
+try {
+// ═══════════════════════════════════════════
+// HERO CANVAS — Quantum interference field
+// Pre-computes static fringe texture, animates particles on top
+// ═══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('heroCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, dpr;
+  let particles = [];
+  let time = 0;
+  let animId = null;
+  let fringeCanvas; // off-screen, pre-computed
+
+  // Two-source interference intensity at (x, y)
+  function interference(x, y, W, H) {
+    const cx = W * 0.5, cy = H * 0.08;
+    const sep = W * 0.07;
+    const wl = W * 0.065;
+    const d1 = Math.hypot(x - cx + sep/2, y - cy);
+    const d2 = Math.hypot(x - cx - sep/2, y - cy);
+    const phi = ((d1 - d2) / wl) * Math.PI;
+    const cosP = Math.cos(phi);
+    // Decay with distance from source
+    const dist = Math.hypot(x - cx, y - cy);
+    const decay = Math.max(0, 1 - dist / (Math.max(W, H) * 0.9));
+    return cosP * cosP * decay * decay;
+  }
+
+  function buildFringes() {
+    // Render at 1/5 resolution, upscale with smoothing
+    const scale = 5;
+    const fw = Math.ceil(W / scale);
+    const fh = Math.ceil(H / scale);
+    fringeCanvas = document.createElement('canvas');
+    fringeCanvas.width = fw;
+    fringeCanvas.height = fh;
+    const fctx = fringeCanvas.getContext('2d');
+    const img = fctx.createImageData(fw, fh);
+    const d = img.data;
+    for (let py = 0; py < fh; py++) {
+      for (let px = 0; px < fw; px++) {
+        const I = interference(px * scale, py * scale, W, H);
+        const b = I * 0.12;
+        const idx = (py * fw + px) * 4;
+        d[idx]     = Math.round(40 * b * 5);   // R
+        d[idx + 1] = Math.round(160 * b * 5);  // G
+        d[idx + 2] = Math.round(248 * b * 5);  // B
+        d[idx + 3] = Math.round(255 * b);       // A
+      }
+    }
+    fctx.putImageData(img, 0, 0);
+  }
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = canvas.clientWidth;
+    H = canvas.clientHeight;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    buildFringes();
+    initParticles();
+  }
+
+  function initParticles() {
+    particles = [];
+    const count = Math.min(Math.floor(W * H / 1200), 400);
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: (Math.random() - 0.5) * 0.15 + 0.08,
+        r: Math.random() * 1.4 + 0.4,
+        phase: Math.random() * Math.PI * 2,
+        freq: Math.random() * 0.015 + 0.004,
+        hue: [200, 200, 200, 260, 45][Math.floor(Math.random() * 5)]
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Draw pre-computed fringe field (upscaled)
+    const pulse = 0.7 + 0.3 * Math.sin(time * 0.008);
+    ctx.save();
+    ctx.globalAlpha = 0.6 * pulse;
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(fringeCanvas, 0, 0, W, H);
+    ctx.restore();
+
+    // Draw particles
+    const t = time * 0.001;
+    for (const p of particles) {
+      const I = interference(p.x, p.y, W, H);
+      const alpha = 0.1 + I * 0.75;
+      const sway = Math.sin(t * 10 * p.freq + p.phase);
+
+      p.x += p.vx + sway * 0.12;
+      p.y += p.vy + Math.cos(t * 8 * p.freq + p.phase) * 0.06;
+
+      // Wrap
+      if (p.x < -5) p.x += W + 10;
+      if (p.x > W + 5) p.x -= W + 10;
+      if (p.y < -5) p.y += H + 10;
+      if (p.y > H + 5) p.y -= H + 10;
+
+      // Soft attraction toward brighter fringes
+      const dx = interference(p.x + 3, p.y, W, H) - I;
+      const dy = interference(p.x, p.y + 3, W, H) - I;
+      p.vx += dx * 0.004;
+      p.vy += dy * 0.004;
+      p.vx *= 0.997;
+      p.vy *= 0.997;
+
+      const h = p.hue;
+      const s = h === 45 ? '80%' : '72%';
+      const l = h === 45 ? '58%' : '62%';
+      const r = p.r * (1 + 0.2 * sway);
+
+      // Outer glow
+      if (I > 0.3) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r + I * 5, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${h}, ${s}, ${l}, ${alpha * 0.08})`;
+        ctx.fill();
+      }
+
+      // Core dot
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${h}, ${s}, ${l}, ${alpha})`;
+      ctx.fill();
+    }
+
+    time++;
+    animId = requestAnimationFrame(draw);
+  }
+
+  const heroObs = new IntersectionObserver(entries => {
+    const vis = entries[0].isIntersecting;
+    if (vis && !animId) draw();
+    if (!vis && animId) { cancelAnimationFrame(animId); animId = null; }
+  }, { threshold: 0.05 });
+
+  window.addEventListener('resize', () => { resize(); });
+  resize();
+  draw();
+  heroObs.observe(canvas);
+})();
+
+
+// ═══════════════════════════════════════════
+// DOUBLE-SLIT EXPERIMENT
+// ═══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('slitCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, dpr;
+  let photons = [];       // Accumulated hit positions
+  let activePhotons = [];  // Currently flying photons
+  let detectorOn = false;
+  let speedMode = 0;      // 0=normal, 1=fast, 2=ultra
+  let animId;
+  let isVisible = false;
+
+  // Physics parameters
+  const WAVELENGTH = 500e-9;   // 500 nm (green)
+  const SLIT_WIDTH = 0.0001;   // 100 μm
+  const SLIT_SEP = 0.0003;     // 300 μm
+  const SCREEN_DIST = 1.0;     // 1 m
+  // Normalized for canvas
+  let slitY, screenX, barrierX;
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = rect.width;
+    H = rect.height;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    barrierX = W * 0.35;
+    screenX = W * 0.85;
+    slitY = H / 2;
+  }
+
+  // Probability distribution for where photon lands on screen
+  // Double-slit: I(y) = cos²(π d sinθ / λ) × sinc²(π a sinθ / λ)
+  function getHitY() {
+    const screenH = H * 0.85;
+    // Use rejection sampling for accuracy
+    for (let tries = 0; tries < 200; tries++) {
+      const y = (Math.random() - 0.5) * screenH;
+      const sinTheta = y / (H * 3); // scale factor for visual appeal
+
+      if (detectorOn) {
+        // Which-way info: no interference, just single-slit diffraction from each slit
+        const slit = Math.random() > 0.5 ? 1 : -1;
+        const offset = slit * H * 0.045; // visible slit separation on screen
+        const yRel = y - offset;
+        const aPhase = Math.PI * SLIT_WIDTH * (yRel / (H * 3)) / WAVELENGTH;
+        const env = aPhase === 0 ? 1 : Math.sin(aPhase) / aPhase;
+        const prob = env * env;
+        if (Math.random() < prob) return slitY + y;
+      } else {
+        // Double slit interference
+        const dPhase = Math.PI * SLIT_SEP * sinTheta / WAVELENGTH;
+        const aPhase = Math.PI * SLIT_WIDTH * sinTheta / WAVELENGTH;
+        const env = aPhase === 0 ? 1 : Math.sin(aPhase) / aPhase;
+        const interf = Math.cos(dPhase);
+        const prob = (interf * interf) * (env * env);
+        if (Math.random() < prob) return slitY + y;
+      }
+    }
+    return slitY; // fallback
+  }
+
+  function emitPhoton() {
+    const targetY = getHitY();
+    // Fly from left, through a slit, to screen
+    const startX = W * 0.05;
+    const startY = slitY + (Math.random() - 0.5) * H * 0.3;
+
+    // Determine which slit it goes through
+    const slitGap = H * 0.045;
+    let throughY;
+    if (detectorOn) {
+      throughY = Math.random() > 0.5 ? slitY - slitGap : slitY + slitGap;
+    } else {
+      // Quantum: goes through "both" — pick one for visual, but the landing
+      // is from the interference distribution
+      throughY = Math.random() > 0.5 ? slitY - slitGap : slitY + slitGap;
+    }
+
+    activePhotons.push({
+      x: startX,
+      y: startY,
+      targetY: targetY,
+      throughY: throughY,
+      phase: 0, // 0: flying to barrier, 1: flying to screen, 2: landed
+      speed: 3 + Math.random() * 2,
+      hue: detectorOn ? 45 : 200 // gold if detected, blue if quantum
+    });
+  }
+
+  function update() {
+    // Emit photons
+    const emitRate = [1, 4, 15][speedMode];
+    for (let i = 0; i < emitRate; i++) {
+      if (activePhotons.length < 300) emitPhoton();
+    }
+
+    // Update flying photons
+    for (let i = activePhotons.length - 1; i >= 0; i--) {
+      const p = activePhotons[i];
+      if (p.phase === 0) {
+        // Flying toward barrier
+        p.x += p.speed;
+        // Interpolate y toward slit
+        const t = (p.x - W * 0.05) / (barrierX - W * 0.05);
+        p.y = p.y + (p.throughY - p.y) * 0.05;
+        if (p.x >= barrierX) {
+          p.x = barrierX;
+          p.y = p.throughY;
+          p.phase = 1;
+        }
+      } else if (p.phase === 1) {
+        // Flying toward screen
+        p.x += p.speed;
+        const t = (p.x - barrierX) / (screenX - barrierX);
+        p.y = p.throughY + (p.targetY - p.throughY) * t;
+        if (p.x >= screenX) {
+          p.x = screenX;
+          p.y = p.targetY;
+          p.phase = 2;
+          // Record hit
+          photons.push({ x: screenX, y: p.targetY, age: 0, hue: p.hue });
+          document.getElementById('photonCount').textContent = photons.length;
+          activePhotons.splice(i, 1);
+        }
+      }
+    }
+
+    // Age hit photons
+    for (const p of photons) p.age++;
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Background
+    ctx.fillStyle = '#050810';
+    ctx.fillRect(0, 0, W, H);
+
+    // ── Draw barrier with slits ──
+    const slitGap = H * 0.045;
+    const slitHalfW = H * 0.015;
+    const barrierW = 4;
+
+    ctx.fillStyle = '#1a2545';
+    // Top portion
+    ctx.fillRect(barrierX - barrierW/2, 0, barrierW, slitY - slitGap - slitHalfW);
+    // Middle portion
+    ctx.fillRect(barrierX - barrierW/2, slitY - slitGap + slitHalfW, barrierW,
+      2 * (slitGap - slitHalfW));
+    // Bottom portion
+    ctx.fillRect(barrierX - barrierW/2, slitY + slitGap + slitHalfW, barrierW,
+      H - (slitY + slitGap + slitHalfW));
+
+    // Slit glow
+    ctx.save();
+    ctx.shadowBlur = 12;
+    ctx.shadowColor = 'rgba(56, 189, 248, 0.5)';
+    ctx.fillStyle = 'rgba(56, 189, 248, 0.3)';
+    ctx.fillRect(barrierX - 1, slitY - slitGap - slitHalfW, 2, slitHalfW * 2);
+    ctx.fillRect(barrierX - 1, slitY + slitGap - slitHalfW, 2, slitHalfW * 2);
+    ctx.restore();
+
+    // Labels
+    ctx.font = `${Math.max(10, W * 0.018)}px 'DM Sans', sans-serif`;
+    ctx.fillStyle = '#7b8db5';
+    ctx.textAlign = 'center';
+    ctx.fillText('Source', W * 0.05, H * 0.08);
+    ctx.fillText('Barrier', barrierX, H * 0.08);
+    ctx.fillText('Screen', screenX, H * 0.08);
+
+    // Detector indicator
+    if (detectorOn) {
+      ctx.save();
+      const dx = barrierX + 15;
+      const dy1 = slitY - slitGap;
+      const dy2 = slitY + slitGap;
+      ctx.font = `${Math.max(10, W * 0.022)}px 'DM Sans', sans-serif`;
+      ctx.fillStyle = '#f0b429';
+      ctx.textAlign = 'left';
+      ctx.fillText('👁', dx, dy1 + 4);
+      ctx.fillText('👁', dx, dy2 + 4);
+      // Detector label
+      ctx.font = `${Math.max(9, W * 0.014)}px 'JetBrains Mono', monospace`;
+      ctx.fillStyle = 'rgba(240,180,41,0.7)';
+      ctx.fillText('detector', dx + 22, dy1 + 4);
+      ctx.restore();
+    }
+
+    // ── Draw screen (faint vertical line) ──
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(screenX, H * 0.1);
+    ctx.lineTo(screenX, H * 0.9);
+    ctx.stroke();
+
+    // ── Draw accumulated photon hits ──
+    for (const p of photons) {
+      const fade = Math.min(1, p.age / 20);
+      const alpha = 0.5 + fade * 0.4;
+      const h = p.hue;
+      const s = h === 45 ? '80%' : '75%';
+      const l = h === 45 ? '55%' : '65%';
+      ctx.beginPath();
+      ctx.arc(p.x + (Math.random() - 0.5) * 0.3, p.y, 1.2, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${h}, ${s}, ${l}, ${alpha})`;
+      ctx.fill();
+
+      // Glow for recent hits
+      if (p.age < 30) {
+        const glowAlpha = (1 - p.age / 30) * 0.3;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${h}, ${s}, ${l}, ${glowAlpha})`;
+        ctx.fill();
+      }
+    }
+
+    // ── Draw flying photons ──
+    for (const p of activePhotons) {
+      const h = p.hue;
+      // Trail
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${h}, 80%, 70%, 0.9)`;
+      ctx.fill();
+
+      // Glow
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${h}, 80%, 70%, 0.15)`;
+      ctx.fill();
+
+      // Wave visualization (when not detected)
+      if (!detectorOn && p.phase === 1) {
+        const spread = (p.x - barrierX) / (screenX - barrierX);
+        const waveR = spread * 15;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, waveR, 0, Math.PI * 2);
+        ctx.strokeStyle = `hsla(200, 70%, 60%, ${0.08 * (1 - spread)})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+
+    // ── Histogram on the right side ──
+    if (photons.length > 50) {
+      const bins = 80;
+      const hist = new Float32Array(bins);
+      const screenTop = H * 0.1;
+      const screenBot = H * 0.9;
+      const screenRange = screenBot - screenTop;
+
+      for (const p of photons) {
+        const bin = Math.floor(((p.y - screenTop) / screenRange) * bins);
+        if (bin >= 0 && bin < bins) hist[bin]++;
+      }
+
+      const maxCount = Math.max(...hist) || 1;
+      const barW = screenRange / bins;
+      const maxBarLen = W * 0.08;
+
+      ctx.save();
+      ctx.globalAlpha = 0.5;
+      for (let i = 0; i < bins; i++) {
+        const len = (hist[i] / maxCount) * maxBarLen;
+        const y = screenTop + i * barW;
+        const hue = detectorOn ? 45 : 200;
+        ctx.fillStyle = `hsla(${hue}, 60%, 55%, 0.6)`;
+        ctx.fillRect(screenX + 8, y, len, barW - 1);
+      }
+      ctx.restore();
+    }
+
+    update();
+    animId = requestAnimationFrame(draw);
+  }
+
+  // ── Controls ──
+  document.getElementById('btnToggleDetector').addEventListener('click', function() {
+    detectorOn = !detectorOn;
+    this.classList.toggle('active', detectorOn);
+    this.innerHTML = detectorOn
+      ? '<span class="icon">👁</span> 검출기 ON'
+      : '<span class="icon">👁</span> 검출기 설치';
+    // Reset to show the difference
+    photons = [];
+    activePhotons = [];
+    document.getElementById('photonCount').textContent = '0';
+  });
+
+  document.getElementById('btnSpeed').addEventListener('click', function() {
+    speedMode = (speedMode + 1) % 3;
+    const labels = ['⚡ Faster', '⚡⚡ Fast', '⚡⚡⚡ Ultra'];
+    this.innerHTML = `<span class="icon"></span> ${labels[speedMode]}`;
+    this.classList.toggle('active', speedMode > 0);
+  });
+
+  document.getElementById('btnReset').addEventListener('click', function() {
+    photons = [];
+    activePhotons = [];
+    document.getElementById('photonCount').textContent = '0';
+  });
+
+  // Visibility observer - stop computing when off-screen
+  const obs = new IntersectionObserver(entries => {
+    isVisible = entries[0].isIntersecting;
+    if (isVisible && !animId) draw();
+    if (!isVisible && animId) { cancelAnimationFrame(animId); animId = null; }
+  }, { threshold: 0.05 });
+
+  window.addEventListener('resize', resize);
+  resize();
+  obs.observe(canvas);
+
+})();
+
+
+// ═══════════════════════════════════════════
+// BILLIARD TABLE — Perfect Newtonian mechanics
+// ═══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('billiardCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, dpr;
+  let balls = [];
+  let dragging = null;
+  let dragStart = null;
+  let dragCurrent = null;
+  let animId = null;
+  let isVisible = false;
+  let trails = []; // for trajectory trails
+
+  const FRICTION = 0.997;
+  const RESTITUTION = 0.95;
+  const BALL_R_FRAC = 0.038; // fraction of canvas height
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = rect.width;
+    H = rect.height;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (balls.length === 0) initBalls();
+  }
+
+  function ballR() { return H * BALL_R_FRAC; }
+
+  function initBalls() {
+    const r = ballR();
+    const colors = [
+      '#f5f5f0', // cue (white)
+      '#e8c02a', // 1 (yellow)
+      '#2a5faa', // 2 (blue)
+      '#d63031', // 3 (red)
+      '#6c3483', // 4 (purple)
+      '#e67e22', // 5 (orange)
+      '#27ae60', // 6 (green)
+      '#943126', // 7 (maroon)
+      '#1a1a1a', // 8 (black)
+    ];
+
+    balls = [];
+    trails = [];
+
+    // Cue ball
+    balls.push({ x: W * 0.25, y: H * 0.5, vx: 0, vy: 0, r, color: colors[0], id: 0 });
+
+    // Triangle rack
+    const startX = W * 0.65;
+    const startY = H * 0.5;
+    const gap = r * 2.15;
+    let idx = 1;
+    for (let row = 0; row < 4; row++) {
+      for (let col = 0; col <= row; col++) {
+        if (idx >= colors.length) break;
+        const x = startX + row * gap * Math.cos(Math.PI / 6);
+        const y = startY + (col - row / 2) * gap;
+        balls.push({ x, y, vx: 0, vy: 0, r, color: colors[idx], id: idx });
+        idx++;
+      }
+    }
+  }
+
+  function getPointer(e) {
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.touches ? e.touches[0] : e;
+    return {
+      x: (touch.clientX - rect.left) * (W / rect.width),
+      y: (touch.clientY - rect.top) * (H / rect.height)
+    };
+  }
+
+  function onDown(e) {
+    e.preventDefault();
+    const p = getPointer(e);
+    for (const b of balls) {
+      const dist = Math.hypot(p.x - b.x, p.y - b.y);
+      if (dist < b.r * 1.5) {
+        dragging = b;
+        dragStart = { x: b.x, y: b.y };
+        dragCurrent = p;
+        b.vx = 0; b.vy = 0;
+        break;
+      }
+    }
+  }
+
+  function onMove(e) {
+    if (!dragging) return;
+    e.preventDefault();
+    dragCurrent = getPointer(e);
+  }
+
+  function onUp(e) {
+    if (!dragging) return;
+    const p = dragCurrent || getPointer(e);
+    // Velocity = direction from current pointer back to ball (slingshot)
+    const dx = dragStart.x - p.x;
+    const dy = dragStart.y - p.y;
+    const power = Math.min(Math.hypot(dx, dy) * 0.15, 18);
+    const angle = Math.atan2(dy, dx);
+    dragging.vx = Math.cos(angle) * power;
+    dragging.vy = Math.sin(angle) * power;
+    dragging = null;
+    dragStart = null;
+    dragCurrent = null;
+    document.getElementById('billiardHint').classList.add('hidden');
+  }
+
+  canvas.addEventListener('mousedown', onDown);
+  canvas.addEventListener('mousemove', onMove);
+  canvas.addEventListener('mouseup', onUp);
+  canvas.addEventListener('mouseleave', onUp);
+  canvas.addEventListener('touchstart', onDown, { passive: false });
+  canvas.addEventListener('touchmove', onMove, { passive: false });
+  canvas.addEventListener('touchend', onUp);
+
+  function physics() {
+    const r = ballR();
+    // Move
+    for (const b of balls) {
+      b.x += b.vx;
+      b.y += b.vy;
+      b.vx *= FRICTION;
+      b.vy *= FRICTION;
+      if (Math.abs(b.vx) < 0.01) b.vx = 0;
+      if (Math.abs(b.vy) < 0.01) b.vy = 0;
+
+      // Record trail
+      if (Math.hypot(b.vx, b.vy) > 0.3) {
+        trails.push({ x: b.x, y: b.y, age: 0, color: b.color });
+        if (trails.length > 2000) trails.shift();
+      }
+    }
+
+    // Wall collisions
+    for (const b of balls) {
+      if (b.x - r < 0) { b.x = r; b.vx = Math.abs(b.vx) * RESTITUTION; }
+      if (b.x + r > W) { b.x = W - r; b.vx = -Math.abs(b.vx) * RESTITUTION; }
+      if (b.y - r < 0) { b.y = r; b.vy = Math.abs(b.vy) * RESTITUTION; }
+      if (b.y + r > H) { b.y = H - r; b.vy = -Math.abs(b.vy) * RESTITUTION; }
+    }
+
+    // Ball–ball collisions (elastic)
+    for (let i = 0; i < balls.length; i++) {
+      for (let j = i + 1; j < balls.length; j++) {
+        const a = balls[i], b = balls[j];
+        const dx = b.x - a.x, dy = b.y - a.y;
+        const dist = Math.hypot(dx, dy);
+        const minD = a.r + b.r;
+        if (dist < minD && dist > 0) {
+          // Separate
+          const nx = dx / dist, ny = dy / dist;
+          const overlap = minD - dist;
+          a.x -= nx * overlap / 2;
+          a.y -= ny * overlap / 2;
+          b.x += nx * overlap / 2;
+          b.y += ny * overlap / 2;
+          // Elastic collision (equal mass)
+          const dvx = a.vx - b.vx, dvy = a.vy - b.vy;
+          const dvDotN = dvx * nx + dvy * ny;
+          if (dvDotN > 0) {
+            a.vx -= dvDotN * nx * RESTITUTION;
+            a.vy -= dvDotN * ny * RESTITUTION;
+            b.vx += dvDotN * nx * RESTITUTION;
+            b.vy += dvDotN * ny * RESTITUTION;
+          }
+        }
+      }
+    }
+
+    // Age trails
+    for (let i = trails.length - 1; i >= 0; i--) {
+      trails[i].age++;
+      if (trails[i].age > 120) trails.splice(i, 1);
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    // Felt background
+    ctx.fillStyle = '#0a3d1f';
+    ctx.fillRect(0, 0, W, H);
+
+    // Subtle rail (cushion) border
+    const cushion = 6;
+    ctx.strokeStyle = '#1a5c30';
+    ctx.lineWidth = cushion;
+    ctx.strokeRect(cushion/2, cushion/2, W - cushion, H - cushion);
+
+    // Corner pockets (decorative)
+    const pocketR = ballR() * 1.3;
+    const pockets = [[0,0],[W,0],[0,H],[W,H],[W/2,0],[W/2,H]];
+    for (const [px, py] of pockets) {
+      ctx.beginPath();
+      ctx.arc(px, py, pocketR, 0, Math.PI * 2);
+      ctx.fillStyle = '#061a0e';
+      ctx.fill();
+    }
+
+    // Trails
+    for (const t of trails) {
+      const alpha = (1 - t.age / 120) * 0.3;
+      ctx.beginPath();
+      ctx.arc(t.x, t.y, 1, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+      ctx.fill();
+    }
+
+    // Drag aim line
+    if (dragging && dragCurrent && dragStart) {
+      const dx = dragStart.x - dragCurrent.x;
+      const dy = dragStart.y - dragCurrent.y;
+      const len = Math.hypot(dx, dy);
+      if (len > 5) {
+        ctx.save();
+        ctx.setLineDash([4, 6]);
+        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(dragging.x, dragging.y);
+        ctx.lineTo(dragging.x + dx * 2, dragging.y + dy * 2);
+        ctx.stroke();
+        ctx.restore();
+        // Power indicator
+        const power = Math.min(len * 0.15, 18);
+        const maxPow = 18;
+        ctx.fillStyle = `rgba(240,180,41,${0.4 + 0.6 * power/maxPow})`;
+        ctx.font = `${Math.max(10, W*0.018)}px 'JetBrains Mono', monospace`;
+        ctx.textAlign = 'center';
+        ctx.fillText(`power: ${Math.round(power/maxPow*100)}%`, dragging.x, dragging.y - dragging.r - 10);
+      }
+    }
+
+    // Balls
+    const r = ballR();
+    for (const b of balls) {
+      // Shadow
+      ctx.beginPath();
+      ctx.arc(b.x + 2, b.y + 2, r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0,0,0,0.3)';
+      ctx.fill();
+
+      // Ball body
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, r, 0, Math.PI * 2);
+      const grad = ctx.createRadialGradient(b.x - r*0.3, b.y - r*0.3, r*0.1, b.x, b.y, r);
+      grad.addColorStop(0, '#fff');
+      grad.addColorStop(0.3, b.color);
+      grad.addColorStop(1, darken(b.color, 0.4));
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      // Highlight
+      ctx.beginPath();
+      ctx.arc(b.x - r*0.25, b.y - r*0.25, r*0.3, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      ctx.fill();
+    }
+
+    physics();
+    animId = requestAnimationFrame(draw);
+  }
+
+  function darken(hex, amount) {
+    let r = parseInt(hex.slice(1,3),16);
+    let g = parseInt(hex.slice(3,5),16);
+    let b = parseInt(hex.slice(5,7),16);
+    r = Math.round(r * (1 - amount));
+    g = Math.round(g * (1 - amount));
+    b = Math.round(b * (1 - amount));
+    return `rgb(${r},${g},${b})`;
+  }
+
+  const obs = new IntersectionObserver(entries => {
+    isVisible = entries[0].isIntersecting;
+    if (isVisible && !animId) draw();
+    if (!isVisible && animId) { cancelAnimationFrame(animId); animId = null; }
+  }, { threshold: 0.05 });
+
+  window.addEventListener('resize', () => { resize(); });
+  resize();
+  obs.observe(canvas);
+})();
+
+
+// ═══════════════════════════════════════════
+// LAPLACE'S DEMON — Deterministic solar system
+// ═══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('demonCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, dpr;
+  let animId = null;
+  let isVisible = false;
+  let simTime = 0;
+  let speed = 1; // -3 (rewind), 1 (play), 3 (fast)
+  let orbits = []; // trail history
+
+  // Planets: [distance_frac, period, radius, color, name, eccentricity]
+  const PLANETS = [
+    { d: 0.12, T: 2.0,  r: 3,  color: '#a0a0a0', name: 'Mercury', e: 0.12 },
+    { d: 0.19, T: 3.5,  r: 4,  color: '#e8c87a', name: 'Venus',   e: 0.04 },
+    { d: 0.27, T: 5.0,  r: 4.5,color: '#38bdf8', name: 'Earth',   e: 0.06 },
+    { d: 0.36, T: 7.5,  r: 3.5,color: '#fb7185', name: 'Mars',    e: 0.09 },
+    { d: 0.52, T: 15.0, r: 8,  color: '#f0b429', name: 'Jupiter', e: 0.05 },
+    { d: 0.68, T: 25.0, r: 7,  color: '#d4a853', name: 'Saturn',  e: 0.06 },
+  ];
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = rect.width;
+    H = rect.height;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function planetPos(p, t) {
+    // Simplified Keplerian orbit (first-order eccentricity approximation)
+    const angle = (2 * Math.PI * t) / p.T;
+    const rDist = p.d * Math.min(W, H * 2) * 0.45 * (1 - p.e * Math.cos(angle));
+    return {
+      x: W / 2 + rDist * Math.cos(angle),
+      y: H / 2 + rDist * Math.sin(angle) * 0.45 // flatten for perspective
+    };
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#050810';
+    ctx.fillRect(0, 0, W, H);
+
+    const cx = W / 2, cy = H / 2;
+
+    // Star field (static)
+    const starSeed = 42;
+    let rng = starSeed;
+    function srand() { rng = (rng * 16807 + 0) % 2147483647; return rng / 2147483647; }
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    for (let i = 0; i < 80; i++) {
+      ctx.fillRect(srand() * W, srand() * H, srand() > 0.8 ? 1.5 : 0.8, 0.8);
+    }
+
+    // Sun
+    const sunR = Math.max(8, H * 0.06);
+    const sunGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, sunR * 3);
+    sunGrad.addColorStop(0, 'rgba(255,220,100,0.4)');
+    sunGrad.addColorStop(0.3, 'rgba(255,180,50,0.1)');
+    sunGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = sunGrad;
+    ctx.fillRect(cx - sunR*3, cy - sunR*3, sunR*6, sunR*6);
+
+    ctx.beginPath();
+    ctx.arc(cx, cy, sunR, 0, Math.PI * 2);
+    const sGrad = ctx.createRadialGradient(cx - sunR*0.2, cy - sunR*0.2, sunR*0.1, cx, cy, sunR);
+    sGrad.addColorStop(0, '#fff8e0');
+    sGrad.addColorStop(0.5, '#f0b429');
+    sGrad.addColorStop(1, '#c88510');
+    ctx.fillStyle = sGrad;
+    ctx.fill();
+
+    // Orbit paths (faint ellipses)
+    for (const p of PLANETS) {
+      const rDist = p.d * Math.min(W, H * 2) * 0.45;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, rDist, rDist * 0.45, 0, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
+
+    // Planets
+    for (const p of PLANETS) {
+      const pos = planetPos(p, simTime);
+
+      // Trail (recent path)
+      ctx.beginPath();
+      let first = true;
+      const trailLen = 60;
+      const step = speed > 0 ? -0.05 : 0.05;
+      for (let i = 0; i < trailLen; i++) {
+        const tp = planetPos(p, simTime + i * step * Math.abs(speed));
+        if (first) { ctx.moveTo(tp.x, tp.y); first = false; }
+        else ctx.lineTo(tp.x, tp.y);
+      }
+      ctx.strokeStyle = p.color + '30';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      // Planet
+      const pr = Math.max(p.r, H * 0.015);
+      ctx.beginPath();
+      ctx.arc(pos.x, pos.y, pr, 0, Math.PI * 2);
+      const pGrad = ctx.createRadialGradient(pos.x - pr*0.3, pos.y - pr*0.3, pr*0.1, pos.x, pos.y, pr);
+      pGrad.addColorStop(0, '#fff');
+      pGrad.addColorStop(0.4, p.color);
+      pGrad.addColorStop(1, darkenHex(p.color, 0.5));
+      ctx.fillStyle = pGrad;
+      ctx.fill();
+
+      // Glow
+      ctx.beginPath();
+      ctx.arc(pos.x, pos.y, pr + 4, 0, Math.PI * 2);
+      ctx.fillStyle = p.color + '15';
+      ctx.fill();
+
+      // Saturn's ring
+      if (p.name === 'Saturn') {
+        ctx.beginPath();
+        ctx.ellipse(pos.x, pos.y, pr * 2.2, pr * 0.6, -0.3, 0, Math.PI * 2);
+        ctx.strokeStyle = p.color + '60';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+    }
+
+    // Time display
+    const timeSpan = document.querySelector('#demonTime span');
+    if (timeSpan) timeSpan.textContent = simTime.toFixed(2);
+
+    // Time direction indicator
+    ctx.font = `${Math.max(10, W*0.016)}px 'JetBrains Mono', monospace`;
+    ctx.textAlign = 'right';
+    ctx.fillStyle = speed < 0 ? '#fb7185' : (speed > 1 ? '#38bdf8' : 'rgba(255,255,255,0.3)');
+    const label = speed < 0 ? '◀ PAST' : (speed > 1 ? 'FUTURE ▶' : 'PRESENT');
+    ctx.fillText(label, W - 15, 20);
+
+    simTime += 0.016 * speed;
+    animId = requestAnimationFrame(draw);
+  }
+
+  function darkenHex(hex, amount) {
+    let r = parseInt(hex.slice(1,3),16) || 0;
+    let g = parseInt(hex.slice(3,5),16) || 0;
+    let b = parseInt(hex.slice(5,7),16) || 0;
+    r = Math.round(r * (1 - amount));
+    g = Math.round(g * (1 - amount));
+    b = Math.round(b * (1 - amount));
+    return `rgb(${r},${g},${b})`;
+  }
+
+  // Controls
+  document.getElementById('btnDemon되감기').addEventListener('click', function() {
+    speed = -3;
+    document.querySelectorAll('.demon-controls .ctrl-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+  });
+
+  document.getElementById('btnDemonPlay').addEventListener('click', function() {
+    speed = 1;
+    document.querySelectorAll('.demon-controls .ctrl-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+  });
+
+  document.getElementById('btnDemonFast').addEventListener('click', function() {
+    speed = 3;
+    document.querySelectorAll('.demon-controls .ctrl-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+  });
+
+  const obs = new IntersectionObserver(entries => {
+    isVisible = entries[0].isIntersecting;
+    if (isVisible && !animId) draw();
+    if (!isVisible && animId) { cancelAnimationFrame(animId); animId = null; }
+  }, { threshold: 0.05 });
+
+  window.addEventListener('resize', () => { resize(); });
+  resize();
+  obs.observe(canvas);
+})();
+
+
+// ═══════════════════════════════════════════
+// GLOWING CAVITY — Bouncing photon particles
+// ═══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('cavityCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, dpr;
+  let photons = [];
+  let animId = null;
+  let isVisible = false;
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = rect.width; H = rect.height;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  // Wien's displacement: peak wavelength (nm) from T
+  function peakWavelength(T) { return 2.898e6 / T; }
+
+  // Wavelength to approximate RGB
+  function wavelengthToRGB(nm) {
+    let r = 0, g = 0, b = 0;
+    if (nm < 380) { r = 0.4; g = 0.2; b = 1; }
+    else if (nm < 440) { r = -(nm - 440) / 60; b = 1; }
+    else if (nm < 490) { g = (nm - 440) / 50; b = 1; }
+    else if (nm < 510) { g = 1; b = -(nm - 510) / 20; }
+    else if (nm < 580) { r = (nm - 510) / 70; g = 1; }
+    else if (nm < 645) { r = 1; g = -(nm - 645) / 65; }
+    else { r = 1; }
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+  }
+
+  function bodyGlow(T) {
+    if (T < 1000) return '#1a0500';
+    if (T < 2000) return '#8b2500';
+    if (T < 3500) return '#ff6020';
+    if (T < 5000) return '#ffa040';
+    if (T < 7000) return '#ffe8c0';
+    if (T < 10000) return '#e8f0ff';
+    return '#b0c8ff';
+  }
+
+  function spawnPhoton(T) {
+    // Energy distribution: simplified — more high-freq at higher T
+    const peakNm = peakWavelength(T);
+    // Random wavelength around peak (Gaussian-ish)
+    const nm = Math.max(200, Math.min(800, peakNm + (Math.random() - 0.5) * peakNm * 1.2));
+    const rgb = wavelengthToRGB(nm);
+    const speed = 1.5 + Math.random() * 2.5 + (T / 5000);
+    const angle = Math.random() * Math.PI * 2;
+    // Start from walls
+    const side = Math.floor(Math.random() * 4);
+    let x, y;
+    const margin = 20;
+    if (side === 0) { x = margin; y = margin + Math.random() * (H - 2 * margin); }
+    else if (side === 1) { x = W - margin; y = margin + Math.random() * (H - 2 * margin); }
+    else if (side === 2) { x = margin + Math.random() * (W - 2 * margin); y = margin; }
+    else { x = margin + Math.random() * (W - 2 * margin); y = H - margin; }
+
+    return {
+      x, y,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      r: 1.5 + Math.random() * 1.5,
+      rgb,
+      nm,
+      life: 200 + Math.random() * 300,
+      age: 0
+    };
+  }
+
+  function draw() {
+    const T = parseFloat(document.getElementById('cavityTemp').value);
+    document.getElementById('cavityTempLabel').textContent = T;
+
+    ctx.clearRect(0, 0, W, H);
+
+    // Cavity walls (glowing)
+    const glow = bodyGlow(T);
+    const wallW = 18;
+    ctx.fillStyle = '#1a1008';
+    ctx.fillRect(0, 0, W, H);
+
+    // Inner glow
+    const igr = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W, H) * 0.6);
+    const glowAlpha = Math.min(0.25, T / 15000);
+    igr.addColorStop(0, glow + Math.round(glowAlpha * 255).toString(16).padStart(2, '0'));
+    igr.addColorStop(1, 'transparent');
+    ctx.fillStyle = igr;
+    ctx.fillRect(0, 0, W, H);
+
+    // Walls
+    ctx.fillStyle = '#2a1a0a';
+    ctx.fillRect(0, 0, W, wallW); // top
+    ctx.fillRect(0, H - wallW, W, wallW); // bottom
+    ctx.fillRect(0, 0, wallW, H); // left
+    ctx.fillRect(W - wallW, 0, wallW, H); // right
+
+    // Wall inner edge glow
+    ctx.shadowColor = glow;
+    ctx.shadowBlur = 10 + T / 500;
+    ctx.strokeStyle = glow;
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(wallW, wallW, W - 2 * wallW, H - 2 * wallW);
+    ctx.shadowBlur = 0;
+
+    // Manage photon count based on temperature
+    const targetCount = Math.min(250, Math.floor(T / 30));
+    while (photons.length < targetCount) photons.push(spawnPhoton(T));
+    while (photons.length > targetCount + 20) photons.shift();
+
+    // Update & draw photons
+    for (let i = photons.length - 1; i >= 0; i--) {
+      const p = photons[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.age++;
+
+      // Bounce off walls
+      if (p.x < wallW + p.r) { p.x = wallW + p.r; p.vx = Math.abs(p.vx); }
+      if (p.x > W - wallW - p.r) { p.x = W - wallW - p.r; p.vx = -Math.abs(p.vx); }
+      if (p.y < wallW + p.r) { p.y = wallW + p.r; p.vy = Math.abs(p.vy); }
+      if (p.y > H - wallW - p.r) { p.y = H - wallW - p.r; p.vy = -Math.abs(p.vy); }
+
+      if (p.age > p.life) {
+        photons[i] = spawnPhoton(T);
+        continue;
+      }
+
+      const alpha = Math.min(1, p.age / 20) * (1 - Math.max(0, (p.age - p.life + 40) / 40));
+      const [r, g, b] = p.rgb;
+
+      // Glow
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r + 4, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${r},${g},${b},${alpha * 0.15})`;
+      ctx.fill();
+
+      // Core
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${r},${g},${b},${alpha * 0.8})`;
+      ctx.fill();
+    }
+
+    // Temperature label in corner
+    ctx.font = `bold ${Math.max(14, W * 0.035)}px 'Fraunces', serif`;
+    ctx.fillStyle = glow;
+    ctx.textAlign = 'center';
+    ctx.globalAlpha = 0.7;
+    ctx.fillText(`${T} K`, W / 2, H / 2 + 5);
+    ctx.globalAlpha = 1;
+
+    // Small note on what color means
+    ctx.font = `${Math.max(9, W * 0.016)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.fillText(`peak λ ≈ ${Math.round(peakWavelength(T))} nm`, W / 2, H / 2 + 22);
+
+    animId = requestAnimationFrame(draw);
+  }
+
+  document.getElementById('cavityTemp').addEventListener('input', () => {});
+
+  const obs = new IntersectionObserver(entries => {
+    isVisible = entries[0].isIntersecting;
+    if (isVisible && !animId) draw();
+    if (!isVisible && animId) { cancelAnimationFrame(animId); animId = null; }
+  }, { threshold: 0.05 });
+
+  window.addEventListener('resize', resize);
+  resize();
+  obs.observe(canvas);
+})();
+
+
+// ═══════════════════════════════════════════
+// GLOWING CAVITY — Photons bouncing inside a hot box
+// ═══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('cavityCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, dpr;
+  let photons = [];
+  let animId = null;
+  let isVisible = false;
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = rect.width; H = rect.height;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    initPhotons();
+  }
+
+  function tempToColor(T) {
+    // Approximate blackbody color
+    let r, g, b;
+    if (T < 2000) { r = 255; g = Math.round(50 + (T - 800) * 0.1); b = 0; }
+    else if (T < 4000) { r = 255; g = Math.round(150 + (T - 2000) * 0.05); b = Math.round((T - 2000) * 0.08); }
+    else if (T < 7000) { r = 255; g = Math.round(240 - (T - 4000) * 0.01); b = Math.round(160 + (T - 4000) * 0.03); }
+    else { r = Math.round(200 + (T - 7000) * 0.005); g = Math.round(210 + (T - 7000) * 0.004); b = 255; }
+    r = Math.min(255, Math.max(0, r));
+    g = Math.min(255, Math.max(0, g));
+    b = Math.min(255, Math.max(0, b));
+    return { r, g, b, str: `rgb(${r},${g},${b})` };
+  }
+
+  function initPhotons() {
+    photons = [];
+    const count = 80;
+    for (let i = 0; i < count; i++) {
+      spawnPhoton();
+    }
+  }
+
+  function spawnPhoton() {
+    const T = parseFloat(document.getElementById('cavityTemp').value);
+    const speed = 1.5 + (T / 12000) * 4 + Math.random() * 2;
+    const angle = Math.random() * Math.PI * 2;
+    // Higher T → more high-energy (blue) photons
+    const energyRoll = Math.random();
+    const blueChance = Math.min(0.7, T / 15000);
+    let hue;
+    if (energyRoll < blueChance * 0.3) hue = 240 + Math.random() * 30; // UV/violet
+    else if (energyRoll < blueChance) hue = 200 + Math.random() * 40; // blue
+    else if (energyRoll < blueChance + 0.3) hue = 30 + Math.random() * 30; // yellow-orange
+    else hue = 0 + Math.random() * 20; // red
+
+    photons.push({
+      x: 40 + Math.random() * (W - 80),
+      y: 40 + Math.random() * (H - 80),
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      hue,
+      r: 2 + Math.random() * 1.5,
+      life: 300 + Math.random() * 400,
+      age: 0
+    });
+  }
+
+  function draw() {
+    const T = parseFloat(document.getElementById('cavityTemp').value);
+    document.getElementById('cavityTempLabel').textContent = T;
+
+    const col = tempToColor(T);
+
+    ctx.clearRect(0, 0, W, H);
+
+    // Cavity walls — glowing
+    const wallGlow = Math.min(1, T / 6000);
+    ctx.fillStyle = '#0a0a10';
+    ctx.fillRect(0, 0, W, H);
+
+    // Inner cavity glow
+    const grad = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W, H) * 0.6);
+    grad.addColorStop(0, `rgba(${col.r},${col.g},${col.b},${wallGlow * 0.12})`);
+    grad.addColorStop(0.6, `rgba(${col.r},${col.g},${col.b},${wallGlow * 0.04})`);
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    // Walls
+    const wallW = 25;
+    const wallColor = `rgb(${Math.round(40 + col.r * wallGlow * 0.5)},${Math.round(15 + col.g * wallGlow * 0.2)},${Math.round(10 + col.b * wallGlow * 0.1)})`;
+    ctx.fillStyle = wallColor;
+    ctx.fillRect(0, 0, wallW, H);
+    ctx.fillRect(W - wallW, 0, wallW, H);
+    ctx.fillRect(0, 0, W, wallW);
+    ctx.fillRect(0, H - wallW, W, wallW);
+
+    // Wall inner glow
+    ctx.shadowBlur = 15 * wallGlow;
+    ctx.shadowColor = `rgba(${col.r},${col.g},${col.b},${wallGlow * 0.6})`;
+    ctx.strokeStyle = col.str;
+    ctx.lineWidth = 1;
+    ctx.strokeRect(wallW, wallW, W - wallW * 2, H - wallW * 2);
+    ctx.shadowBlur = 0;
+
+    // Small opening on right wall
+    const openY = H * 0.4;
+    const openH = H * 0.2;
+    ctx.fillStyle = '#0a0a10';
+    ctx.fillRect(W - wallW - 2, openY, wallW + 4, openH);
+    // Light escaping
+    ctx.save();
+    const escGrad = ctx.createLinearGradient(W - wallW, openY + openH/2, W, openY + openH/2);
+    escGrad.addColorStop(0, `rgba(${col.r},${col.g},${col.b},${wallGlow * 0.6})`);
+    escGrad.addColorStop(1, 'transparent');
+    ctx.fillStyle = escGrad;
+    ctx.beginPath();
+    ctx.moveTo(W - wallW, openY);
+    ctx.lineTo(W, openY - 15);
+    ctx.lineTo(W, openY + openH + 15);
+    ctx.lineTo(W - wallW, openY + openH);
+    ctx.fill();
+    ctx.restore();
+
+    // Photons
+    for (let i = photons.length - 1; i >= 0; i--) {
+      const p = photons[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.age++;
+
+      // Bounce off walls
+      if (p.x < wallW + p.r) { p.x = wallW + p.r; p.vx = Math.abs(p.vx); }
+      if (p.y < wallW + p.r) { p.y = wallW + p.r; p.vy = Math.abs(p.vy); }
+      if (p.y > H - wallW - p.r) { p.y = H - wallW - p.r; p.vy = -Math.abs(p.vy); }
+
+      // Right wall — escape through opening?
+      if (p.x > W - wallW - p.r) {
+        if (p.y > openY && p.y < openY + openH) {
+          // Escape! Remove and respawn
+          photons.splice(i, 1);
+          spawnPhoton();
+          continue;
+        } else {
+          p.x = W - wallW - p.r;
+          p.vx = -Math.abs(p.vx);
+        }
+      }
+
+      // Draw photon
+      const alpha = Math.min(1, p.age / 20) * 0.85;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${p.hue}, 80%, 65%, ${alpha})`;
+      ctx.fill();
+
+      // Glow trail
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r + 4, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${p.hue}, 70%, 55%, ${alpha * 0.15})`;
+      ctx.fill();
+
+      // Replace old photons with temp-appropriate ones
+      if (p.age > p.life) {
+        photons.splice(i, 1);
+        spawnPhoton();
+      }
+    }
+
+    // Temperature marker
+    ctx.font = `${Math.max(11, W * 0.022)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = col.str;
+    ctx.textAlign = 'center';
+    ctx.fillText(`${T} K`, W / 2, H - wallW - 8);
+
+    animId = requestAnimationFrame(draw);
+  }
+
+  document.getElementById('cavityTemp').addEventListener('input', () => {
+    // Respawn photons with new temperature characteristics
+    const T = parseFloat(document.getElementById('cavityTemp').value);
+    // Gradually adjust existing photons
+    for (let i = 0; i < 10; i++) {
+      if (photons.length > 0) {
+        photons.splice(Math.floor(Math.random() * photons.length), 1);
+      }
+      spawnPhoton();
+    }
+  });
+
+  const obs = new IntersectionObserver(entries => {
+    isVisible = entries[0].isIntersecting;
+    if (isVisible && !animId) draw();
+    if (!isVisible && animId) { cancelAnimationFrame(animId); animId = null; }
+  }, { threshold: 0.05 });
+
+  window.addEventListener('resize', resize);
+  resize();
+  obs.observe(canvas);
+})();
+
+
+// ═══════════════════════════════════════════
+// PHOTOELECTRIC EFFECT — Light vs electrons
+// ═══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('photoCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, dpr;
+  let animId = null;
+  let isVisible = false;
+  let time = 0;
+  let electrons = [];
+  let incomingPhotons = [];
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = rect.width; H = rect.height;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function freqToColor(freq01) {
+    // 0=red, 0.5=green, 1=violet
+    if (freq01 < 0.15) return { h: 0, s: 80, l: 50, label: 'infrared', wl: '> 700 nm' };
+    if (freq01 < 0.3) return { h: 15, s: 90, l: 55, label: 'red', wl: '~650 nm' };
+    if (freq01 < 0.45) return { h: 45, s: 90, l: 55, label: 'orange-yellow', wl: '~580 nm' };
+    if (freq01 < 0.55) return { h: 120, s: 60, l: 45, label: 'green', wl: '~530 nm' };
+    if (freq01 < 0.7) return { h: 210, s: 80, l: 55, label: 'blue', wl: '~470 nm' };
+    if (freq01 < 0.85) return { h: 260, s: 70, l: 55, label: 'violet', wl: '~400 nm' };
+    return { h: 280, s: 70, l: 45, label: 'ultraviolet', wl: '< 380 nm' };
+  }
+
+  const THRESHOLD = 0.48; // frequency threshold (0–1 scale)
+
+  function draw() {
+    const freq = parseFloat(document.getElementById('photoFreq').value) / 100;
+    const intensity = parseFloat(document.getElementById('photoInt').value) / 100;
+    const fc = freqToColor(freq);
+    document.getElementById('photoFreqLabel').textContent = `${fc.label} (${fc.wl})`;
+    document.getElementById('photoIntLabel').textContent = Math.round(intensity * 100);
+
+    const aboveThreshold = freq >= THRESHOLD;
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#050810';
+    ctx.fillRect(0, 0, W, H);
+
+    // Metal plate
+    const plateX = W * 0.55;
+    const plateW = 12;
+    const plateTop = H * 0.1;
+    const plateBot = H * 0.9;
+    const plateGrad = ctx.createLinearGradient(plateX - plateW, 0, plateX + plateW, 0);
+    plateGrad.addColorStop(0, '#3a4a6a');
+    plateGrad.addColorStop(0.5, '#6a7a9a');
+    plateGrad.addColorStop(1, '#3a4a6a');
+    ctx.fillStyle = plateGrad;
+    ctx.fillRect(plateX - plateW/2, plateTop, plateW, plateBot - plateTop);
+
+    // Label
+    ctx.font = `${Math.max(10, W * 0.018)}px 'DM Sans', sans-serif`;
+    ctx.fillStyle = '#7b8db5';
+    ctx.textAlign = 'center';
+    ctx.fillText('metal', plateX, plateBot + 18);
+
+    // Light source indicator (left)
+    const srcX = W * 0.08, srcY = H / 2;
+    ctx.beginPath();
+    ctx.arc(srcX, srcY, 18, 0, Math.PI * 2);
+    ctx.fillStyle = `hsla(${fc.h}, ${fc.s}%, ${fc.l}%, 0.3)`;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(srcX, srcY, 10, 0, Math.PI * 2);
+    ctx.fillStyle = `hsl(${fc.h}, ${fc.s}%, ${fc.l}%)`;
+    ctx.fill();
+    ctx.font = `${Math.max(9, W * 0.015)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = `hsl(${fc.h}, ${fc.s}%, ${fc.l}%)`;
+    ctx.fillText('light', srcX, srcY + 32);
+
+    // Emit incoming photons
+    const emitRate = Math.max(1, Math.round(intensity * 4));
+    if (time % Math.max(1, Math.round(6 / emitRate)) === 0) {
+      const spread = (plateBot - plateTop) * 0.8;
+      incomingPhotons.push({
+        x: srcX + 25,
+        y: H / 2 + (Math.random() - 0.5) * spread,
+        speed: 3 + Math.random() * 2,
+        hue: fc.h,
+        r: 3,
+      });
+    }
+
+    // Update & draw incoming photons
+    for (let i = incomingPhotons.length - 1; i >= 0; i--) {
+      const p = incomingPhotons[i];
+      p.x += p.speed;
+
+      // Wave visualization
+      const waveAmp = 4 + (1 - freq) * 6; // lower freq → bigger wavelength
+      const waveFreq = 0.05 + freq * 0.2;
+      const waveY = p.y + Math.sin(p.x * waveFreq + time * 0.1) * waveAmp;
+
+      ctx.beginPath();
+      ctx.arc(p.x, waveY, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${p.hue}, 80%, 60%, 0.8)`;
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(p.x, waveY, p.r + 5, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${p.hue}, 70%, 55%, 0.12)`;
+      ctx.fill();
+
+      // Hit plate
+      if (p.x >= plateX - plateW / 2) {
+        if (aboveThreshold) {
+          // Eject electron!
+          electrons.push({
+            x: plateX + plateW / 2 + 5,
+            y: p.y + (Math.random() - 0.5) * 10,
+            vx: 2 + Math.random() * 3 + (freq - THRESHOLD) * 8,
+            vy: (Math.random() - 0.5) * 3,
+            life: 80 + Math.random() * 60,
+            age: 0
+          });
+          // Flash on plate
+          ctx.beginPath();
+          ctx.arc(plateX, p.y, 8, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(56,189,248,0.4)';
+          ctx.fill();
+        } else {
+          // Absorbed — small red flash (no electron)
+          ctx.beginPath();
+          ctx.arc(plateX, p.y, 5, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(251,113,133,0.2)';
+          ctx.fill();
+        }
+        incomingPhotons.splice(i, 1);
+      }
+    }
+
+    // Draw & update electrons
+    for (let i = electrons.length - 1; i >= 0; i--) {
+      const e = electrons[i];
+      e.x += e.vx;
+      e.y += e.vy;
+      e.vy += 0.02; // slight gravity
+      e.age++;
+
+      const alpha = Math.max(0, 1 - e.age / e.life);
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(56,189,248,${alpha})`;
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, 6, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(56,189,248,${alpha * 0.15})`;
+      ctx.fill();
+
+      if (e.age > e.life || e.x > W + 10) electrons.splice(i, 1);
+    }
+
+    // Electron label (right side)
+    if (electrons.length > 0) {
+      ctx.font = `${Math.max(9, W * 0.015)}px 'JetBrains Mono', monospace`;
+      ctx.fillStyle = '#38bdf8';
+      ctx.textAlign = 'left';
+      ctx.fillText('electrons →', plateX + plateW + 20, H * 0.12);
+    }
+
+    // Status message
+    ctx.font = `bold ${Math.max(12, W * 0.024)}px 'DM Sans', sans-serif`;
+    ctx.textAlign = 'center';
+    if (aboveThreshold) {
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillText('✓ Electrons ejected', W * 0.75, H * 0.9);
+    } else {
+      ctx.fillStyle = '#fb7185';
+      ctx.fillText('✗ No electrons — frequency too low', W * 0.5, H * 0.9);
+      // Additional note about intensity
+      if (intensity > 0.7) {
+        ctx.font = `${Math.max(10, W * 0.017)}px 'DM Sans', sans-serif`;
+        ctx.fillStyle = 'rgba(251,113,133,0.6)';
+        ctx.fillText('(even at maximum intensity!)', W * 0.5, H * 0.9 + 18);
+      }
+    }
+
+    // Threshold marker
+    const threshX = W * 0.08;
+    ctx.font = `${Math.max(9, W * 0.014)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = 'rgba(240,180,41,0.5)';
+    ctx.textAlign = 'left';
+    ctx.fillText(`threshold: blue-violet`, 10, 16);
+
+    time++;
+    animId = requestAnimationFrame(draw);
+  }
+
+  document.getElementById('photoFreq').addEventListener('input', () => {
+    electrons = [];
+    incomingPhotons = [];
+  });
+  document.getElementById('photoInt').addEventListener('input', () => {});
+
+  const obs = new IntersectionObserver(entries => {
+    isVisible = entries[0].isIntersecting;
+    if (isVisible && !animId) draw();
+    if (!isVisible && animId) { cancelAnimationFrame(animId); animId = null; }
+  }, { threshold: 0.05 });
+
+  window.addEventListener('resize', resize);
+  resize();
+  obs.observe(canvas);
+})();
+
+
+// ═══════════════════════════════════════════
+// BLACKBODY SPECTRUM — Planck vs Rayleigh-Jeans
+// ═══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('bbCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, dpr;
+  let showClassical = false;
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = rect.width; H = rect.height;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function planck(nu, T) {
+    const h = 6.626e-34, k = 1.381e-23, c = 3e8;
+    const x = h * nu / (k * T);
+    if (x > 500) return 0;
+    return (2 * h * nu * nu * nu / (c * c)) / (Math.exp(x) - 1);
+  }
+
+  function rayleighJeans(nu, T) {
+    const k = 1.381e-23, c = 3e8;
+    return (2 * nu * nu * k * T) / (c * c);
+  }
+
+  function draw() {
+    const T = parseFloat(document.getElementById('bbTemp').value);
+    document.getElementById('bbTempLabel').textContent = T;
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#050810';
+    ctx.fillRect(0, 0, W, H);
+
+    const pad = { l: 55, r: 25, t: 30, b: 45 };
+    const gw = W - pad.l - pad.r;
+    const gh = H - pad.t - pad.b;
+    const nuMin = 1e13, nuMax = 3e15;
+    const steps = 300;
+
+    let maxP = 0;
+    for (let i = 0; i < steps; i++) {
+      maxP = Math.max(maxP, planck(nuMin + (nuMax - nuMin) * (i / steps), T));
+    }
+    if (maxP === 0) maxP = 1;
+
+    // Axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad.l, pad.t); ctx.lineTo(pad.l, pad.t + gh); ctx.lineTo(pad.l + gw, pad.t + gh);
+    ctx.stroke();
+
+    ctx.font = `${Math.max(9, W * 0.018)}px 'DM Sans', sans-serif`;
+    ctx.fillStyle = '#5c6178';
+    ctx.textAlign = 'center';
+    ctx.fillText('Frequency →', pad.l + gw / 2, H - 6);
+    ctx.save();
+    ctx.translate(12, pad.t + gh / 2); ctx.rotate(-Math.PI / 2);
+    ctx.fillText('Intensity', 0, 0);
+    ctx.restore();
+
+    // Visible light band
+    const visMin = 4e14, visMax = 7.5e14;
+    const vx1 = pad.l + ((visMin - nuMin) / (nuMax - nuMin)) * gw;
+    const vx2 = pad.l + ((visMax - nuMin) / (nuMax - nuMin)) * gw;
+    const sg = ctx.createLinearGradient(vx1, 0, vx2, 0);
+    sg.addColorStop(0, 'rgba(255,0,0,0.12)');
+    sg.addColorStop(0.2, 'rgba(255,165,0,0.12)');
+    sg.addColorStop(0.35, 'rgba(255,255,0,0.12)');
+    sg.addColorStop(0.5, 'rgba(0,255,0,0.12)');
+    sg.addColorStop(0.7, 'rgba(0,150,255,0.12)');
+    sg.addColorStop(0.85, 'rgba(75,0,130,0.12)');
+    sg.addColorStop(1, 'rgba(148,0,211,0.12)');
+    ctx.fillStyle = sg;
+    ctx.fillRect(vx1, pad.t, vx2 - vx1, gh);
+    ctx.font = `${Math.max(8, W * 0.014)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.fillText('visible', (vx1 + vx2) / 2, pad.t + gh - 6);
+    ctx.fillText('ultraviolet →', Math.min(vx2 + 45, pad.l + gw - 30), pad.t + gh - 6);
+
+    // Planck curve
+    ctx.beginPath();
+    for (let i = 0; i <= steps; i++) {
+      const nu = nuMin + (nuMax - nuMin) * (i / steps);
+      const I = planck(nu, T);
+      const x = pad.l + (i / steps) * gw;
+      const y = pad.t + gh - (I / maxP) * gh * 0.88;
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // Fill
+    ctx.lineTo(pad.l + gw, pad.t + gh); ctx.lineTo(pad.l, pad.t + gh); ctx.closePath();
+    ctx.fillStyle = 'rgba(56,189,248,0.07)';
+    ctx.fill();
+
+    ctx.font = `${Math.max(10, W * 0.02)}px 'DM Sans', sans-serif`;
+    ctx.fillStyle = '#38bdf8';
+    ctx.textAlign = 'left';
+    ctx.fillText('Planck (quantum)', pad.l + 8, pad.t + 18);
+
+    // Classical curve
+    if (showClassical) {
+      ctx.beginPath();
+      for (let i = 0; i <= steps; i++) {
+        const nu = nuMin + (nuMax - nuMin) * (i / steps);
+        const I = rayleighJeans(nu, T);
+        const x = pad.l + (i / steps) * gw;
+        const y = pad.t + gh - Math.min(I / maxP, 4) * gh * 0.88 / 4;
+        i === 0 ? ctx.moveTo(x, Math.max(y, pad.t - 5)) : ctx.lineTo(x, Math.max(y, pad.t - 5));
+      }
+      ctx.strokeStyle = '#fb7185';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#fb7185';
+      ctx.font = `bold ${Math.max(11, W * 0.022)}px 'DM Sans', sans-serif`;
+      ctx.textAlign = 'right';
+      ctx.fillText('→ ∞ !', pad.l + gw - 8, pad.t + 18);
+      ctx.font = `${Math.max(9, W * 0.017)}px 'DM Sans', sans-serif`;
+      ctx.textAlign = 'left';
+      ctx.fillText('Rayleigh–Jeans (classical)', pad.l + 8, pad.t + 38);
+
+      ctx.save();
+      ctx.font = `bold ${Math.max(12, W * 0.026)}px 'Fraunces', serif`;
+      ctx.fillStyle = 'rgba(251,113,133,0.5)';
+      ctx.textAlign = 'center';
+      ctx.fillText('ULTRAVIOLET CATASTROPHE', pad.l + gw * 0.65, pad.t + gh * 0.35);
+      ctx.restore();
+    }
+
+    // Glowing orb (Wien color)
+    const peakNm = 2.898e6 / T;
+    let gc;
+    if (peakNm < 380) gc = '#b0c8ff';
+    else if (peakNm < 450) gc = '#8888ff';
+    else if (peakNm < 500) gc = '#40c0ff';
+    else if (peakNm < 570) gc = '#80ff80';
+    else if (peakNm < 600) gc = '#ffff40';
+    else if (peakNm < 650) gc = '#ff8800';
+    else gc = '#ff3300';
+
+    const ox = W - 42, oy = 42, or2 = 18;
+    const og = ctx.createRadialGradient(ox, oy, 0, ox, oy, or2 * 2.5);
+    og.addColorStop(0, gc); og.addColorStop(0.4, gc + '40'); og.addColorStop(1, 'transparent');
+    ctx.fillStyle = og;
+    ctx.fillRect(ox - or2*2.5, oy - or2*2.5, or2*5, or2*5);
+    ctx.beginPath(); ctx.arc(ox, oy, or2 * 0.55, 0, Math.PI * 2);
+    ctx.fillStyle = gc; ctx.fill();
+    ctx.font = `${Math.max(8, W * 0.013)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = 'rgba(255,255,255,0.45)';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${T} K`, ox, oy + or2 * 1.4);
+  }
+
+  document.getElementById('bbTemp').addEventListener('input', draw);
+  document.getElementById('btnShowClassical').addEventListener('click', function() {
+    showClassical = !showClassical;
+    this.classList.toggle('active', showClassical);
+    this.innerHTML = showClassical
+      ? '<span class="icon">💥</span> 고전 예측 숨기기'
+      : '<span class="icon">💥</span> 고전 예측 보기';
+    draw();
+  });
+
+  const obs = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) draw();
+  }, { threshold: 0.1 });
+
+  window.addEventListener('resize', () => { resize(); draw(); });
+  resize();
+  obs.observe(canvas);
+})();
+
+
+// ═══════════════════════════════════════════
+// PHOTOELECTRIC EFFECT — Frequency vs intensity
+// ═══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('photoCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, dpr;
+  let animId = null;
+  let isVisible = false;
+  let photonBullets = [];
+  let electrons = [];
+  let time = 0;
+
+  const THRESHOLD = 45; // frequency threshold (0–100 scale)
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = rect.width; H = rect.height;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  // Frequency to color
+  function freqToColor(f) {
+    // f: 0–100 → red to violet
+    if (f < 15) return { r: 255, g: 50, b: 50, label: 'infrared', nm: '> 700 nm' };
+    if (f < 30) return { r: 255, g: 120, b: 0, label: 'red/orange', nm: '600 nm' };
+    if (f < 45) return { r: 255, g: 220, b: 0, label: 'yellow/green', nm: '550 nm' };
+    if (f < 55) return { r: 0, g: 200, b: 100, label: 'green', nm: '500 nm' };
+    if (f < 70) return { r: 0, g: 150, b: 255, label: 'blue', nm: '450 nm' };
+    if (f < 85) return { r: 100, g: 50, b: 255, label: 'violet', nm: '400 nm' };
+    return { r: 180, g: 100, b: 255, label: 'ultraviolet', nm: '< 380 nm' };
+  }
+
+  function draw() {
+    const freq = parseFloat(document.getElementById('photoFreq').value);
+    const intensity = parseFloat(document.getElementById('photoInt').value);
+    const fc = freqToColor(freq);
+    document.getElementById('photoFreqLabel').textContent = fc.label;
+    document.getElementById('photoIntLabel').textContent = Math.round(intensity);
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#050810';
+    ctx.fillRect(0, 0, W, H);
+
+    const plateX = W * 0.55;
+    const plateTop = H * 0.12;
+    const plateBot = H * 0.88;
+    const plateW = 12;
+
+    // Metal plate
+    const pg = ctx.createLinearGradient(plateX, 0, plateX + plateW, 0);
+    pg.addColorStop(0, '#4a5568');
+    pg.addColorStop(0.5, '#718096');
+    pg.addColorStop(1, '#4a5568');
+    ctx.fillStyle = pg;
+    ctx.fillRect(plateX, plateTop, plateW, plateBot - plateTop);
+
+    // Plate label
+    ctx.font = `${Math.max(9, W * 0.015)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = '#7b8db5';
+    ctx.textAlign = 'center';
+    ctx.fillText('metal', plateX + plateW / 2, plateTop - 8);
+
+    // Light source indicator
+    ctx.font = `${Math.max(10, W * 0.02)}px 'DM Sans', sans-serif`;
+    ctx.fillStyle = `rgb(${fc.r},${fc.g},${fc.b})`;
+    ctx.textAlign = 'left';
+    ctx.fillText(`Light: ${fc.label} (${fc.nm})`, 12, 22);
+
+    // Threshold line indicator
+    ctx.font = `${Math.max(8, W * 0.013)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = '#f0b42980';
+    ctx.textAlign = 'left';
+    ctx.fillText(`threshold freq ≈ green/blue`, 12, H - 10);
+
+    // Status
+    const aboveThreshold = freq >= THRESHOLD;
+    ctx.font = `bold ${Math.max(12, W * 0.025)}px 'Fraunces', serif`;
+    ctx.textAlign = 'right';
+    if (aboveThreshold) {
+      ctx.fillStyle = '#34d399';
+      ctx.fillText('Electrons ejected ✓', W - 12, 22);
+    } else {
+      ctx.fillStyle = '#fb7185';
+      ctx.fillText('No electrons — frequency too low ✗', W - 12, 22);
+      ctx.font = `${Math.max(9, W * 0.015)}px 'DM Sans', sans-serif`;
+      ctx.fillStyle = '#fb718580';
+      ctx.fillText('(no matter how bright!)', W - 12, 40);
+    }
+
+    // Emit photon bullets
+    const emitRate = Math.floor(intensity / 25) + 1;
+    if (time % Math.max(1, Math.floor(8 - intensity / 15)) === 0) {
+      for (let i = 0; i < emitRate; i++) {
+        photonBullets.push({
+          x: 10 + Math.random() * 20,
+          y: plateTop + Math.random() * (plateBot - plateTop),
+          vx: 3 + Math.random() * 2,
+          r: fc.r, g: fc.g, b: fc.b,
+          alive: true
+        });
+      }
+    }
+
+    // Update photon bullets
+    for (let i = photonBullets.length - 1; i >= 0; i--) {
+      const p = photonBullets[i];
+      p.x += p.vx;
+
+      // Hit plate?
+      if (p.x >= plateX - 2) {
+        p.alive = false;
+        // Eject electron?
+        if (aboveThreshold) {
+          electrons.push({
+            x: plateX + plateW + 4,
+            y: p.y + (Math.random() - 0.5) * 6,
+            vx: 2 + Math.random() * 3 + (freq - THRESHOLD) * 0.05,
+            vy: (Math.random() - 0.5) * 2,
+            life: 120
+          });
+        }
+        photonBullets.splice(i, 1);
+        continue;
+      }
+
+      // Draw photon
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${p.r},${p.g},${p.b},0.85)`;
+      ctx.fill();
+      // Glow
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${p.r},${p.g},${p.b},0.12)`;
+      ctx.fill();
+    }
+
+    // Update electrons
+    for (let i = electrons.length - 1; i >= 0; i--) {
+      const e = electrons[i];
+      e.x += e.vx;
+      e.y += e.vy;
+      e.vy += 0.02; // slight gravity
+      e.life--;
+      if (e.life <= 0 || e.x > W + 10) { electrons.splice(i, 1); continue; }
+
+      const alpha = Math.min(1, e.life / 30);
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(52,211,153,${alpha * 0.9})`;
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, 6, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(52,211,153,${alpha * 0.12})`;
+      ctx.fill();
+    }
+
+    // Electron label
+    if (electrons.length > 0) {
+      ctx.font = `${Math.max(8, W * 0.013)}px 'JetBrains Mono', monospace`;
+      ctx.fillStyle = '#34d39980';
+      ctx.textAlign = 'left';
+      ctx.fillText('e⁻', plateX + plateW + 18, plateTop + 15);
+    }
+
+    // Light beam glow on plate
+    if (photonBullets.length > 0) {
+      const beamGlow = ctx.createRadialGradient(plateX, H / 2, 0, plateX, H / 2, 40);
+      beamGlow.addColorStop(0, `rgba(${fc.r},${fc.g},${fc.b},0.08)`);
+      beamGlow.addColorStop(1, 'transparent');
+      ctx.fillStyle = beamGlow;
+      ctx.fillRect(plateX - 40, plateTop, 80, plateBot - plateTop);
+    }
+
+    // Cap arrays
+    if (photonBullets.length > 200) photonBullets.splice(0, 50);
+    if (electrons.length > 150) electrons.splice(0, 30);
+
+    time++;
+    animId = requestAnimationFrame(draw);
+  }
+
+  const obs = new IntersectionObserver(entries => {
+    isVisible = entries[0].isIntersecting;
+    if (isVisible && !animId) draw();
+    if (!isVisible && animId) { cancelAnimationFrame(animId); animId = null; }
+  }, { threshold: 0.05 });
+
+  window.addEventListener('resize', resize);
+  resize();
+  obs.observe(canvas);
+})();
+
+
+// ═══════════════════════════════════════════
+// UNCERTAINTY — Fourier dual wave packets
+// ═══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('uncCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, dpr;
+  let time = 0;
+  let animId = null;
+  let isVisible = false;
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = rect.width; H = rect.height;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function draw() {
+    const sigma = parseFloat(document.getElementById('uncSlider').value) / 100;
+    document.getElementById('uncLabel').textContent = Math.round(sigma * 100);
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#050810';
+    ctx.fillRect(0, 0, W, H);
+
+    const midX = W / 2;
+    const pH = H - 50;
+
+    // Dividing line
+    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 5]);
+    ctx.beginPath(); ctx.moveTo(midX, 8); ctx.lineTo(midX, H - 8); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Position width in pixels, momentum inversely
+    const sigX = 10 + sigma * 120;
+    const sigP = 3000 / sigX;
+
+    // Panel labels
+    const fontSize = Math.max(10, W * 0.018);
+    ctx.font = `${fontSize}px 'DM Sans', sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#38bdf8';
+    ctx.fillText('Position (Δx)', midX / 2, 18);
+    ctx.fillStyle = '#fb7185';
+    ctx.fillText('Momentum (Δp)', midX + (W - midX) / 2, 18);
+
+    const baseY = H * 0.6;
+    const t = time * 0.03;
+    const amp = pH * 0.38;
+
+    // ── POSITION SIDE ──
+    const xC = midX / 2;
+
+    // Probability density fill (|ψ|²)
+    ctx.beginPath();
+    ctx.moveTo(10, baseY);
+    for (let px = 10; px < midX - 10; px++) {
+      const x = px - xC;
+      const g = Math.exp(-x * x / (2 * sigX * sigX));
+      ctx.lineTo(px, baseY - g * g * amp * 0.7);
+    }
+    ctx.lineTo(midX - 10, baseY);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(56,189,248,0.06)';
+    ctx.fill();
+
+    // Wave function ψ(x)
+    ctx.beginPath();
+    for (let px = 10; px < midX - 10; px++) {
+      const x = px - xC;
+      const gauss = Math.exp(-x * x / (2 * sigX * sigX));
+      const wave = Math.cos(x * 0.15 + t);
+      const y = baseY - gauss * wave * amp;
+      px === 10 ? ctx.moveTo(px, y) : ctx.lineTo(px, y);
+    }
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Envelope (dashed)
+    for (const sign of [1, -1]) {
+      ctx.beginPath();
+      for (let px = 10; px < midX - 10; px++) {
+        const x = px - xC;
+        const g = Math.exp(-x * x / (2 * sigX * sigX));
+        ctx.lineTo(px, baseY - sign * g * amp);
+      }
+      ctx.strokeStyle = 'rgba(56,189,248,0.2)';
+      ctx.lineWidth = 0.8;
+      ctx.setLineDash([3, 4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Δx bracket
+    const bracketY = baseY + amp * 0.75 + 12;
+    const dxPx = Math.min(sigX * 2, midX / 2 - 15);
+    ctx.strokeStyle = 'rgba(56,189,248,0.45)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(xC - dxPx, bracketY); ctx.lineTo(xC - dxPx, bracketY + 7);
+    ctx.moveTo(xC - dxPx, bracketY + 3.5); ctx.lineTo(xC + dxPx, bracketY + 3.5);
+    ctx.moveTo(xC + dxPx, bracketY); ctx.lineTo(xC + dxPx, bracketY + 7);
+    ctx.stroke();
+    ctx.font = `${Math.max(10, W * 0.016)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = '#38bdf8';
+    ctx.textAlign = 'center';
+    ctx.fillText('Δx', xC, bracketY + 20);
+
+    // ── MOMENTUM SIDE ──
+    const pC = midX + (W - midX) / 2;
+
+    // Probability fill
+    ctx.beginPath();
+    ctx.moveTo(midX + 10, baseY);
+    for (let px = midX + 10; px < W - 10; px++) {
+      const x = px - pC;
+      const g = Math.exp(-x * x / (2 * sigP * sigP));
+      ctx.lineTo(px, baseY - g * g * amp * 0.7);
+    }
+    ctx.lineTo(W - 10, baseY);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(251,113,133,0.06)';
+    ctx.fill();
+
+    // Wave function ψ̃(p)
+    ctx.beginPath();
+    for (let px = midX + 10; px < W - 10; px++) {
+      const x = px - pC;
+      const gauss = Math.exp(-x * x / (2 * sigP * sigP));
+      const wave = Math.cos(x * 0.15 - t);
+      const y = baseY - gauss * wave * amp;
+      px === midX + 10 ? ctx.moveTo(px, y) : ctx.lineTo(px, y);
+    }
+    ctx.strokeStyle = '#fb7185';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Envelope
+    for (const sign of [1, -1]) {
+      ctx.beginPath();
+      for (let px = midX + 10; px < W - 10; px++) {
+        const x = px - pC;
+        const g = Math.exp(-x * x / (2 * sigP * sigP));
+        ctx.lineTo(px, baseY - sign * g * amp);
+      }
+      ctx.strokeStyle = 'rgba(251,113,133,0.2)';
+      ctx.lineWidth = 0.8;
+      ctx.setLineDash([3, 4]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Δp bracket
+    const dpPx = Math.min(sigP * 2, (W - midX) / 2 - 15);
+    ctx.strokeStyle = 'rgba(251,113,133,0.45)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(pC - dpPx, bracketY); ctx.lineTo(pC - dpPx, bracketY + 7);
+    ctx.moveTo(pC - dpPx, bracketY + 3.5); ctx.lineTo(pC + dpPx, bracketY + 3.5);
+    ctx.moveTo(pC + dpPx, bracketY); ctx.lineTo(pC + dpPx, bracketY + 7);
+    ctx.stroke();
+    ctx.fillStyle = '#fb7185';
+    ctx.fillText('Δp', pC, bracketY + 20);
+
+    // ── Product indicator ──
+    const product = (sigX * sigP / 3000).toFixed(2);
+    // Always ≥ ℏ/2 (by design)
+    ctx.font = `${Math.max(10, W * 0.016)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = '#f0b429';
+    ctx.textAlign = 'center';
+    ctx.fillText(`Δx × Δp = const ≥ ℏ/2`, W / 2, H - 10);
+
+    time++;
+    animId = requestAnimationFrame(draw);
+  }
+
+  const obs = new IntersectionObserver(entries => {
+    isVisible = entries[0].isIntersecting;
+    if (isVisible && !animId) draw();
+    if (!isVisible && animId) { cancelAnimationFrame(animId); animId = null; }
+  }, { threshold: 0.05 });
+
+  window.addEventListener('resize', resize);
+  resize();
+  obs.observe(canvas);
+})();
+
+
+// ═══════════════════════════════════════════
+// PARTICLE IN A BOX — Confinement & energy
+// ═══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('boxCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, dpr;
+  let time = 0;
+  let animId = null;
+  let isVisible = false;
+  let showWave = false;
+  let particles = [];
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = rect.width; H = rect.height;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    initParticles();
+  }
+
+  function initParticles() {
+    particles = [];
+    for (let i = 0; i < 5; i++) {
+      particles.push({
+        x: 0.5 + (Math.random() - 0.5) * 0.3,
+        vx: (Math.random() - 0.5) * 0.02,
+        phase: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  function draw() {
+    const widthFrac = parseFloat(document.getElementById('boxWidth').value) / 100;
+    const labels = ['very narrow', 'narrow', 'medium', 'wide', 'very wide'];
+    document.getElementById('boxWidthLabel').textContent =
+      labels[Math.min(4, Math.floor(widthFrac * 5))];
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#050810';
+    ctx.fillRect(0, 0, W, H);
+
+    const boxHalf = widthFrac * 0.42; // half-width as fraction of canvas
+    const boxL = W * (0.5 - boxHalf);
+    const boxR = W * (0.5 + boxHalf);
+    const boxW = boxR - boxL;
+    const boxTop = H * 0.12;
+    const boxBot = H * 0.88;
+
+    // Walls
+    ctx.fillStyle = '#2a3a5a';
+    ctx.fillRect(boxL - 6, boxTop, 6, boxBot - boxTop);
+    ctx.fillRect(boxR, boxTop, 6, boxBot - boxTop);
+
+    // Wall glow (brighter when narrow — more energy)
+    const energy = 1 / (widthFrac * widthFrac + 0.01); // ∝ 1/L²
+    const glowIntensity = Math.min(1, energy * 0.015);
+    ctx.shadowColor = `rgba(56,189,248,${glowIntensity})`;
+    ctx.shadowBlur = 8 + glowIntensity * 20;
+    ctx.strokeStyle = `rgba(56,189,248,${0.3 + glowIntensity * 0.5})`;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(boxL, boxTop); ctx.lineTo(boxL, boxBot);
+    ctx.moveTo(boxR, boxTop); ctx.lineTo(boxR, boxBot);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Floor/ceiling
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath();
+    ctx.moveTo(boxL, boxTop); ctx.lineTo(boxR, boxTop);
+    ctx.moveTo(boxL, boxBot); ctx.lineTo(boxR, boxBot);
+    ctx.stroke();
+
+    const midY = (boxTop + boxBot) / 2;
+
+    if (showWave) {
+      // Show ground state wave function: ψ₁(x) = sin(πx/L)
+      // And first excited state faintly
+      for (let n = 1; n <= 3; n++) {
+        const alpha = n === 1 ? 0.8 : (n === 2 ? 0.3 : 0.12);
+        const color = n === 1 ? '#38bdf8' : (n === 2 ? '#a78bfa' : '#f0b429');
+        const waveAmp = (boxBot - boxTop) * 0.18;
+        const yOffset = midY + (n - 2) * (boxBot - boxTop) * 0.28;
+
+        // ψ_n
+        ctx.beginPath();
+        for (let px = Math.ceil(boxL); px <= Math.floor(boxR); px++) {
+          const xNorm = (px - boxL) / boxW; // 0 to 1
+          const psi = Math.sin(n * Math.PI * xNorm);
+          // Time evolution: oscillating phase
+          const phase = Math.cos(n * n * time * 0.02);
+          const y = yOffset - psi * phase * waveAmp;
+          px === Math.ceil(boxL) ? ctx.moveTo(px, y) : ctx.lineTo(px, y);
+        }
+        ctx.strokeStyle = color;
+        ctx.globalAlpha = alpha;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+
+        // Label
+        ctx.font = `${Math.max(9, W * 0.014)}px 'JetBrains Mono', monospace`;
+        ctx.fillStyle = color;
+        ctx.globalAlpha = alpha;
+        ctx.textAlign = 'right';
+        ctx.fillText(`n=${n}`, boxL - 12, yOffset + 4);
+        ctx.globalAlpha = 1;
+      }
+
+      // Energy levels
+      ctx.font = `${Math.max(9, W * 0.014)}px 'JetBrains Mono', monospace`;
+      ctx.fillStyle = '#f0b429';
+      ctx.textAlign = 'left';
+      const eScale = 1 / (boxW * boxW) * 1e5;
+      ctx.fillText(`E₁ ∝ 1/L²`, boxR + 14, midY - (boxBot - boxTop) * 0.28 + 4);
+    } else {
+      // Show bouncing particle(s)
+      const speed = 0.005 + energy * 0.0008;
+      for (const p of particles) {
+        p.x += p.vx;
+        // Bounce off walls (in normalized coords 0–1)
+        const normL = 0;
+        const normR = 1;
+        if (p.x < normL) { p.x = normL; p.vx = Math.abs(p.vx); }
+        if (p.x > normR) { p.x = normR; p.vx = -Math.abs(p.vx); }
+        // Speed proportional to 1/width (uncertainty → momentum)
+        const targetSpeed = speed * (0.5 + Math.random() * 0.1);
+        p.vx = Math.sign(p.vx) * (Math.abs(p.vx) * 0.98 + targetSpeed * 0.02);
+
+        const px = boxL + p.x * boxW;
+        const py = midY + Math.sin(time * 0.05 + p.phase) * (boxBot - boxTop) * 0.25;
+
+        // Blur trail
+        ctx.beginPath();
+        ctx.arc(px, py, 4, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(56,189,248,0.15)';
+        ctx.fill();
+
+        // Particle
+        ctx.beginPath();
+        ctx.arc(px, py, 3, 0, Math.PI * 2);
+        ctx.fillStyle = '#38bdf8';
+        ctx.fill();
+
+        // Glow proportional to energy
+        ctx.beginPath();
+        ctx.arc(px, py, 3 + glowIntensity * 12, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(56,189,248,${glowIntensity * 0.15})`;
+        ctx.fill();
+      }
+    }
+
+    // Energy bar
+    const barX = W - 35;
+    const barTop = boxTop + 10;
+    const barBot = boxBot - 10;
+    const barH = barBot - barTop;
+    ctx.fillStyle = 'rgba(255,255,255,0.03)';
+    ctx.fillRect(barX - 6, barTop, 12, barH);
+    const eFrac = Math.min(1, energy * 0.02);
+    const eBarH = eFrac * barH;
+    const eGrad = ctx.createLinearGradient(0, barBot - eBarH, 0, barBot);
+    eGrad.addColorStop(0, '#fb7185');
+    eGrad.addColorStop(1, '#38bdf8');
+    ctx.fillStyle = eGrad;
+    ctx.fillRect(barX - 5, barBot - eBarH, 10, eBarH);
+    ctx.font = `${Math.max(8, W * 0.012)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = '#fb7185';
+    ctx.textAlign = 'center';
+    ctx.fillText('E', barX, barTop - 5);
+    ctx.fillStyle = '#7b8db5';
+    ctx.fillText('↑', barX, barTop + 10);
+
+    // Width label
+    ctx.font = `${Math.max(10, W * 0.017)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.textAlign = 'center';
+    ctx.fillText('← L →', (boxL + boxR) / 2, boxBot + 18);
+
+    time++;
+    animId = requestAnimationFrame(draw);
+  }
+
+  document.getElementById('btnBoxMode').addEventListener('click', function() {
+    showWave = !showWave;
+    this.classList.toggle('active', showWave);
+    this.innerHTML = showWave
+      ? '<span class="icon">⚫</span> 입자 보기'
+      : '<span class="icon">〰</span> 파동함수 보기';
+  });
+
+  const obs = new IntersectionObserver(entries => {
+    isVisible = entries[0].isIntersecting;
+    if (isVisible && !animId) draw();
+    if (!isVisible && animId) { cancelAnimationFrame(animId); animId = null; }
+  }, { threshold: 0.05 });
+
+  window.addEventListener('resize', resize);
+  resize();
+  obs.observe(canvas);
+})();
+
+
+// ═══════════════════════════════════════════
+// STERN-GERLACH — Quantized measurement
+// ═══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('sgCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, dpr;
+  let animId = null;
+  let isVisible = false;
+  let atoms = [];
+  let hits = [];   // where atoms land on screen
+  let upCount = 0, downCount = 0;
+  let time = 0;
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = rect.width; H = rect.height;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function fireAtoms(n) {
+    for (let i = 0; i < n; i++) {
+      atoms.push({
+        x: W * 0.05,
+        y: H * 0.5 + (Math.random() - 0.5) * H * 0.15,
+        vx: 2.5 + Math.random() * 1.5,
+        vy: 0,
+        phase: 0, // 0=before magnet, 1=in magnet, 2=past magnet
+        spin: Math.random() < 0.5 ? 1 : -1, // decided at "measurement"
+        delay: i * 3 + Math.random() * 5
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#050810';
+    ctx.fillRect(0, 0, W, H);
+
+    const magnetL = W * 0.3;
+    const magnetR = W * 0.6;
+    const screenX = W * 0.85;
+    const midY = H * 0.5;
+
+    // Source
+    ctx.beginPath();
+    ctx.arc(W * 0.08, midY, 10, 0, Math.PI * 2);
+    ctx.fillStyle = '#f0b42930';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(W * 0.08, midY, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#f0b429';
+    ctx.fill();
+    ctx.font = `${Math.max(9, W * 0.015)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = '#7b8db5';
+    ctx.textAlign = 'center';
+    ctx.fillText('source', W * 0.08, midY - 18);
+
+    // Magnet (N pole top, S pole bottom)
+    const magH = H * 0.65;
+    const magTop = midY - magH / 2;
+    const magW = magnetR - magnetL;
+
+    // North pole (top wedge)
+    ctx.fillStyle = '#1a2a4a';
+    ctx.beginPath();
+    ctx.moveTo(magnetL, magTop);
+    ctx.lineTo(magnetR, magTop);
+    ctx.lineTo(magnetR, midY - H * 0.08);
+    ctx.lineTo(magnetL, midY - H * 0.06);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = '#38bdf850';
+    ctx.font = `bold ${Math.max(12, W * 0.025)}px 'DM Sans', sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText('N', (magnetL + magnetR) / 2, magTop + 20);
+
+    // South pole (bottom wedge)
+    ctx.fillStyle = '#2a1a1a';
+    ctx.beginPath();
+    ctx.moveTo(magnetL, magTop + magH);
+    ctx.lineTo(magnetR, magTop + magH);
+    ctx.lineTo(magnetR, midY + H * 0.08);
+    ctx.lineTo(magnetL, midY + H * 0.06);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = '#fb718550';
+    ctx.fillText('S', (magnetL + magnetR) / 2, magTop + magH - 8);
+
+    // Field lines (faint)
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i < 5; i++) {
+      const t = (i + 1) / 6;
+      ctx.beginPath();
+      ctx.moveTo(magnetL + magW * 0.2, midY - H * 0.06 * (1 - t));
+      ctx.quadraticCurveTo((magnetL + magnetR) / 2, midY, magnetL + magW * 0.2, midY + H * 0.06 * (1 - t));
+      ctx.stroke();
+    }
+
+    // Magnet label
+    ctx.font = `${Math.max(9, W * 0.015)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = '#7b8db5';
+    ctx.fillText('inhomogeneous', (magnetL + magnetR) / 2, magTop - 8);
+    ctx.fillText('magnetic field', (magnetL + magnetR) / 2, magTop - 8 + 14);
+
+    // Detection screen
+    ctx.fillStyle = '#1a1a2a';
+    ctx.fillRect(screenX - 3, magTop + 10, 6, magH - 20);
+    ctx.font = `${Math.max(9, W * 0.015)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = '#7b8db5';
+    ctx.fillText('screen', screenX, magTop);
+
+    // Draw accumulated hits
+    for (const h of hits) {
+      const alpha = Math.min(1, h.age / 15);
+      ctx.beginPath();
+      ctx.arc(screenX, h.y, 2, 0, Math.PI * 2);
+      ctx.fillStyle = h.spin > 0
+        ? `rgba(56,189,248,${alpha * 0.7})`
+        : `rgba(251,113,133,${alpha * 0.7})`;
+      ctx.fill();
+    }
+
+    // Histogram on right side of screen
+    if (hits.length > 5) {
+      const bins = 40;
+      const hist = new Float32Array(bins);
+      const hTop = magTop + 15;
+      const hBot = magTop + magH - 25;
+      const hRange = hBot - hTop;
+      for (const h of hits) {
+        const bin = Math.floor(((h.y - hTop) / hRange) * bins);
+        if (bin >= 0 && bin < bins) hist[bin]++;
+      }
+      const maxC = Math.max(...hist) || 1;
+      const barH = hRange / bins;
+      for (let i = 0; i < bins; i++) {
+        const len = (hist[i] / maxC) * W * 0.06;
+        const y = hTop + i * barH;
+        const mid = bins / 2;
+        const hue = i < mid ? 200 : 350;
+        ctx.fillStyle = `hsla(${hue},60%,55%,0.4)`;
+        ctx.fillRect(screenX + 6, y, len, barH - 1);
+      }
+    }
+
+    // Update atoms
+    for (let i = atoms.length - 1; i >= 0; i--) {
+      const a = atoms[i];
+      if (a.delay > 0) { a.delay--; continue; }
+
+      a.x += a.vx;
+
+      // In magnet zone: deflect based on spin
+      if (a.x > magnetL && a.x < magnetR) {
+        a.phase = 1;
+        a.vy += a.spin * 0.12;
+      } else if (a.x >= magnetR) {
+        a.phase = 2;
+      }
+      a.y += a.vy;
+
+      // Hit screen
+      if (a.x >= screenX) {
+        hits.push({ y: a.y, spin: a.spin, age: 0 });
+        if (a.spin > 0) upCount++; else downCount++;
+        document.getElementById('sgUp').textContent = upCount;
+        document.getElementById('sgDown').textContent = downCount;
+        atoms.splice(i, 1);
+        continue;
+      }
+
+      // Draw atom
+      const col = a.phase < 2 ? '#f0b429' : (a.spin > 0 ? '#38bdf8' : '#fb7185');
+      ctx.beginPath();
+      ctx.arc(a.x, a.y, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = col;
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(a.x, a.y, 6, 0, Math.PI * 2);
+      ctx.fillStyle = col.replace(')', ',0.1)').replace('rgb', 'rgba');
+      ctx.fill();
+    }
+
+    // Age hits
+    for (const h of hits) h.age++;
+    if (atoms.length > 300) atoms.splice(0, 50);
+
+    time++;
+    animId = requestAnimationFrame(draw);
+  }
+
+  document.getElementById('btnSGFire').addEventListener('click', () => fireAtoms(30));
+  document.getElementById('btnSGReset').addEventListener('click', () => {
+    atoms = []; hits = []; upCount = 0; downCount = 0;
+    document.getElementById('sgUp').textContent = '0';
+    document.getElementById('sgDown').textContent = '0';
+  });
+
+  const obs = new IntersectionObserver(entries => {
+    isVisible = entries[0].isIntersecting;
+    if (isVisible && !animId) { fireAtoms(15); draw(); }
+    if (!isVisible && animId) { cancelAnimationFrame(animId); animId = null; }
+  }, { threshold: 0.05 });
+
+  window.addEventListener('resize', resize);
+  resize();
+  obs.observe(canvas);
+})();
+
+
+// ═══════════════════════════════════════════
+// BLOCH SPHERE — Quantum state visualizer
+// ═══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('blochCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, dpr;
+  let theta = Math.PI / 3; // polar angle
+  let phi = Math.PI / 4;   // azimuthal angle
+  let animId = null;
+  let isVisible = false;
+  let time = 0;
+  let draggingBloch = false;
+  let lastMouse = null;
+  let upCount = 0, downCount = 0;
+  let measureFlash = 0;
+  let measureResult = null;
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = rect.width; H = rect.height;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function project(x3, y3, z3) {
+    // Simple isometric-ish projection
+    const R = Math.min(W, H) * 0.32;
+    const cx = W / 2, cy = H / 2;
+    const px = cx + R * (x3 * 0.87 - y3 * 0.5);
+    const py = cy - R * (z3 * 0.85 - x3 * 0.2 - y3 * 0.35);
+    return { x: px, y: py };
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#050810';
+    ctx.fillRect(0, 0, W, H);
+
+    const R = Math.min(W, H) * 0.32;
+    const cx = W / 2, cy = H / 2;
+
+    // Sphere wireframe
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 0.5;
+
+    // Equator
+    ctx.beginPath();
+    for (let a = 0; a <= 360; a += 2) {
+      const rad = a * Math.PI / 180;
+      const p = project(Math.cos(rad), Math.sin(rad), 0);
+      if (a === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+    }
+    ctx.stroke();
+
+    // Meridians
+    for (let m = 0; m < 3; m++) {
+      ctx.beginPath();
+      const mAngle = m * Math.PI / 3;
+      for (let a = 0; a <= 360; a += 2) {
+        const rad = a * Math.PI / 180;
+        const x = Math.cos(rad) * Math.cos(mAngle);
+        const y = Math.cos(rad) * Math.sin(mAngle);
+        const z = Math.sin(rad);
+        const p = project(x, y, z);
+        if (a === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y);
+      }
+      ctx.stroke();
+    }
+
+    // Axes
+    const axes = [
+      { v: [0, 0, 1.3], label: '|0⟩', color: '#38bdf8' },
+      { v: [0, 0, -1.3], label: '|1⟩', color: '#fb7185' },
+      { v: [1.3, 0, 0], label: 'x', color: 'rgba(255,255,255,0.2)' },
+      { v: [0, 1.3, 0], label: 'y', color: 'rgba(255,255,255,0.2)' },
+    ];
+    for (const ax of axes) {
+      const p0 = project(0, 0, 0);
+      const p1 = project(...ax.v);
+      ctx.beginPath();
+      ctx.moveTo(p0.x, p0.y);
+      ctx.lineTo(p1.x, p1.y);
+      ctx.strokeStyle = ax.color;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.font = `${Math.max(12, W * 0.03)}px 'Fraunces', serif`;
+      ctx.fillStyle = ax.color;
+      ctx.textAlign = 'center';
+      ctx.fillText(ax.label, p1.x + 5, p1.y - 5);
+    }
+
+    // State vector
+    const sx = Math.sin(theta) * Math.cos(phi);
+    const sy = Math.sin(theta) * Math.sin(phi);
+    const sz = Math.cos(theta);
+    const sp = project(sx, sy, sz);
+    const o = project(0, 0, 0);
+
+    // Arrow
+    ctx.beginPath();
+    ctx.moveTo(o.x, o.y);
+    ctx.lineTo(sp.x, sp.y);
+    ctx.strokeStyle = '#f0b429';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // Arrow head
+    ctx.beginPath();
+    ctx.arc(sp.x, sp.y, 6, 0, Math.PI * 2);
+    ctx.fillStyle = '#f0b429';
+    ctx.fill();
+
+    // Glow
+    ctx.beginPath();
+    ctx.arc(sp.x, sp.y, 14, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(240,180,41,0.15)';
+    ctx.fill();
+
+    // Probabilities
+    const pUp = Math.cos(theta / 2) ** 2;
+    const pDown = Math.sin(theta / 2) ** 2;
+    ctx.font = `${Math.max(11, W * 0.025)}px 'JetBrains Mono', monospace`;
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#38bdf8';
+    ctx.fillText(`P(|0⟩) = ${(pUp * 100).toFixed(1)}%`, 15, H - 35);
+    ctx.fillStyle = '#fb7185';
+    ctx.fillText(`P(|1⟩) = ${(pDown * 100).toFixed(1)}%`, 15, H - 15);
+
+    // Measurement flash
+    if (measureFlash > 0) {
+      ctx.save();
+      ctx.globalAlpha = measureFlash;
+      ctx.fillStyle = measureResult === 0 ? 'rgba(56,189,248,0.2)' : 'rgba(251,113,133,0.2)';
+      ctx.fillRect(0, 0, W, H);
+      ctx.font = `bold ${Math.max(20, W * 0.06)}px 'Fraunces', serif`;
+      ctx.textAlign = 'center';
+      ctx.fillStyle = measureResult === 0 ? '#38bdf8' : '#fb7185';
+      ctx.fillText(measureResult === 0 ? '|0⟩' : '|1⟩', W / 2, H / 2);
+      ctx.restore();
+      measureFlash -= 0.02;
+    }
+
+    time++;
+    animId = requestAnimationFrame(draw);
+  }
+
+  // Drag to rotate
+  function getPointer(e) {
+    const rect = canvas.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return { x: (t.clientX - rect.left) * W / rect.width, y: (t.clientY - rect.top) * H / rect.height };
+  }
+
+  canvas.addEventListener('mousedown', e => { draggingBloch = true; lastMouse = getPointer(e); });
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); draggingBloch = true; lastMouse = getPointer(e); }, { passive: false });
+
+  function onDrag(e) {
+    if (!draggingBloch) return;
+    e.preventDefault();
+    const p = getPointer(e);
+    if (lastMouse) {
+      const dx = p.x - lastMouse.x;
+      const dy = p.y - lastMouse.y;
+      phi += dx * 0.01;
+      theta = Math.max(0.01, Math.min(Math.PI - 0.01, theta + dy * 0.01));
+    }
+    lastMouse = p;
+  }
+  canvas.addEventListener('mousemove', onDrag);
+  canvas.addEventListener('touchmove', onDrag, { passive: false });
+
+  function endDrag() { draggingBloch = false; lastMouse = null; }
+  canvas.addEventListener('mouseup', endDrag);
+  canvas.addEventListener('mouseleave', endDrag);
+  canvas.addEventListener('touchend', endDrag);
+
+  // Measure
+  document.getElementById('btnMeasure').addEventListener('click', () => {
+    const pUp = Math.cos(theta / 2) ** 2;
+    if (Math.random() < pUp) {
+      measureResult = 0;
+      theta = 0.01; // collapse to |0⟩
+      upCount++;
+    } else {
+      measureResult = 1;
+      theta = Math.PI - 0.01; // collapse to |1⟩
+      downCount++;
+    }
+    measureFlash = 1;
+    document.getElementById('blochUp').textContent = upCount;
+    document.getElementById('blochDown').textContent = downCount;
+  });
+
+  document.getElementById('btn중첩').addEventListener('click', () => {
+    theta = Math.PI / 2; // equal superposition
+    phi = Math.random() * Math.PI * 2;
+    measureFlash = 0;
+  });
+
+  document.getElementById('btnBlochReset').addEventListener('click', () => {
+    upCount = 0; downCount = 0;
+    document.getElementById('blochUp').textContent = '0';
+    document.getElementById('blochDown').textContent = '0';
+  });
+
+  const obs = new IntersectionObserver(entries => {
+    isVisible = entries[0].isIntersecting;
+    if (isVisible && !animId) draw();
+    if (!isVisible && animId) { cancelAnimationFrame(animId); animId = null; }
+  }, { threshold: 0.05 });
+
+  window.addEventListener('resize', resize);
+  resize();
+  obs.observe(canvas);
+})();
+
+
+// ═══════════════════════════════════════════
+// ENTANGLEMENT VISUALIZER — Pair creation & instant correlation
+// ═══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('entangleCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, dpr;
+  let animId = null;
+  let isVisible = false;
+  let time = 0;
+
+  // State machine
+  let state = 'idle'; // idle, flying, measured
+  let pairTime = 0;
+  let aliceX, bobX, aliceY, bobY;
+  let measuredSpin = 0; // +1 or -1
+  let flashAlpha = 0;
+  let connectionAlpha = 0;
+  let particles = []; // decorative bg particles
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = rect.width; H = rect.height;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    initBg();
+  }
+
+  function initBg() {
+    particles = [];
+    for (let i = 0; i < 40; i++) {
+      particles.push({
+        x: Math.random() * W, y: Math.random() * H,
+        r: Math.random() * 1 + 0.3,
+        a: Math.random() * 0.15 + 0.03,
+        vx: (Math.random() - 0.5) * 0.2,
+        vy: (Math.random() - 0.5) * 0.2
+      });
+    }
+  }
+
+  const cx = () => W * 0.5;
+  const cy = () => H * 0.5;
+  const aliceHome = () => ({ x: W * 0.12, y: H * 0.5 });
+  const bobHome = () => ({ x: W * 0.88, y: H * 0.5 });
+
+  function createPair() {
+    state = 'flying';
+    pairTime = 0;
+    aliceX = cx(); bobX = cx();
+    aliceY = cy(); bobY = cy();
+    measuredSpin = 0;
+    flashAlpha = 0;
+    connectionAlpha = 1;
+  }
+
+  function measureAlice() {
+    if (state !== 'flying') return;
+    state = 'measured';
+    measuredSpin = Math.random() < 0.5 ? 1 : -1;
+    flashAlpha = 1;
+    connectionAlpha = 1.5; // bright flash on connection
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#050810';
+    ctx.fillRect(0, 0, W, H);
+
+    // Background particles
+    for (const p of particles) {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0) p.x += W; if (p.x > W) p.x -= W;
+      if (p.y < 0) p.y += H; if (p.y > H) p.y -= H;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${p.a})`;
+      ctx.fill();
+    }
+
+    const aHome = aliceHome();
+    const bHome = bobHome();
+
+    // Detector labels
+    ctx.font = `bold ${Math.max(11, W * 0.02)}px 'DM Sans', sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#38bdf8';
+    ctx.fillText('Alice', aHome.x, aHome.y - 35);
+    ctx.fillStyle = '#fb7185';
+    ctx.fillText('Bob', bHome.x, bHome.y - 35);
+
+    // Detector circles
+    for (const [home, col] of [[aHome, '#38bdf8'], [bHome, '#fb7185']]) {
+      ctx.beginPath();
+      ctx.arc(home.x, home.y, 22, 0, Math.PI * 2);
+      ctx.fillStyle = col + '15';
+      ctx.strokeStyle = col + '40';
+      ctx.lineWidth = 1.5;
+      ctx.fill(); ctx.stroke();
+    }
+
+    // Source
+    ctx.beginPath();
+    ctx.arc(cx(), cy(), 8, 0, Math.PI * 2);
+    ctx.fillStyle = '#f0b429';
+    ctx.fill();
+    ctx.font = `${Math.max(8, W * 0.013)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = '#7b8db5';
+    ctx.fillText('source', cx(), cy() + 22);
+
+    if (state === 'flying') {
+      pairTime++;
+      const t = Math.min(1, pairTime / 120);
+      const ease = 1 - Math.pow(1 - t, 3); // ease-out
+
+      aliceX = cx() + (aHome.x - cx()) * ease;
+      bobX = cx() + (bHome.x - cx()) * ease;
+      aliceY = cy() + Math.sin(pairTime * 0.05) * 3;
+      bobY = cy() - Math.sin(pairTime * 0.05) * 3;
+
+      // Entanglement connection line
+      if (connectionAlpha > 0) {
+        ctx.beginPath();
+        ctx.moveTo(aliceX, aliceY);
+        ctx.quadraticCurveTo(cx(), cy() - 20 * Math.sin(time * 0.02), bobX, bobY);
+        ctx.strokeStyle = `rgba(240,180,41,${connectionAlpha * 0.2})`;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([4, 6]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      // Particles in superposition — oscillating between two colors
+      const superPos = Math.sin(time * 0.08);
+      const aCol = superPos > 0 ? '#38bdf8' : '#fb7185';
+      const bCol = superPos > 0 ? '#fb7185' : '#38bdf8';
+      const blendAlpha = 0.5 + 0.3 * Math.abs(superPos);
+
+      for (const [px, py, col] of [[aliceX, aliceY, aCol], [bobX, bobY, bCol]]) {
+        // Superposition glow (both colors)
+        ctx.beginPath();
+        ctx.arc(px, py, 12, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(56,189,248,${0.08 + 0.05 * superPos})`;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(px, py, 12, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(251,113,133,${0.08 - 0.05 * superPos})`;
+        ctx.fill();
+        // Core
+        ctx.beginPath();
+        ctx.arc(px, py, 5, 0, Math.PI * 2);
+        ctx.fillStyle = col;
+        ctx.globalAlpha = blendAlpha;
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+
+      // "Superposition" label
+      ctx.font = `${Math.max(9, W * 0.014)}px 'JetBrains Mono', monospace`;
+      ctx.fillStyle = '#f0b42960';
+      ctx.textAlign = 'center';
+      ctx.fillText('⟨ entangled — superposition ⟩', cx(), H * 0.18);
+    }
+
+    if (state === 'measured') {
+      // Alice collapses
+      const aCol = measuredSpin > 0 ? '#38bdf8' : '#fb7185';
+      const bCol = measuredSpin > 0 ? '#fb7185' : '#38bdf8'; // anti-correlated
+      const aLabel = measuredSpin > 0 ? '↑ spin up' : '↓ spin down';
+      const bLabel = measuredSpin > 0 ? '↓ spin down' : '↑ spin up';
+
+      // Connection flash
+      if (connectionAlpha > 0) {
+        ctx.beginPath();
+        ctx.moveTo(aliceX, aliceY);
+        ctx.quadraticCurveTo(cx(), cy() - 10, bobX, bobY);
+        ctx.strokeStyle = `rgba(240,180,41,${Math.min(1, connectionAlpha) * 0.6})`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        connectionAlpha -= 0.015;
+      }
+
+      // Particles with definite states
+      for (const [px, py, col, label] of [[aliceX, aliceY, aCol, aLabel], [bobX, bobY, bCol, bLabel]]) {
+        ctx.beginPath();
+        ctx.arc(px, py, 5 + flashAlpha * 8, 0, Math.PI * 2);
+        ctx.fillStyle = col;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(px, py, 18, 0, Math.PI * 2);
+        ctx.fillStyle = col + Math.round(flashAlpha * 40).toString(16).padStart(2, '0');
+        ctx.fill();
+        ctx.font = `${Math.max(9, W * 0.015)}px 'JetBrains Mono', monospace`;
+        ctx.fillStyle = col;
+        ctx.textAlign = 'center';
+        ctx.fillText(label, px, py + 32);
+      }
+
+      // "INSTANT" label
+      if (flashAlpha > 0.3) {
+        ctx.font = `bold ${Math.max(11, W * 0.02)}px 'Fraunces', serif`;
+        ctx.fillStyle = `rgba(240,180,41,${flashAlpha * 0.7})`;
+        ctx.textAlign = 'center';
+        ctx.fillText('instant correlation', cx(), H * 0.18);
+      }
+
+      flashAlpha = Math.max(0, flashAlpha - 0.008);
+    }
+
+    if (state === 'idle') {
+      ctx.font = `${Math.max(10, W * 0.018)}px 'DM Sans', sans-serif`;
+      ctx.fillStyle = '#7b8db5';
+      ctx.textAlign = 'center';
+      ctx.fillText('Click "얽힌 쌍 생성" to begin', cx(), H * 0.18);
+    }
+
+    time++;
+    animId = requestAnimationFrame(draw);
+  }
+
+  document.getElementById('btnEntanglePair').addEventListener('click', createPair);
+  document.getElementById('btnEntangleMeasure').addEventListener('click', measureAlice);
+
+  const obs = new IntersectionObserver(entries => {
+    isVisible = entries[0].isIntersecting;
+    if (isVisible && !animId) draw();
+    if (!isVisible && animId) { cancelAnimationFrame(animId); animId = null; }
+  }, { threshold: 0.05 });
+
+  window.addEventListener('resize', resize);
+  resize();
+  obs.observe(canvas);
+})();
+
+
+// ═══════════════════════════════════════════
+// BELL TEST — Entanglement correlations
+// ═══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('bellCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, dpr;
+  let trials = [];
+  let totalTrials = 0;
+  let matches = 0;
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = rect.width; H = rect.height;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function draw() {
+    const aAngle = parseFloat(document.getElementById('aliceAngle').value);
+    const bAngle = parseFloat(document.getElementById('bobAngle').value);
+    document.getElementById('aliceAngleLabel').textContent = aAngle;
+    document.getElementById('bobAngleLabel').textContent = bAngle;
+
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#050810';
+    ctx.fillRect(0, 0, W, H);
+
+    const cx = W / 2, cy = H / 2;
+
+    // Source in center
+    ctx.beginPath();
+    ctx.arc(cx, cy, 12, 0, Math.PI * 2);
+    const sGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 12);
+    sGrad.addColorStop(0, '#f0b429');
+    sGrad.addColorStop(1, '#f0b42940');
+    ctx.fillStyle = sGrad;
+    ctx.fill();
+    ctx.font = `${Math.max(9, W * 0.016)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = '#f0b429';
+    ctx.textAlign = 'center';
+    ctx.fillText('Source', cx, cy + 25);
+
+    // Alice (left)
+    const aliceX = W * 0.15, aliceY = cy;
+    ctx.beginPath();
+    ctx.arc(aliceX, aliceY, 20, 0, Math.PI * 2);
+    ctx.fillStyle = '#38bdf820';
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 1.5;
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = '#38bdf8';
+    ctx.font = `bold ${Math.max(11, W * 0.02)}px 'DM Sans', sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText('Alice', aliceX, aliceY - 30);
+
+    // Alice's detector angle
+    const aRad = aAngle * Math.PI / 180;
+    const detLen = 16;
+    ctx.beginPath();
+    ctx.moveTo(aliceX - Math.cos(aRad) * detLen, aliceY - Math.sin(aRad) * detLen);
+    ctx.lineTo(aliceX + Math.cos(aRad) * detLen, aliceY + Math.sin(aRad) * detLen);
+    ctx.strokeStyle = '#38bdf8';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.font = `${Math.max(9, W * 0.015)}px 'JetBrains Mono', monospace`;
+    ctx.fillText(`${aAngle}°`, aliceX, aliceY + 38);
+
+    // Bob (right)
+    const bobX = W * 0.85, bobY = cy;
+    ctx.beginPath();
+    ctx.arc(bobX, bobY, 20, 0, Math.PI * 2);
+    ctx.fillStyle = '#fb718520';
+    ctx.strokeStyle = '#fb7185';
+    ctx.lineWidth = 1.5;
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = '#fb7185';
+    ctx.font = `bold ${Math.max(11, W * 0.02)}px 'DM Sans', sans-serif`;
+    ctx.fillText('Bob', bobX, bobY - 30);
+
+    const bRad = bAngle * Math.PI / 180;
+    ctx.beginPath();
+    ctx.moveTo(bobX - Math.cos(bRad) * detLen, bobY - Math.sin(bRad) * detLen);
+    ctx.lineTo(bobX + Math.cos(bRad) * detLen, bobY + Math.sin(bRad) * detLen);
+    ctx.strokeStyle = '#fb7185';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.font = `${Math.max(9, W * 0.015)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = '#fb7185';
+    ctx.fillText(`${bAngle}°`, bobX, bobY + 38);
+
+    // Entangled photon paths
+    ctx.setLineDash([4, 6]);
+    ctx.strokeStyle = 'rgba(240,180,41,0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(cx - 15, cy);
+    ctx.lineTo(aliceX + 22, aliceY);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx + 15, cy);
+    ctx.lineTo(bobX - 22, bobY);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Results display
+    if (totalTrials > 0) {
+      const corrRate = matches / totalTrials;
+      const diff = aAngle - bAngle;
+      const qmPred = Math.cos(diff * Math.PI / 180) ** 2;
+
+      ctx.font = `${Math.max(11, W * 0.02)}px 'DM Sans', sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillStyle = '#e0e6f0';
+      const statY = H * 0.15;
+      ctx.fillText(`Trials: ${totalTrials}`, cx, statY);
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillText(`Measured correlation: ${(corrRate * 100).toFixed(1)}%`, cx, statY + 22);
+      ctx.fillStyle = '#f0b429';
+      ctx.fillText(`QM prediction: ${(qmPred * 100).toFixed(1)}%`, cx, statY + 44);
+
+      // Bell inequality check
+      // CHSH: S ≤ 2 classically, QM allows up to 2√2
+      ctx.fillStyle = corrRate > 0.85 && Math.abs(diff) > 20 && Math.abs(diff) < 70
+        ? '#34d399' : '#7b8db5';
+      if (totalTrials >= 100 && Math.abs(diff) > 20 && Math.abs(diff) < 70 && corrRate > 0.7) {
+        ctx.font = `bold ${Math.max(12, W * 0.022)}px 'Fraunces', serif`;
+        ctx.fillStyle = '#f0b429';
+        ctx.fillText('⚡ Bell inequality violated!', cx, statY + 70);
+      }
+
+      // Recent trial dots
+      const dotY = H * 0.82;
+      const dotR = 3;
+      const shown = Math.min(trials.length, 50);
+      const startI = trials.length - shown;
+      for (let i = startI; i < trials.length; i++) {
+        const dx = (i - startI) * (W * 0.8 / shown) + W * 0.1;
+        ctx.beginPath();
+        ctx.arc(dx, dotY - 8, dotR, 0, Math.PI * 2);
+        ctx.fillStyle = trials[i].a ? '#38bdf8' : '#38bdf830';
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(dx, dotY + 8, dotR, 0, Math.PI * 2);
+        ctx.fillStyle = trials[i].b ? '#fb7185' : '#fb718530';
+        ctx.fill();
+        if (trials[i].a === trials[i].b) {
+          ctx.beginPath();
+          ctx.arc(dx, dotY, 1, 0, Math.PI * 2);
+          ctx.fillStyle = '#f0b42980';
+          ctx.fill();
+        }
+      }
+      ctx.font = `${Math.max(8, W * 0.013)}px 'JetBrains Mono', monospace`;
+      ctx.textAlign = 'left';
+      ctx.fillStyle = '#38bdf8';
+      ctx.fillText('Alice', W * 0.03, dotY - 4);
+      ctx.fillStyle = '#fb7185';
+      ctx.fillText('Bob', W * 0.03, dotY + 12);
+    }
+  }
+
+  document.getElementById('aliceAngle').addEventListener('input', draw);
+  document.getElementById('bobAngle').addEventListener('input', draw);
+
+  document.getElementById('btnBellRun').addEventListener('click', () => {
+    const aAngle = parseFloat(document.getElementById('aliceAngle').value);
+    const bAngle = parseFloat(document.getElementById('bobAngle').value);
+    const diff = (aAngle - bAngle) * Math.PI / 180;
+    const pSame = Math.cos(diff) ** 2;
+
+    for (let i = 0; i < 100; i++) {
+      // Quantum prediction: correlation = cos²(θA - θB)
+      const same = Math.random() < pSame;
+      const aResult = Math.random() > 0.5;
+      const bResult = same ? aResult : !aResult;
+      trials.push({ a: aResult, b: bResult });
+      totalTrials++;
+      if (aResult === bResult) matches++;
+    }
+    draw();
+  });
+
+  document.getElementById('btnBellReset').addEventListener('click', () => {
+    trials = []; totalTrials = 0; matches = 0;
+    draw();
+  });
+
+  const obs = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) draw();
+  }, { threshold: 0.1 });
+
+  window.addEventListener('resize', () => { resize(); draw(); });
+  resize();
+  obs.observe(canvas);
+})();
+
+
+// ═══════════════════════════════════════════
+// SOLVAY TIMELINE — Einstein-Bohr debate milestones
+// ═══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('solvayCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const textBox = document.getElementById('solvayText');
+  let W, H, dpr;
+  let hoverIdx = -1;
+  let selectedIdx = -1;
+
+  const events = [
+    { year: 1927, label: 'Solvay V',
+      text: '<strong style="color:#f0b429">1927 — Fifth Solvay Conference, Brussels.</strong> Einstein challenges Bohr with a single-slit thought experiment, arguing that the uncertainty principle can be violated. Bohr refutes it overnight, using complementarity. The debate electrifies the conference. 17 of the 29 attendees are or will be Nobel laureates.' },
+    { year: 1930, label: 'Clock-in-box',
+      text: '<strong style="color:#f0b429">1930 — Sixth Solvay Conference.</strong> Einstein unveils his most ingenious attack: a box that weighs a photon to determine its energy, then releases it at a known time — seemingly violating ΔE·Δt ≥ ℏ/2. Bohr is reportedly shaken. He works through the night — and the next morning uses Einstein\'s own general relativity (gravitational time dilation) to refute the argument. Einstein is stunned.' },
+    { year: 1935, label: 'EPR Paper',
+      text: '<strong style="color:#f0b429">1935 — The EPR Paper.</strong> Einstein, Podolsky, and Rosen argue that entangled particles prove quantum mechanics is incomplete. Bohr responds — but his reply is widely considered obscure. Schrödinger, inspired by EPR, coins the word "entanglement" (Verschränkung) and publishes the cat thought experiment in the same year.' },
+    { year: 1952, label: 'Bohm',
+      text: '<strong style="color:#f0b429">1952 — David Bohm\'s pilot wave.</strong> Bohm shows that a fully deterministic hidden-variable theory can reproduce all quantum predictions. The physics establishment largely ignores it. Von Neumann had "proved" hidden variables impossible in 1932 — but his proof contained a subtle error that Bell would later expose.' },
+    { year: 1957, label: 'Everett',
+      text: '<strong style="color:#f0b429">1957 — Hugh Everett\'s "Relative State."</strong> A Princeton PhD student proposes that the wave function never collapses — the universe splits. His advisor, John Wheeler, supports the thesis but asks Everett to tone down the language. The paper is ignored for decades. Everett leaves physics entirely.' },
+    { year: 1964, label: 'Bell',
+      text: '<strong style="color:#f0b429">1964 — Bell\'s Theorem.</strong> John Bell, working at CERN, proves that any hidden-variable theory that respects locality must satisfy an inequality — and quantum mechanics violates it. The Einstein-Bohr debate is no longer philosophical. It is experimentally testable. Bell privately favors Bohm\'s interpretation.' },
+    { year: 1982, label: 'Aspect',
+      text: '<strong style="color:#f0b429">1982 — Aspect\'s experiment.</strong> Alain Aspect, in Paris, performs the first convincing Bell test, switching detector settings while photons are in flight. The results violate Bell\'s inequality. Einstein\'s dream of local hidden variables is dead. Nature is non-local — or non-real — or both.' },
+    { year: 2022, label: 'Nobel',
+      text: '<strong style="color:#f0b429">2022 — The Nobel Prize.</strong> Aspect, Clauser, and Zeilinger share the Nobel Prize in Physics for establishing the violation of Bell inequalities. The Swedish Academy states: their work "established that the real world is not locally real." A century after the debate began, the question of what quantum mechanics <em>means</em> remains open.' },
+  ];
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = rect.width; H = rect.height;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function getEventX(i) {
+    const pad = W * 0.08;
+    return pad + (i / (events.length - 1)) * (W - 2 * pad);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#050810';
+    ctx.fillRect(0, 0, W, H);
+
+    const lineY = H * 0.5;
+    const pad = W * 0.08;
+
+    // Timeline line
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(pad, lineY);
+    ctx.lineTo(W - pad, lineY);
+    ctx.stroke();
+
+    // Events
+    for (let i = 0; i < events.length; i++) {
+      const x = getEventX(i);
+      const ev = events[i];
+      const isHover = i === hoverIdx;
+      const isSel = i === selectedIdx;
+      const r = isSel ? 8 : (isHover ? 7 : 5);
+
+      // Vertical tick
+      ctx.strokeStyle = isSel ? '#f0b429' : (isHover ? '#38bdf880' : 'rgba(255,255,255,0.1)');
+      ctx.lineWidth = isSel ? 1.5 : 0.5;
+      ctx.beginPath();
+      ctx.moveTo(x, lineY - 12);
+      ctx.lineTo(x, lineY + 12);
+      ctx.stroke();
+
+      // Dot
+      ctx.beginPath();
+      ctx.arc(x, lineY, r, 0, Math.PI * 2);
+      ctx.fillStyle = isSel ? '#f0b429' : (isHover ? '#38bdf8' : '#7b8db5');
+      ctx.fill();
+
+      if (isSel) {
+        ctx.beginPath();
+        ctx.arc(x, lineY, r + 6, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(240,180,41,0.12)';
+        ctx.fill();
+      }
+
+      // Year
+      ctx.font = `${Math.max(9, W * 0.014)}px 'JetBrains Mono', monospace`;
+      ctx.fillStyle = isSel ? '#f0b429' : (isHover ? '#38bdf8' : '#7b8db5');
+      ctx.textAlign = 'center';
+      ctx.fillText(ev.year, x, lineY + 28);
+
+      // Label
+      ctx.font = `${Math.max(8, W * 0.012)}px 'DM Sans', sans-serif`;
+      ctx.fillStyle = isSel ? '#e0e6f0' : (isHover ? '#e0e6f0' : '#5c6178');
+      ctx.fillText(ev.label, x, lineY - 18);
+    }
+
+    // Title labels at ends
+    ctx.font = `${Math.max(10, W * 0.016)}px 'Fraunces', serif`;
+    ctx.fillStyle = '#38bdf850';
+    ctx.textAlign = 'left';
+    ctx.fillText('Einstein', pad, lineY - 35);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = '#f0b42950';
+    ctx.fillText('Bohr → Bell → Nobel', W - pad, lineY - 35);
+  }
+
+  function getPointer(e) {
+    const rect = canvas.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return { x: (t.clientX - rect.left) * W / rect.width, y: (t.clientY - rect.top) * H / rect.height };
+  }
+
+  function findEvent(p) {
+    const lineY = H * 0.5;
+    if (Math.abs(p.y - lineY) > 35) return -1;
+    for (let i = 0; i < events.length; i++) {
+      if (Math.abs(p.x - getEventX(i)) < 20) return i;
+    }
+    return -1;
+  }
+
+  canvas.addEventListener('mousemove', e => {
+    hoverIdx = findEvent(getPointer(e));
+    canvas.style.cursor = hoverIdx >= 0 ? 'pointer' : 'default';
+    draw();
+  });
+
+  canvas.addEventListener('click', e => {
+    const idx = findEvent(getPointer(e));
+    if (idx >= 0) {
+      selectedIdx = idx;
+      textBox.innerHTML = events[idx].text;
+      draw();
+    }
+  });
+
+  canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    const idx = findEvent(getPointer(e));
+    if (idx >= 0) {
+      selectedIdx = idx;
+      textBox.innerHTML = events[idx].text;
+      draw();
+    }
+  }, { passive: false });
+
+  canvas.addEventListener('mouseleave', () => { hoverIdx = -1; draw(); });
+
+  const obs = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) draw();
+  }, { threshold: 0.1 });
+
+  window.addEventListener('resize', () => { resize(); draw(); });
+  resize();
+  obs.observe(canvas);
+})();
+
+
+// ═══════════════════════════════════════════
+// INTERPRETATION DEBATE — Interactive voter
+// ═══════════════════════════════════════════
+(function() {
+  const cards = document.querySelectorAll('.debate-card');
+  const result = document.getElementById('debateResult');
+  const resultTitle = document.getElementById('debateResultTitle');
+  const resultText = document.getElementById('debateResultText');
+  const pollWrap = document.getElementById('debatePoll');
+
+  const data = {
+    copenhagen: {
+      title: "You chose Copenhagen — the pragmatist's path",
+      text: "You're in good company. The Copenhagen interpretation was the dominant view for most of the 20th century. It says: don't ask what's 'really' happening between measurements. The wave function is a tool for prediction, not a description of reality. Bohr argued that quantum and classical domains are fundamentally different, and we should not try to extend classical intuitions into the quantum world. Critics call it 'giving up on understanding.' Defenders call it 'intellectual honesty.'",
+      pct: 42
+    },
+    manyworlds: {
+      title: "You chose Many Worlds — the realist's gamble",
+      text: "You believe the math is real — all of it. Everett's interpretation is the most audacious: the wave function never collapses. Instead, the universe branches at every quantum event. Right now, countless versions of you are reading different sentences on different screens. Sean Carroll calls it 'the most honest' interpretation because it takes the Schrödinger equation seriously. The price? An infinity of unobservable parallel worlds. As Bryce DeWitt wrote to Everett: 'Your theory is too cheap on assumptions and too expensive on universes.'",
+      pct: 18
+    },
+    bohm: {
+      title: "You chose Pilot Wave — the hidden river",
+      text: "You want particles to be real, definite things — and you're willing to accept non-locality as the price. In Bohm's theory, every particle has a definite position at all times, guided by a quantum potential that is instantly influenced by distant events. John Bell — of Bell's theorem — was a secret Bohmian: 'Why is the pilot wave picture ignored in text books? Should it not be taught, not as the only way, but as an antidote to the prevailing complacency?' The theory reproduces all standard quantum predictions but requires a preferred foliation of spacetime — uncomfortable for relativists.",
+      pct: 9
+    },
+    qbism: {
+      title: "You chose QBism — the radical subjectivist",
+      text: "You've taken the most philosophically radical position. QBism says quantum mechanics is not about the world — it's about an agent's beliefs and expectations. The wave function is personal, like a probability assignment in Bayesian statistics. There is no collapse because there was never an objective state to collapse. Chris Fuchs argues this resolves all quantum paradoxes at a stroke, but critics say it veers into solipsism. As Mermin puts it: 'Quantum mechanics is a user's manual that any agent can use to manage their expectations.'",
+      pct: 6
+    }
+  };
+
+  // 2013 Schlosshauer–Kofler–Zeilinger poll data
+  const pollData = [
+    { label: 'Copenhagen', pct: 42, color: '#38bdf8' },
+    { label: 'Many Worlds', pct: 18, color: '#a78bfa' },
+    { label: 'Information', pct: 24, color: '#34d399' },
+    { label: 'Pilot Wave', pct: 9, color: '#f0b429' },
+    { label: 'Other', pct: 7, color: '#7b8db5' },
+  ];
+
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      cards.forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+
+      const interp = card.dataset.interp;
+      const d = data[interp];
+      resultTitle.textContent = d.title;
+      resultText.textContent = d.text;
+
+      // Build poll bars
+      pollWrap.innerHTML = '<p style="font-family:var(--font-mono);font-size:.7rem;color:var(--muted);margin-bottom:.8rem;text-align:center">2013 Quantum Foundations Poll (Schlosshauer, Kofler & Zeilinger)</p>';
+      for (const p of pollData) {
+        const row = document.createElement('div');
+        row.className = 'poll-row';
+        row.innerHTML = `
+          <span class="poll-label">${p.label}</span>
+          <div style="flex:1;background:var(--bg3);border-radius:4px;overflow:hidden;height:8px;">
+            <div class="poll-bar" style="width:0%;background:${p.color};height:100%;"></div>
+          </div>
+          <span class="poll-pct">${p.pct}%</span>
+        `;
+        pollWrap.appendChild(row);
+      }
+
+      result.classList.add('show');
+
+      // Animate bars
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          pollWrap.querySelectorAll('.poll-bar').forEach((bar, i) => {
+            bar.style.width = pollData[i].pct + '%';
+          });
+        }, 100);
+      });
+    });
+  });
+})();
+
+} catch(e) { console.error('Quantum viz error:', e); }
+</script>
+</body>
+</html>

@@ -1,0 +1,4461 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>선택을 거부한 비트 — Mellow Math</title>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════
+   CSS RESET & VARIABLES
+   ═══════════════════════════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:#0a0c12;
+  --bg2:#0e1019;
+  --text:#c8cad4;
+  --heading:#edeef2;
+  --gold:#d4a853;
+  --gold-dim:rgba(212,168,83,.15);
+  --cyan:#5ec4d4;
+  --cyan-dim:rgba(94,196,212,.12);
+  --magenta:#c47ad4;
+  --magenta-dim:rgba(196,122,212,.12);
+  --muted:#5c6178;
+  --border:rgba(255,255,255,.06);
+  --font-display:'Cormorant Garamond', Georgia, serif;
+  --font-body:'EB Garamond', Georgia, serif;
+  --font-mono:'JetBrains Mono', monospace;
+  --font-ui:'DM Sans', sans-serif;
+  --max-w:42rem;
+}
+
+html{
+  scroll-behavior:smooth;
+  -webkit-text-size-adjust:100%;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(255,255,255,.08) transparent;
+}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  font-size:1.08rem;
+  line-height:1.78;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Subtle grain overlay */
+body::after{
+  content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;
+  opacity:.035;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px;
+}
+
+::selection{background:rgba(212,168,83,.25);color:#fff}
+
+/* ═══════════════════════════════════════════
+   HERO SECTION
+   ═══════════════════════════════════════════ */
+#hero{
+  position:relative;
+  width:100%;
+  min-height:100vh;
+  min-height:100dvh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  cursor:default;
+}
+
+/* Three-layer canvas stack */
+#hero-bg{position:absolute;inset:0;z-index:0}
+#hero-sphere{position:absolute;inset:0;z-index:1;cursor:grab}
+#hero-sphere:active{cursor:grabbing}
+
+/* Radial vignette */
+#hero::after{
+  content:'';position:absolute;inset:0;z-index:2;
+  background:radial-gradient(ellipse 70% 65% at 50% 50%,transparent 0%,var(--bg) 100%);
+  pointer-events:none;
+}
+
+/* Text overlay */
+.hero-content{
+  position:relative;z-index:3;
+  text-align:center;
+  padding:0 2rem;
+  max-width:48rem;
+  pointer-events:none;
+}
+
+.hero-kicker{
+  font-family:var(--font-mono);
+  font-size:.65rem;
+  font-weight:400;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  color:var(--cyan);
+  margin-bottom:1.2rem;
+  opacity:0;
+  animation:fadeUp .9s ease .3s forwards;
+}
+
+.hero-title{
+  font-family:var(--font-display);
+  font-size:clamp(2.4rem,6vw,4.2rem);
+  font-weight:300;
+  line-height:1.15;
+  color:var(--heading);
+  letter-spacing:-.01em;
+  margin-bottom:.6rem;
+  opacity:0;
+  animation:fadeUp 1s ease .5s forwards;
+}
+.hero-title em{
+  font-style:italic;
+  color:var(--gold);
+  font-weight:300;
+}
+
+.hero-subtitle{
+  font-family:var(--font-body);
+  font-size:clamp(1rem,2.2vw,1.28rem);
+  font-weight:400;
+  color:var(--muted);
+  line-height:1.6;
+  max-width:32rem;
+  margin:0 auto 2.2rem;
+  opacity:0;
+  animation:fadeUp 1s ease .7s forwards;
+}
+
+.hero-start{
+  pointer-events:all;
+  display:inline-flex;
+  align-items:center;
+  gap:.55rem;
+  font-family:var(--font-mono);
+  font-size:.72rem;
+  font-weight:400;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--gold);
+  background:transparent;
+  border:1px solid rgba(212,168,83,.25);
+  padding:.7rem 1.8rem;
+  border-radius:2px;
+  cursor:pointer;
+  transition:all .3s ease;
+  opacity:0;
+  animation:fadeUp .9s ease .95s forwards;
+}
+.hero-start:hover{
+  background:rgba(212,168,83,.08);
+  border-color:rgba(212,168,83,.5);
+  box-shadow:0 0 24px rgba(212,168,83,.1);
+}
+.hero-start .arrow{
+  display:inline-block;
+  transition:transform .3s ease;
+}
+.hero-start:hover .arrow{transform:translateY(2px)}
+
+/* Hint at bottom */
+.hero-hint{
+  position:absolute;
+  bottom:2.5rem;left:0;right:0;
+  z-index:3;
+  text-align:center;
+  font-family:var(--font-mono);
+  font-size:.55rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:rgba(94,196,212,.35);
+  opacity:0;
+  animation:fadeUp .8s ease 1.4s forwards;
+}
+.hero-hint span{
+  display:inline-block;
+  animation:gentleBob 3s ease-in-out infinite;
+}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(18px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes gentleBob{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(5px)}
+}
+
+/* ═══════════════════════════════════════════
+   SECTION SCAFFOLDING (for future sections)
+   ═══════════════════════════════════════════ */
+section{
+  padding:6rem 2rem;
+  max-width:var(--max-w);
+  margin:0 auto;
+}
+
+.section-num{
+  font-family:var(--font-mono);
+  font-size:.62rem;
+  font-weight:400;
+  letter-spacing:.22em;
+  text-transform:uppercase;
+  color:var(--cyan);
+  margin-bottom:1rem;
+}
+
+section h2{
+  font-family:var(--font-display);
+  font-size:clamp(1.6rem,4vw,2.4rem);
+  font-weight:300;
+  color:var(--heading);
+  line-height:1.25;
+  margin-bottom:1.5rem;
+}
+
+section h2 .accent-gold{color:var(--gold)}
+section h2 .accent-cyan{color:var(--cyan)}
+
+section p{
+  margin-bottom:1.2rem;
+  color:var(--text);
+}
+
+/* Fade-in on scroll */
+.reveal{
+  opacity:0;
+  transform:translateY(24px);
+  transition:opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1);
+}
+.reveal.visible{
+  opacity:1;
+  transform:none;
+}
+/* Stagger children inside a reveal */
+.reveal.visible > *:nth-child(2){transition-delay:.05s}
+.reveal.visible > *:nth-child(3){transition-delay:.1s}
+.reveal.visible > *:nth-child(4){transition-delay:.15s}
+
+/* ═══════════════════════════════════════════
+   PLACEHOLDER SECTION
+   ═══════════════════════════════════════════ */
+#sec-bit{
+  border-top:1px solid var(--border);
+}
+
+.coming-soon{
+  text-align:center;
+  padding:4rem 2rem;
+  color:var(--muted);
+  font-family:var(--font-mono);
+  font-size:.75rem;
+  letter-spacing:.15em;
+}
+
+/* ═══════════════════════════════════════════
+   SECTION NAV DOTS
+   ═══════════════════════════════════════════ */
+#sec-nav{
+  position:fixed;right:1.2rem;top:50%;transform:translateY(-50%);
+  z-index:9990;display:flex;flex-direction:column;gap:.5rem;
+}
+.nav-dot{
+  display:flex;align-items:center;gap:.6rem;cursor:pointer;
+  justify-content:flex-end;
+}
+.nav-pip{
+  width:6px;height:6px;border-radius:50%;
+  border:1.5px solid rgba(255,255,255,.15);background:transparent;
+  flex-shrink:0;transition:all .3s;
+}
+.nav-dot:hover .nav-pip{border-color:rgba(255,255,255,.4)}
+.nav-dot.active .nav-pip{
+  background:var(--gold);border-color:var(--gold);
+  box-shadow:0 0 6px rgba(212,168,83,.3);
+}
+.nav-label{
+  font-family:var(--font-mono);font-size:.45rem;letter-spacing:.06em;
+  color:var(--muted);opacity:0;transform:translateX(4px);
+  transition:opacity .2s,transform .2s;white-space:nowrap;
+}
+.nav-dot:hover .nav-label{opacity:1;transform:translateX(0)}
+.nav-dot.active .nav-label{color:var(--gold)}
+@media(max-width:640px){#sec-nav{display:none}}
+
+/* ═══════════════════════════════════════════
+   EPILOGUE
+   ═══════════════════════════════════════════ */
+.epilogue{
+  text-align:center;padding:3rem 2rem 1rem;
+  max-width:var(--max-w);margin:0 auto;
+}
+.epilogue-text{
+  font-family:var(--font-display);
+  font-size:clamp(1.1rem,2.5vw,1.5rem);
+  font-weight:300;font-style:italic;
+  color:rgba(237,238,242,.4);
+  line-height:1.6;
+}
+
+/* ═══════════════════════════════════════════
+   FLOATING BADGE (bottom-left)
+   ═══════════════════════════════════════════ */
+.floating-badge{
+  position:fixed;
+  bottom:1.75rem;
+  left:1.75rem;
+  z-index:10000;
+  font-family:var(--font-mono);
+  font-size:.6rem;
+  letter-spacing:.14em;
+  text-transform:lowercase;
+  color:#8db830;
+  background:transparent;
+  padding:.35rem .7rem;
+  text-decoration:none;
+  transition:color .25s,text-shadow .25s,transform .25s;
+  text-shadow:0 0 6px rgba(141,184,48,.4),0 0 16px rgba(141,184,48,.15);
+}
+.floating-badge:hover{
+  color:#a8d43a;
+  text-shadow:0 0 8px rgba(141,184,48,.65),0 0 22px rgba(141,184,48,.28);
+  transform:translateY(-1px);
+}
+
+/* ═══════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════ */
+footer{
+  text-align:center;
+  padding:4rem 2rem 5rem;
+  border-top:1px solid var(--border);
+  margin-top:2rem;
+}
+.footer-attr{
+  display:flex;flex-direction:column;gap:.25rem;align-items:center;
+}
+.footer-name{
+  font-family:'Fraunces',Georgia,serif;
+  font-size:.85rem;font-weight:400;color:var(--heading);letter-spacing:-.01em;
+}
+.footer-inst{
+  font-family:var(--font-ui);
+  font-size:.72rem;font-weight:300;color:var(--muted);letter-spacing:.01em;
+}
+.footer-url{
+  font-family:var(--font-mono);
+  font-size:.6rem;letter-spacing:.08em;color:var(--gold);
+  text-decoration:none;margin-top:.25rem;
+}
+.footer-url:hover{text-decoration:underline}
+
+/* ═══════════════════════════════════════════
+   SECTION NAV (right side dots)
+   ═══════════════════════════════════════════ */
+#sec-nav{
+  position:fixed;right:1.2rem;top:50%;transform:translateY(-50%);
+  z-index:9990;display:flex;flex-direction:column;gap:.5rem;
+}
+.nav-dot{
+  width:7px;height:7px;border-radius:50%;
+  border:1.5px solid rgba(255,255,255,.15);background:transparent;
+  cursor:pointer;transition:all .3s;
+  position:relative;
+}
+.nav-dot:hover{border-color:rgba(255,255,255,.4)}
+.nav-dot.active{
+  background:var(--gold);border-color:var(--gold);
+  box-shadow:0 0 8px rgba(212,168,83,.35);
+}
+.nav-dot .nav-tip{
+  position:absolute;right:16px;top:50%;transform:translateY(-50%);
+  font-family:var(--font-mono);font-size:.48rem;letter-spacing:.08em;
+  color:var(--muted);white-space:nowrap;
+  opacity:0;transition:opacity .2s;pointer-events:none;
+}
+.nav-dot:hover .nav-tip{opacity:1}
+@media(max-width:768px){#sec-nav{display:none}}
+
+/* ═══════════════════════════════════════════
+   EPIGRAPH
+   ═══════════════════════════════════════════ */
+.epigraph{
+  max-width:28rem;margin:0 auto;padding:3rem 2rem 2rem;
+  text-align:center;
+}
+.epigraph p{
+  font-family:var(--font-display);
+  font-size:1.15rem;font-weight:300;font-style:italic;
+  color:rgba(237,238,242,.45);line-height:1.65;
+  margin-bottom:.6rem;
+}
+.epigraph .ep-attr{
+  font-family:var(--font-mono);font-size:.55rem;
+  letter-spacing:.12em;color:var(--muted);font-style:normal;
+}
+
+/* ═══════════════════════════════════════════
+   EQUATION BLOCK
+   ═══════════════════════════════════════════ */
+.eq-block{
+  text-align:center;margin:2.5rem 0;padding:1.5rem 1rem;
+  background:rgba(212,168,83,.03);
+  border:1px solid rgba(212,168,83,.08);
+  border-radius:4px;
+}
+.eq-block .eq-main{
+  font-family:var(--font-mono);font-size:1.15rem;
+  color:var(--heading);letter-spacing:.04em;
+}
+.eq-block .eq-note{
+  font-family:var(--font-body);font-size:.82rem;
+  color:var(--muted);margin-top:.6rem;font-style:italic;
+}
+
+/* ═══════════════════════════════════════════
+   "TRY THIS" CALLOUT
+   ═══════════════════════════════════════════ */
+.try-this{
+  display:flex;align-items:center;gap:.6rem;
+  margin:1.5rem 0;padding:.7rem 1rem;
+  border-radius:4px;background:rgba(212,168,83,.04);
+  border:1px solid rgba(212,168,83,.1);
+}
+.try-this .try-icon{
+  font-family:var(--font-mono);font-size:.7rem;
+  color:var(--gold);flex-shrink:0;
+}
+.try-this p{
+  font-family:var(--font-body);font-size:.95rem;
+  color:var(--text);margin:0;font-style:italic;
+}
+
+/* ═══════════════════════════════════════════
+   DROP CAP (first paragraph of each section)
+   ═══════════════════════════════════════════ */
+.drop-cap::first-letter{
+  font-family:var(--font-display);
+  font-size:3.2rem;font-weight:300;
+  float:left;line-height:.8;
+  margin-right:.12em;margin-top:.08em;
+  color:var(--gold);
+}
+
+/* ═══════════════════════════════════════════
+   INFO / QUOTE / THEOREM BOXES
+   ═══════════════════════════════════════════ */
+.info-box{
+  background:var(--cyan-dim);
+  border-left:2px solid rgba(94,196,212,.35);
+  padding:1.2rem 1.5rem;
+  margin:1.8rem 0;
+  border-radius:0 4px 4px 0;
+  font-size:1rem;
+}
+.info-box .box-label{
+  font-family:var(--font-mono);
+  font-size:.58rem;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--cyan);
+  display:block;
+  margin-bottom:.5rem;
+}
+
+.quote-box{
+  border-left:2px solid rgba(212,168,83,.3);
+  padding:1rem 1.5rem;
+  margin:2rem 0;
+  font-family:var(--font-display);
+  font-size:1.2rem;
+  font-style:italic;
+  font-weight:300;
+  color:rgba(237,238,242,.7);
+  line-height:1.55;
+}
+.quote-box .attribution{
+  display:block;
+  margin-top:.6rem;
+  font-family:var(--font-mono);
+  font-size:.6rem;
+  font-style:normal;
+  letter-spacing:.1em;
+  color:var(--muted);
+}
+
+/* ═══════════════════════════════════════════
+   §1 — CLASSICAL BIT TOGGLE
+   ═══════════════════════════════════════════ */
+.bit-demo{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:1.5rem;
+  margin:2.5rem 0;
+  padding:2rem;
+  background:rgba(255,255,255,.015);
+  border:1px solid var(--border);
+  border-radius:6px;
+}
+
+.bit-toggle-row{
+  display:flex;
+  align-items:center;
+  gap:2rem;
+}
+
+.bit-switch{
+  position:relative;
+  width:80px;
+  height:40px;
+  background:rgba(94,196,212,.1);
+  border:1.5px solid rgba(94,196,212,.3);
+  border-radius:20px;
+  cursor:pointer;
+  transition:all .35s ease;
+  -webkit-tap-highlight-color:transparent;
+}
+.bit-switch.on{
+  background:rgba(212,168,83,.15);
+  border-color:rgba(212,168,83,.5);
+}
+.bit-switch .knob{
+  position:absolute;
+  top:3px; left:3px;
+  width:32px; height:32px;
+  border-radius:50%;
+  background:var(--cyan);
+  transition:all .35s cubic-bezier(.68,-.55,.27,1.55);
+  box-shadow:0 0 12px rgba(94,196,212,.4);
+}
+.bit-switch.on .knob{
+  left:43px;
+  background:var(--gold);
+  box-shadow:0 0 12px rgba(212,168,83,.4);
+}
+
+.bit-value{
+  font-family:var(--font-mono);
+  font-size:2.8rem;
+  font-weight:500;
+  color:var(--cyan);
+  transition:color .35s ease;
+  min-width:2ch;
+  text-align:center;
+}
+.bit-value.on{color:var(--gold)}
+
+.bit-label{
+  font-family:var(--font-mono);
+  font-size:.62rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+
+/* Bit stream visualization */
+.bit-stream{
+  display:flex;
+  gap:3px;
+  flex-wrap:wrap;
+  justify-content:center;
+  max-width:28rem;
+}
+.bit-stream .cell{
+  width:22px; height:22px;
+  border-radius:2px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--font-mono);
+  font-size:.55rem;
+  font-weight:400;
+  transition:all .2s ease;
+  cursor:default;
+}
+.bit-stream .cell.zero{
+  background:rgba(94,196,212,.08);
+  color:rgba(94,196,212,.5);
+}
+.bit-stream .cell.one{
+  background:rgba(212,168,83,.1);
+  color:rgba(212,168,83,.6);
+}
+
+/* Byte counter */
+.byte-info{
+  text-align:center;
+}
+.byte-info .big-num{
+  font-family:var(--font-mono);
+  font-size:1.6rem;
+  font-weight:500;
+  color:var(--heading);
+}
+.byte-info .big-label{
+  font-family:var(--font-mono);
+  font-size:.55rem;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--muted);
+  display:block;
+  margin-top:.2rem;
+}
+
+/* Shannon portrait area */
+.figure-card{
+  margin:2.5rem 0;
+  text-align:center;
+}
+.figure-card canvas{
+  display:block;
+  margin:0 auto;
+  border-radius:4px;
+}
+.figure-card .caption{
+  font-family:var(--font-mono);
+  font-size:.58rem;
+  letter-spacing:.08em;
+  color:var(--muted);
+  margin-top:.8rem;
+  line-height:1.6;
+}
+
+/* Interactive entropy demo */
+.entropy-demo{
+  margin:2.5rem 0;
+  padding:2rem;
+  background:rgba(255,255,255,.015);
+  border:1px solid var(--border);
+  border-radius:6px;
+}
+.entropy-demo .demo-title{
+  font-family:var(--font-mono);
+  font-size:.6rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--cyan);
+  margin-bottom:1.2rem;
+}
+
+.coin-area{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:1rem;
+}
+.coin{
+  width:80px; height:80px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--font-mono);
+  font-size:1.4rem;
+  font-weight:500;
+  cursor:pointer;
+  transition:all .3s ease;
+  border:2px solid rgba(212,168,83,.3);
+  background:rgba(212,168,83,.05);
+  color:var(--gold);
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.coin:hover{
+  border-color:rgba(212,168,83,.6);
+  background:rgba(212,168,83,.1);
+  transform:scale(1.05);
+}
+.coin:active{
+  transform:scale(.95);
+}
+.coin.flip{
+  animation:coinFlip .4s ease;
+}
+@keyframes coinFlip{
+  0%{transform:rotateX(0)}
+  50%{transform:rotateX(180deg) scale(.9)}
+  100%{transform:rotateX(360deg)}
+}
+
+.coin-results{
+  display:flex;
+  gap:4px;
+  flex-wrap:wrap;
+  justify-content:center;
+  max-width:20rem;
+  min-height:24px;
+}
+.coin-results .pip{
+  width:8px; height:8px;
+  border-radius:50%;
+  transition:all .2s ease;
+}
+.coin-results .pip.h{background:var(--gold);box-shadow:0 0 4px rgba(212,168,83,.4)}
+.coin-results .pip.t{background:var(--cyan);box-shadow:0 0 4px rgba(94,196,212,.4)}
+
+.entropy-bar{
+  margin-top:1rem;
+  display:flex;
+  align-items:center;
+  gap:.8rem;
+}
+.entropy-bar .bar-track{
+  flex:1;
+  height:6px;
+  background:rgba(255,255,255,.04);
+  border-radius:3px;
+  overflow:hidden;
+  position:relative;
+}
+.entropy-bar .bar-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--cyan),var(--gold));
+  border-radius:3px;
+  transition:width .3s ease;
+}
+.entropy-bar .bar-val{
+  font-family:var(--font-mono);
+  font-size:.7rem;
+  color:var(--heading);
+  min-width:5ch;
+  text-align:right;
+}
+.entropy-bar .bar-label{
+  font-family:var(--font-mono);
+  font-size:.55rem;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--muted);
+  min-width:6ch;
+}
+
+.coin-stats{
+  display:flex;
+  gap:1.5rem;
+  justify-content:center;
+  margin-top:.6rem;
+}
+.coin-stats span{
+  font-family:var(--font-mono);
+  font-size:.6rem;
+  color:var(--muted);
+  letter-spacing:.05em;
+}
+
+.reset-btn{
+  font-family:var(--font-mono);
+  font-size:.55rem;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--muted);
+  background:transparent;
+  border:1px solid var(--border);
+  padding:.35rem .8rem;
+  border-radius:2px;
+  cursor:pointer;
+  transition:all .2s;
+  margin-top:.5rem;
+}
+.reset-btn:hover{color:var(--text);border-color:rgba(255,255,255,.15)}
+
+/* Section divider */
+.sec-divider{
+  width:100%;max-width:6rem;height:1px;margin:0 auto;
+  background:linear-gradient(90deg,transparent,rgba(212,168,83,.18),transparent);
+  position:relative;
+}
+.sec-divider::after{
+  content:'';position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:4px;height:4px;border-radius:50%;
+  background:var(--gold);
+  box-shadow:0 0 8px rgba(212,168,83,.3);
+}
+
+/* ─── Floating section nav ─── */
+#sec-nav{
+  position:fixed;right:1.2rem;top:50%;transform:translateY(-50%);
+  z-index:990;display:flex;flex-direction:column;gap:.45rem;
+}
+.nav-pip{
+  width:6px;height:6px;border-radius:50%;
+  border:1.5px solid rgba(255,255,255,.12);background:transparent;
+  cursor:pointer;transition:all .3s;
+  position:relative;
+}
+.nav-pip:hover{border-color:rgba(255,255,255,.35)}
+.nav-pip.active{
+  background:var(--gold);border-color:var(--gold);
+  box-shadow:0 0 6px rgba(212,168,83,.3);
+}
+.nav-pip .pip-label{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  font-family:var(--font-mono);font-size:.45rem;letter-spacing:.06em;
+  color:var(--muted);white-space:nowrap;
+  opacity:0;transition:opacity .2s;pointer-events:none;
+}
+.nav-pip:hover .pip-label{opacity:1}
+
+@media(max-width:768px){#sec-nav{display:none}}
+
+/* ═══════════════════════════════════════════
+   §2 — INTERACTIVE BLOCH SPHERE
+   ═══════════════════════════════════════════ */
+.bloch-lab{
+  margin:2.5rem 0;
+  padding:0;
+  background:rgba(255,255,255,.01);
+  border:1px solid var(--border);
+  border-radius:6px;
+  overflow:hidden;
+}
+.bloch-lab-header{
+  padding:1rem 1.5rem .6rem;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.bloch-lab-header .demo-title{
+  font-family:var(--font-mono);
+  font-size:.6rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--cyan);
+}
+.bloch-lab-header .demo-hint{
+  font-family:var(--font-mono);
+  font-size:.5rem;
+  letter-spacing:.1em;
+  color:var(--muted);
+}
+
+.bloch-canvas-wrap{
+  position:relative;
+  width:100%;
+  aspect-ratio:4/3;
+  max-height:480px;
+  cursor:grab;
+}
+.bloch-canvas-wrap:active{cursor:grabbing}
+.bloch-canvas-wrap canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+}
+
+.bloch-controls{
+  padding:1rem 1.5rem 1.2rem;
+  display:flex;
+  flex-direction:column;
+  gap:.8rem;
+}
+
+.bloch-slider-row{
+  display:flex;
+  align-items:center;
+  gap:.8rem;
+}
+.bloch-slider-row label{
+  font-family:var(--font-mono);
+  font-size:.65rem;
+  letter-spacing:.08em;
+  color:var(--muted);
+  min-width:2rem;
+}
+.bloch-slider-row input[type="range"]{
+  flex:1;
+  -webkit-appearance:none;
+  appearance:none;
+  height:4px;
+  background:rgba(255,255,255,.06);
+  border-radius:2px;
+  outline:none;
+}
+.bloch-slider-row input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:14px; height:14px;
+  border-radius:50%;
+  background:var(--gold);
+  cursor:pointer;
+  box-shadow:0 0 8px rgba(212,168,83,.3);
+}
+.bloch-slider-row input[type="range"]::-moz-range-thumb{
+  width:14px; height:14px;
+  border-radius:50%;
+  background:var(--gold);
+  cursor:pointer;
+  border:none;
+  box-shadow:0 0 8px rgba(212,168,83,.3);
+}
+.bloch-slider-row .slider-val{
+  font-family:var(--font-mono);
+  font-size:.65rem;
+  color:var(--heading);
+  min-width:4.5ch;
+  text-align:right;
+}
+
+.state-readout{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:.3rem;
+  font-family:var(--font-mono);
+  font-size:.85rem;
+  color:var(--heading);
+  padding:.5rem 0;
+  letter-spacing:.02em;
+}
+.state-readout .ket{
+  color:var(--muted);
+}
+.state-readout .amp-0{
+  color:var(--cyan);
+}
+.state-readout .amp-1{
+  color:var(--magenta);
+}
+
+.prob-bar-row{
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+  padding:0 .2rem;
+}
+.prob-bar-row .prob-label{
+  font-family:var(--font-mono);
+  font-size:.55rem;
+  letter-spacing:.06em;
+  min-width:3.5ch;
+}
+.prob-bar-row .prob-label.c0{color:var(--cyan)}
+.prob-bar-row .prob-label.c1{color:var(--magenta)}
+.prob-bar-row .prob-track{
+  flex:1;
+  height:5px;
+  background:rgba(255,255,255,.03);
+  border-radius:3px;
+  overflow:hidden;
+}
+.prob-bar-row .prob-fill-0{
+  height:100%;
+  background:var(--cyan);
+  border-radius:3px;
+  transition:width .15s ease;
+  opacity:.5;
+}
+.prob-bar-row .prob-fill-1{
+  height:100%;
+  background:var(--magenta);
+  border-radius:3px;
+  transition:width .15s ease;
+  opacity:.5;
+}
+.prob-bar-row .prob-pct{
+  font-family:var(--font-mono);
+  font-size:.55rem;
+  color:var(--muted);
+  min-width:4ch;
+  text-align:right;
+}
+
+.preset-btns{
+  display:flex;
+  gap:.4rem;
+  flex-wrap:wrap;
+  justify-content:center;
+  padding:.3rem 0;
+}
+.preset-btn{
+  font-family:var(--font-mono);
+  font-size:.55rem;
+  letter-spacing:.08em;
+  color:var(--muted);
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--border);
+  padding:.3rem .6rem;
+  border-radius:2px;
+  cursor:pointer;
+  transition:all .2s;
+}
+.preset-btn:hover{
+  color:var(--heading);
+  border-color:rgba(255,255,255,.15);
+  background:rgba(255,255,255,.05);
+}
+
+/* Comparison side-by-side */
+.compare-row{
+  display:flex;
+  gap:1.5rem;
+  margin:2.5rem 0;
+}
+.compare-card{
+  flex:1;
+  padding:1.4rem;
+  border-radius:4px;
+  border:1px solid var(--border);
+}
+.compare-card.classical{
+  background:rgba(94,196,212,.03);
+  border-color:rgba(94,196,212,.12);
+}
+.compare-card.quantum{
+  background:rgba(212,168,83,.03);
+  border-color:rgba(212,168,83,.12);
+}
+.compare-card h4{
+  font-family:var(--font-mono);
+  font-size:.6rem;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  margin-bottom:.8rem;
+}
+.compare-card.classical h4{color:var(--cyan)}
+.compare-card.quantum h4{color:var(--gold)}
+.compare-card p{
+  font-size:.95rem;
+  line-height:1.6;
+  margin-bottom:.5rem;
+}
+.compare-card .compare-visual{
+  text-align:center;
+  margin-top:.8rem;
+}
+.compare-card .compare-visual canvas{
+  display:inline-block;
+}
+
+@media(max-width:640px){
+  .compare-row{flex-direction:column;gap:1rem}
+  .compare-card{padding:1rem}
+  .bloch-canvas-wrap{aspect-ratio:1/1}
+  .bloch-controls{padding:.8rem 1rem 1rem}
+  .preset-btns{gap:.3rem}
+}
+
+/* ═══════════════════════════════════════════
+   §3 — MEASUREMENT SIMULATOR
+   ═══════════════════════════════════════════ */
+.measure-lab{
+  margin:2.5rem 0;
+  padding:0;
+  background:rgba(255,255,255,.01);
+  border:1px solid var(--border);
+  border-radius:6px;
+  overflow:hidden;
+}
+.measure-lab-header{
+  padding:1rem 1.5rem .6rem;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.measure-lab-header .demo-title{
+  font-family:var(--font-mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);
+}
+
+.measure-canvas-wrap{
+  position:relative;
+  width:100%;
+  aspect-ratio:5/3;
+  max-height:400px;
+}
+.measure-canvas-wrap canvas{
+  position:absolute;inset:0;width:100%;height:100%;
+}
+
+.measure-controls{
+  padding:1rem 1.5rem 1.2rem;
+  display:flex;flex-direction:column;gap:.8rem;align-items:center;
+}
+
+.measure-prep{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;justify-content:center;
+}
+.measure-prep label{
+  font-family:var(--font-mono);font-size:.58rem;letter-spacing:.1em;color:var(--muted);
+}
+.measure-prep input[type="range"]{
+  width:120px;
+  -webkit-appearance:none;appearance:none;height:4px;
+  background:rgba(255,255,255,.06);border-radius:2px;outline:none;
+}
+.measure-prep input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:12px;height:12px;border-radius:50%;
+  background:var(--gold);cursor:pointer;box-shadow:0 0 6px rgba(212,168,83,.3);
+}
+.measure-prep input[type="range"]::-moz-range-thumb{
+  width:12px;height:12px;border-radius:50%;
+  background:var(--gold);cursor:pointer;border:none;
+}
+.measure-prep .prep-val{
+  font-family:var(--font-mono);font-size:.65rem;color:var(--heading);min-width:3.5ch;
+}
+
+.measure-btn{
+  font-family:var(--font-mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--bg);background:var(--gold);
+  border:none;padding:.6rem 2rem;border-radius:3px;cursor:pointer;
+  transition:all .25s;position:relative;overflow:hidden;
+}
+.measure-btn:hover{
+  background:#e0b45e;box-shadow:0 0 20px rgba(212,168,83,.25);
+}
+.measure-btn:active{transform:scale(.96)}
+.measure-btn.flash{animation:btnFlash .3s ease}
+@keyframes btnFlash{
+  0%{box-shadow:0 0 0 0 rgba(212,168,83,.6)}
+  100%{box-shadow:0 0 40px 10px rgba(212,168,83,0)}
+}
+
+.measure-multi-row{
+  display:flex;gap:.5rem;align-items:center;
+}
+.measure-multi-btn{
+  font-family:var(--font-mono);font-size:.55rem;letter-spacing:.1em;
+  color:var(--muted);background:transparent;
+  border:1px solid var(--border);padding:.3rem .7rem;border-radius:2px;cursor:pointer;
+  transition:all .2s;
+}
+.measure-multi-btn:hover{color:var(--text);border-color:rgba(255,255,255,.15)}
+
+/* Histogram */
+.histogram-wrap{
+  width:100%;max-width:22rem;margin:0 auto;
+}
+.histogram-bars{
+  display:flex;align-items:flex-end;gap:2rem;justify-content:center;
+  height:120px;padding:0 1rem;
+}
+.histo-col{
+  display:flex;flex-direction:column;align-items:center;gap:.3rem;flex:1;max-width:6rem;
+}
+.histo-bar-track{
+  width:100%;height:100px;
+  display:flex;align-items:flex-end;
+  position:relative;
+}
+.histo-bar{
+  width:100%;border-radius:2px 2px 0 0;
+  transition:height .3s ease;
+  min-height:1px;
+}
+.histo-bar.bar-0{background:var(--cyan);opacity:.6}
+.histo-bar.bar-1{background:var(--magenta);opacity:.6}
+.histo-count{
+  font-family:var(--font-mono);font-size:.7rem;color:var(--heading);
+}
+.histo-label{
+  font-family:var(--font-mono);font-size:.6rem;letter-spacing:.06em;
+}
+.histo-label.c0{color:var(--cyan)}
+.histo-label.c1{color:var(--magenta)}
+.histo-pct{
+  font-family:var(--font-mono);font-size:.5rem;color:var(--muted);
+}
+
+.measure-stats{
+  text-align:center;
+  font-family:var(--font-mono);font-size:.55rem;color:var(--muted);letter-spacing:.08em;
+  margin-top:.3rem;
+}
+
+/* Collapse animation overlay */
+.collapse-overlay{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;opacity:0;
+  transition:opacity .15s;
+}
+.collapse-overlay.show{opacity:1}
+.collapse-result{
+  font-family:var(--font-mono);font-size:2.5rem;font-weight:500;
+  text-shadow:0 0 30px currentColor;
+  animation:collapseIn .4s ease;
+}
+.collapse-result.r0{color:var(--cyan)}
+.collapse-result.r1{color:var(--magenta)}
+@keyframes collapseIn{
+  0%{transform:scale(2);opacity:0}
+  60%{transform:scale(.9);opacity:1}
+  100%{transform:scale(1);opacity:1}
+}
+
+/* §3 — Prediction Game */
+.predict-game{
+  margin:2.5rem 0;
+  padding:1.5rem;
+  background:rgba(212,168,83,.03);
+  border:1px solid rgba(212,168,83,.12);
+  border-radius:6px;
+}
+.predict-game .demo-title{
+  font-family:var(--font-mono);font-size:.6rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:.8rem;
+}
+.predict-prompt{
+  font-family:var(--font-body);font-size:1.05rem;color:var(--text);
+  text-align:center;margin-bottom:1rem;
+}
+.predict-buttons{
+  display:flex;gap:.8rem;justify-content:center;margin-bottom:1rem;
+}
+.predict-btn{
+  font-family:var(--font-mono);font-size:.9rem;font-weight:500;
+  padding:.7rem 2rem;border-radius:3px;cursor:pointer;
+  transition:all .25s;border:1.5px solid;min-width:5rem;
+}
+.predict-btn.guess-0{
+  color:var(--cyan);border-color:rgba(94,196,212,.35);background:rgba(94,196,212,.05);
+}
+.predict-btn.guess-0:hover{background:rgba(94,196,212,.12);border-color:rgba(94,196,212,.6)}
+.predict-btn.guess-1{
+  color:var(--magenta);border-color:rgba(196,122,212,.35);background:rgba(196,122,212,.05);
+}
+.predict-btn.guess-1:hover{background:rgba(196,122,212,.12);border-color:rgba(196,122,212,.6)}
+.predict-btn:active{transform:scale(.95)}
+.predict-btn:disabled{opacity:.4;cursor:default;transform:none}
+
+.predict-feedback{
+  text-align:center;min-height:2.2rem;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-size:.85rem;font-weight:500;
+  transition:opacity .2s;
+}
+.predict-feedback.correct{color:#8db830}
+.predict-feedback.wrong{color:#d45454}
+
+.predict-score{
+  display:flex;gap:2rem;justify-content:center;margin-top:.8rem;
+  flex-wrap:wrap;
+}
+.predict-score .score-item{
+  text-align:center;
+}
+.predict-score .score-num{
+  font-family:var(--font-mono);font-size:1.3rem;font-weight:500;color:var(--heading);
+  display:block;
+}
+.predict-score .score-label{
+  font-family:var(--font-mono);font-size:.5rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted);display:block;margin-top:.15rem;
+}
+
+.predict-insight{
+  margin-top:1rem;text-align:center;
+  font-family:var(--font-body);font-size:.9rem;font-style:italic;
+  color:var(--muted);min-height:1.5rem;
+  transition:opacity .3s;
+}
+
+@media(max-width:640px){
+  .measure-canvas-wrap{aspect-ratio:1/1;max-height:320px}
+  .histogram-bars{height:90px;gap:1.5rem}
+  .histo-bar-track{height:70px}
+  .measure-controls{padding:.8rem 1rem 1rem}
+}
+
+/* ═══════════════════════════════════════════
+   §4 — ENTANGLEMENT
+   ═══════════════════════════════════════════ */
+.entangle-lab{
+  margin:2.5rem 0;padding:0;
+  background:rgba(255,255,255,.01);border:1px solid var(--border);border-radius:6px;overflow:hidden;
+}
+.entangle-lab-header{
+  padding:1rem 1.5rem .6rem;display:flex;align-items:center;justify-content:space-between;
+}
+.entangle-lab-header .demo-title{
+  font-family:var(--font-mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--cyan);
+}
+
+.entangle-canvas-wrap{
+  position:relative;width:100%;aspect-ratio:2/1;max-height:350px;
+}
+.entangle-canvas-wrap canvas{
+  position:absolute;inset:0;width:100%;height:100%;
+}
+
+.entangle-controls{
+  padding:1rem 1.5rem 1.2rem;display:flex;flex-direction:column;gap:.7rem;align-items:center;
+}
+
+.entangle-pair{
+  display:flex;align-items:center;gap:1.5rem;justify-content:center;flex-wrap:wrap;
+}
+.qubit-card{
+  display:flex;flex-direction:column;align-items:center;gap:.3rem;
+  padding:1rem 1.5rem;border-radius:4px;border:1px solid var(--border);
+  min-width:7rem;transition:all .3s;
+}
+.qubit-card.alice{background:rgba(94,196,212,.03);border-color:rgba(94,196,212,.15)}
+.qubit-card.bob{background:rgba(196,122,212,.03);border-color:rgba(196,122,212,.15)}
+.qubit-card.flash-0{animation:cardFlash0 .5s ease}
+.qubit-card.flash-1{animation:cardFlash1 .5s ease}
+@keyframes cardFlash0{
+  0%{box-shadow:0 0 0 0 rgba(94,196,212,.5)}100%{box-shadow:0 0 30px 5px rgba(94,196,212,0)}
+}
+@keyframes cardFlash1{
+  0%{box-shadow:0 0 0 0 rgba(196,122,212,.5)}100%{box-shadow:0 0 30px 5px rgba(196,122,212,0)}
+}
+
+.qubit-card .card-label{
+  font-family:var(--font-mono);font-size:.55rem;letter-spacing:.14em;text-transform:uppercase;
+}
+.qubit-card.alice .card-label{color:var(--cyan)}
+.qubit-card.bob .card-label{color:var(--magenta)}
+
+.qubit-card .card-result{
+  font-family:var(--font-mono);font-size:2rem;font-weight:500;color:var(--heading);
+  min-height:2.5rem;display:flex;align-items:center;justify-content:center;
+  transition:all .3s;
+}
+.qubit-card .card-result.r0{color:var(--cyan)}
+.qubit-card .card-result.r1{color:var(--magenta)}
+.qubit-card .card-result.unknown{
+  color:var(--muted);font-size:1.2rem;font-weight:300;
+}
+
+.entangle-link{
+  font-family:var(--font-mono);font-size:.55rem;color:var(--gold);
+  letter-spacing:.1em;opacity:.6;
+  display:flex;align-items:center;gap:.3rem;
+}
+.entangle-link .link-line{
+  width:30px;height:1px;background:linear-gradient(90deg,var(--cyan),var(--magenta));
+  position:relative;
+}
+.entangle-link .link-line::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,var(--cyan),var(--magenta));
+  filter:blur(3px);opacity:.5;
+}
+
+.entangle-measure-btn{
+  font-family:var(--font-mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--bg);background:var(--cyan);
+  border:none;padding:.6rem 2rem;border-radius:3px;cursor:pointer;
+  transition:all .25s;
+}
+.entangle-measure-btn:hover{background:#7ad4e0;box-shadow:0 0 20px rgba(94,196,212,.25)}
+.entangle-measure-btn:active{transform:scale(.96)}
+
+.entangle-state-select{
+  display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center;
+}
+.estate-btn{
+  font-family:var(--font-mono);font-size:.55rem;letter-spacing:.06em;
+  color:var(--muted);background:rgba(255,255,255,.03);
+  border:1px solid var(--border);padding:.3rem .6rem;border-radius:2px;cursor:pointer;transition:all .2s;
+}
+.estate-btn:hover{color:var(--heading);border-color:rgba(255,255,255,.15)}
+.estate-btn.active{color:var(--gold);border-color:rgba(212,168,83,.4);background:rgba(212,168,83,.06)}
+
+/* Correlation tracker */
+.corr-tracker{
+  width:100%;max-width:24rem;
+}
+.corr-row{
+  display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;
+}
+.corr-label{
+  font-family:var(--font-mono);font-size:.5rem;letter-spacing:.08em;color:var(--muted);
+  min-width:8rem;text-align:right;
+}
+.corr-track{
+  flex:1;height:4px;background:rgba(255,255,255,.03);border-radius:2px;overflow:hidden;
+}
+.corr-fill{
+  height:100%;border-radius:2px;transition:width .3s ease;
+}
+.corr-fill.same{background:var(--gold);opacity:.6}
+.corr-fill.diff{background:var(--cyan);opacity:.6}
+.corr-val{
+  font-family:var(--font-mono);font-size:.5rem;color:var(--heading);min-width:3.5ch;text-align:right;
+}
+.corr-summary{
+  text-align:center;margin-top:.6rem;
+  font-family:var(--font-mono);font-size:.55rem;color:var(--muted);letter-spacing:.06em;
+}
+
+/* Bell test mini-game */
+.bell-game{
+  margin:2.5rem 0;padding:1.5rem;
+  background:rgba(196,122,212,.03);border:1px solid rgba(196,122,212,.12);border-radius:6px;
+}
+.bell-game .demo-title{
+  font-family:var(--font-mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--magenta);margin-bottom:.6rem;
+}
+.bell-desc{
+  font-size:.95rem;color:var(--text);margin-bottom:1rem;text-align:center;
+}
+.bell-axes{
+  display:flex;gap:1rem;justify-content:center;margin-bottom:1rem;flex-wrap:wrap;
+}
+.bell-axis-card{
+  display:flex;flex-direction:column;align-items:center;gap:.3rem;
+  padding:.8rem 1.2rem;border-radius:4px;border:1px solid var(--border);
+  background:rgba(255,255,255,.02);min-width:5rem;
+}
+.bell-axis-card .ba-label{
+  font-family:var(--font-mono);font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+}
+.bell-axis-card select{
+  font-family:var(--font-mono);font-size:.7rem;color:var(--heading);
+  background:rgba(255,255,255,.05);border:1px solid var(--border);
+  padding:.25rem .4rem;border-radius:2px;outline:none;cursor:pointer;
+}
+.bell-axis-card select option{background:var(--bg);color:var(--text)}
+
+.bell-run-btn{
+  display:block;margin:0 auto 1rem;
+  font-family:var(--font-mono);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--bg);background:var(--magenta);
+  border:none;padding:.5rem 1.5rem;border-radius:3px;cursor:pointer;transition:all .25s;
+}
+.bell-run-btn:hover{background:#d48ae0;box-shadow:0 0 16px rgba(196,122,212,.25)}
+
+.bell-results{
+  display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;
+}
+.bell-stat{text-align:center}
+.bell-stat .bs-num{
+  font-family:var(--font-mono);font-size:1.3rem;font-weight:500;color:var(--heading);display:block;
+}
+.bell-stat .bs-label{
+  font-family:var(--font-mono);font-size:.48rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);display:block;margin-top:.1rem;
+}
+.bell-verdict{
+  text-align:center;margin-top:1rem;font-family:var(--font-body);font-size:.95rem;
+  color:var(--gold);font-style:italic;min-height:1.5rem;
+}
+
+@media(max-width:640px){
+  .entangle-canvas-wrap{aspect-ratio:3/2;max-height:260px}
+  .entangle-pair{gap:.8rem}
+  .qubit-card{padding:.7rem 1rem;min-width:5.5rem}
+  .qubit-card .card-result{font-size:1.5rem}
+  .bell-axes{gap:.5rem}
+  .bell-axis-card{padding:.5rem .8rem}
+}
+
+/* ═══════════════════════════════════════════
+   §5 — QUANTUM TELEPORTATION
+   ═══════════════════════════════════════════ */
+.teleport-lab{
+  margin:2.5rem 0;padding:0;
+  background:rgba(255,255,255,.01);border:1px solid var(--border);border-radius:6px;overflow:hidden;
+}
+.teleport-lab-header{
+  padding:1rem 1.5rem .6rem;display:flex;align-items:center;justify-content:space-between;
+}
+.teleport-lab-header .demo-title{
+  font-family:var(--font-mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+}
+
+.teleport-canvas-wrap{
+  position:relative;width:100%;aspect-ratio:5/2;max-height:320px;
+}
+.teleport-canvas-wrap canvas{
+  position:absolute;inset:0;width:100%;height:100%;
+}
+
+.teleport-controls{
+  padding:1rem 1.5rem 1.4rem;display:flex;flex-direction:column;gap:.8rem;align-items:center;
+}
+
+.teleport-state-row{
+  display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;justify-content:center;
+}
+.teleport-state-row label{
+  font-family:var(--font-mono);font-size:.58rem;letter-spacing:.1em;color:var(--muted);
+}
+.teleport-state-row input[type="range"]{
+  width:100px;-webkit-appearance:none;appearance:none;height:4px;
+  background:rgba(255,255,255,.06);border-radius:2px;outline:none;
+}
+.teleport-state-row input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:12px;height:12px;border-radius:50%;
+  background:var(--gold);cursor:pointer;box-shadow:0 0 6px rgba(212,168,83,.3);
+}
+.teleport-state-row input[type="range"]::-moz-range-thumb{
+  width:12px;height:12px;border-radius:50%;background:var(--gold);cursor:pointer;border:none;
+}
+.teleport-state-row .ts-val{
+  font-family:var(--font-mono);font-size:.65rem;color:var(--heading);min-width:3ch;
+}
+
+/* Protocol steps */
+.protocol-steps{
+  width:100%;max-width:32rem;
+}
+.proto-step{
+  display:flex;align-items:flex-start;gap:.8rem;
+  padding:.6rem .8rem;border-radius:4px;margin-bottom:.3rem;
+  transition:all .4s ease;opacity:.35;
+}
+.proto-step.active{
+  opacity:1;background:rgba(255,255,255,.025);
+}
+.proto-step.done{
+  opacity:.6;
+}
+.proto-step .step-num{
+  font-family:var(--font-mono);font-size:.6rem;font-weight:500;
+  color:var(--gold);min-width:1.5rem;padding-top:.15rem;
+}
+.proto-step .step-text{
+  font-family:var(--font-body);font-size:.92rem;color:var(--text);line-height:1.5;
+}
+.proto-step .step-text strong{color:var(--heading)}
+.proto-step .step-text .hl-cyan{color:var(--cyan)}
+.proto-step .step-text .hl-mag{color:var(--magenta)}
+.proto-step .step-text .hl-gold{color:var(--gold)}
+
+.teleport-run-btn{
+  font-family:var(--font-mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--bg);background:var(--gold);
+  border:none;padding:.6rem 2rem;border-radius:3px;cursor:pointer;transition:all .25s;
+}
+.teleport-run-btn:hover{background:#e0b45e;box-shadow:0 0 20px rgba(212,168,83,.25)}
+.teleport-run-btn:active{transform:scale(.96)}
+.teleport-run-btn:disabled{opacity:.4;cursor:default}
+
+.teleport-result{
+  text-align:center;min-height:2rem;
+  font-family:var(--font-mono);font-size:.75rem;
+  color:var(--gold);letter-spacing:.05em;
+  transition:opacity .3s;
+}
+
+/* Step timeline dots */
+.step-dots{
+  display:flex;gap:.5rem;justify-content:center;margin-bottom:.5rem;
+}
+.step-dot{
+  width:8px;height:8px;border-radius:50%;
+  border:1.5px solid var(--border);background:transparent;
+  transition:all .3s;
+}
+.step-dot.done{background:var(--gold);border-color:var(--gold);box-shadow:0 0 6px rgba(212,168,83,.3)}
+.step-dot.active{border-color:var(--gold);box-shadow:0 0 8px rgba(212,168,83,.2)}
+
+@media(max-width:640px){
+  .teleport-canvas-wrap{aspect-ratio:3/2;max-height:240px}
+  .proto-step{padding:.4rem .5rem;gap:.5rem}
+  .proto-step .step-text{font-size:.85rem}
+}
+
+/* ═══════════════════════════════════════════
+   §6 — THE QUANTUM FUTURE (TIMELINE + CARDS)
+   ═══════════════════════════════════════════ */
+.timeline{
+  position:relative;padding-left:2rem;margin:2.5rem 0;
+}
+.timeline::before{
+  content:'';position:absolute;left:.45rem;top:0;bottom:0;
+  width:1px;background:var(--border);
+}
+.tl-item{
+  position:relative;margin-bottom:1.8rem;padding-left:1rem;
+}
+.tl-item::before{
+  content:'';position:absolute;left:-1.65rem;top:.45rem;
+  width:8px;height:8px;border-radius:50%;
+  border:1.5px solid var(--gold);background:var(--bg);
+  transition:all .3s;
+}
+.tl-item.visible::before{
+  background:var(--gold);box-shadow:0 0 8px rgba(212,168,83,.3);
+}
+.tl-year{
+  font-family:var(--font-mono);font-size:.6rem;letter-spacing:.14em;
+  color:var(--gold);display:block;margin-bottom:.2rem;
+}
+.tl-text{
+  font-size:.98rem;line-height:1.6;color:var(--text);
+}
+.tl-text strong{color:var(--heading)}
+
+/* Application cards */
+.app-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:1rem;margin:2.5rem 0;
+}
+.app-card{
+  padding:1.3rem;border-radius:4px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.015);
+  transition:all .3s;
+}
+.app-card:hover{
+  border-color:rgba(212,168,83,.2);
+  background:rgba(255,255,255,.025);
+}
+.app-card .card-icon{
+  font-size:1.4rem;margin-bottom:.6rem;display:block;
+}
+.app-card h4{
+  font-family:var(--font-display);font-size:1.1rem;font-weight:400;
+  color:var(--heading);margin-bottom:.4rem;
+}
+.app-card p{
+  font-size:.88rem;line-height:1.55;color:var(--muted);margin:0;
+}
+
+/* Qubit race game */
+.race-game{
+  margin:2.5rem 0;padding:1.5rem;
+  background:rgba(94,196,212,.03);border:1px solid rgba(94,196,212,.12);border-radius:6px;
+}
+.race-game .demo-title{
+  font-family:var(--font-mono);font-size:.6rem;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--cyan);margin-bottom:.8rem;
+}
+.race-desc{font-size:.95rem;color:var(--text);margin-bottom:1rem;text-align:center}
+
+.race-tracks{
+  display:flex;flex-direction:column;gap:.8rem;margin-bottom:1rem;
+}
+.race-track{
+  display:flex;align-items:center;gap:.8rem;
+}
+.race-label{
+  font-family:var(--font-mono);font-size:.55rem;letter-spacing:.1em;
+  color:var(--muted);min-width:5rem;text-align:right;
+}
+.race-bar{
+  flex:1;height:24px;background:rgba(255,255,255,.03);border-radius:3px;
+  position:relative;overflow:hidden;
+}
+.race-fill{
+  height:100%;border-radius:3px;transition:width .15s ease;
+  display:flex;align-items:center;padding-left:.5rem;
+  font-family:var(--font-mono);font-size:.5rem;color:rgba(255,255,255,.8);
+}
+.race-fill.classical{background:rgba(94,196,212,.25)}
+.race-fill.quantum{background:rgba(212,168,83,.3)}
+.race-pct{
+  font-family:var(--font-mono);font-size:.55rem;color:var(--muted);min-width:3.5ch;
+}
+
+.race-controls{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap}
+.race-btn{
+  font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--bg);background:var(--cyan);
+  border:none;padding:.5rem 1.5rem;border-radius:3px;cursor:pointer;transition:all .25s;
+}
+.race-btn:hover{background:#7ad4e0;box-shadow:0 0 16px rgba(94,196,212,.2)}
+.race-btn:disabled{opacity:.4;cursor:default}
+.race-result{
+  text-align:center;margin-top:.8rem;
+  font-family:var(--font-mono);font-size:.65rem;color:var(--gold);
+  min-height:1.5rem;letter-spacing:.05em;
+}
+
+/* ═══════════════════════════════════════════
+   §7 — REFERENCES
+   ═══════════════════════════════════════════ */
+.ref-list{
+  margin:1.5rem 0;padding:0;list-style:none;
+  counter-reset:ref;
+}
+.ref-list li{
+  counter-increment:ref;
+  position:relative;
+  padding-left:2.2rem;
+  margin-bottom:1rem;
+  font-size:.88rem;
+  line-height:1.6;
+  color:var(--muted);
+}
+.ref-list li::before{
+  content:'[' counter(ref) ']';
+  position:absolute;left:0;top:0;
+  font-family:var(--font-mono);font-size:.65rem;
+  color:var(--gold);letter-spacing:.03em;
+  min-width:1.8rem;
+}
+.ref-list li strong{color:var(--text);font-weight:500}
+.ref-list li em{color:var(--text);font-style:italic}
+
+@media(max-width:640px){
+  .app-grid{grid-template-columns:1fr}
+  .timeline{padding-left:1.5rem}
+  .race-track{flex-wrap:wrap}
+  .race-label{min-width:4rem;font-size:.5rem}
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════ */
+@media(max-width:640px){
+  .hero-content{padding:0 1.2rem}
+  .hero-hint{bottom:1.5rem}
+  .floating-badge{bottom:1rem;left:1rem;font-size:.52rem}
+  section{padding:4rem 1.2rem}
+  .bit-demo{padding:1.2rem}
+  .bit-toggle-row{gap:1.2rem}
+  .bit-value{font-size:2rem}
+  .entropy-demo{padding:1.2rem}
+  .coin{width:64px;height:64px;font-size:1.1rem}
+  .quote-box{font-size:1.05rem;padding:1rem 1.2rem}
+  footer{padding:3rem 1.2rem 4rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════ -->
+<div id="hero">
+  <canvas id="hero-bg"></canvas>
+  <canvas id="hero-sphere"></canvas>
+
+  <div class="hero-content">
+    <p class="hero-kicker">Mellow Math · 양자 정보</p>
+    <h1 class="hero-title">선택을 거부한<br><em>비트</em></h1>
+    <p class="hero-subtitle">고전적인 비트는 0 아니면 1 — 닫힌 문 아니면 열린 문. 양자 비트는 구의 표면 위에서 모든 가능성을 품은 채, 우주가 스스로 결정하는 순간까지 진실과 진실 사이에 머무릅니다.</p>
+    <button class="hero-start" onclick="document.getElementById('sec-bit').scrollIntoView({behavior:'smooth'})">
+      읽기 시작 <span class="arrow">↓</span>
+    </button>
+  </div>
+
+  <p class="hero-hint"><span>구를 드래그하세요 · 스크롤하여 탐험</span></p>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     SECTION NAV
+     ═══════════════════════════════════════════ -->
+<nav id="sec-nav">
+  <div class="nav-dot active" onclick="document.getElementById('hero').scrollIntoView({behavior:'smooth'})"><span class="nav-tip">처음</span></div>
+  <div class="nav-dot" onclick="document.getElementById('sec-bit').scrollIntoView({behavior:'smooth'})"><span class="nav-tip">§1 비트</span></div>
+  <div class="nav-dot" onclick="document.getElementById('sec-qubit').scrollIntoView({behavior:'smooth'})"><span class="nav-tip">§2 큐비트</span></div>
+  <div class="nav-dot" onclick="document.getElementById('sec-measure').scrollIntoView({behavior:'smooth'})"><span class="nav-tip">§3 측정</span></div>
+  <div class="nav-dot" onclick="document.getElementById('sec-entangle').scrollIntoView({behavior:'smooth'})"><span class="nav-tip">§4 얽힘</span></div>
+  <div class="nav-dot" onclick="document.getElementById('sec-teleport').scrollIntoView({behavior:'smooth'})"><span class="nav-tip">§5 순간이동</span></div>
+  <div class="nav-dot" onclick="document.getElementById('sec-future').scrollIntoView({behavior:'smooth'})"><span class="nav-tip">§6 미래</span></div>
+  <div class="nav-dot" onclick="document.getElementById('sec-refs').scrollIntoView({behavior:'smooth'})"><span class="nav-tip">§7 참고문헌</span></div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     EPIGRAPH
+     ═══════════════════════════════════════════ -->
+<div class="epigraph">
+  <p>양자역학에 충격받지 않은 사람은 양자역학을 이해하지 못한 것이다.</p>
+  <span class="ep-attr">— 닐스 보어</span>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     §1 — WHAT IS A BIT?
+     ═══════════════════════════════════════════ -->
+<section id="sec-bit">
+<div class="reveal">
+  <p class="section-num">§ 1 — 비트란 무엇인가</p>
+  <h2>가장 작은 <span class="accent-gold">결정</span></h2>
+
+  <p class="drop-cap">당신이 만져본 모든 디지털 — 사진, 음악, 메시지 — 은 같은 작은 재료로 이루어져 있습니다. 두 가지 가능성 사이의 선택. 예 또는 아니오. 켜짐 또는 꺼짐. 0 또는 1. 이것이 <em>비트(bit)</em>이며, 정보 시대의 원자입니다.</p>
+
+  <div class="try-this"><span class="try-icon">↓</span><p>스위치를 눌러보세요.</p></div>
+</div>
+
+<div class="reveal bit-demo" id="bit-demo-1">
+  <div class="bit-toggle-row">
+    <div class="bit-switch" id="classicalSwitch" onclick="toggleBit()">
+      <div class="knob"></div>
+    </div>
+    <div class="bit-value" id="bitValue">0</div>
+  </div>
+  <p class="bit-label">고전적 비트 — 정확히 두 상태, 그 사이는 없다</p>
+</div>
+
+<div class="reveal">
+  <p>그 딸깍 — 두 상태 사이의 단호한 전환 — 이것이 지금까지 만들어진 모든 컴퓨터의 기초입니다. 1948년, 벨 연구소의 클로드 섀넌은 이 아이디어에 이름과 수학적 체계를 부여했습니다. 그는 이 이론을 <em>정보 이론</em>이라 불렀고, 기본 단위를 <em>비트(bit)</em> — "binary digit"의 줄임말 — 라 명명했습니다.</p>
+
+  <div class="quote-box">
+    통신의 근본적인 문제는 한 지점에서 선택된 메시지를 다른 지점에서 정확하게, 또는 근사적으로 재현하는 것이다.
+    <span class="attribution">— 클로드 섀넌, "통신의 수학적 이론" (1948)</span>
+  </div>
+
+  <p>섀넌의 통찰은 혁명적이었습니다. 정보는 질량이나 온도처럼 측정할 수 있다는 것. 공정한 동전 던지기는 정확히 1비트의 정보를 전달합니다 — 하나의 이진 선택. 8비트는 1바이트, 256개의 문자를 담기에 충분합니다. 여러분이 본 모든 디지털은 비트의 탑입니다.</p>
+</div>
+
+<div class="reveal bit-demo" id="bit-stream-demo">
+  <p class="bit-label" style="margin-bottom:.8rem">셀을 클릭하여 토글 — 이진수를 쓰고 있습니다</p>
+  <div class="bit-stream" id="bitStream"></div>
+  <div class="byte-info" style="margin-top:1rem">
+    <span class="big-num" id="byteDecimal">0</span>
+    <span class="big-label">첫 8비트의 십진수 값</span>
+  </div>
+</div>
+
+<div class="reveal">
+  <p>그런데 여기에 미묘한 것이 있습니다. 정보는 답 자체가 아니라 <em>놀라움</em>에 관한 것입니다. 동전이 항상 앞면이 나온다면, 던져봐야 새로운 것을 알 수 없습니다. 섀넌은 이것을 아름다운 양으로 포착했습니다: <strong>엔트로피</strong>, 정보원이 품고 있는 놀라움의 척도.</p>
+
+  <div class="try-this"><span class="try-icon">↓</span><p>아래 동전을 던지며 엔트로피가 쌓이는 것을 지켜보세요.</p></div>
+</div>
+
+<div class="reveal entropy-demo" id="entropy-demo">
+  <p class="demo-title">인터랙티브 · 섀넌 엔트로피</p>
+  <div class="coin-area">
+    <div class="coin" id="coinFlip" onclick="flipCoin()">던지기</div>
+    <div class="coin-results" id="coinResults"></div>
+    <div class="coin-stats">
+      <span id="coinH">앞면: 0</span>
+      <span id="coinT">뒷면: 0</span>
+    </div>
+    <div class="entropy-bar">
+      <span class="bar-label">엔트로피</span>
+      <div class="bar-track"><div class="bar-fill" id="entropyFill" style="width:0%"></div></div>
+      <span class="bar-val" id="entropyVal">0.000</span>
+    </div>
+    <button class="reset-btn" onclick="resetCoin()">초기화</button>
+  </div>
+</div>
+
+<div class="reveal">
+  <div class="info-box">
+    <span class="box-label">핵심 아이디어</span>
+    공정한 동전의 엔트로피는 최대값 1비트입니다. 편향된 동전은 엔트로피가 낮습니다 — 놀라움이 적습니다. 섀넌의 엔트로피 공식, <em>H = −Σ p log₂ p</em>는 매번의 결과가 평균적으로 얼마나 많은 정보를 주는지 정확히 측정합니다. 이 공식은 통계역학에서도 등장하는데, 볼츠만이 물리계의 무질서도를 기술하는 데 사용한 바로 그 공식입니다.
+  </div>
+
+  <p>고전적 비트는 아름답도록 단순합니다: 확정된 0 또는 확정된 1, 그 사이는 없습니다. 모든 고전 컴퓨팅 — 알고리즘, 신경망, 화면의 모든 픽셀 — 은 수조 개의 이 작은 양자택일로 이루어져 있습니다.</p>
+
+  <p>그러나 1981년, 리처드 파인만이 모든 것을 바꿀 질문을 던졌습니다: 정보가 양자역학의 법칙을 따르도록 하면 어떨까?</p>
+
+  <div class="quote-box">
+    자연은 고전적이지 않다, 젠장. 자연을 시뮬레이션하려면 양자역학적으로 해야 한다.
+    <span class="attribution">— 리처드 파인만, MIT 기조강연 (1981)</span>
+  </div>
+
+  <p>비트가 0<em>이면서 동시에</em> 1이 될 수 있다면? 스위치 대신 구 전체를 방황할 수 있게 한다면?</p>
+
+  <p style="color:var(--muted);font-style:italic;margin-top:2rem;text-align:center;">어둠 속에 빛나는 구를 상상해보세요. 그 표면 위의 모든 점은 서로 다른 종류의 '아마도'입니다.</p>
+</div>
+
+<div class="sec-divider" style="margin-top:3rem"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     §2 — THE QUBIT: LIVING ON A SPHERE
+     ═══════════════════════════════════════════ -->
+<section id="sec-qubit">
+<div class="reveal">
+  <p class="section-num">§ 2 — 큐비트</p>
+  <h2><span class="accent-gold">구</span> 위에서 사는 비트</h2>
+
+  <p class="drop-cap">고전적 비트는 두 끝점 0과 1을 가진 선분 위에 삽니다. 양자 비트 — <em>큐비트(qubit)</em> — 는 구의 표면 위에 삽니다. 이것은 비유가 아닙니다. 양자 상태의 실제 기하학입니다.</p>
+
+  <p>큐비트는 |0⟩이 될 수도, |1⟩이 될 수도, 또는 — 여기서 모든 것이 바뀝니다 — 둘의 부드러운 혼합이 될 수도 있습니다. 물리학자들은 이것을 <em>중첩(superposition)</em>이라 부릅니다:</p>
+</div>
+
+<div class="reveal eq-block">
+  <span class="eq-main">
+    |ψ⟩ = cos(<span style="color:var(--gold)">θ</span>/2) |0⟩ + e<sup>i<span style="color:var(--gold)">φ</span></sup> sin(<span style="color:var(--gold)">θ</span>/2) |1⟩
+  </span>
+  <p class="eq-note">두 개의 각도, 하나의 구 — 모든 큐비트 상태는 공간 속의 방향입니다.</p>
+</div>
+
+<div class="reveal">
+  <p>물리학자 펠릭스 블로흐의 이름을 딴 <strong>블로흐 구</strong>는 큐비트의 집입니다. 북극은 |0⟩, 남극은 |1⟩. 적도에는 모든 동일 중첩 상태가 놓여 있습니다 — 정확히 반은 이것, 반은 저것이면서, 오직 <em>위상(phase)</em>만 다른 상태들. 위상은 큐비트들이 상호작용할 때만 모습을 드러내는 보이지 않는 비틀림입니다.</p>
+
+  <div class="try-this"><span class="try-icon">↓</span><p>슬라이더를 움직여보세요 — 구의 표면 위로 큐비트를 조종하고 있습니다.</p></div>
+</div>
+
+<div class="reveal bloch-lab" id="blochLab">
+  <div class="bloch-lab-header">
+    <span class="demo-title">인터랙티브 · 블로흐 구</span>
+    <span class="demo-hint">구를 드래그하여 회전</span>
+  </div>
+
+  <div class="bloch-canvas-wrap" id="blochWrap">
+    <canvas id="bloch2"></canvas>
+  </div>
+
+  <div class="bloch-controls">
+    <div class="state-readout" id="stateReadout">
+      <span class="ket">|ψ⟩ = </span>
+      <span class="amp-0" id="ampA">1.000</span>
+      <span class="ket"> |0⟩ + </span>
+      <span class="amp-1" id="ampB">0.000</span>
+      <span class="ket"> |1⟩</span>
+    </div>
+    <div class="bloch-slider-row"><label>θ</label><input type="range" id="thetaSlider" min="0" max="314" value="0" step="1"><span class="slider-val" id="thetaVal">0°</span></div>
+    <div class="bloch-slider-row"><label>φ</label><input type="range" id="phiSlider" min="0" max="628" value="0" step="1"><span class="slider-val" id="phiVal">0°</span></div>
+    <div class="prob-bar-row"><span class="prob-label c0">|0⟩</span><div class="prob-track"><div class="prob-fill-0" id="prob0Fill" style="width:100%"></div></div><span class="prob-pct" id="prob0Pct">100%</span></div>
+    <div class="prob-bar-row"><span class="prob-label c1">|1⟩</span><div class="prob-track"><div class="prob-fill-1" id="prob1Fill" style="width:0%"></div></div><span class="prob-pct" id="prob1Pct">0%</span></div>
+    <div class="preset-btns">
+      <button class="preset-btn" onclick="setBlochState(0, 0)">|0⟩</button>
+      <button class="preset-btn" onclick="setBlochState(Math.PI, 0)">|1⟩</button>
+      <button class="preset-btn" onclick="setBlochState(Math.PI/2, 0)">|+⟩</button>
+      <button class="preset-btn" onclick="setBlochState(Math.PI/2, Math.PI)">|−⟩</button>
+      <button class="preset-btn" onclick="setBlochState(Math.PI/2, Math.PI/2)">|i⟩</button>
+      <button class="preset-btn" onclick="setBlochState(Math.PI/2, 3*Math.PI/2)">|−i⟩</button>
+    </div>
+  </div>
+</div>
+
+<div class="reveal">
+  <p>놀라운 점을 발견하세요. θ가 적도(90°)에 있으면 큐비트는 <em>동일 중첩</em> 상태 — |0⟩으로 발견될 확률 50%, |1⟩으로 발견될 확률 50%. 하지만 <em>위상</em> φ는 여전히 중요합니다. |+⟩와 |−⟩는 측정 확률이 같지만 물리적으로 다른 상태입니다 — 적도의 반대편에 놓여 있습니다.</p>
+
+  <div class="info-box">
+    <span class="box-label">정보의 기하학</span>
+    고전적 비트는 자유도가 1입니다(두 값 중 하나). 큐비트는 <em>2개</em>의 연속적 자유도(θ와 φ)를 가집니다. 그런데 측정하면 항상 두 답 중 하나만 얻습니다: 0 또는 1. 나머지 정보는 <em>위상</em> 속에 숨어 있습니다 — 큐비트들이 서로 상호작용할 때만 모습을 드러내는 보이지 않는 재료. 이것이 양자역학의 깊은 낯설음입니다.
+  </div>
+</div>
+
+<div class="reveal compare-row">
+  <div class="compare-card classical">
+    <h4>고전적 비트</h4>
+    <p>두 상태: 0 또는 1</p>
+    <p><strong>선분</strong> 위에 산다</p>
+    <p>자유롭게 복사 가능</p>
+    <p>읽어도 변하지 않는다</p>
+    <div class="compare-visual"><canvas id="classicalVis" width="180" height="50"></canvas></div>
+  </div>
+  <div class="compare-card quantum">
+    <h4>큐비트</h4>
+    <p>구 위의 무한한 상태</p>
+    <p><strong>블로흐 구</strong> 위에 산다</p>
+    <p>복제 불가 (복제 불가능 정리)</p>
+    <p>측정이 중첩을 파괴한다</p>
+    <div class="compare-visual"><canvas id="quantumVis" width="180" height="100"></canvas></div>
+  </div>
+</div>
+
+<div class="reveal">
+  <p>1982년 우터스와 주렉이 증명한 복제 불가능 정리는 양자 정보의 가장 중요한 결과 중 하나입니다. <em>미지의 양자 상태를 완벽하게 복사할 수 없다</em>는 것입니다. 고전 세계에서 복사는 공짜 — 비트를 읽고 다른 곳에 쓰면 됩니다. 양자 세계에서는 읽는 행위 자체가 복사하려던 바로 그 상태를 파괴합니다.</p>
+
+  <div class="quote-box">
+    하나의 양자는 복제될 수 없다.
+    <span class="attribution">— W. K. Wootters, W. H. Zurek, Nature (1982)</span>
+  </div>
+
+  <p>제약처럼 들리지만, 사실은 선물입니다. 바로 이 복제 불가능성이 양자 암호를 안전하게 만듭니다 — 도청자는 물리학이 남기는 지문 없이 양자 메시지를 가로챌 수 없습니다.</p>
+
+  <p>그런데 먼저: 상자를 열어 안을 들여다보면 무슨 일이 벌어질까요?</p>
+
+  <p style="color:var(--muted);font-style:italic;margin-top:2rem;text-align:center;">모든 측정은 중첩에 대한 돌이킬 수 없는 폭력 행위입니다.</p>
+</div>
+
+<div class="sec-divider" style="margin-top:3rem"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     §3 — MEASUREMENT: THE UNIVERSE ROLLS A DIE
+     ═══════════════════════════════════════════ -->
+<section id="sec-measure">
+<div class="reveal">
+  <p class="section-num">§ 3 — 측정</p>
+  <h2>우주가 <span class="accent-cyan">주사위</span>를 굴린다</h2>
+
+  <p class="drop-cap">큐비트는 아름다운 중첩 상태에 존재할 수 있습니다 — |0⟩과 |1⟩ 사이에서 공중에 돌고 있는 동전처럼, 앞면도 뒷면도 아닌 채로. 하지만 잡는 순간 — <em>측정</em>하는 순간 — 동전은 떨어집니다. 중첩은 하나의 확정된 값으로 붕괴하고, 다른 가능성은 처음부터 없었던 것처럼 사라집니다.</p>
+
+  <p>결과는 무작위이지만, 동전 던지기가 무작위인 것과는 다릅니다. 동전의 결과는 원리적으로 계산할 수 있는 물리학으로 결정됩니다: 엄지의 튕김, 공기 저항, 중력. 양자 무작위성은 다릅니다. <em>근본적</em>입니다. 숨겨진 톱니바퀴도, 더 깊은 진실의 층도 없습니다. 질문이 던져지기 전까지 우주 자체도 답을 모릅니다.</p>
+
+  <div class="quote-box">
+    신은 우주와 주사위 놀이를 하지 않는다.
+    <span class="attribution">— 알베르트 아인슈타인, 막스 보른에게 보낸 편지 (1926)</span>
+  </div>
+
+  <p>아인슈타인은 틀렸습니다 — 적어도 1926년 이후의 모든 실험은 그렇게 말합니다. Max 보른의 해석 — 양자 상태가 확실성이 아닌 <em>확률</em>을 준다는 — 모든 도전을 이겨냈습니다. |0⟩을 측정할 확률은 cos²(θ/2), |1⟩을 측정할 확률은 sin²(θ/2). 이것이 <strong>보른의 규칙</strong>입니다: 양자 세계와 우리가 사는 세계를 잇는 다리.</p>
+
+  <div class="try-this"><span class="try-icon">↓</span><p>상태를 준비하고 측정하세요 — 반복해서. 혼돈이 통계가 되는 것을 지켜보세요.</p></div>
+</div>
+
+<!-- Measurement Simulator -->
+<div class="reveal measure-lab" id="measureLab">
+  <div class="measure-lab-header">
+    <span class="demo-title">인터랙티브 · 양자 측정</span>
+  </div>
+
+  <div class="measure-canvas-wrap" id="measureCanvasWrap">
+    <canvas id="measureCanvas"></canvas>
+    <div class="collapse-overlay" id="collapseOverlay">
+      <span class="collapse-result" id="collapseResult"></span>
+    </div>
+  </div>
+
+  <div class="measure-controls">
+    <!-- Prepare state -->
+    <div class="measure-prep">
+      <label>θ 준비</label>
+      <input type="range" id="measureTheta" min="0" max="314" value="157" step="1">
+      <span class="prep-val" id="measureThetaVal">90°</span>
+    </div>
+
+    <div class="state-readout" id="measureStateReadout" style="font-size:.78rem">
+      <span class="ket">P(|0⟩) = </span>
+      <span class="amp-0" id="mProb0">50%</span>
+      <span style="color:var(--muted);margin:0 .5rem">·</span>
+      <span class="ket">P(|1⟩) = </span>
+      <span class="amp-1" id="mProb1">50%</span>
+    </div>
+
+    <!-- Measure button -->
+    <button class="measure-btn" id="measureBtn" onclick="doMeasure()">측정</button>
+
+    <div class="measure-multi-row">
+      <button class="measure-multi-btn" onclick="doMeasureN(10)">×10</button>
+      <button class="measure-multi-btn" onclick="doMeasureN(50)">×50</button>
+      <button class="measure-multi-btn" onclick="doMeasureN(200)">×200</button>
+      <button class="measure-multi-btn" onclick="resetMeasure()">reset</button>
+    </div>
+
+    <!-- Histogram -->
+    <div class="histogram-wrap">
+      <div class="histogram-bars">
+        <div class="histo-col">
+          <span class="histo-count" id="hCount0">0</span>
+          <div class="histo-bar-track">
+            <div class="histo-bar bar-0" id="hBar0" style="height:0%"></div>
+          </div>
+          <span class="histo-label c0">|0⟩</span>
+          <span class="histo-pct" id="hPct0">—</span>
+        </div>
+        <div class="histo-col">
+          <span class="histo-count" id="hCount1">0</span>
+          <div class="histo-bar-track">
+            <div class="histo-bar bar-1" id="hBar1" style="height:0%"></div>
+          </div>
+          <span class="histo-label c1">|1⟩</span>
+          <span class="histo-pct" id="hPct1">—</span>
+        </div>
+      </div>
+      <p class="measure-stats" id="measureTotal">0회 측정</p>
+    </div>
+  </div>
+</div>
+
+<div class="reveal">
+  <p>측정을 쌓아가며 무슨 일이 일어나는지 관찰하세요. 수백 번의 시행 후, 히스토그램은 보른의 규칙이 예측한 이론적 확률로 수렴합니다. 개별 결과는 완벽히 무작위이지만, <em>통계</em>는 완벽히 예측 가능합니다. 이것이 양자역학의 깊은 이중성입니다.</p>
+
+  <div class="try-this"><span class="try-icon">↓</span><p>Think you can beat 양자 무작위성을 이길 수 있다고요? 큐비트는 동일 중첩 상태입니다. 측정 전에 결과를 맞혀보세요.</p></div>
+</div>
+
+<!-- Prediction Game -->
+<div class="reveal predict-game" id="predictGame">
+  <p class="demo-title">큐비트를 이길 수 있을까?</p>
+  <p class="predict-prompt" id="predictPrompt">|+⟩⟩ 상태의 큐비트가 측정됩니다. |0⟩ or |1⟩?</p>
+
+  <div class="predict-buttons" id="predictBtns">
+    <button class="predict-btn guess-0" onclick="makePrediction(0)">|0⟩</button>
+    <button class="predict-btn guess-1" onclick="makePrediction(1)">|1⟩</button>
+  </div>
+
+  <div class="predict-feedback" id="predictFeedback"></div>
+
+  <div class="predict-score">
+    <div class="score-item">
+      <span class="score-num" id="pCorrect">0</span>
+      <span class="score-label">정답</span>
+    </div>
+    <div class="score-item">
+      <span class="score-num" id="pTotal">0</span>
+      <span class="score-label">시행</span>
+    </div>
+    <div class="score-item">
+      <span class="score-num" id="pRate">—</span>
+      <span class="score-label">적중률</span>
+    </div>
+  </div>
+
+  <p class="predict-insight" id="predictInsight"></p>
+</div>
+
+<div class="reveal">
+  <div class="info-box">
+    <span class="box-label">측정 문제</span>
+    측정 중에 정확히 무슨 일이 일어나는 걸까요? 왜 양자 상태의 매끄럽고 연속적인 진화가 갑자기 확정된 결과로 끊어질까요? 이것이 <em>측정 문제</em>이며, 물리학에서 가장 깊이 해결되지 않은 질문 중 하나입니다. 코펜하겐 해석, 다세계 해석, 결어긋남, QBism — 근본적으로 다른 답을 제시합니다. 수학은 그 사이에서 편을 들지 않습니다.
+  </div>
+
+  <p>측정에는 아인슈타인을 기쁘게 하면서 동시에 경악시켰을 결과가 하나 더 있습니다. 두 큐비트가 <em>얽히면</em>, 하나를 측정하는 것이 다른 하나의 상태를 즉시 결정합니다 — 거리에 상관없이. 방 하나 건너, 바다 건너, 관측 가능한 우주 끝까지.</p>
+
+  <p style="color:var(--muted);font-style:italic;margin-top:2rem;text-align:center;">수십 광년 떨어진 두 입자가 하나의 비밀을 공유합니다.</p>
+</div>
+
+<div class="sec-divider" style="margin-top:3rem"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     §4 — ENTANGLEMENT: SPOOKY COINS
+     ═══════════════════════════════════════════ -->
+<section id="sec-entangle">
+<div class="reveal">
+  <p class="section-num">§ 4 — 얽힘</p>
+  <h2>유령 같은 <span class="accent-magenta" style="color:var(--magenta)">동전</span></h2>
+
+  <p class="drop-cap">1935년, 알베르트 아인슈타인, 보리스 포돌스키, 네이선 로젠은 양자역학의 결함을 폭로하려는 논문을 발표했습니다. 한 입자의 측정이 먼 곳의 파트너에게 즉각 영향을 미칠 수 있다면, 양자역학은 무언가를 놓치고 있는 것이 틀림없다 — 입자들이 목적지에서 열리는 봉인된 편지처럼 미리 정해진 지시를 가지고 다닐 것이라고 주장했습니다.</p>
+
+  <p>양자역학을 죽이기는커녕, 그들의 논증은 가장 특별한 특성을 드러냈습니다: <strong>얽힘(entanglement)</strong>. 두 큐비트는 너무 깊이 엮여서 각각은 독립적인 상태를 갖지 못하고 — 오직 쌍만이 상태를 가집니다. 방 하나 건너든 은하 건너든 분리하세요; 하나를 측정하면 다른 하나의 운명은 즉시 결정됩니다.</p>
+
+  <div class="quote-box">
+    으스스한 원격 작용.
+    <span class="attribution">— 알베르트 아인슈타인, 막스 보른에게 보낸 편지 (1947)</span>
+  </div>
+
+  <p>아인슈타인은 이것이 터무니없다고 생각했습니다. 입자들이 숨겨진 지시 — 미리 합의된 대본 — 을 가지고 있을 것이라 믿었습니다. 하지만 1964년, 물리학자 존 벨은 어떤 대본도 양자역학의 모든 예측을 재현할 수 없음을 수학적으로 증명했습니다. 그리고 실험을 거듭할수록, 양자역학이 이겼습니다.</p>
+
+  <div class="try-this"><span class="try-icon">↓</span><p>앨리스와 밥이 각각 얽힌 쌍의 큐비트를 하나씩 들고 있습니다. 앨리스의 것을 측정하세요 — 밥의 것이 즉시 반응합니다.</p></div>
+</div>
+
+<!-- Entanglement Lab -->
+<div class="reveal entangle-lab" id="entangleLab">
+  <div class="entangle-lab-header">
+    <span class="demo-title">인터랙티브 · 얽힌 쌍</span>
+  </div>
+
+  <div class="entangle-canvas-wrap" id="entangleCanvasWrap">
+    <canvas id="entangleCanvas"></canvas>
+  </div>
+
+  <div class="entangle-controls">
+    <!-- State selector -->
+    <div class="entangle-state-select">
+      <button class="estate-btn active" onclick="setEntState(0,this)" data-state="phi+">Φ⁺ (같은)</button>
+      <button class="estate-btn" onclick="setEntState(1,this)" data-state="phi-">Φ⁻ (같은)</button>
+      <button class="estate-btn" onclick="setEntState(2,this)" data-state="psi+">Ψ⁺ (반대)</button>
+      <button class="estate-btn" onclick="setEntState(3,this)" data-state="psi-">Ψ⁻ (반대)</button>
+    </div>
+
+    <!-- Qubit pair display -->
+    <div class="entangle-pair">
+      <div class="qubit-card alice" id="aliceCard">
+        <span class="card-label">Alice</span>
+        <span class="card-result unknown" id="aliceResult">?</span>
+      </div>
+
+      <div class="entangle-link">
+        <div class="link-line"></div>
+        <span>얽힘</span>
+        <div class="link-line"></div>
+      </div>
+
+      <div class="qubit-card bob" id="bobCard">
+        <span class="card-label">Bob</span>
+        <span class="card-result unknown" id="bobResult">?</span>
+      </div>
+    </div>
+
+    <!-- Measure button -->
+    <button class="entangle-measure-btn" id="entMeasureBtn" onclick="measureEntangled()">앨리스 큐비트 측정</button>
+
+    <!-- Correlation tracker -->
+    <div class="corr-tracker" id="corrTracker">
+      <div class="corr-row">
+        <span class="corr-label">같은 결과</span>
+        <div class="corr-track"><div class="corr-fill same" id="corrSame" style="width:0%"></div></div>
+        <span class="corr-val" id="corrSameVal">0</span>
+      </div>
+      <div class="corr-row">
+        <span class="corr-label">반대 결과</span>
+        <div class="corr-track"><div class="corr-fill diff" id="corrDiff" style="width:0%"></div></div>
+        <span class="corr-val" id="corrDiffVal">0</span>
+      </div>
+      <p class="corr-summary" id="corrSummary">측정하여 상관관계 확인</p>
+    </div>
+  </div>
+</div>
+
+<div class="reveal">
+  <p>Φ⁺ 상태에서 앨리스와 밥은 <em>항상</em> 같은 결과를 얻습니다. Ψ⁺에서는 <em>항상</em> 반대 결과를 얻습니다. 결과가 미리 정해져 있었기 때문이 아닙니다 — 얽힌 양자 상태 자체의 결과입니다. 이 상관관계는 고전 물리학이 허용하는 어떤 것보다 강합니다.</p>
+
+  <div class="info-box">
+    <span class="box-label">네 가지 벨 상태</span>
+    얽힌 큐비트 쌍은 벨 상태라 불리는 네 가지 최대 얽힘 상태 중 하나로 기술됩니다. Φ⁺ and Φ⁻ 상관된 결과를 만들고(둘 다 0 또는 둘 다 1), Ψ⁺와 Ψ⁻는 반-상관된 결과를 만듭니다(하나가 0이면 다른 하나가 1). 이 네 상태는 두-큐비트 계의 정규직교 기저를 이룹니다 — 어떤 두-큐비트 상태든 이들의 결합으로 쓸 수 있습니다.
+  </div>
+
+  <p>그런데 얽힘이 진짜이며 숨겨진 지시가 아니라는 것을 어떻게 <em>알</em> 수 있을까요? 여기서 벨의 정리가 등장합니다.</p>
+
+  <p>벨은 입자들이 미리 합의된 지시("국소 숨은 변수")를 가지고 있다면, 특정 상관관계가 하나의 부등식을 만족해야 함을 보였습니다. 양자역학은 얽힌 입자들이 이 부등식을 <em>위반</em>할 수 있다고 예측합니다. 실험은 위반을 확인했습니다.</p>
+
+  <div class="try-this"><span class="try-icon">↓</span><p>앨리스와 밥의 측정 축을 선택하세요. 시행을 돌려보세요. 고전적 숨은 변수로 설명될까요?</p></div>
+</div>
+
+<!-- Bell Test Mini-Game -->
+<div class="reveal bell-game" id="bellGame">
+  <p class="demo-title">벨 부등식 시뮬레이터</p>
+  <p class="bell-desc">앨리스와 밥의 측정 축을 선택하세요. 여러 번 시행해보세요. 고전적 숨은 변수로 상관관계를 설명할 수 있을까요?</p>
+
+  <div class="bell-axes">
+    <div class="bell-axis-card">
+      <span class="ba-label">앨리스 축</span>
+      <select id="bellAliceAxis">
+        <option value="0">0° (Z)</option>
+        <option value="45">45°</option>
+        <option value="90">90° (X)</option>
+        <option value="135">135°</option>
+      </select>
+    </div>
+    <div class="bell-axis-card">
+      <span class="ba-label">밥 축</span>
+      <select id="bellBobAxis">
+        <option value="0">0° (Z)</option>
+        <option value="45" selected>45°</option>
+        <option value="90">90° (X)</option>
+        <option value="135">135°</option>
+      </select>
+    </div>
+  </div>
+
+  <button class="bell-run-btn" onclick="runBellTest(100)">100회 시행</button>
+
+  <div class="bell-results">
+    <div class="bell-stat">
+      <span class="bs-num" id="bellTrials">0</span>
+      <span class="bs-label">시행</span>
+    </div>
+    <div class="bell-stat">
+      <span class="bs-num" id="bellCorr">—</span>
+      <span class="bs-label">상관계수</span>
+    </div>
+    <div class="bell-stat">
+      <span class="bs-num" id="bellClassical">—</span>
+      <span class="bs-label">고전 한계</span>
+    </div>
+    <div class="bell-stat">
+      <span class="bs-num" id="bellQuantum">—</span>
+      <span class="bs-label">양자 예측</span>
+    </div>
+  </div>
+  <p class="bell-verdict" id="bellVerdict"></p>
+</div>
+
+<div class="reveal">
+  <p>축이 45°, 양자 상관관계는 어떤 국소 숨은 변수 모형도 만들어낼 수 없는 수준을 초과합니다. 이것이 벨 부등식 위반의 본질이며 — 알랭 아스페(1982)가 실험으로 확인하고, 이후 많은 연구자가 정교화하여, 아스페, 클라우저, 차일링거에게 2022년 노벨 물리학상을 안겨주었습니다.</p>
+
+  <p>얽힘은 단순한 호기심의 대상이 아닙니다. <em>자원</em>입니다 — 양자 순간이동, 양자 암호, 양자 컴퓨팅을 구동하는 비밀 연료. 얽힘 없이 양자 컴퓨터는 고전 컴퓨터보다 나을 것이 없습니다.</p>
+
+  <p style="color:var(--muted);font-style:italic;margin-top:2rem;text-align:center;">얽힘을 이용해 양자 상태를 공간 너머로 보낼 수 있다면 — 상태 자체는 한 번도 여행하지 않으면서?</p>
+</div>
+
+<div class="sec-divider" style="margin-top:3rem"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     §5 — QUANTUM TELEPORTATION
+     ═══════════════════════════════════════════ -->
+<section id="sec-teleport">
+<div class="reveal">
+  <p class="section-num">§ 5 — 양자 순간이동</p>
+  <h2>보내지 않고 <span class="accent-gold">보내기</span></h2>
+
+  <p class="drop-cap">1993년, 찰스 베넷과 다섯 명의 공저자는 공상과학처럼 들리는 것을 증명했습니다: 하나의 얽힌 쌍과 두 비트의 고전적 정보만으로, 미지의 양자 상태를 한 장소에서 다른 장소로 전송할 수 있다는 것 — 양자 상태가 그 사이의 공간을 통과하지 않으면서.</p>
+
+  <p>이것이 <em>양자 순간이동</em>입니다. 이름은 의도적으로 극적입니다. 물질이나 에너지가 순간이동하는 것이 아니라 — 오직 양자 정보만. 하지만 이 프로토콜은 실제이고, 실험으로 검증되었으며, 양자 통신의 초석 중 하나입니다.</p>
+
+  <div class="quote-box">
+    미지의 양자 상태는 순수하게 고전적인 정보와 순수하게 비고전적인 EPR 상관관계로 분해된 뒤, 다시 재구성될 수 있다.
+    <span class="attribution">— 베넷, 브라사드, 크레포, 조자, 페레스, 우터스 (1993)</span>
+  </div>
+</div>
+
+<div class="reveal">
+  <p>작동 원리는 이렇습니다. 앨리스는 미지의 상태 |ψ⟩ 의 큐비트를 밥에게 보내고 싶습니다. 앨리스와 밥은 이미 하나의 얽힌 쌍을 공유하고 있습니다. 프로토콜은 네 단계입니다:</p>
+</div>
+
+<!-- Teleportation Lab -->
+<div class="reveal teleport-lab" id="teleportLab">
+  <div class="teleport-lab-header">
+    <span class="demo-title">인터랙티브 · 양자 순간이동 프로토콜</span>
+  </div>
+
+  <div class="teleport-canvas-wrap" id="teleportCanvasWrap">
+    <canvas id="teleportCanvas"></canvas>
+  </div>
+
+  <div class="teleport-controls">
+    <!-- Choose state to teleport -->
+    <div class="teleport-state-row">
+      <label>앨리스의 상태 |ψ⟩ θ =</label>
+      <input type="range" id="teleportTheta" min="0" max="314" value="105" step="1">
+      <span class="ts-val" id="teleportThetaVal">60°</span>
+    </div>
+
+    <!-- Step dots -->
+    <div class="step-dots" id="stepDots">
+      <div class="step-dot" id="dot0"></div>
+      <div class="step-dot" id="dot1"></div>
+      <div class="step-dot" id="dot2"></div>
+      <div class="step-dot" id="dot3"></div>
+    </div>
+
+    <!-- Protocol steps -->
+    <div class="protocol-steps" id="protoSteps">
+      <div class="proto-step active" id="pstep0">
+        <span class="step-num">1</span>
+        <span class="step-text"><strong>준비.</strong> 앨리스가 |ψ⟩(순간이동할 상태)를 가집니다. 앨리스와 밥은 각각 <span class="hl-gold">얽힌 쌍</span>의 큐비트를 하나씩 가집니다.</span>
+      </div>
+      <div class="proto-step" id="pstep1">
+        <span class="step-num">2</span>
+        <span class="step-text"><strong>앨리스 측정.</strong> 앨리스는 자신의 큐비트 |ψ⟩ 와 얽힌 쌍의 자기 몫에 대해 특수한 결합 측정(벨 측정)을 수행합니다. <span class="hl-cyan">두 개의 고전적 비트</span>를 얻습니다.</span>
+      </div>
+      <div class="proto-step" id="pstep2">
+        <span class="step-num">3</span>
+        <span class="step-text"><strong>고전적 메시지.</strong> 앨리스가 <span class="hl-cyan">두 고전적 비트</span>를 보통 채널(전화, 라디오, 전서구)로 밥에게 보냅니다.</span>
+      </div>
+      <div class="proto-step" id="pstep3">
+        <span class="step-num">4</span>
+        <span class="step-text"><strong>밥이 교정.</strong> 앨리스의 두 비트에 따라 밥이 자신의 큐비트에 교정을 가합니다. 이제 밥의 큐비트는 상태 <span class="hl-gold">|ψ⟩</span> — 앨리스의 원래 상태와 동일합니다.</span>
+      </div>
+    </div>
+
+    <!-- Run teleportation -->
+    <button class="teleport-run-btn" id="teleportBtn" onclick="runTeleport()">순간이동 실행</button>
+
+    <div class="teleport-result" id="teleportResult"></div>
+  </div>
+</div>
+
+<div class="reveal">
+  <p>무슨 일이 일어났는지 보세요. Alice's original state |ψ⟩ 는 측정 중에 <em>파괴</em>되었습니다 — 더 이상 갖고 있지 않습니다. 하지만 그 상태가 밥의 위치에 나타났습니다. 양자 정보는 복사된 것이 아닙니다(그건 복제 불가능 정리를 위반합니다). <em>이동</em>한 것입니다.</p>
+
+  <div class="info-box">
+    <span class="box-label">빛보다 빠르지 않다</span>
+    양자 순간이동은 빛보다 빠르게 정보를 보낼 수 없습니다. 앨리스는 두 고전적 비트를 밥에게 보내야 하고, 그 메시지는 보통 속도로 이동합니다. 그 비트 없이 밥의 큐비트는 완전히 무작위로 보입니다 — 혼자서는 어떤 정보도 추출할 수 없습니다. 얽힘이 상관관계를 제공하지만, 프로토콜을 완성하는 것은 고전적 채널입니다. 아인슈타인의 속도 제한은 안전합니다.
+  </div>
+
+  <p>양자 순간이동은 1,400킬로미터 이상에 걸쳐 실험적으로 실증되었습니다, 2017년 중국의 위성 미치우스를 이용하여. 이것은 떠오르는 양자 인터넷의 기반입니다 — 노드 사이로 얽힘이 흐르고, 양자 정보가 선을 통과하지 않으면서 이동하는 네트워크.</p>
+
+  <p style="color:var(--muted);font-style:italic;margin-top:2rem;text-align:center;">새로운 종류의 정보. 새로운 종류의 계산. 이 모든 것은 어디로 향할까요?</p>
+</div>
+
+<div class="sec-divider" style="margin-top:3rem"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     §6 — WHY IT MATTERS: THE QUANTUM FUTURE
+     ═══════════════════════════════════════════ -->
+<section id="sec-future">
+<div class="reveal">
+  <p class="section-num">§ 6 — 양자의 미래</p>
+  <h2>왜 <span class="accent-gold">중요한가</span></h2>
+
+  <p class="drop-cap">양자 정보는 이론적 호기심에 그치지 않습니다. 자연을 이해하기 위한 새로운 언어입니다 — 계산, 통신, 암호학이 처음부터 다시 쓰이는 언어. 양자 혁명의 네 기둥을 소개합니다.</p>
+</div>
+
+<!-- Application Cards -->
+<div class="reveal app-grid">
+  <div class="app-card">
+    <span class="card-icon">⚡</span>
+    <h4>양자 컴퓨팅</h4>
+    <p>특정 문제 — 큰 수의 인수분해 (Shor, 1994), searching unsorted databases (Grover, 1996) — 가 양자 컴퓨터에서 기하급수적으로 빨라집니다. 약속: 신약 개발, 소재 과학, 고전 컴퓨터가 닿을 수 없는 규모의 최적화.</p>
+  </div>
+  <div class="app-card">
+    <span class="card-icon">🔐</span>
+    <h4>양자 암호</h4>
+    <p>BB84 프로토콜(Bennett & Brassard, 1984)은 큐비트를 사용하여 물리 법칙으로 보안이 보장되는 암호키를 배포합니다 — 수학 문제의 어려움이 아닌. 도청은 자연 자체가 감지합니다.</p>
+  </div>
+  <div class="app-card">
+    <span class="card-icon">🌐</span>
+    <h4>양자 인터넷</h4>
+    <p>노드 사이에 얽힘을 배포하는 네트워크로, 정보의 양자 순간이동, 분산 양자 계산, 글로벌 규모의 보안 통신을 가능하게 합니다.</p>
+  </div>
+  <div class="app-card">
+    <span class="card-icon">🛡️</span>
+    <h4>양자 오류 정정</h4>
+    <p>실제 큐비트는 취약합니다 — 결어긋남이 일어납니다. Quantum error correction (Shor, 1995; Steane, 1996) 논리적 큐비트를 여러 물리적 큐비트에 걸쳐 인코딩하여 양자 정보를 잡음으로부터 보호합니다. 확장 가능한 양자 컴퓨팅의 열쇠입니다.</p>
+  </div>
+</div>
+
+<div class="reveal">
+  <p>"기하급수적으로 빠르다"는 것은 얼마나 빠른 걸까요? Shor의 알고리즘은 <em>n</em>자리 수를 대략 n³에 비례하는 시간에 인수분해합니다. 최적의 고전 알고리즘은 n^{1/3}에 지수적인 시간이 걸립니다. 2048비트 RSA 키의 경우, 이것은 수 시간과 수십억 년의 차이입니다.</p>
+
+  <div class="try-this"><span class="try-icon">↓</span><p>고전 컴퓨터는 목록을 하나씩 검색합니다. Grover's 양자 알고리즘은 N이 아닌 √N 단계만에 답을 찾습니다. 경주를 지켜보세요.</p></div>
+</div>
+
+<!-- Grover Search Race -->
+<div class="reveal race-game" id="raceGame">
+  <p class="demo-title">그로버 검색 · 고전 vs 양자</p>
+  <p class="race-desc">1024개 항목 데이터베이스에서 하나를 검색</p>
+
+  <div class="race-tracks">
+    <div class="race-track">
+      <span class="race-label">고전</span>
+      <div class="race-bar"><div class="race-fill classical" id="raceFillC" style="width:0%"></div></div>
+      <span class="race-pct" id="racePctC">0</span>
+    </div>
+    <div class="race-track">
+      <span class="race-label">양자 (Grover)</span>
+      <div class="race-bar"><div class="race-fill quantum" id="raceFillQ" style="width:0%"></div></div>
+      <span class="race-pct" id="racePctQ">0</span>
+    </div>
+  </div>
+
+  <div class="race-controls">
+    <button class="race-btn" id="raceBtn" onclick="startRace()">경주 시작</button>
+    <button class="race-btn" style="background:transparent;color:var(--muted);border:1px solid var(--border)" onclick="resetRace()">Reset</button>
+  </div>
+  <p class="race-result" id="raceResult"></p>
+</div>
+
+<div class="reveal">
+  <div class="info-box">
+    <span class="box-label">솔직한 그림</span>
+    양자 컴퓨팅은 마법이 아닙니다. <em>모든</em> 계산을 빠르게 하지는 않습니다. 양자 알고리즘이 활용할 수 있는 수학적 구조를 가진 특정 문제에서 뛰어납니다 — 주로 간섭과 얽힘이 관여하는 문제. 이메일이나 동영상 스트리밍 같은 일상 작업에서는 고전 컴퓨터가 왕으로 남을 것입니다. 혁명은 좁지만 깊습니다.
+  </div>
+</div>
+
+<!-- Timeline -->
+<div class="reveal">
+  <p>양자 정보의 간략한 역사:</p>
+</div>
+
+<div class="reveal timeline">
+  <div class="tl-item reveal">
+    <span class="tl-year">1935</span>
+    <p class="tl-text"><strong>EPR 역설.</strong> 아인슈타인, 포돌스키, 로젠이 양자역학은 불완전하다고 주장합니다. 우연히 얽힘의 힘을 발견합니다.</p>
+  </div>
+  <div class="tl-item reveal">
+    <span class="tl-year">1964</span>
+    <p class="tl-text"><strong>벨의 정리.</strong> 존 벨이 어떤 국소 숨은 변수 이론도 모든 양자 예측을 재현할 수 없음을 증명합니다.</p>
+  </div>
+  <div class="tl-item reveal">
+    <span class="tl-year">1981</span>
+    <p class="tl-text"><strong>파인만의 제안.</strong> 리처드 파인만이 양자계로 양자 물리를 시뮬레이션하자고 제안합니다 — 양자 컴퓨팅의 탄생.</p>
+  </div>
+  <div class="tl-item reveal">
+    <span class="tl-year">1984</span>
+    <p class="tl-text"><strong>BB84 프로토콜.</strong> 베넷과 브라사드가 양자 키 분배를 발명 — 증명 가능하게 안전한 통신.</p>
+  </div>
+  <div class="tl-item reveal">
+    <span class="tl-year">1993</span>
+    <p class="tl-text"><strong>양자 순간이동.</strong> 베넷 등이 얽힘과 고전적 비트로 양자 상태를 전송하는 방법을 제시.</p>
+  </div>
+  <div class="tl-item reveal">
+    <span class="tl-year">1994</span>
+    <p class="tl-text"><strong>Shor의 알고리즘.</strong> 피터 쇼어가 정수 인수분해를 위한 효율적 양자 알고리즘을 발견, RSA 암호 위협.</p>
+  </div>
+  <div class="tl-item reveal">
+    <span class="tl-year">1996</span>
+    <p class="tl-text"><strong>Grover의 알고리즘.</strong> 로브 그로버가 양자 검색 발견 — 정렬 안 된 데이터베이스의 이차 가속.</p>
+  </div>
+  <div class="tl-item reveal">
+    <span class="tl-year">2019</span>
+    <p class="tl-text"><strong>양자 우월성.</strong> 구글의 시카모어 프로세서가 고전 슈퍼컴퓨터로 ~10,000년 걸릴 작업을 200초 만에 완료.</p>
+  </div>
+  <div class="tl-item reveal">
+    <span class="tl-year">2022</span>
+    <p class="tl-text"><strong>노벨상.</strong> 아스페, 클라우저, 차일링거가 벨 부등식 위반 실험과 양자 정보 과학 선구적 업적으로 노벨 물리학상 수상.</p>
+  </div>
+  <div class="tl-item reveal">
+    <span class="tl-year">2025</span>
+    <p class="tl-text"><strong>최전선.</strong> 내결함성 양자 컴퓨팅, 양자 네트워크, 위상 큐비트가 전 세계에서 활발히 연구 중.</p>
+  </div>
+</div>
+
+<div class="reveal">
+  <p>우리는 선택을 거부한 비트에서 시작했습니다. 그 여정에서 그 거부가 고집이 아니라 자유였음을 — 선 대신 구에 거주할 자유, 모순을 중첩으로 품을 자유, 우주 건너편의 파트너와 얽힐 자유. 섀넌의 소박한 이진 숫자에서 양자 인터넷까지, 정보는 1948년에 누구도 상상하지 못했을 만큼 낯설고, 깊고, 아름다운 것으로 밝혀졌습니다.</p>
+
+  <p>이야기는 아직 끝나지 않았습니다. 우리는 문턱에 서 있습니다 — 20세기의 이론적 시가 21세기의 공학이 되는 순간. 양자의 미래는 어떤 새로운 수학, 어떤 새로운 물리학, 어떤 새로운 사고방식을 요구할까요?</p>
+
+  <p style="text-align:center;margin-top:2.5rem;margin-bottom:1rem">
+    <span style="font-family:var(--font-display);font-size:1.5rem;color:var(--gold);opacity:.5">✦</span>
+  </p>
+</div>
+
+<div class="sec-divider" style="margin-top:3rem"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     §7 — REFERENCES
+     ═══════════════════════════════════════════ -->
+<section id="sec-refs">
+<div class="reveal">
+  <p class="section-num">§ 7 — 참고문헌</p>
+  <h2>출처</h2>
+
+  <ol class="ref-list">
+    <li><strong>C. E. Shannon</strong>, <em>A Mathematical Theory of Communication</em>, Bell System Technical Journal <strong>27</strong>, 379–423 (1948).</li>
+    <li><strong>A. Einstein, B. Podolsky, N. Rosen</strong>, <em>Can Quantum-Mechanical Description of Physical Reality Be Considered Complete?</em>, Physical Review <strong>47</strong>, 777–780 (1935).</li>
+    <li><strong>J. S. Bell</strong>, <em>On the Einstein Podolsky Rosen Paradox</em>, Physics Physique Fizika <strong>1</strong>, 195–200 (1964).</li>
+    <li><strong>R. P. Feynman</strong>, <em>Simulating Physics with Computers</em>, International Journal of Theoretical Physics <strong>21</strong>, 467–488 (1982).</li>
+    <li><strong>W. K. Wootters, W. H. Zurek</strong>, <em>A Single Quantum Cannot Be Cloned</em>, Nature <strong>299</strong>, 802–803 (1982).</li>
+    <li><strong>C. H. Bennett, G. Brassard</strong>, <em>Quantum Cryptography: Public Key Distribution and Coin Tossing</em>, Proc. IEEE Int. Conf. Comput. Syst. Signal Process., 175–179 (1984).</li>
+    <li><strong>C. H. Bennett, G. Brassard, C. Crépeau, R. Jozsa, A. Peres, W. K. Wootters</strong>, <em>Teleporting an Unknown Quantum State via Dual Classical and Einstein-Podolsky-Rosen Channels</em>, Physical Review Letters <strong>70</strong>, 1895–1899 (1993).</li>
+    <li><strong>P. W. Shor</strong>, <em>Algorithms for Quantum Computation: Discrete Logarithms and Factoring</em>, Proc. 35th IEEE FOCS, 124–134 (1994).</li>
+    <li><strong>B. Schumacher</strong>, <em>Quantum Coding</em>, Physical Review A <strong>51</strong>, 2738–2747 (1995). — 'qubit'이라는 용어를 만든 논문 "qubit".</li>
+    <li><strong>L. K. Grover</strong>, <em>A Fast Quantum Mechanical Algorithm for Database Search</em>, Proc. 28th ACM STOC, 212–219 (1996).</li>
+    <li><strong>M. A. Nielsen, I. L. Chuang</strong>, <em>Quantum Computation and Quantum Information</em>, Cambridge University Press (2000). — 표준 교과서.</li>
+    <li><strong>J. Preskill</strong>, <em>Quantum Computing in the NISQ Era and Beyond</em>, Quantum <strong>2</strong>, 79 (2018).</li>
+    <li><strong>F. Arute et al.</strong>, <em>Quantum Supremacy Using a Programmable Superconducting Processor</em>, Nature <strong>574</strong>, 505–510 (2019).</li>
+    <li><strong>Nobel Prize Committee</strong>, <em>The Nobel Prize in Physics 2022: Experiments with Entangled Photons</em>, nobelprize.org (2022).</li>
+  </ol>
+
+  <div class="info-box" style="border-left-color:rgba(212,168,83,.3);background:var(--gold-dim)">
+    <span class="box-label" style="color:var(--gold)">더 읽을거리</span>
+    접근하기 좋은 입문서: 스콧 아론슨의 블로그 <em>Shtetl-Optimized</em>와 그의 책 <em>Quantum Computing Since Democritus</em>; IBM Quantum Experience (무료 온라인 양자 컴퓨터); 영상 시리즈 <em>Quantum Computing for the Very Curious</em> (앤디 마투샥, 마이클 닐슨).
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     BRANDING
+     ═══════════════════════════════════════════ -->
+<a class="floating-badge" href="https://edu.kimsh.kr" target="_blank">edu.kimsh.kr</a>
+
+<footer>
+  <div class="footer-attr">
+    <span class="footer-name">Sang-hyun Kim</span>
+    <span class="footer-inst">Korea Institute for Advanced Study · AI4Math, KAIST</span>
+    <a class="footer-url" href="https://kimsh.kr" target="_blank">kimsh.kr</a>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     SCRIPTS
+     ═══════════════════════════════════════════ -->
+<script>
+/* ─────────────────────────────────────────────
+   AUDIO: Minimal ambient sound system
+   ───────────────────────────────────────────── */
+let audioCtx = null;
+function getAudio(){
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function playTone(freq, dur, vol, type){
+  try {
+    const ctx = getAudio();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type || 'sine';
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    gain.gain.setValueAtTime(0, ctx.currentTime);
+    gain.gain.linearRampToValueAtTime(vol || .06, ctx.currentTime + .02);
+    gain.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + (dur || .3));
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime + (dur || .3) + .05);
+  } catch(e){}
+}
+
+function playCollapse(result){
+  // High bright tone for |0⟩, lower warm tone for |1⟩
+  playTone(result === 0 ? 880 : 440, .25, .05, 'sine');
+  setTimeout(() => playTone(result === 0 ? 1320 : 660, .15, .03, 'sine'), 60);
+}
+
+function playCoinSound(){
+  playTone(600 + Math.random()*200, .12, .04, 'triangle');
+}
+
+function playEntangleSound(){
+  playTone(523, .2, .04, 'sine');
+  setTimeout(() => playTone(784, .2, .04, 'sine'), 150);
+}
+
+function playTeleportSound(){
+  const freqs = [440, 554, 659, 880];
+  freqs.forEach((f,i) => setTimeout(() => playTone(f, .15, .03, 'sine'), i * 120));
+}
+
+/* ─────────────────────────────────────────────
+   BACKGROUND: Subtle quantum particle field
+   ───────────────────────────────────────────── */
+(function(){
+  const c = document.getElementById('hero-bg');
+  const ctx = c.getContext('2d');
+  let W, H, particles = [], raf;
+
+  function resize(){
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth; H = window.innerHeight;
+    c.width = W * dpr; c.height = H * dpr;
+    c.style.width = W + 'px'; c.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function initParticles(){
+    particles = [];
+    const count = Math.min(Math.floor(W * H / 8000), 120);
+    for(let i = 0; i < count; i++){
+      particles.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - .5) * .15,
+        vy: (Math.random() - .5) * .15,
+        r: Math.random() * 1.2 + .3,
+        phase: Math.random() * Math.PI * 2,
+        freq: .003 + Math.random() * .005,
+        hue: Math.random() < .5 ? 190 : 45  // cyan or gold
+      });
+    }
+  }
+
+  let t = 0;
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    t++;
+
+    for(const p of particles){
+      p.x += p.vx; p.y += p.vy;
+      if(p.x < -10) p.x = W + 10;
+      if(p.x > W + 10) p.x = -10;
+      if(p.y < -10) p.y = H + 10;
+      if(p.y > H + 10) p.y = -10;
+
+      const alpha = .12 + .1 * Math.sin(t * p.freq + p.phase);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      if(p.hue === 190){
+        ctx.fillStyle = `rgba(94,196,212,${alpha})`;
+      } else {
+        ctx.fillStyle = `rgba(212,168,83,${alpha})`;
+      }
+      ctx.fill();
+    }
+
+    // Draw subtle connections
+    for(let i = 0; i < particles.length; i++){
+      for(let j = i + 1; j < particles.length; j++){
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = dx * dx + dy * dy;
+        if(dist < 12000){
+          const alpha = .025 * (1 - dist / 12000);
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(94,196,212,${alpha})`;
+          ctx.lineWidth = .5;
+          ctx.stroke();
+        }
+      }
+    }
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  resize(); initParticles(); draw();
+  window.addEventListener('resize', () => { resize(); initParticles(); });
+
+  // Pause when not visible
+  const heroEl = document.getElementById('hero');
+  const obs = new IntersectionObserver(([e]) => {
+    if(e.isIntersecting){ if(!raf) draw(); }
+    else { cancelAnimationFrame(raf); raf = null; }
+  }, {threshold: 0.05});
+  obs.observe(heroEl);
+})();
+
+
+/* ─────────────────────────────────────────────
+   BLOCH SPHERE: Interactive 3D qubit visualization
+   ───────────────────────────────────────────── */
+(function(){
+  const canvas = document.getElementById('hero-sphere');
+  const ctx = canvas.getContext('2d');
+  let W, H, cx, cy, R;
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  function resize(){
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cx = W / 2; cy = H / 2;
+    R = Math.min(W, H) * .22;
+  }
+
+  // Rotation state
+  let rotX = -.4, rotY = .3;
+  let autoRotY = 0;
+  let isDragging = false, lastMX = 0, lastMY = 0;
+  let dragVelX = 0, dragVelY = 0;
+
+  // Qubit state: θ and φ on Bloch sphere
+  let theta = Math.PI / 3;    // polar angle
+  let phi = 0;                 // azimuthal, auto-precesses
+
+  // Trail of state vector
+  const trail = [];
+  const TRAIL_MAX = 300;
+
+  // 3D → 2D projection
+  function project(x, y, z){
+    // Rotate around Y axis
+    const cosY = Math.cos(rotY + autoRotY), sinY = Math.sin(rotY + autoRotY);
+    let x1 = x * cosY + z * sinY;
+    let z1 = -x * sinY + z * cosY;
+    let y1 = y;
+    // Rotate around X axis
+    const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+    let y2 = y1 * cosX - z1 * sinX;
+    let z2 = y1 * sinX + z1 * cosX;
+    // Simple perspective
+    const scale = 1 / (1 + z2 * .0003);
+    return {
+      x: cx + x1 * scale,
+      y: cy - y2 * scale,  // flip y
+      z: z2,
+      scale: scale
+    };
+  }
+
+  // Draw great circle on sphere
+  function drawGreatCircle(normalX, normalY, normalZ, color, alpha, dashed){
+    // Find two orthogonal vectors in the plane
+    let ux, uy, uz;
+    if(Math.abs(normalX) < .9){
+      ux = 0; uy = -normalZ; uz = normalY;
+    } else {
+      ux = -normalZ; uy = 0; uz = normalX;
+    }
+    const len = Math.sqrt(ux*ux + uy*uy + uz*uz);
+    ux /= len; uy /= len; uz /= len;
+    // Second orthogonal
+    let vx = normalY * uz - normalZ * uy;
+    let vy = normalZ * ux - normalX * uz;
+    let vz = normalX * uy - normalY * ux;
+
+    const pts = [];
+    const N = 80;
+    for(let i = 0; i <= N; i++){
+      const a = (i / N) * Math.PI * 2;
+      const px = R * (Math.cos(a) * ux + Math.sin(a) * vx);
+      const py = R * (Math.cos(a) * uy + Math.sin(a) * vy);
+      const pz = R * (Math.cos(a) * uz + Math.sin(a) * vz);
+      const p = project(px, py, pz);
+      pts.push({...p, behind: p.z < 0});
+    }
+
+    // Draw back part first, then front
+    for(const behind of [true, false]){
+      ctx.beginPath();
+      let started = false;
+      for(const p of pts){
+        if(p.behind === behind){
+          if(!started){ ctx.moveTo(p.x, p.y); started = true; }
+          else ctx.lineTo(p.x, p.y);
+        } else {
+          if(started){ 
+            ctx.stroke(); 
+            ctx.beginPath(); started = false; 
+          }
+        }
+      }
+      if(started) ctx.stroke();
+      ctx.strokeStyle = color;
+      ctx.globalAlpha = behind ? alpha * .2 : alpha;
+      ctx.lineWidth = behind ? .5 : .8;
+      if(dashed && behind) ctx.setLineDash([3, 5]);
+      else ctx.setLineDash([]);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+    ctx.setLineDash([]);
+  }
+
+  // Draw the sphere wireframe
+  function drawWireframe(){
+    // Equator (XZ plane)
+    drawGreatCircle(0, 1, 0, 'rgba(94,196,212,.5)', .35, false);
+    // Meridian XY
+    drawGreatCircle(0, 0, 1, 'rgba(94,196,212,.3)', .2, true);
+    // Meridian YZ
+    drawGreatCircle(1, 0, 0, 'rgba(94,196,212,.3)', .2, true);
+  }
+
+  // Draw axis labels
+  function drawAxes(){
+    const axisLen = R * 1.25;
+    const axes = [
+      {dir:[0, axisLen, 0], label:'|0⟩', color:'rgba(94,196,212,.8)'},
+      {dir:[0, -axisLen, 0], label:'|1⟩', color:'rgba(196,122,212,.8)'},
+      {dir:[axisLen, 0, 0], label:'|+⟩', color:'rgba(212,168,83,.4)'},
+      {dir:[-axisLen, 0, 0], label:'|−⟩', color:'rgba(212,168,83,.4)'},
+    ];
+
+    for(const a of axes){
+      const p = project(a.dir[0], a.dir[1], a.dir[2]);
+      ctx.font = `500 ${Math.max(11, R * .085)}px 'JetBrains Mono', monospace`;
+      ctx.fillStyle = a.color;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(a.label, p.x, p.y);
+    }
+
+    // Draw thin axis lines
+    ctx.lineWidth = .5;
+    for(const a of axes){
+      const o = project(0, 0, 0);
+      const p = project(a.dir[0] * .85, a.dir[1] * .85, a.dir[2] * .85);
+      ctx.beginPath();
+      ctx.moveTo(o.x, o.y);
+      ctx.lineTo(p.x, p.y);
+      ctx.strokeStyle = 'rgba(94,196,212,.12)';
+      ctx.stroke();
+    }
+  }
+
+  // Draw semi-transparent sphere surface
+  function drawSphereSurface(){
+    const center = project(0, 0, 0);
+    const grad = ctx.createRadialGradient(
+      center.x - R * .15, center.y - R * .15, R * .05,
+      center.x, center.y, R
+    );
+    grad.addColorStop(0, 'rgba(94,196,212,.04)');
+    grad.addColorStop(.5, 'rgba(94,196,212,.015)');
+    grad.addColorStop(1, 'rgba(94,196,212,.005)');
+
+    ctx.beginPath();
+    ctx.arc(center.x, center.y, R, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Subtle rim light
+    ctx.beginPath();
+    ctx.arc(center.x, center.y, R, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(94,196,212,.12)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Qubit state vector
+  function getStateVec(){
+    const sx = Math.sin(theta) * Math.cos(phi);
+    const sy = Math.cos(theta);  // |0⟩ at top
+    const sz = Math.sin(theta) * Math.sin(phi);
+    return [sx * R, sy * R, sz * R];
+  }
+
+  function drawStateVector(){
+    const [sx, sy, sz] = getStateVec();
+    const origin = project(0, 0, 0);
+    const tip = project(sx, sy, sz);
+
+    // Trail
+    trail.push({x: sx, y: sy, z: sz, t: performance.now()});
+    if(trail.length > TRAIL_MAX) trail.shift();
+
+    // Draw trail
+    if(trail.length > 2){
+      for(let i = 1; i < trail.length; i++){
+        const a = trail[i-1], b = trail[i];
+        const pa = project(a.x, a.y, a.z);
+        const pb = project(b.x, b.y, b.z);
+        const age = (i / trail.length);
+        ctx.beginPath();
+        ctx.moveTo(pa.x, pa.y);
+        ctx.lineTo(pb.x, pb.y);
+        ctx.strokeStyle = `rgba(212,168,83,${age * .35})`;
+        ctx.lineWidth = age * 1.8;
+        ctx.stroke();
+      }
+    }
+
+    // Vector line
+    ctx.beginPath();
+    ctx.moveTo(origin.x, origin.y);
+    ctx.lineTo(tip.x, tip.y);
+    ctx.strokeStyle = 'rgba(212,168,83,.85)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Tip glow
+    ctx.beginPath();
+    ctx.arc(tip.x, tip.y, 5, 0, Math.PI * 2);
+    const glow = ctx.createRadialGradient(tip.x, tip.y, 0, tip.x, tip.y, 12);
+    glow.addColorStop(0, 'rgba(212,168,83,.9)');
+    glow.addColorStop(.4, 'rgba(212,168,83,.3)');
+    glow.addColorStop(1, 'rgba(212,168,83,0)');
+    ctx.fillStyle = glow;
+    ctx.fill();
+
+    // Solid dot
+    ctx.beginPath();
+    ctx.arc(tip.x, tip.y, 3, 0, Math.PI * 2);
+    ctx.fillStyle = '#d4a853';
+    ctx.fill();
+
+    // Projection line to equator (dashed)
+    const eqX = Math.sin(theta) * Math.cos(phi) * R;
+    const eqZ = Math.sin(theta) * Math.sin(phi) * R;
+    const eqP = project(eqX, 0, eqZ);
+    ctx.beginPath();
+    ctx.moveTo(tip.x, tip.y);
+    ctx.lineTo(eqP.x, eqP.y);
+    ctx.setLineDash([3, 4]);
+    ctx.strokeStyle = 'rgba(212,168,83,.2)';
+    ctx.lineWidth = .8;
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // State readout
+    const cosHalf = Math.cos(theta / 2);
+    const sinHalf = Math.sin(theta / 2);
+    const p0 = (cosHalf * cosHalf * 100).toFixed(0);
+    const p1 = (sinHalf * sinHalf * 100).toFixed(0);
+
+    // Probability bar at bottom of sphere
+    const barY = cy + R + 35;
+    const barW = R * 1.2;
+    const barH = 4;
+    const barX = cx - barW / 2;
+
+    ctx.fillStyle = 'rgba(94,196,212,.25)';
+    ctx.fillRect(barX, barY, barW * cosHalf * cosHalf, barH);
+    ctx.fillStyle = 'rgba(196,122,212,.25)';
+    ctx.fillRect(barX + barW * cosHalf * cosHalf, barY, barW * sinHalf * sinHalf, barH);
+
+    // Labels
+    ctx.font = `400 ${Math.max(9, R * .06)}px 'JetBrains Mono', monospace`;
+    ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(94,196,212,.5)';
+    ctx.fillText(`|0⟩ ${p0}%`, barX, barY + barH + 14);
+    ctx.textAlign = 'right';
+    ctx.fillStyle = 'rgba(196,122,212,.5)';
+    ctx.fillText(`|1⟩ ${p1}%`, barX + barW, barY + barH + 14);
+  }
+
+  // Animation loop
+  let time = 0;
+  let raf;
+
+  function draw(){
+    ctx.clearRect(0, 0, W, H);
+    time += .016;
+
+    // Auto-rotation (slow)
+    if(!isDragging){
+      autoRotY += .002;
+      // Gentle precession of qubit state
+      phi += .008;
+      theta += Math.sin(time * .3) * .001;
+      theta = Math.max(.15, Math.min(Math.PI - .15, theta));
+    }
+
+    // Apply drag momentum
+    if(!isDragging){
+      rotY += dragVelY;
+      rotX += dragVelX;
+      dragVelX *= .95;
+      dragVelY *= .95;
+    }
+
+    // Clamp X rotation
+    rotX = Math.max(-Math.PI / 2 + .1, Math.min(Math.PI / 2 - .1, rotX));
+
+    drawSphereSurface();
+    drawWireframe();
+    drawAxes();
+    drawStateVector();
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  // Interaction
+  function startDrag(x, y){
+    isDragging = true;
+    lastMX = x; lastMY = y;
+    dragVelX = 0; dragVelY = 0;
+  }
+  function moveDrag(x, y){
+    if(!isDragging) return;
+    const dx = x - lastMX, dy = y - lastMY;
+    rotY += dx * .005;
+    rotX += dy * .005;
+    dragVelX = dy * .002;
+    dragVelY = dx * .002;
+    lastMX = x; lastMY = y;
+  }
+  function endDrag(){ isDragging = false; }
+
+  canvas.addEventListener('mousedown', e => startDrag(e.clientX, e.clientY));
+  window.addEventListener('mousemove', e => moveDrag(e.clientX, e.clientY));
+  window.addEventListener('mouseup', endDrag);
+
+  canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    const t = e.touches[0];
+    startDrag(t.clientX, t.clientY);
+  }, {passive:false});
+  canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    const t = e.touches[0];
+    moveDrag(t.clientX, t.clientY);
+  }, {passive:false});
+  canvas.addEventListener('touchend', endDrag);
+
+  resize(); draw();
+  window.addEventListener('resize', resize);
+
+  // Visibility optimization
+  const heroEl = document.getElementById('hero');
+  const obs = new IntersectionObserver(([e]) => {
+    if(e.isIntersecting){ if(!raf) draw(); }
+    else { cancelAnimationFrame(raf); raf = null; }
+  }, {threshold:0.05});
+  obs.observe(heroEl);
+})();
+
+
+/* ─────────────────────────────────────────────
+   §1: CLASSICAL BIT TOGGLE
+   ───────────────────────────────────────────── */
+let bitState = 0;
+function toggleBit(){
+  bitState = 1 - bitState;
+  const sw = document.getElementById('classicalSwitch');
+  const val = document.getElementById('bitValue');
+  if(bitState){
+    sw.classList.add('on');
+    val.classList.add('on');
+    val.textContent = '1';
+  } else {
+    sw.classList.remove('on');
+    val.classList.remove('on');
+    val.textContent = '0';
+  }
+}
+
+/* ─────────────────────────────────────────────
+   §1: BIT STREAM
+   ───────────────────────────────────────────── */
+(function(){
+  const container = document.getElementById('bitStream');
+  const decDisplay = document.getElementById('byteDecimal');
+  const bits = new Array(32).fill(0);
+
+  function render(){
+    container.innerHTML = '';
+    for(let i = 0; i < bits.length; i++){
+      const cell = document.createElement('div');
+      cell.className = 'cell ' + (bits[i] ? 'one' : 'zero');
+      cell.textContent = bits[i];
+      cell.onclick = () => {
+        bits[i] = 1 - bits[i];
+        render();
+      };
+      // Byte separator
+      if(i > 0 && i % 8 === 0){
+        cell.style.marginLeft = '6px';
+      }
+      container.appendChild(cell);
+    }
+    // Calculate decimal of first byte
+    let dec = 0;
+    for(let i = 0; i < 8; i++){
+      dec += bits[i] * Math.pow(2, 7 - i);
+    }
+    decDisplay.textContent = dec;
+  }
+
+  render();
+})();
+
+/* ─────────────────────────────────────────────
+   §1: COIN FLIP & ENTROPY
+   ───────────────────────────────────────────── */
+let coinHeads = 0, coinTails = 0;
+const coinHistory = [];
+
+function flipCoin(){
+  const coin = document.getElementById('coinFlip');
+  coin.classList.remove('flip');
+  void coin.offsetWidth;
+  coin.classList.add('flip');
+  playCoinSound();
+
+  const isHeads = Math.random() < 0.5;
+  if(isHeads) coinHeads++; else coinTails++;
+  coinHistory.push(isHeads);
+
+  setTimeout(() => {
+    coin.textContent = isHeads ? 'H' : 'T';
+    updateCoinDisplay();
+  }, 200);
+}
+
+function updateCoinDisplay(){
+  // Results pips
+  const container = document.getElementById('coinResults');
+  // Show last 60
+  const recent = coinHistory.slice(-60);
+  container.innerHTML = '';
+  for(const h of recent){
+    const pip = document.createElement('div');
+    pip.className = 'pip ' + (h ? 'h' : 't');
+    container.appendChild(pip);
+  }
+
+  // Stats
+  document.getElementById('coinH').textContent = `heads: ${coinHeads}`;
+  document.getElementById('coinT').textContent = `tails: ${coinTails}`;
+
+  // Shannon entropy
+  const total = coinHeads + coinTails;
+  let entropy = 0;
+  if(total > 0){
+    const pH = coinHeads / total;
+    const pT = coinTails / total;
+    if(pH > 0) entropy -= pH * Math.log2(pH);
+    if(pT > 0) entropy -= pT * Math.log2(pT);
+  }
+
+  document.getElementById('entropyVal').textContent = entropy.toFixed(3);
+  document.getElementById('entropyFill').style.width = (entropy * 100) + '%';
+}
+
+function resetCoin(){
+  coinHeads = 0; coinTails = 0;
+  coinHistory.length = 0;
+  document.getElementById('coinFlip').textContent = 'flip';
+  document.getElementById('coinResults').innerHTML = '';
+  document.getElementById('coinH').textContent = '앞면: 0';
+  document.getElementById('coinT').textContent = '뒷면: 0';
+  document.getElementById('entropyVal').textContent = '0.000';
+  document.getElementById('entropyFill').style.width = '0%';
+}
+
+
+/* ─────────────────────────────────────────────
+   §2: INTERACTIVE BLOCH SPHERE LAB
+   ───────────────────────────────────────────── */
+(function(){
+  const wrap = document.getElementById('blochWrap');
+  if(!wrap) return;
+  const canvas = document.getElementById('bloch2');
+  const ctx = canvas.getContext('2d');
+  let W, H, cx, cy, R;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  // View rotation
+  let viewRotX = -.45, viewRotY = .6;
+  let isDrag = false, lastMX = 0, lastMY = 0;
+  let velX = 0, velY = 0;
+
+  // Qubit state
+  let qTheta = 0, qPhi = 0;
+
+  function resize(){
+    const rect = wrap.getBoundingClientRect();
+    W = rect.width; H = rect.height;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cx = W / 2; cy = H / 2;
+    R = Math.min(W, H) * .3;
+  }
+
+  function project(x, y, z){
+    const cosY = Math.cos(viewRotY), sinY = Math.sin(viewRotY);
+    let x1 = x * cosY + z * sinY;
+    let z1 = -x * sinY + z * cosY;
+    const cosX = Math.cos(viewRotX), sinX = Math.sin(viewRotX);
+    let y2 = y * cosX - z1 * sinX;
+    let z2 = y * sinX + z1 * cosX;
+    return { x: cx + x1, y: cy - y2, z: z2 };
+  }
+
+  function drawCircle(nx, ny, nz, col, alphaF, alphaB){
+    let ux, uy, uz;
+    if(Math.abs(nx) < .9){ ux=0; uy=-nz; uz=ny; }
+    else { ux=-nz; uy=0; uz=nx; }
+    const len = Math.sqrt(ux*ux+uy*uy+uz*uz);
+    ux/=len; uy/=len; uz/=len;
+    let vx=ny*uz-nz*uy, vy=nz*ux-nx*uz, vz=nx*uy-ny*ux;
+
+    const segs = 100;
+    const pts = [];
+    for(let i=0;i<=segs;i++){
+      const a = (i/segs)*Math.PI*2;
+      const px = R*(Math.cos(a)*ux + Math.sin(a)*vx);
+      const py = R*(Math.cos(a)*uy + Math.sin(a)*vy);
+      const pz = R*(Math.cos(a)*uz + Math.sin(a)*vz);
+      pts.push({...project(px,py,pz), behind: project(px,py,pz).z < 0});
+    }
+
+    for(const behind of [true, false]){
+      ctx.beginPath();
+      let started = false;
+      for(const p of pts){
+        if(p.behind === behind){
+          if(!started){ctx.moveTo(p.x,p.y);started=true;}
+          else ctx.lineTo(p.x,p.y);
+        } else if(started){
+          ctx.strokeStyle = col;
+          ctx.globalAlpha = behind ? alphaB : alphaF;
+          ctx.lineWidth = behind ? .4 : .7;
+          ctx.setLineDash(behind ? [3,5] : []);
+          ctx.stroke();
+          ctx.beginPath(); started = false;
+        }
+      }
+      if(started){
+        ctx.strokeStyle = col;
+        ctx.globalAlpha = behind ? alphaB : alphaF;
+        ctx.lineWidth = behind ? .4 : .7;
+        ctx.setLineDash(behind ? [3,5] : []);
+        ctx.stroke();
+      }
+    }
+    ctx.globalAlpha = 1;
+    ctx.setLineDash([]);
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    // Gentle auto-rotation
+    if(!isDrag){
+      viewRotY += .001;
+      viewRotX += velX; viewRotY += velY;
+      velX *= .96; velY *= .96;
+    }
+    viewRotX = Math.max(-1.4, Math.min(1.4, viewRotX));
+
+    // Sphere surface
+    const c0 = project(0,0,0);
+    const grad = ctx.createRadialGradient(c0.x-R*.12,c0.y-R*.12,R*.05,c0.x,c0.y,R);
+    grad.addColorStop(0,'rgba(94,196,212,.05)');
+    grad.addColorStop(.7,'rgba(94,196,212,.02)');
+    grad.addColorStop(1,'rgba(94,196,212,.005)');
+    ctx.beginPath(); ctx.arc(c0.x,c0.y,R,0,Math.PI*2);
+    ctx.fillStyle = grad; ctx.fill();
+    ctx.strokeStyle = 'rgba(94,196,212,.15)';
+    ctx.lineWidth = .8; ctx.stroke();
+
+    // Great circles
+    drawCircle(0,1,0,'rgba(94,196,212,1)',.3,.07);
+    drawCircle(0,0,1,'rgba(94,196,212,1)',.15,.05);
+    drawCircle(1,0,0,'rgba(94,196,212,1)',.15,.05);
+
+    // Axes
+    const axisLen = R * 1.15;
+    const axes = [
+      {d:[0,axisLen,0], l:'|0⟩', c:'rgba(94,196,212,.9)', s:.09},
+      {d:[0,-axisLen,0], l:'|1⟩', c:'rgba(196,122,212,.9)', s:.09},
+      {d:[axisLen,0,0], l:'|+⟩', c:'rgba(212,168,83,.45)', s:.065},
+      {d:[-axisLen,0,0], l:'|−⟩', c:'rgba(212,168,83,.45)', s:.065},
+      {d:[0,0,axisLen], l:'|i⟩', c:'rgba(212,168,83,.35)', s:.06},
+      {d:[0,0,-axisLen], l:'|−i⟩', c:'rgba(212,168,83,.35)', s:.06},
+    ];
+    for(const a of axes){
+      const o = project(0,0,0);
+      const p = project(a.d[0]*.85,a.d[1]*.85,a.d[2]*.85);
+      ctx.beginPath(); ctx.moveTo(o.x,o.y); ctx.lineTo(p.x,p.y);
+      ctx.strokeStyle = 'rgba(94,196,212,.08)'; ctx.lineWidth = .5; ctx.stroke();
+      const lp = project(a.d[0],a.d[1],a.d[2]);
+      ctx.font = `500 ${Math.max(10,R*a.s)}px 'JetBrains Mono',monospace`;
+      ctx.fillStyle = a.c;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(a.l, lp.x, lp.y);
+    }
+
+    // State vector
+    const sx = Math.sin(qTheta)*Math.cos(qPhi)*R;
+    const sy = Math.cos(qTheta)*R;
+    const sz = Math.sin(qTheta)*Math.sin(qPhi)*R;
+    const origin = project(0,0,0);
+    const tip = project(sx,sy,sz);
+
+    // Projection to equator
+    const eqP = project(Math.sin(qTheta)*Math.cos(qPhi)*R, 0, Math.sin(qTheta)*Math.sin(qPhi)*R);
+    ctx.beginPath(); ctx.moveTo(tip.x,tip.y); ctx.lineTo(eqP.x,eqP.y);
+    ctx.setLineDash([2,3]); ctx.strokeStyle='rgba(212,168,83,.15)'; ctx.lineWidth=.6; ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(origin.x,origin.y); ctx.lineTo(eqP.x,eqP.y);
+    ctx.setLineDash([2,3]); ctx.strokeStyle='rgba(212,168,83,.1)'; ctx.lineWidth=.5; ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Vector
+    ctx.beginPath(); ctx.moveTo(origin.x,origin.y); ctx.lineTo(tip.x,tip.y);
+    ctx.strokeStyle='rgba(212,168,83,.85)'; ctx.lineWidth=2; ctx.stroke();
+
+    // Tip glow
+    const glow = ctx.createRadialGradient(tip.x,tip.y,0,tip.x,tip.y,14);
+    glow.addColorStop(0,'rgba(212,168,83,.8)');
+    glow.addColorStop(.4,'rgba(212,168,83,.2)');
+    glow.addColorStop(1,'rgba(212,168,83,0)');
+    ctx.beginPath(); ctx.arc(tip.x,tip.y,14,0,Math.PI*2);
+    ctx.fillStyle=glow; ctx.fill();
+    ctx.beginPath(); ctx.arc(tip.x,tip.y,3.5,0,Math.PI*2);
+    ctx.fillStyle='#d4a853'; ctx.fill();
+
+    // θ arc (from north pole toward state)
+    if(qTheta > 0.02){
+      ctx.beginPath();
+      const arcR = R * .25;
+      const steps = 30;
+      for(let i=0;i<=steps;i++){
+        const t = (i/steps) * qTheta;
+        const ax = Math.sin(t)*Math.cos(qPhi)*arcR;
+        const ay = Math.cos(t)*arcR;
+        const az = Math.sin(t)*Math.sin(qPhi)*arcR;
+        const ap = project(ax,ay,az);
+        if(i===0) ctx.moveTo(ap.x,ap.y);
+        else ctx.lineTo(ap.x,ap.y);
+      }
+      ctx.strokeStyle='rgba(212,168,83,.4)'; ctx.lineWidth=1; ctx.stroke();
+      // Label θ
+      const midT = qTheta/2;
+      const mp = project(Math.sin(midT)*Math.cos(qPhi)*arcR*1.4, Math.cos(midT)*arcR*1.4, Math.sin(midT)*Math.sin(qPhi)*arcR*1.4);
+      ctx.font = `italic 400 ${Math.max(10,R*.07)}px 'EB Garamond',serif`;
+      ctx.fillStyle = 'rgba(212,168,83,.6)';
+      ctx.fillText('θ', mp.x, mp.y);
+    }
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  // Slider updates
+  const thetaSlider = document.getElementById('thetaSlider');
+  const phiSlider = document.getElementById('phiSlider');
+
+  function updateFromSliders(){
+    qTheta = parseFloat(thetaSlider.value) / 100;
+    qPhi = parseFloat(phiSlider.value) / 100;
+    updateReadout();
+  }
+
+  function updateReadout(){
+    const cosH = Math.cos(qTheta/2);
+    const sinH = Math.sin(qTheta/2);
+    document.getElementById('thetaVal').textContent = (qTheta * 180 / Math.PI).toFixed(0) + '°';
+    document.getElementById('phiVal').textContent = (qPhi * 180 / Math.PI).toFixed(0) + '°';
+    document.getElementById('ampA').textContent = cosH.toFixed(3);
+    document.getElementById('ampB').textContent = sinH.toFixed(3);
+    const p0 = cosH * cosH * 100;
+    const p1 = sinH * sinH * 100;
+    document.getElementById('prob0Fill').style.width = p0 + '%';
+    document.getElementById('prob1Fill').style.width = p1 + '%';
+    document.getElementById('prob0Pct').textContent = p0.toFixed(0) + '%';
+    document.getElementById('prob1Pct').textContent = p1.toFixed(0) + '%';
+  }
+
+  thetaSlider.addEventListener('input', updateFromSliders);
+  phiSlider.addEventListener('input', updateFromSliders);
+
+  // Set state programmatically
+  window.setBlochState = function(t, p){
+    qTheta = t; qPhi = p;
+    thetaSlider.value = Math.round(t * 100);
+    phiSlider.value = Math.round(p * 100);
+    updateReadout();
+  };
+
+  // Drag rotation
+  canvas.addEventListener('mousedown', e => { isDrag=true; lastMX=e.clientX; lastMY=e.clientY; velX=0;velY=0; });
+  window.addEventListener('mousemove', e => {
+    if(!isDrag)return;
+    viewRotY += (e.clientX-lastMX)*.005;
+    viewRotX += (e.clientY-lastMY)*.005;
+    velX=(e.clientY-lastMY)*.002; velY=(e.clientX-lastMX)*.002;
+    lastMX=e.clientX; lastMY=e.clientY;
+  });
+  window.addEventListener('mouseup', () => { isDrag=false; });
+
+  canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    isDrag=true; lastMX=e.touches[0].clientX; lastMY=e.touches[0].clientY; velX=0;velY=0;
+  }, {passive:false});
+  canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    if(!isDrag)return;
+    const t=e.touches[0];
+    viewRotY += (t.clientX-lastMX)*.005;
+    viewRotX += (t.clientY-lastMY)*.005;
+    velX=(t.clientY-lastMY)*.002; velY=(t.clientX-lastMX)*.002;
+    lastMX=t.clientX; lastMY=t.clientY;
+  }, {passive:false});
+  canvas.addEventListener('touchend', () => { isDrag=false; });
+
+  let raf;
+  resize(); updateReadout(); draw();
+  window.addEventListener('resize', resize);
+
+  // Visibility optimization
+  const obs = new IntersectionObserver(([e]) => {
+    if(e.isIntersecting){ if(!raf) draw(); }
+    else { cancelAnimationFrame(raf); raf = null; }
+  }, {threshold:0.05});
+  obs.observe(wrap);
+})();
+
+
+/* ─────────────────────────────────────────────
+   §2: COMPARISON CARD VISUALS
+   ───────────────────────────────────────────── */
+(function(){
+  // Classical bit: simple line segment
+  const c1 = document.getElementById('classicalVis');
+  if(!c1) return;
+  const ctx1 = c1.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio||1, 2);
+  c1.width = 180*dpr; c1.height = 50*dpr;
+  ctx1.setTransform(dpr,0,0,dpr,0,0);
+
+  ctx1.strokeStyle = 'rgba(94,196,212,.3)';
+  ctx1.lineWidth = 2;
+  ctx1.beginPath(); ctx1.moveTo(30,25); ctx1.lineTo(150,25); ctx1.stroke();
+
+  ctx1.fillStyle = '#5ec4d4';
+  ctx1.beginPath(); ctx1.arc(30,25,6,0,Math.PI*2); ctx1.fill();
+  ctx1.beginPath(); ctx1.arc(150,25,6,0,Math.PI*2); ctx1.fill();
+
+  ctx1.font = "500 11px 'JetBrains Mono',monospace";
+  ctx1.textAlign = 'center';
+  ctx1.fillStyle = '#5ec4d4';
+  ctx1.fillText('0', 30, 45);
+  ctx1.fillText('1', 150, 45);
+
+  // Quantum: mini sphere
+  const c2 = document.getElementById('quantumVis');
+  if(!c2) return;
+  const ctx2 = c2.getContext('2d');
+  c2.width = 180*dpr; c2.height = 100*dpr;
+  ctx2.setTransform(dpr,0,0,dpr,0,0);
+
+  const qcx = 90, qcy = 50, qR = 35;
+
+  // Sphere outline
+  ctx2.beginPath(); ctx2.arc(qcx,qcy,qR,0,Math.PI*2);
+  ctx2.strokeStyle = 'rgba(212,168,83,.25)'; ctx2.lineWidth = 1; ctx2.stroke();
+
+  // Equator ellipse
+  ctx2.beginPath(); ctx2.ellipse(qcx,qcy,qR,qR*.3,0,0,Math.PI*2);
+  ctx2.strokeStyle = 'rgba(212,168,83,.15)'; ctx2.lineWidth = .6; ctx2.stroke();
+
+  // Vector
+  const angle = -Math.PI/4;
+  const tx = qcx + Math.cos(angle)*qR*.8;
+  const ty = qcy + Math.sin(angle)*qR*.8;
+  ctx2.beginPath(); ctx2.moveTo(qcx,qcy); ctx2.lineTo(tx,ty);
+  ctx2.strokeStyle = '#d4a853'; ctx2.lineWidth = 1.5; ctx2.stroke();
+  ctx2.beginPath(); ctx2.arc(tx,ty,3,0,Math.PI*2);
+  ctx2.fillStyle = '#d4a853'; ctx2.fill();
+
+  // Poles
+  ctx2.font = "500 9px 'JetBrains Mono',monospace";
+  ctx2.textAlign = 'center';
+  ctx2.fillStyle = 'rgba(94,196,212,.6)';
+  ctx2.fillText('|0⟩', qcx, qcy-qR-6);
+  ctx2.fillStyle = 'rgba(196,122,212,.6)';
+  ctx2.fillText('|1⟩', qcx, qcy+qR+14);
+})();
+
+
+/* ─────────────────────────────────────────────
+   §3: MEASUREMENT SIMULATOR
+   ───────────────────────────────────────────── */
+(function(){
+  const wrap = document.getElementById('measureCanvasWrap');
+  if(!wrap) return;
+  const canvas = document.getElementById('measureCanvas');
+  const ctx = canvas.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio||1,2);
+  let W,H,cx,cy,R;
+
+  let viewRX = -.4, viewRY = .5;
+  let mTheta = Math.PI/2; // prepared state
+  let collapsed = false, collapsedTo = 0;
+  let collapseAnim = 0; // 0=not animating, >0=animating
+  let currentTheta = Math.PI/2; // animated theta
+
+  function resize(){
+    const rect = wrap.getBoundingClientRect();
+    W = rect.width; H = rect.height;
+    canvas.width = W*dpr; canvas.height = H*dpr;
+    canvas.style.width = W+'px'; canvas.style.height = H+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    cx = W/2; cy = H/2;
+    R = Math.min(W,H)*.28;
+  }
+
+  function project(x,y,z){
+    const cY=Math.cos(viewRY),sY=Math.sin(viewRY);
+    let x1=x*cY+z*sY, z1=-x*sY+z*cY;
+    const cX=Math.cos(viewRX),sX=Math.sin(viewRX);
+    let y2=y*cX-z1*sX, z2=y*sX+z1*cX;
+    return{x:cx+x1,y:cy-y2,z:z2};
+  }
+
+  function drawCircle(nx,ny,nz,col,aF,aB){
+    let ux,uy,uz;
+    if(Math.abs(nx)<.9){ux=0;uy=-nz;uz=ny}else{ux=-nz;uy=0;uz=nx}
+    const len=Math.sqrt(ux*ux+uy*uy+uz*uz);ux/=len;uy/=len;uz/=len;
+    let vx=ny*uz-nz*uy,vy=nz*ux-nx*uz,vz=nx*uy-ny*ux;
+    const segs=80,pts=[];
+    for(let i=0;i<=segs;i++){
+      const a=(i/segs)*Math.PI*2;
+      const px=R*(Math.cos(a)*ux+Math.sin(a)*vx);
+      const py=R*(Math.cos(a)*uy+Math.sin(a)*vy);
+      const pz=R*(Math.cos(a)*uz+Math.sin(a)*vz);
+      const p=project(px,py,pz);pts.push({...p,behind:p.z<0});
+    }
+    for(const behind of[true,false]){
+      ctx.beginPath();let s=false;
+      for(const p of pts){
+        if(p.behind===behind){if(!s){ctx.moveTo(p.x,p.y);s=true}else ctx.lineTo(p.x,p.y)}
+        else if(s){ctx.strokeStyle=col;ctx.globalAlpha=behind?aB:aF;ctx.lineWidth=behind?.4:.7;
+          ctx.setLineDash(behind?[3,5]:[]);ctx.stroke();ctx.beginPath();s=false}
+      }
+      if(s){ctx.strokeStyle=col;ctx.globalAlpha=behind?aB:aF;ctx.lineWidth=behind?.4:.7;
+        ctx.setLineDash(behind?[3,5]:[]);ctx.stroke()}
+    }
+    ctx.globalAlpha=1;ctx.setLineDash([]);
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    viewRY += .001;
+
+    // Collapse animation
+    if(collapseAnim > 0){
+      collapseAnim -= .03;
+      const target = collapsedTo === 0 ? 0 : Math.PI;
+      currentTheta += (target - currentTheta) * .15;
+      if(collapseAnim <= 0){
+        collapseAnim = 0;
+        currentTheta = target;
+      }
+    } else if(!collapsed){
+      currentTheta = mTheta;
+    }
+
+    // Sphere
+    const c0=project(0,0,0);
+    const grad=ctx.createRadialGradient(c0.x-R*.1,c0.y-R*.1,R*.05,c0.x,c0.y,R);
+    grad.addColorStop(0,'rgba(94,196,212,.04)');grad.addColorStop(1,'rgba(94,196,212,.005)');
+    ctx.beginPath();ctx.arc(c0.x,c0.y,R,0,Math.PI*2);ctx.fillStyle=grad;ctx.fill();
+    ctx.strokeStyle='rgba(94,196,212,.12)';ctx.lineWidth=.8;ctx.stroke();
+
+    drawCircle(0,1,0,'rgba(94,196,212,1)',.25,.06);
+    drawCircle(0,0,1,'rgba(94,196,212,1)',.12,.04);
+    drawCircle(1,0,0,'rgba(94,196,212,1)',.12,.04);
+
+    // Poles
+    const axes=[
+      {d:[0,R*1.12,0],l:'|0⟩',c:'rgba(94,196,212,.8)'},
+      {d:[0,-R*1.12,0],l:'|1⟩',c:'rgba(196,122,212,.8)'},
+    ];
+    for(const a of axes){
+      const p=project(a.d[0],a.d[1],a.d[2]);
+      ctx.font=`500 ${Math.max(10,R*.085)}px 'JetBrains Mono',monospace`;
+      ctx.fillStyle=a.c;ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(a.l,p.x,p.y);
+    }
+    // Axis lines
+    const o=project(0,0,0);
+    const pTop=project(0,R*.9,0),pBot=project(0,-R*.9,0);
+    ctx.beginPath();ctx.moveTo(pTop.x,pTop.y);ctx.lineTo(pBot.x,pBot.y);
+    ctx.strokeStyle='rgba(94,196,212,.08)';ctx.lineWidth=.5;ctx.stroke();
+
+    // State vector
+    const sx=Math.sin(currentTheta)*R;
+    const sy=Math.cos(currentTheta)*R;
+    const tip=project(sx,sy,0);
+    const orig=project(0,0,0);
+
+    // Glow based on collapse
+    let vecColor = 'rgba(212,168,83,.85)';
+    let glowColor = 'rgba(212,168,83,';
+    let dotColor = '#d4a853';
+    if(collapsed && collapseAnim <= 0){
+      if(collapsedTo === 0){
+        vecColor='rgba(94,196,212,.9)';glowColor='rgba(94,196,212,';dotColor='#5ec4d4';
+      } else {
+        vecColor='rgba(196,122,212,.9)';glowColor='rgba(196,122,212,';dotColor='#c47ad4';
+      }
+    }
+
+    ctx.beginPath();ctx.moveTo(orig.x,orig.y);ctx.lineTo(tip.x,tip.y);
+    ctx.strokeStyle=vecColor;ctx.lineWidth=2.5;ctx.stroke();
+
+    const glow=ctx.createRadialGradient(tip.x,tip.y,0,tip.x,tip.y,16);
+    glow.addColorStop(0,glowColor+'.8)');glow.addColorStop(.4,glowColor+'.2)');glow.addColorStop(1,glowColor+'0)');
+    ctx.beginPath();ctx.arc(tip.x,tip.y,16,0,Math.PI*2);ctx.fillStyle=glow;ctx.fill();
+    ctx.beginPath();ctx.arc(tip.x,tip.y,4,0,Math.PI*2);ctx.fillStyle=dotColor;ctx.fill();
+
+    // Probability zone arc (faint wedge showing uncertainty)
+    if(!collapsed && mTheta > 0.05 && mTheta < Math.PI - 0.05){
+      ctx.globalAlpha = .06;
+      ctx.beginPath();
+      const wedgeSteps = 40;
+      const mp = project(0,0,0);
+      ctx.moveTo(mp.x, mp.y);
+      for(let i=0;i<=wedgeSteps;i++){
+        const t = (i/wedgeSteps) * Math.PI;
+        const wp = project(Math.sin(t)*R, Math.cos(t)*R, 0);
+        ctx.lineTo(wp.x, wp.y);
+      }
+      ctx.closePath();
+      ctx.fillStyle = '#d4a853';
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  // Slider
+  const slider = document.getElementById('measureTheta');
+  slider.addEventListener('input', () => {
+    mTheta = parseFloat(slider.value)/100;
+    collapsed = false;
+    collapseAnim = 0;
+    updateMeasureReadout();
+  });
+
+  function updateMeasureReadout(){
+    const cosH = Math.cos(mTheta/2);
+    const sinH = Math.sin(mTheta/2);
+    const p0 = (cosH*cosH*100).toFixed(0);
+    const p1 = (sinH*sinH*100).toFixed(0);
+    document.getElementById('measureThetaVal').textContent = (mTheta*180/Math.PI).toFixed(0)+'°';
+    document.getElementById('mProb0').textContent = p0+'%';
+    document.getElementById('mProb1').textContent = p1+'%';
+  }
+  updateMeasureReadout();
+
+  let raf;
+  resize(); draw();
+  window.addEventListener('resize', resize);
+
+  const obs = new IntersectionObserver(([e])=>{
+    if(e.isIntersecting){if(!raf)draw()}
+    else{cancelAnimationFrame(raf);raf=null}
+  },{threshold:.05});
+  obs.observe(wrap);
+})();
+
+/* Measurement logic */
+let mCount0 = 0, mCount1 = 0;
+
+function doMeasure(){
+  const slider = document.getElementById('measureTheta');
+  const theta = parseFloat(slider.value)/100;
+  const p0 = Math.cos(theta/2)**2;
+  const result = Math.random() < p0 ? 0 : 1;
+
+  if(result === 0) mCount0++; else mCount1++;
+  playCollapse(result);
+
+  // Show collapse overlay
+  const overlay = document.getElementById('collapseOverlay');
+  const resultEl = document.getElementById('collapseResult');
+  resultEl.className = 'collapse-result ' + (result === 0 ? 'r0' : 'r1');
+  resultEl.textContent = result === 0 ? '|0⟩' : '|1⟩';
+  overlay.classList.add('show');
+  setTimeout(() => overlay.classList.remove('show'), 600);
+
+  // Button flash
+  const btn = document.getElementById('measureBtn');
+  btn.classList.remove('flash');
+  void btn.offsetWidth;
+  btn.classList.add('flash');
+
+  updateHistogram();
+}
+
+function doMeasureN(n){
+  const slider = document.getElementById('measureTheta');
+  const theta = parseFloat(slider.value)/100;
+  const p0 = Math.cos(theta/2)**2;
+
+  for(let i=0;i<n;i++){
+    if(Math.random() < p0) mCount0++; else mCount1++;
+  }
+  updateHistogram();
+}
+
+function resetMeasure(){
+  mCount0 = 0; mCount1 = 0;
+  updateHistogram();
+}
+
+function updateHistogram(){
+  const total = mCount0 + mCount1;
+  const max = Math.max(mCount0, mCount1, 1);
+
+  document.getElementById('hCount0').textContent = mCount0;
+  document.getElementById('hCount1').textContent = mCount1;
+  document.getElementById('hBar0').style.height = (mCount0/max*100)+'%';
+  document.getElementById('hBar1').style.height = (mCount1/max*100)+'%';
+
+  if(total > 0){
+    document.getElementById('hPct0').textContent = (mCount0/total*100).toFixed(1)+'%';
+    document.getElementById('hPct1').textContent = (mCount1/total*100).toFixed(1)+'%';
+  } else {
+    document.getElementById('hPct0').textContent = '—';
+    document.getElementById('hPct1').textContent = '—';
+  }
+  document.getElementById('measureTotal').textContent = total + ' 회 측정' + (total!==1?'s':'');
+}
+
+
+/* ─────────────────────────────────────────────
+   §3: PREDICTION GAME — "큐비트를 이길 수 있을까?"
+   ───────────────────────────────────────────── */
+let pCorrect = 0, pTotal = 0;
+const predInsights = [
+  { min:0, max:5, msg:"계속 해보세요 — 양자 무작위성은 드러나는 데 시간이 걸립니다." },
+  { min:6, max:15, msg:"운이 좋은 건가요? 패턴이 있나요? (스포일러: 없습니다.)" },
+  { min:16, max:30, msg:"적중률이 50%를 향해 흘러가고 있습니다... 어떤 전략을 쓰든." },
+  { min:31, max:60, msg:"보른의 규칙이 작동하고 있습니다. 어떤 인간도, 컴퓨터도, 알고리즘도 이길 수 없습니다." },
+  { min:61, max:999, msg:"스스로 증명했습니다: 양자 무작위성은 환원 불가능합니다. 완전한 양자 상태를 알아도 도움이 되지 않습니다." },
+];
+
+function makePrediction(guess){
+  // Disable buttons briefly
+  const btns = document.querySelectorAll('.predict-btn');
+  btns.forEach(b => b.disabled = true);
+
+  // Quantum measurement: equal superposition → 50/50
+  const result = Math.random() < 0.5 ? 0 : 1;
+  const correct = (guess === result);
+  if(correct) pCorrect++;
+  pTotal++;
+
+  // Feedback
+  const fb = document.getElementById('predictFeedback');
+  fb.className = 'predict-feedback ' + (correct ? 'correct' : 'wrong');
+  if(correct){
+    const msgs = ['✓ 정답!', '✓ 행운!', '✓ 맞았어요!', '✓ 좋은 추측!'];
+    fb.textContent = msgs[Math.floor(Math.random()*msgs.length)] + 
+      '  →  결과: ' + (result===0?'|0⟩':'|1⟩');
+  } else {
+    const msgs = ['✗ 아닙니다.', '✗ 이번엔 아닙니다.', '✗ 틀렸어요!', '✗ 큐비트가 동의하지 않았습니다.'];
+    fb.textContent = msgs[Math.floor(Math.random()*msgs.length)] + 
+      '  →  결과: ' + (result===0?'|0⟩':'|1⟩');
+  }
+
+  // Update score
+  document.getElementById('pCorrect').textContent = pCorrect;
+  document.getElementById('pTotal').textContent = pTotal;
+  const rate = (pCorrect/pTotal*100).toFixed(1);
+  document.getElementById('pRate').textContent = rate + '%';
+
+  // Insight message
+  const insight = predInsights.find(i => pTotal >= i.min && pTotal <= i.max);
+  if(insight){
+    document.getElementById('predictInsight').textContent = insight.msg;
+  }
+
+  // Re-enable after short delay
+  setTimeout(() => {
+    btns.forEach(b => b.disabled = false);
+  }, 300);
+}
+
+
+/* ─────────────────────────────────────────────
+   §4: ENTANGLEMENT CANVAS — Spooky Particles
+   ───────────────────────────────────────────── */
+(function(){
+  const wrap = document.getElementById('entangleCanvasWrap');
+  if(!wrap) return;
+  const canvas = document.getElementById('entangleCanvas');
+  const ctx = canvas.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio||1,2);
+  let W,H;
+
+  // Two particle positions
+  let aliceX, bobX, midY;
+  let linkPulse = 0;
+  let flashA = 0, flashB = 0; // flash animation timers
+  let flashResultA = -1, flashResultB = -1;
+
+  function resize(){
+    const r = wrap.getBoundingClientRect();
+    W = r.width; H = r.height;
+    canvas.width = W*dpr; canvas.height = H*dpr;
+    canvas.style.width = W+'px'; canvas.style.height = H+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    aliceX = W * .28; bobX = W * .72; midY = H * .5;
+  }
+
+  let t = 0, raf;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    t += .016;
+    linkPulse = Math.sin(t * 1.5) * .5 + .5;
+    if(flashA > 0) flashA -= .02;
+    if(flashB > 0) flashB -= .02;
+
+    // Entanglement link — wavy glowing line
+    ctx.beginPath();
+    const segs = 60;
+    for(let i=0;i<=segs;i++){
+      const frac = i/segs;
+      const x = aliceX + (bobX - aliceX) * frac;
+      const wave = Math.sin(frac * Math.PI * 4 + t * 3) * 6 * (1 - Math.abs(frac - .5) * 2);
+      const y = midY + wave;
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    const linkAlpha = .12 + linkPulse * .08;
+    ctx.strokeStyle = `rgba(212,168,83,${linkAlpha})`;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Glow version
+    ctx.beginPath();
+    for(let i=0;i<=segs;i++){
+      const frac = i/segs;
+      const x = aliceX + (bobX - aliceX) * frac;
+      const wave = Math.sin(frac * Math.PI * 4 + t * 3) * 6 * (1 - Math.abs(frac - .5) * 2);
+      const y = midY + wave;
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle = `rgba(212,168,83,${linkAlpha * .3})`;
+    ctx.lineWidth = 6;
+    ctx.stroke();
+
+    // Alice particle
+    drawParticle(aliceX, midY, 'rgba(94,196,212,', flashA, flashResultA);
+    // Bob particle
+    drawParticle(bobX, midY, 'rgba(196,122,212,', flashB, flashResultB);
+
+    // Labels
+    ctx.font = `400 ${Math.max(10, W*.022)}px 'JetBrains Mono',monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(94,196,212,.5)';
+    ctx.fillText('Alice', aliceX, midY + 55);
+    ctx.fillStyle = 'rgba(196,122,212,.5)';
+    ctx.fillText('Bob', bobX, midY + 55);
+
+    // "Entangled" label
+    ctx.font = `300 ${Math.max(9, W*.016)}px 'JetBrains Mono',monospace`;
+    ctx.fillStyle = `rgba(212,168,83,${.2 + linkPulse * .1})`;
+    ctx.fillText('entangled', W/2, midY - 40);
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  function drawParticle(px, py, colBase, flash, result){
+    const radius = 22 + Math.sin(t * 2) * 2;
+
+    // Outer glow
+    const gSize = radius + 20 + flash * 30;
+    const g = ctx.createRadialGradient(px,py,0,px,py,gSize);
+    g.addColorStop(0, colBase + (.15 + flash * .4) + ')');
+    g.addColorStop(.5, colBase + (.05 + flash * .15) + ')');
+    g.addColorStop(1, colBase + '0)');
+    ctx.beginPath(); ctx.arc(px,py,gSize,0,Math.PI*2);
+    ctx.fillStyle = g; ctx.fill();
+
+    // Core
+    ctx.beginPath(); ctx.arc(px,py,radius,0,Math.PI*2);
+    const cg = ctx.createRadialGradient(px-radius*.2,py-radius*.2,radius*.1,px,py,radius);
+    cg.addColorStop(0, colBase + (.6 + flash * .3) + ')');
+    cg.addColorStop(1, colBase + (.2 + flash * .2) + ')');
+    ctx.fillStyle = cg; ctx.fill();
+
+    // Result text
+    if(result >= 0){
+      ctx.font = `500 16px 'JetBrains Mono',monospace`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#fff';
+      ctx.fillText(result === 0 ? '|0⟩' : '|1⟩', px, py);
+    } else {
+      // Superposition symbol
+      ctx.font = `300 14px 'JetBrains Mono',monospace`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'rgba(255,255,255,.5)';
+      ctx.fillText('?', px, py);
+    }
+  }
+
+  resize(); draw();
+  window.addEventListener('resize', resize);
+
+  const obs = new IntersectionObserver(([e])=>{
+    if(e.isIntersecting){if(!raf)draw()}else{cancelAnimationFrame(raf);raf=null}
+  },{threshold:.05});
+  obs.observe(wrap);
+
+  // Expose trigger for measurement animation
+  window.triggerEntangleFlash = function(resA, resB){
+    flashA = 1; flashB = 0; flashResultA = resA; flashResultB = -1;
+    setTimeout(()=>{ flashB = 1; flashResultB = resB; }, 250);
+  };
+  window.resetEntangleVis = function(){
+    flashResultA = -1; flashResultB = -1; flashA = 0; flashB = 0;
+  };
+})();
+
+
+/* ─────────────────────────────────────────────
+   §4: ENTANGLEMENT MEASUREMENT LOGIC
+   ───────────────────────────────────────────── */
+let entState = 0; // 0=Φ+, 1=Φ-, 2=Ψ+, 3=Ψ-
+let entSame = 0, entDiff = 0;
+
+function setEntState(s, btn){
+  entState = s;
+  document.querySelectorAll('.estate-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  entSame = 0; entDiff = 0;
+  updateCorrDisplay();
+  window.resetEntangleVis();
+  document.getElementById('aliceResult').textContent = '?';
+  document.getElementById('aliceResult').className = 'card-result unknown';
+  document.getElementById('bobResult').textContent = '?';
+  document.getElementById('bobResult').className = 'card-result unknown';
+}
+
+function measureEntangled(){
+  const aliceResult = Math.random() < 0.5 ? 0 : 1;
+  let bobResult;
+  if(entState <= 1){
+    bobResult = aliceResult;
+  } else {
+    bobResult = 1 - aliceResult;
+  }
+
+  if(aliceResult === bobResult) entSame++; else entDiff++;
+  playEntangleSound();
+
+  // Update UI
+  const ar = document.getElementById('aliceResult');
+  ar.textContent = aliceResult === 0 ? '|0⟩' : '|1⟩';
+  ar.className = 'card-result ' + (aliceResult===0?'r0':'r1');
+
+  const br = document.getElementById('bobResult');
+  setTimeout(()=>{
+    br.textContent = bobResult === 0 ? '|0⟩' : '|1⟩';
+    br.className = 'card-result ' + (bobResult===0?'r0':'r1');
+  }, 250);
+
+  // Card flash
+  const ac = document.getElementById('aliceCard');
+  const bc = document.getElementById('bobCard');
+  ac.classList.remove('flash-0','flash-1');
+  bc.classList.remove('flash-0','flash-1');
+  void ac.offsetWidth;
+  ac.classList.add(aliceResult===0?'flash-0':'flash-1');
+  setTimeout(()=>{
+    void bc.offsetWidth;
+    bc.classList.add(bobResult===0?'flash-0':'flash-1');
+  }, 250);
+
+  // Canvas animation
+  window.triggerEntangleFlash(aliceResult, bobResult);
+
+  updateCorrDisplay();
+}
+
+function updateCorrDisplay(){
+  const total = entSame + entDiff;
+  const max = Math.max(entSame, entDiff, 1);
+  document.getElementById('corrSame').style.width = (entSame/max*100)+'%';
+  document.getElementById('corrDiff').style.width = (entDiff/max*100)+'%';
+  document.getElementById('corrSameVal').textContent = entSame;
+  document.getElementById('corrDiffVal').textContent = entDiff;
+
+  if(total > 0){
+    const corrType = entState <= 1 ? 'correlated' : 'anti-correlated';
+    const pct = entState <= 1 ? (entSame/total*100).toFixed(0) : (entDiff/total*100).toFixed(0);
+    document.getElementById('corrSummary').textContent =
+      `${total} trials · ${pct}% ${corrType} (theory: 100%)`;
+  } else {
+    document.getElementById('corrSummary').textContent = '측정하여 상관관계 확인';
+  }
+}
+
+
+/* ─────────────────────────────────────────────
+   §4: BELL TEST SIMULATOR
+   ───────────────────────────────────────────── */
+let bellTotal = 0, bellSameCount = 0;
+
+function runBellTest(n){
+  const aAxis = parseInt(document.getElementById('bellAliceAxis').value) * Math.PI/180;
+  const bAxis = parseInt(document.getElementById('bellBobAxis').value) * Math.PI/180;
+
+  // Quantum prediction: correlation = -cos(angle between axes)
+  const angleDiff = Math.abs(aAxis - bAxis);
+  const qCorr = -Math.cos(angleDiff);
+
+  // Simulate quantum measurements on Ψ⁻ (singlet) state
+  let same = 0;
+  for(let i=0;i<n;i++){
+    // Alice measures along her axis: outcome ±1
+    // For singlet: P(같은) = sin²(Δ/2), P(diff) = cos²(Δ/2)
+    const pSame = Math.sin(angleDiff/2)**2;
+    if(Math.random() < pSame) same++;
+  }
+  const diff = n - same;
+
+  bellTotal += n;
+  bellSameCount += same;
+
+  // Display
+  document.getElementById('bellTrials').textContent = bellTotal;
+
+  // Measured correlation: (same-diff)/total → E(a,b)
+  const totalSame = bellSameCount;
+  const totalDiff = bellTotal - bellSameCount;
+  const measuredCorr = (totalSame - totalDiff) / bellTotal;
+  document.getElementById('bellCorr').textContent = measuredCorr.toFixed(3);
+
+  // Classical limit for CHSH: |S| ≤ 2, per pair: |E| ≤ cos(Δ) if hidden vars
+  // Simplified: for this pair, classical limit is cos of angle diff
+  const classicalLim = Math.cos(angleDiff).toFixed(3);
+  document.getElementById('bellClassical').textContent = classicalLim;
+
+  const qPred = qCorr.toFixed(3);
+  document.getElementById('bellQuantum').textContent = qPred;
+
+  // Verdict
+  const verdict = document.getElementById('bellVerdict');
+  if(Math.abs(angleDiff) < 0.01 || Math.abs(angleDiff - Math.PI) < 0.01){
+    verdict.textContent = 'Same or opposite axes: classical and quantum predictions agree here.';
+  } else if(Math.abs(angleDiff - Math.PI/4) < 0.01 || Math.abs(angleDiff - 3*Math.PI/4) < 0.01){
+    verdict.textContent = '45° separation — the quantum correlation is stronger than any classical model allows. Bell inequality violated!';
+  } else {
+    const diff2 = Math.abs(measuredCorr) - Math.abs(parseFloat(classicalLim));
+    if(diff2 > 0.05){
+      verdict.textContent = 'The measured correlation exceeds the classical limit. Entanglement is real.';
+    } else {
+      verdict.textContent = 'At this angle, classical and quantum predictions are close. Try 45° or 135° for maximum violation.';
+    }
+  }
+}
+
+
+/* ─────────────────────────────────────────────
+   §5: TELEPORTATION CANVAS — Three-particle scene
+   ───────────────────────────────────────────── */
+(function(){
+  const wrap = document.getElementById('teleportCanvasWrap');
+  if(!wrap) return;
+  const canvas = document.getElementById('teleportCanvas');
+  const ctx = canvas.getContext('2d');
+  const dpr = Math.min(window.devicePixelRatio||1,2);
+  let W,H;
+
+  // Positions
+  let aliceX, bobX, midY;
+  let psiX; // the state qubit position
+  // Animation state
+  let phase = 0; // 0=idle, 1=bell-measure, 2=classical-send, 3=correct, 4=done
+  let animT = 0;
+  let classicalBits = [0,0];
+  let msgX = 0; // classical message x position
+
+  function resize(){
+    const r = wrap.getBoundingClientRect();
+    W = r.width; H = r.height;
+    canvas.width = W*dpr; canvas.height = H*dpr;
+    canvas.style.width = W+'px'; canvas.style.height = H+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    aliceX = W*.22; bobX = W*.78; midY = H*.5;
+    psiX = W*.08;
+  }
+
+  let t=0, raf;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    t += .016;
+    if(phase > 0) animT += .016;
+
+    const qRadius = Math.min(18, W*.035);
+
+    // ── LABELS ──
+    ctx.font = `300 ${Math.max(8,W*.018)}px 'JetBrains Mono',monospace`;
+    ctx.textAlign = 'center';
+
+    // ── ALICE'S ZONE ──
+    ctx.fillStyle = 'rgba(94,196,212,.12)';
+    ctx.fillRect(0, 0, W*.45, H);
+    ctx.fillStyle = 'rgba(94,196,212,.35)';
+    ctx.fillText('Alice', W*.22, H*.12);
+
+    // ── BOB'S ZONE ──
+    ctx.fillStyle = 'rgba(196,122,212,.06)';
+    ctx.fillRect(W*.55, 0, W*.45, H);
+    ctx.fillStyle = 'rgba(196,122,212,.35)';
+    ctx.fillText('Bob', W*.78, H*.12);
+
+    // ── ENTANGLED PAIR (Alice's half + Bob's half) ──
+    const entAliceX = W*.32, entBobX = W*.68;
+    const entY = midY + qRadius*2;
+
+    // Entanglement link
+    if(phase < 2){
+      ctx.beginPath();
+      const segs = 40;
+      for(let i=0;i<=segs;i++){
+        const f = i/segs;
+        const x = entAliceX + (entBobX-entAliceX)*f;
+        const wave = Math.sin(f*Math.PI*3+t*2)*4*(1-Math.abs(f-.5)*2);
+        if(i===0) ctx.moveTo(x,entY+wave); else ctx.lineTo(x,entY+wave);
+      }
+      ctx.strokeStyle = `rgba(212,168,83,${.15+Math.sin(t*1.5)*.05})`;
+      ctx.lineWidth = 1.2; ctx.stroke();
+    }
+
+    // Alice's entangled qubit
+    if(phase < 2){
+      drawQ(entAliceX, entY, qRadius, 'rgba(212,168,83,', .4, 'E');
+    }
+    // Bob's entangled qubit
+    const bobDone = phase >= 4;
+    const bobColor = bobDone ? 'rgba(212,168,83,' : 'rgba(196,122,212,';
+    const bobLabel = bobDone ? 'ψ' : (phase>=3 ? '...' : 'E');
+    drawQ(entBobX, entY, qRadius, bobColor, bobDone?.7:.4, bobLabel);
+    if(bobDone){
+      // Gold glow on success
+      const glow = ctx.createRadialGradient(entBobX,entY,0,entBobX,entY,qRadius*3);
+      glow.addColorStop(0,'rgba(212,168,83,.2)');
+      glow.addColorStop(1,'rgba(212,168,83,0)');
+      ctx.beginPath(); ctx.arc(entBobX,entY,qRadius*3,0,Math.PI*2);
+      ctx.fillStyle = glow; ctx.fill();
+    }
+
+    // ── STATE QUBIT |ψ⟩ ──
+    if(phase < 2){
+      const psiAlpha = phase===1 ? Math.max(0, 1-animT*1.5) : 1;
+      ctx.globalAlpha = psiAlpha;
+      drawQ(psiX+(phase===1?Math.min(animT*120,aliceX*.6):0), midY-qRadius*2, qRadius, 'rgba(94,196,212,', .6, 'ψ');
+      ctx.globalAlpha = 1;
+    }
+
+    // ── BELL MEASUREMENT FLASH ──
+    if(phase===1 && animT < .8){
+      const flash = Math.max(0, .6-animT*.8);
+      const fx = aliceX + W*.05;
+      const fy = midY;
+      ctx.beginPath(); ctx.arc(fx,fy,40+animT*30,0,Math.PI*2);
+      ctx.fillStyle = `rgba(94,196,212,${flash})`;
+      ctx.fill();
+    }
+
+    // ── CLASSICAL BITS FLYING ──
+    if(phase===2){
+      const progress = Math.min(animT * .8, 1);
+      msgX = entAliceX + (entBobX-entAliceX)*progress;
+      const msgY = midY - qRadius*3.5;
+
+      // Dotted path
+      ctx.setLineDash([3,4]);
+      ctx.beginPath(); ctx.moveTo(entAliceX,msgY); ctx.lineTo(msgX,msgY);
+      ctx.strokeStyle = 'rgba(94,196,212,.3)'; ctx.lineWidth=1; ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Bits
+      ctx.font = `500 ${Math.max(10,W*.02)}px 'JetBrains Mono',monospace`;
+      ctx.fillStyle = 'var(--cyan)';
+      ctx.textAlign = 'center';
+      ctx.fillStyle = 'rgba(94,196,212,.9)';
+      ctx.fillText(classicalBits[0]+''+classicalBits[1], msgX, msgY-4);
+
+      // Label
+      ctx.font = `300 ${Math.max(7,W*.013)}px 'JetBrains Mono',monospace`;
+      ctx.fillStyle = 'rgba(94,196,212,.4)';
+      ctx.fillText('classical bits', (entAliceX+entBobX)/2, msgY+14);
+
+      if(progress >= 1){
+        phase = 3; animT = 0;
+      }
+    }
+
+    // ── BOB CORRECTION ──
+    if(phase===3){
+      // Brief glow around Bob's qubit
+      const p = Math.min(animT*1.5, 1);
+      const glow = ctx.createRadialGradient(entBobX,entY,0,entBobX,entY,qRadius*2.5);
+      glow.addColorStop(0,`rgba(212,168,83,${.4*(1-p)})`);
+      glow.addColorStop(1,'rgba(212,168,83,0)');
+      ctx.beginPath(); ctx.arc(entBobX,entY,qRadius*2.5,0,Math.PI*2);
+      ctx.fillStyle = glow; ctx.fill();
+
+      if(animT > .7){
+        phase = 4; animT = 0;
+      }
+    }
+
+    // ── SUCCESS LABEL ──
+    if(phase===4){
+      const alpha = Math.min(animT*2, 1);
+      ctx.globalAlpha = alpha;
+      ctx.font = `400 ${Math.max(11,W*.022)}px 'JetBrains Mono',monospace`;
+      ctx.fillStyle = '#d4a853';
+      ctx.textAlign = 'center';
+      ctx.fillText('✓  State |ψ⟩ teleported to Bob', W/2, H*.9);
+      ctx.globalAlpha = 1;
+    }
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  function drawQ(x, y, r, colBase, alpha, label){
+    // Glow
+    const g = ctx.createRadialGradient(x,y,0,x,y,r*2.2);
+    g.addColorStop(0, colBase+(alpha*.5)+')');
+    g.addColorStop(1, colBase+'0)');
+    ctx.beginPath(); ctx.arc(x,y,r*2.2,0,Math.PI*2);
+    ctx.fillStyle = g; ctx.fill();
+    // Core
+    ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
+    const cg = ctx.createRadialGradient(x-r*.2,y-r*.2,r*.1,x,y,r);
+    cg.addColorStop(0, colBase+alpha+')');
+    cg.addColorStop(1, colBase+(alpha*.4)+')');
+    ctx.fillStyle = cg; ctx.fill();
+    // Label
+    if(label){
+      ctx.font = `500 ${Math.max(9,r*.7)}px 'JetBrains Mono',monospace`;
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillStyle = 'rgba(255,255,255,.85)';
+      ctx.fillText(label, x, y);
+    }
+  }
+
+  resize(); draw();
+  window.addEventListener('resize', resize);
+
+  const obs = new IntersectionObserver(([e])=>{
+    if(e.isIntersecting){if(!raf)draw()}else{cancelAnimationFrame(raf);raf=null}
+  },{threshold:.05});
+  obs.observe(wrap);
+
+  // Expose for external control
+  window.startTeleportAnim = function(bits){
+    phase = 1; animT = 0; classicalBits = bits;
+    setTimeout(()=>{ if(phase===1){ phase=2; animT=0; } }, 1200);
+  };
+  window.resetTeleportAnim = function(){
+    phase = 0; animT = 0;
+  };
+})();
+
+
+/* ─────────────────────────────────────────────
+   §5: TELEPORTATION PROTOCOL LOGIC
+   ───────────────────────────────────────────── */
+(function(){
+  const slider = document.getElementById('teleportTheta');
+  if(!slider) return;
+  const valEl = document.getElementById('teleportThetaVal');
+
+  slider.addEventListener('input', ()=>{
+    const deg = (parseFloat(slider.value)/100*180/Math.PI).toFixed(0);
+    valEl.textContent = deg + '°';
+    resetTeleportUI();
+  });
+
+  function resetTeleportUI(){
+    window.resetTeleportAnim();
+    document.querySelectorAll('.proto-step').forEach((s,i)=>{
+      s.classList.remove('active','done');
+      if(i===0) s.classList.add('active');
+    });
+    document.querySelectorAll('.step-dot').forEach(d => d.classList.remove('active','done'));
+    document.getElementById('teleportResult').textContent = '';
+    document.getElementById('teleportBtn').disabled = false;
+  }
+
+  window.runTeleport = function(){
+    const btn = document.getElementById('teleportBtn');
+    btn.disabled = true;
+
+    // Step 1 → 2: Bell measurement
+    const bits = [Math.random()<.5?0:1, Math.random()<.5?0:1];
+
+    // Animate step progression
+    setStep(0, 'done');
+    playTeleportSound();
+    setTimeout(()=>{
+      setStep(1, 'active');
+      setDot(0, 'done');
+      setDot(1, 'active');
+      window.startTeleportAnim(bits);
+    }, 300);
+
+    setTimeout(()=>{
+      setStep(1, 'done');
+      setStep(2, 'active');
+      setDot(1, 'done');
+      setDot(2, 'active');
+      document.getElementById('teleportResult').textContent =
+        `앨리스 측정: ${bits[0]}${bits[1]} → 밥에게 전송 중...`;
+    }, 1500);
+
+    setTimeout(()=>{
+      setStep(2, 'done');
+      setStep(3, 'active');
+      setDot(2, 'done');
+      setDot(3, 'active');
+      document.getElementById('teleportResult').textContent =
+        `밥이 비트 ${bits[0]}${bits[1]}을 받아 교정 중...`;
+    }, 3200);
+
+    setTimeout(()=>{
+      setStep(3, 'done');
+      setDot(3, 'done');
+      const theta = parseFloat(slider.value)/100;
+      const deg = (theta*180/Math.PI).toFixed(0);
+      document.getElementById('teleportResult').innerHTML =
+        `<span style="color:var(--gold)">✓ 순간이동 완료!</span> 밥의 큐비트 상태: |ψ⟩ (θ=${deg}°)`;
+    }, 4500);
+  };
+
+  function setStep(i, cls){
+    const el = document.getElementById('pstep'+i);
+    el.classList.remove('active','done');
+    el.classList.add(cls);
+  }
+  function setDot(i, cls){
+    const el = document.getElementById('dot'+i);
+    el.classList.remove('active','done');
+    el.classList.add(cls);
+  }
+})();
+
+
+/* ─────────────────────────────────────────────
+   §6: GROVER'S SEARCH RACE
+   ───────────────────────────────────────────── */
+let raceRunning = false;
+let raceClassical = 0, raceQuantum = 0;
+const RACE_N = 1024;
+const RACE_TARGET = Math.floor(Math.random() * RACE_N);
+let raceInterval = null;
+
+function startRace(){
+  if(raceRunning) return;
+  raceRunning = true;
+  raceClassical = 0;
+  raceQuantum = 0;
+  document.getElementById('raceBtn').disabled = true;
+  document.getElementById('raceResult').textContent = '';
+
+  // Classical: linear search, one step at a time
+  // Quantum: reaches √N ≈ 32 steps
+  const quantumSteps = Math.ceil(Math.sqrt(RACE_N)); // ~32
+  let classicalFound = false;
+  let quantumFound = false;
+  let quantumDone = false;
+
+  // Randomize classical search order
+  const order = Array.from({length: RACE_N}, (_, i) => i);
+  for(let i = order.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [order[i], order[j]] = [order[j], order[i]];
+  }
+
+  raceInterval = setInterval(() => {
+    // Classical step
+    if(!classicalFound){
+      raceClassical++;
+      if(order[raceClassical - 1] === RACE_TARGET) classicalFound = true;
+    }
+
+    // Quantum step (takes ~32 steps)
+    if(!quantumDone){
+      raceQuantum++;
+      if(raceQuantum >= quantumSteps) quantumDone = true;
+    }
+
+    // Update UI
+    const cPct = Math.min(raceClassical / RACE_N * 100, 100);
+    const qPct = Math.min(raceQuantum / quantumSteps * 100, 100);
+    document.getElementById('raceFillC').style.width = cPct + '%';
+    document.getElementById('raceFillQ').style.width = qPct + '%';
+    document.getElementById('racePctC').textContent = raceClassical;
+    document.getElementById('racePctQ').textContent = raceQuantum;
+
+    // Check if quantum found
+    if(quantumDone && !quantumFound){
+      quantumFound = true;
+      document.getElementById('raceFillQ').textContent = '✓ found!';
+    }
+    if(classicalFound && !document.getElementById('raceFillC').textContent.includes('✓')){
+      document.getElementById('raceFillC').textContent = '✓ found!';
+    }
+
+    // End condition
+    if(classicalFound || raceClassical >= RACE_N){
+      clearInterval(raceInterval);
+      raceRunning = false;
+      document.getElementById('raceBtn').disabled = false;
+
+      const speedup = (raceClassical / raceQuantum).toFixed(1);
+      document.getElementById('raceResult').textContent =
+        `고전: ${raceClassical}단계 · 양자: ${raceQuantum}단계 · 가속: ${speedup}× · (이론: √${RACE_N} ≈ ${Math.ceil(Math.sqrt(RACE_N))})`;
+    }
+  }, 8);
+}
+
+function resetRace(){
+  if(raceInterval) clearInterval(raceInterval);
+  raceRunning = false;
+  raceClassical = 0; raceQuantum = 0;
+  document.getElementById('raceFillC').style.width = '0%';
+  document.getElementById('raceFillQ').style.width = '0%';
+  document.getElementById('raceFillC').textContent = '';
+  document.getElementById('raceFillQ').textContent = '';
+  document.getElementById('racePctC').textContent = '0';
+  document.getElementById('racePctQ').textContent = '0';
+  document.getElementById('raceResult').textContent = '';
+  document.getElementById('raceBtn').disabled = false;
+}
+
+
+/* ─────────────────────────────────────────────
+   SCROLL REVEAL + SECTION NAV TRACKING
+   ───────────────────────────────────────────── */
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting) e.target.classList.add('visible');
+  });
+}, {threshold: 0.12});
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+/* Section nav dot tracking */
+const navSections = [
+  {id:'hero', dot:0},
+  {id:'sec-bit', dot:1},
+  {id:'sec-qubit', dot:2},
+  {id:'sec-measure', dot:3},
+  {id:'sec-entangle', dot:4},
+  {id:'sec-teleport', dot:5},
+  {id:'sec-future', dot:6},
+  {id:'sec-refs', dot:7},
+];
+const navDots = document.querySelectorAll('.nav-dot');
+
+const navObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      const idx = navSections.findIndex(s => s.id === e.target.id);
+      if(idx >= 0){
+        navDots.forEach(d => d.classList.remove('active'));
+        if(navDots[idx]) navDots[idx].classList.add('active');
+      }
+    }
+  });
+}, {threshold: 0.3, rootMargin: '-10% 0px -60% 0px'});
+
+navSections.forEach(s => {
+  const el = document.getElementById(s.id);
+  if(el) navObs.observe(el);
+});
+</script>
+
+</body>
+</html>
