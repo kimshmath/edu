@@ -356,6 +356,8 @@ h2 em { font-style: italic; color: var(--sky); font-weight: 400; }
   width: 100%;
   height: 100%;
   display: block;
+  position: relative;
+  z-index: 1;
 }
 
 /* Table felt texture via CSS */
@@ -1028,18 +1030,17 @@ footer {
     <div class="sec-label reveal">Chapter 0</div>
     <h2 class="reveal">현실을 <em>산산조각</em> 낸 실험</h2>
     <p class="sec-prose reveal">
-      1801년, 토머스 영은 빛을 두 개의 좁은 틈으로 통과시켜
-      불가능한 것을 보았다 — <strong>간섭 무늬</strong> — 빛이
-      파동이라는 증거였다. 한 세기 뒤, 물리학자들은
-      <strong>한 번에 광자 하나</strong>씩 쏘며 실험을 반복했다.
-      각 광자는 하나의 점으로 도착했다. 그러나 수천 개가 쌓이자,
-      간섭 무늬가 다시 나타났다.
+      In 1801, Thomas Young passed light through two narrow slits and saw
+      something impossible: <strong>an interference pattern</strong> — proof that
+      light is a wave. A century later, physicists repeated the experiment
+      firing <strong>one photon at a time</strong>. Each photon landed as a single
+      dot. But as thousands accumulated, the interference pattern emerged again.
     </p>
     <p class="sec-prose reveal">
-      하나의 입자가, 어떻게든 <strong>자기 자신</strong>과 간섭하고 있었다.
-      더 이상한 일이 벌어졌다: 광자가 어느 틈을 지나갔는지
-      검출기를 설치하자, 무늬가 사라졌다.
-      <strong>관찰 자체</strong>가 결과를 바꾼 것이다.
+      A single particle, somehow interfering with <strong>itself</strong>.
+      Things got stranger: when they placed a detector at one slit to see
+      which way the photon went, the pattern vanished. <strong>Observation
+      itself</strong> changed the outcome.
     </p>
 
     <!-- Interactive experiment -->
@@ -1073,11 +1074,11 @@ footer {
     <div class="insight-card reveal">
       <h3>왜 이것이 중요한가</h3>
       <p>
-        이중 슬릿 실험은 단순한 호기심이 아니다.
-        자연의 근본 구조가 확률적이라는 것을 말해준다.
-        입자는 측정 사이에 확정된 궤적을 갖지 않는다.
-        우리가 "현실"이라 부르는 것은 관찰의 순간에만 결정화된다.
-        이것은 철학이 아니다 — 수학이 요구하는 바이다.
+        The double-slit experiment is not just a curious lab trick.
+        It tells us that the very fabric of nature is probabilistic.
+        Particles do not have definite trajectories between measurements.
+        What we call "reality" only crystallizes in the act of observation.
+        This is not philosophy — it is what the mathematics demands.
       </p>
     </div>
   </div>
@@ -1092,20 +1093,19 @@ footer {
     <h2 class="reveal">우주는 <em>완벽</em>했다</h2>
 
     <p class="sec-prose reveal">
-      이백 년 동안, 물리학은 확실성의 승리였다.
-      뉴턴의 법칙은 모든 행성, 모든 포탄,
-      모든 모래알의 운동을 예측할 수 있었다 — 초기 조건만 알면.
-      우주는 <strong>태엽 장치</strong>였고, 물리 법칙은
-      그 톱니바퀴였다.
+      For two hundred years, physics was a triumph of certainty.
+      Newton's laws could predict the motion of every planet, every cannonball,
+      every grain of sand — if you knew the starting conditions.
+      The universe was a <strong>clockwork machine</strong>, and the laws of
+      physics were its gears.
     </p>
 
     <!-- Interactive billiard table -->
     <div class="billiard-wrap reveal">
-      <div class="billiard-felt"></div>
-      <canvas id="billiardCanvas"></canvas>
+      <canvas id="billiardCanvas" style="position:relative;z-index:1;"></canvas>
     </div>
     <div class="billiard-instructions" id="billiardHint">
-      공을 드래그하고 놓으면 발사 — 완벽한 뉴턴 역학을 감상하세요
+      공을 드래그하고 놓아 발사하세요 — 완벽한 뉴턴 역학
     </div>
 
     <p class="sec-prose reveal" style="margin-top:2.5rem">
@@ -1117,11 +1117,10 @@ footer {
 
     <div class="quote-block reveal">
       <p class="quote-text">
-        "어떤 순간에 모든 힘과…
-        자연을 구성하는 모든 존재의
-        위치를 알 수 있는 지성이 있다면 — 불확실한 것은
-        아무것도 없을 것이며, 미래도 과거와 마찬가지로
-        그의 눈앞에 펼쳐질 것이다."
+        "An intellect which at a certain moment would know all forces…
+        and all positions of all items of which nature is composed — nothing
+        would be uncertain, and the future just like the past would be present
+        before its eyes."
       </p>
       <p class="quote-attr">— 피에르-시몽 라플라스, 1814</p>
     </div>
@@ -1132,40 +1131,73 @@ footer {
       surprise, novelty: all illusions in a deterministic universe.
     </p>
 
-    <!-- Laplace's Demon: a mini solar system that you can rewind/fast-forward -->
-    <div class="demon-viz reveal">
-      <div class="demon-canvas-wrap">
-        <canvas id="demonCanvas"></canvas>
+    <p class="sec-prose reveal">
+      But there is another demon in physics — one that attacks from the opposite
+      direction. In 1867, James Clerk Maxwell imagined a tiny creature guarding
+      a door between two chambers of gas. By selectively opening and closing the
+      door, the demon could sort fast molecules to one side and slow ones to the
+      other — creating a temperature difference <strong>from nothing</strong>,
+      seemingly violating the second law of thermodynamics.
+    </p>
+
+    <!-- Maxwell's Demon simulation -->
+    <div class="viz-box reveal">
+      <div class="viz-canvas-wrap" style="aspect-ratio:16/9;">
+        <canvas id="maxwellCanvas"></canvas>
       </div>
-      <div class="demon-controls">
-        <button class="ctrl-btn" id="btnDemon되감기">
-          <span class="icon">⏪</span> 되감기
+      <div class="viz-controls">
+        <button class="ctrl-btn active" id="btnDemonOff">
+          <span class="icon">😴</span> 악마 잠자는 중
         </button>
-        <button class="ctrl-btn active" id="btnDemonPlay">
-          <span class="icon">▶</span> Play
+        <button class="ctrl-btn" id="btnDemonOn">
+          <span class="icon">👹</span> 악마 깨어남
         </button>
-        <button class="ctrl-btn" id="btnDemonFast">
-          <span class="icon">⏩</span> Future
+        <button class="ctrl-btn" id="btnDemonSpeed">
+          <span class="icon">⚡</span> 1×
         </button>
-        <div class="photon-counter" id="demonTime">
-          t = <span>0.00</span>
+        <button class="ctrl-btn" id="btnDemonReset">
+          <span class="icon">↺</span> Reset
+        </button>
+        <div class="photon-counter">
+          Left: <span id="tempLeft" style="color:var(--sky)">--</span>
+          &nbsp; Right: <span id="tempRight" style="color:var(--coral)">--</span>
         </div>
       </div>
-      <p style="margin-top:1rem;font-size:.82rem;color:var(--muted);line-height:1.6">
-        A deterministic Newtonian solar system. Every orbit is perfectly predictable.
-        되감기 and fast-forward — the demon sees past and future alike.
+      <p style="margin-top:.8rem;font-size:.78rem;color:var(--muted);text-align:center;line-height:1.5">
+        Gas molecules bounce between two chambers. Wake the demon — it opens
+        the door only for <strong style="color:var(--coral)">fast</strong> molecules going right
+        and <strong style="color:var(--sky)">slow</strong> molecules going left.
+        Watch the right side heat up and the left side cool down — <em>for free</em>.
+        Or so it seems.
+      </p>
+    </div>
+
+    <div class="insight-card reveal">
+      <h3>두 악마, 두 세계관</h3>
+      <p>
+        <strong>Laplace's demon</strong> knows everything and computes the future.
+        It embodies classical determinism: the universe is a clockwork, and
+        prediction is merely a matter of computation.
+        <strong>Maxwell's demon</strong> knows only one thing — which molecules
+        are fast — and uses that knowledge to cheat thermodynamics.
+        It was eventually defeated: Rolf Landauer showed in 1961 that
+        erasing the demon's memory (which it must do eventually) generates
+        entropy. <strong>Information is physical</strong>, and forgetting has
+        a thermodynamic cost. The second law survives — but only because
+        information and entropy are deeply connected.
+        This insight would later become a cornerstone of quantum information theory.
       </p>
     </div>
 
     <p class="sec-prose reveal">
-      이것이 20세기 여명기에 물리학자들이 믿었던 세계였다.
-      우아하고, 완전하고, <strong>아름다웠다.</strong>
+      This was the world that physicists believed in at the dawn of the twentieth
+      century. Elegant. Complete. <strong>Beautiful.</strong>
     </p>
 
     <p class="sec-prose reveal">
-      그리고 1900년 12월 14일, 막스 플랑크라는 조용한 독일 물리학자가
-      베를린 물리학회 앞에 서서, 거의 마지못해,
-      그것을 <strong>깨뜨렸다</strong>.
+      And then, on December 14, 1900, a quiet German physicist named Max Planck
+      stood before the Berlin Physical Society and, almost reluctantly,
+      <strong>broke it</strong>.
     </p>
 
     <div class="insight-card reveal">
@@ -1239,8 +1271,8 @@ footer {
         E = hν
       </p>
       <p class="quote-attr">
-        에너지는 플랑크 상수 곱하기 주파수.<br>
-        혁명을 시작한 방정식 — December 14, 1900.
+        Energy equals Planck's constant times frequency.<br>
+        The equation that started a revolution — December 14, 1900.
       </p>
     </div>
 
@@ -1273,8 +1305,8 @@ footer {
 
     <div class="quote-block reveal">
       <p class="quote-text">
-        "간단히 요약하면, 내가 한 것은 단순히 절박한 행위로
-        묘사될 수 있다."
+        "Briefly summarized, what I did can be described as simply an act
+        of desperation."
       </p>
       <p class="quote-attr">— 막스 플랑크, R.W. Wood에게 보낸 편지, 1931</p>
     </div>
@@ -1386,8 +1418,8 @@ footer {
 
     <div class="quote-block reveal">
       <p class="quote-text">
-        "위치가 더 정확하게 결정될수록, 그 순간 운동량은
-        덜 정확하게 알려지며, 그 역도 성립한다."
+        "The more precisely the position is determined, the less precisely
+        the momentum is known in this instant, and vice versa."
       </p>
       <p class="quote-attr">— 베르너 하이젠베르크, 1927</p>
     </div>
@@ -1564,8 +1596,8 @@ footer {
 
     <div class="quote-block reveal">
       <p class="quote-text">
-        "아주 우스꽝스러운 경우를 설정할 수도 있다. 고양이 한 마리가
-        강철 상자에 갇혀 있다…"
+        "One can even set up quite ridiculous cases. A cat is penned up in
+        a steel chamber…"
       </p>
       <p class="quote-attr">— 에르빈 슈뢰딩거, 1935</p>
     </div>
@@ -1655,10 +1687,10 @@ footer {
 
     <div class="quote-block reveal">
       <p class="quote-text">
-        "나는 [양자역학을] 진심으로 믿을 수 없다 because the
+        "I cannot seriously believe in [quantum mechanics] because the
         theory cannot be reconciled with the idea that physics should
         represent a reality in time and space, free from spooky actions
-        작용으로부터 자유로운 현실이라는 생각과 양립할 수 없기 때문이다."
+        at a distance."
       </p>
       <p class="quote-attr">— 알베르트 아인슈타인, 막스 보른에게 보낸 편지, 1947</p>
     </div>
@@ -1703,8 +1735,8 @@ footer {
 
     <div class="quote-block reveal">
       <p class="quote-text">
-        "우주는 우리가 상상하는 것보다 기이할 뿐 아니라,
-        우리가 상상<em>할 수 있는</em> 것보다도 기이하다."
+        "The universe is not only queerer than we suppose, but queerer
+        than we <em>can</em> suppose."
       </p>
       <p class="quote-attr">— J.B.S. 홀데인 (양자 맥락에서 자주 인용)</p>
     </div>
@@ -1838,6 +1870,108 @@ footer {
       <h4 id="debateResultTitle"></h4>
       <p id="debateResultText"></p>
       <div class="poll-bar-wrap" id="debatePoll"></div>
+    </div>
+
+    <!-- ── Thought Experiment 1: Quantum Teleportation ── -->
+    <h2 class="reveal" style="margin-top:4rem">사고 실험: <em>양자 텔레포테이션</em></h2>
+
+    <p class="sec-prose reveal">
+      Can you transmit a quantum state from one place to another, without
+      physically moving the particle? In 1993, Charles Bennett and colleagues
+      proved it is possible — using entanglement as a resource and classical
+      communication as a channel. The original particle's state is
+      <strong>destroyed</strong> at the source and <strong>recreated</strong>
+      at the destination. Nothing travels faster than light — yet the
+      quantum information has been teleported.
+    </p>
+
+    <div class="viz-box reveal">
+      <div class="viz-canvas-wrap" style="aspect-ratio:16/7;">
+        <canvas id="teleportCanvas"></canvas>
+      </div>
+      <div class="viz-controls">
+        <button class="ctrl-btn" id="btnTeleportStart">
+          <span class="icon">✨</span> Teleport
+        </button>
+        <button class="ctrl-btn" id="btnTeleportReset">
+          <span class="icon">↺</span> Reset
+        </button>
+      </div>
+      <p style="margin-top:.8rem;font-size:.78rem;color:var(--muted);text-align:center;line-height:1.6">
+        <strong style="color:var(--gold)">Step 1:</strong> Alice and Bob share an entangled pair.
+        <strong style="color:var(--sky)">Step 2:</strong> Alice measures her particle together
+        with the state she wants to send — this <em>destroys</em> her copy.
+        <strong style="color:var(--mint)">Step 3:</strong> Alice sends Bob 2 classical bits.
+        Bob applies a correction — and now holds the exact original state.
+        No cloning. No faster-than-light. Just entanglement doing its magic.
+      </p>
+    </div>
+
+    <div class="insight-card reveal">
+      <h3>Why it matters</h3>
+      <p>
+        Quantum teleportation does not move matter or energy — it moves
+        <strong>information</strong>. The no-cloning theorem guarantees
+        that the original is always destroyed: you cannot copy a quantum state.
+        This is not science fiction teleportation, but something subtler
+        and arguably more profound — a proof that entanglement is a genuine
+        physical resource, as real as energy or momentum.
+        Teleportation was first demonstrated experimentally by Zeilinger's
+        group in 1997 and is now a routine operation in quantum computing labs.
+        It is the backbone of quantum networks and the future quantum internet.
+      </p>
+    </div>
+
+    <!-- ── Thought Experiment 2: Delayed Choice Quantum Eraser ── -->
+    <h2 class="reveal" style="margin-top:3rem">사고 실험: <em>양자 지우개</em></h2>
+
+    <p class="sec-prose reveal">
+      John Wheeler's delayed-choice experiment asks: can a choice made
+      <em>after</em> a photon has already been detected change whether it
+      behaved as a wave or a particle? Astonishingly, yes. In the quantum
+      eraser variant (Scully &amp; Drühl, 1982), which-way information is
+      recorded — destroying interference. But if you later <em>erase</em>
+      that information, the interference pattern reappears in the data.
+      The future seems to reach back and reshape the past.
+    </p>
+
+    <div class="viz-box reveal">
+      <div class="viz-canvas-wrap" style="aspect-ratio:16/7;">
+        <canvas id="eraserCanvas"></canvas>
+      </div>
+      <div class="viz-controls">
+        <button class="ctrl-btn active" id="btnEraserNoInfo">
+          <span class="icon">🌊</span> 경로 정보 없음
+        </button>
+        <button class="ctrl-btn" id="btnEraserRecord">
+          <span class="icon">📝</span> 경로 기록
+        </button>
+        <button class="ctrl-btn" id="btnEraserErase">
+          <span class="icon">🗑</span> 기록 삭제
+        </button>
+        <button class="ctrl-btn" id="btnEraserReset">
+          <span class="icon">↺</span> Reset
+        </button>
+        <div class="photon-counter">
+          광자: <span id="eraserCount" style="color:var(--sky)">0</span>
+        </div>
+      </div>
+      <p style="margin-top:.8rem;font-size:.78rem;color:var(--muted);text-align:center;line-height:1.5">
+        <strong style="color:var(--sky)">No info</strong>: interference pattern forms.
+        <strong style="color:var(--coral)">경로 기록</strong>: pattern vanishes — just two blobs.
+        <strong style="color:var(--gold)">기록 삭제</strong>: the interference pattern
+        <em>comes back</em> — as if the photons "knew" you would erase.
+        The choice can be made after the photons have already landed.
+      </p>
+    </div>
+
+    <div class="quote-block reveal">
+      <p class="quote-text">
+        "No elementary quantum phenomenon is a phenomenon until it is a
+        registered phenomenon — that is to say, brought to a close by an
+        irreversible act of amplification."
+      </p>
+      <p class="quote-attr">— 존 아치볼드 휠러</p>
     </div>
 
     <p class="sec-prose reveal" style="margin-top:2.5rem">
@@ -2432,7 +2566,8 @@ try {
   let dragCurrent = null;
   let animId = null;
   let isVisible = false;
-  let trails = []; // for trajectory trails
+  let trails = [];
+  let pocketedBalls = []; // balls sinking into pockets
 
   const FRICTION = 0.997;
   const RESTITUTION = 0.95;
@@ -2442,9 +2577,12 @@ try {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     const rect = canvas.parentElement.getBoundingClientRect();
     W = rect.width;
-    H = rect.height;
+    H = rect.height || (rect.width * 4 / 7); // fallback from aspect-ratio 7/4
+    if (W < 10 || H < 10) return; // not visible yet
     canvas.width = W * dpr;
     canvas.height = H * dpr;
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     if (balls.length === 0) initBalls();
   }
@@ -2467,6 +2605,7 @@ try {
 
     balls = [];
     trails = [];
+    pocketedBalls = [];
 
     // Cue ball
     balls.push({ x: W * 0.25, y: H * 0.5, vx: 0, vy: 0, r, color: colors[0], id: 0 });
@@ -2559,6 +2698,28 @@ try {
       }
     }
 
+    // Pocket detection — remove balls that fall in
+    const pR = ballR() * 2.2;
+    const pockets = [[0,0],[W,0],[0,H],[W,H],[W/2,0],[W/2,H]];
+    for (let i = balls.length - 1; i >= 0; i--) {
+      const b = balls[i];
+      for (const [px, py] of pockets) {
+        if (Math.hypot(b.x - px, b.y - py) < pR * 0.7) {
+          // Ball sinks into pocket — animate
+          pocketedBalls.push({ x: b.x, y: b.y, color: b.color, alpha: 1, r: b.r });
+          balls.splice(i, 1);
+          break;
+        }
+      }
+    }
+
+    // Animate pocketed balls (shrink + fade)
+    for (let i = pocketedBalls.length - 1; i >= 0; i--) {
+      pocketedBalls[i].alpha -= 0.04;
+      pocketedBalls[i].r *= 0.92;
+      if (pocketedBalls[i].alpha <= 0) pocketedBalls.splice(i, 1);
+    }
+
     // Wall collisions
     for (const b of balls) {
       if (b.x - r < 0) { b.x = r; b.vx = Math.abs(b.vx) * RESTITUTION; }
@@ -2615,14 +2776,40 @@ try {
     ctx.lineWidth = cushion;
     ctx.strokeRect(cushion/2, cushion/2, W - cushion, H - cushion);
 
-    // Corner pockets (decorative)
-    const pocketR = ballR() * 1.3;
-    const pockets = [[0,0],[W,0],[0,H],[W,H],[W/2,0],[W/2,H]];
-    for (const [px, py] of pockets) {
+    // Pockets — big and inviting
+    const pocketR = ballR() * 2.2;
+    const pocketPositions = [[0,0],[W,0],[0,H],[W,H],[W/2,0],[W/2,H]];
+    for (const [px, py] of pocketPositions) {
+      // Outer shadow
+      ctx.beginPath();
+      ctx.arc(px, py, pocketR + 3, 0, Math.PI * 2);
+      ctx.fillStyle = '#020a04';
+      ctx.fill();
+      // Pocket hole
       ctx.beginPath();
       ctx.arc(px, py, pocketR, 0, Math.PI * 2);
-      ctx.fillStyle = '#061a0e';
+      const pGrad = ctx.createRadialGradient(px, py, pocketR * 0.3, px, py, pocketR);
+      pGrad.addColorStop(0, '#000000');
+      pGrad.addColorStop(0.7, '#020804');
+      pGrad.addColorStop(1, '#061a0e');
+      ctx.fillStyle = pGrad;
       ctx.fill();
+      // Inner rim highlight
+      ctx.beginPath();
+      ctx.arc(px, py, pocketR - 1, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    // Pocketed balls sinking animation
+    for (const pb of pocketedBalls) {
+      ctx.beginPath();
+      ctx.arc(pb.x, pb.y, pb.r, 0, Math.PI * 2);
+      ctx.fillStyle = pb.color;
+      ctx.globalAlpha = pb.alpha;
+      ctx.fill();
+      ctx.globalAlpha = 1;
     }
 
     // Trails
@@ -2712,46 +2899,63 @@ try {
 
 
 // ═══════════════════════════════════════════
-// LAPLACE'S DEMON — Deterministic solar system
+// MAXWELL'S DEMON — Sorting molecules
 // ═══════════════════════════════════════════
 (function() {
-  const canvas = document.getElementById('demonCanvas');
+  const canvas = document.getElementById('maxwellCanvas');
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
   let W, H, dpr;
   let animId = null;
   let isVisible = false;
-  let simTime = 0;
-  let speed = 1; // -3 (rewind), 1 (play), 3 (fast)
-  let orbits = []; // trail history
+  let molecules = [];
+  let demonActive = false;
+  let doorOpen = false;
+  let doorTimer = 0;
+  let demonEyeGlow = 0;
+  let simSpeed = 1; // 1, 3, 6, 10
 
-  // Planets: [distance_frac, period, radius, color, name, eccentricity]
-  const PLANETS = [
-    { d: 0.12, T: 2.0,  r: 3,  color: '#a0a0a0', name: 'Mercury', e: 0.12 },
-    { d: 0.19, T: 3.5,  r: 4,  color: '#e8c87a', name: 'Venus',   e: 0.04 },
-    { d: 0.27, T: 5.0,  r: 4.5,color: '#38bdf8', name: 'Earth',   e: 0.06 },
-    { d: 0.36, T: 7.5,  r: 3.5,color: '#fb7185', name: 'Mars',    e: 0.09 },
-    { d: 0.52, T: 15.0, r: 8,  color: '#f0b429', name: 'Jupiter', e: 0.05 },
-    { d: 0.68, T: 25.0, r: 7,  color: '#d4a853', name: 'Saturn',  e: 0.06 },
-  ];
+  const N = 80;
 
   function resize() {
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     const rect = canvas.parentElement.getBoundingClientRect();
-    W = rect.width;
-    H = rect.height;
-    canvas.width = W * dpr;
-    canvas.height = H * dpr;
+    W = rect.width; H = rect.height || rect.width * 9/16;
+    if (W < 10) return;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (molecules.length === 0) initMolecules();
   }
 
-  function planetPos(p, t) {
-    // Simplified Keplerian orbit (first-order eccentricity approximation)
-    const angle = (2 * Math.PI * t) / p.T;
-    const rDist = p.d * Math.min(W, H * 2) * 0.45 * (1 - p.e * Math.cos(angle));
-    return {
-      x: W / 2 + rDist * Math.cos(angle),
-      y: H / 2 + rDist * Math.sin(angle) * 0.45 // flatten for perspective
-    };
+  function initMolecules() {
+    molecules = [];
+    for (let i = 0; i < N; i++) {
+      const speed = 0.8 + Math.random() * 3;
+      const angle = Math.random() * Math.PI * 2;
+      molecules.push({
+        x: Math.random() * W,
+        y: 20 + Math.random() * (H - 40),
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        r: 3,
+        speed: speed // intrinsic speed for coloring
+      });
+    }
+  }
+
+  function speedToColor(speed) {
+    // slow=blue, fast=red/coral
+    const t = Math.min(1, (speed - 0.5) / 3.5);
+    const r = Math.round(56 + t * 195);
+    const g = Math.round(189 - t * 76);
+    const b = Math.round(248 - t * 113);
+    return `rgb(${r},${g},${b})`;
+  }
+
+  function speedToHue(speed) {
+    const t = Math.min(1, (speed - 0.5) / 3.5);
+    return t; // 0=cold/blue, 1=hot/red
   }
 
   function draw() {
@@ -2759,132 +2963,243 @@ try {
     ctx.fillStyle = '#050810';
     ctx.fillRect(0, 0, W, H);
 
-    const cx = W / 2, cy = H / 2;
+    const wallW = 6;
+    const midX = W / 2;
+    const gapY = H * 0.20;
+    const gapH = H * 0.60;
+    const gapTop = gapY;
+    const gapBot = gapY + gapH;
 
-    // Star field (static)
-    const starSeed = 42;
-    let rng = starSeed;
-    function srand() { rng = (rng * 16807 + 0) % 2147483647; return rng / 2147483647; }
-    ctx.fillStyle = 'rgba(255,255,255,0.3)';
-    for (let i = 0; i < 80; i++) {
-      ctx.fillRect(srand() * W, srand() * H, srand() > 0.8 ? 1.5 : 0.8, 0.8);
+    // Chamber backgrounds — tint based on average speed
+    let leftSum = 0, leftN = 0, rightSum = 0, rightN = 0;
+    for (const m of molecules) {
+      const spd = Math.hypot(m.vx, m.vy);
+      if (m.x < midX) { leftSum += spd; leftN++; }
+      else { rightSum += spd; rightN++; }
     }
+    const leftAvg = leftN > 0 ? leftSum / leftN : 0;
+    const rightAvg = rightN > 0 ? rightSum / rightN : 0;
+    const leftHeat = Math.min(1, leftAvg / 4);
+    const rightHeat = Math.min(1, rightAvg / 4);
 
-    // Sun
-    const sunR = Math.max(8, H * 0.06);
-    const sunGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, sunR * 3);
-    sunGrad.addColorStop(0, 'rgba(255,220,100,0.4)');
-    sunGrad.addColorStop(0.3, 'rgba(255,180,50,0.1)');
-    sunGrad.addColorStop(1, 'transparent');
-    ctx.fillStyle = sunGrad;
-    ctx.fillRect(cx - sunR*3, cy - sunR*3, sunR*6, sunR*6);
+    // Left chamber tint
+    ctx.fillStyle = `rgba(56,189,248,${0.02 + (1-leftHeat)*0.03})`;
+    ctx.fillRect(0, 0, midX, H);
+    // Right chamber tint
+    ctx.fillStyle = `rgba(251,113,133,${0.02 + rightHeat*0.03})`;
+    ctx.fillRect(midX, 0, midX, H);
 
-    ctx.beginPath();
-    ctx.arc(cx, cy, sunR, 0, Math.PI * 2);
-    const sGrad = ctx.createRadialGradient(cx - sunR*0.2, cy - sunR*0.2, sunR*0.1, cx, cy, sunR);
-    sGrad.addColorStop(0, '#fff8e0');
-    sGrad.addColorStop(0.5, '#f0b429');
-    sGrad.addColorStop(1, '#c88510');
-    ctx.fillStyle = sGrad;
-    ctx.fill();
+    // Update temps display
+    document.getElementById('tempLeft').textContent = leftAvg.toFixed(1);
+    document.getElementById('tempRight').textContent = rightAvg.toFixed(1);
 
-    // Orbit paths (faint ellipses)
-    for (const p of PLANETS) {
-      const rDist = p.d * Math.min(W, H * 2) * 0.45;
-      ctx.beginPath();
-      ctx.ellipse(cx, cy, rDist, rDist * 0.45, 0, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(255,255,255,0.04)';
-      ctx.lineWidth = 0.5;
-      ctx.stroke();
-    }
+    // Center wall
+    ctx.fillStyle = '#1a2545';
+    ctx.fillRect(midX - wallW/2, 0, wallW, gapTop);
+    ctx.fillRect(midX - wallW/2, gapBot, wallW, H - gapBot);
 
-    // Planets
-    for (const p of PLANETS) {
-      const pos = planetPos(p, simTime);
-
-      // Trail (recent path)
-      ctx.beginPath();
-      let first = true;
-      const trailLen = 60;
-      const step = speed > 0 ? -0.05 : 0.05;
-      for (let i = 0; i < trailLen; i++) {
-        const tp = planetPos(p, simTime + i * step * Math.abs(speed));
-        if (first) { ctx.moveTo(tp.x, tp.y); first = false; }
-        else ctx.lineTo(tp.x, tp.y);
-      }
-      ctx.strokeStyle = p.color + '30';
+    // Door
+    if (doorOpen) {
+      // Door open — faint outline
+      ctx.strokeStyle = 'rgba(240,180,41,0.15)';
       ctx.lineWidth = 1;
+      ctx.setLineDash([3, 5]);
+      ctx.beginPath();
+      ctx.moveTo(midX, gapTop); ctx.lineTo(midX, gapBot);
       ctx.stroke();
-
-      // Planet
-      const pr = Math.max(p.r, H * 0.015);
+      ctx.setLineDash([]);
+    } else {
+      // Door closed
+      ctx.fillStyle = '#2a3a6a';
+      ctx.fillRect(midX - wallW/2, gapTop, wallW, gapH);
+      // Door handle glow
       ctx.beginPath();
-      ctx.arc(pos.x, pos.y, pr, 0, Math.PI * 2);
-      const pGrad = ctx.createRadialGradient(pos.x - pr*0.3, pos.y - pr*0.3, pr*0.1, pos.x, pos.y, pr);
-      pGrad.addColorStop(0, '#fff');
-      pGrad.addColorStop(0.4, p.color);
-      pGrad.addColorStop(1, darkenHex(p.color, 0.5));
-      ctx.fillStyle = pGrad;
+      ctx.arc(midX, (gapTop + gapBot)/2, 3, 0, Math.PI * 2);
+      ctx.fillStyle = demonActive ? '#f0b429' : '#4a5568';
       ctx.fill();
+    }
 
-      // Glow
-      ctx.beginPath();
-      ctx.arc(pos.x, pos.y, pr + 4, 0, Math.PI * 2);
-      ctx.fillStyle = p.color + '15';
-      ctx.fill();
-
-      // Saturn's ring
-      if (p.name === 'Saturn') {
+    // Demon face
+    const demonX = midX;
+    const demonY = gapTop - 18;
+    if (demonActive) {
+      // Active demon
+      ctx.font = `${Math.max(16, W * 0.035)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText('👹', demonX, demonY);
+      // Eye glow when sorting
+      if (demonEyeGlow > 0) {
         ctx.beginPath();
-        ctx.ellipse(pos.x, pos.y, pr * 2.2, pr * 0.6, -0.3, 0, Math.PI * 2);
-        ctx.strokeStyle = p.color + '60';
-        ctx.lineWidth = 1.5;
-        ctx.stroke();
+        ctx.arc(demonX, demonY - 6, 12, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(240,180,41,${demonEyeGlow * 0.15})`;
+        ctx.fill();
+        demonEyeGlow -= 0.03;
+      }
+    } else {
+      ctx.font = `${Math.max(16, W * 0.035)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText('😴', demonX, demonY);
+    }
+
+    // Labels
+    ctx.font = `${Math.max(10, W * 0.018)}px 'JetBrains Mono', monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = `rgba(56,189,248,${0.3 + (1-leftHeat)*0.3})`;
+    ctx.fillText('COLD', midX * 0.5, 18);
+    ctx.fillStyle = `rgba(251,113,133,${0.3 + rightHeat*0.3})`;
+    ctx.fillText('HOT', midX * 1.5, 18);
+
+    // Physics
+    function step() {
+      const midX = W / 2;
+      const wallW = 6;
+      const gapY = H * 0.20;
+      const gapH = H * 0.60;
+      const gapTop = gapY;
+      const gapBot = gapY + gapH;
+      const wallL = midX - wallW/2;
+      const wallR = midX + wallW/2;
+      const avgSpd = molecules.reduce((s,m) => s + Math.hypot(m.vx, m.vy), 0) / (molecules.length || 1);
+
+      for (const m of molecules) {
+        // Save previous position
+        const prevX = m.x;
+        m.x += m.vx;
+        m.y += m.vy;
+
+        // Outer wall bouncing
+        if (m.x - m.r < 0) { m.x = m.r; m.vx = Math.abs(m.vx); }
+        if (m.x + m.r > W) { m.x = W - m.r; m.vx = -Math.abs(m.vx); }
+        if (m.y - m.r < 0) { m.y = m.r; m.vy = Math.abs(m.vy); }
+        if (m.y + m.r > H) { m.y = H - m.r; m.vy = -Math.abs(m.vy); }
+
+        // Center wall — per-molecule gate logic
+        const inGapY = m.y > gapTop && m.y < gapBot;
+        const crossingWall = (prevX < wallL && m.x + m.r >= wallL) ||
+                             (prevX > wallR && m.x - m.r <= wallR) ||
+                             (Math.abs(m.x - midX) < wallW/2 + m.r);
+
+        if (crossingWall) {
+          if (inGapY && demonActive) {
+            // Demon decides per-molecule: should this one pass?
+            const spd = Math.hypot(m.vx, m.vy);
+            const goingRight = m.vx > 0;
+            const goingLeft = m.vx < 0;
+            let allow = false;
+
+            // Fast molecule going right → allow (heats right side)
+            if (goingRight && spd > avgSpd) allow = true;
+            // Slow molecule going left → allow (cools right side)
+            if (goingLeft && spd < avgSpd) allow = true;
+
+            if (allow) {
+              // Let it through — don't bounce
+              demonEyeGlow = 1;
+              doorOpen = true; // visual only
+            } else {
+              // Block it — bounce back
+              if (prevX <= midX) { m.x = wallL - m.r; m.vx = -Math.abs(m.vx); }
+              else { m.x = wallR + m.r; m.vx = Math.abs(m.vx); }
+            }
+          } else if (inGapY && !demonActive) {
+            // No demon: door always closed, bounce
+            if (prevX <= midX || m.x < midX) { m.x = wallL - m.r; m.vx = -Math.abs(m.vx); }
+            else { m.x = wallR + m.r; m.vx = Math.abs(m.vx); }
+          } else {
+            // Solid wall (above/below gap)
+            if (prevX <= midX || m.x < midX) { m.x = wallL - m.r; m.vx = -Math.abs(m.vx); }
+            else { m.x = wallR + m.r; m.vx = Math.abs(m.vx); }
+          }
+        }
+      }
+
+      // Visual door state: open if any molecule was allowed this step
+      if (!demonActive) doorOpen = false;
+      // Decay door open visual (will be set true again next step if needed)
+      if (demonActive && demonEyeGlow < 0.5) doorOpen = false;
+    }
+
+    // Run physics simSpeed times per frame
+    for (let s = 0; s < simSpeed; s++) step();
+
+    // Draw molecules (after all physics steps)
+    for (const m of molecules) {
+      const spd = Math.hypot(m.vx, m.vy);
+      const col = speedToColor(spd);
+      ctx.beginPath();
+      ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2);
+      ctx.fillStyle = col;
+      ctx.fill();
+      const t = speedToHue(spd);
+      if (t > 0.5) {
+        ctx.beginPath();
+        ctx.arc(m.x, m.y, m.r + 3, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(251,113,133,${(t-0.5)*0.2})`;
+        ctx.fill();
       }
     }
 
-    // Time display
-    const timeSpan = document.querySelector('#demonTime span');
-    if (timeSpan) timeSpan.textContent = simTime.toFixed(2);
+    // Speed indicator
+    if (simSpeed > 1) {
+      ctx.font = `bold ${Math.max(11, W * 0.02)}px 'JetBrains Mono', monospace`;
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#f0b429';
+      ctx.fillText(`${simSpeed}× speed`, W - 14, H - 10);
+    }
 
-    // Time direction indicator
-    ctx.font = `${Math.max(10, W*0.016)}px 'JetBrains Mono', monospace`;
-    ctx.textAlign = 'right';
-    ctx.fillStyle = speed < 0 ? '#fb7185' : (speed > 1 ? '#38bdf8' : 'rgba(255,255,255,0.3)');
-    const label = speed < 0 ? '◀ PAST' : (speed > 1 ? 'FUTURE ▶' : 'PRESENT');
-    ctx.fillText(label, W - 15, 20);
+    // Temperature bars on sides
+    const barW = 6;
+    const barH = H * 0.6;
+    const barTop = H * 0.25;
+    // Left bar (cold)
+    const leftFill = Math.min(1, leftAvg / 4);
+    ctx.fillStyle = 'rgba(255,255,255,0.03)';
+    ctx.fillRect(8, barTop, barW, barH);
+    const lGrad = ctx.createLinearGradient(0, barTop + barH, 0, barTop);
+    lGrad.addColorStop(0, '#38bdf8'); lGrad.addColorStop(1, '#fb7185');
+    ctx.fillStyle = lGrad;
+    ctx.fillRect(8, barTop + barH * (1 - leftFill), barW, barH * leftFill);
+    // Right bar (hot)
+    const rightFill = Math.min(1, rightAvg / 4);
+    ctx.fillStyle = 'rgba(255,255,255,0.03)';
+    ctx.fillRect(W - 8 - barW, barTop, barW, barH);
+    ctx.fillStyle = lGrad;
+    ctx.fillRect(W - 8 - barW, barTop + barH * (1 - rightFill), barW, barH * rightFill);
 
-    simTime += 0.016 * speed;
     animId = requestAnimationFrame(draw);
   }
 
-  function darkenHex(hex, amount) {
-    let r = parseInt(hex.slice(1,3),16) || 0;
-    let g = parseInt(hex.slice(3,5),16) || 0;
-    let b = parseInt(hex.slice(5,7),16) || 0;
-    r = Math.round(r * (1 - amount));
-    g = Math.round(g * (1 - amount));
-    b = Math.round(b * (1 - amount));
-    return `rgb(${r},${g},${b})`;
-  }
-
-  // Controls
-  document.getElementById('btnDemon되감기').addEventListener('click', function() {
-    speed = -3;
-    document.querySelectorAll('.demon-controls .ctrl-btn').forEach(b => b.classList.remove('active'));
-    this.classList.add('active');
+  document.getElementById('btnDemonOff').addEventListener('click', function() {
+    demonActive = false;
+    document.getElementById('btnDemonOff').classList.add('active');
+    document.getElementById('btnDemonOn').classList.remove('active');
   });
 
-  document.getElementById('btnDemonPlay').addEventListener('click', function() {
-    speed = 1;
-    document.querySelectorAll('.demon-controls .ctrl-btn').forEach(b => b.classList.remove('active'));
-    this.classList.add('active');
+  document.getElementById('btnDemonOn').addEventListener('click', function() {
+    demonActive = true;
+    document.getElementById('btnDemonOn').classList.add('active');
+    document.getElementById('btnDemonOff').classList.remove('active');
   });
 
-  document.getElementById('btnDemonFast').addEventListener('click', function() {
-    speed = 3;
-    document.querySelectorAll('.demon-controls .ctrl-btn').forEach(b => b.classList.remove('active'));
-    this.classList.add('active');
+  const speeds = [1, 3, 6, 10];
+  const speedLabels = ['⚡ 1×', '⚡⚡ 3×', '⚡⚡⚡ 6×', '🔥 10×'];
+  let speedIdx = 0;
+  document.getElementById('btnDemonSpeed').addEventListener('click', function() {
+    speedIdx = (speedIdx + 1) % speeds.length;
+    simSpeed = speeds[speedIdx];
+    this.innerHTML = `<span class="icon"></span> ${speedLabels[speedIdx]}`;
+    this.classList.toggle('active', speedIdx > 0);
+  });
+
+  document.getElementById('btnDemonReset').addEventListener('click', function() {
+    initMolecules();
+    demonActive = false;
+    simSpeed = 1;
+    speedIdx = 0;
+    document.getElementById('btnDemonSpeed').innerHTML = '<span class="icon">⚡</span> 1×';
+    document.getElementById('btnDemonSpeed').classList.remove('active');
+    document.getElementById('btnDemonOff').classList.add('active');
+    document.getElementById('btnDemonOn').classList.remove('active');
   });
 
   const obs = new IntersectionObserver(entries => {
@@ -2893,7 +3208,7 @@ try {
     if (!isVisible && animId) { cancelAnimationFrame(animId); animId = null; }
   }, { threshold: 0.05 });
 
-  window.addEventListener('resize', () => { resize(); });
+  window.addEventListener('resize', resize);
   resize();
   obs.observe(canvas);
 })();
@@ -5147,6 +5462,511 @@ try {
   }, { threshold: 0.1 });
 
   window.addEventListener('resize', () => { resize(); draw(); });
+  resize();
+  obs.observe(canvas);
+})();
+
+
+// ═══════════════════════════════════════════
+// QUANTUM TELEPORTATION — Step-by-step animation
+// ═══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('teleportCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, dpr;
+  let animId = null;
+  let isVisible = false;
+  let time = 0;
+  let phase = 'idle'; // idle, share, measure, send, reconstruct, done
+  let phaseTime = 0;
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = rect.width; H = rect.height || rect.width * 7/16;
+    if (W < 10) return;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  const aliceX = () => W * 0.18;
+  const bobX = () => W * 0.82;
+  const midY = () => H * 0.52;
+  const sourceX = () => W * 0.5;
+
+  function drawParticle(x, y, r, color, label, glow) {
+    if (glow) {
+      ctx.beginPath();
+      ctx.arc(x, y, r + 8, 0, Math.PI * 2);
+      ctx.fillStyle = color + '18';
+      ctx.fill();
+    }
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    if (label) {
+      ctx.font = `${Math.max(8, W * 0.013)}px 'JetBrains Mono', monospace`;
+      ctx.fillStyle = color;
+      ctx.textAlign = 'center';
+      ctx.fillText(label, x, y + r + 14);
+    }
+  }
+
+  function drawLabel(x, y, text, color) {
+    ctx.font = `bold ${Math.max(11, W * 0.02)}px 'DM Sans', sans-serif`;
+    ctx.fillStyle = color;
+    ctx.textAlign = 'center';
+    ctx.fillText(text, x, y);
+  }
+
+  function drawStep(num, text, active) {
+    const y = H * 0.1;
+    const spacing = W * 0.28;
+    const x = W * 0.22 + (num - 1) * spacing;
+    ctx.font = `${Math.max(9, W * 0.015)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = active ? '#f0b429' : '#3a4060';
+    ctx.textAlign = 'center';
+    ctx.fillText(`Step ${num}: ${text}`, x, y);
+    if (active) {
+      ctx.fillRect(x - 20, y + 4, 40, 1.5);
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#050810';
+    ctx.fillRect(0, 0, W, H);
+
+    const ax = aliceX(), bx = bobX(), my = midY(), sx = sourceX();
+    phaseTime++;
+
+    // Actor labels
+    drawLabel(ax, H * 0.2, 'Alice', '#38bdf8');
+    drawLabel(bx, H * 0.2, 'Bob', '#fb7185');
+
+    // Step indicators
+    drawStep(1, 'Share pair', phase === 'share');
+    drawStep(2, 'Measure', phase === 'measure');
+    drawStep(3, 'Reconstruct', phase === 'send' || phase === 'reconstruct');
+
+    const t = Math.min(1, phaseTime / 90); // normalized phase progress
+    const ease = 1 - Math.pow(1 - t, 3);
+
+    if (phase === 'idle') {
+      // Show unknown state |ψ⟩ at Alice
+      drawParticle(ax, my - 30, 7, '#f0b429', '|ψ⟩ unknown state', true);
+      // Instruction
+      ctx.font = `${Math.max(10, W * 0.018)}px 'DM Sans', sans-serif`;
+      ctx.fillStyle = '#7b8db5';
+      ctx.textAlign = 'center';
+      ctx.fillText('Alice wants to send |ψ⟩ to Bob', W/2, H * 0.88);
+    }
+
+    if (phase === 'share') {
+      // Entangled pair flying apart from center
+      const pairA_x = sx + (ax - sx) * ease;
+      const pairB_x = sx + (bx - sx) * ease;
+      // Entanglement line
+      if (ease < 0.95) {
+        ctx.setLineDash([4, 6]);
+        ctx.strokeStyle = `rgba(240,180,41,${0.4 * (1 - ease)})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(pairA_x, my + 20);
+        ctx.lineTo(pairB_x, my + 20);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+      drawParticle(pairA_x, my + 20, 5, '#a78bfa', ease > 0.9 ? 'entangled A' : '', true);
+      drawParticle(pairB_x, my + 20, 5, '#a78bfa', ease > 0.9 ? 'entangled B' : '', true);
+      // Original state stays at Alice
+      drawParticle(ax, my - 30, 7, '#f0b429', '|ψ⟩', true);
+      // Source label
+      if (ease < 0.5) {
+        ctx.font = `${Math.max(8, W * 0.013)}px 'JetBrains Mono', monospace`;
+        ctx.fillStyle = '#a78bfa';
+        ctx.textAlign = 'center';
+        ctx.fillText('entangled pair', sx, my + 10);
+      }
+      if (phaseTime > 100) { phase = 'measure'; phaseTime = 0; }
+    }
+
+    if (phase === 'measure') {
+      // Entangled particles in place
+      drawParticle(ax, my + 20, 5, '#a78bfa', 'entangled A', false);
+      drawParticle(bx, my + 20, 5, '#a78bfa', 'entangled B', false);
+      // Alice measures |ψ⟩ together with her entangled particle
+      const flash = Math.sin(phaseTime * 0.15) * 0.5 + 0.5;
+      // Merge animation
+      const mergeY = my - 30 + ease * 50;
+      drawParticle(ax, mergeY, 7 * (1 - ease * 0.4), '#f0b429', '', true);
+      if (ease > 0.5) {
+        // Measurement flash
+        ctx.beginPath();
+        ctx.arc(ax, my + 5, 20 * flash, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(56,189,248,${flash * 0.15})`;
+        ctx.fill();
+        ctx.font = `${Math.max(10, W * 0.018)}px 'JetBrains Mono', monospace`;
+        ctx.fillStyle = '#38bdf8';
+        ctx.textAlign = 'center';
+        ctx.fillText('📐 Bell measurement', ax, my + 45);
+      }
+      if (ease > 0.8) {
+        // State destroyed at Alice
+        ctx.font = `${Math.max(9, W * 0.016)}px 'DM Sans', sans-serif`;
+        ctx.fillStyle = '#fb7185';
+        ctx.fillText('|ψ⟩ destroyed here', ax, my - 40);
+      }
+      if (phaseTime > 110) { phase = 'send'; phaseTime = 0; }
+    }
+
+    if (phase === 'send') {
+      // Classical bits flying from Alice to Bob
+      drawParticle(bx, my + 20, 5, '#a78bfa', 'entangled B', false);
+      // Alice's particles gone — just an empty circle
+      ctx.beginPath();
+      ctx.arc(ax, my, 6, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.font = `${Math.max(8, W * 0.013)}px 'JetBrains Mono', monospace`;
+      ctx.fillStyle = '#7b8db5';
+      ctx.textAlign = 'center';
+      ctx.fillText('(empty)', ax, my + 18);
+      // Classical bits
+      const bitX = ax + (bx - ax) * ease;
+      ctx.font = `${Math.max(12, W * 0.025)}px 'JetBrains Mono', monospace`;
+      ctx.fillStyle = '#f0b429';
+      ctx.textAlign = 'center';
+      ctx.fillText('01', bitX, my - 15);
+      // Label
+      ctx.font = `${Math.max(8, W * 0.013)}px 'JetBrains Mono', monospace`;
+      ctx.fillStyle = '#f0b42980';
+      ctx.fillText('2 classical bits', bitX, my - 30);
+      // Dotted line
+      ctx.setLineDash([3, 5]);
+      ctx.strokeStyle = '#f0b42930';
+      ctx.beginPath();
+      ctx.moveTo(ax + 20, my - 15);
+      ctx.lineTo(bitX - 15, my - 15);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      if (phaseTime > 100) { phase = 'reconstruct'; phaseTime = 0; }
+    }
+
+    if (phase === 'reconstruct') {
+      // Bob applies correction
+      ctx.beginPath();
+      ctx.arc(ax, my, 6, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      const flash = Math.sin(phaseTime * 0.12) * 0.5 + 0.5;
+      if (ease < 0.5) {
+        drawParticle(bx, my + 20, 5, '#a78bfa', '', false);
+        ctx.beginPath();
+        ctx.arc(bx, my + 20, 18 * flash, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(240,180,41,${flash * 0.12})`;
+        ctx.fill();
+        ctx.font = `${Math.max(9, W * 0.015)}px 'JetBrains Mono', monospace`;
+        ctx.fillStyle = '#f0b429';
+        ctx.textAlign = 'center';
+        ctx.fillText('applying correction...', bx, my + 50);
+      } else {
+        // Success!
+        drawParticle(bx, my + 20, 7, '#f0b429', '|ψ⟩ reconstructed!', true);
+      }
+      if (phaseTime > 120) { phase = 'done'; phaseTime = 0; }
+    }
+
+    if (phase === 'done') {
+      ctx.beginPath();
+      ctx.arc(ax, my, 6, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.font = `${Math.max(8, W*0.013)}px 'JetBrains Mono', monospace`;
+      ctx.fillStyle = '#7b8db5';
+      ctx.textAlign = 'center';
+      ctx.fillText('(empty)', ax, my + 18);
+
+      drawParticle(bx, my + 20, 7, '#f0b429', '|ψ⟩', true);
+
+      ctx.font = `bold ${Math.max(13, W * 0.026)}px 'Fraunces', serif`;
+      ctx.fillStyle = '#34d399';
+      ctx.textAlign = 'center';
+      ctx.fillText('✓  Teleportation complete', W/2, H * 0.88);
+
+      ctx.font = `${Math.max(9, W * 0.015)}px 'DM Sans', sans-serif`;
+      ctx.fillStyle = '#7b8db5';
+      ctx.fillText('State destroyed at Alice, recreated at Bob. No cloning. No FTL.', W/2, H * 0.94);
+    }
+
+    time++;
+    animId = requestAnimationFrame(draw);
+  }
+
+  document.getElementById('btnTeleportStart').addEventListener('click', () => {
+    phase = 'share'; phaseTime = 0;
+  });
+  document.getElementById('btnTeleportReset').addEventListener('click', () => {
+    phase = 'idle'; phaseTime = 0;
+  });
+
+  const obs = new IntersectionObserver(entries => {
+    isVisible = entries[0].isIntersecting;
+    if (isVisible && !animId) draw();
+    if (!isVisible && animId) { cancelAnimationFrame(animId); animId = null; }
+  }, { threshold: 0.05 });
+
+  window.addEventListener('resize', resize);
+  resize();
+  obs.observe(canvas);
+})();
+
+
+// ═══════════════════════════════════════════
+// QUANTUM ERASER — Delayed choice
+// ═══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('eraserCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, dpr;
+  let animId = null;
+  let isVisible = false;
+  let mode = 'none'; // 'none' | 'record' | 'erase'
+  let photons = [];
+  let activePhotons = [];
+  let time = 0;
+
+  const SLIT_SEP = 0.0003;
+  const SLIT_W = 0.0001;
+  const WAVELENGTH = 500e-9;
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const rect = canvas.parentElement.getBoundingClientRect();
+    W = rect.width; H = rect.height || rect.width * 7/16;
+    if (W < 10) return;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function getHitY() {
+    const screenH = H * 0.8;
+    for (let tries = 0; tries < 200; tries++) {
+      const y = (Math.random() - 0.5) * screenH;
+      const sinT = y / (H * 3);
+
+      if (mode === 'record') {
+        // Which-way info recorded → no interference, two blobs
+        const slit = Math.random() > 0.5 ? 1 : -1;
+        const offset = slit * H * 0.06;
+        const yRel = y - offset;
+        const aP = Math.PI * SLIT_W * (yRel / (H * 3)) / WAVELENGTH;
+        const env = aP === 0 ? 1 : Math.sin(aP) / aP;
+        if (Math.random() < env * env) return H/2 + y;
+      } else {
+        // No info or erased → full interference
+        const dP = Math.PI * SLIT_SEP * sinT / WAVELENGTH;
+        const aP = Math.PI * SLIT_W * sinT / WAVELENGTH;
+        const env = aP === 0 ? 1 : Math.sin(aP) / aP;
+        const interf = Math.cos(dP);
+        if (Math.random() < interf * interf * env * env) return H/2 + y;
+      }
+    }
+    return H/2;
+  }
+
+  function emit() {
+    const target = getHitY();
+    const barrierX = W * 0.3;
+    const screenX = W * 0.82;
+    const slitGap = H * 0.06;
+    const throughY = Math.random() > 0.5 ? H/2 - slitGap : H/2 + slitGap;
+    activePhotons.push({
+      x: W * 0.05, y: H/2 + (Math.random()-.5)*H*0.2,
+      targetY: target, throughY,
+      phase: 0, speed: 3 + Math.random()*2,
+      color: mode === 'record' ? '#fb7185' : (mode === 'erase' ? '#f0b429' : '#38bdf8')
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#050810';
+    ctx.fillRect(0, 0, W, H);
+
+    const barrierX = W * 0.3;
+    const screenX = W * 0.82;
+    const slitGap = H * 0.06;
+    const slitHW = H * 0.015;
+    const midY = H / 2;
+
+    // Barrier
+    ctx.fillStyle = '#1a2545';
+    ctx.fillRect(barrierX - 2, 0, 4, midY - slitGap - slitHW);
+    ctx.fillRect(barrierX - 2, midY - slitGap + slitHW, 4, 2*(slitGap - slitHW));
+    ctx.fillRect(barrierX - 2, midY + slitGap + slitHW, 4, H - midY - slitGap - slitHW);
+
+    // Slit glow
+    ctx.save();
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = 'rgba(56,189,248,0.4)';
+    ctx.fillStyle = 'rgba(56,189,248,0.2)';
+    ctx.fillRect(barrierX - 1, midY - slitGap - slitHW, 2, slitHW * 2);
+    ctx.fillRect(barrierX - 1, midY + slitGap - slitHW, 2, slitHW * 2);
+    ctx.restore();
+
+    // Which-way detector (if recording)
+    if (mode === 'record') {
+      ctx.font = `${Math.max(10, W * 0.018)}px sans-serif`;
+      ctx.fillText('📝', barrierX + 12, midY - slitGap + 4);
+      ctx.fillText('📝', barrierX + 12, midY + slitGap + 4);
+      ctx.font = `${Math.max(8, W * 0.013)}px 'JetBrains Mono', monospace`;
+      ctx.fillStyle = '#fb7185';
+      ctx.textAlign = 'left';
+      ctx.fillText('which-way', barrierX + 28, midY - slitGap + 4);
+      ctx.fillText('recorded', barrierX + 28, midY + slitGap + 4);
+    }
+
+    // Eraser (if erasing)
+    if (mode === 'erase') {
+      const eraserX = (barrierX + screenX) / 2;
+      ctx.font = `${Math.max(14, W * 0.028)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.fillText('🗑', eraserX, midY - 15);
+      ctx.font = `${Math.max(8, W * 0.013)}px 'JetBrains Mono', monospace`;
+      ctx.fillStyle = '#f0b429';
+      ctx.fillText('info erased', eraserX, midY + 8);
+    }
+
+    // Screen line
+    ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(screenX, H * 0.08); ctx.lineTo(screenX, H * 0.92);
+    ctx.stroke();
+
+    // Mode label
+    ctx.font = `bold ${Math.max(11, W * 0.02)}px 'DM Sans', sans-serif`;
+    ctx.textAlign = 'center';
+    if (mode === 'none') { ctx.fillStyle = '#38bdf8'; ctx.fillText('INTERFERENCE', W/2, 18); }
+    else if (mode === 'record') { ctx.fillStyle = '#fb7185'; ctx.fillText('NO INTERFERENCE', W/2, 18); }
+    else { ctx.fillStyle = '#f0b429'; ctx.fillText('INTERFERENCE RESTORED', W/2, 18); }
+
+    // Labels
+    ctx.font = `${Math.max(8, W * 0.013)}px 'JetBrains Mono', monospace`;
+    ctx.fillStyle = '#7b8db5';
+    ctx.textAlign = 'center';
+    ctx.fillText('source', W * 0.05, H * 0.07);
+    ctx.fillText('slits', barrierX, H * 0.07);
+    ctx.fillText('screen', screenX, H * 0.07);
+
+    // Emit
+    if (time % 3 === 0 && activePhotons.length < 200) emit();
+
+    // Update active photons
+    for (let i = activePhotons.length - 1; i >= 0; i--) {
+      const p = activePhotons[i];
+      if (p.phase === 0) {
+        p.x += p.speed;
+        p.y += (p.throughY - p.y) * 0.04;
+        if (p.x >= barrierX) { p.x = barrierX; p.y = p.throughY; p.phase = 1; }
+      } else if (p.phase === 1) {
+        p.x += p.speed;
+        const t = (p.x - barrierX) / (screenX - barrierX);
+        p.y = p.throughY + (p.targetY - p.throughY) * t;
+        if (p.x >= screenX) {
+          photons.push({ y: p.targetY, age: 0, color: p.color });
+          document.getElementById('eraserCount').textContent = photons.length;
+          activePhotons.splice(i, 1);
+          continue;
+        }
+      }
+      // Draw
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.fill();
+    }
+
+    // Draw hits
+    for (const p of photons) {
+      p.age++;
+      const a = Math.min(1, p.age / 15) * 0.6;
+      ctx.beginPath();
+      ctx.arc(screenX, p.y, 1.2, 0, Math.PI * 2);
+      ctx.fillStyle = p.color.replace(')', `,${a})`).replace('rgb', 'rgba').replace('#', '');
+      // Use hex to rgba
+      const hex = p.color;
+      const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+      ctx.fillStyle = `rgba(${r},${g},${b},${a})`;
+      ctx.fill();
+    }
+
+    // Histogram
+    if (photons.length > 20) {
+      const bins = 60;
+      const hist = new Float32Array(bins);
+      const top = H * 0.08, bot = H * 0.92, range = bot - top;
+      for (const p of photons) {
+        const bin = Math.floor(((p.y - top) / range) * bins);
+        if (bin >= 0 && bin < bins) hist[bin]++;
+      }
+      const maxC = Math.max(...hist) || 1;
+      for (let i = 0; i < bins; i++) {
+        const len = (hist[i] / maxC) * W * 0.08;
+        const y = top + i * (range / bins);
+        const hex = mode === 'record' ? '#fb7185' : (mode === 'erase' ? '#f0b429' : '#38bdf8');
+        const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+        ctx.fillStyle = `rgba(${r},${g},${b},0.4)`;
+        ctx.fillRect(screenX + 6, y, len, range/bins - 1);
+      }
+    }
+
+    time++;
+    animId = requestAnimationFrame(draw);
+  }
+
+  function setMode(m) {
+    mode = m;
+    photons = [];
+    activePhotons = [];
+    document.getElementById('eraserCount').textContent = '0';
+    ['btnEraserNoInfo','btnEraserRecord','btnEraserErase'].forEach(id => {
+      document.getElementById(id).classList.remove('active');
+    });
+  }
+
+  document.getElementById('btnEraserNoInfo').addEventListener('click', function() {
+    setMode('none'); this.classList.add('active');
+  });
+  document.getElementById('btnEraserRecord').addEventListener('click', function() {
+    setMode('record'); this.classList.add('active');
+  });
+  document.getElementById('btnEraserErase').addEventListener('click', function() {
+    setMode('erase'); this.classList.add('active');
+  });
+  document.getElementById('btnEraserReset').addEventListener('click', function() {
+    setMode('none');
+    document.getElementById('btnEraserNoInfo').classList.add('active');
+  });
+
+  const obs = new IntersectionObserver(entries => {
+    isVisible = entries[0].isIntersecting;
+    if (isVisible && !animId) draw();
+    if (!isVisible && animId) { cancelAnimationFrame(animId); animId = null; }
+  }, { threshold: 0.05 });
+
+  window.addEventListener('resize', resize);
   resize();
   obs.observe(canvas);
 })();
