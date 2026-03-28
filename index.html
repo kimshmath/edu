@@ -14,7 +14,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Interactive Mathematics — Mellow Math</title>
   <meta name="description"
-    content="Interactive explorations where abstract mathematics becomes something you can see, hear, and touch. 24 chapters across Space, Flow, Sense, and Machine.">
+    content="Interactive explorations where abstract mathematics becomes something you can see, hear, and touch. Chapters across Space, Flow, Quantum, Sense, and Machine.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link
     href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400&display=swap"
@@ -42,6 +42,7 @@
       --space: #6C9BFF;
       --flow: #FFB86C;
       --sense: #50FA7B;
+      --quantum: #BF9FFF;
       --machine: #FF79C6;
     }
 
@@ -120,7 +121,7 @@
 
     .home-header {
       text-align: center;
-      padding: 6rem 0 2.5rem;
+      padding: 5rem 0 2rem;
       animation: fadeIn 0.8s ease both;
     }
 
@@ -147,207 +148,199 @@
       font-style: italic;
     }
 
-    /* ─── Category Grid ─── */
-    .category-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.9rem;
-      max-width: 460px;
-      width: 100%;
+    /* ═══ PENTAGONAL LAYOUT ═══ */
+    .pentagon-wrapper {
+      position: relative;
+      width: min(520px, 90vw);
+      height: min(520px, 90vw);
       margin-bottom: 4rem;
     }
 
+    /* ─── Category Cards (positioned absolutely) ─── */
     .category-card {
+      position: absolute;
+      width: clamp(120px, 28vw, 145px);
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 1.8rem 1rem 1.4rem;
-      border-radius: 18px;
+      text-align: center;
+      padding: 1.2rem 0.7rem 1rem;
+      border-radius: 22px;
       border: 1px solid var(--border);
       background: var(--surface);
       cursor: pointer;
-      transition: transform 0.3s cubic-bezier(.4, 0, .2, 1), border-color 0.3s, background 0.3s;
+      transition: transform 0.3s cubic-bezier(.4, 0, .2, 1), border-color 0.3s, background 0.3s, box-shadow 0.3s;
       text-decoration: none;
       -webkit-tap-highlight-color: transparent;
       animation: fadeIn 0.6s ease both;
-    }
-
-    .category-card:nth-child(1) {
-      animation-delay: 0.15s;
-    }
-
-    .category-card:nth-child(2) {
-      animation-delay: 0.25s;
-    }
-
-    .category-card:nth-child(3) {
-      animation-delay: 0.35s;
-    }
-
-    .category-card:nth-child(4) {
-      animation-delay: 0.45s;
+      transform: translate(-50%, -50%);
     }
 
     .category-card:hover {
-      transform: translateY(-3px) scale(1.01);
+      transform: translate(-50%, -50%) translateY(-3px) scale(1.04);
       border-color: var(--border-hover);
     }
 
     .category-card:active {
-      transform: scale(0.97);
+      transform: translate(-50%, -50%) scale(0.97);
     }
 
     .category-card[data-cat="space"]:hover {
-      border-color: rgba(108, 155, 255, 0.25);
-      background: rgba(108, 155, 255, 0.04);
+      border-color: rgba(108, 155, 255, 0.3);
+      background: rgba(108, 155, 255, 0.05);
+      box-shadow: 0 0 30px rgba(108, 155, 255, 0.08);
     }
-
     .category-card[data-cat="flow"]:hover {
-      border-color: rgba(255, 184, 108, 0.25);
-      background: rgba(255, 184, 108, 0.04);
+      border-color: rgba(255, 184, 108, 0.3);
+      background: rgba(255, 184, 108, 0.05);
+      box-shadow: 0 0 30px rgba(255, 184, 108, 0.08);
     }
-
     .category-card[data-cat="sense"]:hover {
-      border-color: rgba(80, 250, 123, 0.25);
-      background: rgba(80, 250, 123, 0.04);
+      border-color: rgba(80, 250, 123, 0.3);
+      background: rgba(80, 250, 123, 0.05);
+      box-shadow: 0 0 30px rgba(80, 250, 123, 0.08);
     }
-
+    .category-card[data-cat="quantum"]:hover {
+      border-color: rgba(191, 159, 255, 0.3);
+      background: rgba(191, 159, 255, 0.05);
+      box-shadow: 0 0 30px rgba(191, 159, 255, 0.08);
+    }
     .category-card[data-cat="machine"]:hover {
-      border-color: rgba(255, 121, 198, 0.25);
-      background: rgba(255, 121, 198, 0.04);
+      border-color: rgba(255, 121, 198, 0.3);
+      background: rgba(255, 121, 198, 0.05);
+      box-shadow: 0 0 30px rgba(255, 121, 198, 0.08);
     }
 
-    /* ═══ ARTISTIC SYMMETRIC GRID (4x4) ═══ */
-    .category-grid {
-      display: grid;
-      /* 1:0.5:0.5:1 ratio ensures Hub is exactly 1/3 of total span */
-      grid-template-columns: 1fr 0.5fr 0.5fr 1fr;
-      grid-template-rows: 1fr 0.5fr 0.5fr 1fr;
-      gap: 0;
-      max-width: 600px;
-      width: 100%;
-      margin-bottom: 4rem;
-      position: relative;
-    }
-
-    .category-card {
-      margin: 4px;
-      border-radius: 28px;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      padding: 1.5rem;
-      box-sizing: border-box;
-      background: rgba(255, 255, 255, 0.03);
-      transition: all 0.3s cubic-bezier(.4, 0, .2, 1);
-    }
-
-    /* Quadrant Alignment: Push content to outer corners to avoid Hub overlap */
+    /* Pentagon vertex positions (regular pentagon, top vertex at 12 o'clock):
+       Space    — top center
+       Flow     — upper-left
+       Quantum  — upper-right
+       Sense    — lower-left
+       Machine  — lower-right
+    */
     .category-card[data-cat="space"] {
-      grid-area: 1 / 1 / 3 / 3;
-      border-bottom-right-radius: 4px;
-      align-items: flex-start; text-align: left;
-      box-shadow: 0 0 25px rgba(108, 155, 255, 0.06);
+      left: 50%; top: 8%;
+      animation-delay: 0.1s;
     }
     .category-card[data-cat="flow"] {
-      grid-area: 1 / 3 / 3 / 5;
-      border-bottom-left-radius: 4px;
-      align-items: flex-end; text-align: right;
-      box-shadow: 0 0 25px rgba(255, 184, 108, 0.06);
+      left: 10%; top: 35%;
+      animation-delay: 0.18s;
+    }
+    .category-card[data-cat="quantum"] {
+      left: 90%; top: 35%;
+      animation-delay: 0.26s;
     }
     .category-card[data-cat="sense"] {
-      grid-area: 3 / 1 / 5 / 3;
-      border-top-right-radius: 4px;
-      justify-content: flex-end; align-items: flex-start; text-align: left;
-      box-shadow: 0 0 25px rgba(80, 250, 123, 0.06);
+      left: 25%; top: 82%;
+      animation-delay: 0.34s;
     }
     .category-card[data-cat="machine"] {
-      grid-area: 3 / 3 / 5 / 5;
-      border-top-left-radius: 4px;
-      justify-content: flex-end; align-items: flex-end; text-align: right;
-      box-shadow: 0 0 25px rgba(255, 121, 198, 0.06);
+      left: 75%; top: 82%;
+      animation-delay: 0.42s;
     }
 
-    .category-card .cat-desc { max-width: 160px; }
+    /* ─── Connecting lines (SVG pentagon wireframe) ─── */
+    .pentagon-lines {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
 
+    /* ─── Center Hub ─── */
     .suggest-center {
-      grid-area: 2 / 2 / 4 / 4;
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
       z-index: 10;
-      margin: 12px;
+      width: clamp(100px, 22vw, 120px);
+      height: clamp(100px, 22vw, 120px);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      border-radius: 32px;
-      background: rgba(10,12,20,0.96);
-      border: 1.5px solid rgba(212,168,83,0.45);
-      box-shadow: 0 0 40px rgba(0,0,0,0.95);
-      transition: all 0.3s cubic-bezier(.4,0,.2,1);
+      border-radius: 50%;
+      background: rgba(10, 12, 20, 0.96);
+      border: 1.5px solid rgba(212, 168, 83, 0.45);
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.95);
+      transition: all 0.3s cubic-bezier(.4, 0, .2, 1);
       -webkit-tap-highlight-color: transparent;
       backdrop-filter: blur(20px);
+      animation: fadeIn 0.8s 0.5s ease both;
     }
 
     .suggest-center::before {
       content: '';
-      position: absolute; inset: -15px;
-      background: radial-gradient(circle, rgba(212,168,83,0.18), transparent 70%);
+      position: absolute;
+      inset: -20px;
+      background: radial-gradient(circle, rgba(212, 168, 83, 0.15), transparent 70%);
       z-index: -1;
       pointer-events: none;
+      border-radius: 50%;
     }
 
     .suggest-center:hover {
-      transform: scale(1.04);
-      border-color: rgba(212,168,83,0.9);
-      box-shadow: 0 0 60px rgba(212,168,83,0.3);
+      transform: translate(-50%, -50%) scale(1.06);
+      border-color: rgba(212, 168, 83, 0.9);
+      box-shadow: 0 0 60px rgba(212, 168, 83, 0.25);
     }
 
-    .suggest-center .cat-icon { width: 50px; height: 50px; margin-bottom: 0.8rem; filter: drop-shadow(0 0 12px rgba(212,168,83,0.5)); }
-    .suggest-center .cat-label { font-size: 0.95rem; color: #d4a853; text-align: center; line-height: 1.2; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
-    .suggest-center .cat-label-ko { font-size: 0.65rem; color: rgba(212,168,83,0.55); margin-top: 0.25rem; font-weight: 400; }
-
-    @media (max-width: 520px) {
-      .category-grid {
-        grid-template-columns: 1fr 1.15fr 1.15fr 1fr;
-        max-width: 100%;
-      }
-      .suggest-center { margin: 6px; border-radius: 20px; }
-      .category-card { min-height: 140px; border-radius: 18px; }
-      .suggest-center .cat-icon { width: 36px; height: 36px; }
-      .suggest-center .cat-label { font-size: 0.75rem; }
+    .suggest-center .cat-icon {
+      width: 36px; height: 36px;
+      margin-bottom: 0.5rem;
+      filter: drop-shadow(0 0 12px rgba(212, 168, 83, 0.5));
     }
 
+    .suggest-center .cat-label {
+      font-size: 0.75rem;
+      color: #d4a853;
+      text-align: center;
+      line-height: 1.2;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .suggest-center .cat-label-ko {
+      font-size: 0.6rem;
+      color: rgba(212, 168, 83, 0.55);
+      margin-top: 0.15rem;
+      font-weight: 400;
+    }
+
+    /* ─── Shared card elements ─── */
     .cat-icon {
-      width: 56px;
-      height: 56px;
-      margin-bottom: 0.9rem;
+      width: 44px;
+      height: 44px;
+      margin-bottom: 0.6rem;
     }
 
     .cat-label {
       font-family: var(--f-serif);
-      font-size: 1.2rem;
+      font-size: 1rem;
       font-weight: 600;
       color: var(--white);
-      margin-bottom: 0.15rem;
+      margin-bottom: 0.1rem;
     }
 
     .cat-label-ko {
-      font-size: 0.7rem;
-      margin-bottom: 0.5rem;
+      font-size: 0.65rem;
+      margin-bottom: 0.4rem;
     }
 
     .cat-desc {
-      font-size: 0.65rem;
-      color: rgba(255, 255, 255, 0.3);
+      font-size: 0.55rem;
+      color: rgba(255, 255, 255, 0.28);
       text-align: center;
-      line-height: 1.5;
-      margin-bottom: 0.6rem;
+      line-height: 1.45;
+      margin-bottom: 0.4rem;
+      max-width: 140px;
     }
 
     .cat-count {
       font-family: var(--f-mono);
-      font-size: 0.55rem;
+      font-size: 0.5rem;
       letter-spacing: 0.05em;
     }
 
@@ -592,6 +585,8 @@
       display: flex;
       flex-direction: column;
       gap: 0.2rem;
+      align-items: center;
+      text-align: center;
     }
 
     .footer-name {
@@ -645,7 +640,6 @@
         opacity: 0;
         transform: translateY(12px);
       }
-
       to {
         opacity: 1;
         transform: translateY(0);
@@ -657,7 +651,6 @@
         opacity: 0;
         transform: translateX(20px);
       }
-
       to {
         opacity: 1;
         transform: translateX(0);
@@ -665,27 +658,110 @@
     }
 
     /* ─── Responsive ─── */
-    @media (max-width: 480px) {
+    @media (max-width: 520px) {
       .home-header {
-        padding: 4rem 0 2rem;
+        padding: 4rem 0 1rem;
       }
 
-      .cat-label {
-        font-size: 1.05rem;
+      .pentagon-wrapper {
+        width: 100vw;
+        height: 110vw;
+        margin-bottom: 2rem;
+      }
+
+      .category-card {
+        width: clamp(90px, 25vw, 120px);
+        padding: 0.7rem 0.45rem 0.6rem;
+        border-radius: 14px;
       }
 
       .cat-icon {
-        width: 44px;
-        height: 44px;
+        width: 30px;
+        height: 30px;
+        margin-bottom: 0.3rem;
+      }
+
+      .cat-label {
+        font-size: 0.8rem;
+      }
+
+      .cat-label-ko {
+        font-size: 0.5rem;
+        margin-bottom: 0.2rem;
       }
 
       .cat-desc {
-        font-size: 0.6rem;
+        font-size: 0.45rem;
+        max-width: 100px;
+        line-height: 1.35;
+        margin-bottom: 0.25rem;
+      }
+
+      .cat-count {
+        font-size: 0.42rem;
+      }
+
+      .suggest-center {
+        width: clamp(72px, 19vw, 95px);
+        height: clamp(72px, 19vw, 95px);
+      }
+
+      .suggest-center .cat-icon {
+        width: 24px;
+        height: 24px;
+        margin-bottom: 0.25rem;
+      }
+
+      .suggest-center .cat-label {
+        font-size: 0.55rem;
+      }
+
+      .suggest-center .cat-label-ko {
+        font-size: 0.45rem;
+      }
+
+      /* Spread pentagon wider vertically on narrow screens */
+      .category-card[data-cat="space"] {
+        left: 50%; top: 4%;
+      }
+      .category-card[data-cat="flow"] {
+        left: 12%; top: 32%;
+      }
+      .category-card[data-cat="quantum"] {
+        left: 88%; top: 32%;
+      }
+      .category-card[data-cat="sense"] {
+        left: 20%; top: 78%;
+      }
+      .category-card[data-cat="machine"] {
+        left: 80%; top: 78%;
+      }
+      .suggest-center {
+        top: 48%;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .cat-desc {
+        display: none;
+      }
+
+      .category-card {
+        width: clamp(80px, 24vw, 105px);
+        padding: 0.6rem 0.35rem 0.5rem;
+      }
+
+      .cat-label {
+        font-size: 0.72rem;
+      }
+
+      .suggest-center {
+        width: 68px;
+        height: 68px;
       }
     }
 
     @media (min-width: 768px) {
-
       .chapter-list {
         max-width: 680px;
       }
@@ -696,7 +772,7 @@
 <body>
 
   <!-- ═══════════════════════════════════════════ -->
-  <!-- HOME VIEW: 4 Category Cards               -->
+  <!-- HOME VIEW: 5 Category Pentagon             -->
   <!-- ═══════════════════════════════════════════ -->
   <div class="lang-toggle">
     <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
@@ -709,8 +785,9 @@
       <h1 class="home-title">Interactive <em>Mathematics</em></h1>
     </header>
 
-    <div class="category-grid">
-      <!-- Space -->
+    <div class="pentagon-wrapper">
+
+      <!-- Space - top vertex -->
       <div class="category-card" data-cat="space" onclick="showCategory('space')">
         <svg class="cat-icon" viewBox="0 0 40 40" fill="none">
           <circle cx="20" cy="20" r="16" stroke="#6C9BFF" stroke-width="1.4" fill="rgba(108,155,255,0.02)" />
@@ -726,7 +803,7 @@
         <div class="cat-count" style="color:rgba(108,155,255,0.45)">6 chapters</div>
       </div>
 
-      <!-- Flow -->
+      <!-- Flow - upper-left vertex -->
       <div class="category-card" data-cat="flow" onclick="showCategory('flow')">
         <svg class="cat-icon" viewBox="0 0 40 40" fill="none">
           <path d="M4 10 Q12 10 16 14 Q20 18 24 18 Q28 18 36 14" stroke="#FFB86C" stroke-width="1.2" fill="none"
@@ -744,21 +821,38 @@
         <div class="cat-label">Flow</div>
         <div class="cat-label-ko" style="color:rgba(255,184,108,0.5)">흐름</div>
         <div class="cat-desc">Convergence, diffusion, and the currents beneath</div>
-        <div class="cat-count" style="color:rgba(255,184,108,0.45)">7 chapters</div>
+        <div class="cat-count" style="color:rgba(255,184,108,0.45)">6 chapters</div>
       </div>
 
-      <!-- Hub: Suggest Random -->
-      <div class="suggest-center" onclick="suggestRandom()">
+      <!-- Quantum - upper-right vertex -->
+      <div class="category-card" data-cat="quantum" onclick="showCategory('quantum')">
         <svg class="cat-icon" viewBox="0 0 40 40" fill="none">
-          <path d="M20 5 L24 16 L35 20 L24 24 L20 35 L16 24 L5 20 L16 16 Z" fill="rgba(212,168,83,0.2)" stroke="#d4a853"
-            stroke-width="1.2" />
-          <circle cx="20" cy="20" r="1.5" fill="#d4a853" />
+          <!-- Bloch sphere: the actual geometric representation of a qubit state -->
+          <!-- Sphere outline -->
+          <circle cx="20" cy="20" r="14" stroke="#BF9FFF" stroke-width="1.1" fill="rgba(191,159,255,0.03)" />
+          <!-- Equatorial great circle (tilted for 3D feel) -->
+          <ellipse cx="20" cy="22" rx="14" ry="4.5" stroke="#BF9FFF" stroke-width="0.7" fill="none" opacity="0.3" />
+          <!-- Longitudinal great circle -->
+          <ellipse cx="20" cy="20" rx="5" ry="14" stroke="#BF9FFF" stroke-width="0.7" fill="none" opacity="0.25" />
+          <!-- Z-axis: |0⟩ pole (top) to |1⟩ pole (bottom) -->
+          <line x1="20" y1="6" x2="20" y2="34" stroke="#BF9FFF" stroke-width="0.6" opacity="0.2" stroke-dasharray="1.5 1.5" />
+          <!-- |0⟩ at north pole -->
+          <circle cx="20" cy="6" r="1.2" fill="#BF9FFF" opacity="0.6" />
+          <!-- |1⟩ at south pole -->
+          <circle cx="20" cy="34" r="1.2" fill="#BF9FFF" opacity="0.35" />
+          <!-- State vector |ψ⟩ pointing to a superposition state -->
+          <line x1="20" y1="20" x2="30" y2="11" stroke="#BF9FFF" stroke-width="1.3" opacity="0.8" />
+          <circle cx="30" cy="11" r="1.5" fill="#BF9FFF" opacity="0.85" />
+          <!-- Center origin -->
+          <circle cx="20" cy="20" r="0.8" fill="#BF9FFF" opacity="0.4" />
         </svg>
-        <div class="cat-label suggest-text">Suggest!</div>
-        <div class="cat-label-ko suggest-text-ko" style="color:rgba(212,168,83,0.6); margin-top:0.2rem; font-size:0.65rem;">추천!</div>
+        <div class="cat-label">Quantum</div>
+        <div class="cat-label-ko" style="color:rgba(191,159,255,0.5)">양자</div>
+        <div class="cat-desc">Superposition, entanglement, and nature at its smallest</div>
+        <div class="cat-count" style="color:rgba(191,159,255,0.45)">2 chapters</div>
       </div>
 
-      <!-- Sense -->
+      <!-- Sense - lower-left vertex -->
       <div class="category-card" data-cat="sense" onclick="showCategory('sense')">
         <svg class="cat-icon" viewBox="0 0 40 40" fill="none">
           <circle cx="20" cy="20" r="4" stroke="#50FA7B" stroke-width="1.4" fill="rgba(80,250,123,0.09)" />
@@ -773,7 +867,7 @@
         <div class="cat-count" style="color:rgba(80,250,123,0.45)">4 chapters</div>
       </div>
 
-      <!-- Machine -->
+      <!-- Machine - lower-right vertex -->
       <div class="category-card" data-cat="machine" onclick="showCategory('machine')">
         <svg class="cat-icon" viewBox="0 0 40 40" fill="none">
           <circle cx="8" cy="12" r="2.5" fill="rgba(255,121,198,0.21)" stroke="#FF79C6" stroke-width="0.7" />
@@ -794,7 +888,18 @@
         <div class="cat-label">Machine</div>
         <div class="cat-label-ko" style="color:rgba(255,121,198,0.5)">기계</div>
         <div class="cat-desc">How machines learn, dream, and understand</div>
-        <div class="cat-count" style="color:rgba(255,121,198,0.45)">10 chapters</div>
+        <div class="cat-count" style="color:rgba(255,121,198,0.45)">9 chapters</div>
+      </div>
+
+      <!-- Hub: Suggest Random (center) -->
+      <div class="suggest-center" onclick="suggestRandom()">
+        <svg class="cat-icon" viewBox="0 0 40 40" fill="none">
+          <path d="M20 5 L24 16 L35 20 L24 24 L20 35 L16 24 L5 20 L16 16 Z" fill="rgba(212,168,83,0.2)" stroke="#d4a853"
+            stroke-width="1.2" />
+          <circle cx="20" cy="20" r="1.5" fill="#d4a853" />
+        </svg>
+        <div class="cat-label suggest-text">Suggest!</div>
+        <div class="cat-label-ko suggest-text-ko" style="color:rgba(212,168,83,0.6); margin-top:0.1rem; font-size:0.55rem;">추천!</div>
       </div>
     </div>
 
@@ -909,10 +1014,6 @@
             title: 'The Music of the Primes', titleKo: '소수의 음악', tagline: 'The hidden rhythm of numbers', taglineKo: '숫자에 숨겨진 리듬', difficulty: 2, en: 'primes.html', ko: 'primes-ko.html',
             icon: '<svg viewBox="0 0 56 56" fill="none"><text x="6" y="18" fill="#FFB86C" font-size="11" font-family="serif" opacity="0.7">2</text><text x="18" y="30" fill="#FFB86C" font-size="11" font-family="serif" opacity="0.55">3</text><text x="30" y="18" fill="#FFB86C" font-size="11" font-family="serif" opacity="0.45">5</text><text x="38" y="38" fill="#FFB86C" font-size="11" font-family="serif" opacity="0.35">7</text><text x="8" y="44" fill="#FFB86C" font-size="9" font-family="serif" opacity="0.25">11</text><text x="44" y="22" fill="#FFB86C" font-size="9" font-family="serif" opacity="0.2">13</text><path d="M4 48 Q14 38 20 42 Q28 48 36 36 Q44 24 52 28" stroke="#FFB86C" stroke-width="0.8" fill="none" opacity="0.3" stroke-linecap="round"/></svg>'
           },
-          {
-            title: 'The Coin That Lands on Both Sides', titleKo: '양면에 착지하는 동전', tagline: 'Reality as superposition', taglineKo: '중첩으로서의 현실', difficulty: 3, en: 'quantum.html', ko: 'quantum_ko.html',
-            icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="18" stroke="#FFB86C" stroke-width="1.2" fill="#FFB86C05"/><ellipse cx="28" cy="28" rx="18" ry="6" stroke="#FFB86C" stroke-width="0.9" opacity="0.35" transform="rotate(45 28 28)"/><ellipse cx="28" cy="28" rx="18" ry="6" stroke="#FFB86C" stroke-width="0.9" opacity="0.35" transform="rotate(-45 28 28)"/><circle cx="22" cy="28" r="3" fill="#FFB86C" opacity="0.4"/><circle cx="34" cy="28" r="3" fill="#FFB86C" opacity="0.4"/><path d="M22 28 L34 28" stroke="#FFB86C" stroke-width="0.7" opacity="0.3" stroke-dasharray="1.5 1.5"/><text x="28" y="48" text-anchor="middle" fill="#FFB86C" font-size="7" font-family="serif" opacity="0.25" font-style="italic">ψ</text></svg>'
-          },
         ]
       },
       sense: {
@@ -936,6 +1037,22 @@
           {
             title: 'The Sound of Mathematics', titleKo: '수학의 소리', tagline: 'Why does a violin sound like a violin?', taglineKo: '바이올린은 왜 바이올린처럼 들릴까?', difficulty: 2, en: 'ghost.html', ko: 'ghost_ko.html',
             icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M22 10 L22 40" stroke="#50FA7B" stroke-width="1.2" opacity="0.5"/><path d="M34 10 L34 40" stroke="#50FA7B" stroke-width="1.2" opacity="0.5"/><path d="M22 10 L34 14" stroke="#50FA7B" stroke-width="1" opacity="0.4"/><path d="M22 16 L34 20" stroke="#50FA7B" stroke-width="1" opacity="0.4"/><circle cx="18" cy="40" r="4" fill="#50FA7B" opacity="0.3"/><circle cx="30" cy="44" r="4" fill="#50FA7B" opacity="0.3"/><path d="M4 28 Q10 20 16 28 Q22 36 28 28 Q34 20 40 28 Q46 36 52 28" stroke="#50FA7B" stroke-width="0.8" fill="none" opacity="0.25" stroke-linecap="round"/></svg>'
+          },
+        ]
+      },
+      quantum: {
+        label: 'Quantum', labelKo: '양자', color: '#BF9FFF',
+        desc: 'Superposition, entanglement, and nature at its smallest',
+        descKo: '중첩, 얽힘, 그리고 가장 작은 세계의 자연',
+        icon: document.querySelector('[data-cat="quantum"] .cat-icon').outerHTML,
+        chapters: [
+          {
+            title: 'The Coin That Lands on Both Sides', titleKo: '양면에 착지하는 동전', tagline: 'Reality as superposition', taglineKo: '중첩으로서의 현실', difficulty: 3, en: 'quantum.html', ko: 'quantum_ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="18" stroke="#BF9FFF" stroke-width="1.2" fill="#BF9FFF05"/><ellipse cx="28" cy="28" rx="18" ry="6" stroke="#BF9FFF" stroke-width="0.9" opacity="0.35" transform="rotate(45 28 28)"/><ellipse cx="28" cy="28" rx="18" ry="6" stroke="#BF9FFF" stroke-width="0.9" opacity="0.35" transform="rotate(-45 28 28)"/><circle cx="22" cy="28" r="3" fill="#BF9FFF" opacity="0.4"/><circle cx="34" cy="28" r="3" fill="#BF9FFF" opacity="0.4"/><path d="M22 28 L34 28" stroke="#BF9FFF" stroke-width="0.7" opacity="0.3" stroke-dasharray="1.5 1.5"/><text x="28" y="48" text-anchor="middle" fill="#BF9FFF" font-size="7" font-family="serif" opacity="0.25" font-style="italic">ψ</text></svg>'
+          },
+          {
+            title: 'The Quantum Shortcut', titleKo: '양자 지름길', tagline: 'Computing beyond classical limits', taglineKo: '고전적 한계를 넘는 계산', difficulty: 3, en: 'quantum-shortcut.html', ko: 'quantum-shortcut-kr.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="14" cy="28" r="6" stroke="#BF9FFF" stroke-width="1.1" fill="#BF9FFF10"/><circle cx="42" cy="28" r="6" stroke="#BF9FFF" stroke-width="1.1" fill="#BF9FFF10"/><path d="M20 28 L36 28" stroke="#BF9FFF" stroke-width="1.2" opacity="0.5"/><path d="M14 22 Q14 10 28 10 Q42 10 42 22" stroke="#BF9FFF" stroke-width="0.8" fill="none" opacity="0.3" stroke-dasharray="2 2"/><path d="M14 34 Q14 46 28 46 Q42 46 42 34" stroke="#BF9FFF" stroke-width="0.8" fill="none" opacity="0.3" stroke-dasharray="2 2"/><text x="14" y="31" text-anchor="middle" fill="#BF9FFF" font-size="7" font-family="serif" opacity="0.5">|0⟩</text><text x="42" y="31" text-anchor="middle" fill="#BF9FFF" font-size="7" font-family="serif" opacity="0.5">|1⟩</text></svg>'
           },
         ]
       },
@@ -980,10 +1097,6 @@
           {
             title: 'Does a Machine Suffer?', titleKo: '기계는 고통받는가?', tagline: 'Beyond computation', taglineKo: '계산 너머', difficulty: 1, en: 'suffer.html', ko: 'suffer_ko.html',
             icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M28 8 C28 8 16 26 16 34 C16 40.6 21.4 46 28 46 C34.6 46 40 40.6 40 34 C40 26 28 8 28 8 Z" stroke="#FF79C6" stroke-width="1.4" fill="#FF79C615"/><path d="M24 32 C24 28 28 18 28 18 C28 18 22 30 22 34 C22 37 24.5 39.5 28 39.5" stroke="#FF79C6" stroke-width="0.6" fill="none" opacity="0.2"/></svg>'
-          },
-          {
-            title: 'The Quantum Shortcut', titleKo: '양자 지름길', tagline: 'Computing beyond classical limits', taglineKo: '고전적 한계를 넘는 계산', difficulty: 3, en: 'quantum-shortcut.html', ko: 'quantum-shortcut-kr.html',
-            icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="14" cy="28" r="6" stroke="#FF79C6" stroke-width="1.1" fill="#FF79C610"/><circle cx="42" cy="28" r="6" stroke="#FF79C6" stroke-width="1.1" fill="#FF79C610"/><path d="M20 28 L36 28" stroke="#FF79C6" stroke-width="1.2" opacity="0.5"/><path d="M14 22 Q14 10 28 10 Q42 10 42 22" stroke="#FF79C6" stroke-width="0.8" fill="none" opacity="0.3" stroke-dasharray="2 2"/><path d="M14 34 Q14 46 28 46 Q42 46 42 34" stroke="#FF79C6" stroke-width="0.8" fill="none" opacity="0.3" stroke-dasharray="2 2"/><text x="14" y="31" text-anchor="middle" fill="#FF79C6" font-size="7" font-family="serif" opacity="0.5">|0⟩</text><text x="42" y="31" text-anchor="middle" fill="#FF79C6" font-size="7" font-family="serif" opacity="0.5">|1⟩</text></svg>'
           },
         ]
       }
