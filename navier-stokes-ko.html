@@ -1989,20 +1989,17 @@ heroObs.observe(document.getElementById('hero'));
   const statEps = document.getElementById('cascStatEps');
   const statE = document.getElementById('cascStatE');
 
-  // Multi-scale vortex blobs
-  let vortices = []; // {x, y, gamma, radius, age, generation}
-  const MAX_VORTICES = 300;
-  // Tracer particles for visualization
+  let vortices = [];
+  const MAX_VORTICES = 500;
   let tracers = [];
-  const N_TRACERS = 2000;
+  const N_TRACERS = 2500;
   let time = 0;
-  // Smoothed spectrum for display
   let spectrumSmooth = new Float32Array(32);
 
   function initTracers(){
     tracers = [];
     for(let i = 0; i < N_TRACERS; i++){
-      tracers.push({ x: Math.random(), y: Math.random(), age: Math.random() * 10 });
+      tracers.push({ x: Math.random(), y: Math.random(), age: Math.random() * 8 });
     }
   }
 
@@ -2031,20 +2028,16 @@ heroObs.observe(document.getElementById('hero'));
   }, { threshold: 0.1 });
   boxObs.observe(document.getElementById('ibox4'));
 
-  // Velocity field from vortex blobs at point (px,py) in [0,1]²
   function velocityAt(px, py){
     let ux = 0, uy = 0;
     for(let i = 0; i < vortices.length; i++){
       const v = vortices[i];
-      let dx = px - v.x;
-      let dy = py - v.y;
-      // periodic wrap for nearest image
+      let dx = px - v.x, dy = py - v.y;
       if(dx > 0.5) dx -= 1; if(dx < -0.5) dx += 1;
       if(dy > 0.5) dy -= 1; if(dy < -0.5) dy += 1;
       const r2 = dx*dx + dy*dy;
       const rc2 = v.radius * v.radius;
-      // Lamb-Oseen vortex: v_theta = Gamma/(2πr) * (1 - exp(-r²/rc²))
-      const factor = v.gamma / (2 * Math.PI * (r2 + 0.0001)) * (1 - Math.exp(-r2/rc2));
+      const factor = v.gamma / (2 * Math.PI * (r2 + 0.0001)) * (1 - Math.exp(-r2 / rc2));
       ux += -dy * factor;
       uy +=  dx * factor;
     }
@@ -2055,59 +2048,70 @@ heroObs.observe(document.getElementById('hero'));
     requestAnimationFrame(loop);
     if(!boxVisible) return;
 
-    const dt = 0.012;
+    const dt = 0.016;
     time += dt;
     const visc = parseFloat(viscSlider.value);
     const forcing = parseFloat(forceSlider.value);
 
-    // === FORCING: inject large-scale vortices ===
-    if(Math.random() < forcing * 0.15 && vortices.length < MAX_VORTICES){
-      const sign = Math.random() < 0.5 ? 1 : -1;
+    // === FORCING: inject large-scale vortex dipoles frequently ===
+    const injectRate = forcing * 0.5;
+    if(Math.random() < injectRate && vortices.length < MAX_VORTICES - 6){
+      // Inject a dipole pair for more interesting flow
+      const cx = Math.random(), cy = Math.random();
+      const angle = Math.random() * Math.PI * 2;
+      const sep = 0.06;
+      const strength = (0.4 + Math.random() * 0.5) * forcing;
       vortices.push({
-        x: Math.random(), y: Math.random(),
-        gamma: sign * (0.02 + Math.random() * 0.03) * forcing,
-        radius: 0.08 + Math.random() * 0.06, // large scale
+        x: (cx + Math.cos(angle)*sep + 1) % 1,
+        y: (cy + Math.sin(angle)*sep + 1) % 1,
+        gamma: strength,
+        radius: 0.06 + Math.random() * 0.05,
+        age: 0, generation: 0
+      });
+      vortices.push({
+        x: (cx - Math.cos(angle)*sep + 1) % 1,
+        y: (cy - Math.sin(angle)*sep + 1) % 1,
+        gamma: -strength,
+        radius: 0.06 + Math.random() * 0.05,
         age: 0, generation: 0
       });
     }
 
-    // === CASCADE: large vortices break into smaller ones ===
+    // === CASCADE ===
     const toAdd = [];
     for(let i = vortices.length - 1; i >= 0; i--){
       const v = vortices[i];
       v.age += dt;
 
-      // Cascade: probabilistic breakup after some time
-      const breakupTime = 1.5 + v.radius * 15;
-      if(v.age > breakupTime && v.radius > visc * 2 && v.generation < 5 && vortices.length + toAdd.length < MAX_VORTICES - 4){
-        // Spawn 2-3 child vortices at smaller scale
-        const nChildren = 2 + (Math.random() < 0.3 ? 1 : 0);
+      // Faster cascade: breakup depends on strength and radius
+      const breakupTime = 0.4 + v.radius * 6;
+      if(v.age > breakupTime && v.radius > visc * 3 && v.generation < 6 && vortices.length + toAdd.length < MAX_VORTICES - 6){
+        const nChildren = 2 + (Math.random() < 0.4 ? 1 : 0);
         for(let c = 0; c < nChildren; c++){
-          const angle = Math.random() * Math.PI * 2;
-          const dist = v.radius * 0.5;
+          const a = Math.random() * Math.PI * 2;
+          const dist = v.radius * 0.6;
           toAdd.push({
-            x: (v.x + Math.cos(angle)*dist + 1) % 1,
-            y: (v.y + Math.sin(angle)*dist + 1) % 1,
-            gamma: v.gamma / nChildren * (0.7 + Math.random()*0.3),
-            radius: v.radius * (0.4 + Math.random()*0.15),
+            x: (v.x + Math.cos(a)*dist + 1) % 1,
+            y: (v.y + Math.sin(a)*dist + 1) % 1,
+            gamma: v.gamma / nChildren * (0.8 + Math.random()*0.3),
+            radius: v.radius * (0.35 + Math.random()*0.15),
             age: 0, generation: v.generation + 1
           });
         }
-        v.gamma *= 0.1; // parent loses most energy
+        v.gamma *= 0.05;
         v.age = 0;
       }
 
-      // Viscous dissipation: small vortices decay
-      const dissipationRate = visc * 8 / (v.radius * v.radius + 0.001);
-      v.gamma *= (1 - dissipationRate * dt);
+      // Viscous dissipation — gentler, scales with radius properly
+      const dissipation = visc * 4 / (v.radius * v.radius + 0.0001);
+      v.gamma *= (1 - dissipation * dt);
 
-      // Advect vortex by velocity from other vortices (simplified — use average)
+      // Advect
       const [ux, uy] = velocityAt(v.x, v.y);
-      v.x = (v.x + ux * dt * 0.3 + 1) % 1;
-      v.y = (v.y + uy * dt * 0.3 + 1) % 1;
+      v.x = (v.x + ux * dt * 0.4 + 1) % 1;
+      v.y = (v.y + uy * dt * 0.4 + 1) % 1;
 
-      // Remove dead vortices
-      if(Math.abs(v.gamma) < 0.0005 || v.age > 20){
+      if(Math.abs(v.gamma) < 0.005 || v.age > 15){
         vortices.splice(i, 1);
       }
     }
@@ -2117,10 +2121,10 @@ heroObs.observe(document.getElementById('hero'));
     for(let i = 0; i < tracers.length; i++){
       const t = tracers[i];
       const [ux, uy] = velocityAt(t.x, t.y);
-      t.x = (t.x + ux * dt + 1) % 1;
-      t.y = (t.y + uy * dt + 1) % 1;
+      t.x = (t.x + ux * dt * 1.5 + 1) % 1;
+      t.y = (t.y + uy * dt * 1.5 + 1) % 1;
       t.age += dt;
-      if(t.age > 12){ t.x = Math.random(); t.y = Math.random(); t.age = 0; }
+      if(t.age > 8){ t.x = Math.random(); t.y = Math.random(); t.age = 0; }
     }
 
     // === DRAW TURBULENCE ===
@@ -2128,53 +2132,49 @@ heroObs.observe(document.getElementById('hero'));
     const TW = turbCanvas.width / dpr;
     const TH = turbCanvas.height / dpr;
     tCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    tCtx.fillStyle = 'rgba(4,5,12,.15)';
+    tCtx.fillStyle = 'rgba(4,5,12,.12)';
     tCtx.fillRect(0, 0, TW, TH);
 
-    // Draw tracer particles
+    // Tracers
     for(let i = 0; i < tracers.length; i++){
       const t = tracers[i];
       const [ux, uy] = velocityAt(t.x, t.y);
       const speed = Math.sqrt(ux*ux + uy*uy);
-      const hue = 195 - speed * 600;
-      const lum = 30 + Math.min(speed * 300, 40);
-      const alpha = Math.min(t.age * 0.5, 0.7) * Math.min(1, speed * 60 + 0.15);
+      const hue = 195 - Math.min(speed * 200, 120);
+      const lum = 25 + Math.min(speed * 120, 45);
+      const alpha = Math.min(t.age * 0.4, 0.8) * Math.min(1, speed * 15 + 0.08);
       tCtx.beginPath();
-      tCtx.arc(t.x * TW, t.y * TH, 1.2, 0, Math.PI * 2);
-      tCtx.fillStyle = `hsla(${hue},60%,${lum}%,${alpha})`;
+      tCtx.arc(t.x * TW, t.y * TH, 1.3 + speed * 2, 0, Math.PI * 2);
+      tCtx.fillStyle = `hsla(${hue},65%,${lum}%,${alpha})`;
       tCtx.fill();
     }
 
-    // Draw vortex cores faintly
+    // Vortex cores
     for(const v of vortices){
-      const intensity = Math.abs(v.gamma) * 20;
+      const intensity = Math.abs(v.gamma) * 3;
       if(intensity < 0.03) continue;
-      const grd = tCtx.createRadialGradient(v.x*TW, v.y*TH, 0, v.x*TW, v.y*TH, v.radius*TW*0.5);
+      const grd = tCtx.createRadialGradient(v.x*TW, v.y*TH, 0, v.x*TW, v.y*TH, v.radius*TW*0.6);
       const hue = v.gamma > 0 ? 195 : 280;
-      grd.addColorStop(0, `hsla(${hue},60%,50%,${Math.min(intensity,0.2)})`);
+      grd.addColorStop(0, `hsla(${hue},65%,55%,${Math.min(intensity,0.3)})`);
       grd.addColorStop(1, 'transparent');
       tCtx.fillStyle = grd;
       tCtx.beginPath();
-      tCtx.arc(v.x*TW, v.y*TH, v.radius*TW*0.5, 0, Math.PI*2);
+      tCtx.arc(v.x*TW, v.y*TH, v.radius*TW*0.6, 0, Math.PI*2);
       tCtx.fill();
     }
 
-    // === COMPUTE ENERGY SPECTRUM ===
+    // === ENERGY SPECTRUM ===
     const nBins = 32;
     const spectrum = new Float32Array(nBins);
-    const counts = new Float32Array(nBins);
     for(const v of vortices){
-      // wavenumber ~ 1/radius
       const k = 1 / (v.radius + 0.001);
       const bin = Math.floor(Math.log(k + 1) / Math.log(200) * nBins);
       if(bin >= 0 && bin < nBins){
         spectrum[bin] += v.gamma * v.gamma;
-        counts[bin]++;
       }
     }
-    // Smooth
     for(let i = 0; i < nBins; i++){
-      spectrumSmooth[i] = spectrumSmooth[i] * 0.92 + spectrum[i] * 0.08;
+      spectrumSmooth[i] = spectrumSmooth[i] * 0.9 + spectrum[i] * 0.1;
     }
 
     // === DRAW SPECTRUM ===
@@ -2187,7 +2187,6 @@ heroObs.observe(document.getElementById('hero'));
     const plotW = SW - padL - padR;
     const plotH = SH - padT - padB;
 
-    // Axes
     sCtx.strokeStyle = 'rgba(255,255,255,.1)';
     sCtx.lineWidth = 1;
     sCtx.beginPath();
@@ -2196,7 +2195,6 @@ heroObs.observe(document.getElementById('hero'));
     sCtx.lineTo(padL + plotW, padT + plotH);
     sCtx.stroke();
 
-    // Axis labels
     sCtx.font = '9px "JetBrains Mono"';
     sCtx.fillStyle = 'rgba(255,255,255,.25)';
     sCtx.textAlign = 'center';
@@ -2207,38 +2205,37 @@ heroObs.observe(document.getElementById('hero'));
     sCtx.fillText('log E(k)', 0, 0);
     sCtx.restore();
 
-    // −5/3 reference line
-    const refStartX = padL + plotW * 0.15;
-    const refEndX = padL + plotW * 0.75;
-    const refStartY = padT + plotH * 0.15;
-    const refSlope = -5/3;
-    const refEndY = refStartY - refSlope * (refEndX - refStartX) * 0.6;
-    sCtx.strokeStyle = 'rgba(201,168,76,.25)';
+    // −5/3 reference line — position it relative to the data
+    let maxE = 0.001;
+    for(let i = 0; i < nBins; i++) if(spectrumSmooth[i] > maxE) maxE = spectrumSmooth[i];
+    const logMax = Math.log10(maxE + 1e-10);
+    const logMin = logMax - 5;
+
+    // Reference line tracks the data
+    const refX1 = padL + plotW * 0.2;
+    const refX2 = padL + plotW * 0.8;
+    const refY1 = padT + plotH * 0.12;
+    const refY2 = refY1 + (refX2 - refX1) * 0.55; // slope ≈ −5/3 visually
+    sCtx.strokeStyle = 'rgba(201,168,76,.3)';
     sCtx.lineWidth = 1;
     sCtx.setLineDash([4,4]);
     sCtx.beginPath();
-    sCtx.moveTo(refStartX, refStartY);
-    sCtx.lineTo(refEndX, Math.min(refEndY, padT + plotH - 5));
+    sCtx.moveTo(refX1, refY1);
+    sCtx.lineTo(refX2, Math.min(refY2, padT + plotH - 5));
     sCtx.stroke();
     sCtx.setLineDash([]);
     sCtx.font = '8px "JetBrains Mono"';
-    sCtx.fillStyle = 'rgba(201,168,76,.4)';
+    sCtx.fillStyle = 'rgba(201,168,76,.45)';
     sCtx.textAlign = 'left';
-    sCtx.fillText('k⁻⁵ᐟ³', refEndX + 4, Math.min(refEndY, padT + plotH - 5) - 4);
+    sCtx.fillText('k⁻⁵ᐟ³', refX2 + 4, Math.min(refY2, padT + plotH - 5) - 4);
 
-    // Inertial range label
     sCtx.fillStyle = 'rgba(63,168,196,.2)';
     sCtx.textAlign = 'center';
     sCtx.fillText('관성 영역', padL + plotW * 0.45, padT + plotH + 18);
 
-    // Plot spectrum
-    let maxE = 0.00001;
-    for(let i = 0; i < nBins; i++) if(spectrumSmooth[i] > maxE) maxE = spectrumSmooth[i];
-    const logMax = Math.log10(maxE + 1e-10);
-    const logMin = logMax - 4;
-
+    // Plot spectrum line + filled area
     sCtx.beginPath();
-    let started = false;
+    let started = false, firstX = 0, firstY = 0;
     for(let i = 0; i < nBins; i++){
       const val = spectrumSmooth[i];
       if(val < 1e-10) continue;
@@ -2246,50 +2243,77 @@ heroObs.observe(document.getElementById('hero'));
       const nx = padL + (i / nBins) * plotW;
       const ny = padT + plotH - ((lv - logMin) / (logMax - logMin)) * plotH;
       const clampY = Math.max(padT, Math.min(padT + plotH, ny));
-      if(!started){ sCtx.moveTo(nx, clampY); started = true; }
+      if(!started){ sCtx.moveTo(nx, clampY); firstX = nx; firstY = clampY; started = true; }
       else sCtx.lineTo(nx, clampY);
+    }
+    // Fill under curve
+    if(started){
+      const pathCopy = new Path2D();
+      let s2 = false;
+      for(let i = 0; i < nBins; i++){
+        const val = spectrumSmooth[i];
+        if(val < 1e-10) continue;
+        const lv = Math.log10(val);
+        const nx = padL + (i / nBins) * plotW;
+        const ny = Math.max(padT, Math.min(padT + plotH, padT + plotH - ((lv - logMin) / (logMax - logMin)) * plotH));
+        if(!s2){ pathCopy.moveTo(nx, ny); s2 = true; }
+        else pathCopy.lineTo(nx, ny);
+      }
+      // close to bottom
+      pathCopy.lineTo(padL + plotW, padT + plotH);
+      pathCopy.lineTo(firstX, padT + plotH);
+      pathCopy.closePath();
+      const fillGrad = sCtx.createLinearGradient(0, padT, 0, padT + plotH);
+      fillGrad.addColorStop(0, 'rgba(63,168,196,.15)');
+      fillGrad.addColorStop(1, 'rgba(63,168,196,.02)');
+      sCtx.fillStyle = fillGrad;
+      sCtx.fill(pathCopy);
     }
     sCtx.strokeStyle = '#3fa8c4';
     sCtx.lineWidth = 2;
     sCtx.stroke();
 
-    // Dots on spectrum
+    // Dots
     for(let i = 0; i < nBins; i++){
       const val = spectrumSmooth[i];
       if(val < 1e-10) continue;
       const lv = Math.log10(val);
       const nx = padL + (i / nBins) * plotW;
-      const ny = padT + plotH - ((lv - logMin) / (logMax - logMin)) * plotH;
-      const clampY = Math.max(padT, Math.min(padT + plotH, ny));
+      const ny = Math.max(padT, Math.min(padT + plotH, padT + plotH - ((lv - logMin) / (logMax - logMin)) * plotH));
       sCtx.beginPath();
-      sCtx.arc(nx, clampY, 2.5, 0, Math.PI * 2);
+      sCtx.arc(nx, ny, 3, 0, Math.PI * 2);
       sCtx.fillStyle = '#3fa8c4';
+      sCtx.fill();
+      // glow
+      sCtx.beginPath();
+      sCtx.arc(nx, ny, 6, 0, Math.PI * 2);
+      sCtx.fillStyle = 'rgba(63,168,196,.15)';
       sCtx.fill();
     }
 
-    // Region labels
     sCtx.font = '8px "JetBrains Mono"';
     sCtx.fillStyle = 'rgba(255,255,255,.15)';
     sCtx.textAlign = 'center';
     sCtx.fillText('구동', padL + plotW * 0.1, padT + 14);
     sCtx.fillText('소산', padL + plotW * 0.88, padT + 14);
 
-    // === STATS ===
+    // === STATS — scale to meaningful numbers ===
     let totalE = 0, totalEnstrophy = 0;
     for(const v of vortices){
       totalE += v.gamma * v.gamma;
       totalEnstrophy += v.gamma * v.gamma / (v.radius * v.radius + 0.0001);
     }
-    const epsilon = visc * totalEnstrophy;
-    const eta = epsilon > 0 ? Math.pow(visc*visc*visc / (epsilon+1e-10), 0.25) : 0;
+    // Scale for display: multiply by 1000 to get readable numbers
+    const displayE = totalE * 100;
+    const epsilon = visc * totalEnstrophy * 100;
+    const eta = totalEnstrophy > 0 ? Math.pow(visc*visc*visc / (visc * totalEnstrophy + 1e-10), 0.25) : 0;
     const urms = Math.sqrt(totalE * 2 / Math.max(vortices.length, 1));
-    const lambda = urms > 0 ? Math.sqrt(15 * visc / (epsilon / Math.max(urms*urms, 1e-10) + 1e-10)) : 0;
-    const taylorRe = urms * lambda / visc;
+    const Re_turb = urms > 1e-6 ? urms * 0.1 / visc : 0;
 
-    statRe.textContent = Math.round(taylorRe);
+    statRe.textContent = Math.round(Re_turb);
     statEta.textContent = eta > 0.0001 ? eta.toFixed(4) : '—';
-    statEps.textContent = epsilon.toFixed(4);
-    statE.textContent = totalE.toFixed(4);
+    statEps.textContent = epsilon.toFixed(1);
+    statE.textContent = displayE.toFixed(1);
   }
   loop();
 })();
