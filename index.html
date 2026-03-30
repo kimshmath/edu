@@ -153,7 +153,7 @@
       position: relative;
       width: min(520px, 90vw);
       height: min(520px, 90vw);
-      margin-bottom: 4rem;
+      margin-bottom: 2.5rem;
     }
 
     /* ─── Category Cards (positioned absolutely) ─── */
@@ -244,7 +244,7 @@
     /* ─── Center Hub ─── */
     .suggest-center {
       position: absolute;
-      left: 50%; top: 50%;
+      left: 50%; top: 56%;
       transform: translate(-50%, -50%);
       z-index: 10;
       width: clamp(100px, 22vw, 120px);
@@ -255,7 +255,7 @@
       justify-content: center;
       cursor: pointer;
       border-radius: 50%;
-      background: rgba(8, 8, 10, 0.82);
+      background: rgba(8, 8, 10, 0.45);
       border: 1.5px solid rgba(212, 168, 83, 0.35);
       box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 80px rgba(8, 8, 10, 0.6);
       transition: all 0.3s cubic-bezier(.4, 0, .2, 1);
@@ -298,10 +298,11 @@
     }
 
     .suggest-center .cat-label-ko {
-      font-size: 0.72rem;
-      color: rgba(212, 168, 83, 0.55);
-      margin-top: 0.15rem;
-      font-weight: 400;
+      font-size: 0.95rem;
+      color: rgba(212, 168, 83, 0.75);
+      margin-top: 0.1rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
     }
 
     /* ─── Shared card elements ─── */
@@ -662,7 +663,7 @@
       .pentagon-wrapper {
         width: 100vw;
         height: 105vw;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
       }
 
       .category-card {
@@ -710,7 +711,7 @@
       }
 
       .suggest-center .cat-label-ko {
-        font-size: 0.58rem;
+        font-size: 0.8rem;
       }
 
       /* Tighter pentagon on mobile */
@@ -730,7 +731,7 @@
         left: 78%; top: 76%;
       }
       .suggest-center {
-        top: 48%;
+        top: 54%;
       }
     }
 
@@ -891,8 +892,8 @@
             stroke-width="1.2" />
           <circle cx="20" cy="20" r="1.5" fill="#d4a853" />
         </svg>
-        <div class="cat-label suggest-text">Suggest!</div>
-        <div class="cat-label-ko suggest-text-ko" style="color:rgba(212,168,83,0.6); margin-top:0.1rem; font-size:0.55rem;">추천!</div>
+        <div class="cat-label suggest-text">Suggest</div>
+        <div class="cat-label-ko suggest-text-ko">추천</div>
       </div>
     </div>
 
