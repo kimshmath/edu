@@ -1,5 +1,5 @@
 import sys, json, urllib.request, urllib.parse, os
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup  # type: ignore
 
 def translate(text):
     text_clean = text.strip()
@@ -33,8 +33,8 @@ def process_file():
             elif "고등연구원" in translated:
                 translated = translated.replace("고등연구원", "고등과학원")
             
-            left_space = text[:len(text)-len(text.lstrip())]
-            right_space = text[len(text.rstrip()):]
+            left_space = text[:len(text)-len(text.lstrip())]  # type: ignore
+            right_space = text[len(text.rstrip()):]  # type: ignore
             element.replace_with(left_space + translated + right_space)
 
     for element in soup.find_all(title=True):

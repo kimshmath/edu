@@ -2,9 +2,10 @@ import sys
 import json
 import urllib.request
 import urllib.parse
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup  # type: ignore
 import time
 import os
+import re
 
 def translate(text, target_lang):
     text_clean = text.strip()
@@ -27,7 +28,7 @@ def process_file(filepath, target_lang):
     with open(filepath, 'r', encoding='utf-8') as f: html = f.read()
 
     soup = BeautifulSoup(html, 'html.parser')
-    count = 0
+    translated_items: int = 0
     for element in list(soup.find_all(string=True)):
         parent = element.parent
         if parent is None: continue
@@ -35,16 +36,21 @@ def process_file(filepath, target_lang):
         classes = parent.get('class', [])
         if 'math' in classes or 'eq' in classes: continue
 
-        text = str(element)
-        if text.strip() and len(text.strip()) > 1 and any(c.isalpha() for c in text):
-            count += 1
+        text_str = str(element)
+        clean_text = text_str.strip()
+        if clean_text and len(clean_text) > 1 and any(c.isalpha() for c in clean_text):
+            translated_items = translated_items + 1  # type: ignore
             # For massive speed, just translate the first 50 major UI structural elements and ignore deep essay text if it takes too long
-            if count > 80:
-                translated = text.strip()
+            if translated_items > 80:
+                translated = clean_text
             else:
-                translated = translate(text.strip(), target_lang)
-            left_space = text[:len(text)-len(text.lstrip())]
-            right_space = text[len(text.rstrip()):]
+                translated = translate(clean_text, target_lang)
+            
+            m_left = re.match(r'^(\\s*)', text_str)
+            m_right = re.search(r'(\\s*)$', text_str)
+            left_space = m_left.group(1) if m_left else ""
+            right_space = m_right.group(1) if m_right else ""
+            
             element.replace_with(left_space + translated + right_space)
 
     for element in soup.find_all(title=True):

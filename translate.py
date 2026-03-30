@@ -2,7 +2,7 @@ import sys
 import json
 import urllib.request
 import urllib.parse
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup  # type: ignore
 import time
 import os
 
@@ -47,8 +47,8 @@ def process_file(filepath, outpath, target_lang):
         if text.strip() and len(text.strip()) > 1:
             if any(c.isalpha() for c in text): # Has letters
                 translated = translate(text.strip(), target_lang)
-                left_space = text[:len(text)-len(text.lstrip())]
-                right_space = text[len(text.rstrip()):]
+                left_space = text[:len(text)-len(text.lstrip())]  # type: ignore
+                right_space = text[len(text.rstrip()):]  # type: ignore
                 element.replace_with(left_space + translated + right_space)
                 time.sleep(0.02) # gentle delay
 
