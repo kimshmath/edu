@@ -1462,7 +1462,7 @@ heroObs.observe(document.getElementById('hero'));
   const statSpread = document.getElementById('reStatSpread');
 
   // Dye particles
-  const MAX_P = 1800;
+  const MAX_P = 3500;
   let particles = [];
   let time = 0;
 
@@ -1485,7 +1485,6 @@ heroObs.observe(document.getElementById('hero'));
   }, { threshold: 0.1 });
   boxObs.observe(document.getElementById('ibox2'));
 
-  // Perlin-like noise (simple value noise with interpolation)
   const NOISE_SIZE = 256;
   const noiseTable = new Float32Array(NOISE_SIZE);
   for(let i=0;i<NOISE_SIZE;i++) noiseTable[i] = Math.random();
@@ -1494,7 +1493,7 @@ heroObs.observe(document.getElementById('hero'));
     const xf = x - Math.floor(x);
     const a = noiseTable[xi];
     const b = noiseTable[(xi+1) % NOISE_SIZE];
-    const t = xf * xf * (3 - 2*xf); // smoothstep
+    const t = xf * xf * (3 - 2*xf);
     return a + (b-a)*t;
   }
   function noise2D(x,y){
@@ -1505,7 +1504,6 @@ heroObs.observe(document.getElementById('hero'));
     const t = yf * yf * (3 - 2*yf);
     return a + (b-a)*t;
   }
-  // Fractal noise
   function fbm(x,y,octaves){
     let val = 0, amp = 1, freq = 1, max = 0;
     for(let i=0;i<octaves;i++){
@@ -1526,7 +1524,8 @@ heroObs.observe(document.getElementById('hero'));
     const W = canvas.width / dpr;
     const H = canvas.height / dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = 'rgba(4,5,12,.28)';
+    ctx.fillRect(0, 0, W, H);
 
     const flowVel = parseFloat(flowSlider.value);
     const diam = parseFloat(diamSlider.value);
@@ -1535,50 +1534,45 @@ heroObs.observe(document.getElementById('hero'));
     const pipeH = pipeBot - pipeTop;
     const pipeCenter = (pipeTop + pipeBot) / 2;
 
-    // Reynolds number: Re = V * D / nu  (nu ~ 0.001 for water-like)
     const nu = 0.0008;
-    const Re = (flowVel * 6) * (diam * 0.05) / nu;
-    const turbulence = Math.max(0, (Re - 1800) / 2000); // ramps from 0 to ~1+
-    const turbClamp = Math.min(turbulence, 1.5);
+    const Re = (flowVel * 6) * (diam * 0.7) / nu;
+    const turbulence = Math.max(0, (Re - 1800) / 1500);
+    const turbClamp = Math.min(turbulence, 2.5);
 
-    // Draw pipe walls
     ctx.fillStyle = 'rgba(255,255,255,.03)';
     ctx.fillRect(0, 0, W, pipeTop);
     ctx.fillRect(0, pipeBot, W, H - pipeBot);
 
-    // Pipe wall lines
     ctx.strokeStyle = 'rgba(255,255,255,.08)';
     ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(0, pipeTop); ctx.lineTo(W, pipeTop); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(0, pipeBot); ctx.lineTo(W, pipeBot); ctx.stroke();
 
-    // Draw laminar profile indicator on left
     ctx.strokeStyle = 'rgba(201,168,76,.15)';
     ctx.lineWidth = 1;
     ctx.beginPath();
     for(let y = pipeTop; y <= pipeBot; y += 2){
-      const r = (y - pipeCenter) / (pipeH / 2); // -1 to 1
-      const vProfile = flowVel * (1 - r*r); // parabolic
-      const xLen = vProfile * 60;
+      const r = (y - pipeCenter) / (pipeH / 2);
+      const vProfile = flowVel * (1 - r*r);
       ctx.moveTo(10, y);
-      ctx.lineTo(10 + xLen, y);
+      ctx.lineTo(10 + vProfile * 60, y);
     }
     ctx.stroke();
 
-    // Emit dye particles from left center
     if(flowVel > 0.01 && particles.length < MAX_P){
-      const emitCount = Math.ceil(flowVel * 4);
+      const emitCount = Math.ceil(flowVel * 6 * (1 + turbClamp * 1.5));
       for(let i = 0; i < emitCount; i++){
+        const initSpread = turbClamp > 0.3 ? (Math.random() - 0.5) * turbClamp * 4 : 0;
         particles.push({
           x: 0,
-          y: pipeCenter + (Math.random() - 0.5) * 3,
+          y: pipeCenter + (Math.random() - 0.5) * 3 + initSpread,
+          vx: 0, vy: 0,
           age: 0,
           seed: Math.random() * 1000
         });
       }
     }
 
-    // Update and draw particles
     let totalSpread = 0;
     let aliveCount = 0;
 
@@ -1586,64 +1580,127 @@ heroObs.observe(document.getElementById('hero'));
       const p = particles[i];
       p.age += 0.016;
 
-      // Local position in pipe (normalized -1 to 1)
       const r = (p.y - pipeCenter) / (pipeH / 2);
-
-      // Laminar component: parabolic profile
       const vLaminar = flowVel * 6 * Math.max(0, 1 - r*r);
 
-      // Turbulent perturbation
       let vTurbX = 0, vTurbY = 0;
       if(turbClamp > 0.01){
-        const noiseScale = 3.5;
-        const tScale = time * (1 + turbClamp * 2);
-        const nx = fbm(p.x * 0.008 * noiseScale + p.seed * 0.1, p.y * 0.015 * noiseScale + tScale, 4);
-        const ny = fbm(p.x * 0.008 * noiseScale + 100 + p.seed * 0.1, p.y * 0.015 * noiseScale + tScale + 50, 4);
-        vTurbX = (nx - 0.5) * turbClamp * 3.5 * flowVel;
-        vTurbY = (ny - 0.5) * turbClamp * 5.0 * flowVel;
+        const noiseScale = 4.5;
+        const tScale = time * (1.5 + turbClamp * 3);
+        const nx = fbm(p.x * 0.006 * noiseScale + p.seed * 0.1, p.y * 0.012 * noiseScale + tScale, 6);
+        const ny = fbm(p.x * 0.006 * noiseScale + 100 + p.seed * 0.1, p.y * 0.012 * noiseScale + tScale + 50, 6);
+        const nx2 = fbm(p.x * 0.03 + p.seed, p.y * 0.04 + tScale * 2, 3);
+        const ny2 = fbm(p.x * 0.03 + 77 + p.seed, p.y * 0.04 + tScale * 2 + 33, 3);
 
-        // Intermittent bursts near transition
-        if(turbulence > 0 && turbulence < 0.8){
-          const burst = Math.sin(time * 3 + p.seed) * Math.sin(time * 7.3 + p.x * 0.02);
-          if(burst > 0.7){
-            vTurbX *= 2.5;
-            vTurbY *= 2.5;
+        vTurbX = (nx - 0.5) * turbClamp * 6 * flowVel + (nx2 - 0.5) * turbClamp * 2.5 * flowVel;
+        vTurbY = (ny - 0.5) * turbClamp * 10 * flowVel + (ny2 - 0.5) * turbClamp * 4 * flowVel;
+
+        if(turbulence > 0 && turbulence < 1.2){
+          const burst = Math.sin(time * 4.5 + p.seed * 0.3) * Math.sin(time * 11 + p.x * 0.03);
+          if(burst > 0.5){
+            vTurbX *= 3;
+            vTurbY *= 3;
           }
+        }
+
+        if(turbClamp > 1){
+          vTurbY += Math.sin(time * 2.3 + p.x * 0.01 + p.seed) * turbClamp * flowVel * 3;
         }
       }
 
-      p.x += vLaminar + vTurbX;
-      p.y += vTurbY;
+      p.vx = p.vx * 0.85 + (vLaminar + vTurbX - p.vx) * 0.15;
+      p.vy = p.vy * 0.85 + (vTurbY - p.vy) * 0.15;
+      p.x += p.vx;
+      p.y += p.vy;
 
-      // Bounce off pipe walls
-      if(p.y < pipeTop + 2){ p.y = pipeTop + 2; }
-      if(p.y > pipeBot - 2){ p.y = pipeBot - 2; }
+      if(p.y < pipeTop + 2){ p.y = pipeTop + 3; p.vy *= -0.3; }
+      if(p.y > pipeBot - 2){ p.y = pipeBot - 3; p.vy *= -0.3; }
 
-      // Remove if off screen
-      if(p.x > W + 10 || p.age > 15){
+      if(p.x > W + 10 || p.age > 12){
         particles.splice(i, 1);
         continue;
       }
 
-      // Track spread
       const distFromCenter = Math.abs(p.y - pipeCenter);
       totalSpread += distFromCenter;
       aliveCount++;
-
-      // Color: blue-teal for laminar, violet-rose for turbulent
-      const speed = Math.sqrt((vLaminar + vTurbX)**2 + vTurbY**2);
-      const hue = turbClamp < 0.3 ? 195 : 195 - turbClamp * 70;
-      const sat = 60 + turbClamp * 20;
-      const lum = 45 + Math.min(speed * 2, 20);
-      const alpha = Math.max(0, Math.min(1, 1 - p.age / 12)) * 0.85;
-
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, 1.5 + turbClamp * 0.8, 0, Math.PI * 2);
-      ctx.fillStyle = `hsla(${hue},${sat}%,${lum}%,${alpha})`;
-      ctx.fill();
     }
 
-    // Glow effect for dye stream at injection point
+    // === THREAD RENDERING ===
+    const sorted = particles.slice().sort((a,b) => a.x - b.x);
+
+    const breakDist = turbClamp < 0.1
+      ? pipeH * 0.6
+      : Math.max(4, pipeH * 0.15 / (1 + turbClamp * 2));
+
+    if(sorted.length > 1){
+      let segStart = 0;
+      for(let i = 1; i <= sorted.length; i++){
+        const broken = i === sorted.length
+          || Math.abs(sorted[i].y - sorted[i-1].y) > breakDist
+          || sorted[i].x - sorted[i-1].x > W * 0.06;
+
+        if(broken && i - segStart >= 2){
+          const segLen = i - segStart;
+          ctx.beginPath();
+          ctx.moveTo(sorted[segStart].x, sorted[segStart].y);
+          for(let j = segStart + 1; j < i; j++){
+            if(j < i - 1){
+              const mx = (sorted[j].x + sorted[j+1].x) / 2;
+              const my = (sorted[j].y + sorted[j+1].y) / 2;
+              ctx.quadraticCurveTo(sorted[j].x, sorted[j].y, mx, my);
+            } else {
+              ctx.lineTo(sorted[j].x, sorted[j].y);
+            }
+          }
+
+          const threadAlpha = turbClamp < 0.2 ? 0.85 : Math.max(0.15, 0.7 - turbClamp * 0.3);
+          const threadWidth = turbClamp < 0.2 ? 3.0 : Math.max(1.0, 2.5 - turbClamp * 0.8);
+          const threadHue = turbClamp < 0.2 ? 195 : 195 - Math.min(turbClamp * 50, 100);
+
+          if(turbClamp < 1.5){
+            ctx.strokeStyle = `hsla(${threadHue},60%,55%,${threadAlpha * 0.25})`;
+            ctx.lineWidth = threadWidth * 3;
+            ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+            ctx.stroke();
+          }
+          ctx.strokeStyle = `hsla(${threadHue},65%,60%,${threadAlpha})`;
+          ctx.lineWidth = threadWidth;
+          ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+          ctx.stroke();
+
+          segStart = i;
+        } else if(broken){
+          segStart = i;
+        }
+      }
+    }
+
+    for(let i = 0; i < particles.length; i++){
+      const p = particles[i];
+      const speed = Math.sqrt(p.vx**2 + p.vy**2);
+      const hue = turbClamp < 0.2 ? 195 : 195 - Math.min(turbClamp * 50, 100);
+      const sat = 55 + Math.min(turbClamp * 25, 40);
+      const lum = 40 + Math.min(speed * 3, 30);
+      const ageAlpha = Math.max(0, Math.min(1, 1 - p.age / 10));
+      const particleAlpha = turbClamp < 0.2
+        ? ageAlpha * 0.15
+        : ageAlpha * Math.min(0.9, 0.2 + turbClamp * 0.35);
+      const radius = turbClamp < 0.2 ? 1.0 : 1.5 + turbClamp * 0.8;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${hue},${sat}%,${lum}%,${particleAlpha})`;
+      ctx.fill();
+
+      if(speed > 3 && turbClamp > 0.5){
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, radius * 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${hue},${sat}%,${lum}%,${particleAlpha * 0.12})`;
+        ctx.fill();
+      }
+    }
+
     const glowGrd = ctx.createRadialGradient(8, pipeCenter, 0, 8, pipeCenter, 15);
     glowGrd.addColorStop(0, 'rgba(63,168,196,.5)');
     glowGrd.addColorStop(1, 'transparent');
