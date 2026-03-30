@@ -211,31 +211,25 @@
       box-shadow: 0 0 30px rgba(255, 121, 198, 0.08);
     }
 
-    /* Pentagon vertex positions (regular pentagon, top vertex at 12 o'clock):
-       Space    — top center
-       Flow     — upper-left
-       Quantum  — upper-right
-       Sense    — lower-left
-       Machine  — lower-right
-    */
+    /* Pentagon vertex positions — pulled inward for tighter clustering */
     .category-card[data-cat="space"] {
-      left: 50%; top: 8%;
+      left: 50%; top: 12%;
       animation-delay: 0.1s;
     }
     .category-card[data-cat="flow"] {
-      left: 10%; top: 35%;
+      left: 14%; top: 38%;
       animation-delay: 0.18s;
     }
     .category-card[data-cat="quantum"] {
-      left: 90%; top: 35%;
+      left: 86%; top: 38%;
       animation-delay: 0.26s;
     }
     .category-card[data-cat="sense"] {
-      left: 25%; top: 82%;
+      left: 26%; top: 78%;
       animation-delay: 0.34s;
     }
     .category-card[data-cat="machine"] {
-      left: 75%; top: 82%;
+      left: 74%; top: 78%;
       animation-delay: 0.42s;
     }
 
@@ -261,20 +255,20 @@
       justify-content: center;
       cursor: pointer;
       border-radius: 50%;
-      background: rgba(10, 12, 20, 0.96);
-      border: 1.5px solid rgba(212, 168, 83, 0.45);
-      box-shadow: 0 0 40px rgba(0, 0, 0, 0.95);
+      background: rgba(8, 8, 10, 0.82);
+      border: 1.5px solid rgba(212, 168, 83, 0.35);
+      box-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 80px rgba(8, 8, 10, 0.6);
       transition: all 0.3s cubic-bezier(.4, 0, .2, 1);
       -webkit-tap-highlight-color: transparent;
-      backdrop-filter: blur(20px);
+      backdrop-filter: blur(16px);
       animation: fadeIn 0.8s 0.5s ease both;
     }
 
     .suggest-center::before {
       content: '';
       position: absolute;
-      inset: -20px;
-      background: radial-gradient(circle, rgba(212, 168, 83, 0.15), transparent 70%);
+      inset: -25px;
+      background: radial-gradient(circle, rgba(212, 168, 83, 0.1), transparent 70%);
       z-index: -1;
       pointer-events: none;
       border-radius: 50%;
@@ -282,8 +276,9 @@
 
     .suggest-center:hover {
       transform: translate(-50%, -50%) scale(1.06);
-      border-color: rgba(212, 168, 83, 0.9);
-      box-shadow: 0 0 60px rgba(212, 168, 83, 0.25);
+      border-color: rgba(212, 168, 83, 0.8);
+      background: rgba(8, 8, 10, 0.92);
+      box-shadow: 0 0 60px rgba(212, 168, 83, 0.2), 0 0 80px rgba(0, 0, 0, 0.8);
     }
 
     .suggest-center .cat-icon {
@@ -336,6 +331,7 @@
       line-height: 1.5;
       margin-bottom: 0.4rem;
       max-width: 170px;
+      display: none;
     }
 
     .cat-count {
@@ -660,13 +656,13 @@
     /* ─── Responsive ─── */
     @media (max-width: 520px) {
       .home-header {
-        padding: 4rem 0 1rem;
+        padding: 3.5rem 0 0.5rem;
       }
 
       .pentagon-wrapper {
         width: 100vw;
-        height: 110vw;
-        margin-bottom: 2rem;
+        height: 105vw;
+        margin-bottom: 1.5rem;
       }
 
       .category-card {
@@ -691,10 +687,7 @@
       }
 
       .cat-desc {
-        font-size: 0.72rem;
-        max-width: 120px;
-        line-height: 1.4;
-        margin-bottom: 0.25rem;
+        display: none;
       }
 
       .cat-count {
@@ -720,21 +713,21 @@
         font-size: 0.58rem;
       }
 
-      /* Spread pentagon wider vertically on narrow screens */
+      /* Tighter pentagon on mobile */
       .category-card[data-cat="space"] {
-        left: 50%; top: 4%;
+        left: 50%; top: 5%;
       }
       .category-card[data-cat="flow"] {
-        left: 12%; top: 32%;
+        left: 14%; top: 34%;
       }
       .category-card[data-cat="quantum"] {
-        left: 88%; top: 32%;
+        left: 86%; top: 34%;
       }
       .category-card[data-cat="sense"] {
-        left: 20%; top: 78%;
+        left: 22%; top: 76%;
       }
       .category-card[data-cat="machine"] {
-        left: 80%; top: 78%;
+        left: 78%; top: 76%;
       }
       .suggest-center {
         top: 48%;
@@ -849,7 +842,7 @@
         <div class="cat-label">Quantum</div>
         <div class="cat-label-ko" style="color:rgba(191,159,255,0.5)">양자</div>
         <div class="cat-desc">Superposition, entanglement, and nature at its smallest</div>
-        <div class="cat-count" style="color:rgba(191,159,255,0.45)">2 chapters</div>
+        <div class="cat-count" style="color:rgba(191,159,255,0.45)">4 chapters</div>
       </div>
 
       <!-- Sense - lower-left vertex -->
@@ -864,7 +857,7 @@
         <div class="cat-label">Sense</div>
         <div class="cat-label-ko" style="color:rgba(80,250,123,0.5)">감각</div>
         <div class="cat-desc">Sound, vibration, and the mathematics of perception</div>
-        <div class="cat-count" style="color:rgba(80,250,123,0.45)">4 chapters</div>
+        <div class="cat-count" style="color:rgba(80,250,123,0.45)">5 chapters</div>
       </div>
 
       <!-- Machine - lower-right vertex -->
@@ -1038,6 +1031,10 @@
             title: 'The Sound of Mathematics', titleKo: '수학의 소리', tagline: 'Why does a violin sound like a violin?', taglineKo: '바이올린은 왜 바이올린처럼 들릴까?', difficulty: 2, en: 'ghost.html', ko: 'ghost_ko.html',
             icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M22 10 L22 40" stroke="#50FA7B" stroke-width="1.2" opacity="0.5"/><path d="M34 10 L34 40" stroke="#50FA7B" stroke-width="1.2" opacity="0.5"/><path d="M22 10 L34 14" stroke="#50FA7B" stroke-width="1" opacity="0.4"/><path d="M22 16 L34 20" stroke="#50FA7B" stroke-width="1" opacity="0.4"/><circle cx="18" cy="40" r="4" fill="#50FA7B" opacity="0.3"/><circle cx="30" cy="44" r="4" fill="#50FA7B" opacity="0.3"/><path d="M4 28 Q10 20 16 28 Q22 36 28 28 Q34 20 40 28 Q46 36 52 28" stroke="#50FA7B" stroke-width="0.8" fill="none" opacity="0.25" stroke-linecap="round"/></svg>'
           },
+          {
+            title: 'The Dream of a Perfect Tone', titleKo: '완벽한 음색의 꿈', tagline: 'Sculpting sound from mathematics', taglineKo: '수학으로 소리를 빚다', difficulty: 2, en: 'synth.html', ko: 'synth-ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M6 40 C6 40 10 38 14 34 C18 30 20 24 22 20 C24 16 25 14 28 14 C31 14 32 16 34 20 C36 24 38 30 42 34 C46 38 50 40 50 40" stroke="#50FA7B" stroke-width="1.4" fill="none" opacity="0.6" stroke-linecap="round"/><circle cx="14" cy="34" r="2" fill="#50FA7B" opacity="0.5"/><circle cx="22" cy="20" r="2" fill="#50FA7B" opacity="0.65"/><circle cx="28" cy="14" r="2.5" fill="#50FA7B" opacity="0.8"/><circle cx="34" cy="20" r="2" fill="#50FA7B" opacity="0.65"/><circle cx="42" cy="34" r="2" fill="#50FA7B" opacity="0.5"/><path d="M14 34 L14 46" stroke="#50FA7B" stroke-width="0.7" opacity="0.2"/><path d="M22 20 L22 46" stroke="#50FA7B" stroke-width="0.7" opacity="0.25"/><path d="M28 14 L28 46" stroke="#50FA7B" stroke-width="0.7" opacity="0.3"/><path d="M34 20 L34 46" stroke="#50FA7B" stroke-width="0.7" opacity="0.25"/><path d="M42 34 L42 46" stroke="#50FA7B" stroke-width="0.7" opacity="0.2"/><line x1="10" y1="46" x2="46" y2="46" stroke="#50FA7B" stroke-width="0.5" opacity="0.15"/></svg>'
+          },
         ]
       },
       quantum: {
@@ -1190,7 +1187,7 @@
       catView.style.display = 'flex';
       if (!skipPush) {
         window.scrollTo(0, 0);
-        history.pushState({ cat: catId }, '', '#' + catId);
+        try { history.pushState({ cat: catId }, '', '#' + catId); } catch(e) {}
       }
     }
 
@@ -1199,7 +1196,7 @@
       document.getElementById('category-view').style.display = 'none';
       document.getElementById('home-view').style.display = 'flex';
       window.scrollTo(0, 0);
-      history.pushState({}, '', window.location.pathname);
+      try { history.pushState({}, '', window.location.pathname); } catch(e) {}
     }
 
     // Handle back button
