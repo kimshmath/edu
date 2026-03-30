@@ -1,0 +1,3055 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>움직이는 모든 것에 대하여 — Mellow Math</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400&family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ── reset ── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-weight:300;
+  font-size:clamp(.92rem,1.6vw,1.05rem);line-height:1.75;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased}
+
+:root{
+  --bg:#04050c;--bg2:#090b18;--bg3:#0e1128;
+  --text:#b8b4ac;--cream:#ece8e0;--muted:#52566a;
+  --gold:#c9a84c;--gold2:#d4a853;--gold-dim:rgba(201,168,76,.08);
+  --violet:#8a6abf;--fern:#5a9a72;--fern-glow:#7cc89a;
+  --border:rgba(255,255,255,.04);
+  --font-display:'Fraunces',Georgia,serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-kr:'Noto Serif KR',serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+
+/* ── film grain ── */
+body::after{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='1'/%3E%3C/svg%3E");
+  background-size:200px}
+
+/* ── scrollbar ── */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px}
+
+/* ── typography ── */
+h1,h2,h3{font-family:var(--font-display);color:var(--cream);font-weight:400;line-height:1.2}
+.prose{font-family:var(--font-kr);font-size:clamp(.92rem,1.6vw,1.05rem);max-width:680px;margin:0 auto}
+.prose p{font-family:var(--font-kr);margin-bottom:1.3em}
+.prose-drop::first-letter{font-family:var(--font-display);font-size:3.4em;float:left;
+  line-height:.82;margin:.06em .18em 0 0;color:var(--gold);font-weight:400}
+.hi{color:var(--cream)}
+.ac{color:var(--gold);text-shadow:0 0 20px rgba(201,168,76,.12)}
+
+/* ── hero ── */
+.hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-vignette{position:absolute;inset:0;
+  background:radial-gradient(ellipse 65% 55% at 50% 50%,transparent 0%,rgba(4,5,12,.4) 60%,var(--bg) 100%);
+  pointer-events:none}
+.hero-content{position:relative;z-index:2;text-align:center;padding:0 2rem}
+.hero-label{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.25em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:1.4rem}
+.hero h1{font-size:clamp(2.4rem,5.5vw,4.6rem);font-weight:300;color:var(--cream);
+  margin-bottom:.6rem;letter-spacing:-.02em}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero-tagline{font-family:var(--font-display);font-style:italic;font-weight:300;
+  font-size:clamp(.85rem,1.6vw,1.05rem);color:var(--text);margin-bottom:3rem;opacity:.7}
+.hero-scroll{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--muted);cursor:pointer;
+  animation:breathe 3s ease-in-out infinite;transition:color .3s}
+.hero-scroll:hover{color:var(--gold)}
+@keyframes breathe{0%,100%{opacity:.5;transform:translateY(0)}50%{opacity:1;transform:translateY(-4px)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.hero-content>*{animation:fadeInUp 1.2s cubic-bezier(.23,1,.32,1) both}
+.hero-content>.hero-label{animation-delay:.3s}
+.hero-content>h1{animation-delay:.6s}
+.hero-content>.hero-tagline{animation-delay:.9s}
+.hero-content>.hero-scroll{animation-delay:1.4s}
+
+/* ── sections ── */
+.chapter-section{max-width:780px;margin:0 auto;padding:6rem 2rem}
+.section-num{font-family:var(--font-mono);font-size:.65rem;letter-spacing:.18em;color:var(--gold);
+  margin-bottom:.8rem;text-shadow:0 0 12px rgba(201,168,76,.2)}
+.section-title{font-size:clamp(1.5rem,3vw,2.2rem);margin-bottom:1.6rem;font-weight:400}
+.section-title em{font-style:italic;color:var(--gold)}
+.section-divider{width:80px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:4rem auto}
+
+/* ── pull quote ── */
+.pull-quote{text-align:center;margin:3rem auto;max-width:560px;padding:0 1rem;position:relative}
+.pull-quote::before{content:'"';font-family:var(--font-display);font-size:4rem;
+  color:var(--gold);opacity:.15;position:absolute;top:-.8rem;left:50%;transform:translateX(-50%);
+  line-height:1;pointer-events:none}
+.pull-quote p{font-family:var(--font-kr);font-style:italic;font-size:clamp(1rem,1.8vw,1.2rem);
+  color:var(--cream);line-height:1.6;font-weight:300}
+.pull-quote::after{content:'';display:block;width:60px;height:1px;margin:1.5rem auto 0;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+
+/* ── block quote ── */
+.block-quote{background:var(--gold-dim);border-left:2px solid var(--gold);
+  padding:1.5rem 2rem;margin:2rem auto;max-width:620px;border-radius:0 8px 8px 0}
+.block-quote p{font-family:var(--font-display);font-style:italic;font-size:.95rem;
+  color:var(--cream);line-height:1.65;margin:0}
+.block-quote .bq-attr{font-family:var(--font-mono);font-size:.6rem;color:var(--muted);
+  margin-top:.8rem;letter-spacing:.08em}
+
+/* ── interactive box ── */
+.ibox{background:var(--bg3);border-radius:16px;padding:2.5rem;margin:3rem auto;
+  max-width:720px;position:relative;overflow:hidden;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03),0 8px 32px rgba(0,0,0,.3)}
+.ibox::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.ibox-label{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.14em;
+  color:var(--gold);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.ibox-label .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);
+  box-shadow:0 0 6px rgba(201,168,76,.5);animation:pulse-dot 2s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:.4}50%{opacity:1}}
+.ibox-title{font-family:var(--font-display);font-size:1.25rem;color:var(--cream);
+  margin-bottom:.6rem;font-weight:400}
+.ibox-desc{font-family:var(--font-kr);font-size:.82rem;color:var(--text);margin-bottom:1.5rem;line-height:1.65;opacity:.8}
+.ibox canvas{width:100%;min-height:280px;border-radius:8px;display:block;margin-bottom:1.2rem;
+  background:rgba(0,0,0,.3);cursor:crosshair}
+.ibox-controls{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1.2rem;align-items:center}
+.ibox-controls label{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.08em;
+  color:var(--muted);display:flex;align-items:center;gap:.5rem}
+.ibox-controls input[type=range]{-webkit-appearance:none;width:120px;height:3px;
+  background:var(--border);border-radius:2px;outline:none}
+.ibox-controls input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;
+  border-radius:50%;background:radial-gradient(circle at 40% 35%,var(--gold2),#a07830);cursor:pointer;
+  box-shadow:0 0 8px rgba(201,168,76,.3)}
+.ibox-btn{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;
+  padding:.45rem 1rem;border:1px solid var(--muted);border-radius:4px;
+  background:transparent;color:var(--muted);cursor:pointer;transition:all .25s;
+  text-transform:uppercase}
+.ibox-btn:hover{border-color:var(--gold);color:var(--gold)}
+.ibox-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
+.ibox-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+  gap:.6rem;margin-top:1rem}
+.ibox-stat{background:rgba(255,255,255,.02);border-radius:8px;padding:.7rem .9rem;
+  border:1px solid var(--border)}
+.ibox-stat .stat-label{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.1em;
+  color:var(--muted);text-transform:uppercase;margin-bottom:.2rem}
+.ibox-stat .stat-value{font-family:var(--font-mono);font-size:1.1rem;color:var(--gold)}
+
+/* ── references ── */
+.ref-section{max-width:680px;margin:0 auto;padding:4rem 2rem 2rem}
+.ref-heading{font-family:var(--font-display);font-size:1.1rem;color:var(--cream);
+  margin-bottom:1.5rem;font-weight:400}
+.ref-list{list-style:none;padding:0}
+.ref-list li{font-size:.78rem;color:var(--muted);margin-bottom:.7rem;line-height:1.55;
+  padding-left:1.2rem;text-indent:-1.2rem}
+.ref-author{color:var(--text)}
+.ref-title{font-style:italic;color:var(--cream);opacity:.7}
+.ref-detail{color:var(--muted)}
+
+/* ── footer ── */
+footer{text-align:center;padding:4rem 2rem 3rem;border-top:1px solid var(--border)}
+.footer-attr{opacity:.7}
+.footer-name{font-family:var(--font-display);font-size:.85rem;color:var(--cream);margin-bottom:.3rem}
+.footer-inst{font-family:var(--font-body);font-size:.7rem;color:var(--muted)}
+.footer-url{font-family:var(--font-mono);font-size:.58rem;color:var(--gold);
+  text-decoration:none;letter-spacing:.1em;display:inline-block;margin-top:.6rem}
+.footer-url:hover{color:var(--gold2)}
+
+/* ── floating badge ── */
+.floating-badge{position:fixed;bottom:1.5rem;left:1.5rem;z-index:100;
+  font-family:var(--font-mono);font-size:.58rem;letter-spacing:.14em;
+  color:#8db830;text-decoration:none;text-transform:lowercase;
+  text-shadow:0 0 12px rgba(141,184,48,.3);transition:all .3s}
+.floating-badge:hover{color:#a8d43a;transform:translateY(-1px);
+  text-shadow:0 0 18px rgba(141,184,48,.5)}
+
+/* ── particles ── */
+.ambient-particle{position:fixed;pointer-events:none;z-index:1;
+  border-radius:50%;opacity:0;animation:float-up linear infinite}
+@keyframes float-up{
+  0%{transform:translateY(100vh) scale(.5);opacity:0}
+  10%{opacity:.6}
+  90%{opacity:.4}
+  100%{transform:translateY(-20vh) scale(0);opacity:0}
+}
+
+/* ── scroll reveal ── */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.23,1,.32,1),
+  transform .8s cubic-bezier(.23,1,.32,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ── coda ── */
+.coda{text-align:center;max-width:560px;margin:0 auto;padding:4rem 2rem 6rem}
+.coda p{font-family:var(--font-kr);font-style:italic;font-weight:300;
+  font-size:clamp(.9rem,1.5vw,1.05rem);color:var(--cream);line-height:2;opacity:.75}
+.coda p:last-child{margin-top:1.5em;opacity:.5}
+
+/* ── mobile ── */
+@media(max-width:768px){
+  .chapter-section{padding:4rem 1.5rem}
+  .ibox{padding:1.5rem;margin:2rem -0.5rem}
+  .ibox-stats{grid-template-columns:repeat(2,1fr)}
+  .hero h1{font-size:clamp(1.8rem,8vw,2.8rem)}
+}
+@media(max-width:480px){
+  .ibox{padding:1.2rem;border-radius:12px}
+  .ibox-stats{grid-template-columns:1fr 1fr}
+  .ibox-controls{gap:.4rem}
+}
+
+/* ── narrator bar ── */
+.narrator-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:linear-gradient(180deg,rgba(4,5,12,.0) 0%,rgba(4,5,12,.95) 20%,rgba(9,11,24,.98) 100%);
+  padding:1.4rem 1.5rem 1.2rem;transform:translateY(100%);
+  transition:transform .5s cubic-bezier(.23,1,.32,1);pointer-events:none}
+.narrator-bar.open{transform:translateY(0);pointer-events:auto}
+.narrator-inner{max-width:680px;margin:0 auto;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.narrator-toggle{position:fixed;bottom:1.5rem;right:1.5rem;z-index:201;
+  width:42px;height:42px;border-radius:50%;border:1px solid var(--muted);
+  background:rgba(9,11,24,.85);color:var(--muted);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;transition:all .3s;backdrop-filter:blur(8px)}
+.narrator-toggle:hover{border-color:var(--gold);color:var(--gold)}
+.narrator-toggle.active{border-color:var(--gold);color:var(--gold);
+  background:rgba(201,168,76,.08)}
+.narrator-controls{display:flex;align-items:center;gap:.5rem}
+.narrator-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);
+  background:transparent;color:var(--cream);cursor:pointer;display:flex;
+  align-items:center;justify-content:center;font-size:.85rem;transition:all .25s}
+.narrator-btn:hover{border-color:var(--gold);color:var(--gold)}
+.narrator-btn.play{width:38px;height:38px;font-size:1rem;
+  border-color:var(--gold);color:var(--gold)}
+.narrator-btn.play:hover{background:rgba(201,168,76,.1)}
+.narrator-voice-select{display:flex;gap:.3rem}
+.narrator-voice-btn{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.08em;
+  padding:.3rem .7rem;border:1px solid var(--border);border-radius:12px;
+  background:transparent;color:var(--muted);cursor:pointer;transition:all .25s;
+  text-transform:uppercase}
+.narrator-voice-btn:hover{border-color:var(--gold);color:var(--gold)}
+.narrator-voice-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
+.narrator-progress{flex:1;min-width:80px;height:2px;background:var(--border);
+  border-radius:1px;position:relative;cursor:pointer}
+.narrator-progress-fill{height:100%;background:var(--gold);border-radius:1px;
+  transition:width .3s ease;width:0}
+.narrator-status{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.08em;
+  color:var(--muted);white-space:nowrap;min-width:60px}
+.narrator-speed{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.08em;
+  color:var(--muted);cursor:pointer;padding:.2rem .5rem;border:1px solid var(--border);
+  border-radius:8px;background:transparent;transition:all .25s}
+.narrator-speed:hover{border-color:var(--gold);color:var(--gold)}
+.prose p.narrating{color:var(--cream);transition:color .4s ease}
+.prose p.narrating-done{color:var(--text);transition:color 1s ease}
+@media(max-width:768px){
+  .narrator-inner{gap:.6rem}
+  .narrator-bar{padding:1rem 1rem .8rem}
+  .narrator-toggle{bottom:1rem;right:1rem;width:38px;height:38px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- HERO                                        -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="hero" id="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-label">Mellow Math</div>
+    <h1>움직이는 모든 것에 <em>대하여</em></h1>
+    <div class="hero-tagline" style="font-family:var(--font-kr)">모든 픽셀, 모든 약, 모든 도로의 곡선, 모든 거래소의 가격 — 미적분은 이미 일하고 있다.</div>
+    <div class="hero-scroll" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">
+      시작 ↓
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- EPIGRAPH                                    -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="chapter-section" style="padding-bottom:0">
+  <div class="block-quote reveal" style="border-left-color:rgba(201,168,76,.3);max-width:560px">
+    <p>"The calculus was the first achievement of modern mathematics, and it is difficult to overestimate its importance. I think it defines more unequivocally than anything else the inception of modern mathematics; and the system of mathematical analysis, which is its logical development, still constitutes the greatest technical advance in exact thinking."</p>
+    <div class="bq-attr">— John von Neumann, 1947</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- § 1 — Sixty Times a Second                  -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="chapter-section" id="s1">
+  <div class="reveal">
+    <div class="section-num">§ 1</div>
+    <h2 class="section-title">매 순간, <em>60번의</em> 미적분</h2>
+  </div>
+
+  <div class="prose reveal">
+    <p class="prose-drop">지금 이 글자를 읽고 있는 당신의 눈앞에서, 미적분이 작동하고 있다. 비유가 아니라 문자 그대로 — 화면 위 모든 글리프의 윤곽선은 3차 베지에 곡선의 연속이며, 네 개의 제어점과 미적분의 가장 오래된 기술인 보간법의 극한으로 정의된다. 폰트 렌더러는 이 곡선들을 초당 60번 계산하며, 너무나 매끄러운 호를 그려내기에 우리는 수학을 잉크로 착각한다.</p>
+
+    <p>이야기는 대학이 아닌 자동차 공장에서 시작된다. 1959년, 시트로엥의 엔지니어 <span class="hi">폴 드 카스텔조</span>는 자동차의 곡면 차체를 기계가 정밀하게 깎을 수 있도록 기술할 방법이 필요했다. 그가 발명한 알고리즘은 숨이 멎을 만큼 우아하다. 네 점을 잡고, 선분으로 연결하고, 각 선분의 중점을 찾고, <em>그</em> 중점들을 다시 연결하고, 또 중점을 찾으면 — 최종적으로 도달하는 단 하나의 점이 곡선 위에 정확히 놓인다. 매개변수 <em>t</em>를 0에서 1까지 변화시키며 이 과정을 반복하면, 직선의 평균만으로 매끄러운 호가 탄생한다.</p>
+
+    <p>드 카스텔조의 고용주는 그의 연구를 비밀에 부쳤다. 그래서 경쟁사 르노의 <span class="hi">피에르 베지에</span>가 1962년에 본질적으로 같은 아이디어를 발표했을 때, 곡선은 베지에의 이름을 얻었다. 드 카스텔조는 알고리즘의 이름을 얻었다. 역사가 항상 공평한 것은 아니지만, 이 경우에는 두 이름 모두 살아남았다 — 하나는 곡선에, 다른 하나는 그것을 구성하는 가장 아름다운 방법에.</p>
+  </div>
+
+  <div class="pull-quote reveal">
+    <p style="font-family:var(--font-kr)">베지에 곡선은 직선이 되는 법을 잊어버린 직선이다 — 그리고 대신, 우아해지는 법을 기억해냈다.</p>
+  </div>
+
+  <div class="prose reveal">
+    <p>베지에 곡선을 단순한 기하학이 아니라 미적분으로 만드는 것은 무엇인가? 도함수다. 곡선 위 모든 점에서 접선 벡터를 계산할 수 있다 — 펜이 호를 따라 움직인다면 그 방향과 속도를. 이 도함수 곡선은 <span class="ac">호도그래프</span>라 불리며, 그 자체가 차수가 하나 낮은 베지에 곡선이다. 운동의 속도가 형태 안에 암호화되어 있는 것이다. 일러스트레이터나 피그마에서 제어점을 드래그하는 디자이너들은, 알든 모르든, 도함수를 조각하고 있다.</p>
+
+    <p>베지에 곡선이 디지털 세계를 정복한 더 깊은 이유가 있다. 이 곡선은 <span class="hi">아핀 불변</span>이다. 화면을 회전하든, 창 크기를 바꾸든, 시점을 기울이든, 네 개의 제어점만 변환하면 곡선이 정확하게 따라온다. 재계산도 반올림 오차도 없다. 모든 현대 폰트 포맷 — TrueType, OpenType, PostScript — 이 글자를 베지에 스플라인으로 저장하는 이유다. 웹에서 보는 모든 애니메이션 — 모든 ease-in, ease-out, 모든 부드러운 스크롤 — 이 3차 베지에 타이밍 함수로 구동되는 이유다. 브라우저의 CSS에는 문자 그대로 <span class="ac">cubic-bezier()</span>라는 속성이 있다.</p>
+
+    <p>아래에서 직접 해보자. 네 개의 제어점을 드래그하여 곡선이 반응하는 것을 보라. 구성선을 켜면 드 카스텔조의 알고리즘이 작동하는 모습을 볼 수 있다 — 중첩된 선형 보간이 곡선 위의 한 점으로 수렴하는 과정. 그런 다음 점이 호를 따라 이동하는 것을 관찰하라. 직선 구간에서는 빠르고, 굽은 곳에서는 느려지는 것을. 그 속도의 변화가 바로 눈에 보이는 도함수다.</p>
+  </div>
+
+  <!-- ── interactive: Bézier ── -->
+  <div class="ibox reveal" id="bezierBox">
+    <div class="ibox-label"><span class="dot"></span> 인터랙티브</div>
+    <div class="ibox-title">드 카스텔조 기계</div>
+    <div class="ibox-desc" style="font-family:var(--font-kr)">네 개의 제어점(금색 원)을 드래그하여 곡선을 변형하세요. "구성선"을 켜면 드 카스텔조의 중첩 보간 과정을 볼 수 있습니다. "재생"을 누르면 곡선 위로 점이 이동합니다 — 그 속도가 곧 도함수입니다.</div>
+    <canvas id="bezierCanvas" width="700" height="420" data-nopz></canvas>
+    <div class="ibox-controls">
+      <button class="ibox-btn active" id="btnConstruction" onclick="toggleConstruction()">구성선</button>
+      <button class="ibox-btn" id="btnHodograph" onclick="toggleHodograph()">호도그래프</button>
+      <button class="ibox-btn" id="btnAnimate" onclick="toggleAnimate()">▶ 재생</button>
+      <button class="ibox-btn" id="btnReset" onclick="resetBezier()">↺ 초기화</button>
+      <label>속도
+        <input type="range" id="animSpeed" min="0.1" max="3" step="0.1" value="1">
+      </label>
+    </div>
+    <div class="ibox-stats">
+      <div class="ibox-stat"><div class="stat-label">매개변수 t</div><div class="stat-value" id="statT">0.00</div></div>
+      <div class="ibox-stat"><div class="stat-label">곡선 길이</div><div class="stat-value" id="statLen">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">곡률</div><div class="stat-value" id="statCurv">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">속력 (|B′|)</div><div class="stat-value" id="statSpeed">—</div></div>
+    </div>
+  </div>
+
+  <div class="prose reveal">
+    <p>위의 인터랙티브는 미묘한 사실을 보여준다. 매개변수 <em>t</em>가 일정한 속도로 증가하는데도, 점은 곡선을 따라 등속으로 움직이지 않는다. 제어점이 멀리 떨어진 곳에서는 곡선이 늘어나고 점이 달려가고, 제어점이 몰려 있는 곳에서는 느려진다. <span class="hi">매개변수는 거리와 같지 않다.</span> 수학적 매개변수와 그것이 기술하는 물리적 양 사이의 이 구별은 미적분이 가르치는 가장 깊은 교훈 중 하나다. 호 길이 매개변수화 — <em>t</em>를 실제 이동 거리에 비례하게 만드는 기술 — 는 닫힌 형태의 답이 거의 존재하지 않는 적분을 필요로 한다. 곡선은 자신의 길이를 알고 있지만, 적분 없이는 알려주지 않는다.</p>
+
+    <p>그러니 다음에 당신의 폰 화면이 부드럽게 어두워지거나, 지도가 우아하게 확대될 때 기억하라. 1959년, 프랑스의 한 자동차 공장의 엔지니어가 미적분에게 일자리를 주었고, 그 이래로 미적분은 야간 근무를 쉰 적이 없다. <span class="ac">초당 60프레임, 매초, 지구의 모든 화면에서.</span></p>
+  </div>
+
+  <div class="section-divider"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- § 2 — The Half-Life of Everything           -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="chapter-section" id="s2">
+  <div class="reveal">
+    <div class="section-num">§ 2</div>
+    <h2 class="section-title">모든 것의 <em>반감기</em></h2>
+  </div>
+
+  <div class="prose reveal">
+    <p class="prose-drop">세상을 지배하는 미분방정식이 하나 있다. 엽서에 적을 수 있을 만큼 짧고, 1학년 학생도 풀 수 있을 만큼 간단하며, 아침 커피의 냉각, 혈류에서의 아스피린 제거, 파라오 무덤 속 탄소-14의 붕괴, 핸드폰 배터리의 방전, 저축 계좌의 이자 성장을 모두 지배할 만큼 보편적이다. 이 방정식은 이렇게 말한다: <span class="ac">어떤 양의 변화율은 그 양 자체에 비례한다.</span> 그뿐이다. dy/dt = ky라 쓰면, 당신은 과학의 절반에 대한 만능열쇠를 손에 쥔 것이다.</p>
+
+    <p>상수 k가 음수이면, 사물은 쇠퇴한다. 뜨거운 커피는 방으로 열을 잃고, 실온과의 차이가 클수록 더 빨리 식는다. 뉴턴은 1701년에 이것을 발견하고 법칙으로 적었다 — 열역학이 아닌 미적분의 법칙이었다. 해는 평형을 향해 가라앉는 지수 곡선이며, 결코 완전히 도달하지는 않는다. 긴 소설이 결말에 다가가는 것처럼 — 항상 가까워지지만, 결코 완전히 거기에 닿지는 않는다.</p>
+
+    <p>k가 양수이면, 사물은 성장한다. 박테리아 군집이 배로 늘고, 배가 된 군집이 다시 배로 늘어난다. 복리는 정장을 입은 같은 수학이다. 벤저민 프랭클린은 1790년에 보스턴과 필라델피아에 1,000파운드를 남기며 200년간 투자하라고 지시했다. 1990년 신탁이 만기되었을 때, <span class="hi">보스턴의 몫은 500만 달러로 불어나 있었다.</span> 프랭클린에게는 재무 상담사가 필요 없었다. 지수함수가 필요했을 뿐이다.</p>
+  </div>
+
+  <div class="block-quote reveal">
+    <p>"The most powerful force in the universe is compound interest."</p>
+    <div class="bq-attr">— Attributed (perhaps apocryphally) to Albert Einstein</div>
+  </div>
+
+  <div class="prose reveal">
+    <p>하지만 대부분의 사람들이 이 방정식과 가장 친밀하게 만나는 곳은 의학이다. 약을 삼키면 약물이 혈류에 들어가고, 즉시 간과 신장에 의해 걸러지기 시작한다. 제거 속도는 농도에 비례한다 — 약물이 많을수록 몸은 더 빨리 제거한다. 이것이 1차 약동학이며, 모든 약물에 <span class="ac">반감기</span>를 부여한다 — 농도가 절반으로 떨어지는 데 걸리는 시간이다. 아스피린의 반감기는 약 3.5시간, 카페인은 대략 5시간, 디아제팜은 40시간 이상 체내에 머문다.</p>
+
+    <p>의사는 — 보통 이런 용어로 생각하지 않지만 — 처방 일정을 정할 때마다 이 미분방정식을 풀고 있다. 목표는 약물을 <span class="hi">치료 범위</span> 안에 유지하는 것이다 — 효과를 보기에 충분히 높고, 독성을 피하기에 충분히 낮게. 한 번 복용하고, 지수적으로 감소하는 것을 기다리며, 유효 농도 이하로 떨어지기 전에 다시 복용한다. 결과는 특유의 톱니파 패턴이다: 급등, 감소, 급등, 감소. 몇 번의 주기 후에 정점과 골은 <span class="ac">정상 상태</span>에 안착한다 — 지수함수와 시계만으로 유지되는 동적 평형이다.</p>
+
+    <p>아래 인터랙티브에서 이 기계를 직접 볼 수 있다. 시나리오를 선택하라 — 커피 냉각, 약물 투여, 배터리 방전, 박테리아 성장, 복리 이자 — 그리고 같은 방정식이 전혀 다른 드라마를 만들어내는 것을 보라. 약물 모드에서 "약 복용"을 반복적으로 누르면 톱니파가 형성된다. 곡선을 치료 범위 안에 유지해보라. 당신은 손으로, 약동학자가 미적분으로 하는 일을 하고 있는 것이다.</p>
+  </div>
+
+  <!-- ── interactive: exponential decay/growth ── -->
+  <div class="ibox reveal" id="decayBox">
+    <div class="ibox-label"><span class="dot"></span> 인터랙티브</div>
+    <div class="ibox-title">보편 방정식</div>
+    <div class="ibox-desc">프리셋을 선택하여 현실적인 매개변수를 불러오세요. 약물 모드에서 "약 복용"을 누르면 볼루스가 추가되고 톱니파 정상 상태가 나타납니다. 음영 영역이 치료 범위입니다.</div>
+    <canvas id="decayCanvas" width="700" height="380" data-nopz></canvas>
+    <div class="ibox-controls">
+      <button class="ibox-btn active" id="presetCoffee" onclick="setPreset('coffee')">☕ 커피</button>
+      <button class="ibox-btn" id="presetDrug" onclick="setPreset('drug')">💊 약물</button>
+      <button class="ibox-btn" id="presetBattery" onclick="setPreset('battery')">🔋 배터리</button>
+      <button class="ibox-btn" id="presetBacteria" onclick="setPreset('bacteria')">🦠 박테리아</button>
+      <button class="ibox-btn" id="presetInterest" onclick="setPreset('interest')">💰 복리</button>
+    </div>
+    <div class="ibox-controls">
+      <button class="ibox-btn" id="btnDose" onclick="addDose()" style="display:none">💊 약 복용</button>
+      <button class="ibox-btn" id="btnPlayDecay" onclick="togglePlayDecay()">▶ 재생</button>
+      <button class="ibox-btn" onclick="resetDecay()">↺ 초기화</button>
+      <label>속도
+        <input type="range" id="decaySpeed" min="0.5" max="5" step="0.25" value="1.5">
+      </label>
+    </div>
+    <div class="ibox-stats">
+      <div class="ibox-stat"><div class="stat-label">현재 값</div><div class="stat-value" id="statVal">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">반감기</div><div class="stat-value" id="statHalf">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">경과 시간</div><div class="stat-value" id="statTime">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">면적 (∫)</div><div class="stat-value" id="statAUC">—</div></div>
+    </div>
+  </div>
+
+  <div class="prose reveal">
+    <p>한 가지 주목할 것이 있다. <span class="hi">곡선 아래의 면적</span> — 적분 — 은 모든 시나리오에서 직접적인 물리적 의미를 갖는다. 커피의 경우 총 손실 열량을 측정한다. 약물의 경우 "곡선 아래 면적" 즉 AUC로, 약동학에서 가장 중요한 단 하나의 숫자다. 몸의 총 약물 노출량을 나타내기 때문이다. AUC가 클수록 더 많은 약물이 흡수된 것이다. 임상시험은 이 숫자에 달려 있다. 적분은 추상이 아니다. 의사가 실제로 관심을 갖는 바로 그것이다.</p>
+
+    <p>반감기 그 자체가 변장한 순수 미적분이다. 지수함수를 초기값의 절반으로 놓고 시간을 풀면 ln(2)/|k|를 얻는다 — 2의 자연로그를 속도 상수로 나눈 것이다. <span class="ac">ln(2) ≈ 0.693이라는 숫자는 응용수학에서 가장 중요한 상수 중 하나다.</span> 무언가가 반으로 줄거나 두 배로 늘 때마다 이 숫자가 등장한다. 은행가들이 쓰는 "72의 법칙" — 이자율로 72를 나누어 두 배가 되는 시간을 추정하는 것 — 은 ln(2)가 암산에 친화적인 변장을 한 것에 불과하다.</p>
+  </div>
+
+  <div class="pull-quote reveal">
+    <p>하나의 방정식. 커피 한 잔, 약병, 저축 계좌, 가이거 계수기. 미적분은 무엇을 측정하는지 신경 쓰지 않는다 — 변화의 형태만을 알 뿐이다.</p>
+  </div>
+
+  <div class="section-divider"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- § 3 — Downhill to the Answer                -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="chapter-section" id="s3">
+  <div class="reveal">
+    <div class="section-num">§ 3</div>
+    <h2 class="section-title">기울기를 따라 <em>답</em>으로</h2>
+  </div>
+
+  <div class="prose reveal">
+    <p class="prose-drop">자연은 가능한 한 가장 우아한 방식으로 게으르다. 비눗방울은 표면적을 최소화한다. 빛은 두 점 사이의 가장 빠른 경로를 택한다 — 페르마가 1662년에 이를 증명했고, 유리가 빛을 굴절시키는 이유를 설명했다. 자기 무게로 매달린 사슬은 위치 에너지를 최소화하는 형태를 찾아, 포물선처럼 보이지만 포물선이 아닌 현수선이라는 곡선을 그린다. 갈릴레오는 포물선이라 추측했다. 라이프니츠, 호이겐스, 요한 베르누이가 1691년에 그 오류를 증명했다. 정답에는 갈릴레오가 갖지 못했던 미적분이 필요했다.</p>
+
+    <p>이 모든 자연의 최적화 뒤에는 하나의 원리가 있다: <span class="ac">도함수는 내리막을 가리킨다.</span> 어떤 점에서든 함수의 기울기를 계산하면, 값이 가장 빠르게 감소하는 방향을 알 수 있다. 그 방향으로 작은 걸음을 내딛고, 기울기를 다시 계산하고, 다시 걷는다. 이것이 <span class="hi">경사 하강법</span>이며, 현존하는 가장 오래된 최적화 알고리즘이다 — 뉴턴이 1669년에 방정식의 근을 찾기 위해 그 한 버전을 기술했다. 3세기 반이 지난 지금, 지구상의 모든 신경망을 훈련시키는 엔진이다.</p>
+
+    <p>아이디어는 무장을 해제할 만큼 단순하다. 함수가 있다 — 언덕과 골짜기의 지형이다. 가장 낮은 지점을 원한다. 전체 지형을 볼 수는 없고, 발밑의 경사만 느낄 수 있다. 그래서 내리막을 걷는다. 항상 내리막을. 기울기 — 도함수의 다차원 일반화 — 가 어느 방향이 가장 가파른지 알려준다. 그것을 따른다. 걸음걸음, 골짜기로 내려간다.</p>
+  </div>
+
+  <div class="block-quote reveal">
+    <p>"옳은 방향이라면 작은 걸음도 가까워진다. 잘못된 방향이라면 큰 도약도 멀어질 뿐이다."</p>
+    <div class="bq-attr">— 경사 하강법이 문자 그대로 실천하는 격언</div>
+  </div>
+
+  <div class="prose reveal">
+    <p>하지만 악마는 디테일에 있으며, 그 디테일이 수학을 아름답게 만드는 곳이다. 한 걸음의 크기를 얼마로 해야 할까? 너무 작으면 빙하처럼 느린 하강에 영원을 소비한다. 너무 크면 뛰어넘어 — 골짜기를 지나쳐 반대편 언덕에 착지하거나, 더 나쁘면 앞뒤로 격렬하게 진동하며 결코 안정되지 않는다. 기계학습 실무자들이 스텝 크기라 부르는 <span class="hi">학습률</span>은 현대 기술에서 가장 중대한 숫자 중 하나다. 잘 설정하면 신경망이 얼굴을 인식하고, 언어를 번역하고, 단백질을 접는다. 잘못 설정하면 같은 신경망이 아무것도 배우지 못한다.</p>
+
+    <p>더 깊은 문제가 있다. 대부분의 흥미로운 지형에는 골짜기가 하나 이상이다. 탐욕스럽고 국소적인 경사 하강법은 가장 가까운 골짜기에 안착하는데 — 그것이 가장 깊지 않을 수도 있다. 이것이 <span class="ac">극소</span>이며, 여기서 탈출하려면 기교가 필요하다: 모멘텀 추가 (공이 속도를 쌓아 얕은 골짜기를 통과하게), 노이즈 주입 (지형을 무작위로 흔들기), 또는 담금질 (큰 혼란스러운 걸음으로 시작해 점차 안정시키기). 지난 10년간 신경망 훈련의 모든 주요 발전은, 근본적으로, 한 점의 기울기만을 이용해 10억 차원의 지형을 탐색하는 더 나은 전략이었다.</p>
+
+    <p>아래 인터랙티브에서 이것을 두 가지 방법으로 볼 수 있다. 첫째, 2D 지형 — 두 변수 함수의 등고선 지도. 아무 곳이나 클릭하여 공을 떨어뜨리면, 경사 하강법이 그것을 골짜기로 운반하는 것을 볼 수 있다. 학습률을 조절하고 모멘텀을 켜보라. 둘째, 자신만의 1D 지형을 그리고 알고리즘이 바닥을 찾는 것을 관찰하라. 두 경우 모두, 접선 — 도함수 — 이 유일한 나침반이다.</p>
+  </div>
+
+  <!-- ── interactive: gradient descent ── -->
+  <div class="ibox reveal" id="gradBox">
+    <div class="ibox-label"><span class="dot"></span> 인터랙티브</div>
+    <div class="ibox-title">하강</div>
+    <div class="ibox-desc">지형을 클릭하여 공을 놓으세요. 기울기를 따라 내리막으로 굴러갑니다. 학습률을 조절하세요 — 너무 작으면 느리고, 너무 크면 뛰어넘습니다. 모멘텀을 켜면 얕은 골짜기를 빠져나오는 데 도움이 됩니다. "그리기" 모드에서 자신만의 1D 지형을 만들 수 있습니다.</div>
+    <canvas id="gradCanvas" width="700" height="420" data-nopz></canvas>
+    <div class="ibox-controls">
+      <button class="ibox-btn active" id="btnMode2D" onclick="setGradMode('2d')">2D 지형</button>
+      <button class="ibox-btn" id="btnMode1D" onclick="setGradMode('1d')">✏ 1D 그리기</button>
+      <button class="ibox-btn" id="btnMomentum" onclick="toggleMomentum()">모멘텀</button>
+      <button class="ibox-btn" onclick="resetGrad()">↺ 초기화</button>
+      <label>학습률
+        <input type="range" id="lrSlider" min="0.002" max="0.15" step="0.002" value="0.03">
+      </label>
+    </div>
+    <div class="ibox-stats">
+      <div class="ibox-stat"><div class="stat-label">위치</div><div class="stat-value" id="statPos">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">기울기</div><div class="stat-value" id="statGrad">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">걸음수</div><div class="stat-value" id="statSteps">0</div></div>
+      <div class="ibox-stat"><div class="stat-label">높이 f(x)</div><div class="stat-value" id="statHeight">—</div></div>
+    </div>
+  </div>
+
+  <div class="prose reveal">
+    <p>2D 지형에서 학습률을 너무 높게 설정하면 어떤 일이 벌어지는지 주목하라. 공은 단지 최솟값을 놓치는 것이 아니다 — 에너지를 잃는 대신 얻으며 바깥으로 나선형으로 돌 수 있다. 이것은 비유의 오류가 아니다. 학습률이 잘못 조정되었을 때 실제 신경망 훈련에서 정확히 일어나는 일이다. <span class="hi">발산은 수렴의 어두운 쌍둥이이며</span>, 그 경계는 종종 면도날처럼 얇다. Adam, RMSProp, 학습률 웜업, 코사인 어닐링 — 이 연구 프로그램 전체가 그 경계를 안전하게 걷기 위해 존재한다.</p>
+
+    <p>그럼에도, 그 모든 단순함에도 불구하고, 경사 하강법은 작동한다. 수백만 개의 매개변수와 수십억 개의 데이터 포인트를 가진 문제에서 작동한다. 어떤 인간도 시각화할 수 없는 광대한 공간에서 작동한다. 작동하는 이유는 <span class="ac">한 점에서 계산된 도함수가, 한 걸음의 유용한 발을 내딛기에 딱 충분한 전체 지형에 대한 정보를 담고 있기 때문이다.</span> 이것이 국소 정보의 기적이다: 전체 산을 볼 필요가 없다. 발밑의 기울기만 느끼면 된다.</p>
+
+    <p>다음에 언어 모델이 당신의 질문에 답하거나, 추천 엔진이 보고 싶은 것을 추측하거나, 자율주행차가 방향을 조정할 때 — 기억하라. 어딘가에서 도함수가 계산되고, 내리막으로 한 걸음이 내디뎌지고, 함수가 조금 더 작아졌다. 수백만 번 반복되어, 마침내 답이 나타났다. 미적분이, 하강하고 있다.</p>
+  </div>
+
+  <div class="pull-quote reveal">
+    <p>서 있는 곳에서 골짜기는 보이지 않는다. 하지만 발밑의 기울기는 길을 알고 있다. 도함수를 믿어라.</p>
+  </div>
+
+  <div class="section-divider"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- § 4 — The Spiral in the Road                -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="chapter-section" id="s4">
+  <div class="reveal">
+    <div class="section-num">§ 4</div>
+    <h2 class="section-title">도로 위의 <em>나선</em></h2>
+  </div>
+
+  <div class="prose reveal">
+    <p class="prose-drop">고속도로 진입로에 속도를 내며 올라타면 별다른 느낌이 없다 — 차는 직선 도로에서 곡선으로, 문장이 절로 흘러가듯 매끄럽게 미끄러진다. 하지만 도로가 직선에서 원호로 곧장 이어진다고 가정해보자. 곡선이 시작되는 정확한 지점에서, 필요한 핸들 각도가 순간적으로 0에서 유한한 값으로 뛸 것이다. 손은 핸들을 확 돌려야 하고, 타이어는 비명을 지를 것이다. 시속 100킬로미터에서 그 갑작스러움은 목숨을 앗아갈 수 있다. 그래서 고속도로 엔지니어들은 1930년대부터 모든 직선 구간과 원호 사이에 특별한 곡선을 삽입해왔다 — 곡률이 거리에 따라 <span class="hi">선형으로 증가</span>하는 곡선을. 시작점에서는 곡률이 0이고, 직선과 만나는 곳이다. 끝점에서는 완전한 곡률이고, 원과 만나는 곳이다. 핸들은 일정한 속도로 돌아간다. 전환은 감지할 수 없다. 미적분이 당신의 목숨을 지키고 있고, 당신은 알아채지도 못한다.</p>
+
+    <p>이 전환 곡선은 <span class="ac">오일러 나선</span>이며, 클로소이드 또는 코르뉘 나선이라고도 불린다. 레온하르트 오일러가 1744년에 탄성체 — 양 끝에 힘이 가해져 휜 얇은 보의 형태 — 와 관련하여 연구했다. 하지만 그 수학은 더 일찍 등장했다. 오귀스탱 장 프레넬이 1818년에 빛의 회절을 연구하며 같은 적분과 마주쳤다. 이 곡선은 닫힌 형태의 해를 갖지 않는 한 쌍의 적분으로 정의된다. x와 y 좌표를 초등함수로 표현하는 공식을 적을 수 없다. 곡선은 오직 적분으로만 존재한다 — 단순화를 거부하는 미적분이며, 그 거부 때문에 더 아름답다.</p>
+
+    <p>정의하는 성질은 거의 우스울 만큼 단순하다: <span class="hi">곡률이 호 길이와 같다.</span> 나선을 따라 1미터를 걸으면 곡률은 1이다. 2미터를 걸으면 2배가 된다. 10미터를 걸으면 10이다. 이 선형성은 핸들이 일정한 각속도로 돌아간다는 것을 의미한다 — 운전자가 할 수 있는 가장 편안한 동작이다. 롤러코스터 설계자들은 경추 손상을 방지하기 위해 같은 곡선을 사용한다. 철도 엔지니어들은 고속도로 엔지니어들보다 수십 년 먼저 이것을 채택했다. 세계의 모든 고속철도 — 신칸센, TGV, KTX — 는 한 번의 여정에서 수십 번씩 승객을 클로소이드를 통해 실어 나른다.</p>
+  </div>
+
+  <div class="block-quote reveal">
+    <p>"The corrected alignment employs a transition spiral to effect a gradual change from the tangent to the circular curve, and from the circular curve back to the tangent."</p>
+    <div class="bq-attr">— AASHTO, A Policy on Geometric Design of Highways and Streets, 1st ed. (1954)</div>
+  </div>
+
+  <div class="prose reveal">
+    <p>나선을 정의하는 프레넬 적분 — C(t) = ∫cos(πs²/2) ds와 S(t) = ∫sin(πs²/2) ds — 은 수학에서 가장 알아보기 쉬운 형태 중 하나를 만들어낸다. 매개변수적으로 그리면 <span class="ac">코르뉘 나선</span>이 나타난다: 각 반평면의 초점을 향해 안쪽으로 감기는 이중 나선으로, 점점 더 촘촘히 감기지만 결코 도달하지 않는다. 곡률 그 자체가 눈에 보이는 형태로 만들어진 것이다.</p>
+
+    <p>광학에서 같은 적분은 빛이 날카로운 모서리 주위를 어떻게 휘는지 기술한다. 프레넬 회절 — 그림자의 경계에서 보이는 밝고 어두운 띠의 패턴 — 은 코르뉘 나선에서 직접 계산된다. 당신의 차가 미끄러지는 것을 막는 수학이, 그림자가 결코 완벽하게 선명하지 않은 이유도 설명한다. 하나의 적분이, 전혀 다른 두 벌의 제복을 입고 있는 것이다.</p>
+
+    <p>아래 인터랙티브에서 도로를 설계할 수 있다. 직선 구간과 원호가 있고, 이를 연결한다 — 먼저 급격한 접합으로, 그 다음 클로소이드 전환으로. 시뮬레이션된 차가 양쪽을 모두 통과한다. 아래의 곡률 그래프가 차이를 보여준다: 급격한 경우는 계단형 불연속, 클로소이드는 매끈한 경사로다. 두 번째 모드에서는 나선 매개변수를 조절하며 코르뉘 나선이 실시간으로 그려지는 것을 볼 수 있다 — 각 점이 수치 적분으로 계산되며, 암실에서 사진이 나타나듯 적분에서 곡선이 떠오른다.</p>
+  </div>
+
+  <!-- ── interactive: Euler spiral / clothoid ── -->
+  <div class="ibox reveal" id="spiralBox">
+    <div class="ibox-label"><span class="dot"></span> 인터랙티브</div>
+    <div class="ibox-title">클로소이드</div>
+    <div class="ibox-desc">도로 설계 모드와 코르뉘 나선 모드를 전환하세요. 도로 모드에서는 차가 급격한 접합(빨강)과 클로소이드 전환(금색)을 통과합니다. 아래 곡률 그래프가 차이를 보여줍니다. 코르뉘 모드에서는 매개변수를 조절하여 나선이 자라나는 것을 볼 수 있습니다 — 각 점이 프레넬 적분으로 계산됩니다.</div>
+    <canvas id="spiralCanvas" width="700" height="440" data-nopz></canvas>
+    <div class="ibox-controls">
+      <button class="ibox-btn active" id="btnRoadMode" onclick="setSpiralMode('road')">🛣 도로 설계</button>
+      <button class="ibox-btn" id="btnCornuMode" onclick="setSpiralMode('cornu')">🌀 코르뉘 나선</button>
+      <button class="ibox-btn" id="btnDriveRoad" onclick="driveRoad()">▶ 주행</button>
+      <button class="ibox-btn" onclick="resetSpiral()">↺ 초기화</button>
+      <label>전환 길이
+        <input type="range" id="transSlider" min="0" max="1" step="0.01" value="0.5">
+      </label>
+    </div>
+    <div class="ibox-stats">
+      <div class="ibox-stat"><div class="stat-label">곡률 κ</div><div class="stat-value" id="statKappa">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">나선 매개변수</div><div class="stat-value" id="statSpiralA">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">핸들 각도</div><div class="stat-value" id="statSteer">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">횡방향 저크</div><div class="stat-value" id="statJerk">—</div></div>
+    </div>
+  </div>
+
+  <div class="prose reveal">
+    <p>곡률 그래프가 모든 이야기를 들려준다. 전환 없이는 곡률이 0에서 상수로 점프한다 — 무한한 도함수, 무한한 저크다. 승객들이 앞으로 쏠린다. 클로소이드가 있으면 곡률은 매끈한 경사를 오르고, 그 도함수 — 엔지니어들이 저크라 부르는 <span class="hi">곡률의 변화율</span> — 는 유계로 머문다. 전환이 길수록 저크는 부드러워진다. 하지만 긴 전환은 비용이 든다: 더 많은 땅, 더 많은 아스팔트, 더 많은 토공. 고속도로 기하학은 실제 판돈이 걸린 최적화 문제이며, 클로소이드의 미적분이 그 중심에 있다.</p>
+
+    <p>오일러 나선에는 조용히 감동적인 무언가가 있다. 이것은 <span class="ac">적어낼 수 없는</span> 곡선이다 — 수학자들이 시도하지 않았다는 뜻이 아니라, 프레넬 적분이 초등함수가 아니라는 정확한 의미에서 그렇다. 오차함수, 사인 적분, 그리고 소수의 다른 함수들과 함께 특별한 부류에 속한다: 적분으로만 정의되고, 성질을 통해서만 알려지며, 근사로만 계산되는 함수들. 그런데도 이 곡선은 — 적분의 행위로만 존재하는 이 곡선은 — <span class="hi">당신이 고속도로에 합류할 때마다 바퀴 아래 놓인 곡선이다.</span></p>
+
+    <p>미적분은 알아채 달라고 요구하지 않는다. 핸들이 매끄럽게 돌아갈 때, 책상 위의 그림자가 부드럽게 번진 가장자리를 가질 때, 신칸센이 시속 300킬로로 커브를 돌 때 커피를 흘리지 않을 때, 미적분은 자신을 알리지 않는다. 그저 작동할 뿐이다 — 중력이 작동하는 것처럼, 시간이 흐르는 것처럼 — 건설된 세계의 직물 깊숙이 짜여, 그것을 분리하면 모든 것이 풀어질 만큼.</p>
+  </div>
+
+  <div class="section-divider"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- § 5 — The Price of Uncertainty              -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="chapter-section" id="s5">
+  <div class="reveal">
+    <div class="section-num">§ 5</div>
+    <h2 class="section-title">불확실성의 <em>가격</em></h2>
+  </div>
+
+  <div class="prose reveal">
+    <p class="prose-drop">1973년의 어느 봄 아침, 피셔 블랙과 마이런 숄즈가 세계 금융 시스템을 재편할 논문을 발표했다. 그들의 질문은 기만적으로 단순했다: 옵션의 가치는 얼마인가? 옵션은 미래의 특정 날짜에 정해진 가격으로 주식을 살 수 있는 <em>권리</em>를 — 의무가 아닌 — 부여하는 계약이다. 주가가 그 가격 위로 오르면 옵션은 가치가 있다. 그렇지 않으면 옵션은 무가치하게 만료된다. 질문은 이것이다: 미래를 알 수 없는 오늘, 그 계약에 얼마를 지불해야 하는가?</p>
+
+    <p>그들의 답은 미분방정식이었다. 그냥 미분방정식이 아니라 — 열의 흐름, 파동의 전파, 공기 중 연기의 확산을 지배하는 종류인 <span class="ac">편미분방정식</span>이었다. 블랙과 숄즈는 주식과 채권의 포트폴리오를 연속적으로 조정하여 옵션의 위험을 정확히 상쇄하면, 그 결과는 무위험 — 무위험 이자율로 성장해야 하며, 그렇지 않으면 차익거래가 가능하다는 것을 깨달았다. 1940년대 이토의 확률 미적분과 결합된 이 헤징 논증은, 물리학의 열 방정식과 놀랄 만큼 닮은 방정식을 만들어냈다 — 단, <span class="hi">시간이 거꾸로 흐르는</span>.</p>
+
+    <p>열 방정식은 금속 막대를 통해 온도가 퍼지는 방식을 기술한다. 높은 열의 영역이 차가운 이웃으로 확산되며, 점차 평형을 향해 평탄해진다. 블랙–숄즈 방정식도 같은 일을 한다. 다만 확산되는 것은 열이 아니라 — <span class="ac">미래 가격에 대한 불확실성</span>이다. 만기가 멀면 옵션의 가치는 매끄럽고 넓게 퍼져 있다. 무엇이든 일어날 수 있으므로. 만기가 다가오면 불확실성이 붕괴하고 가치는 날카로운 모서리로 뾰족해진다: 옵션이 행사가격 위에 있거나 아래에 있거나. 시간이 거꾸로 흐른다. 확산이 역행한다. 방정식은 이것을 안다.</p>
+  </div>
+
+  <div class="block-quote reveal">
+    <p>"The striking thing about the Black–Scholes formula is that the expected return of the stock does not appear in it. The option price depends on volatility, but not on where the stock is going — only on how much it wanders."</p>
+    <div class="bq-attr">— Emanuel Derman, My Life as a Quant (2004)</div>
+  </div>
+
+  <div class="prose reveal">
+    <p>블랙과 숄즈가 유도한 — 그리고 로버트 머튼이 다른 방법으로 동시에 증명한 — 공식은 미적분 학생이라면 누구나 알아볼 조각들로 만들어져 있다. 확률변수가 임계값 이하로 떨어질 확률을 측정하는 누적정규분포함수. 미래 현금 흐름을 현재로 할인하는 지수함수. 곱셈적 성장을 덧셈적 산술로 바꾸는 자연로그. 그리고 그 심장에, 모든 것을 지배하는 단 하나의 매개변수: <span class="ac">변동성</span>, σ로 표기되며, 주가의 대수 수익률의 표준편차다. 변동성은 방향의 예측이 아니다. 가격이 얼마나 <em>방황</em>하는지의 척도 — 랜덤 워크가 얼마나 격렬하게 미래를 흔드는지의 척도다.</p>
+
+    <p>블랙–숄즈 공식은 숄즈와 머튼에게 1997년 노벨 경제학상을 안겨주었다. 블랙은 2년 전에 세상을 떠난 후였다. 그때 이미 공식은 현대 금융의 산소였다. 시카고옵션거래소(CBOE)는 1973년에 — 논문이 발표된 바로 그 해에 — 개장했고, 10년 안에 거래 현장의 트레이더들은 블랙–숄즈가 탑재된 휴대용 계산기로 실시간으로 옵션 가격을 매기고 있었다. 공식은 단순히 시장을 기술한 것이 아니었다. <span class="hi">공식이 시장이 되었다</span>. 모든 참여자가 같은 방정식을 사용하고 있었기에, 가격은 방정식이 제시하는 값으로 수렴했다.</p>
+
+    <p>하지만 이 방정식의 가장 깊은 교훈은 돈에 관한 것이 아니다. 미적분과 무작위성의 관계에 관한 것이다. <span class="hi">이토 기요시</span>는 전시 일본에서 거의 고립된 채, 뉴턴과 라이프니츠의 고전적 미적분을 브라운 운동 — 1827년 로버트 브라운이 처음 기술하고 1905년 아인슈타인이 설명한, 물속 꽃가루 입자의 불규칙한 떨림 — 에 의해 구동되는 함수로 확장했다. 이토의 미적분은 고전적 유사물이 없는 보정항을 도입했다: 브라운 경로가 너무 거칠기 때문에, 미적분의 통상적인 연쇄법칙이 깨진다. 그 자리에 <span class="ac">이토의 보조정리</span>가 이계도함수에 비례하는 추가 항을 더한다 — 그리고 바로 이 항이 블랙–숄즈 방정식의 확산을 만들어낸다. 이것이 없었다면, 위험의 가격에 대한 공식은 존재하지 않았을 것이다.</p>
+  </div>
+
+  <div class="pull-quote reveal">
+    <p>옵션의 가격은 미래에 대한 추측이 아니다. 모든 가능한 미래에 대한 헤징 비용이며, 시간을 거꾸로 흘려보내는 미분방정식이 계산한 것이다.</p>
+  </div>
+
+  <div class="prose reveal">
+    <p>하지만 주가가 브라운 운동을 따른다는 것은 실제로 무엇을 <em>의미</em>하는가? 현재의 순간에 서서 시간 속을 앞으로 들여다본다고 상상하라. 주식은 어디로든 갈 수 있다. 각각의 가능한 미래는 하나의 경로 — 매 순간 위아래로 떨리는 들쭉날쭉한 방랑의 선이다. 블랙–숄즈 방정식은 <span class="hi">이 모든 경로를 동시에</span> 고려하고, 각각에 확률로 가중치를 매기고, 평균 수익을 계산하여 옵션의 가격을 매긴다. 이것이 몬테카를로 방법이다: 수천 개의 평행 우주를 시뮬레이션하면, 가격은 그 모든 우주에 걸쳐 지불할 것으로 기대되는 금액이다.</p>
+
+    <p>아래 인터랙티브에서 이 평행 우주들을 볼 수 있다. "경로 생성"을 누르면 수백 개의 가능한 미래가 오늘의 가격에서 부채꼴로 펼쳐진다. 각각이 기하 브라운 운동을 추적한다. 오른쪽에서 히스토그램이 스스로 쌓인다: 최종 가격의 분포이며, <span class="ac">로그정규</span> — 대칭이 아니라 비대칭이고, 낮은 확률의 횡재가 길게 늘어진 오른쪽 꼬리를 갖는다. 금색 행사가 선이 옵션의 행사가격을 표시한다. 그 위로 끝나는 경로는 내가격(in the money), 아래의 경로는 무가치하다. 옵션의 가격은 이 모든 평행 세계에 걸친 평균 수익을, 현재로 할인한 것이다. 변동성 슬라이더를 드래그하여 가능성의 원뿔이 확장되거나 축소되는 것을 보라 — 이것이 σ의 의미다, 눈에 보이게 된.</p>
+  </div>
+
+  <!-- ── interactive: Parallel Universes ── -->
+  <div class="ibox reveal" id="bsBox">
+    <div class="ibox-label"><span class="dot"></span> 인터랙티브</div>
+    <div class="ibox-title">평행 우주</div>
+    <div class="ibox-desc">현재에서 수백 개의 가능한 주가 미래가 부채꼴로 펼쳐지는 것을 보세요. 각 경로는 기하 브라운 운동 — 블랙–숄즈 뒤의 수학적 모형입니다. 히스토그램은 최종 가격의 로그정규 분포를 보여줍니다. 행사가 선(금색) 위로 끝나는 경로가 내가격입니다.</div>
+    <canvas id="bsCanvas" width="700" height="480" data-nopz></canvas>
+    <div class="ibox-controls">
+      <button class="ibox-btn active" id="btnSpawn" onclick="spawnPaths()">✦ 경로 생성</button>
+      <button class="ibox-btn" id="btnClearPaths" onclick="clearPaths()">↺ 지우기</button>
+      <label>변동성 σ
+        <input type="range" id="bsSigma" min="0.05" max="0.8" step="0.01" value="0.25">
+      </label>
+      <label>드리프트 μ
+        <input type="range" id="bsMu" min="-0.1" max="0.3" step="0.01" value="0.08">
+      </label>
+    </div>
+    <div class="ibox-controls">
+      <label>행사가 K
+        <input type="range" id="bsK" min="60" max="160" step="1" value="110">
+      </label>
+      <label>시간 범위
+        <input type="range" id="bsT" min="0.25" max="3" step="0.25" value="1">
+      </label>
+      <label>한번에 생성할 경로
+        <input type="range" id="bsN" min="20" max="200" step="10" value="80">
+      </label>
+    </div>
+    <div class="ibox-stats">
+      <div class="ibox-stat"><div class="stat-label">총 경로 수</div><div class="stat-value" id="statPaths">0</div></div>
+      <div class="ibox-stat"><div class="stat-label">내가격 비율</div><div class="stat-value" id="statITM">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">BS 콜 가격</div><div class="stat-value" id="statBSPrice">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">MC 추정치</div><div class="stat-value" id="statMC">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">델타 (Δ)</div><div class="stat-value" id="statDelta">—</div></div>
+    </div>
+  </div>
+
+  <div class="prose reveal">
+    <p>알아챘는가? 경로를 더 많이 생성할수록, 몬테카를로 추정치 — 모든 시뮬레이션된 미래에 걸친 평균 할인 수익 — 가 블랙–숄즈 가격으로 수렴한다. 이것은 우연이 아니다. 적분에 적용된 <span class="ac">큰 수의 법칙</span>이다. 블랙–숄즈 공식은 그 적분을 해석적으로 계산하고, 몬테카를로 방법은 무차별 표본 추출로 계산한다. 둘이 일치하는 것은 같은 질문에 답하고 있기 때문이다: 확률로 가중된 모든 가능한 미래에 걸쳐, 기대 수익은 얼마인가? 공식은 우아하다. 시뮬레이션은 솔직하다. 같은 숫자에 도달한다.</p>
+
+    <p>블랙–숄즈 이야기에는 시적인 아이러니가 있다. 공식은 변동성이 일정하다고 가정한다 — 시장의 랜덤 워크의 거칠기가 결코 변하지 않는다고. 현실의 시장은 이 가정을 극적으로 위반한다. 1987년의 폭락, 1998년의 롱텀캐피털매니지먼트 붕괴(이사회에 숄즈와 머튼 본인이 있었다), 2008년의 금융위기 — 각각은 방정식의 고요한 가정과 시장의 실제 야생성 사이의 간극에 대한 청산이었다. <span class="hi">팻 테일, 변동성 스마일, 레짐 변환</span> — 방정식이 포착할 수 없는 현상들이 정확히 금융 재앙을 일으키는 현상들이다.</p>
+
+    <p>그럼에도 공식은 살아남는다. 완벽해서가 아니라, <span class="ac">최초의 올바른 질문</span>이었기 때문이다. 모든 개선 — 확률적 변동성 모형, 점프-확산 모형, 러프 변동성 — 은 블랙–숄즈에서 시작하여 묻는다: 이 가정을 완화하면 어떻게 되는가? 공식은 최종 답이 아니다. 이후의 모든 답이 표현되는 좌표계다. 이런 면에서 뉴턴의 법칙과 매우 비슷하다: 세부에서는 틀리고, 구조에서는 불가결하며, 숨 쉴 때마다 미적분에 의존한다.</p>
+  </div>
+
+  <div class="section-divider"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- CODA                                        -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="chapter-section" style="padding-top:2rem">
+  <div class="reveal" style="text-align:center;margin-bottom:2rem">
+    <svg width="40" height="40" viewBox="0 0 40 40" style="opacity:.15">
+      <circle cx="20" cy="20" r="18" fill="none" stroke="var(--gold)" stroke-width=".5"/>
+      <circle cx="20" cy="20" r="8" fill="none" stroke="var(--gold)" stroke-width=".5"/>
+      <circle cx="20" cy="20" r="1.5" fill="var(--gold)"/>
+    </svg>
+  </div>
+  <div class="coda reveal">
+    <p>오늘 아침 눈을 떴을 때 미적분은 이미 일하고 있었다 —<br>
+    화면 위의 글자를 그리고,<br>
+    커피를 딱 맞는 온도로 식히고,<br>
+    바퀴 아래 도로를 구부리고,<br>
+    퇴직연금의 위험을 가격 매기고,<br>
+    당신의 질문에 답한 모형을 훈련시키며.</p>
+    <p style="font-family:var(--font-kr)">아무것도 대가를 요구하지 않았다.<br>
+    알아채 달라는 부탁조차 하지 않았다.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- REFERENCES                                  -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="ref-section reveal">
+  <h3 class="ref-heading">참고문헌</h3>
+  <ul class="ref-list">
+    <li><span class="ref-author">Farin, G.,</span> <span class="ref-title">Curves and Surfaces for CAGD: A Practical Guide,</span> <span class="ref-detail">5th ed., Morgan Kaufmann, 2002.</span></li>
+    <li><span class="ref-author">De Casteljau, P.,</span> <span class="ref-title">Courbes et surfaces à pôles,</span> <span class="ref-detail">André Citroën Automobiles SA, Paris (internal report), 1959.</span></li>
+    <li><span class="ref-author">Bézier, P.,</span> <span class="ref-title">Définition numérique des courbes et surfaces I & II,</span> <span class="ref-detail">Automatisme, 11(12):625–632, 1966.</span></li>
+    <li><span class="ref-author">Strang, G.,</span> <span class="ref-title">Calculus,</span> <span class="ref-detail">Wellesley-Cambridge Press, 1991.</span></li>
+    <li><span class="ref-author">Newton, I.,</span> <span class="ref-title">Scala graduum caloris,</span> <span class="ref-detail">Philosophical Transactions of the Royal Society, 22:824–829, 1701.</span></li>
+    <li><span class="ref-author">Rowland, M. & Tozer, T. N.,</span> <span class="ref-title">Clinical Pharmacokinetics and Pharmacodynamics,</span> <span class="ref-detail">4th ed., Lippincott Williams & Wilkins, 2010.</span></li>
+    <li><span class="ref-author">Ruder, S.,</span> <span class="ref-title">An Overview of Gradient Descent Optimization Algorithms,</span> <span class="ref-detail">arXiv:1609.04747, 2016.</span></li>
+    <li><span class="ref-author">Cauchy, A.,</span> <span class="ref-title">Méthode générale pour la résolution des systèmes d'équations simultanées,</span> <span class="ref-detail">Comptes rendus de l'Académie des Sciences, 25:536–538, 1847.</span></li>
+    <li><span class="ref-author">Euler, L.,</span> <span class="ref-title">De curvis elasticis, Additamentum I to Methodus inveniendi,</span> <span class="ref-detail">Lausanne & Geneva, 1744.</span></li>
+    <li><span class="ref-author">Fresnel, A.,</span> <span class="ref-title">Mémoire sur la diffraction de la lumière,</span> <span class="ref-detail">Annales de chimie et de physique, 1:239–281, 1816.</span></li>
+    <li><span class="ref-author">Walton, D. J. & Meek, D. S.,</span> <span class="ref-title">A planar cubic Bézier spiral,</span> <span class="ref-detail">Journal of Computational and Applied Mathematics, 72(1):85–100, 1996.</span></li>
+    <li><span class="ref-author">AASHTO,</span> <span class="ref-title">A Policy on Geometric Design of Highways and Streets,</span> <span class="ref-detail">7th ed., American Association of State Highway and Transportation Officials, 2018.</span></li>
+    <li><span class="ref-author">Goodfellow, I., Bengio, Y. & Courville, A.,</span> <span class="ref-title">Deep Learning,</span> <span class="ref-detail">MIT Press, 2016.</span></li>
+    <li><span class="ref-author">Thompson, D. W.,</span> <span class="ref-title">On Growth and Form,</span> <span class="ref-detail">Cambridge University Press, 1917.</span></li>
+    <li><span class="ref-author">Black, F. & Scholes, M.,</span> <span class="ref-title">The Pricing of Options and Corporate Liabilities,</span> <span class="ref-detail">Journal of Political Economy, 81(3):637–654, 1973.</span></li>
+    <li><span class="ref-author">Merton, R. C.,</span> <span class="ref-title">Theory of Rational Option Pricing,</span> <span class="ref-detail">Bell Journal of Economics and Management Science, 4(1):141–183, 1973.</span></li>
+    <li><span class="ref-author">Itô, K.,</span> <span class="ref-title">On Stochastic Differential Equations,</span> <span class="ref-detail">Memoirs of the American Mathematical Society, 4:1–51, 1951.</span></li>
+    <li><span class="ref-author">Derman, E.,</span> <span class="ref-title">My Life as a Quant: Reflections on Physics and Finance,</span> <span class="ref-detail">Wiley, 2004.</span></li>
+    <li><span class="ref-author">Hull, J. C.,</span> <span class="ref-title">Options, Futures, and Other Derivatives,</span> <span class="ref-detail">11th ed., Pearson, 2022.</span></li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- FOOTER                                      -->
+<!-- ═══════════════════════════════════════════ -->
+<footer>
+  <div style="text-align:center;margin-bottom:2rem;opacity:.35">
+    <p style="font-family:var(--font-mono);font-size:.55rem;letter-spacing:.1em;color:var(--muted);line-height:1.8">
+      모든 시각화는 실시간으로 계산됩니다.<br>
+      녹화도, 사전 렌더링도 없이 — 오직 수학.
+    </p>
+  </div>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study</div>
+    <div class="footer-inst">AI4MATH, KAIST</div>
+    <a class="footer-url" href="https://kimsh.kr">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- NARRATOR                                    -->
+<!-- ═══════════════════════════════════════════ -->
+<button class="narrator-toggle" id="narratorToggle" onclick="toggleNarratorBar()" title="Voice narration">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+</button>
+
+<div class="narrator-bar" id="narratorBar">
+  <div class="narrator-inner">
+    <div class="narrator-controls">
+      <button class="narrator-btn" onclick="narratorPrev()" title="Previous section">⏮</button>
+      <button class="narrator-btn play" id="narratorPlayBtn" onclick="narratorPlayPause()" title="Play / Pause">▶</button>
+      <button class="narrator-btn" onclick="narratorNext()" title="Next section">⏭</button>
+    </div>
+    <div class="narrator-voice-select">
+      <button class="narrator-voice-btn active" id="voiceFemale" onclick="setNarratorVoice('female')">여성</button>
+      <button class="narrator-voice-btn" id="voiceMale" onclick="setNarratorVoice('male')">남성</button>
+    </div>
+    <div class="narrator-progress" id="narratorProgress" onclick="narratorSeek(event)">
+      <div class="narrator-progress-fill" id="narratorProgressFill"></div>
+    </div>
+    <button class="narrator-speed" id="narratorSpeedBtn" onclick="cycleNarratorSpeed()">1×</button>
+    <div class="narrator-status" id="narratorStatus">§1 준비</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- AMBIENT PARTICLES                           -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+(function createParticles(){
+  const colors = ['rgba(201,168,76,','rgba(212,168,83,','rgba(180,150,60,'];
+  for(let i=0;i<22;i++){
+    const p=document.createElement('div');
+    p.className='ambient-particle';
+    const s=Math.random()*3+1.5;
+    const c=colors[Math.floor(Math.random()*colors.length)];
+    p.style.cssText=`left:${Math.random()*100}%;width:${s}px;height:${s}px;
+      background:radial-gradient(circle,${c}0.6) 0%,${c}0) 100%);
+      box-shadow:0 0 ${s*2}px ${c}0.2);
+      animation-duration:${14+Math.random()*20}s;animation-delay:${-Math.random()*22}s`;
+    document.body.appendChild(p);
+  }
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SCROLL REVEAL                               -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+const revealObs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revealObs.unobserve(e.target)}});
+},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+</script>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- HERO ANIMATION — flowing vector field       -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+(function heroAnim(){
+  const c=document.getElementById('heroCanvas');
+  const ctx=c.getContext('2d');
+  let W,H,dpr;
+  let _heroVisible=true, _heroTimer=0, _heroTimeout=300;
+  const NPARTICLES=500;
+  let particles=[];
+  let time=0;
+  let mouseX=0.5,mouseY=0.5;
+
+  function resize(){
+    dpr=window.devicePixelRatio||1;
+    W=c.clientWidth; H=c.clientHeight;
+    c.width=W*dpr; c.height=H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    // reinit particles to new size
+    particles=[];
+    for(let i=0;i<NPARTICLES;i++) spawnParticle(particles,true);
+  }
+
+  function spawnParticle(arr,randomAge){
+    arr.push({
+      x:Math.random()*W, y:Math.random()*H,
+      age:randomAge?Math.random()*300:0,
+      maxAge:180+Math.random()*200,
+      size:0.6+Math.random()*2.0,
+      hue:30+Math.random()*30, // amber to gold
+      sat:40+Math.random()*25,
+      light:45+Math.random()*20,
+      trail:[]
+    });
+  }
+
+  window.addEventListener('resize',resize);
+  resize();
+
+  // vector field: morphing between regimes
+  function field(x,y,t){
+    const nx=x/W-0.5, ny=y/H-0.5;
+    const mx=mouseX-0.5, my=mouseY-0.5;
+    const phase=t*0.00025;
+    const s=Math.sin(phase), cs=Math.cos(phase);
+    // layered: gentle rotation + sinusoidal waves + spiral
+    let vx= Math.sin(ny*3.5+phase)*0.7 + cs*ny*1.8 - mx*0.6;
+    let vy= Math.cos(nx*3.5+phase*1.2)*0.7 - s*nx*1.8 - my*0.6;
+    const r=Math.sqrt(nx*nx+ny*ny);
+    const spiral=Math.sin(r*6-t*0.0015)*0.6;
+    vx += -ny*spiral;
+    vy += nx*spiral;
+    // secondary wave
+    vx += Math.sin(ny*7+phase*2.1)*0.15;
+    vy += Math.cos(nx*7+phase*1.7)*0.15;
+    const mag=Math.sqrt(vx*vx+vy*vy)||1;
+    return{vx:vx/mag,vy:vy/mag,mag};
+  }
+
+  c.addEventListener('mousemove',e=>{
+    const r=c.getBoundingClientRect();
+    mouseX=(e.clientX-r.left)/W;
+    mouseY=(e.clientY-r.top)/H;
+    _heroTimer=0;
+  });
+  c.addEventListener('touchmove',e=>{
+    const r=c.getBoundingClientRect();
+    mouseX=(e.touches[0].clientX-r.left)/W;
+    mouseY=(e.touches[0].clientY-r.top)/H;
+    _heroTimer=0;
+  },{passive:true});
+
+  const heroObs=new IntersectionObserver(entries=>{
+    _heroVisible=entries[0].isIntersecting;
+  },{threshold:0.05});
+  heroObs.observe(c);
+
+  function draw(ts){
+    if(!_heroVisible){requestAnimationFrame(draw);return;}
+    _heroTimer++;
+    if(_heroTimer>_heroTimeout*60){requestAnimationFrame(draw);return;}
+    time=ts;
+
+    // very slow fade — long comet trails
+    ctx.fillStyle='rgba(4,5,12,0.04)';
+    ctx.fillRect(0,0,W,H);
+
+    for(let i=0;i<particles.length;i++){
+      const p=particles[i];
+      const f=field(p.x,p.y,time);
+      const speed=1.0+p.size*0.3;
+      p.x+=f.vx*speed;
+      p.y+=f.vy*speed;
+      p.age++;
+
+      // lifecycle alpha
+      const life=p.age/p.maxAge;
+      const alpha=life<0.08?life/0.08 : life>0.8?(1-(life-0.8)/0.2) : 1;
+
+      if(p.age>p.maxAge||p.x<-20||p.x>W+20||p.y<-20||p.y>H+20){
+        // respawn
+        p.x=Math.random()*W; p.y=Math.random()*H;
+        p.age=0; p.maxAge=180+Math.random()*200;
+        p.hue=30+Math.random()*30;
+        p.size=0.6+Math.random()*2.0;
+        continue;
+      }
+
+      // draw with glow
+      const a=alpha*0.65;
+      const sz=p.size;
+      ctx.shadowColor=`hsla(${p.hue},${p.sat}%,${p.light}%,${a*0.5})`;
+      ctx.shadowBlur=sz*4;
+      ctx.fillStyle=`hsla(${p.hue},${p.sat}%,${p.light}%,${a})`;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,sz,0,Math.PI*2);
+      ctx.fill();
+    }
+    ctx.shadowBlur=0;
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- BÉZIER INTERACTIVE                          -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+(function bezierInteractive(){
+  const c=document.getElementById('bezierCanvas');
+  const ctx=c.getContext('2d');
+  let W,H,dpr;
+  let showConstruction=true, showHodograph=false, animating=false;
+  let animT=0, animDir=1, animSpeed=1;
+
+  // control points (CSS coords)
+  const defaultPts=[
+    {x:80,y:350},{x:200,y:60},{x:500,y:60},{x:620,y:350}
+  ];
+  let pts=defaultPts.map(p=>({...p}));
+  let dragging=-1;
+  let hoverT=-1; // t value at mouse position
+
+  function resize(){
+    dpr=window.devicePixelRatio||1;
+    W=c.clientWidth; H=c.clientHeight;
+    c.width=W*dpr; c.height=H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    draw();
+  }
+  window.addEventListener('resize',resize);
+
+  // lazy init
+  const lazyObs=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting){resize();lazyObs.unobserve(c);}
+  },{threshold:0.05});
+  lazyObs.observe(c);
+
+  // Bézier math
+  function bezier(t,p0,p1,p2,p3){
+    const u=1-t;
+    return{
+      x:u*u*u*p0.x+3*u*u*t*p1.x+3*u*t*t*p2.x+t*t*t*p3.x,
+      y:u*u*u*p0.y+3*u*u*t*p1.y+3*u*t*t*p2.y+t*t*t*p3.y
+    };
+  }
+  function bezierDeriv(t,p0,p1,p2,p3){
+    const u=1-t;
+    return{
+      x:3*(u*u*(p1.x-p0.x)+2*u*t*(p2.x-p1.x)+t*t*(p3.x-p2.x)),
+      y:3*(u*u*(p1.y-p0.y)+2*u*t*(p2.y-p1.y)+t*t*(p3.y-p2.y))
+    };
+  }
+  function bezierDeriv2(t,p0,p1,p2,p3){
+    const u=1-t;
+    return{
+      x:6*(u*(p2.x-2*p1.x+p0.x)+t*(p3.x-2*p2.x+p1.x)),
+      y:6*(u*(p2.y-2*p1.y+p0.y)+t*(p3.y-2*p2.y+p1.y))
+    };
+  }
+  function curveLength(){
+    let len=0;const N=200;
+    for(let i=1;i<=N;i++){
+      const a=bezier((i-1)/N,...pts);
+      const b=bezier(i/N,...pts);
+      len+=Math.sqrt((b.x-a.x)**2+(b.y-a.y)**2);
+    }
+    return len;
+  }
+  function curvature(t){
+    const d=bezierDeriv(t,...pts);
+    const dd=bezierDeriv2(t,...pts);
+    const cross=d.x*dd.y-d.y*dd.x;
+    const speed=Math.pow(d.x*d.x+d.y*d.y,1.5);
+    return speed>0.001?Math.abs(cross)/speed:0;
+  }
+
+  // de Casteljau construction
+  function deCasteljau(t){
+    const [p0,p1,p2,p3]=pts;
+    const u=1-t;
+    const a={x:u*p0.x+t*p1.x, y:u*p0.y+t*p1.y};
+    const b={x:u*p1.x+t*p2.x, y:u*p1.y+t*p2.y};
+    const cc={x:u*p2.x+t*p3.x, y:u*p2.y+t*p3.y};
+    const d={x:u*a.x+t*b.x, y:u*a.y+t*b.y};
+    const e={x:u*b.x+t*cc.x, y:u*b.y+t*cc.y};
+    const f={x:u*d.x+t*e.x, y:u*d.y+t*e.y};
+    return{l1:[a,b,cc],l2:[d,e],point:f};
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const t=animating?animT:(hoverT>=0?hoverT:0.5);
+
+    // control polygon
+    ctx.strokeStyle='rgba(255,255,255,0.08)';
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x,pts[0].y);
+    for(let i=1;i<4;i++) ctx.lineTo(pts[i].x,pts[i].y);
+    ctx.stroke();
+
+    // construction
+    if(showConstruction){
+      const dc=deCasteljau(t);
+      // level 1 lines
+      ctx.strokeStyle='rgba(138,106,191,0.3)';
+      ctx.lineWidth=1;
+      ctx.beginPath();
+      ctx.moveTo(dc.l1[0].x,dc.l1[0].y);
+      ctx.lineTo(dc.l1[1].x,dc.l1[1].y);
+      ctx.lineTo(dc.l1[2].x,dc.l1[2].y);
+      ctx.stroke();
+      // level 2 line
+      ctx.strokeStyle='rgba(201,168,76,0.4)';
+      ctx.beginPath();
+      ctx.moveTo(dc.l2[0].x,dc.l2[0].y);
+      ctx.lineTo(dc.l2[1].x,dc.l2[1].y);
+      ctx.stroke();
+      // level 1 dots
+      dc.l1.forEach(p=>{
+        ctx.fillStyle='rgba(138,106,191,0.6)';
+        ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fill();
+      });
+      // level 2 dots
+      dc.l2.forEach(p=>{
+        ctx.fillStyle='rgba(201,168,76,0.7)';
+        ctx.beginPath();ctx.arc(p.x,p.y,3.5,0,Math.PI*2);ctx.fill();
+      });
+      // point on curve
+      ctx.fillStyle='#fff';
+      ctx.shadowColor='rgba(255,255,255,0.6)';ctx.shadowBlur=10;
+      ctx.beginPath();ctx.arc(dc.point.x,dc.point.y,5,0,Math.PI*2);ctx.fill();
+      ctx.shadowBlur=0;
+    }
+
+    // main curve
+    ctx.strokeStyle='rgba(236,232,224,0.9)';
+    ctx.lineWidth=2.5;
+    ctx.shadowColor='rgba(236,232,224,0.25)';ctx.shadowBlur=12;
+    ctx.beginPath();
+    for(let i=0;i<=200;i++){
+      const p=bezier(i/200,...pts);
+      i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y);
+    }
+    ctx.stroke();
+    ctx.shadowBlur=0;
+
+    // hodograph
+    if(showHodograph){
+      const hOff={x:W-180,y:H-120};
+      const scale=0.15;
+      ctx.save();
+      // hodograph background
+      ctx.fillStyle='rgba(14,17,40,0.7)';
+      ctx.strokeStyle='rgba(255,255,255,0.06)';
+      ctx.lineWidth=1;
+      ctx.beginPath();
+      ctx.roundRect(hOff.x-90,hOff.y-80,180,160,8);
+      ctx.fill();ctx.stroke();
+      ctx.fillStyle='rgba(82,86,106,0.8)';
+      ctx.font='9px "JetBrains Mono"';
+      ctx.fillText('HODOGRAPH (B′)',hOff.x-55,hOff.y-62);
+      // draw hodograph curve
+      ctx.strokeStyle='rgba(201,168,76,0.6)';
+      ctx.lineWidth=1.5;
+      ctx.beginPath();
+      for(let i=0;i<=100;i++){
+        const d=bezierDeriv(i/100,...pts);
+        const px=hOff.x+d.x*scale, py=hOff.y+d.y*scale;
+        i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+      }
+      ctx.stroke();
+      // current velocity
+      const d=bezierDeriv(t,...pts);
+      ctx.fillStyle='var(--gold)';
+      ctx.beginPath();
+      ctx.arc(hOff.x+d.x*scale,hOff.y+d.y*scale,3,0,Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // tangent vector at animation point
+    if(animating||hoverT>=0){
+      const bp=bezier(t,...pts);
+      const bd=bezierDeriv(t,...pts);
+      const mag=Math.sqrt(bd.x*bd.x+bd.y*bd.y);
+      const tScale=40/Math.max(mag,1);
+      ctx.strokeStyle='rgba(201,168,76,0.7)';
+      ctx.lineWidth=1.5;
+      ctx.beginPath();
+      ctx.moveTo(bp.x,bp.y);
+      ctx.lineTo(bp.x+bd.x*tScale,bp.y+bd.y*tScale);
+      ctx.stroke();
+      // arrowhead
+      const ax=bp.x+bd.x*tScale, ay=bp.y+bd.y*tScale;
+      const angle=Math.atan2(bd.y,bd.x);
+      ctx.fillStyle='rgba(201,168,76,0.7)';
+      ctx.beginPath();
+      ctx.moveTo(ax,ay);
+      ctx.lineTo(ax-8*Math.cos(angle-0.4),ay-8*Math.sin(angle-0.4));
+      ctx.lineTo(ax-8*Math.cos(angle+0.4),ay-8*Math.sin(angle+0.4));
+      ctx.fill();
+    }
+
+    // control points
+    pts.forEach((p,i)=>{
+      ctx.fillStyle='var(--gold)';
+      ctx.shadowColor='rgba(201,168,76,0.4)';ctx.shadowBlur=8;
+      ctx.beginPath();ctx.arc(p.x,p.y,7,0,Math.PI*2);ctx.fill();
+      ctx.shadowBlur=0;
+      ctx.fillStyle='rgba(4,5,12,0.8)';
+      ctx.font='bold 8px "JetBrains Mono"';
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText('P'+i,p.x,p.y);
+    });
+
+    // update stats
+    const deriv=bezierDeriv(t,...pts);
+    const speed=Math.sqrt(deriv.x*deriv.x+deriv.y*deriv.y);
+    document.getElementById('statT').textContent=t.toFixed(2);
+    document.getElementById('statLen').textContent=curveLength().toFixed(1)+'px';
+    document.getElementById('statCurv').textContent=curvature(t).toFixed(4);
+    document.getElementById('statSpeed').textContent=speed.toFixed(1);
+  }
+
+  // animation loop
+  function animLoop(){
+    if(!animating) return;
+    animT+=0.004*animDir*animSpeed;
+    if(animT>1){animT=1;animDir=-1;}
+    if(animT<0){animT=0;animDir=1;}
+    draw();
+    requestAnimationFrame(animLoop);
+  }
+
+  // mouse interaction
+  function getMousePos(e){
+    const r=c.getBoundingClientRect();
+    return{x:e.clientX-r.left,y:e.clientY-r.top};
+  }
+  c.addEventListener('mousedown',e=>{
+    const m=getMousePos(e);
+    for(let i=0;i<4;i++){
+      const dx=m.x-pts[i].x, dy=m.y-pts[i].y;
+      if(dx*dx+dy*dy<400){dragging=i;break;}
+    }
+  });
+  c.addEventListener('mousemove',e=>{
+    const m=getMousePos(e);
+    if(dragging>=0){
+      pts[dragging].x=Math.max(10,Math.min(W-10,m.x));
+      pts[dragging].y=Math.max(10,Math.min(H-10,m.y));
+      draw();
+    } else {
+      // find nearest t
+      let bestDist=Infinity,bestT=0;
+      for(let i=0;i<=200;i++){
+        const t=i/200;
+        const p=bezier(t,...pts);
+        const d=(p.x-m.x)**2+(p.y-m.y)**2;
+        if(d<bestDist){bestDist=d;bestT=t;}
+      }
+      hoverT=bestDist<2000?bestT:-1;
+      if(!animating) draw();
+    }
+  });
+  c.addEventListener('mouseup',()=>{dragging=-1;});
+  c.addEventListener('mouseleave',()=>{dragging=-1;hoverT=-1;if(!animating)draw();});
+
+  // touch
+  c.addEventListener('touchstart',e=>{
+    e.preventDefault();
+    const t=e.touches[0];
+    const m=getMousePos(t);
+    for(let i=0;i<4;i++){
+      const dx=m.x-pts[i].x,dy=m.y-pts[i].y;
+      if(dx*dx+dy*dy<800){dragging=i;break;}
+    }
+  },{passive:false});
+  c.addEventListener('touchmove',e=>{
+    e.preventDefault();
+    if(dragging>=0){
+      const m=getMousePos(e.touches[0]);
+      pts[dragging].x=Math.max(10,Math.min(W-10,m.x));
+      pts[dragging].y=Math.max(10,Math.min(H-10,m.y));
+      draw();
+    }
+  },{passive:false});
+  c.addEventListener('touchend',()=>{dragging=-1;});
+
+  // buttons
+  window.toggleConstruction=()=>{
+    showConstruction=!showConstruction;
+    document.getElementById('btnConstruction').classList.toggle('active',showConstruction);
+    draw();
+  };
+  window.toggleHodograph=()=>{
+    showHodograph=!showHodograph;
+    document.getElementById('btnHodograph').classList.toggle('active',showHodograph);
+    draw();
+  };
+  window.toggleAnimate=()=>{
+    animating=!animating;
+    const btn=document.getElementById('btnAnimate');
+    btn.textContent=animating?'⏸ 일시정지':'▶ 재생';
+    btn.classList.toggle('active',animating);
+    if(animating){animT=0;animDir=1;animLoop();}
+    else draw();
+  };
+  window.resetBezier=()=>{
+    pts=defaultPts.map(p=>({...p}));
+    animating=false;animT=0;
+    document.getElementById('btnAnimate').textContent='▶ 재생';
+    document.getElementById('btnAnimate').classList.remove('active');
+    draw();
+  };
+  document.getElementById('animSpeed').addEventListener('input',e=>{
+    animSpeed=parseFloat(e.target.value);
+  });
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- DECAY / GROWTH INTERACTIVE                  -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+(function decayInteractive(){
+  const c=document.getElementById('decayCanvas');
+  if(!c) return;
+  const ctx=c.getContext('2d');
+  let W,H,dpr;
+
+  const presets={
+    coffee:{
+      label:'Coffee Cooling',k:-0.07,y0:90,yEnv:22,
+      unit:'°C',tMax:60,tUnit:'min',
+      window:null,color:'hsl(25,70%,55%)',doseAmt:0
+    },
+    drug:{
+      label:'Drug Concentration',k:-0.18,y0:0,yEnv:0,
+      unit:'mg/L',tMax:48,tUnit:'hr',
+      window:[2,8],color:'hsl(340,60%,55%)',doseAmt:10
+    },
+    battery:{
+      label:'Battery Discharge',k:-0.04,y0:100,yEnv:0,
+      unit:'%',tMax:80,tUnit:'hr',
+      window:null,color:'hsl(130,50%,50%)',doseAmt:0
+    },
+    bacteria:{
+      label:'Bacterial Growth',k:0.35,y0:100,yEnv:0,
+      unit:'cells',tMax:24,tUnit:'hr',
+      window:null,color:'hsl(50,65%,50%)',doseAmt:0
+    },
+    interest:{
+      label:'Compound Interest (5%)',k:0.05,y0:1000,yEnv:0,
+      unit:'$',tMax:50,tUnit:'yr',
+      window:null,color:'hsl(200,55%,50%)',doseAmt:0
+    }
+  };
+
+  let current='coffee';
+  let playing=false;
+  let simTime=0;
+  let history=[]; // {t, y} points
+  let doses=[]; // times when doses were added
+  let simSpeed=1.5;
+  let animId=null;
+
+  // compute y at time t considering doses (for drug mode)
+  function computeY(t){
+    const p=presets[current];
+    if(current==='drug'){
+      // superposition of exponential decays from each dose
+      let total=0;
+      for(const doseT of doses){
+        if(t>=doseT){
+          total+=p.doseAmt*Math.exp(p.k*(t-doseT));
+        }
+      }
+      return total;
+    }
+    if(current==='coffee'){
+      // Newton cooling: y(t) = yEnv + (y0-yEnv)*exp(kt)
+      return p.yEnv+(p.y0-p.yEnv)*Math.exp(p.k*t);
+    }
+    // general: y0*exp(kt)
+    return p.y0*Math.exp(p.k*t);
+  }
+
+  function computeAUC(){
+    // trapezoidal integration of history
+    let auc=0;
+    for(let i=1;i<history.length;i++){
+      auc+=0.5*(history[i-1].y+history[i].y)*(history[i].t-history[i-1].t);
+    }
+    return auc;
+  }
+
+  function resize(){
+    dpr=window.devicePixelRatio||1;
+    W=c.clientWidth;H=c.clientHeight;
+    c.width=W*dpr;c.height=H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    draw();
+  }
+
+  const lazyObs=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting){resize();lazyObs.unobserve(c);}
+  },{threshold:0.05});
+  lazyObs.observe(c);
+  window.addEventListener('resize',resize);
+
+  function getYRange(){
+    const p=presets[current];
+    if(current==='bacteria') return{min:0,max:Math.max(p.y0*Math.exp(p.k*p.tMax),500)};
+    if(current==='interest') return{min:0,max:p.y0*Math.exp(p.k*p.tMax)*1.1};
+    if(current==='drug') return{min:0,max:Math.max(15,Math.max(...history.map(h=>h.y),10)*1.2)};
+    if(current==='coffee') return{min:0,max:p.y0*1.1};
+    return{min:0,max:p.y0*1.1};
+  }
+
+  const PAD={l:60,r:20,t:30,b:40};
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const p=presets[current];
+    const yr=getYRange();
+    const plotW=W-PAD.l-PAD.r, plotH=H-PAD.t-PAD.b;
+
+    function tx(t){return PAD.l+t/p.tMax*plotW;}
+    function ty(y){return PAD.t+plotH-(y-yr.min)/(yr.max-yr.min)*plotH;}
+
+    // axes
+    ctx.strokeStyle='rgba(255,255,255,0.08)';
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.moveTo(PAD.l,PAD.t);ctx.lineTo(PAD.l,H-PAD.b);ctx.lineTo(W-PAD.r,H-PAD.b);
+    ctx.stroke();
+
+    // grid lines
+    ctx.fillStyle='rgba(82,86,106,0.7)';
+    ctx.font='9px "JetBrains Mono"';
+    ctx.textAlign='center';
+    const nTicksX=6;
+    for(let i=0;i<=nTicksX;i++){
+      const t=p.tMax*i/nTicksX;
+      const x=tx(t);
+      ctx.strokeStyle='rgba(255,255,255,0.03)';
+      ctx.beginPath();ctx.moveTo(x,PAD.t);ctx.lineTo(x,H-PAD.b);ctx.stroke();
+      ctx.fillText(t.toFixed(0),x,H-PAD.b+14);
+    }
+    ctx.fillText(p.tUnit,W-PAD.r,H-PAD.b+14);
+
+    ctx.textAlign='right';
+    const nTicksY=5;
+    for(let i=0;i<=nTicksY;i++){
+      const y=yr.min+(yr.max-yr.min)*i/nTicksY;
+      const yy=ty(y);
+      ctx.strokeStyle='rgba(255,255,255,0.03)';
+      ctx.beginPath();ctx.moveTo(PAD.l,yy);ctx.lineTo(W-PAD.r,yy);ctx.stroke();
+      let label=y.toFixed(0);
+      if(yr.max>9999) label=(y/1000).toFixed(1)+'k';
+      ctx.fillText(label,PAD.l-8,yy+3);
+    }
+
+    // therapeutic window
+    if(p.window){
+      const y1=ty(p.window[1]),y2=ty(p.window[0]);
+      ctx.fillStyle='rgba(90,154,114,0.08)';
+      ctx.fillRect(PAD.l,y1,plotW,y2-y1);
+      ctx.strokeStyle='rgba(90,154,114,0.25)';
+      ctx.setLineDash([4,4]);
+      ctx.beginPath();ctx.moveTo(PAD.l,y1);ctx.lineTo(W-PAD.r,y1);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(PAD.l,y2);ctx.lineTo(W-PAD.r,y2);ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle='rgba(90,154,114,0.5)';
+      ctx.font='8px "JetBrains Mono"';
+      ctx.textAlign='left';
+      ctx.fillText('effective',PAD.l+4,y2-4);
+      ctx.fillText('toxic',PAD.l+4,y1+12);
+    }
+
+    // dose markers
+    if(current==='drug'){
+      ctx.fillStyle='rgba(201,168,76,0.15)';
+      doses.forEach(dt=>{
+        if(dt<=p.tMax){
+          const x=tx(dt);
+          ctx.fillRect(x-1,PAD.t,2,plotH);
+        }
+      });
+    }
+
+    // environment line (coffee)
+    if(current==='coffee'){
+      const yRoom=ty(p.yEnv);
+      ctx.strokeStyle='rgba(201,168,76,0.2)';
+      ctx.setLineDash([6,4]);
+      ctx.beginPath();ctx.moveTo(PAD.l,yRoom);ctx.lineTo(W-PAD.r,yRoom);ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle='rgba(201,168,76,0.4)';
+      ctx.font='8px "JetBrains Mono"';ctx.textAlign='left';
+      ctx.fillText('room temp',PAD.l+4,yRoom-4);
+    }
+
+    // full theoretical curve (faint)
+    ctx.strokeStyle='rgba(255,255,255,0.06)';
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    const N=300;
+    for(let i=0;i<=N;i++){
+      const t=p.tMax*i/N;
+      const y=computeY(t);
+      const px=tx(t),py=ty(Math.max(yr.min,Math.min(yr.max,y)));
+      i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+    }
+    ctx.stroke();
+
+    // traced history
+    if(history.length>1){
+      // area fill under curve
+      ctx.fillStyle=p.color.replace(')',',0.04)').replace('hsl','hsla');
+      ctx.beginPath();
+      ctx.moveTo(tx(history[0].t),ty(0));
+      history.forEach((h)=>{
+        const px=tx(h.t),py=ty(Math.max(yr.min,Math.min(yr.max,h.y)));
+        ctx.lineTo(px,py);
+      });
+      ctx.lineTo(tx(history[history.length-1].t),ty(0));
+      ctx.closePath();ctx.fill();
+
+      ctx.strokeStyle=p.color;
+      ctx.lineWidth=2.5;
+      ctx.shadowColor=p.color;ctx.shadowBlur=10;
+      ctx.beginPath();
+      history.forEach((h,i)=>{
+        const px=tx(h.t),py=ty(Math.max(yr.min,Math.min(yr.max,h.y)));
+        i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+      });
+      ctx.stroke();
+      ctx.shadowBlur=0;
+
+      // current point
+      const last=history[history.length-1];
+      const lx=tx(last.t),ly=ty(Math.max(yr.min,Math.min(yr.max,last.y)));
+      ctx.fillStyle='#fff';
+      ctx.shadowColor='rgba(255,255,255,0.7)';ctx.shadowBlur=12;
+      ctx.beginPath();ctx.arc(lx,ly,4.5,0,Math.PI*2);ctx.fill();
+      ctx.shadowBlur=0;
+    }
+
+    // label
+    ctx.fillStyle='rgba(236,232,224,0.6)';
+    ctx.font='11px "Fraunces"';ctx.textAlign='left';
+    ctx.fillText(p.label,PAD.l+8,PAD.t+16);
+
+    // stats
+    const curY=history.length?history[history.length-1].y:computeY(0);
+    const halfLife=p.k<0?(Math.LN2/Math.abs(p.k)):p.k>0?(Math.LN2/p.k):'∞';
+    document.getElementById('statVal').textContent=
+      curY>9999?(curY/1000).toFixed(1)+'k':curY.toFixed(1)+' '+p.unit;
+    document.getElementById('statHalf').textContent=
+      typeof halfLife==='number'?halfLife.toFixed(1)+' '+p.tUnit:'∞';
+    document.getElementById('statTime').textContent=simTime.toFixed(1)+' '+p.tUnit;
+    const auc=computeAUC();
+    document.getElementById('statAUC').textContent=
+      auc>9999?(auc/1000).toFixed(1)+'k':auc.toFixed(1);
+  }
+
+  function step(){
+    const p=presets[current];
+    const dt=0.05*simSpeed;
+    simTime+=dt;
+    if(simTime>p.tMax){
+      playing=false;
+      document.getElementById('btnPlayDecay').textContent='▶ 재생';
+      document.getElementById('btnPlayDecay').classList.remove('active');
+      return;
+    }
+    const y=computeY(simTime);
+    history.push({t:simTime,y});
+    draw();
+    if(playing) animId=requestAnimationFrame(step);
+  }
+
+  function initPreset(){
+    const p=presets[current];
+    simTime=0;
+    history=[];
+    doses=[];
+    if(current==='drug'){
+      doses.push(0);
+      document.getElementById('btnDose').style.display='';
+    } else {
+      document.getElementById('btnDose').style.display='none';
+    }
+    history.push({t:0,y:computeY(0)});
+    playing=false;
+    if(animId) cancelAnimationFrame(animId);
+    document.getElementById('btnPlayDecay').textContent='▶ 재생';
+    document.getElementById('btnPlayDecay').classList.remove('active');
+    draw();
+  }
+
+  window.setPreset=function(name){
+    current=name;
+    // update button states
+    Object.keys(presets).forEach(k=>{
+      const btn=document.getElementById('preset'+k.charAt(0).toUpperCase()+k.slice(1));
+      if(btn) btn.classList.toggle('active',k===name);
+    });
+    initPreset();
+  };
+
+  window.addDose=function(){
+    if(current!=='drug') return;
+    doses.push(simTime);
+    // recompute current point
+    const y=computeY(simTime);
+    history.push({t:simTime,y});
+    draw();
+  };
+
+  window.togglePlayDecay=function(){
+    playing=!playing;
+    const btn=document.getElementById('btnPlayDecay');
+    btn.textContent=playing?'⏸ 일시정지':'▶ 재생';
+    btn.classList.toggle('active',playing);
+    if(playing) step();
+  };
+
+  window.resetDecay=function(){
+    if(animId) cancelAnimationFrame(animId);
+    initPreset();
+  };
+
+  document.getElementById('decaySpeed').addEventListener('input',e=>{
+    simSpeed=parseFloat(e.target.value);
+  });
+
+  // start with coffee
+  initPreset();
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- GRADIENT DESCENT INTERACTIVE                -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+(function gradInteractive(){
+  const c=document.getElementById('gradCanvas');
+  if(!c) return;
+  const ctx=c.getContext('2d');
+  let W,H,dpr;
+  let mode='2d'; // '2d' or '1d'
+  let useMomentum=false;
+  let lr=0.03;
+  let ball=null; // {x,y} in function space
+  let velocity={x:0,y:0};
+  let trail=[];
+  let steps=0;
+  let animId=null;
+  let running=false;
+
+  // 1D draw mode
+  let drawPts=[];
+  let ball1D=null; // {x, vx}
+
+  const PAD={l:10,r:10,t:10,b:10};
+
+  // 2D landscape function: two Gaussians + a saddle
+  // f(x,y) domain ~ [-3,3] x [-3,3]
+  function f2d(x,y){
+    const g1=2.5*Math.exp(-((x-1)**2+(y-1)**2)/0.8);
+    const g2=3.0*Math.exp(-((x+1.2)**2+(y+0.8)**2)/0.6);
+    const g3=1.5*Math.exp(-((x-0.3)**2+(y+1.5)**2)/1.0);
+    const bowl=0.08*(x*x+y*y);
+    return -(g1+g2+g3)+bowl+4.0;
+  }
+  function grad2d(x,y){
+    const eps=0.001;
+    return{
+      x:(f2d(x+eps,y)-f2d(x-eps,y))/(2*eps),
+      y:(f2d(x,y+eps)-f2d(x,y-eps))/(2*eps)
+    };
+  }
+
+  // mapping: function space <-> canvas
+  const RANGE=3.2;
+  function fx2c(x){return PAD.l+(x+RANGE)/(2*RANGE)*(W-PAD.l-PAD.r);}
+  function fy2c(y){return PAD.t+(y+RANGE)/(2*RANGE)*(H-PAD.t-PAD.b);}
+  function fc2x(cx){return (cx-PAD.l)/(W-PAD.l-PAD.r)*(2*RANGE)-RANGE;}
+  function fc2y(cy){return (cy-PAD.t)/(H-PAD.t-PAD.b)*(2*RANGE)-RANGE;}
+
+  // 1D: spline through drawPts
+  function f1d(x){
+    if(drawPts.length<2) return 0;
+    // linear interpolation with smoothing
+    const sorted=[...drawPts].sort((a,b)=>a.x-b.x);
+    if(x<=sorted[0].x) return sorted[0].y;
+    if(x>=sorted[sorted.length-1].x) return sorted[sorted.length-1].y;
+    for(let i=0;i<sorted.length-1;i++){
+      if(x>=sorted[i].x && x<=sorted[i+1].x){
+        const t=(x-sorted[i].x)/(sorted[i+1].x-sorted[i].x);
+        // smooth hermite
+        const t2=t*t, t3=t2*t;
+        const h1=2*t3-3*t2+1, h2=t3-2*t2+t, h3=-2*t3+3*t2, h4=t3-t2;
+        const m0=i>0?(sorted[i+1].y-sorted[i-1].y)/(sorted[i+1].x-sorted[i-1].x)*
+          (sorted[i+1].x-sorted[i].x):0;
+        const m1=i<sorted.length-2?(sorted[i+2].y-sorted[i].y)/(sorted[i+2].x-sorted[i].x)*
+          (sorted[i+1].x-sorted[i].x):0;
+        return h1*sorted[i].y+h2*m0+h3*sorted[i+1].y+h4*m1;
+      }
+    }
+    return 0;
+  }
+  function grad1d(x){
+    const eps=0.002;
+    return (f1d(x+eps)-f1d(x-eps))/(2*eps);
+  }
+
+  function resize(){
+    dpr=window.devicePixelRatio||1;
+    W=c.clientWidth;H=c.clientHeight;
+    c.width=W*dpr;c.height=H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    draw();
+  }
+
+  const lazyObs=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting){resize();lazyObs.unobserve(c);}
+  },{threshold:0.05});
+  lazyObs.observe(c);
+  window.addEventListener('resize',resize);
+
+  // precompute 2D heatmap
+  let heatmapData=null;
+  function buildHeatmap(){
+    const res=2;
+    const cols=Math.ceil(W/res), rows=Math.ceil(H/res);
+    const img=ctx.createImageData(cols,rows);
+    let fmin=Infinity,fmax=-Infinity;
+    const vals=new Float32Array(cols*rows);
+    for(let j=0;j<rows;j++){
+      for(let i=0;i<cols;i++){
+        const x=fc2x(i*res+res/2), y=fc2y(j*res+res/2);
+        const v=f2d(x,y);
+        vals[j*cols+i]=v;
+        if(v<fmin)fmin=v;if(v>fmax)fmax=v;
+      }
+    }
+    for(let j=0;j<rows;j++){
+      for(let i=0;i<cols;i++){
+        const idx=(j*cols+i)*4;
+        const t=(vals[j*cols+i]-fmin)/(fmax-fmin);
+        // color ramp: deep indigo → teal → gold → warm cream
+        let r,g,b;
+        if(t<0.25){const s=t/0.25;r=6+s*10;g=8+s*45;b=35+s*55;}
+        else if(t<0.5){const s=(t-0.25)/0.25;r=16+s*40;g=53+s*50;b=90+s*(-20);}
+        else if(t<0.75){const s=(t-0.5)/0.25;r=56+s*140;g=103+s*55;b=70-s*25;}
+        else{const s=(t-0.75)/0.25;r=196+s*40;g=158+s*74;b=45+s*40;}
+        img.data[idx]=r;img.data[idx+1]=g;img.data[idx+2]=b;img.data[idx+3]=255;
+      }
+    }
+    heatmapData={img,cols,rows,res,fmin,fmax};
+  }
+
+  function drawContours(){
+    if(!heatmapData) return;
+    const{fmin,fmax}=heatmapData;
+    const nLevels=12;
+    ctx.strokeStyle='rgba(255,255,255,0.1)';
+    ctx.lineWidth=0.5;
+    // simple marching: horizontal scan
+    const step=3;
+    for(let lev=0;lev<nLevels;lev++){
+      const val=fmin+(fmax-fmin)*(lev+1)/(nLevels+1);
+      for(let cy=PAD.t;cy<H-PAD.b;cy+=step){
+        let prevV=f2d(fc2x(PAD.l),fc2y(cy));
+        for(let cx=PAD.l+step;cx<W-PAD.r;cx+=step){
+          const curV=f2d(fc2x(cx),fc2y(cy));
+          if((prevV-val)*(curV-val)<0){
+            ctx.fillStyle='rgba(255,255,255,0.12)';
+            ctx.fillRect(cx,cy,1,1);
+          }
+          prevV=curV;
+        }
+      }
+    }
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    if(mode==='2d'){
+      // heatmap
+      if(!heatmapData||heatmapData.cols!==Math.ceil(W/2)) buildHeatmap();
+      if(heatmapData){
+        const tmp=document.createElement('canvas');
+        tmp.width=heatmapData.cols;tmp.height=heatmapData.rows;
+        tmp.getContext('2d').putImageData(heatmapData.img,0,0);
+        ctx.imageSmoothingEnabled=true;
+        ctx.drawImage(tmp,0,0,W,H);
+      }
+      drawContours();
+
+      // trail
+      if(trail.length>1){
+        ctx.strokeStyle='rgba(236,232,224,0.5)';
+        ctx.lineWidth=1.5;
+        ctx.setLineDash([3,3]);
+        ctx.beginPath();
+        trail.forEach((p,i)=>{
+          const cx=fx2c(p.x),cy=fy2c(p.y);
+          i===0?ctx.moveTo(cx,cy):ctx.lineTo(cx,cy);
+        });
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // trail dots
+        trail.forEach((p,i)=>{
+          const cx=fx2c(p.x),cy=fy2c(p.y);
+          const alpha=0.15+0.85*(i/trail.length);
+          ctx.fillStyle=`rgba(201,168,76,${alpha})`;
+          ctx.beginPath();ctx.arc(cx,cy,2,0,Math.PI*2);ctx.fill();
+        });
+      }
+
+      // ball
+      if(ball){
+        const cx=fx2c(ball.x),cy=fy2c(ball.y);
+        // gradient arrow
+        const g=grad2d(ball.x,ball.y);
+        const gMag=Math.sqrt(g.x*g.x+g.y*g.y);
+        if(gMag>0.01){
+          const arrowScale=25/Math.max(gMag,0.5);
+          const ax=cx-g.x*arrowScale, ay=cy-g.y*arrowScale;
+          ctx.strokeStyle='rgba(201,168,76,0.6)';
+          ctx.lineWidth=1.5;
+          ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(ax,ay);ctx.stroke();
+          // arrowhead
+          const angle=Math.atan2(-g.y,-g.x);
+          ctx.fillStyle='rgba(201,168,76,0.6)';
+          ctx.beginPath();ctx.moveTo(ax,ay);
+          ctx.lineTo(ax-7*Math.cos(angle-0.4),ay-7*Math.sin(angle-0.4));
+          ctx.lineTo(ax-7*Math.cos(angle+0.4),ay-7*Math.sin(angle+0.4));ctx.fill();
+        }
+        // ball glow
+        ctx.fillStyle='#fff';
+        ctx.shadowColor='rgba(255,255,255,0.7)';ctx.shadowBlur=12;
+        ctx.beginPath();ctx.arc(cx,cy,5,0,Math.PI*2);ctx.fill();
+        ctx.shadowBlur=0;
+      }
+
+      // labels
+      ctx.fillStyle='rgba(82,86,106,0.6)';
+      ctx.font='8px "JetBrains Mono"';
+      ctx.textAlign='left';
+      ctx.fillText('click to place ball',10,H-8);
+
+    } else {
+      // 1D mode
+      const plotL=50,plotR=W-20,plotT=40,plotB=H-40;
+      const plotW=plotR-plotL, plotH=plotB-plotT;
+
+      // axes
+      ctx.strokeStyle='rgba(255,255,255,0.08)';
+      ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(plotL,plotT);ctx.lineTo(plotL,plotB);ctx.lineTo(plotR,plotB);ctx.stroke();
+
+      if(drawPts.length>=2){
+        // function curve
+        ctx.strokeStyle='rgba(236,232,224,0.5)';
+        ctx.lineWidth=2;
+        ctx.beginPath();
+        const sorted=[...drawPts].sort((a,b)=>a.x-b.x);
+        const xMin=sorted[0].x,xMax=sorted[sorted.length-1].x;
+        // y range
+        let yMin=Infinity,yMax=-Infinity;
+        for(let i=0;i<=200;i++){
+          const x=xMin+(xMax-xMin)*i/200;
+          const y=f1d(x);
+          if(y<yMin)yMin=y;if(y>yMax)yMax=y;
+        }
+        const yPad=(yMax-yMin)*0.15||1;
+        yMin-=yPad;yMax+=yPad;
+
+        function t1x(x){return plotL+(x-xMin)/(xMax-xMin)*plotW;}
+        function t1y(y){return plotT+(1-(y-yMin)/(yMax-yMin))*plotH;}
+
+        for(let i=0;i<=300;i++){
+          const x=xMin+(xMax-xMin)*i/300;
+          const y=f1d(x);
+          const cx=t1x(x),cy=t1y(y);
+          i===0?ctx.moveTo(cx,cy):ctx.lineTo(cx,cy);
+        }
+        ctx.stroke();
+
+        // draw pts
+        drawPts.forEach(p=>{
+          ctx.fillStyle='rgba(138,106,191,0.5)';
+          ctx.beginPath();ctx.arc(t1x(p.x),t1y(p.y),4,0,Math.PI*2);ctx.fill();
+        });
+
+        // 1D ball
+        if(ball1D){
+          const bx=ball1D.x;
+          const by=f1d(bx);
+          const cx=t1x(bx),cy=t1y(by);
+
+          // trail
+          if(trail.length>1){
+            ctx.strokeStyle='rgba(201,168,76,0.3)';
+            ctx.lineWidth=1;
+            ctx.setLineDash([2,2]);
+            ctx.beginPath();
+            trail.forEach((p,i)=>{
+              const px=t1x(p.x),py=t1y(p.y);
+              i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+            });
+            ctx.stroke();
+            ctx.setLineDash([]);
+          }
+
+          // tangent line
+          const g=grad1d(bx);
+          const tangentLen=40;
+          const dx=tangentLen/Math.sqrt(1+g*g);
+          ctx.strokeStyle='rgba(201,168,76,0.5)';
+          ctx.lineWidth=1;
+          ctx.beginPath();
+          ctx.moveTo(t1x(bx-dx*(xMax-xMin)/plotW),t1y(by-g*dx*(xMax-xMin)/plotW));
+          ctx.lineTo(t1x(bx+dx*(xMax-xMin)/plotW),t1y(by+g*dx*(xMax-xMin)/plotW));
+          ctx.stroke();
+
+          // ball
+          ctx.fillStyle='#fff';
+          ctx.shadowColor='rgba(255,255,255,0.7)';ctx.shadowBlur=10;
+          ctx.beginPath();ctx.arc(cx,cy,5,0,Math.PI*2);ctx.fill();
+          ctx.shadowBlur=0;
+        }
+      }
+
+      ctx.fillStyle='rgba(82,86,106,0.6)';
+      ctx.font='8px "JetBrains Mono"';
+      ctx.textAlign='left';
+      ctx.fillText(drawPts.length<2?'click to draw landscape':'click curve to place ball · right-click to add points',10,H-8);
+    }
+
+    updateStats();
+  }
+
+  function updateStats(){
+    if(mode==='2d' && ball){
+      const g=grad2d(ball.x,ball.y);
+      const gMag=Math.sqrt(g.x*g.x+g.y*g.y);
+      document.getElementById('statPos').textContent=`(${ball.x.toFixed(2)}, ${ball.y.toFixed(2)})`;
+      document.getElementById('statGrad').textContent=gMag.toFixed(3);
+      document.getElementById('statSteps').textContent=steps;
+      document.getElementById('statHeight').textContent=f2d(ball.x,ball.y).toFixed(3);
+    } else if(mode==='1d' && ball1D){
+      const g=grad1d(ball1D.x);
+      document.getElementById('statPos').textContent=ball1D.x.toFixed(3);
+      document.getElementById('statGrad').textContent=g.toFixed(3);
+      document.getElementById('statSteps').textContent=steps;
+      document.getElementById('statHeight').textContent=f1d(ball1D.x).toFixed(3);
+    } else {
+      document.getElementById('statPos').textContent='—';
+      document.getElementById('statGrad').textContent='—';
+      document.getElementById('statSteps').textContent=steps;
+      document.getElementById('statHeight').textContent='—';
+    }
+  }
+
+  function stepGrad(){
+    if(mode==='2d' && ball){
+      const g=grad2d(ball.x,ball.y);
+      const gMag=Math.sqrt(g.x*g.x+g.y*g.y);
+      if(gMag<0.0005){stopGrad();return;}
+      if(useMomentum){
+        const mu=0.9;
+        velocity.x=mu*velocity.x-lr*g.x;
+        velocity.y=mu*velocity.y-lr*g.y;
+        ball.x+=velocity.x;
+        ball.y+=velocity.y;
+      } else {
+        ball.x-=lr*g.x;
+        ball.y-=lr*g.y;
+      }
+      // clamp
+      ball.x=Math.max(-RANGE,Math.min(RANGE,ball.x));
+      ball.y=Math.max(-RANGE,Math.min(RANGE,ball.y));
+      trail.push({x:ball.x,y:ball.y});
+      if(trail.length>500) trail.shift();
+      steps++;
+    } else if(mode==='1d' && ball1D && drawPts.length>=2){
+      const g=grad1d(ball1D.x);
+      if(Math.abs(g)<0.0005){stopGrad();return;}
+      const sorted=[...drawPts].sort((a,b)=>a.x-b.x);
+      if(useMomentum){
+        ball1D.vx=0.9*ball1D.vx-lr*g*3;
+        ball1D.x+=ball1D.vx;
+      } else {
+        ball1D.x-=lr*g*3;
+      }
+      ball1D.x=Math.max(sorted[0].x,Math.min(sorted[sorted.length-1].x,ball1D.x));
+      trail.push({x:ball1D.x,y:f1d(ball1D.x)});
+      if(trail.length>500) trail.shift();
+      steps++;
+    }
+    draw();
+    if(running) animId=requestAnimationFrame(stepGrad);
+  }
+
+  function stopGrad(){
+    running=false;
+    if(animId) cancelAnimationFrame(animId);
+  }
+
+  // click handler
+  c.addEventListener('click',e=>{
+    const r=c.getBoundingClientRect();
+    const cx=e.clientX-r.left, cy=e.clientY-r.top;
+
+    if(mode==='2d'){
+      ball={x:fc2x(cx),y:fc2y(cy)};
+      velocity={x:0,y:0};
+      trail=[{x:ball.x,y:ball.y}];
+      steps=0;
+      running=true;
+      stepGrad();
+    } else {
+      if(drawPts.length<2){
+        // add draw points
+        const plotL=50,plotR=W-20,plotT=40,plotB=H-40;
+        const nx=(cx-plotL)/(plotR-plotL);
+        const ny=1-(cy-plotT)/(plotB-plotT);
+        drawPts.push({x:nx*4,y:ny*4});
+        draw();
+      } else {
+        // place ball on curve
+        const plotL=50,plotR=W-20;
+        const sorted=[...drawPts].sort((a,b)=>a.x-b.x);
+        const xMin=sorted[0].x,xMax=sorted[sorted.length-1].x;
+        const bx=xMin+(cx-plotL)/(plotR-plotL)*(xMax-xMin);
+        ball1D={x:Math.max(xMin,Math.min(xMax,bx)),vx:0};
+        trail=[{x:ball1D.x,y:f1d(ball1D.x)}];
+        steps=0;
+        running=true;
+        stepGrad();
+      }
+    }
+  });
+
+  c.addEventListener('contextmenu',e=>{
+    e.preventDefault();
+    if(mode==='1d'){
+      const r=c.getBoundingClientRect();
+      const cx=e.clientX-r.left,cy=e.clientY-r.top;
+      const plotL=50,plotR=W-20,plotT=40,plotB=H-40;
+      const nx=(cx-plotL)/(plotR-plotL);
+      const ny=1-(cy-plotT)/(plotB-plotT);
+      drawPts.push({x:nx*4,y:ny*4});
+      ball1D=null;trail=[];steps=0;
+      draw();
+    }
+  });
+
+  window.setGradMode=function(m){
+    mode=m;
+    stopGrad();
+    ball=null;ball1D=null;trail=[];steps=0;
+    if(m==='1d') drawPts=[];
+    heatmapData=null;
+    document.getElementById('btnMode2D').classList.toggle('active',m==='2d');
+    document.getElementById('btnMode1D').classList.toggle('active',m==='1d');
+    draw();
+  };
+  window.toggleMomentum=function(){
+    useMomentum=!useMomentum;
+    document.getElementById('btnMomentum').classList.toggle('active',useMomentum);
+  };
+  window.resetGrad=function(){
+    stopGrad();
+    ball=null;ball1D=null;trail=[];steps=0;
+    if(mode==='1d') drawPts=[];
+    draw();
+  };
+  document.getElementById('lrSlider').addEventListener('input',e=>{
+    lr=parseFloat(e.target.value);
+  });
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- EULER SPIRAL / CLOTHOID INTERACTIVE         -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+(function spiralInteractive(){
+  const c=document.getElementById('spiralCanvas');
+  if(!c) return;
+  const ctx=c.getContext('2d');
+  let W,H,dpr;
+  let spiralMode='road'; // 'road' or 'cornu'
+  let transLen=0.5; // 0..1 normalized transition
+  let driving=false;
+  let driveT=0;
+  let driveAnim=null;
+
+  // Fresnel integrals by Simpson's rule
+  function fresnel(t,N){
+    N=N||200;
+    const h=t/N;
+    let C=0,S=0;
+    for(let i=0;i<=N;i++){
+      const s=i*h;
+      const arg=Math.PI*s*s/2;
+      const w=(i===0||i===N)?1:(i%2===0?2:4);
+      C+=w*Math.cos(arg);
+      S+=w*Math.sin(arg);
+    }
+    C*=h/3;S*=h/3;
+    return{C,S};
+  }
+
+  // Generate clothoid points for a given max parameter
+  function clothoidPts(tMax,N){
+    const pts=[];
+    for(let i=0;i<=N;i++){
+      const t=tMax*i/N;
+      const f=fresnel(t);
+      pts.push({x:f.C,y:f.S,t});
+    }
+    return pts;
+  }
+
+  // Road geometry: straight → transition → circle
+  // transition length = transLen (0 = abrupt, 1 = full clothoid)
+  function buildRoad(){
+    const roadLen=600;
+    const circleR=120;
+    const circleK=1/circleR;
+    const straightLen=roadLen*0.3;
+    const arcLen=roadLen*0.35;
+    const maxTrans=roadLen*0.35;
+    const tLen=maxTrans*transLen;
+    const N=300;
+
+    // abrupt road (red): straight then circle
+    const abrupt=[];
+    let ax=0,ay=0,aAngle=0;
+    const stepA=roadLen/N;
+    for(let i=0;i<=N;i++){
+      const s=i*stepA;
+      let k=0;
+      if(s>straightLen) k=circleK;
+      abrupt.push({x:ax,y:ay,k,s});
+      aAngle+=k*stepA;
+      ax+=Math.cos(aAngle)*stepA;
+      ay+=Math.sin(aAngle)*stepA;
+    }
+
+    // clothoid road (gold): straight → clothoid → circle
+    const smooth=[];
+    let sx=0,sy=0,sAngle=0;
+    const stepS=roadLen/N;
+    for(let i=0;i<=N;i++){
+      const s=i*stepS;
+      let k=0;
+      if(tLen<0.01){
+        // almost abrupt
+        if(s>straightLen) k=circleK;
+      } else {
+        if(s<=straightLen){
+          k=0;
+        } else if(s<=straightLen+tLen){
+          k=circleK*(s-straightLen)/tLen;
+        } else {
+          k=circleK;
+        }
+      }
+      smooth.push({x:sx,y:sy,k,s});
+      sAngle+=k*stepS;
+      sx+=Math.cos(sAngle)*stepS;
+      sy+=Math.sin(sAngle)*stepS;
+    }
+
+    return{abrupt,smooth,straightLen,tLen,circleK,roadLen};
+  }
+
+  function resize(){
+    dpr=window.devicePixelRatio||1;
+    W=c.clientWidth;H=c.clientHeight;
+    c.width=W*dpr;c.height=H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    draw();
+  }
+
+  const lazyObs=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting){resize();lazyObs.unobserve(c);}
+  },{threshold:0.05});
+  lazyObs.observe(c);
+  window.addEventListener('resize',resize);
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    if(spiralMode==='road'){
+      drawRoadMode();
+    } else {
+      drawCornuMode();
+    }
+  }
+
+  function drawRoadMode(){
+    const road=buildRoad();
+    // split canvas: top = road view, bottom = curvature graph
+    const roadH=H*0.6;
+    const graphH=H*0.35;
+    const graphY=H*0.62;
+
+    // fit roads in view
+    let allPts=[...road.abrupt,...road.smooth];
+    let xMin=Infinity,xMax=-Infinity,yMin=Infinity,yMax=-Infinity;
+    allPts.forEach(p=>{
+      if(p.x<xMin)xMin=p.x;if(p.x>xMax)xMax=p.x;
+      if(p.y<yMin)yMin=p.y;if(p.y>yMax)yMax=p.y;
+    });
+    const pad=30;
+    const scaleX=(W-2*pad)/(xMax-xMin||1);
+    const scaleY=(roadH-2*pad)/(yMax-yMin||1);
+    const scale=Math.min(scaleX,scaleY)*0.85;
+    const offX=pad-xMin*scale+((W-2*pad)-(xMax-xMin)*scale)/2;
+    const offY=pad-yMin*scale+((roadH-2*pad)-(yMax-yMin)*scale)/2;
+
+    function tx(x){return x*scale+offX;}
+    function ty(y){return y*scale+offY;}
+
+    // draw abrupt road
+    ctx.strokeStyle='rgba(200,80,80,0.35)';
+    ctx.lineWidth=3;
+    ctx.beginPath();
+    road.abrupt.forEach((p,i)=>{
+      i===0?ctx.moveTo(tx(p.x),ty(p.y)):ctx.lineTo(tx(p.x),ty(p.y));
+    });
+    ctx.stroke();
+
+    // draw smooth road
+    ctx.strokeStyle='rgba(201,168,76,0.8)';
+    ctx.lineWidth=3;
+    ctx.shadowColor='rgba(201,168,76,0.3)';ctx.shadowBlur=6;
+    ctx.beginPath();
+    road.smooth.forEach((p,i)=>{
+      i===0?ctx.moveTo(tx(p.x),ty(p.y)):ctx.lineTo(tx(p.x),ty(p.y));
+    });
+    ctx.stroke();
+    ctx.shadowBlur=0;
+
+    // car position
+    if(driving){
+      const idx=Math.min(Math.floor(driveT*road.smooth.length),road.smooth.length-1);
+      const sp=road.smooth[idx];
+      // car on smooth
+      ctx.fillStyle='#fff';
+      ctx.shadowColor='rgba(255,255,255,0.6)';ctx.shadowBlur=10;
+      ctx.beginPath();ctx.arc(tx(sp.x),ty(sp.y),5,0,Math.PI*2);ctx.fill();
+      ctx.shadowBlur=0;
+      // car on abrupt
+      const ap=road.abrupt[idx];
+      ctx.fillStyle='rgba(200,80,80,0.8)';
+      ctx.beginPath();ctx.arc(tx(ap.x),ty(ap.y),4,0,Math.PI*2);ctx.fill();
+
+      // update stats
+      document.getElementById('statKappa').textContent=sp.k.toFixed(4);
+      document.getElementById('statSteer').textContent=(sp.k*180/Math.PI*10).toFixed(1)+'°';
+      // jerk: dk/ds
+      const idx2=Math.min(idx+1,road.smooth.length-1);
+      const dk=road.smooth[idx2].k-sp.k;
+      const ds=road.smooth[idx2].s-sp.s||1;
+      document.getElementById('statJerk').textContent=(Math.abs(dk/ds)*1000).toFixed(2);
+    }
+
+    // labels
+    ctx.font='8px "JetBrains Mono"';
+    ctx.fillStyle='rgba(200,80,80,0.5)';ctx.textAlign='left';
+    ctx.fillText('abrupt',10,roadH-8);
+    ctx.fillStyle='rgba(201,168,76,0.6)';
+    ctx.fillText('clothoid',60,roadH-8);
+
+    // ── curvature graph ──
+    ctx.fillStyle='rgba(82,86,106,0.5)';ctx.font='8px "JetBrains Mono"';ctx.textAlign='left';
+    ctx.fillText('CURVATURE κ vs ARC LENGTH',gL+4,gT-6);
+    ctx.strokeStyle='rgba(255,255,255,0.06)';
+    ctx.lineWidth=1;
+    const gL=50,gR=W-20,gT=graphY,gB=graphY+graphH;
+    ctx.beginPath();ctx.moveTo(gL,gT);ctx.lineTo(gL,gB);ctx.lineTo(gR,gB);ctx.stroke();
+
+    // axis labels
+    ctx.fillStyle='rgba(82,86,106,0.7)';
+    ctx.font='8px "JetBrains Mono"';
+    ctx.textAlign='center';
+    ctx.fillText('arc length',gL+(gR-gL)/2,gB+14);
+    ctx.save();ctx.translate(gL-14,(gT+gB)/2);ctx.rotate(-Math.PI/2);
+    ctx.fillText('curvature κ',0,0);ctx.restore();
+
+    const kMax=road.circleK*1.3;
+    function gx(s){return gL+(s/road.roadLen)*(gR-gL);}
+    function gy(k){return gB-(k/kMax)*(gB-gT-10);}
+
+    // abrupt curvature — area fill + stroke
+    ctx.fillStyle='rgba(200,80,80,0.04)';
+    ctx.beginPath();
+    ctx.moveTo(gx(road.abrupt[0].s),gB);
+    road.abrupt.forEach(p=>ctx.lineTo(gx(p.s),gy(p.k)));
+    ctx.lineTo(gx(road.abrupt[road.abrupt.length-1].s),gB);
+    ctx.closePath();ctx.fill();
+    ctx.strokeStyle='rgba(200,80,80,0.5)';
+    ctx.lineWidth=1.5;
+    ctx.beginPath();
+    road.abrupt.forEach((p,i)=>{
+      i===0?ctx.moveTo(gx(p.s),gy(p.k)):ctx.lineTo(gx(p.s),gy(p.k));
+    });
+    ctx.stroke();
+
+    // smooth curvature — area fill + stroke with glow
+    ctx.fillStyle='rgba(201,168,76,0.04)';
+    ctx.beginPath();
+    ctx.moveTo(gx(road.smooth[0].s),gB);
+    road.smooth.forEach(p=>ctx.lineTo(gx(p.s),gy(p.k)));
+    ctx.lineTo(gx(road.smooth[road.smooth.length-1].s),gB);
+    ctx.closePath();ctx.fill();
+    ctx.strokeStyle='rgba(201,168,76,0.85)';
+    ctx.lineWidth=2;
+    ctx.shadowColor='rgba(201,168,76,0.25)';ctx.shadowBlur=8;
+    ctx.beginPath();
+    road.smooth.forEach((p,i)=>{
+      i===0?ctx.moveTo(gx(p.s),gy(p.k)):ctx.lineTo(gx(p.s),gy(p.k));
+    });
+    ctx.stroke();
+    ctx.shadowBlur=0;
+
+    // drive cursor on curvature graph
+    if(driving){
+      const idx=Math.min(Math.floor(driveT*road.smooth.length),road.smooth.length-1);
+      const sp=road.smooth[idx];
+      ctx.strokeStyle='rgba(255,255,255,0.15)';
+      ctx.beginPath();ctx.moveTo(gx(sp.s),gT);ctx.lineTo(gx(sp.s),gB);ctx.stroke();
+    }
+
+    // transition region highlight
+    if(road.tLen>0.01){
+      const x1=gx(road.straightLen),x2=gx(road.straightLen+road.tLen);
+      ctx.fillStyle='rgba(201,168,76,0.05)';
+      ctx.fillRect(x1,gT,x2-x1,gB-gT);
+    }
+
+    document.getElementById('statSpiralA').textContent=
+      transLen<0.01?'none':(transLen*100).toFixed(0)+'%';
+  }
+
+  function drawCornuMode(){
+    const tMax=1+transLen*6; // 1..7
+    const pts=clothoidPts(tMax,500);
+    // also negative
+    const ptsNeg=clothoidPts(tMax,500).map(p=>({x:-p.x,y:-p.y,t:-p.t}));
+
+    // bounds
+    let xMin=Infinity,xMax=-Infinity,yMin=Infinity,yMax=-Infinity;
+    [...pts,...ptsNeg].forEach(p=>{
+      if(p.x<xMin)xMin=p.x;if(p.x>xMax)xMax=p.x;
+      if(p.y<yMin)yMin=p.y;if(p.y>yMax)yMax=p.y;
+    });
+    const pad=50;
+    const sx=(W-2*pad)/(xMax-xMin||1);
+    const sy=(H-2*pad)/(yMax-yMin||1);
+    const scale=Math.min(sx,sy)*0.9;
+    const cx=W/2,cy=H/2;
+    const ox=(xMax+xMin)/2,oy=(yMax+yMin)/2;
+
+    function tx(x){return cx+(x-ox)*scale;}
+    function ty(y){return cy-(y-oy)*scale;}
+
+    // axes
+    ctx.strokeStyle='rgba(255,255,255,0.05)';
+    ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(0,ty(0));ctx.lineTo(W,ty(0));ctx.stroke();
+    ctx.beginPath();ctx.moveTo(tx(0),0);ctx.lineTo(tx(0),H);ctx.stroke();
+
+    // negative arm
+    ctx.strokeStyle='rgba(138,106,191,0.6)';
+    ctx.lineWidth=2;
+    ctx.shadowColor='rgba(138,106,191,0.3)';ctx.shadowBlur=8;
+    ctx.beginPath();
+    ptsNeg.forEach((p,i)=>{
+      i===0?ctx.moveTo(tx(p.x),ty(p.y)):ctx.lineTo(tx(p.x),ty(p.y));
+    });
+    ctx.stroke();
+    ctx.shadowBlur=0;
+
+    // positive arm
+    ctx.strokeStyle='rgba(201,168,76,0.85)';
+    ctx.lineWidth=2.5;
+    ctx.shadowColor='rgba(201,168,76,0.4)';ctx.shadowBlur=12;
+    ctx.beginPath();
+    pts.forEach((p,i)=>{
+      i===0?ctx.moveTo(tx(p.x),ty(p.y)):ctx.lineTo(tx(p.x),ty(p.y));
+    });
+    ctx.stroke();
+    ctx.shadowBlur=0;
+
+    // end dots with glow
+    const last=pts[pts.length-1];
+    ctx.fillStyle='#c9a84c';
+    ctx.shadowColor='rgba(201,168,76,0.6)';ctx.shadowBlur=10;
+    ctx.beginPath();ctx.arc(tx(last.x),ty(last.y),4.5,0,Math.PI*2);ctx.fill();
+    const lastN=ptsNeg[ptsNeg.length-1];
+    ctx.fillStyle='rgba(138,106,191,0.85)';
+    ctx.shadowColor='rgba(138,106,191,0.5)';
+    ctx.beginPath();ctx.arc(tx(lastN.x),ty(lastN.y),4.5,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;
+
+    // focus points (0.5, 0.5) and (-0.5, -0.5)
+    ctx.strokeStyle='rgba(255,255,255,0.1)';
+    ctx.setLineDash([2,3]);
+    [{ x:0.5,y:0.5},{x:-0.5,y:-0.5}].forEach(fp=>{
+      ctx.beginPath();ctx.arc(tx(fp.x),ty(fp.y),8,0,Math.PI*2);ctx.stroke();
+    });
+    ctx.setLineDash([]);
+
+    // labels
+    ctx.fillStyle='rgba(82,86,106,0.6)';
+    ctx.font='9px "JetBrains Mono"';ctx.textAlign='left';
+    ctx.fillText('C(t)',tx(last.x)+8,ty(last.y)-4);
+    ctx.fillText('t_max = '+tMax.toFixed(1),10,H-10);
+    ctx.fillText('CORNU SPIRAL (Fresnel integrals)',10,16);
+
+    // stats
+    document.getElementById('statKappa').textContent=(Math.PI*tMax).toFixed(2);
+    document.getElementById('statSpiralA').textContent=tMax.toFixed(2);
+    document.getElementById('statSteer').textContent='—';
+    document.getElementById('statJerk').textContent='—';
+  }
+
+  function driveAnim_(){
+    if(!driving) return;
+    driveT+=0.003;
+    if(driveT>=1){driveT=0;driving=false;return;}
+    draw();
+    driveAnim=requestAnimationFrame(driveAnim_);
+  }
+
+  window.setSpiralMode=function(m){
+    spiralMode=m;
+    driving=false;driveT=0;
+    if(driveAnim) cancelAnimationFrame(driveAnim);
+    document.getElementById('btnRoadMode').classList.toggle('active',m==='road');
+    document.getElementById('btnCornuMode').classList.toggle('active',m==='cornu');
+    document.getElementById('btnDriveRoad').style.display=m==='road'?'':'none';
+    draw();
+  };
+  window.driveRoad=function(){
+    if(spiralMode!=='road') return;
+    driving=true;driveT=0;
+    driveAnim_();
+  };
+  window.resetSpiral=function(){
+    driving=false;driveT=0;
+    if(driveAnim) cancelAnimationFrame(driveAnim);
+    transLen=0.5;
+    document.getElementById('transSlider').value=0.5;
+    draw();
+  };
+  document.getElementById('transSlider').addEventListener('input',e=>{
+    transLen=parseFloat(e.target.value);
+    driving=false;driveT=0;
+    draw();
+  });
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PARALLEL UNIVERSES — Brownian Motion        -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+(function bsInteractive(){
+  const c=document.getElementById('bsCanvas');
+  if(!c) return;
+  const ctx=c.getContext('2d');
+  let W,H,dpr;
+  const S0=100; // starting price
+  const r=0.05; // risk-free rate
+  let allPaths=[]; // each: array of prices
+  let finalPrices=[];
+
+  // BS analytics
+  function cdf(x){
+    const a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429;
+    const p=0.3275911;
+    const sign=x<0?-1:1;
+    x=Math.abs(x)/Math.SQRT2;
+    const t=1/(1+p*x);
+    const y=1-((((a5*t+a4)*t+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);
+    return 0.5*(1+sign*y);
+  }
+  function pdf(x){return Math.exp(-0.5*x*x)/Math.sqrt(2*Math.PI);}
+  function bsCall(S,K,T,r,sigma){
+    if(T<0.001) return Math.max(S-K,0);
+    const d1=(Math.log(S/K)+(r+0.5*sigma*sigma)*T)/(sigma*Math.sqrt(T));
+    const d2=d1-sigma*Math.sqrt(T);
+    return S*cdf(d1)-K*Math.exp(-r*T)*cdf(d2);
+  }
+  function bsDelta(S,K,T,r,sigma){
+    if(T<0.001) return S>K?1:0;
+    const d1=(Math.log(S/K)+(r+0.5*sigma*sigma)*T)/(sigma*Math.sqrt(T));
+    return cdf(d1);
+  }
+
+  function getParams(){
+    return{
+      sigma:parseFloat(document.getElementById('bsSigma').value),
+      mu:parseFloat(document.getElementById('bsMu').value),
+      K:parseFloat(document.getElementById('bsK').value),
+      T:parseFloat(document.getElementById('bsT').value),
+      N:parseInt(document.getElementById('bsN').value)
+    };
+  }
+
+  function resize(){
+    dpr=window.devicePixelRatio||1;
+    W=c.clientWidth;H=c.clientHeight;
+    c.width=W*dpr;c.height=H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    draw();
+  }
+
+  const lazyObs=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting){resize();lazyObs.unobserve(c);}
+  },{threshold:0.05});
+  lazyObs.observe(c);
+  window.addEventListener('resize',resize);
+
+  // Generate one GBM path
+  function generatePath(sigma,mu,T){
+    const steps=200;
+    const dt=T/steps;
+    const path=[S0];
+    let s=S0;
+    for(let i=0;i<steps;i++){
+      // Box-Muller for normal random
+      const u1=Math.random(),u2=Math.random();
+      const z=Math.sqrt(-2*Math.log(u1))*Math.cos(2*Math.PI*u2);
+      s=s*Math.exp((mu-0.5*sigma*sigma)*dt+sigma*Math.sqrt(dt)*z);
+      path.push(s);
+    }
+    return path;
+  }
+
+  // Layout constants
+  const PAD={l:50,r:80,t:25,b:35}; // right padding for histogram
+  const HIST_W=60; // histogram width
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const p=getParams();
+    const plotW=W-PAD.l-PAD.r;
+    const plotH=H-PAD.t-PAD.b;
+
+    // price range
+    let pMin=S0*0.3, pMax=S0*2.2;
+    if(finalPrices.length>2){
+      const sorted=[...finalPrices].sort((a,b)=>a-b);
+      pMin=Math.min(pMin,sorted[Math.floor(sorted.length*0.01)]*0.85);
+      pMax=Math.max(pMax,sorted[Math.floor(sorted.length*0.99)]*1.1);
+    }
+
+    function tx(i,steps){return PAD.l+i/steps*plotW;}
+    function ty(price){
+      const logP=Math.log(price), logMin=Math.log(pMin), logMax=Math.log(pMax);
+      return PAD.t+plotH*(1-(logP-logMin)/(logMax-logMin));
+    }
+
+    // subtle grid
+    ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=0.5;
+    const gridPrices=[40,60,80,100,120,150,200,300,400];
+    ctx.font='8px "JetBrains Mono"';ctx.textAlign='right';
+    gridPrices.forEach(gp=>{
+      if(gp<pMin||gp>pMax) return;
+      const y=ty(gp);
+      ctx.strokeStyle='rgba(255,255,255,0.04)';
+      ctx.beginPath();ctx.moveTo(PAD.l,y);ctx.lineTo(PAD.l+plotW,y);ctx.stroke();
+      ctx.fillStyle='rgba(82,86,106,0.5)';
+      ctx.fillText('$'+gp,PAD.l-6,y+3);
+    });
+
+    // time axis
+    ctx.textAlign='center';
+    ctx.fillStyle='rgba(82,86,106,0.4)';
+    const tLabels=p.T<=1?[0,0.25,0.5,0.75,1]:[0,0.5,1,1.5,2,2.5,3];
+    tLabels.forEach(tl=>{
+      if(tl>p.T) return;
+      const x=tx(tl/p.T*200,200);
+      ctx.fillText(tl.toFixed(tl%1===0?0:1)+'y',x,H-PAD.b+14);
+    });
+
+    // ±1σ and ±2σ confidence cones
+    const steps=200;
+    [2,1].forEach((nSig,ci)=>{
+      const alpha=ci===0?0.03:0.06;
+      ctx.fillStyle=`rgba(201,168,76,${alpha})`;
+      ctx.beginPath();
+      for(let i=0;i<=steps;i++){
+        const t=p.T*i/steps;
+        const upper=S0*Math.exp((p.mu-0.5*p.sigma*p.sigma)*t+nSig*p.sigma*Math.sqrt(t));
+        ctx.lineTo(tx(i,steps),ty(Math.min(upper,pMax*2)));
+      }
+      for(let i=steps;i>=0;i--){
+        const t=p.T*i/steps;
+        const lower=S0*Math.exp((p.mu-0.5*p.sigma*p.sigma)*t-nSig*p.sigma*Math.sqrt(t));
+        ctx.lineTo(tx(i,steps),ty(Math.max(lower,pMin*0.5)));
+      }
+      ctx.closePath();ctx.fill();
+    });
+
+    // cone boundary lines
+    [1,2].forEach(nSig=>{
+      ctx.strokeStyle=`rgba(201,168,76,${nSig===1?0.2:0.1})`;
+      ctx.lineWidth=1;ctx.setLineDash([3,4]);
+      [1,-1].forEach(sign=>{
+        ctx.beginPath();
+        for(let i=0;i<=steps;i++){
+          const t=p.T*i/steps;
+          const val=S0*Math.exp((p.mu-0.5*p.sigma*p.sigma)*t+sign*nSig*p.sigma*Math.sqrt(t));
+          const y=ty(Math.max(pMin*0.5,Math.min(pMax*2,val)));
+          i===0?ctx.moveTo(tx(i,steps),y):ctx.lineTo(tx(i,steps),y);
+        }
+        ctx.stroke();
+      });
+      ctx.setLineDash([]);
+    });
+
+    // σ labels on right
+    ctx.font='7px "JetBrains Mono"';ctx.textAlign='left';
+    ctx.fillStyle='rgba(201,168,76,0.3)';
+    [1,-1].forEach(sign=>{
+      const val=S0*Math.exp((p.mu-0.5*p.sigma*p.sigma)*p.T+sign*p.sigma*Math.sqrt(p.T));
+      const y=ty(Math.max(pMin*0.5,Math.min(pMax*2,val)));
+      ctx.fillText(sign>0?'+1σ':'−1σ',PAD.l+plotW+3,y+3);
+    });
+
+    // strike line
+    if(p.K>=pMin&&p.K<=pMax){
+      const ky=ty(p.K);
+      ctx.strokeStyle='rgba(201,168,76,0.5)';
+      ctx.lineWidth=1.5;
+      ctx.setLineDash([6,4]);
+      ctx.beginPath();ctx.moveTo(PAD.l,ky);ctx.lineTo(PAD.l+plotW,ky);ctx.stroke();
+      ctx.setLineDash([]);
+      // strike label
+      ctx.fillStyle='rgba(201,168,76,0.6)';ctx.font='8px "JetBrains Mono"';ctx.textAlign='left';
+      ctx.fillText('K = $'+p.K,PAD.l+4,ky-6);
+      // shade in-the-money region at right edge
+      ctx.fillStyle='rgba(90,154,114,0.04)';
+      ctx.fillRect(PAD.l,PAD.t,plotW,ky-PAD.t);
+    }
+
+    // S0 line
+    const s0y=ty(S0);
+    ctx.strokeStyle='rgba(255,255,255,0.1)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(PAD.l,s0y);ctx.lineTo(PAD.l+plotW,s0y);ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,0.25)';ctx.font='8px "JetBrains Mono"';ctx.textAlign='right';
+    ctx.fillText('S₀ = $'+S0,PAD.l-6,s0y-4);
+
+    // draw all paths
+    allPaths.forEach((path,pi)=>{
+      const steps=path.length-1;
+      const finalP=path[path.length-1];
+      const itm=finalP>p.K;
+      // color: in-the-money paths are greenish-gold, out-of-money are dim
+      const hue=itm?45:220;
+      const sat=itm?55:20;
+      const light=itm?55:35;
+      const age=1-pi/Math.max(allPaths.length,1)*0.5; // older paths fade
+      const alpha=Math.min(0.4,1.5/Math.sqrt(Math.max(allPaths.length,1)))*age;
+
+      ctx.strokeStyle=`hsla(${hue},${sat}%,${light}%,${alpha})`;
+      ctx.lineWidth=1;
+      ctx.beginPath();
+      path.forEach((price,i)=>{
+        const x=tx(i,steps);
+        const y=ty(Math.max(pMin*0.3,Math.min(pMax*3,price)));
+        i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+      });
+      ctx.stroke();
+    });
+
+    // latest batch with glow
+    if(allPaths.length>0){
+      const batchSize=Math.min(getParams().N,allPaths.length);
+      const startIdx=Math.max(0,allPaths.length-batchSize);
+      for(let pi=startIdx;pi<allPaths.length;pi++){
+        const path=allPaths[pi];
+        const steps=path.length-1;
+        const finalP=path[path.length-1];
+        const itm=finalP>p.K;
+        const hue=itm?48:210;
+        const sat=itm?60:25;
+        const light=itm?60:40;
+
+        ctx.strokeStyle=`hsla(${hue},${sat}%,${light}%,0.25)`;
+        ctx.lineWidth=1.2;
+        ctx.shadowColor=`hsla(${hue},${sat}%,${light}%,0.15)`;
+        ctx.shadowBlur=3;
+        ctx.beginPath();
+        path.forEach((price,i)=>{
+          const x=tx(i,steps);
+          const y=ty(Math.max(pMin*0.3,Math.min(pMax*3,price)));
+          i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+        });
+        ctx.stroke();
+      }
+      ctx.shadowBlur=0;
+    }
+
+    // median path (bright)
+    if(allPaths.length>0){
+      const steps=allPaths[0].length-1;
+      ctx.strokeStyle='rgba(236,232,224,0.5)';ctx.lineWidth=1.5;
+      ctx.setLineDash([2,3]);
+      ctx.beginPath();
+      for(let i=0;i<=steps;i++){
+        const t=p.T*i/steps;
+        const med=S0*Math.exp(p.mu*t); // expected path (risk-neutral: use r)
+        const y=ty(Math.max(pMin*0.3,Math.min(pMax*3,med)));
+        i===0?ctx.moveTo(tx(i,steps),y):ctx.lineTo(tx(i,steps),y);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // histogram of final prices on right edge
+    if(finalPrices.length>5){
+      const histL=PAD.l+plotW+2;
+      const histR=W-5;
+      const histW=histR-histL;
+      const nBins=35;
+      const logMin=Math.log(pMin),logMax=Math.log(pMax);
+      const bins=new Array(nBins).fill(0);
+      finalPrices.forEach(fp=>{
+        const lp=Math.log(fp);
+        const bi=Math.floor((lp-logMin)/(logMax-logMin)*nBins);
+        if(bi>=0&&bi<nBins) bins[bi]++;
+      });
+      const maxBin=Math.max(...bins,1);
+
+      bins.forEach((count,bi)=>{
+        if(count===0) return;
+        const y1=PAD.t+plotH*(1-(bi+1)/nBins);
+        const y2=PAD.t+plotH*(1-bi/nBins);
+        const bw=count/maxBin*histW;
+        // color by ITM
+        const midPrice=Math.exp(logMin+(bi+0.5)/nBins*(logMax-logMin));
+        const itm=midPrice>p.K;
+        const alpha=0.15+count/maxBin*0.45;
+        ctx.fillStyle=itm?`rgba(90,154,114,${alpha})`:`rgba(82,86,106,${alpha})`;
+        ctx.fillRect(histL,y1,bw,y2-y1-1);
+      });
+
+      // histogram label
+      ctx.save();
+      ctx.fillStyle='rgba(82,86,106,0.4)';ctx.font='7px "JetBrains Mono"';
+      ctx.translate(W-3,PAD.t+plotH/2);ctx.rotate(-Math.PI/2);
+      ctx.textAlign='center';
+      ctx.fillText('DISTRIBUTION',0,0);
+      ctx.restore();
+    }
+
+    // starting price dot
+    ctx.fillStyle='#fff';ctx.shadowColor='rgba(255,255,255,0.6)';ctx.shadowBlur=10;
+    ctx.beginPath();ctx.arc(PAD.l,s0y,4,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;
+
+    // stats
+    const bsPrice=bsCall(S0,p.K,p.T,r,p.sigma);
+    const delta=bsDelta(S0,p.K,p.T,r,p.sigma);
+    document.getElementById('statPaths').textContent=allPaths.length;
+    document.getElementById('statBSPrice').textContent='$'+bsPrice.toFixed(2);
+    document.getElementById('statDelta').textContent=delta.toFixed(3);
+
+    if(finalPrices.length>0){
+      const itm=finalPrices.filter(fp=>fp>p.K).length;
+      document.getElementById('statITM').textContent=
+        (itm/finalPrices.length*100).toFixed(1)+'%';
+      // MC estimate
+      const mcPayoffs=finalPrices.map(fp=>Math.max(fp-p.K,0));
+      const mcPrice=mcPayoffs.reduce((a,b)=>a+b,0)/mcPayoffs.length*Math.exp(-r*p.T);
+      document.getElementById('statMC').textContent='$'+mcPrice.toFixed(2);
+    } else {
+      document.getElementById('statITM').textContent='—';
+      document.getElementById('statMC').textContent='—';
+    }
+
+    // label
+    ctx.fillStyle='rgba(201,168,76,0.4)';ctx.font='8px "JetBrains Mono"';ctx.textAlign='left';
+    ctx.fillText('GBM · σ='+(p.sigma*100).toFixed(0)+'% · T='+p.T.toFixed(2)+'y',PAD.l+4,PAD.t+12);
+  }
+
+  // animated spawn
+  let spawnQueue=[];
+  let spawnAnimId=null;
+
+  function animateSpawn(){
+    if(spawnQueue.length===0){spawnAnimId=null;draw();return;}
+    // add a small batch each frame
+    const batch=Math.min(4,spawnQueue.length);
+    for(let i=0;i<batch;i++){
+      const path=spawnQueue.shift();
+      allPaths.push(path);
+      finalPrices.push(path[path.length-1]);
+    }
+    draw();
+    spawnAnimId=requestAnimationFrame(animateSpawn);
+  }
+
+  window.spawnPaths=function(){
+    const p=getParams();
+    const newPaths=[];
+    for(let i=0;i<p.N;i++){
+      newPaths.push(generatePath(p.sigma,p.mu,p.T));
+    }
+    spawnQueue.push(...newPaths);
+    if(!spawnAnimId) spawnAnimId=requestAnimationFrame(animateSpawn);
+  };
+
+  window.clearPaths=function(){
+    allPaths=[];finalPrices=[];spawnQueue=[];
+    if(spawnAnimId) cancelAnimationFrame(spawnAnimId);
+    spawnAnimId=null;
+    draw();
+  };
+
+  // redraw when params change (but keep paths — they'll be re-rendered with new strike/view)
+  ['bsSigma','bsMu','bsK','bsT','bsN'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.addEventListener('input',()=>{
+      // if sigma or T or mu changed, paths are stale — auto-clear
+      if(id==='bsSigma'||id==='bsT'||id==='bsMu'){
+        allPaths=[];finalPrices=[];spawnQueue=[];
+      }
+      draw();
+    });
+  });
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- VOICE NARRATOR                              -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+(function narrator(){
+  const synth=window.speechSynthesis;
+  if(!synth){
+    const toggle=document.getElementById('narratorToggle');
+    if(toggle) toggle.style.display='none';
+    return;
+  }
+
+  let barOpen=false;
+  let isPlaying=false;
+  let currentIdx=0;
+  let segments=[]; // {el, text, sectionIdx}
+  let voices=[];
+  let femaleVoice=null, maleVoice=null;
+  let chosenGender='female';
+  let speed=1;
+  const speeds=[0.8,1,1.2,1.5];
+  let speedIdx=1;
+  let currentUtterance=null;
+  let charOffset=0; // track character progress within segment
+
+  // ── collect narration segments ──
+  function buildSegments(){
+    segments=[];
+    const sections=document.querySelectorAll('.chapter-section');
+    sections.forEach((sec,si)=>{
+      // section title
+      const title=sec.querySelector('.section-title');
+      if(title) segments.push({el:title,text:title.textContent.trim(),sectionIdx:si});
+      // prose paragraphs
+      sec.querySelectorAll('.prose p').forEach(p=>{
+        const txt=p.textContent.trim();
+        if(txt.length>10) segments.push({el:p,text:txt,sectionIdx:si});
+      });
+      // pull quotes
+      sec.querySelectorAll('.pull-quote p').forEach(p=>{
+        segments.push({el:p,text:p.textContent.trim(),sectionIdx:si});
+      });
+      // block quotes
+      sec.querySelectorAll('.block-quote p').forEach(p=>{
+        segments.push({el:p,text:p.textContent.trim(),sectionIdx:si});
+      });
+      // coda
+      sec.querySelectorAll('.coda p').forEach(p=>{
+        segments.push({el:p,text:p.textContent.trim(),sectionIdx:si});
+      });
+    });
+  }
+
+  // ── voice selection ──
+  function rankVoice(v){
+    // higher = better quality
+    let score=0;
+    const n=v.name.toLowerCase();
+    // premium indicators
+    if(n.includes('neural')) score+=100;
+    if(n.includes('enhanced')) score+=80;
+    if(n.includes('premium')) score+=90;
+    if(n.includes('natural')) score+=70;
+    if(n.includes('online')) score+=50;
+    // well-known high-quality voices
+    if(n.includes('samantha')) score+=60; // macOS
+    if(n.includes('karen')) score+=55;
+    if(n.includes('daniel')) score+=55;
+    if(n.includes('alex')) score+=50;
+    if(n.includes('allison')) score+=55;
+    if(n.includes('ava')) score+=55;
+    if(n.includes('zoe')) score+=50;
+    if(n.includes('tom')) score+=50;
+    if(n.includes('microsoft') && (n.includes('aria') || n.includes('jenny') || n.includes('guy') || n.includes('ryan'))) score+=85;
+    if(n.includes('google')) score+=40;
+    // local voices are lower quality
+    if(v.localService && score<50) score-=20;
+    return score;
+  }
+
+  function guessGender(v){
+    const n=v.name.toLowerCase();
+    const maleNames=['daniel','alex','tom','guy','ryan','james','aaron','albert',
+      'bruce','carlos','david','fred','gordon','henry','jorge','juan','malcolm',
+      'lee','oliver','ralph','reed','rishi','jacques','thomas','grandpa'];
+    const femaleNames=['samantha','karen','victoria','allison','ava','zoe','fiona',
+      'jenny','aria','susan','tessa','kate','moira','serena','veena','ellen',
+      'kathy','princess','grandma','alice','amelie','anna','carmela','catarina',
+      'cecilia','claire','daria','edith','ellen','ioana','joana','laura','lekha',
+      'lesya','linh','luciana','majed','marge','mei-jia','melina','milena',
+      'monica','montse','nora','paulina','petra','renee','satu','shelley',
+      'sinji','tessa','tingting','xander','yuna','zosia'];
+    if(maleNames.some(nm=>n.includes(nm))) return 'male';
+    if(femaleNames.some(nm=>n.includes(nm))) return 'female';
+    // heuristic: many default female voices
+    if(n.includes('female') || n.includes('woman')) return 'female';
+    if(n.includes('male') || n.includes(' man')) return 'male';
+    return 'unknown';
+  }
+
+  function pickVoices(){
+    voices=synth.getVoices().filter(v=>v.lang.startsWith('en'));
+    if(voices.length===0) return;
+
+    // rank and sort
+    const ranked=voices.map(v=>({v,score:rankVoice(v),gender:guessGender(v)}))
+      .sort((a,b)=>b.score-a.score);
+
+    // pick best female
+    const females=ranked.filter(r=>r.gender==='female');
+    femaleVoice=females.length?females[0].v:ranked[0].v;
+
+    // pick best male
+    const males=ranked.filter(r=>r.gender==='male');
+    maleVoice=males.length?males[0].v:(ranked.length>1?ranked[1].v:ranked[0].v);
+
+    // if we still have unknown-gender voices ranked highly, try to assign them
+    if(!females.length && !males.length){
+      femaleVoice=ranked[0].v;
+      maleVoice=ranked.length>1?ranked[1].v:ranked[0].v;
+    }
+  }
+
+  // voices may load async
+  pickVoices();
+  synth.onvoiceschanged=pickVoices;
+
+  // ── playback ──
+  function getVoice(){
+    return chosenGender==='female'?femaleVoice:maleVoice;
+  }
+
+  function speakSegment(idx){
+    if(idx<0||idx>=segments.length){
+      stop();
+      return;
+    }
+    synth.cancel();
+    currentIdx=idx;
+    charOffset=0;
+    const seg=segments[idx];
+
+    // highlight
+    clearHighlights();
+    seg.el.classList.add('narrating');
+    seg.el.scrollIntoView({behavior:'smooth',block:'center'});
+
+    const utt=new SpeechSynthesisUtterance(seg.text);
+    const v=getVoice();
+    if(v) utt.voice=v;
+    utt.rate=speed;
+    utt.pitch=1.0;
+    utt.volume=1.0;
+
+    utt.onboundary=function(e){
+      if(e.name==='word') charOffset=e.charIndex;
+      updateProgress();
+    };
+    utt.onend=function(){
+      seg.el.classList.remove('narrating');
+      seg.el.classList.add('narrating-done');
+      setTimeout(()=>seg.el.classList.remove('narrating-done'),2000);
+      if(isPlaying && currentIdx<segments.length-1){
+        speakSegment(currentIdx+1);
+      } else {
+        stop();
+      }
+    };
+    utt.onerror=function(){
+      if(isPlaying && currentIdx<segments.length-1){
+        speakSegment(currentIdx+1);
+      } else {
+        stop();
+      }
+    };
+
+    currentUtterance=utt;
+    synth.speak(utt);
+    updateStatus();
+    updateProgress();
+
+    // Chrome bug: synth pauses on long utterances. Keep it alive.
+    if(window._narratorKeepAlive) clearInterval(window._narratorKeepAlive);
+    window._narratorKeepAlive=setInterval(()=>{
+      if(synth.speaking && !synth.paused){
+        synth.pause();synth.resume();
+      }
+    },10000);
+  }
+
+  function stop(){
+    synth.cancel();
+    isPlaying=false;
+    clearHighlights();
+    document.getElementById('narratorPlayBtn').innerHTML='▶';
+    if(window._narratorKeepAlive) clearInterval(window._narratorKeepAlive);
+    updateStatus();
+    updateProgress();
+  }
+
+  function clearHighlights(){
+    document.querySelectorAll('.narrating,.narrating-done').forEach(el=>{
+      el.classList.remove('narrating','narrating-done');
+    });
+  }
+
+  function updateStatus(){
+    const el=document.getElementById('narratorStatus');
+    if(!segments.length){el.textContent='loading…';return;}
+    const sec=segments[currentIdx]?segments[currentIdx].sectionIdx+1:1;
+    el.textContent=isPlaying?`§${sec} 재생 중`:`§${sec} ${currentIdx===0?'준비':'일시정지'}`;
+  }
+
+  function updateProgress(){
+    const fill=document.getElementById('narratorProgressFill');
+    if(!segments.length){fill.style.width='0';return;}
+    // coarse: segment-level progress + char-level within segment
+    const segProgress=currentIdx/segments.length;
+    const charProgress=segments[currentIdx]?
+      charOffset/Math.max(segments[currentIdx].text.length,1)/segments.length:0;
+    fill.style.width=((segProgress+charProgress)*100).toFixed(1)+'%';
+  }
+
+  // ── public API ──
+  window.toggleNarratorBar=function(){
+    barOpen=!barOpen;
+    document.getElementById('narratorBar').classList.toggle('open',barOpen);
+    document.getElementById('narratorToggle').classList.toggle('active',barOpen);
+    if(barOpen && !segments.length) buildSegments();
+  };
+
+  window.narratorPlayPause=function(){
+    if(!segments.length) buildSegments();
+    if(isPlaying){
+      // pause
+      synth.pause();
+      isPlaying=false;
+      document.getElementById('narratorPlayBtn').innerHTML='▶';
+      updateStatus();
+    } else {
+      // resume or start
+      if(synth.paused){
+        synth.resume();
+        isPlaying=true;
+      } else {
+        isPlaying=true;
+        speakSegment(currentIdx);
+      }
+      document.getElementById('narratorPlayBtn').innerHTML='⏸';
+      updateStatus();
+    }
+  };
+
+  window.narratorNext=function(){
+    if(!segments.length) buildSegments();
+    // jump to next section
+    const curSec=segments[currentIdx]?segments[currentIdx].sectionIdx:-1;
+    let next=currentIdx+1;
+    while(next<segments.length && segments[next].sectionIdx===curSec) next++;
+    if(next>=segments.length) next=0;
+    currentIdx=next;
+    if(isPlaying) speakSegment(currentIdx);
+    else{updateStatus();updateProgress();}
+  };
+
+  window.narratorPrev=function(){
+    if(!segments.length) buildSegments();
+    // jump to start of current section, or prev section
+    const curSec=segments[currentIdx]?segments[currentIdx].sectionIdx:-1;
+    // find start of current section
+    let start=currentIdx;
+    while(start>0 && segments[start-1].sectionIdx===curSec) start--;
+    if(currentIdx===start && curSec>0){
+      // go to prev section
+      start--;
+      const prevSec=segments[start].sectionIdx;
+      while(start>0 && segments[start-1].sectionIdx===prevSec) start--;
+    }
+    currentIdx=start;
+    if(isPlaying) speakSegment(currentIdx);
+    else{updateStatus();updateProgress();}
+  };
+
+  window.setNarratorVoice=function(gender){
+    chosenGender=gender;
+    document.getElementById('voiceFemale').classList.toggle('active',gender==='female');
+    document.getElementById('voiceMale').classList.toggle('active',gender==='male');
+    // if playing, restart current segment with new voice
+    if(isPlaying){
+      speakSegment(currentIdx);
+    }
+  };
+
+  window.cycleNarratorSpeed=function(){
+    speedIdx=(speedIdx+1)%speeds.length;
+    speed=speeds[speedIdx];
+    document.getElementById('narratorSpeedBtn').textContent=speed+'×';
+    if(isPlaying) speakSegment(currentIdx);
+  };
+
+  window.narratorSeek=function(e){
+    if(!segments.length) return;
+    const bar=document.getElementById('narratorProgress');
+    const rect=bar.getBoundingClientRect();
+    const pct=(e.clientX-rect.left)/rect.width;
+    const idx=Math.max(0,Math.min(segments.length-1,Math.floor(pct*segments.length)));
+    currentIdx=idx;
+    if(isPlaying) speakSegment(idx);
+    else{updateStatus();updateProgress();}
+  };
+
+  // clean up on page leave
+  window.addEventListener('beforeunload',()=>{
+    synth.cancel();
+    if(window._narratorKeepAlive) clearInterval(window._narratorKeepAlive);
+  });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Does Water Want? — Mellow Math</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400&family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & VARIABLES ===== */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root {
+  --bg: #04050c;
+  --bg2: #090b18;
+  --bg3: #0e1128;
+  --text: #b8b4ac;
+  --cream: #ece8e0;
+  --muted: #52566a;
+  --gold: #c9a84c;
+  --gold2: #d4a853;
+  --gold-dim: rgba(201,168,76,.08);
+  --violet: #8a6abf;
+  --fern: #5a9a72;
+  --fern-glow: #7cc89a;
+  --accent: #3fa8c4;
+  --accent2: #56c4d8;
+  --accent-dim: rgba(63,168,196,.08);
+  --rose: #c47a8a;
+  --border: rgba(255,255,255,.04);
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-kr: 'Noto Serif KR', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:var(--font-body);font-weight:300;
+  font-size:clamp(15px,1.08vw,17.5px);
+  line-height:1.78;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Film grain */
+body::after{
+  content:'';position:fixed;inset:0;z-index:9999;
+  pointer-events:none;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='1'/%3E%3C/svg%3E");
+  background-size:200px;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--muted);border-radius:3px}
+
+/* ===== GLOBAL TYPOGRAPHY ===== */
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:400;color:var(--cream)}
+a{color:var(--gold);text-decoration:none}
+a:hover{color:var(--gold2)}
+
+.prose{
+  max-width:680px;margin:0 auto 1.6rem;
+  font-size:1rem;color:var(--text);line-height:1.82;
+}
+.prose-drop::first-letter{
+  font-family:var(--font-display);font-weight:700;
+  font-size:3.6em;float:left;line-height:.82;
+  margin:.05em .14em 0 0;color:var(--cream);
+}
+.hi{color:var(--cream)}
+.ac{color:var(--gold)}
+
+/* Pull quote */
+.pull-quote{
+  max-width:620px;margin:3rem auto;text-align:center;
+  font-family:var(--font-display);font-style:italic;
+  font-size:1.18rem;color:var(--cream);line-height:1.7;
+  padding-bottom:1.8rem;position:relative;
+}
+.pull-quote::after{
+  content:'';position:absolute;bottom:0;left:50%;
+  transform:translateX(-50%);width:120px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+
+/* Block quote */
+.block-quote{
+  max-width:620px;margin:2.4rem auto;
+  padding:1.6rem 2rem;border-radius:10px;
+  background:var(--gold-dim);
+  border-left:2px solid var(--gold);
+  font-family:var(--font-display);font-style:italic;
+  font-size:.95rem;color:var(--cream);line-height:1.7;
+}
+.block-quote .bq-attr{
+  display:block;margin-top:.8rem;
+  font-family:var(--font-mono);font-style:normal;
+  font-size:.7rem;color:var(--muted);letter-spacing:.06em;
+}
+
+/* ===== HERO ===== */
+.hero{
+  position:relative;width:100%;height:100vh;
+  min-height:600px;display:flex;align-items:center;
+  justify-content:center;overflow:hidden;
+}
+.hero-canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-vignette{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 60% at 50% 50%,transparent 0%,var(--bg) 100%);
+  pointer-events:none;
+}
+.hero-content{
+  position:relative;z-index:2;text-align:center;
+  padding:0 2rem;
+}
+.hero-label{
+  font-family:var(--font-mono);font-size:.62rem;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:1.4rem;
+}
+.hero-chapter{
+  font-family:var(--font-mono);font-size:.68rem;
+  letter-spacing:.16em;color:var(--gold);margin-bottom:1.2rem;
+}
+.hero-title{
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(2.2rem,5vw,4.2rem);color:var(--cream);
+  line-height:1.15;margin-bottom:.8rem;
+}
+.hero-title em{font-style:italic;color:var(--accent)}
+.hero-subtitle{
+  font-family:var(--font-kr);font-weight:300;
+  font-size:1rem;color:var(--muted);margin-bottom:1.4rem;
+}
+.hero-tagline{
+  font-family:var(--font-display);font-style:italic;
+  font-weight:300;font-size:clamp(.88rem,1.3vw,1.08rem);
+  color:var(--text);margin-bottom:3rem;
+}
+.hero-scroll{
+  font-family:var(--font-mono);font-size:.56rem;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--muted);cursor:pointer;
+  animation:breathe 3s ease-in-out infinite;
+}
+.hero-scroll span{display:block;margin-top:.5rem;font-size:.9rem}
+@keyframes breathe{0%,100%{opacity:.4;transform:translateY(0)}50%{opacity:1;transform:translateY(4px)}}
+
+/* ===== SECTIONS ===== */
+.chapter-body{max-width:860px;margin:0 auto;padding:0 2rem 4rem}
+.chapter-section{padding:5rem 0 3rem;position:relative}
+.section-number{
+  font-family:var(--font-mono);font-size:.68rem;
+  letter-spacing:.14em;color:var(--gold);margin-bottom:.6rem;
+}
+.section-title{
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(1.6rem,3vw,2.3rem);color:var(--cream);
+  line-height:1.2;margin-bottom:.4rem;
+}
+.section-subtitle{
+  font-family:var(--font-kr);font-weight:300;
+  font-size:.85rem;color:var(--muted);margin-bottom:2.2rem;
+}
+.section-sep{
+  width:60px;height:1px;margin:0 0 2.2rem;
+  background:linear-gradient(90deg,var(--gold),transparent);
+}
+
+/* ===== INTERACTIVE BOX ===== */
+.ibox{
+  background:var(--bg3);border-radius:16px;
+  padding:2.5rem;margin:3rem 0;position:relative;
+  overflow:hidden;
+}
+.ibox::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--accent),var(--gold),transparent);
+}
+.ibox-label{
+  font-family:var(--font-mono);font-size:.62rem;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1.2rem;
+  display:flex;align-items:center;gap:.5rem;
+}
+.ibox-label .dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--gold);
+  animation:pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot{0%,100%{opacity:.4}50%{opacity:1}}
+.ibox-title{
+  font-family:var(--font-display);font-weight:400;
+  font-size:1.3rem;color:var(--cream);margin-bottom:.6rem;
+}
+.ibox-desc{
+  font-size:.82rem;color:var(--text);line-height:1.7;
+  margin-bottom:1.6rem;max-width:580px;
+}
+.ibox canvas{
+  width:100%;border-radius:10px;display:block;
+  margin-bottom:1.2rem;background:var(--bg);
+}
+
+/* Controls */
+.ibox-controls{
+  display:flex;flex-wrap:wrap;gap:1rem;
+  align-items:center;margin-bottom:1.4rem;
+}
+.ctrl-group{display:flex;flex-direction:column;gap:.3rem}
+.ctrl-label{
+  font-family:var(--font-mono);font-size:.58rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+}
+input[type=range]{
+  -webkit-appearance:none;appearance:none;
+  width:160px;height:4px;border-radius:2px;
+  background:var(--border);outline:none;cursor:pointer;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:16px;height:16px;
+  border-radius:50%;cursor:pointer;border:none;
+  background:radial-gradient(circle at 40% 35%,var(--gold2),var(--gold));
+  box-shadow:0 0 8px rgba(201,168,76,.4);
+}
+.btn{
+  font-family:var(--font-mono);font-size:.62rem;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:.5rem 1.2rem;border-radius:6px;
+  border:1px solid var(--muted);
+  background:transparent;color:var(--text);cursor:pointer;
+  transition:all .25s ease;
+}
+.btn:hover{border-color:var(--gold);color:var(--gold)}
+.btn.active{border-color:var(--gold);color:var(--gold);background:var(--gold-dim)}
+
+/* Stats */
+.ibox-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:.8rem;margin-top:1rem;
+}
+.stat-card{
+  background:rgba(255,255,255,.02);border-radius:10px;
+  padding:.8rem 1rem;
+}
+.stat-label{
+  font-family:var(--font-mono);font-size:.5rem;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:.2rem;
+}
+.stat-value{
+  font-family:var(--font-mono);font-size:1.2rem;
+  font-weight:400;color:var(--gold);
+}
+
+/* ===== SCROLL REVEAL ===== */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.23,1,.32,1),transform .8s cubic-bezier(.23,1,.32,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ===== AMBIENT PARTICLES ===== */
+.particles{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.particle{
+  position:absolute;border-radius:50%;
+  background:radial-gradient(circle,var(--accent),transparent 70%);
+  opacity:0;
+  animation:drift-up linear infinite;
+}
+@keyframes drift-up{
+  0%{transform:translateY(100vh) translateX(0);opacity:0}
+  10%{opacity:.3}
+  90%{opacity:.15}
+  100%{transform:translateY(-10vh) translateX(30px);opacity:0}
+}
+
+/* ===== FOOTER ===== */
+footer{
+  text-align:center;padding:4rem 2rem 3rem;
+  border-top:1px solid var(--border);
+}
+.footer-name{
+  font-family:var(--font-display);font-size:.85rem;
+  color:var(--cream);margin-bottom:.3rem;
+}
+.footer-inst{
+  font-family:var(--font-body);font-size:.7rem;
+  color:var(--muted);line-height:1.6;
+}
+.footer-url{
+  display:inline-block;margin-top:.6rem;
+  font-family:var(--font-mono);font-size:.58rem;
+  letter-spacing:.12em;color:var(--gold);
+}
+
+/* ===== FLOATING BADGE ===== */
+.floating-badge{
+  position:fixed;bottom:1.4rem;left:1.4rem;z-index:100;
+  font-family:var(--font-mono);font-size:.58rem;
+  letter-spacing:.14em;text-transform:lowercase;
+  color:#8db830;
+  text-shadow:0 0 12px rgba(141,184,48,.3);
+  transition:all .3s ease;
+}
+.floating-badge:hover{
+  color:#a8d43a;transform:translateY(-1px);
+  text-shadow:0 0 18px rgba(168,212,58,.5);
+}
+
+/* ===== REFERENCES ===== */
+.ref-section{
+  max-width:680px;margin:5rem auto 2rem;
+  padding-top:3rem;border-top:1px solid var(--border);
+}
+.ref-heading{
+  font-family:var(--font-display);font-size:1.1rem;
+  color:var(--cream);margin-bottom:1.5rem;
+}
+.ref-list{list-style:none;padding:0}
+.ref-list li{
+  font-size:.78rem;color:var(--muted);line-height:1.7;
+  margin-bottom:.6rem;padding-left:1.2rem;position:relative;
+}
+.ref-list li::before{
+  content:'—';position:absolute;left:0;color:var(--gold);
+}
+.ref-author{color:var(--text)}
+.ref-title{font-style:italic;color:var(--cream)}
+.ref-detail{color:var(--muted)}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .chapter-body{padding:0 1.2rem 3rem}
+  .ibox{padding:1.6rem}
+  .ibox-stats{grid-template-columns:repeat(2,1fr)}
+  .hero-title{font-size:clamp(1.8rem,7vw,2.8rem)}
+  input[type=range]{width:120px}
+  .ibox-controls{gap:.7rem}
+}
+@media(max-width:480px){
+  .ibox{padding:1.2rem}
+  .ibox-stats{grid-template-columns:1fr 1fr}
+  .stat-card{padding:.6rem .8rem}
+  .prose{font-size:.92rem}
+}
+
+/* ===== NARRATION BUTTON ===== */
+.narration-toggle{
+  position:fixed;bottom:1.4rem;right:1.4rem;z-index:100;
+  font-family:var(--font-mono);font-size:.56rem;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:.5rem 1rem;border-radius:20px;
+  border:1px solid var(--muted);
+  background:rgba(4,5,12,.85);color:var(--muted);
+  cursor:pointer;transition:all .3s ease;
+  backdrop-filter:blur(8px);
+}
+.narration-toggle:hover{border-color:var(--gold);color:var(--gold)}
+</style>
+</head>
+<body>
+
+<!-- ===== AMBIENT PARTICLES ===== -->
+<div class="particles" id="particles"></div>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="hero">
+  <canvas class="hero-canvas" id="heroCanvas"></canvas>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-label">Mellow Math</div>
+    <div class="hero-chapter">Chapter · Flow</div>
+    <h1 class="hero-title">What Does Water <em>Want</em>?</h1>
+    <div class="hero-subtitle">나비에-스토크스 방정식</div>
+    <div class="hero-tagline">An equation for everything that flows — and a mystery that will not rest</div>
+    <div class="hero-scroll" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">
+      Begin<span>↓</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CHAPTER BODY ===== -->
+<div class="chapter-body">
+
+<!-- ===== SECTION 1 ===== -->
+<section class="chapter-section" id="s1">
+  <div class="section-number reveal">01</div>
+  <h2 class="section-title reveal">What Water Wants</h2>
+  <div class="section-subtitle reveal">물은 무엇을 원하는가</div>
+  <div class="section-sep reveal"></div>
+
+  <p class="prose prose-drop reveal">
+    Watch cream dropped into coffee. For one held breath the white thread keeps its shape — a
+    helix, almost architectural — and then it doesn't. It folds and tears and blooms into a
+    hundred filaments, each curling around the others in a pattern so intricate that no one has
+    ever reproduced the same one twice. Every morning, in every kitchen on Earth, <span class="hi">a cup of
+    coffee performs a computation that humbles the largest supercomputer ever built.</span>
+  </p>
+
+  <p class="prose reveal">
+    That this chaos is governed by a single equation — short enough to print on a postcard, old
+    enough to predate the light bulb — is one of the great surprises of modern science. The
+    equation has a name: <span class="ac">Navier–Stokes</span>. It describes the motion of every fluid you
+    have ever seen or felt: the blood in your veins, the weather above your roof, the thin
+    atmosphere clinging to a planet, the plasma inside a star. It is arguably the most
+    consequential partial differential equation ever written.
+  </p>
+
+  <p class="prose reveal">
+    It was not discovered all at once. It was assembled — across nearly a century, by three
+    men who never met, in three different countries, motivated by three different ideas of what
+    a fluid even is.
+  </p>
+
+  <p class="prose reveal">
+    The first was <span class="hi">Leonhard Euler</span>, who in 1757, already blind in one eye and
+    publishing mathematics at an almost inhuman pace, wrote down the equations for an
+    idealized fluid — one with no internal friction, no viscosity. Euler's equations are
+    beautiful and frictionless, a world of pure flow. But they cannot explain why honey pours
+    slowly, or why a river slows at its banks. They describe a fluid that does not quite exist.
+  </p>
+
+  <p class="prose reveal">
+    The friction came next, from an unlikely source. <span class="hi">Claude-Louis Navier</span> was a French
+    civil engineer, not a physicist. In 1822 he added a term to Euler's equation to represent
+    the internal resistance of a fluid — the tendency of each layer to drag on its neighbor.
+    Navier got the right answer, but for the wrong reason: he modeled the fluid as a lattice of
+    molecules connected by springs, a picture that was physically incorrect. It did not matter.
+    The mathematical form he produced was exactly right, as if the equation knew more than its
+    author.
+  </p>
+
+  <p class="prose reveal">
+    It fell to an Irishman, <span class="hi">George Gabriel Stokes</span>, to set the physics straight. In
+    1845, working at Cambridge with rigorous continuum mechanics, Stokes derived the same
+    viscous term from first principles — no molecular model needed, just the assumption that
+    stress in a fluid is proportional to the rate of strain. The equation was now complete.
+    <span class="ac">Newton's second law applied to a continuous fluid</span>: the acceleration of any small
+    parcel of fluid equals the sum of the pressure pushing it, the viscous friction dragging it,
+    and whatever external forces — gravity, a stirring spoon — act upon it.
+  </p>
+
+  <div class="block-quote reveal">
+    "The equations of motion of an incompressible fluid have been obtained by different
+    authors in different ways. The method which I have followed is rather long, but I think
+    it possesses the advantage of showing clearly the nature of the assumptions."
+    <span class="bq-attr">— George Gabriel Stokes, 1845</span>
+  </div>
+
+  <p class="prose reveal">
+    The equation is deceptively short. Written in the compact language of vector calculus, it
+    fits in a single line. But compressing it did not tame it. Inside those symbols hides a
+    nonlinear convective term — the fluid carrying itself — that tangles cause and effect
+    into a knot mathematicians have been trying to untie ever since. <span class="hi">The equation is easy
+    to write down. It is not easy to solve.</span>
+  </p>
+
+  <div class="pull-quote reveal">
+    Three men, a century of thought, and one line of symbols — enough to encode every ocean
+    current and every wisp of smoke.
+  </div>
+
+  <!-- INTERACTIVE: Forces on a Fluid Parcel -->
+  <div class="ibox reveal" id="ibox1">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">Forces on a Fluid Parcel</div>
+    <div class="ibox-desc">
+      A luminous parcel of fluid drifts under three competing forces — the very forces
+      that appear as terms in the Navier–Stokes equation. Adjust each slider to feel how
+      pressure, viscosity, and gravity shape the motion. Watch the force vectors decompose
+      in real time.
+    </div>
+    <canvas id="parcelCanvas" height="360"></canvas>
+    <div class="ibox-controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">Pressure gradient</span>
+        <input type="range" id="pressureSlider" min="-1" max="1" step="0.01" value="0.3">
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">Viscosity</span>
+        <input type="range" id="viscSlider" min="0" max="1" step="0.01" value="0.15">
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">Gravity</span>
+        <input type="range" id="gravSlider" min="0" max="1" step="0.01" value="0.2">
+      </div>
+      <button class="btn" id="resetParcel">Reset</button>
+    </div>
+    <div class="ibox-stats">
+      <div class="stat-card">
+        <div class="stat-label">Velocity</div>
+        <div class="stat-value" id="statVel">0.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Acceleration</div>
+        <div class="stat-value" id="statAcc">0.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Reynolds №</div>
+        <div class="stat-value" id="statRe">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Trail length</div>
+        <div class="stat-value" id="statTrail">0</div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ===== SECTION 2 ===== -->
+<section class="chapter-section" id="s2">
+  <div class="section-number reveal">02</div>
+  <h2 class="section-title reveal">The Threshold</h2>
+  <div class="section-subtitle reveal">문턱</div>
+  <div class="section-sep reveal"></div>
+
+  <p class="prose prose-drop reveal">
+    In the autumn of 1883, a professor of engineering at Owens College in Manchester built
+    one of the most elegant experiments in the history of physics. <span class="hi">Osborne Reynolds</span>
+    fitted a long glass tube with a thin nozzle at its entrance, connected the tube to a
+    reservoir of still water, and threaded a needle of coloured dye into the centre of the
+    flow. When the water moved slowly, the dye ran in a single, unwavering line — a ribbon
+    of colour suspended in glass, as if painted there. The flow was <span class="ac">laminar</span>: every
+    parcel of fluid gliding obediently in parallel layers, each ignoring its neighbours.
+  </p>
+
+  <p class="prose reveal">
+    Then Reynolds opened the valve a little wider. The ribbon trembled. It developed a gentle
+    sinuous wave, like a flag in a breeze. He opened the valve further — and the ribbon
+    exploded. In an instant the clean thread of dye shattered into a cloud of chaotic
+    filaments that filled the pipe with swirling colour. The flow had become
+    <span class="ac">turbulent</span>. There was no gradual transition, no polite negotiation between
+    order and disorder. There was a threshold, and the fluid crossed it like a man stepping
+    off a cliff.
+  </p>
+
+  <p class="prose reveal">
+    What Reynolds discovered was not just a laboratory curiosity. He found that the
+    transition depends on a single dimensionless number — now called the
+    <span class="hi">Reynolds number</span> — which measures the ratio of inertial forces (the
+    fluid's tendency to keep moving) to viscous forces (its internal friction). Multiply
+    the flow speed by a characteristic length and divide by the kinematic viscosity; if the
+    result is small, viscosity wins and the flow is smooth. If the result is large, inertia
+    wins and the flow tears itself apart. For flow in a pipe the critical value is roughly
+    2300 — a number that every engineer memorizes.
+  </p>
+
+  <p class="prose reveal">
+    The Reynolds number is why smoke from a candle rises straight for the first few
+    centimetres and then fractures into whorls. It is why honey pours in a smooth thread
+    while water from a garden hose splatters. It is why an airplane wing at cruising speed
+    lives in a world of violent turbulence — Reynolds numbers in the tens of millions —
+    while a bacterium, swimming through what feels to it like thick syrup, exists in a
+    world where turbulence is physically impossible. <span class="hi">The same equation governs both,
+    but the Reynolds number decides which universe they inhabit.</span>
+  </p>
+
+  <div class="block-quote reveal">
+    "The internal motion of water assumes one or other of two broadly distinguishable
+    forms — either the elements of the fluid follow one another along lines of motion
+    which lead in the most direct manner to their destination, or they eddy about in
+    sinuous paths the most indirect possible."
+    <span class="bq-attr">— Osborne Reynolds, 1883</span>
+  </div>
+
+  <p class="prose reveal">
+    What disturbed Reynolds — and what disturbs mathematicians to this day — is the
+    violence of the transition. Laminar flow is a known, exact solution to the
+    Navier–Stokes equations. In a straight pipe it takes the form of a parabolic
+    velocity profile: fastest at the centre, stationary at the walls, smooth everywhere.
+    This solution exists at <em>every</em> Reynolds number. And yet, above the critical
+    threshold, nature refuses to use it. The slightest perturbation — a vibration in the
+    wall, a fleck of dust — is enough to knock the flow into turbulence. The laminar
+    solution becomes <span class="ac">unstable</span>: mathematically valid but physically unreachable,
+    like a pencil balanced on its tip.
+  </p>
+
+  <div class="pull-quote reveal">
+    A single dimensionless number — speed times size divided by viscosity — decides
+    whether a fluid flows like silk or rages like a storm.
+  </div>
+
+  <!-- INTERACTIVE: Reynolds' Pipe -->
+  <div class="ibox reveal" id="ibox2">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">Reynolds' Pipe</div>
+    <div class="ibox-desc">
+      A thread of dye enters a glass pipe from the left. Drag the slider to increase the
+      flow velocity and watch the transition from laminar calm to turbulent chaos. The
+      critical Reynolds number is around 2300 — see if you can find the exact moment
+      the thread breaks apart.
+    </div>
+    <canvas id="reynoldsCanvas" height="320"></canvas>
+    <div class="ibox-controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">Flow velocity</span>
+        <input type="range" id="reFlowSlider" min="0" max="1" step="0.005" value="0.15">
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">Pipe diameter</span>
+        <input type="range" id="reDiamSlider" min="0.3" max="1" step="0.01" value="0.6">
+      </div>
+      <button class="btn" id="reResetBtn">Reset dye</button>
+    </div>
+    <div class="ibox-stats">
+      <div class="stat-card">
+        <div class="stat-label">Reynolds №</div>
+        <div class="stat-value" id="reStatRe">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Flow regime</div>
+        <div class="stat-value" id="reStatRegime">Laminar</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Velocity</div>
+        <div class="stat-value" id="reStatVel">0.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Dye spread</div>
+        <div class="stat-value" id="reStatSpread">0.0%</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 3 ===== -->
+<section class="chapter-section" id="s3">
+  <div class="section-number reveal">03</div>
+  <h2 class="section-title reveal">A Million-Dollar Question</h2>
+  <div class="section-subtitle reveal">백만 달러짜리 질문</div>
+  <div class="section-sep reveal"></div>
+
+  <p class="prose prose-drop reveal">
+    On a spring morning in the year 2000, the Clay Mathematics Institute in Cambridge,
+    Massachusetts, announced seven problems for the new millennium. Each carried a prize
+    of one million dollars — not for the cleverest approximation or the most promising
+    approach, but for a complete, irrefutable proof. The problems were chosen to represent
+    the deepest unsolved questions in all of mathematics. <span class="hi">One of the seven asks a
+    question so simple it sounds almost embarrassing</span>: does the Navier–Stokes
+    equation always have a solution?
+  </p>
+
+  <p class="prose reveal">
+    More precisely: if you start with a smooth, well-behaved velocity field in three
+    dimensions — no discontinuities, no infinities, everything perfectly tame — and let the
+    fluid evolve according to the Navier–Stokes equation, will the solution remain smooth
+    for all future time? Or is it possible that the velocity at some point could grow without
+    bound, rushing toward infinity in finite time — what mathematicians call a
+    <span class="ac">blow-up</span>?
+  </p>
+
+  <p class="prose reveal">
+    A blow-up would be extraordinary. It would mean that the equation predicting the
+    behaviour of every cup of tea and every ocean current is, in some deep sense,
+    <span class="hi">broken</span> — that starting from a perfectly reasonable initial condition, the
+    mathematics produces a physical impossibility. Infinite velocity at a single point.
+    A singularity born from nothing. It would not mean that real fluids misbehave — water
+    does not actually accelerate to infinite speed — but rather that the Navier–Stokes
+    equation, for all its triumphs, is not the final word on what a fluid is.
+  </p>
+
+  <p class="prose reveal">
+    The question has haunted analysis for nearly a century. In 1934, the French
+    mathematician <span class="hi">Jean Leray</span> proved that the Navier–Stokes equations in three
+    dimensions always have at least a <em>weak</em> solution — a generalized object that
+    satisfies the equation in an averaged sense but might not be smooth. Leray could not
+    rule out singularities; he could only show that if they occur, they must be confined
+    to a set of times with zero measure — a kind of mathematical dust, infinitely sparse
+    on the timeline. His proof was a masterwork of functional analysis, and it remains the
+    foundation of everything that has followed.
+  </p>
+
+  <p class="prose reveal">
+    In 1982, <span class="hi">Caffarelli, Kohn, and Nirenberg</span> pushed further. They proved
+    that even if singularities exist, the set of singular points in space-time must have
+    zero one-dimensional measure — roughly, the singularities cannot form curves or sheets.
+    They can only be isolated points, infinitely lonely in the four-dimensional fabric of
+    space-time. It was a profound partial result, but it did not answer the fundamental
+    question: do any singularities exist at all?
+  </p>
+
+  <p class="prose reveal">
+    The mystery deepens when you compare dimensions. In two dimensions, the question has
+    been settled. <span class="hi">Olga Ladyzhenskaya</span>, working in Leningrad through decades of
+    Soviet mathematical isolation, proved in the 1960s that smooth solutions in 2D exist
+    for all time. No blow-up, no singularities, complete regularity. The proof uses a
+    crucial fact about two-dimensional flow: <span class="ac">vorticity can stretch in three dimensions
+    but not in two.</span> A vortex in flatland can spin and drift, but it cannot intensify
+    itself the way a three-dimensional vortex tube can be stretched thinner and faster
+    without limit.
+  </p>
+
+  <p class="prose reveal">
+    It is this mechanism — vortex stretching — that makes three dimensions so dangerous.
+    When a vortex tube is pulled along its own axis, it thins and spins faster, just as an
+    ice skater spins faster by pulling in their arms. In two dimensions, the total
+    enstrophy — a measure of how intensely the fluid is spinning — is bounded. In three
+    dimensions, it is not. Enstrophy can grow, feeding on itself through the nonlinear
+    coupling of the velocity field, and no one has been able to prove that this growth
+    must eventually stop.
+  </p>
+
+  <p class="prose reveal">
+    In 2016, <span class="hi">Terence Tao</span> constructed an averaged version of the Navier–Stokes
+    equation — a modification that preserves the equation's essential structure — and showed
+    that <em>it</em> does blow up. His result does not prove that the real Navier–Stokes
+    equation has singularities, but it proves something almost as disturbing: <span class="hi">any proof
+    of regularity must use some specific property of the equation that Tao's averaged version
+    does not share.</span> The door to blow-up has not been closed. If anything, Tao showed
+    that it is wider open than anyone hoped.
+  </p>
+
+  <div class="block-quote reveal">
+    "Finite time blow-up is a possible outcome… and in fact for an averaged version of
+    the Navier–Stokes equations this is indeed what happens."
+    <span class="bq-attr">— Terence Tao, 2016</span>
+  </div>
+
+  <div class="pull-quote reveal">
+    The equation governing every glass of water might be fundamentally broken — and proving
+    otherwise is worth a million dollars.
+  </div>
+
+  <!-- INTERACTIVE: Vortex Stretching 2D vs 3D -->
+  <div class="ibox reveal" id="ibox3">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">Vortex Stretching</div>
+    <div class="ibox-desc">
+      In two dimensions, a vortex can spin and drift but never intensify beyond its
+      initial strength. In three dimensions, vortex tubes can be stretched along their
+      axis, concentrating vorticity without limit — the suspected mechanism behind
+      potential blow-up. Toggle between 2D and 3D to see the difference. In 3D mode,
+      increase the stretching rate and watch vorticity concentrate.
+    </div>
+    <canvas id="vortexCanvas" height="400"></canvas>
+    <div class="ibox-controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">Stretching rate</span>
+        <input type="range" id="vStretchSlider" min="0" max="1" step="0.01" value="0.2">
+      </div>
+      <button class="btn active" id="vBtn2D">2D</button>
+      <button class="btn" id="vBtn3D">3D</button>
+      <button class="btn" id="vResetBtn">Reset</button>
+    </div>
+    <div class="ibox-stats">
+      <div class="stat-card">
+        <div class="stat-label">Max vorticity</div>
+        <div class="stat-value" id="vStatOmega">1.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Enstrophy</div>
+        <div class="stat-value" id="vStatEnstrophy">1.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Tube radius</div>
+        <div class="stat-value" id="vStatRadius">1.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Time</div>
+        <div class="stat-value" id="vStatTime">0.00</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 4 ===== -->
+<section class="chapter-section" id="s4">
+  <div class="section-number reveal">04</div>
+  <h2 class="section-title reveal">The Cascade</h2>
+  <div class="section-subtitle reveal">소용돌이의 폭포</div>
+  <div class="section-sep reveal"></div>
+
+  <p class="prose prose-drop reveal">
+    Lewis Fry Richardson was a Quaker, a pacifist, a meteorologist, and one of the strangest
+    geniuses of the twentieth century. He drove an ambulance in the First World War while
+    scribbling weather equations on the battlefield. He dreamed of a vast hall — a
+    "forecast factory" — staffed by sixty-four thousand human computers, each calculating
+    the weather for one cell of the atmosphere while a conductor in the centre coordinated
+    them with coloured lights. The dream was impractical. But buried in Richardson's work
+    was an insight about turbulence so profound that it has shaped every theory since. He
+    expressed it in a rhyme — the only piece of doggerel ever to become a founding principle
+    of mathematical physics:
+  </p>
+
+  <div class="block-quote reveal">
+    "Big whirls have little whirls that feed on their velocity, and little whirls have
+    lesser whirls and so on to viscosity."
+    <span class="bq-attr">— Lewis Fry Richardson, 1922</span>
+  </div>
+
+  <p class="prose reveal">
+    Richardson saw that turbulence is not random noise. It has structure — a hierarchy of
+    eddies, each feeding on the one above it. Energy enters the fluid at the largest scales:
+    a wind blowing across a lake, a spoon stirring a cup, a jet engine pushing air. That
+    large-scale motion is unstable; it breaks into smaller vortices, which break into
+    smaller ones still, in a cascade that continues down through the scales until the eddies
+    are so tiny that <span class="ac">viscosity</span> — the internal friction of the fluid — finally
+    converts their kinetic energy into heat. The process is called the
+    <span class="hi">energy cascade</span>, and it is perhaps the most important single idea in the
+    theory of turbulence.
+  </p>
+
+  <p class="prose reveal">
+    In 1941, a Soviet mathematician named <span class="hi">Andrei Nikolaevich Kolmogorov</span> turned
+    Richardson's poetic insight into one of the most precisely confirmed predictions in all
+    of physics. Kolmogorov reasoned as follows. At very large scales, the details of the flow
+    depend on how it is driven — by wind, by a propeller, by convection. At very small scales,
+    the details depend on the viscosity of the specific fluid. But in between — in what
+    Kolmogorov called the <span class="ac">inertial range</span> — the turbulence should be universal.
+    It should not matter whether the fluid is air or water, whether it is driven by a
+    hurricane or a kitchen mixer. In the inertial range, the only quantity that matters is
+    the rate at which energy cascades down through the scales.
+  </p>
+
+  <p class="prose reveal">
+    From this single assumption, using nothing more than dimensional analysis, Kolmogorov
+    derived his famous law: <span class="hi">the energy at wavenumber <em>k</em> falls off as
+    <em>k</em> to the power negative five-thirds.</span> Plot the energy spectrum on
+    logarithmic axes and the inertial range appears as a straight line with slope −5/3.
+    This prediction has been confirmed in the atmosphere, in wind tunnels, in ocean currents,
+    in the interstellar medium. It is one of those rare results in physics where a single
+    number — five-thirds — seems to have been written into the fabric of the universe.
+  </p>
+
+  <p class="prose reveal">
+    At the bottom of the cascade lies the <span class="ac">Kolmogorov microscale</span> — the smallest
+    eddies, where viscosity finally wins and kinetic energy becomes heat. These eddies are
+    astonishingly small. In the atmosphere, the Kolmogorov scale is about a millimetre. In
+    the ocean, fractions of a millimetre. And the ratio of the largest eddies to the smallest
+    grows as the three-quarter power of the Reynolds number. For a commercial jet at cruising
+    speed, this ratio is of order ten billion. To simulate such a flow with full resolution
+    — capturing every eddy down to the Kolmogorov scale — would require more grid points
+    than there are atoms in the observable universe.
+  </p>
+
+  <div class="pull-quote reveal">
+    Energy pours in at the top, cascades through a waterfall of vortices, and dissipates
+    as heat at the bottom — and the waterfall obeys a law so universal it seems carved
+    into nature itself.
+  </div>
+
+  <!-- INTERACTIVE: The Energy Cascade -->
+  <div class="ibox reveal" id="ibox4">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">The Energy Cascade</div>
+    <div class="ibox-desc">
+      Left: a turbulent velocity field driven at large scales. Right: its energy spectrum,
+      plotted on logarithmic axes. As turbulence develops, the spectrum settles onto
+      Kolmogorov's −5/3 law in the inertial range. Adjust viscosity to change where the
+      cascade ends; adjust forcing to change where it begins.
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:1.2rem">
+      <canvas id="cascadeTurbCanvas" height="340" style="flex:1.2;min-width:260px;border-radius:10px;background:var(--bg)"></canvas>
+      <canvas id="cascadeSpecCanvas" height="340" style="flex:1;min-width:220px;border-radius:10px;background:var(--bg)"></canvas>
+    </div>
+    <div class="ibox-controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">Viscosity</span>
+        <input type="range" id="cascViscSlider" min="0.001" max="0.05" step="0.001" value="0.008">
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">Forcing</span>
+        <input type="range" id="cascForceSlider" min="0" max="1" step="0.01" value="0.5">
+      </div>
+      <button class="btn" id="cascResetBtn">Reset</button>
+    </div>
+    <div class="ibox-stats">
+      <div class="stat-card">
+        <div class="stat-label">Taylor Re</div>
+        <div class="stat-value" id="cascStatRe">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Kolmogorov η</div>
+        <div class="stat-value" id="cascStatEta">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Dissipation ε</div>
+        <div class="stat-value" id="cascStatEps">0.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total energy</div>
+        <div class="stat-value" id="cascStatE">0.00</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 5 ===== -->
+<section class="chapter-section" id="s5">
+  <div class="section-number reveal">05</div>
+  <h2 class="section-title reveal">Simulating the Infinite</h2>
+  <div class="section-subtitle reveal">무한을 시뮬레이션하다</div>
+  <div class="section-sep reveal"></div>
+
+  <p class="prose prose-drop reveal">
+    In 1922, the same year he published his rhyme about whirls, Lewis Fry Richardson
+    proposed an idea so audacious it sounded like science fiction. He imagined a great
+    spherical hall — a "forecast factory" — modelled after the interior of the Earth. The
+    walls would be painted with a map of the globe. Sixty-four thousand human computers,
+    each seated at a desk with a mechanical calculator, would occupy the tiers of the hall,
+    each responsible for solving the Navier–Stokes equations for one small patch of
+    atmosphere. At the centre, suspended from a high platform, a conductor would coordinate
+    them all with beams of coloured light, keeping the computation in step with the weather
+    itself. <span class="hi">Richardson calculated that this army of mathematicians, working in
+    unison, might just barely keep pace with the actual atmosphere.</span>
+  </p>
+
+  <p class="prose reveal">
+    A century later, we have built Richardson's factory — not as a hall of human beings, but
+    as a network of silicon processors. Modern weather prediction solves a discretized form
+    of the Navier–Stokes equations on a grid that covers the entire planet, with grid cells
+    as small as a few kilometres on a side, marching forward in time steps of minutes.
+    <span class="ac">Computational fluid dynamics</span> — CFD — is now one of the largest consumers
+    of supercomputing power in the world. It designs aircraft wings, models blood flow through
+    arteries, predicts the dispersion of pollutants, and simulates the interiors of stars.
+  </p>
+
+  <p class="prose reveal">
+    And yet the fundamental tension that Richardson foresaw remains unresolved. Turbulence
+    contains structure at every scale, down to the Kolmogorov microscale. To capture <em>all</em>
+    of it — what is called a <span class="hi">direct numerical simulation</span>, or DNS — requires a
+    grid fine enough to resolve the smallest eddies. The number of grid points needed grows
+    as the Reynolds number to the power nine-fourths. For a commercial aircraft at cruising
+    altitude, the Reynolds number is of order one hundred million. A fully resolved DNS of
+    the flow around that aircraft would require roughly ten to the twenty-fourth grid points
+    — <span class="ac">more than the number of atoms in a human body</span> — and each point would need
+    to be updated at every time step for the duration of the flight.
+  </p>
+
+  <p class="prose reveal">
+    This is why turbulence modelling exists. Since we cannot compute every eddy, we
+    approximate the small ones. <span class="hi">Large eddy simulation</span> resolves the big,
+    energy-carrying structures and models the rest. Reynolds-averaged methods go further,
+    replacing the turbulent fluctuations entirely with statistical averages. These
+    approximations are engineering marvels — they make modern aviation, weather prediction,
+    and climate science possible — but they are approximations, each carrying assumptions
+    that can fail in unexpected ways.
+  </p>
+
+  <p class="prose reveal">
+    There is a deeper irony still. Weather prediction — the most consequential application
+    of the Navier–Stokes equations — runs headlong into <span class="ac">sensitive dependence on
+    initial conditions</span>, the phenomenon Edward Lorenz discovered in 1963. Even a
+    perfect simulation of the atmosphere, with a perfect model and perfect numerical methods,
+    would eventually diverge from reality because the initial measurements are never exact.
+    The atmosphere is chaotic. Small errors double every few days. Beyond about two weeks,
+    detailed weather prediction is fundamentally impossible — not because our computers are
+    too slow, but because the equation itself amplifies uncertainty faster than any
+    measurement can contain it.
+  </p>
+
+  <p class="prose reveal">
+    And so we arrive at a strange place. We live inside a fluid — the atmosphere — governed
+    by an equation we cannot solve exactly, simulated on machines that can only approximate
+    it, limited by a chaos that makes long-range prediction impossible. And yet
+    <span class="hi">the forecast for tomorrow is usually right.</span> The equation does not yield its
+    secrets gracefully. But it yields enough of them, enough of the time, to let us build
+    airplanes that fly and predict storms before they arrive. Perhaps that is as much as
+    any equation owes us.
+  </p>
+
+  <div class="pull-quote reveal">
+    We live inside the equation — swimming in it, breathing it — and still we cannot
+    fully comprehend what it is trying to say.
+  </div>
+
+  <!-- INTERACTIVE: Your Own Ocean -->
+  <div class="ibox reveal" id="ibox5">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">Your Own Ocean</div>
+    <div class="ibox-desc">
+      A real-time fluid simulation solving a discretized Navier–Stokes equation on a
+      192×192 grid. Move your mouse or finger to inject dye and impart velocity. The
+      colours cycle through the chapter's palette — teal, violet, rose, gold. Toggle
+      the vorticity overlay to see the hidden structure of the flow.
+    </div>
+    <canvas id="oceanCanvas" height="480" style="cursor:crosshair" data-nopz></canvas>
+    <div class="ibox-controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">Viscosity</span>
+        <input type="range" id="oceanViscSlider" min="0.000005" max="0.001" step="0.000005" value="0.00005">
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">Dye radius</span>
+        <input type="range" id="oceanRadSlider" min="1" max="12" step="1" value="4">
+      </div>
+      <button class="btn" id="oceanVortBtn">Vorticity</button>
+      <button class="btn" id="oceanVelBtn">Velocity</button>
+      <button class="btn" id="oceanResetBtn">Clear</button>
+    </div>
+    <div class="ibox-stats">
+      <div class="stat-card">
+        <div class="stat-label">Max velocity</div>
+        <div class="stat-value" id="oceanStatVel">0.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Kinetic energy</div>
+        <div class="stat-value" id="oceanStatKE">0.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Max vorticity</div>
+        <div class="stat-value" id="oceanStatVort">0.00</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Eff. Reynolds</div>
+        <div class="stat-value" id="oceanStatRe">0</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CODA ===== -->
+<section class="chapter-section" id="coda" style="padding-bottom:2rem">
+  <div class="reveal" style="text-align:center;max-width:520px;margin:4rem auto 2rem;font-family:var(--font-display);font-style:italic;color:var(--cream);font-size:1rem;line-height:2">
+    The equation is two centuries old<br>
+    and still it will not confess.<br>
+    Water flows, smoke rises, weather turns —<br>
+    each an answer to a question<br>
+    we have not yet learned how to ask.
+  </div>
+</section>
+
+<!-- ===== REFERENCES ===== -->
+<div class="ref-section reveal">
+  <h3 class="ref-heading">References</h3>
+  <ul class="ref-list">
+    <li><span class="ref-author">Euler, L.,</span> <span class="ref-title">Principes généraux du mouvement des fluides,</span> <span class="ref-detail">Mém. Acad. Sci. Berlin, 1757.</span></li>
+    <li><span class="ref-author">Navier, C.-L.,</span> <span class="ref-title">Mémoire sur les lois du mouvement des fluides,</span> <span class="ref-detail">Mém. Acad. Sci. Inst. France, 1822.</span></li>
+    <li><span class="ref-author">Stokes, G. G.,</span> <span class="ref-title">On the theories of the internal friction of fluids in motion,</span> <span class="ref-detail">Trans. Cambridge Phil. Soc., 1845.</span></li>
+    <li><span class="ref-author">Reynolds, O.,</span> <span class="ref-title">An experimental investigation of the circumstances which determine whether the motion of water shall be direct or sinuous,</span> <span class="ref-detail">Phil. Trans. Roy. Soc., 1883.</span></li>
+    <li><span class="ref-author">Leray, J.,</span> <span class="ref-title">Sur le mouvement d'un liquide visqueux emplissant l'espace,</span> <span class="ref-detail">Acta Mathematica 63, 1934.</span></li>
+    <li><span class="ref-author">Kolmogorov, A. N.,</span> <span class="ref-title">The local structure of turbulence in incompressible viscous fluid for very large Reynolds numbers,</span> <span class="ref-detail">Dokl. Akad. Nauk SSSR 30, 1941.</span></li>
+    <li><span class="ref-author">Ladyzhenskaya, O. A.,</span> <span class="ref-title">The Mathematical Theory of Viscous Incompressible Flow,</span> <span class="ref-detail">Gordon and Breach, 1969.</span></li>
+    <li><span class="ref-author">Caffarelli, L., Kohn, R., Nirenberg, L.,</span> <span class="ref-title">Partial regularity of suitable weak solutions of the Navier–Stokes equations,</span> <span class="ref-detail">Comm. Pure Appl. Math. 35, 1982.</span></li>
+    <li><span class="ref-author">Batchelor, G. K.,</span> <span class="ref-title">An Introduction to Fluid Dynamics,</span> <span class="ref-detail">Cambridge University Press, 1967.</span></li>
+    <li><span class="ref-author">Frisch, U.,</span> <span class="ref-title">Turbulence: The Legacy of A. N. Kolmogorov,</span> <span class="ref-detail">Cambridge University Press, 1995.</span></li>
+    <li><span class="ref-author">Fefferman, C. L.,</span> <span class="ref-title">Existence and smoothness of the Navier–Stokes equation,</span> <span class="ref-detail">Clay Mathematics Institute Millennium Prize Problems, 2000.</span></li>
+    <li><span class="ref-author">Tao, T.,</span> <span class="ref-title">Finite time blowup for an averaged three-dimensional Navier–Stokes equation,</span> <span class="ref-detail">J. Amer. Math. Soc. 29, 2016.</span></li>
+    <li><span class="ref-author">Darrigol, O.,</span> <span class="ref-title">Worlds of Flow: A History of Hydrodynamics from the Bernoullis to Prandtl,</span> <span class="ref-detail">Oxford University Press, 2005.</span></li>
+    <li><span class="ref-author">Stam, J.,</span> <span class="ref-title">Stable Fluids,</span> <span class="ref-detail">Proc. ACM SIGGRAPH, 1999.</span></li>
+  </ul>
+</div>
+
+
+</div><!-- chapter-body -->
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study</div>
+    <div class="footer-inst">AI4MATH, KAIST</div>
+    <a class="footer-url" href="https://kimsh.kr">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
+<!-- ===== SCRIPTS ===== -->
+<script>
+/* ========================================================
+   GLOBAL STATE
+   ======================================================== */
+let _paused = false;
+let _heroVisible = true;
+let _lastInteraction = Date.now();
+
+document.addEventListener('mousemove', () => _lastInteraction = Date.now());
+document.addEventListener('touchstart', () => _lastInteraction = Date.now());
+document.addEventListener('wheel', () => _lastInteraction = Date.now());
+document.addEventListener('keydown', () => _lastInteraction = Date.now());
+
+/* ========================================================
+   AMBIENT PARTICLES
+   ======================================================== */
+(function initParticles(){
+  const cont = document.getElementById('particles');
+  for(let i = 0; i < 22; i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 2 + Math.random() * 4;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (18 + Math.random() * 22) + 's';
+    p.style.animationDelay = -(Math.random() * 30) + 's';
+    cont.appendChild(p);
+  }
+})();
+
+/* ========================================================
+   SCROLL REVEAL
+   ======================================================== */
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+/* ========================================================
+   HERO VISIBILITY OBSERVER
+   ======================================================== */
+const heroObs = new IntersectionObserver((entries) => {
+  _heroVisible = entries[0].isIntersecting;
+}, { threshold: 0.05 });
+heroObs.observe(document.getElementById('hero'));
+
+/* ========================================================
+   HERO CANVAS — Stable Fluids (simplified 2D)
+   ======================================================== */
+(function initHeroFluid(){
+  const canvas = document.getElementById('heroCanvas');
+  const ctx = canvas.getContext('2d');
+  const N = 128; // grid resolution
+  const size = (N + 2) * (N + 2);
+  let u = new Float32Array(size);
+  let v = new Float32Array(size);
+  let u0 = new Float32Array(size);
+  let v0 = new Float32Array(size);
+  let dens = new Float32Array(size);
+  let dens0 = new Float32Array(size);
+  const dt = 0.15;
+  const diff = 0.00005;
+  const visc = 0.00003;
+
+  function IX(i,j){ return i + (N+2)*j; }
+
+  function setBnd(b, x){
+    for(let i=1;i<=N;i++){
+      x[IX(0,i)]   = b===1 ? -x[IX(1,i)] : x[IX(1,i)];
+      x[IX(N+1,i)] = b===1 ? -x[IX(N,i)] : x[IX(N,i)];
+      x[IX(i,0)]   = b===2 ? -x[IX(i,1)] : x[IX(i,1)];
+      x[IX(i,N+1)] = b===2 ? -x[IX(i,N)] : x[IX(i,N)];
+    }
+    x[IX(0,0)]     = .5*(x[IX(1,0)]+x[IX(0,1)]);
+    x[IX(0,N+1)]   = .5*(x[IX(1,N+1)]+x[IX(0,N)]);
+    x[IX(N+1,0)]   = .5*(x[IX(N,0)]+x[IX(N+1,1)]);
+    x[IX(N+1,N+1)] = .5*(x[IX(N,N+1)]+x[IX(N+1,N)]);
+  }
+
+  function diffuse(b, x, x0, diffRate, dt_){
+    const a = dt_ * diffRate * N * N;
+    for(let k=0;k<4;k++){
+      for(let j=1;j<=N;j++) for(let i=1;i<=N;i++){
+        x[IX(i,j)] = (x0[IX(i,j)] + a*(x[IX(i-1,j)]+x[IX(i+1,j)]+x[IX(i,j-1)]+x[IX(i,j+1)])) / (1+4*a);
+      }
+      setBnd(b, x);
+    }
+  }
+
+  function advect(b, d, d0, u_, v_, dt_){
+    const dt0 = dt_ * N;
+    for(let j=1;j<=N;j++) for(let i=1;i<=N;i++){
+      let x = i - dt0*u_[IX(i,j)];
+      let y = j - dt0*v_[IX(i,j)];
+      if(x<.5) x=.5; if(x>N+.5) x=N+.5;
+      if(y<.5) y=.5; if(y>N+.5) y=N+.5;
+      const i0=Math.floor(x), i1=i0+1, j0=Math.floor(y), j1=j0+1;
+      const s1=x-i0, s0=1-s1, t1=y-j0, t0=1-t1;
+      d[IX(i,j)] = s0*(t0*d0[IX(i0,j0)]+t1*d0[IX(i0,j1)]) + s1*(t0*d0[IX(i1,j0)]+t1*d0[IX(i1,j1)]);
+    }
+    setBnd(b, d);
+  }
+
+  function project(u_, v_, p, div_){
+    const h = 1.0/N;
+    for(let j=1;j<=N;j++) for(let i=1;i<=N;i++){
+      div_[IX(i,j)] = -.5*h*(u_[IX(i+1,j)]-u_[IX(i-1,j)]+v_[IX(i,j+1)]-v_[IX(i,j-1)]);
+      p[IX(i,j)] = 0;
+    }
+    setBnd(0, div_); setBnd(0, p);
+    for(let k=0;k<4;k++){
+      for(let j=1;j<=N;j++) for(let i=1;i<=N;i++){
+        p[IX(i,j)] = (div_[IX(i,j)]+p[IX(i-1,j)]+p[IX(i+1,j)]+p[IX(i,j-1)]+p[IX(i,j+1)])/4;
+      }
+      setBnd(0, p);
+    }
+    for(let j=1;j<=N;j++) for(let i=1;i<=N;i++){
+      u_[IX(i,j)] -= .5*N*(p[IX(i+1,j)]-p[IX(i-1,j)]);
+      v_[IX(i,j)] -= .5*N*(p[IX(i,j+1)]-p[IX(i,j-1)]);
+    }
+    setBnd(1, u_); setBnd(2, v_);
+  }
+
+  function velStep(){
+    // add source handled inline
+    diffuse(1, u0, u, visc, dt);
+    diffuse(2, v0, v, visc, dt);
+    project(u0, v0, u, v); // reuse u,v as scratch
+    advect(1, u, u0, u0, v0, dt);
+    advect(2, v, v0, u0, v0, dt);
+    project(u, v, u0, v0);
+  }
+
+  function densStep(){
+    diffuse(0, dens0, dens, diff, dt);
+    advect(0, dens, dens0, u, v, dt);
+  }
+
+  // Autonomous forcing — gentle sinusoidal jets
+  let t = 0;
+  function addForces(){
+    t += dt * 0.3;
+    // Two oscillating jets
+    const cx = Math.floor(N/2), cy = Math.floor(N/2);
+    for(let di=-3;di<=3;di++) for(let dj=-3;dj<=3;dj++){
+      const ii = cx + di + Math.floor(Math.sin(t*0.7)*N*0.25);
+      const jj = cy + dj + Math.floor(Math.cos(t*0.5)*N*0.2);
+      if(ii>0 && ii<=N && jj>0 && jj<=N){
+        u[IX(ii,jj)] += Math.sin(t*1.3) * 3;
+        v[IX(ii,jj)] += Math.cos(t*0.9) * 3;
+        dens[IX(ii,jj)] += 3;
+      }
+    }
+    // second jet
+    for(let di=-2;di<=2;di++) for(let dj=-2;dj<=2;dj++){
+      const ii = Math.floor(N*0.3) + di;
+      const jj = Math.floor(N*0.7) + dj + Math.floor(Math.sin(t*0.4)*8);
+      if(ii>0 && ii<=N && jj>0 && jj<=N){
+        u[IX(ii,jj)] += Math.cos(t*1.1) * 2;
+        v[IX(ii,jj)] += Math.sin(t*0.7) * -2;
+        dens[IX(ii,jj)] += 2;
+      }
+    }
+  }
+
+  // Mouse interaction
+  let mx = 0, my = 0, pmx = 0, pmy = 0, mouseDown = false;
+  canvas.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    pmx = mx; pmy = my;
+    mx = e.clientX - rect.left;
+    my = e.clientY - rect.top;
+    _lastInteraction = Date.now();
+    if(mouseDown || true){
+      const gi = Math.floor(mx / rect.width * N) + 1;
+      const gj = Math.floor(my / rect.height * N) + 1;
+      if(gi>0 && gi<=N && gj>0 && gj<=N){
+        u[IX(gi,gj)] += (mx - pmx) * 1.5;
+        v[IX(gi,gj)] += (my - pmy) * 1.5;
+        dens[IX(gi,gj)] += 5;
+      }
+    }
+  });
+  canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.touches[0];
+    const nx = touch.clientX - rect.left;
+    const ny = touch.clientY - rect.top;
+    const gi = Math.floor(nx / rect.width * N) + 1;
+    const gj = Math.floor(ny / rect.height * N) + 1;
+    if(gi>0 && gi<=N && gj>0 && gj<=N){
+      u[IX(gi,gj)] += (nx - mx) * 2;
+      v[IX(gi,gj)] += (ny - my) * 2;
+      dens[IX(gi,gj)] += 6;
+    }
+    pmx = mx; pmy = my;
+    mx = nx; my = ny;
+    _lastInteraction = Date.now();
+  }, {passive:false});
+
+  // Render
+  function resizeCanvas(){
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = canvas.clientWidth * dpr;
+    canvas.height = canvas.clientHeight * dpr;
+  }
+
+  function render(){
+    resizeCanvas();
+    const w = canvas.width, h = canvas.height;
+    const img = ctx.createImageData(w, h);
+    const d = img.data;
+    for(let py=0; py<h; py++){
+      for(let px=0; px<w; px++){
+        const gi = Math.floor(px/w * N) + 1;
+        const gj = Math.floor(py/h * N) + 1;
+        const dd = dens[IX(gi,gj)];
+        const vel = Math.sqrt(u[IX(gi,gj)]**2 + v[IX(gi,gj)]**2);
+        // Color: teal → violet → rose based on density & velocity
+        const hue = 195 - vel * 8 - dd * 2;
+        const sat = 55 + Math.min(dd * 3, 35);
+        const lum = Math.min(dd * 3.5 + vel * 1.5, 60);
+        // HSL to RGB
+        const hp = ((hue % 360) + 360) % 360;
+        const s = sat / 100, l = lum / 100;
+        const c = (1 - Math.abs(2*l - 1)) * s;
+        const x = c * (1 - Math.abs((hp/60)%2 - 1));
+        const m = l - c/2;
+        let r,g,b;
+        if(hp<60){r=c;g=x;b=0}
+        else if(hp<120){r=x;g=c;b=0}
+        else if(hp<180){r=0;g=c;b=x}
+        else if(hp<240){r=0;g=x;b=c}
+        else if(hp<300){r=x;g=0;b=c}
+        else{r=c;g=0;b=x}
+        const idx = (py*w+px)*4;
+        d[idx]   = (r+m)*255;
+        d[idx+1] = (g+m)*255;
+        d[idx+2] = (b+m)*255;
+        d[idx+3] = 255;
+      }
+    }
+    ctx.putImageData(img,0,0);
+  }
+
+  let heroFrame = 0;
+  function heroLoop(){
+    requestAnimationFrame(heroLoop);
+    if(!_heroVisible) return;
+    if(Date.now() - _lastInteraction > 300000) return; // 5min idle
+    heroFrame++;
+    if(heroFrame % 2 === 0) return; // throttle to ~30fps for perf
+    addForces();
+    velStep();
+    densStep();
+    // slow density decay
+    for(let i=0;i<size;i++) dens[i] *= 0.993;
+    render();
+  }
+  resizeCanvas();
+  heroLoop();
+})();
+
+/* ========================================================
+   SECTION 1 — Forces on a Fluid Parcel
+   ======================================================== */
+(function initParcel(){
+  const canvas = document.getElementById('parcelCanvas');
+  const ctx = canvas.getContext('2d');
+  const pressureEl = document.getElementById('pressureSlider');
+  const viscEl = document.getElementById('viscSlider');
+  const gravEl = document.getElementById('gravSlider');
+  const resetBtn = document.getElementById('resetParcel');
+  const statVel = document.getElementById('statVel');
+  const statAcc = document.getElementById('statAcc');
+  const statRe = document.getElementById('statRe');
+  const statTrail = document.getElementById('statTrail');
+
+  let px, py, vx, vy;
+  const trail = [];
+  const maxTrail = 400;
+
+  function reset(){
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = canvas.clientWidth * dpr;
+    canvas.height = canvas.clientHeight * dpr;
+    px = canvas.width / (2*dpr);
+    py = canvas.height / (2*dpr);
+    vx = 0; vy = 0;
+    trail.length = 0;
+  }
+  reset();
+  resetBtn.addEventListener('click', reset);
+  window.addEventListener('resize', () => {
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = canvas.clientWidth * dpr;
+    canvas.height = canvas.clientHeight * dpr;
+  });
+
+  // Observe when this box is in view
+  let boxVisible = false;
+  const boxObs = new IntersectionObserver(entries => {
+    boxVisible = entries[0].isIntersecting;
+  }, { threshold: 0.1 });
+  boxObs.observe(document.getElementById('ibox1'));
+
+  function step(){
+    const pressure = parseFloat(pressureEl.value);
+    const viscosity = parseFloat(viscEl.value);
+    const gravity = parseFloat(gravEl.value);
+
+    // Forces
+    const fpx = pressure * 0.12;  // pressure pushes right
+    const fpy = 0;
+    const fgx = 0;
+    const fgy = gravity * 0.08;   // gravity pulls down
+    const fvx = -viscosity * vx * 0.15; // viscous drag opposes motion
+    const fvy = -viscosity * vy * 0.15;
+
+    const ax = fpx + fgx + fvx;
+    const ay = fpy + fgy + fvy;
+    vx += ax; vy += ay;
+    px += vx; py += vy;
+
+    // Wrap around
+    const dpr = window.devicePixelRatio || 1;
+    const w = canvas.width / dpr, h = canvas.height / dpr;
+    if(px < 0) px += w;
+    if(px > w) px -= w;
+    if(py < 0) py += h;
+    if(py > h) py -= h;
+
+    trail.push({x:px, y:py, vx, vy});
+    if(trail.length > maxTrail) trail.shift();
+
+    // Stats
+    const speed = Math.sqrt(vx*vx + vy*vy);
+    const acc = Math.sqrt(ax*ax + ay*ay);
+    const re = viscosity > 0.01 ? (speed * 10 / (viscosity * 0.15)).toFixed(0) : '∞';
+    statVel.textContent = speed.toFixed(2);
+    statAcc.textContent = acc.toFixed(3);
+    statRe.textContent = re;
+    statTrail.textContent = trail.length;
+
+    return {fpx, fpy, fgx, fgy, fvx, fvy};
+  }
+
+  function drawArrow(ctx, x, y, dx, dy, color, label){
+    const scale = 80;
+    const ex = x + dx * scale, ey = y + dy * scale;
+    const len = Math.sqrt(dx*dx + dy*dy);
+    if(len < 0.001) return;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(ex, ey);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    // arrowhead
+    const angle = Math.atan2(dy, dx);
+    ctx.beginPath();
+    ctx.moveTo(ex, ey);
+    ctx.lineTo(ex - 8*Math.cos(angle - .4), ey - 8*Math.sin(angle - .4));
+    ctx.lineTo(ex - 8*Math.cos(angle + .4), ey - 8*Math.sin(angle + .4));
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+    // label
+    if(label){
+      ctx.font = '11px "JetBrains Mono"';
+      ctx.fillStyle = color;
+      ctx.fillText(label, ex + 6, ey - 6);
+    }
+  }
+
+  function draw(forces){
+    const dpr = window.devicePixelRatio || 1;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const w = canvas.width / dpr, h = canvas.height / dpr;
+    ctx.clearRect(0, 0, w, h);
+
+    // Trail
+    for(let i=1; i<trail.length; i++){
+      const alpha = i / trail.length * 0.5;
+      const speed = Math.sqrt(trail[i].vx**2 + trail[i].vy**2);
+      const hue = 195 - speed * 20;
+      ctx.beginPath();
+      ctx.moveTo(trail[i-1].x, trail[i-1].y);
+      ctx.lineTo(trail[i].x, trail[i].y);
+      ctx.strokeStyle = `hsla(${hue},60%,55%,${alpha})`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+
+    // Parcel glow
+    const grd = ctx.createRadialGradient(px, py, 0, px, py, 24);
+    grd.addColorStop(0, 'rgba(63,168,196,.6)');
+    grd.addColorStop(.4, 'rgba(63,168,196,.15)');
+    grd.addColorStop(1, 'transparent');
+    ctx.fillStyle = grd;
+    ctx.beginPath(); ctx.arc(px, py, 24, 0, Math.PI*2); ctx.fill();
+
+    // Parcel core
+    ctx.beginPath(); ctx.arc(px, py, 5, 0, Math.PI*2);
+    ctx.fillStyle = '#ece8e0'; ctx.fill();
+
+    // Force arrows
+    drawArrow(ctx, px, py, forces.fpx, forces.fpy, '#c9a84c');
+    drawArrow(ctx, px, py, forces.fgx, forces.fgy, '#c47a8a');
+    drawArrow(ctx, px, py, forces.fvx, forces.fvy, '#8a6abf');
+  }
+
+  function loop(){
+    requestAnimationFrame(loop);
+    if(!boxVisible) return;
+    const forces = step();
+    draw(forces);
+  }
+  loop();
+})();
+
+/* ========================================================
+   SECTION 2 — Reynolds' Pipe
+   ======================================================== */
+(function initReynolds(){
+  const canvas = document.getElementById('reynoldsCanvas');
+  const ctx = canvas.getContext('2d');
+  const flowSlider = document.getElementById('reFlowSlider');
+  const diamSlider = document.getElementById('reDiamSlider');
+  const resetBtn = document.getElementById('reResetBtn');
+  const statRe = document.getElementById('reStatRe');
+  const statRegime = document.getElementById('reStatRegime');
+  const statVel = document.getElementById('reStatVel');
+  const statSpread = document.getElementById('reStatSpread');
+
+  // Dye particles
+  const MAX_P = 1800;
+  let particles = [];
+  let time = 0;
+
+  function resetDye(){
+    particles = [];
+  }
+  resetBtn.addEventListener('click', resetDye);
+
+  function resize(){
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = canvas.clientWidth * dpr;
+    canvas.height = canvas.clientHeight * dpr;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let boxVisible = false;
+  const boxObs = new IntersectionObserver(entries => {
+    boxVisible = entries[0].isIntersecting;
+  }, { threshold: 0.1 });
+  boxObs.observe(document.getElementById('ibox2'));
+
+  // Perlin-like noise (simple value noise with interpolation)
+  const NOISE_SIZE = 256;
+  const noiseTable = new Float32Array(NOISE_SIZE);
+  for(let i=0;i<NOISE_SIZE;i++) noiseTable[i] = Math.random();
+  function noise1D(x){
+    const xi = ((Math.floor(x) % NOISE_SIZE) + NOISE_SIZE) % NOISE_SIZE;
+    const xf = x - Math.floor(x);
+    const a = noiseTable[xi];
+    const b = noiseTable[(xi+1) % NOISE_SIZE];
+    const t = xf * xf * (3 - 2*xf); // smoothstep
+    return a + (b-a)*t;
+  }
+  function noise2D(x,y){
+    const yi = ((Math.floor(y) % NOISE_SIZE) + NOISE_SIZE) % NOISE_SIZE;
+    const yf = y - Math.floor(y);
+    const a = noise1D(x + yi * 1.7);
+    const b = noise1D(x + ((yi+1)%NOISE_SIZE) * 1.7);
+    const t = yf * yf * (3 - 2*yf);
+    return a + (b-a)*t;
+  }
+  // Fractal noise
+  function fbm(x,y,octaves){
+    let val = 0, amp = 1, freq = 1, max = 0;
+    for(let i=0;i<octaves;i++){
+      val += noise2D(x*freq, y*freq) * amp;
+      max += amp;
+      amp *= 0.5;
+      freq *= 2.1;
+    }
+    return val/max;
+  }
+
+  function loop(){
+    requestAnimationFrame(loop);
+    if(!boxVisible) return;
+    time += 0.016;
+
+    const dpr = window.devicePixelRatio || 1;
+    const W = canvas.width / dpr;
+    const H = canvas.height / dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+
+    const flowVel = parseFloat(flowSlider.value);
+    const diam = parseFloat(diamSlider.value);
+    const pipeTop = H * (0.5 - diam * 0.35);
+    const pipeBot = H * (0.5 + diam * 0.35);
+    const pipeH = pipeBot - pipeTop;
+    const pipeCenter = (pipeTop + pipeBot) / 2;
+
+    // Reynolds number: Re = V * D / nu  (nu ~ 0.001 for water-like)
+    const nu = 0.0008;
+    const Re = (flowVel * 6) * (diam * 0.05) / nu;
+    const turbulence = Math.max(0, (Re - 1800) / 2000); // ramps from 0 to ~1+
+    const turbClamp = Math.min(turbulence, 1.5);
+
+    // Draw pipe walls
+    ctx.fillStyle = 'rgba(255,255,255,.03)';
+    ctx.fillRect(0, 0, W, pipeTop);
+    ctx.fillRect(0, pipeBot, W, H - pipeBot);
+
+    // Pipe wall lines
+    ctx.strokeStyle = 'rgba(255,255,255,.08)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, pipeTop); ctx.lineTo(W, pipeTop); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(0, pipeBot); ctx.lineTo(W, pipeBot); ctx.stroke();
+
+    // Draw laminar profile indicator on left
+    ctx.strokeStyle = 'rgba(201,168,76,.15)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for(let y = pipeTop; y <= pipeBot; y += 2){
+      const r = (y - pipeCenter) / (pipeH / 2); // -1 to 1
+      const vProfile = flowVel * (1 - r*r); // parabolic
+      const xLen = vProfile * 60;
+      ctx.moveTo(10, y);
+      ctx.lineTo(10 + xLen, y);
+    }
+    ctx.stroke();
+
+    // Emit dye particles from left center
+    if(flowVel > 0.01 && particles.length < MAX_P){
+      const emitCount = Math.ceil(flowVel * 4);
+      for(let i = 0; i < emitCount; i++){
+        particles.push({
+          x: 0,
+          y: pipeCenter + (Math.random() - 0.5) * 3,
+          age: 0,
+          seed: Math.random() * 1000
+        });
+      }
+    }
+
+    // Update and draw particles
+    let totalSpread = 0;
+    let aliveCount = 0;
+
+    for(let i = particles.length - 1; i >= 0; i--){
+      const p = particles[i];
+      p.age += 0.016;
+
+      // Local position in pipe (normalized -1 to 1)
+      const r = (p.y - pipeCenter) / (pipeH / 2);
+
+      // Laminar component: parabolic profile
+      const vLaminar = flowVel * 6 * Math.max(0, 1 - r*r);
+
+      // Turbulent perturbation
+      let vTurbX = 0, vTurbY = 0;
+      if(turbClamp > 0.01){
+        const noiseScale = 3.5;
+        const tScale = time * (1 + turbClamp * 2);
+        const nx = fbm(p.x * 0.008 * noiseScale + p.seed * 0.1, p.y * 0.015 * noiseScale + tScale, 4);
+        const ny = fbm(p.x * 0.008 * noiseScale + 100 + p.seed * 0.1, p.y * 0.015 * noiseScale + tScale + 50, 4);
+        vTurbX = (nx - 0.5) * turbClamp * 3.5 * flowVel;
+        vTurbY = (ny - 0.5) * turbClamp * 5.0 * flowVel;
+
+        // Intermittent bursts near transition
+        if(turbulence > 0 && turbulence < 0.8){
+          const burst = Math.sin(time * 3 + p.seed) * Math.sin(time * 7.3 + p.x * 0.02);
+          if(burst > 0.7){
+            vTurbX *= 2.5;
+            vTurbY *= 2.5;
+          }
+        }
+      }
+
+      p.x += vLaminar + vTurbX;
+      p.y += vTurbY;
+
+      // Bounce off pipe walls
+      if(p.y < pipeTop + 2){ p.y = pipeTop + 2; }
+      if(p.y > pipeBot - 2){ p.y = pipeBot - 2; }
+
+      // Remove if off screen
+      if(p.x > W + 10 || p.age > 15){
+        particles.splice(i, 1);
+        continue;
+      }
+
+      // Track spread
+      const distFromCenter = Math.abs(p.y - pipeCenter);
+      totalSpread += distFromCenter;
+      aliveCount++;
+
+      // Color: blue-teal for laminar, violet-rose for turbulent
+      const speed = Math.sqrt((vLaminar + vTurbX)**2 + vTurbY**2);
+      const hue = turbClamp < 0.3 ? 195 : 195 - turbClamp * 70;
+      const sat = 60 + turbClamp * 20;
+      const lum = 45 + Math.min(speed * 2, 20);
+      const alpha = Math.max(0, Math.min(1, 1 - p.age / 12)) * 0.85;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 1.5 + turbClamp * 0.8, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${hue},${sat}%,${lum}%,${alpha})`;
+      ctx.fill();
+    }
+
+    // Glow effect for dye stream at injection point
+    const glowGrd = ctx.createRadialGradient(8, pipeCenter, 0, 8, pipeCenter, 15);
+    glowGrd.addColorStop(0, 'rgba(63,168,196,.5)');
+    glowGrd.addColorStop(1, 'transparent');
+    ctx.fillStyle = glowGrd;
+    ctx.beginPath(); ctx.arc(8, pipeCenter, 15, 0, Math.PI*2); ctx.fill();
+
+    // Labels
+    ctx.font = '10px "JetBrains Mono"';
+    ctx.fillStyle = 'rgba(255,255,255,.15)';
+    ctx.fillText('dye inlet', 6, pipeTop - 8);
+    ctx.fillText('pipe wall', W - 62, pipeTop - 8);
+
+    // Re marker line
+    if(Re > 100){
+      const reBarX = W - 25;
+      const reBarTop = pipeTop + 10;
+      const reBarBot = pipeBot - 10;
+      const reBarH = reBarBot - reBarTop;
+      ctx.fillStyle = 'rgba(255,255,255,.03)';
+      ctx.fillRect(reBarX - 4, reBarTop, 8, reBarH);
+      // Critical threshold marker
+      const critY = reBarTop + reBarH * (1 - 2300 / 6000);
+      ctx.strokeStyle = 'rgba(196,122,138,.3)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3,3]);
+      ctx.beginPath(); ctx.moveTo(reBarX - 12, critY); ctx.lineTo(reBarX + 12, critY); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.font = '8px "JetBrains Mono"';
+      ctx.fillStyle = 'rgba(196,122,138,.4)';
+      ctx.fillText('Re=2300', reBarX - 28, critY - 5);
+      // Current Re marker
+      const curY = reBarTop + reBarH * (1 - Math.min(Re, 6000) / 6000);
+      ctx.beginPath(); ctx.arc(reBarX, curY, 3, 0, Math.PI*2);
+      ctx.fillStyle = turbClamp > 0.3 ? '#c47a8a' : '#3fa8c4';
+      ctx.fill();
+    }
+
+    // Stats
+    statRe.textContent = Math.round(Re);
+    statRe.style.color = Re > 2300 ? '#c47a8a' : Re > 1800 ? '#d4a853' : '#3fa8c4';
+    statRegime.textContent = Re < 1800 ? 'Laminar' : Re < 2500 ? 'Transition' : 'Turbulent';
+    statRegime.style.color = Re < 1800 ? '#3fa8c4' : Re < 2500 ? '#d4a853' : '#c47a8a';
+    statVel.textContent = (flowVel * 6).toFixed(2);
+    const avgSpread = aliveCount > 0 ? (totalSpread / aliveCount) / (pipeH/2) * 100 : 0;
+    statSpread.textContent = avgSpread.toFixed(1) + '%';
+  }
+  loop();
+})();
+
+/* ========================================================
+   SECTION 3 — Vortex Stretching 2D vs 3D
+   ======================================================== */
+(function initVortex(){
+  const canvas = document.getElementById('vortexCanvas');
+  const ctx = canvas.getContext('2d');
+  const stretchSlider = document.getElementById('vStretchSlider');
+  const btn2D = document.getElementById('vBtn2D');
+  const btn3D = document.getElementById('vBtn3D');
+  const resetBtn = document.getElementById('vResetBtn');
+  const statOmega = document.getElementById('vStatOmega');
+  const statEnstrophy = document.getElementById('vStatEnstrophy');
+  const statRadius = document.getElementById('vStatRadius');
+  const statTime = document.getElementById('vStatTime');
+
+  let is3D = false;
+  let time = 0;
+  let tubeRadius = 1;
+  let omega = 1;       // peak vorticity
+  let enstrophy = 1;
+
+  // Particles representing the vortex tube cross-section / filaments
+  const NP = 600;
+  let particles = [];
+
+  function initParticles(){
+    particles = [];
+    time = 0;
+    tubeRadius = 1;
+    omega = 1;
+    enstrophy = 1;
+    for(let i = 0; i < NP; i++){
+      // distribute in a disc
+      const angle = Math.random() * Math.PI * 2;
+      const r = Math.sqrt(Math.random()) * 0.9;
+      particles.push({
+        x: Math.cos(angle) * r,
+        y: Math.sin(angle) * r,
+        z: (Math.random() - 0.5) * 2, // depth for 3D
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.3 + Math.random() * 0.7
+      });
+    }
+  }
+  initParticles();
+
+  btn2D.addEventListener('click', () => { is3D = false; btn2D.classList.add('active'); btn3D.classList.remove('active'); initParticles(); });
+  btn3D.addEventListener('click', () => { is3D = true; btn3D.classList.add('active'); btn2D.classList.remove('active'); initParticles(); });
+  resetBtn.addEventListener('click', initParticles);
+
+  function resize(){
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = canvas.clientWidth * dpr;
+    canvas.height = canvas.clientHeight * dpr;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let boxVisible = false;
+  const boxObs = new IntersectionObserver(entries => {
+    boxVisible = entries[0].isIntersecting;
+  }, { threshold: 0.1 });
+  boxObs.observe(document.getElementById('ibox3'));
+
+  function loop(){
+    requestAnimationFrame(loop);
+    if(!boxVisible) return;
+
+    const dt = 0.016;
+    time += dt;
+    const stretch = parseFloat(stretchSlider.value);
+
+    const dpr = window.devicePixelRatio || 1;
+    const W = canvas.width / dpr;
+    const H = canvas.height / dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+
+    const cx = W / 2;
+    const cy = H / 2;
+    const scale = Math.min(W, H) * 0.28;
+
+    if(is3D){
+      // 3D mode: vortex tube being stretched along its axis
+      // Conservation of angular momentum: as tube radius shrinks, omega increases
+      // radius ~ 1 / sqrt(1 + stretch * time), omega ~ 1 + stretch * time
+      const stretchFactor = 1 + stretch * time * 0.8;
+      tubeRadius = 1 / Math.sqrt(stretchFactor);
+      omega = stretchFactor;
+      enstrophy = omega * omega * tubeRadius * tubeRadius * Math.PI; // ω² * area, but ω grows, area shrinks: net grows
+
+      // Actually enstrophy in 3D with stretching: ∫ω² dV
+      // If tube length grows as L(t) and cross-section shrinks to keep volume:
+      // ω ~ L(t) (by Helmholtz), radius ~ 1/√L, enstrophy ~ ω² * π r² * L = L² * π/L * L = πL² → grows
+      enstrophy = omega * omega;
+
+      for(let i = 0; i < NP; i++){
+        const p = particles[i];
+        // Rotate around the tube axis
+        const angVel = omega * p.speed * 1.2;
+        p.phase += angVel * dt;
+        // Compress radially
+        const r = Math.sqrt(p.x*p.x + p.y*p.y);
+        const targetR = r * tubeRadius;
+        if(r > 0.001){
+          const currentR = r;
+          const blend = 0.03;
+          const newR = currentR + (targetR - currentR) * blend;
+          p.x *= newR / currentR;
+          p.y *= newR / currentR;
+        }
+        // 3D depth oscillation
+        p.z += (Math.sin(time * 0.5 + p.phase) * 0.01) * stretch;
+
+        // Draw with perspective projection
+        const perspective = 1 / (1 + p.z * 0.15);
+        const screenX = cx + (Math.cos(p.phase) * Math.sqrt(p.x*p.x + p.y*p.y)) * scale * perspective;
+        const screenY = cy + (Math.sin(p.phase) * Math.sqrt(p.x*p.x + p.y*p.y)) * scale * perspective;
+
+        // Color: teal → white-hot as vorticity intensifies
+        const intensity = Math.min(omega / 8, 1);
+        const hue = 195 - intensity * 195;
+        const sat = 60 - intensity * 40;
+        const lum = 45 + intensity * 45;
+        const alpha = (0.5 + intensity * 0.4) * perspective;
+        const size = (1.5 + intensity * 2) * perspective;
+
+        ctx.beginPath();
+        ctx.arc(screenX, screenY, size, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${hue},${sat}%,${lum}%,${alpha})`;
+        ctx.fill();
+
+        // Glow for high-vorticity particles
+        if(intensity > 0.5){
+          ctx.beginPath();
+          ctx.arc(screenX, screenY, size * 3, 0, Math.PI * 2);
+          ctx.fillStyle = `hsla(${hue},${sat}%,${lum}%,${alpha * 0.15})`;
+          ctx.fill();
+        }
+      }
+
+      // Draw tube outline (ellipse suggesting 3D)
+      ctx.strokeStyle = `rgba(63,168,196,${0.15 / Math.max(omega/3,1)})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, tubeRadius * scale, tubeRadius * scale * 0.7, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Axis arrow showing stretching direction
+      if(stretch > 0.05){
+        const arrowLen = 30 + stretch * 50;
+        ctx.strokeStyle = 'rgba(201,168,76,.2)';
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(cx, cy - arrowLen); ctx.lineTo(cx, cy + arrowLen); ctx.stroke();
+        // arrowheads
+        ctx.fillStyle = 'rgba(201,168,76,.3)';
+        ctx.beginPath(); ctx.moveTo(cx, cy - arrowLen); ctx.lineTo(cx-4, cy - arrowLen+8); ctx.lineTo(cx+4, cy - arrowLen+8); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(cx, cy + arrowLen); ctx.lineTo(cx-4, cy + arrowLen-8); ctx.lineTo(cx+4, cy + arrowLen-8); ctx.fill();
+        ctx.font = '9px "JetBrains Mono"';
+        ctx.fillStyle = 'rgba(201,168,76,.3)';
+        ctx.textAlign = 'center';
+        ctx.fillText('stretch', cx, cy + arrowLen + 14);
+        ctx.textAlign = 'left';
+      }
+
+    } else {
+      // 2D mode: vortex swirls but vorticity is conserved
+      tubeRadius = 1;
+      omega = 1; // bounded!
+      enstrophy = 1;
+
+      for(let i = 0; i < NP; i++){
+        const p = particles[i];
+        const r = Math.sqrt(p.x*p.x + p.y*p.y);
+        // Rankine vortex profile: solid body inside, 1/r outside
+        const angVel = r < 0.5 ? p.speed * 1.5 : p.speed * 0.75 / Math.max(r, 0.01);
+        p.phase += angVel * dt * (1 + stretch * 0.5);
+
+        const screenX = cx + Math.cos(p.phase) * r * scale;
+        const screenY = cy + Math.sin(p.phase) * r * scale;
+
+        const hue = 195;
+        const sat = 55;
+        const lum = 40 + (1 - r) * 15;
+        const alpha = 0.6;
+
+        ctx.beginPath();
+        ctx.arc(screenX, screenY, 1.8, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${hue},${sat}%,${lum}%,${alpha})`;
+        ctx.fill();
+      }
+
+      // Vortex boundary circle
+      ctx.strokeStyle = 'rgba(63,168,196,.12)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(cx, cy, scale, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    // Mode label
+    ctx.font = '10px "JetBrains Mono"';
+    ctx.fillStyle = 'rgba(255,255,255,.2)';
+    ctx.textAlign = 'left';
+    ctx.fillText(is3D ? '3D · vortex tube stretching' : '2D · vorticity conserved', 12, 18);
+
+    // Stats
+    statOmega.textContent = omega.toFixed(2);
+    statOmega.style.color = omega > 3 ? '#c47a8a' : omega > 1.5 ? '#d4a853' : '#3fa8c4';
+    statEnstrophy.textContent = enstrophy.toFixed(2);
+    statEnstrophy.style.color = enstrophy > 5 ? '#c47a8a' : '#c9a84c';
+    statRadius.textContent = tubeRadius.toFixed(3);
+    statTime.textContent = time.toFixed(1);
+  }
+  loop();
+})();
+
+/* ========================================================
+   SECTION 4 — Energy Cascade (multi-scale vortex model)
+   ======================================================== */
+(function initCascade(){
+  const turbCanvas = document.getElementById('cascadeTurbCanvas');
+  const specCanvas = document.getElementById('cascadeSpecCanvas');
+  const tCtx = turbCanvas.getContext('2d');
+  const sCtx = specCanvas.getContext('2d');
+  const viscSlider = document.getElementById('cascViscSlider');
+  const forceSlider = document.getElementById('cascForceSlider');
+  const resetBtn = document.getElementById('cascResetBtn');
+  const statRe = document.getElementById('cascStatRe');
+  const statEta = document.getElementById('cascStatEta');
+  const statEps = document.getElementById('cascStatEps');
+  const statE = document.getElementById('cascStatE');
+
+  // Multi-scale vortex blobs
+  let vortices = []; // {x, y, gamma, radius, age, generation}
+  const MAX_VORTICES = 300;
+  // Tracer particles for visualization
+  let tracers = [];
+  const N_TRACERS = 2000;
+  let time = 0;
+  // Smoothed spectrum for display
+  let spectrumSmooth = new Float32Array(32);
+
+  function initTracers(){
+    tracers = [];
+    for(let i = 0; i < N_TRACERS; i++){
+      tracers.push({ x: Math.random(), y: Math.random(), age: Math.random() * 10 });
+    }
+  }
+
+  function reset(){
+    vortices = [];
+    initTracers();
+    time = 0;
+    spectrumSmooth.fill(0);
+  }
+  reset();
+  resetBtn.addEventListener('click', reset);
+
+  function resize(){
+    const dpr = window.devicePixelRatio || 1;
+    turbCanvas.width = turbCanvas.clientWidth * dpr;
+    turbCanvas.height = turbCanvas.clientHeight * dpr;
+    specCanvas.width = specCanvas.clientWidth * dpr;
+    specCanvas.height = specCanvas.clientHeight * dpr;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let boxVisible = false;
+  const boxObs = new IntersectionObserver(entries => {
+    boxVisible = entries[0].isIntersecting;
+  }, { threshold: 0.1 });
+  boxObs.observe(document.getElementById('ibox4'));
+
+  // Velocity field from vortex blobs at point (px,py) in [0,1]²
+  function velocityAt(px, py){
+    let ux = 0, uy = 0;
+    for(let i = 0; i < vortices.length; i++){
+      const v = vortices[i];
+      let dx = px - v.x;
+      let dy = py - v.y;
+      // periodic wrap for nearest image
+      if(dx > 0.5) dx -= 1; if(dx < -0.5) dx += 1;
+      if(dy > 0.5) dy -= 1; if(dy < -0.5) dy += 1;
+      const r2 = dx*dx + dy*dy;
+      const rc2 = v.radius * v.radius;
+      // Lamb-Oseen vortex: v_theta = Gamma/(2πr) * (1 - exp(-r²/rc²))
+      const factor = v.gamma / (2 * Math.PI * (r2 + 0.0001)) * (1 - Math.exp(-r2/rc2));
+      ux += -dy * factor;
+      uy +=  dx * factor;
+    }
+    return [ux, uy];
+  }
+
+  function loop(){
+    requestAnimationFrame(loop);
+    if(!boxVisible) return;
+
+    const dt = 0.012;
+    time += dt;
+    const visc = parseFloat(viscSlider.value);
+    const forcing = parseFloat(forceSlider.value);
+
+    // === FORCING: inject large-scale vortices ===
+    if(Math.random() < forcing * 0.15 && vortices.length < MAX_VORTICES){
+      const sign = Math.random() < 0.5 ? 1 : -1;
+      vortices.push({
+        x: Math.random(), y: Math.random(),
+        gamma: sign * (0.02 + Math.random() * 0.03) * forcing,
+        radius: 0.08 + Math.random() * 0.06, // large scale
+        age: 0, generation: 0
+      });
+    }
+
+    // === CASCADE: large vortices break into smaller ones ===
+    const toAdd = [];
+    for(let i = vortices.length - 1; i >= 0; i--){
+      const v = vortices[i];
+      v.age += dt;
+
+      // Cascade: probabilistic breakup after some time
+      const breakupTime = 1.5 + v.radius * 15;
+      if(v.age > breakupTime && v.radius > visc * 2 && v.generation < 5 && vortices.length + toAdd.length < MAX_VORTICES - 4){
+        // Spawn 2-3 child vortices at smaller scale
+        const nChildren = 2 + (Math.random() < 0.3 ? 1 : 0);
+        for(let c = 0; c < nChildren; c++){
+          const angle = Math.random() * Math.PI * 2;
+          const dist = v.radius * 0.5;
+          toAdd.push({
+            x: (v.x + Math.cos(angle)*dist + 1) % 1,
+            y: (v.y + Math.sin(angle)*dist + 1) % 1,
+            gamma: v.gamma / nChildren * (0.7 + Math.random()*0.3),
+            radius: v.radius * (0.4 + Math.random()*0.15),
+            age: 0, generation: v.generation + 1
+          });
+        }
+        v.gamma *= 0.1; // parent loses most energy
+        v.age = 0;
+      }
+
+      // Viscous dissipation: small vortices decay
+      const dissipationRate = visc * 8 / (v.radius * v.radius + 0.001);
+      v.gamma *= (1 - dissipationRate * dt);
+
+      // Advect vortex by velocity from other vortices (simplified — use average)
+      const [ux, uy] = velocityAt(v.x, v.y);
+      v.x = (v.x + ux * dt * 0.3 + 1) % 1;
+      v.y = (v.y + uy * dt * 0.3 + 1) % 1;
+
+      // Remove dead vortices
+      if(Math.abs(v.gamma) < 0.0005 || v.age > 20){
+        vortices.splice(i, 1);
+      }
+    }
+    for(const a of toAdd) vortices.push(a);
+
+    // === ADVECT TRACERS ===
+    for(let i = 0; i < tracers.length; i++){
+      const t = tracers[i];
+      const [ux, uy] = velocityAt(t.x, t.y);
+      t.x = (t.x + ux * dt + 1) % 1;
+      t.y = (t.y + uy * dt + 1) % 1;
+      t.age += dt;
+      if(t.age > 12){ t.x = Math.random(); t.y = Math.random(); t.age = 0; }
+    }
+
+    // === DRAW TURBULENCE ===
+    const dpr = window.devicePixelRatio || 1;
+    const TW = turbCanvas.width / dpr;
+    const TH = turbCanvas.height / dpr;
+    tCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    tCtx.fillStyle = 'rgba(4,5,12,.15)';
+    tCtx.fillRect(0, 0, TW, TH);
+
+    // Draw tracer particles
+    for(let i = 0; i < tracers.length; i++){
+      const t = tracers[i];
+      const [ux, uy] = velocityAt(t.x, t.y);
+      const speed = Math.sqrt(ux*ux + uy*uy);
+      const hue = 195 - speed * 600;
+      const lum = 30 + Math.min(speed * 300, 40);
+      const alpha = Math.min(t.age * 0.5, 0.7) * Math.min(1, speed * 60 + 0.15);
+      tCtx.beginPath();
+      tCtx.arc(t.x * TW, t.y * TH, 1.2, 0, Math.PI * 2);
+      tCtx.fillStyle = `hsla(${hue},60%,${lum}%,${alpha})`;
+      tCtx.fill();
+    }
+
+    // Draw vortex cores faintly
+    for(const v of vortices){
+      const intensity = Math.abs(v.gamma) * 20;
+      if(intensity < 0.03) continue;
+      const grd = tCtx.createRadialGradient(v.x*TW, v.y*TH, 0, v.x*TW, v.y*TH, v.radius*TW*0.5);
+      const hue = v.gamma > 0 ? 195 : 280;
+      grd.addColorStop(0, `hsla(${hue},60%,50%,${Math.min(intensity,0.2)})`);
+      grd.addColorStop(1, 'transparent');
+      tCtx.fillStyle = grd;
+      tCtx.beginPath();
+      tCtx.arc(v.x*TW, v.y*TH, v.radius*TW*0.5, 0, Math.PI*2);
+      tCtx.fill();
+    }
+
+    // === COMPUTE ENERGY SPECTRUM ===
+    const nBins = 32;
+    const spectrum = new Float32Array(nBins);
+    const counts = new Float32Array(nBins);
+    for(const v of vortices){
+      // wavenumber ~ 1/radius
+      const k = 1 / (v.radius + 0.001);
+      const bin = Math.floor(Math.log(k + 1) / Math.log(200) * nBins);
+      if(bin >= 0 && bin < nBins){
+        spectrum[bin] += v.gamma * v.gamma;
+        counts[bin]++;
+      }
+    }
+    // Smooth
+    for(let i = 0; i < nBins; i++){
+      spectrumSmooth[i] = spectrumSmooth[i] * 0.92 + spectrum[i] * 0.08;
+    }
+
+    // === DRAW SPECTRUM ===
+    const SW = specCanvas.width / dpr;
+    const SH = specCanvas.height / dpr;
+    sCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    sCtx.clearRect(0, 0, SW, SH);
+
+    const padL = 50, padR = 20, padT = 30, padB = 40;
+    const plotW = SW - padL - padR;
+    const plotH = SH - padT - padB;
+
+    // Axes
+    sCtx.strokeStyle = 'rgba(255,255,255,.1)';
+    sCtx.lineWidth = 1;
+    sCtx.beginPath();
+    sCtx.moveTo(padL, padT);
+    sCtx.lineTo(padL, padT + plotH);
+    sCtx.lineTo(padL + plotW, padT + plotH);
+    sCtx.stroke();
+
+    // Axis labels
+    sCtx.font = '9px "JetBrains Mono"';
+    sCtx.fillStyle = 'rgba(255,255,255,.25)';
+    sCtx.textAlign = 'center';
+    sCtx.fillText('log k (wavenumber)', padL + plotW/2, SH - 6);
+    sCtx.save();
+    sCtx.translate(12, padT + plotH/2);
+    sCtx.rotate(-Math.PI/2);
+    sCtx.fillText('log E(k)', 0, 0);
+    sCtx.restore();
+
+    // −5/3 reference line
+    const refStartX = padL + plotW * 0.15;
+    const refEndX = padL + plotW * 0.75;
+    const refStartY = padT + plotH * 0.15;
+    const refSlope = -5/3;
+    const refEndY = refStartY - refSlope * (refEndX - refStartX) * 0.6;
+    sCtx.strokeStyle = 'rgba(201,168,76,.25)';
+    sCtx.lineWidth = 1;
+    sCtx.setLineDash([4,4]);
+    sCtx.beginPath();
+    sCtx.moveTo(refStartX, refStartY);
+    sCtx.lineTo(refEndX, Math.min(refEndY, padT + plotH - 5));
+    sCtx.stroke();
+    sCtx.setLineDash([]);
+    sCtx.font = '8px "JetBrains Mono"';
+    sCtx.fillStyle = 'rgba(201,168,76,.4)';
+    sCtx.textAlign = 'left';
+    sCtx.fillText('k⁻⁵ᐟ³', refEndX + 4, Math.min(refEndY, padT + plotH - 5) - 4);
+
+    // Inertial range label
+    sCtx.fillStyle = 'rgba(63,168,196,.2)';
+    sCtx.textAlign = 'center';
+    sCtx.fillText('inertial range', padL + plotW * 0.45, padT + plotH + 18);
+
+    // Plot spectrum
+    let maxE = 0.00001;
+    for(let i = 0; i < nBins; i++) if(spectrumSmooth[i] > maxE) maxE = spectrumSmooth[i];
+    const logMax = Math.log10(maxE + 1e-10);
+    const logMin = logMax - 4;
+
+    sCtx.beginPath();
+    let started = false;
+    for(let i = 0; i < nBins; i++){
+      const val = spectrumSmooth[i];
+      if(val < 1e-10) continue;
+      const lv = Math.log10(val);
+      const nx = padL + (i / nBins) * plotW;
+      const ny = padT + plotH - ((lv - logMin) / (logMax - logMin)) * plotH;
+      const clampY = Math.max(padT, Math.min(padT + plotH, ny));
+      if(!started){ sCtx.moveTo(nx, clampY); started = true; }
+      else sCtx.lineTo(nx, clampY);
+    }
+    sCtx.strokeStyle = '#3fa8c4';
+    sCtx.lineWidth = 2;
+    sCtx.stroke();
+
+    // Dots on spectrum
+    for(let i = 0; i < nBins; i++){
+      const val = spectrumSmooth[i];
+      if(val < 1e-10) continue;
+      const lv = Math.log10(val);
+      const nx = padL + (i / nBins) * plotW;
+      const ny = padT + plotH - ((lv - logMin) / (logMax - logMin)) * plotH;
+      const clampY = Math.max(padT, Math.min(padT + plotH, ny));
+      sCtx.beginPath();
+      sCtx.arc(nx, clampY, 2.5, 0, Math.PI * 2);
+      sCtx.fillStyle = '#3fa8c4';
+      sCtx.fill();
+    }
+
+    // Region labels
+    sCtx.font = '8px "JetBrains Mono"';
+    sCtx.fillStyle = 'rgba(255,255,255,.15)';
+    sCtx.textAlign = 'center';
+    sCtx.fillText('forcing', padL + plotW * 0.1, padT + 14);
+    sCtx.fillText('dissipation', padL + plotW * 0.88, padT + 14);
+
+    // === STATS ===
+    let totalE = 0, totalEnstrophy = 0;
+    for(const v of vortices){
+      totalE += v.gamma * v.gamma;
+      totalEnstrophy += v.gamma * v.gamma / (v.radius * v.radius + 0.0001);
+    }
+    const epsilon = visc * totalEnstrophy;
+    const eta = epsilon > 0 ? Math.pow(visc*visc*visc / (epsilon+1e-10), 0.25) : 0;
+    const urms = Math.sqrt(totalE * 2 / Math.max(vortices.length, 1));
+    const lambda = urms > 0 ? Math.sqrt(15 * visc / (epsilon / Math.max(urms*urms, 1e-10) + 1e-10)) : 0;
+    const taylorRe = urms * lambda / visc;
+
+    statRe.textContent = Math.round(taylorRe);
+    statEta.textContent = eta > 0.0001 ? eta.toFixed(4) : '—';
+    statEps.textContent = epsilon.toFixed(4);
+    statE.textContent = totalE.toFixed(4);
+  }
+  loop();
+})();
+
+/* ========================================================
+   SECTION 5 — Your Own Ocean (Stable Fluids, 192×192)
+   ======================================================== */
+(function initOcean(){
+  const canvas = document.getElementById('oceanCanvas');
+  const ctx = canvas.getContext('2d');
+  const viscSlider = document.getElementById('oceanViscSlider');
+  const radSlider = document.getElementById('oceanRadSlider');
+  const vortBtn = document.getElementById('oceanVortBtn');
+  const velBtn = document.getElementById('oceanVelBtn');
+  const resetBtn = document.getElementById('oceanResetBtn');
+  const sVel = document.getElementById('oceanStatVel');
+  const sKE = document.getElementById('oceanStatKE');
+  const sVort = document.getElementById('oceanStatVort');
+  const sRe = document.getElementById('oceanStatRe');
+
+  const N = 192;
+  const S = (N+2)*(N+2);
+  let u = new Float32Array(S), v = new Float32Array(S);
+  let u0 = new Float32Array(S), v0 = new Float32Array(S);
+  // 3 dye channels (RGB-ish for multi-colour dye)
+  let d0 = new Float32Array(S), d1 = new Float32Array(S), d2 = new Float32Array(S);
+  let d0p = new Float32Array(S), d1p = new Float32Array(S), d2p = new Float32Array(S);
+
+  const dt = 0.1;
+  const diff = 0.000002;
+  let showVort = false, showVel = false;
+  let dyeHue = 0; // cycles
+
+  vortBtn.addEventListener('click', () => { showVort = !showVort; vortBtn.classList.toggle('active'); });
+  velBtn.addEventListener('click', () => { showVel = !showVel; velBtn.classList.toggle('active'); });
+  resetBtn.addEventListener('click', () => {
+    u.fill(0); v.fill(0); u0.fill(0); v0.fill(0);
+    d0.fill(0); d1.fill(0); d2.fill(0);
+    d0p.fill(0); d1p.fill(0); d2p.fill(0);
+  });
+
+  function IX(i,j){ return i + (N+2)*j; }
+
+  function setBnd(b,x){
+    for(let i=1;i<=N;i++){
+      x[IX(0,i)]   = b===1?-x[IX(1,i)]:x[IX(1,i)];
+      x[IX(N+1,i)] = b===1?-x[IX(N,i)]:x[IX(N,i)];
+      x[IX(i,0)]   = b===2?-x[IX(i,1)]:x[IX(i,1)];
+      x[IX(i,N+1)] = b===2?-x[IX(i,N)]:x[IX(i,N)];
+    }
+    x[IX(0,0)]=.5*(x[IX(1,0)]+x[IX(0,1)]);
+    x[IX(0,N+1)]=.5*(x[IX(1,N+1)]+x[IX(0,N)]);
+    x[IX(N+1,0)]=.5*(x[IX(N,0)]+x[IX(N+1,1)]);
+    x[IX(N+1,N+1)]=.5*(x[IX(N,N+1)]+x[IX(N+1,N)]);
+  }
+
+  function diffuse(b,x,x0,d,dt_){
+    const a=dt_*d*N*N;
+    if(a < 1e-8){ for(let i=0;i<S;i++) x[i]=x0[i]; return; }
+    for(let k=0;k<4;k++){
+      for(let j=1;j<=N;j++) for(let i=1;i<=N;i++){
+        x[IX(i,j)]=(x0[IX(i,j)]+a*(x[IX(i-1,j)]+x[IX(i+1,j)]+x[IX(i,j-1)]+x[IX(i,j+1)]))/(1+4*a);
+      }
+      setBnd(b,x);
+    }
+  }
+
+  function advect(b,d_,d0_,u_,v_,dt_){
+    const dt0=dt_*N;
+    for(let j=1;j<=N;j++) for(let i=1;i<=N;i++){
+      let x=i-dt0*u_[IX(i,j)], y=j-dt0*v_[IX(i,j)];
+      if(x<.5)x=.5;if(x>N+.5)x=N+.5;
+      if(y<.5)y=.5;if(y>N+.5)y=N+.5;
+      const i0=Math.floor(x),i1=i0+1,j0=Math.floor(y),j1=j0+1;
+      const s1=x-i0,s0=1-s1,t1=y-j0,t0=1-t1;
+      d_[IX(i,j)]=s0*(t0*d0_[IX(i0,j0)]+t1*d0_[IX(i0,j1)])+s1*(t0*d0_[IX(i1,j0)]+t1*d0_[IX(i1,j1)]);
+    }
+    setBnd(b,d_);
+  }
+
+  function project(u_,v_,p,div_){
+    const h=1/N;
+    for(let j=1;j<=N;j++) for(let i=1;i<=N;i++){
+      div_[IX(i,j)]=-.5*h*(u_[IX(i+1,j)]-u_[IX(i-1,j)]+v_[IX(i,j+1)]-v_[IX(i,j-1)]);
+      p[IX(i,j)]=0;
+    }
+    setBnd(0,div_);setBnd(0,p);
+    for(let k=0;k<8;k++){
+      for(let j=1;j<=N;j++) for(let i=1;i<=N;i++)
+        p[IX(i,j)]=(div_[IX(i,j)]+p[IX(i-1,j)]+p[IX(i+1,j)]+p[IX(i,j-1)]+p[IX(i,j+1)])/4;
+      setBnd(0,p);
+    }
+    for(let j=1;j<=N;j++) for(let i=1;i<=N;i++){
+      u_[IX(i,j)]-=.5*N*(p[IX(i+1,j)]-p[IX(i-1,j)]);
+      v_[IX(i,j)]-=.5*N*(p[IX(i,j+1)]-p[IX(i,j-1)]);
+    }
+    setBnd(1,u_);setBnd(2,v_);
+  }
+
+  function velStep(visc_){
+    diffuse(1,u0,u,visc_,dt); diffuse(2,v0,v,visc_,dt);
+    project(u0,v0,u,v);
+    advect(1,u,u0,u0,v0,dt); advect(2,v,v0,u0,v0,dt);
+    project(u,v,u0,v0);
+  }
+
+  function densStep(d_,dp_){
+    diffuse(0,dp_,d_,diff,dt);
+    advect(0,d_,dp_,u,v,dt);
+  }
+
+  // Mouse / touch
+  let mx=0,my=0,pmx=0,pmy=0,isDown=false;
+  function getGrid(ex,ey){
+    const r=canvas.getBoundingClientRect();
+    return [Math.floor((ex-r.left)/r.width*N)+1, Math.floor((ey-r.top)/r.height*N)+1];
+  }
+  function injectAt(gx,gy,dx,dy){
+    const rad=parseInt(radSlider.value);
+    for(let di=-rad;di<=rad;di++) for(let dj=-rad;dj<=rad;dj++){
+      if(di*di+dj*dj>rad*rad) continue;
+      const ii=gx+di,jj=gy+dj;
+      if(ii<1||ii>N||jj<1||jj>N) continue;
+      u[IX(ii,jj)]+=dx*1.2;
+      v[IX(ii,jj)]+=dy*1.2;
+      // Multi-hue dye
+      const h=dyeHue;
+      const c=1, x_=c*(1-Math.abs((h/60)%2-1)), m_=0.2;
+      let r_,g_,b_;
+      if(h<60){r_=c;g_=x_;b_=0}else if(h<120){r_=x_;g_=c;b_=0}
+      else if(h<180){r_=0;g_=c;b_=x_}else if(h<240){r_=0;g_=x_;b_=c}
+      else if(h<300){r_=x_;g_=0;b_=c}else{r_=c;g_=0;b_=x_}
+      d0[IX(ii,jj)]+=r_*4;
+      d1[IX(ii,jj)]+=g_*4;
+      d2[IX(ii,jj)]+=b_*4;
+    }
+    dyeHue=(dyeHue+0.6)%360;
+  }
+
+  canvas.addEventListener('mousedown',e=>{isDown=true;const r=canvas.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top;pmx=mx;pmy=my;});
+  canvas.addEventListener('mouseup',()=>isDown=false);
+  canvas.addEventListener('mouseleave',()=>isDown=false);
+  canvas.addEventListener('mousemove',e=>{
+    const r=canvas.getBoundingClientRect();
+    pmx=mx;pmy=my;mx=e.clientX-r.left;my=e.clientY-r.top;
+    _lastInteraction=Date.now();
+    const [gx,gy]=getGrid(e.clientX,e.clientY);
+    if(gx>0&&gx<=N&&gy>0&&gy<=N){
+      const dx=(mx-pmx)*0.8, dy=(my-pmy)*0.8;
+      injectAt(gx,gy,dx,dy);
+    }
+  });
+  canvas.addEventListener('touchstart',e=>{
+    e.preventDefault();isDown=true;
+    const t=e.touches[0],r=canvas.getBoundingClientRect();
+    mx=t.clientX-r.left;my=t.clientY-r.top;pmx=mx;pmy=my;
+  },{passive:false});
+  canvas.addEventListener('touchend',()=>isDown=false);
+  canvas.addEventListener('touchmove',e=>{
+    e.preventDefault();_lastInteraction=Date.now();
+    const t=e.touches[0],r=canvas.getBoundingClientRect();
+    pmx=mx;pmy=my;mx=t.clientX-r.left;my=t.clientY-r.top;
+    const [gx,gy]=getGrid(t.clientX,t.clientY);
+    if(gx>0&&gx<=N&&gy>0&&gy<=N){
+      injectAt(gx,gy,(mx-pmx)*1,(my-pmy)*1);
+    }
+  },{passive:false});
+
+  function resize(){
+    const dpr=window.devicePixelRatio||1;
+    canvas.width=canvas.clientWidth*dpr;
+    canvas.height=canvas.clientHeight*dpr;
+  }
+  resize();
+  window.addEventListener('resize',resize);
+
+  let boxVisible=false;
+  const boxObs=new IntersectionObserver(entries=>{
+    boxVisible=entries[0].isIntersecting;
+  },{threshold:0.05});
+  boxObs.observe(document.getElementById('ibox5'));
+
+  // Render
+  function render(){
+    const dpr=window.devicePixelRatio||1;
+    const w=canvas.width,h=canvas.height;
+    const img=ctx.createImageData(w,h);
+    const px=img.data;
+    let maxVel=0, totalKE=0, maxVort=0;
+
+    for(let py=0;py<h;py++){
+      for(let pxx=0;pxx<w;pxx++){
+        const gi=Math.floor(pxx/w*N)+1;
+        const gj=Math.floor(py/h*N)+1;
+        const idx=(py*w+pxx)*4;
+
+        // Base: dye channels
+        let r=d0[IX(gi,gj)]*0.35;
+        let g=d1[IX(gi,gj)]*0.35;
+        let b=d2[IX(gi,gj)]*0.35;
+
+        // Velocity magnitude for brightness boost
+        const uu=u[IX(gi,gj)],vv=v[IX(gi,gj)];
+        const vel=Math.sqrt(uu*uu+vv*vv);
+        if(vel>maxVel) maxVel=vel;
+        totalKE+=vel*vel;
+
+        // Vorticity
+        let vort=0;
+        if(gi>1&&gi<N&&gj>1&&gj<N){
+          vort=(v[IX(gi+1,gj)]-v[IX(gi-1,gj)]-u[IX(gi,gj+1)]+u[IX(gi,gj-1)])*N*0.5;
+        }
+        const absVort=Math.abs(vort);
+        if(absVort>maxVort) maxVort=absVort;
+
+        if(showVort){
+          // Vorticity overlay: positive=teal, negative=rose
+          const vStr=Math.min(absVort*0.3,1);
+          if(vort>0){ r+=vStr*0.1; g+=vStr*0.6; b+=vStr*0.7; }
+          else{ r+=vStr*0.7; g+=vStr*0.2; b+=vStr*0.35; }
+        }
+
+        if(showVel){
+          const vStr=Math.min(vel*2,1);
+          r+=vStr*0.3; g+=vStr*0.5; b+=vStr*0.2;
+        }
+
+        // Ambient glow from velocity
+        const vGlow=Math.min(vel*0.5,0.15);
+        r+=vGlow*0.3; g+=vGlow*0.5; b+=vGlow*0.6;
+
+        px[idx]=Math.min(r*255,255);
+        px[idx+1]=Math.min(g*255,255);
+        px[idx+2]=Math.min(b*255,255);
+        px[idx+3]=255;
+      }
+    }
+    ctx.putImageData(img,0,0);
+
+    // Stats
+    const visc_=parseFloat(viscSlider.value);
+    const effRe=maxVel>0?(maxVel*(1/N)/visc_):0;
+    sVel.textContent=maxVel.toFixed(2);
+    sKE.textContent=(totalKE*0.0001).toFixed(3);
+    sVort.textContent=maxVort.toFixed(1);
+    sRe.textContent=Math.round(effRe);
+  }
+
+  let frameCount=0;
+  function loop(){
+    requestAnimationFrame(loop);
+    if(!boxVisible) return;
+    if(Date.now()-_lastInteraction>300000) return;
+    frameCount++;
+    if(frameCount%2===0) return; // ~30fps
+
+    const visc_=parseFloat(viscSlider.value);
+    velStep(visc_);
+    densStep(d0,d0p); densStep(d1,d1p); densStep(d2,d2p);
+    // Slow decay
+    for(let i=0;i<S;i++){
+      d0[i]*=0.998; d1[i]*=0.998; d2[i]*=0.998;
+    }
+    render();
+  }
+  loop();
+})();
+</script>
+</body>
+</html>

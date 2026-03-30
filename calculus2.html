@@ -1,0 +1,3055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>On Everything That Moves — Mellow Math</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400&family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ── reset ── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-weight:300;
+  font-size:clamp(.92rem,1.6vw,1.05rem);line-height:1.75;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased}
+
+:root{
+  --bg:#04050c;--bg2:#090b18;--bg3:#0e1128;
+  --text:#b8b4ac;--cream:#ece8e0;--muted:#52566a;
+  --gold:#c9a84c;--gold2:#d4a853;--gold-dim:rgba(201,168,76,.08);
+  --violet:#8a6abf;--fern:#5a9a72;--fern-glow:#7cc89a;
+  --border:rgba(255,255,255,.04);
+  --font-display:'Fraunces',Georgia,serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-kr:'Noto Serif KR',serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+
+/* ── film grain ── */
+body::after{content:'';position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='1'/%3E%3C/svg%3E");
+  background-size:200px}
+
+/* ── scrollbar ── */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px}
+
+/* ── typography ── */
+h1,h2,h3{font-family:var(--font-display);color:var(--cream);font-weight:400;line-height:1.2}
+.prose{font-size:clamp(.92rem,1.6vw,1.05rem);max-width:680px;margin:0 auto}
+.prose p{margin-bottom:1.3em}
+.prose-drop::first-letter{font-family:var(--font-display);font-size:3.4em;float:left;
+  line-height:.82;margin:.06em .18em 0 0;color:var(--gold);font-weight:400}
+.hi{color:var(--cream)}
+.ac{color:var(--gold);text-shadow:0 0 20px rgba(201,168,76,.12)}
+
+/* ── hero ── */
+.hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-vignette{position:absolute;inset:0;
+  background:radial-gradient(ellipse 65% 55% at 50% 50%,transparent 0%,rgba(4,5,12,.4) 60%,var(--bg) 100%);
+  pointer-events:none}
+.hero-content{position:relative;z-index:2;text-align:center;padding:0 2rem}
+.hero-label{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.25em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:1.4rem}
+.hero h1{font-size:clamp(2.4rem,5.5vw,4.6rem);font-weight:300;color:var(--cream);
+  margin-bottom:.6rem;letter-spacing:-.02em}
+.hero h1 em{font-style:italic;color:var(--gold)}
+.hero-tagline{font-family:var(--font-display);font-style:italic;font-weight:300;
+  font-size:clamp(.85rem,1.6vw,1.05rem);color:var(--text);margin-bottom:3rem;opacity:.7}
+.hero-scroll{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--muted);cursor:pointer;
+  animation:breathe 3s ease-in-out infinite;transition:color .3s}
+.hero-scroll:hover{color:var(--gold)}
+@keyframes breathe{0%,100%{opacity:.5;transform:translateY(0)}50%{opacity:1;transform:translateY(-4px)}}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.hero-content>*{animation:fadeInUp 1.2s cubic-bezier(.23,1,.32,1) both}
+.hero-content>.hero-label{animation-delay:.3s}
+.hero-content>h1{animation-delay:.6s}
+.hero-content>.hero-tagline{animation-delay:.9s}
+.hero-content>.hero-scroll{animation-delay:1.4s}
+
+/* ── sections ── */
+.chapter-section{max-width:780px;margin:0 auto;padding:6rem 2rem}
+.section-num{font-family:var(--font-mono);font-size:.65rem;letter-spacing:.18em;color:var(--gold);
+  margin-bottom:.8rem;text-shadow:0 0 12px rgba(201,168,76,.2)}
+.section-title{font-size:clamp(1.5rem,3vw,2.2rem);margin-bottom:1.6rem;font-weight:400}
+.section-title em{font-style:italic;color:var(--gold)}
+.section-divider{width:80px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:4rem auto}
+
+/* ── pull quote ── */
+.pull-quote{text-align:center;margin:3rem auto;max-width:560px;padding:0 1rem;position:relative}
+.pull-quote::before{content:'"';font-family:var(--font-display);font-size:4rem;
+  color:var(--gold);opacity:.15;position:absolute;top:-.8rem;left:50%;transform:translateX(-50%);
+  line-height:1;pointer-events:none}
+.pull-quote p{font-family:var(--font-display);font-style:italic;font-size:clamp(1rem,1.8vw,1.2rem);
+  color:var(--cream);line-height:1.6;font-weight:300}
+.pull-quote::after{content:'';display:block;width:60px;height:1px;margin:1.5rem auto 0;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+
+/* ── block quote ── */
+.block-quote{background:var(--gold-dim);border-left:2px solid var(--gold);
+  padding:1.5rem 2rem;margin:2rem auto;max-width:620px;border-radius:0 8px 8px 0}
+.block-quote p{font-family:var(--font-display);font-style:italic;font-size:.95rem;
+  color:var(--cream);line-height:1.65;margin:0}
+.block-quote .bq-attr{font-family:var(--font-mono);font-size:.6rem;color:var(--muted);
+  margin-top:.8rem;letter-spacing:.08em}
+
+/* ── interactive box ── */
+.ibox{background:var(--bg3);border-radius:16px;padding:2.5rem;margin:3rem auto;
+  max-width:720px;position:relative;overflow:hidden;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03),0 8px 32px rgba(0,0,0,.3)}
+.ibox::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.ibox-label{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.14em;
+  color:var(--gold);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.ibox-label .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);
+  box-shadow:0 0 6px rgba(201,168,76,.5);animation:pulse-dot 2s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:.4}50%{opacity:1}}
+.ibox-title{font-family:var(--font-display);font-size:1.25rem;color:var(--cream);
+  margin-bottom:.6rem;font-weight:400}
+.ibox-desc{font-size:.82rem;color:var(--text);margin-bottom:1.5rem;line-height:1.65;opacity:.8}
+.ibox canvas{width:100%;min-height:280px;border-radius:8px;display:block;margin-bottom:1.2rem;
+  background:rgba(0,0,0,.3);cursor:crosshair}
+.ibox-controls{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1.2rem;align-items:center}
+.ibox-controls label{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.08em;
+  color:var(--muted);display:flex;align-items:center;gap:.5rem}
+.ibox-controls input[type=range]{-webkit-appearance:none;width:120px;height:3px;
+  background:var(--border);border-radius:2px;outline:none}
+.ibox-controls input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;
+  border-radius:50%;background:radial-gradient(circle at 40% 35%,var(--gold2),#a07830);cursor:pointer;
+  box-shadow:0 0 8px rgba(201,168,76,.3)}
+.ibox-btn{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;
+  padding:.45rem 1rem;border:1px solid var(--muted);border-radius:4px;
+  background:transparent;color:var(--muted);cursor:pointer;transition:all .25s;
+  text-transform:uppercase}
+.ibox-btn:hover{border-color:var(--gold);color:var(--gold)}
+.ibox-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
+.ibox-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+  gap:.6rem;margin-top:1rem}
+.ibox-stat{background:rgba(255,255,255,.02);border-radius:8px;padding:.7rem .9rem;
+  border:1px solid var(--border)}
+.ibox-stat .stat-label{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.1em;
+  color:var(--muted);text-transform:uppercase;margin-bottom:.2rem}
+.ibox-stat .stat-value{font-family:var(--font-mono);font-size:1.1rem;color:var(--gold)}
+
+/* ── references ── */
+.ref-section{max-width:680px;margin:0 auto;padding:4rem 2rem 2rem}
+.ref-heading{font-family:var(--font-display);font-size:1.1rem;color:var(--cream);
+  margin-bottom:1.5rem;font-weight:400}
+.ref-list{list-style:none;padding:0}
+.ref-list li{font-size:.78rem;color:var(--muted);margin-bottom:.7rem;line-height:1.55;
+  padding-left:1.2rem;text-indent:-1.2rem}
+.ref-author{color:var(--text)}
+.ref-title{font-style:italic;color:var(--cream);opacity:.7}
+.ref-detail{color:var(--muted)}
+
+/* ── footer ── */
+footer{text-align:center;padding:4rem 2rem 3rem;border-top:1px solid var(--border)}
+.footer-attr{opacity:.7}
+.footer-name{font-family:var(--font-display);font-size:.85rem;color:var(--cream);margin-bottom:.3rem}
+.footer-inst{font-family:var(--font-body);font-size:.7rem;color:var(--muted)}
+.footer-url{font-family:var(--font-mono);font-size:.58rem;color:var(--gold);
+  text-decoration:none;letter-spacing:.1em;display:inline-block;margin-top:.6rem}
+.footer-url:hover{color:var(--gold2)}
+
+/* ── floating badge ── */
+.floating-badge{position:fixed;bottom:1.5rem;left:1.5rem;z-index:100;
+  font-family:var(--font-mono);font-size:.58rem;letter-spacing:.14em;
+  color:#8db830;text-decoration:none;text-transform:lowercase;
+  text-shadow:0 0 12px rgba(141,184,48,.3);transition:all .3s}
+.floating-badge:hover{color:#a8d43a;transform:translateY(-1px);
+  text-shadow:0 0 18px rgba(141,184,48,.5)}
+
+/* ── particles ── */
+.ambient-particle{position:fixed;pointer-events:none;z-index:1;
+  border-radius:50%;opacity:0;animation:float-up linear infinite}
+@keyframes float-up{
+  0%{transform:translateY(100vh) scale(.5);opacity:0}
+  10%{opacity:.6}
+  90%{opacity:.4}
+  100%{transform:translateY(-20vh) scale(0);opacity:0}
+}
+
+/* ── scroll reveal ── */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.23,1,.32,1),
+  transform .8s cubic-bezier(.23,1,.32,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ── coda ── */
+.coda{text-align:center;max-width:560px;margin:0 auto;padding:4rem 2rem 6rem}
+.coda p{font-family:var(--font-display);font-style:italic;font-weight:300;
+  font-size:clamp(.9rem,1.5vw,1.05rem);color:var(--cream);line-height:2;opacity:.75}
+.coda p:last-child{margin-top:1.5em;opacity:.5}
+
+/* ── mobile ── */
+@media(max-width:768px){
+  .chapter-section{padding:4rem 1.5rem}
+  .ibox{padding:1.5rem;margin:2rem -0.5rem}
+  .ibox-stats{grid-template-columns:repeat(2,1fr)}
+  .hero h1{font-size:clamp(1.8rem,8vw,2.8rem)}
+}
+@media(max-width:480px){
+  .ibox{padding:1.2rem;border-radius:12px}
+  .ibox-stats{grid-template-columns:1fr 1fr}
+  .ibox-controls{gap:.4rem}
+}
+
+/* ── narrator bar ── */
+.narrator-bar{position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:linear-gradient(180deg,rgba(4,5,12,.0) 0%,rgba(4,5,12,.95) 20%,rgba(9,11,24,.98) 100%);
+  padding:1.4rem 1.5rem 1.2rem;transform:translateY(100%);
+  transition:transform .5s cubic-bezier(.23,1,.32,1);pointer-events:none}
+.narrator-bar.open{transform:translateY(0);pointer-events:auto}
+.narrator-inner{max-width:680px;margin:0 auto;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.narrator-toggle{position:fixed;bottom:1.5rem;right:1.5rem;z-index:201;
+  width:42px;height:42px;border-radius:50%;border:1px solid var(--muted);
+  background:rgba(9,11,24,.85);color:var(--muted);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;transition:all .3s;backdrop-filter:blur(8px)}
+.narrator-toggle:hover{border-color:var(--gold);color:var(--gold)}
+.narrator-toggle.active{border-color:var(--gold);color:var(--gold);
+  background:rgba(201,168,76,.08)}
+.narrator-controls{display:flex;align-items:center;gap:.5rem}
+.narrator-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);
+  background:transparent;color:var(--cream);cursor:pointer;display:flex;
+  align-items:center;justify-content:center;font-size:.85rem;transition:all .25s}
+.narrator-btn:hover{border-color:var(--gold);color:var(--gold)}
+.narrator-btn.play{width:38px;height:38px;font-size:1rem;
+  border-color:var(--gold);color:var(--gold)}
+.narrator-btn.play:hover{background:rgba(201,168,76,.1)}
+.narrator-voice-select{display:flex;gap:.3rem}
+.narrator-voice-btn{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.08em;
+  padding:.3rem .7rem;border:1px solid var(--border);border-radius:12px;
+  background:transparent;color:var(--muted);cursor:pointer;transition:all .25s;
+  text-transform:uppercase}
+.narrator-voice-btn:hover{border-color:var(--gold);color:var(--gold)}
+.narrator-voice-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
+.narrator-progress{flex:1;min-width:80px;height:2px;background:var(--border);
+  border-radius:1px;position:relative;cursor:pointer}
+.narrator-progress-fill{height:100%;background:var(--gold);border-radius:1px;
+  transition:width .3s ease;width:0}
+.narrator-status{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.08em;
+  color:var(--muted);white-space:nowrap;min-width:60px}
+.narrator-speed{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.08em;
+  color:var(--muted);cursor:pointer;padding:.2rem .5rem;border:1px solid var(--border);
+  border-radius:8px;background:transparent;transition:all .25s}
+.narrator-speed:hover{border-color:var(--gold);color:var(--gold)}
+.prose p.narrating{color:var(--cream);transition:color .4s ease}
+.prose p.narrating-done{color:var(--text);transition:color 1s ease}
+@media(max-width:768px){
+  .narrator-inner{gap:.6rem}
+  .narrator-bar{padding:1rem 1rem .8rem}
+  .narrator-toggle{bottom:1rem;right:1rem;width:38px;height:38px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- HERO                                        -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="hero" id="hero">
+  <canvas id="heroCanvas"></canvas>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-label">Mellow Math</div>
+    <h1>On Everything That <em>Moves</em></h1>
+    <div class="hero-tagline">In every pixel, every pill, every curve of the road, every price on a trading floor — calculus is already at work.</div>
+    <div class="hero-scroll" onclick="document.getElementById('s1').scrollIntoView({behavior:'smooth'})">
+      Begin ↓
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- EPIGRAPH                                    -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="chapter-section" style="padding-bottom:0">
+  <div class="block-quote reveal" style="border-left-color:rgba(201,168,76,.3);max-width:560px">
+    <p>"The calculus was the first achievement of modern mathematics, and it is difficult to overestimate its importance. I think it defines more unequivocally than anything else the inception of modern mathematics; and the system of mathematical analysis, which is its logical development, still constitutes the greatest technical advance in exact thinking."</p>
+    <div class="bq-attr">— John von Neumann, 1947</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- § 1 — Sixty Times a Second                  -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="chapter-section" id="s1">
+  <div class="reveal">
+    <div class="section-num">§ 1</div>
+    <h2 class="section-title">Sixty Times a <em>Second</em></h2>
+  </div>
+
+  <div class="prose reveal">
+    <p class="prose-drop">Every letter you are reading right now was drawn by calculus. Not approximately, not metaphorically — the very outline of each glyph on your screen is a sequence of cubic Bézier curves, each defined by four control points and the oldest trick in the calculus playbook: interpolation taken to its limit. The font renderer evaluates these curves sixty times a second, tracing arcs so smooth that you mistake mathematics for ink.</p>
+
+    <p>The story begins not in a university but in a car factory. In 1959, <span class="hi">Paul de Casteljau</span>, an engineer at Citroën, needed a way to describe the curved body panels of automobiles precisely enough for machines to cut them. He invented an algorithm of breathtaking elegance: take four points, connect them with lines, find the midpoint of each line, connect <em>those</em> midpoints, find their midpoints in turn — and the single point you arrive at lies exactly on the curve. Repeat for every value of a parameter <em>t</em> from 0 to 1, and a smooth arc emerges from nothing but straight-line averaging.</p>
+
+    <p>De Casteljau's employer kept his work secret. So when <span class="hi">Pierre Bézier</span> at rival Renault published essentially the same idea in 1962, the curves got Bézier's name. De Casteljau got the algorithm. History is not always fair, but in this case both names survived — one attached to the curve, the other to the most beautiful way of constructing it.</p>
+  </div>
+
+  <div class="pull-quote reveal">
+    <p>A Bézier curve is a straight line that forgot how to be straight — and remembered, instead, how to be graceful.</p>
+  </div>
+
+  <div class="prose reveal">
+    <p>What makes Bézier curves calculus, not just geometry? The derivative. At every point along the curve, you can compute a tangent vector — the direction and speed at which a pen would move if it were tracing the arc. This derivative curve, called the <span class="ac">hodograph</span>, is itself a Bézier curve, one degree lower. The velocity of motion is encoded in the shape. Designers who drag control points in Illustrator or Figma are, whether they know it or not, sculpting a derivative.</p>
+
+    <p>And there is a deeper reason Bézier curves conquered the digital world. They are <span class="hi">affine-invariant</span>: rotate the screen, scale the window, tilt the view, and the curve transforms correctly just by transforming its four control points. No re-computation, no rounding errors. This is why every modern font format — TrueType, OpenType, PostScript — stores letters as Bézier splines. This is why every animation you see on the web — every ease-in, ease-out, every smooth scroll — is driven by a cubic Bézier timing function. The CSS in your browser literally has a property called <span class="ac">cubic-bezier()</span>.</p>
+
+    <p>Try it below. Drag the four control points and watch the curve respond. Toggle the construction lines to see de Casteljau's algorithm at work: nested linear interpolation, converging to a single point on the curve. Then watch the dot travel along the arc, and notice how its speed changes — fast where the curve is straight, slow where it bends. That change of speed is the derivative made visible.</p>
+  </div>
+
+  <!-- ── interactive: Bézier ── -->
+  <div class="ibox reveal" id="bezierBox">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">The de Casteljau Machine</div>
+    <div class="ibox-desc">Drag the four control points (gold circles) to reshape the curve. Toggle "Construction" to see de Casteljau's nested interpolation at work. Press "Animate" to send a dot along the curve — its speed is the derivative.</div>
+    <canvas id="bezierCanvas" width="700" height="420" data-nopz></canvas>
+    <div class="ibox-controls">
+      <button class="ibox-btn active" id="btnConstruction" onclick="toggleConstruction()">Construction</button>
+      <button class="ibox-btn" id="btnHodograph" onclick="toggleHodograph()">Hodograph</button>
+      <button class="ibox-btn" id="btnAnimate" onclick="toggleAnimate()">▶ Animate</button>
+      <button class="ibox-btn" id="btnReset" onclick="resetBezier()">↺ Reset</button>
+      <label>speed
+        <input type="range" id="animSpeed" min="0.1" max="3" step="0.1" value="1">
+      </label>
+    </div>
+    <div class="ibox-stats">
+      <div class="ibox-stat"><div class="stat-label">t parameter</div><div class="stat-value" id="statT">0.00</div></div>
+      <div class="ibox-stat"><div class="stat-label">curve length</div><div class="stat-value" id="statLen">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">curvature</div><div class="stat-value" id="statCurv">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">speed (|B′|)</div><div class="stat-value" id="statSpeed">—</div></div>
+    </div>
+  </div>
+
+  <div class="prose reveal">
+    <p>The interactive above shows something subtle: the dot does not travel at constant speed along the curve, even though the parameter <em>t</em> increases at a constant rate. Where the control points are spread far apart, the curve stretches and the dot rushes; where they cluster, it slows. <span class="hi">The parameter is not the same as distance.</span> This distinction — between a mathematical parameter and the physical quantity it describes — is one of the deepest lessons calculus teaches. Arc-length parameterization, the art of making <em>t</em> proportional to true distance traveled, requires an integral that rarely has a closed-form answer. The curve knows its own length, but it won't tell you without integration.</p>
+
+    <p>So the next time your phone's screen dims with a smooth fade, or a map zooms with a graceful ease, remember: a French engineer at a car factory gave calculus a job in 1959, and it has been working the night shift ever since. <span class="ac">Sixty frames a second, every second, on every screen on Earth.</span></p>
+  </div>
+
+  <div class="section-divider"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- § 2 — The Half-Life of Everything           -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="chapter-section" id="s2">
+  <div class="reveal">
+    <div class="section-num">§ 2</div>
+    <h2 class="section-title">The Half-Life of <em>Everything</em></h2>
+  </div>
+
+  <div class="prose reveal">
+    <p class="prose-drop">There is one differential equation that runs the world. It is short enough to fit on a postcard, plain enough that a first-year student can solve it, and so universal that it governs the cooling of your morning coffee, the clearance of aspirin from your bloodstream, the decay of carbon-14 in a Pharaoh's tomb, the discharge of your phone battery, and the growth of money in a savings account. The equation says: <span class="ac">the rate of change of a quantity is proportional to the quantity itself.</span> Nothing more. Write it as dy/dt = ky, and you hold in your hand a skeleton key to half the sciences.</p>
+
+    <p>When the constant k is negative, things decay. A hot cup of coffee loses heat to the room, and the hotter it is relative to the room, the faster it cools. Newton noticed this in 1701 and wrote it down as a law — not of thermodynamics, but of calculus. The solution is an exponential curve that sinks toward equilibrium, never quite arriving. It approaches room temperature the way a long novel approaches its ending: always getting closer, never fully there.</p>
+
+    <p>When k is positive, things grow. A colony of bacteria doubles, then the doubled colony doubles again. Compound interest is the same mathematics wearing a suit. Benjamin Franklin left £1,000 to the cities of Boston and Philadelphia in 1790, with instructions to invest it for two hundred years. When the trust matured in 1990, <span class="hi">Boston's share had grown to $5 million.</span> Franklin did not need a financial advisor. He needed the exponential function.</p>
+  </div>
+
+  <div class="block-quote reveal">
+    <p>"The most powerful force in the universe is compound interest."</p>
+    <div class="bq-attr">— Attributed (perhaps apocryphally) to Albert Einstein</div>
+  </div>
+
+  <div class="prose reveal">
+    <p>But the most intimate encounter most people have with this equation comes from medicine. When you swallow a pill, the drug enters your bloodstream and immediately begins to be filtered out by your liver and kidneys. The rate of removal is proportional to the concentration — the more drug present, the faster the body clears it. This is first-order pharmacokinetics, and it gives every drug a <span class="ac">half-life</span>: the time it takes for the concentration to fall by half. Aspirin's half-life is about 3.5 hours. Caffeine's is roughly 5. Diazepam lingers for 40 hours or more.</p>
+
+    <p>Your doctor — usually without thinking of it in these terms — solves this differential equation every time she prescribes a dosing schedule. The goal is to keep the drug inside a <span class="hi">therapeutic window</span>: high enough to be effective, low enough to avoid toxicity. Take a dose, wait as it decays exponentially, take another dose before it drops below the effective threshold. The result is the characteristic sawtooth pattern: spike, decay, spike, decay. After several cycles, the peaks and troughs settle to a <span class="ac">steady state</span> — a dynamic equilibrium maintained by nothing but an exponential and a clock.</p>
+
+    <p>The interactive below lets you see this machinery at work. Choose a scenario — cooling coffee, a drug dose, a draining battery, bacterial growth, compound interest — and watch the same equation produce entirely different dramas. For the drug scenario, press "Take Dose" repeatedly and watch the sawtooth form. Try to keep the curve inside the therapeutic window. You are doing, with your hands, what a pharmacokineticist does with calculus.</p>
+  </div>
+
+  <!-- ── interactive: exponential decay/growth ── -->
+  <div class="ibox reveal" id="decayBox">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">The Universal Equation</div>
+    <div class="ibox-desc">Choose a preset to load realistic parameters, or adjust k and the initial value. In drug mode, press "Take Dose" to add boluses and watch the sawtooth steady-state emerge. The shaded band is the therapeutic window.</div>
+    <canvas id="decayCanvas" width="700" height="380" data-nopz></canvas>
+    <div class="ibox-controls">
+      <button class="ibox-btn active" id="presetCoffee" onclick="setPreset('coffee')">☕ Coffee</button>
+      <button class="ibox-btn" id="presetDrug" onclick="setPreset('drug')">💊 Drug</button>
+      <button class="ibox-btn" id="presetBattery" onclick="setPreset('battery')">🔋 Battery</button>
+      <button class="ibox-btn" id="presetBacteria" onclick="setPreset('bacteria')">🦠 Bacteria</button>
+      <button class="ibox-btn" id="presetInterest" onclick="setPreset('interest')">💰 Interest</button>
+    </div>
+    <div class="ibox-controls">
+      <button class="ibox-btn" id="btnDose" onclick="addDose()" style="display:none">💊 Take Dose</button>
+      <button class="ibox-btn" id="btnPlayDecay" onclick="togglePlayDecay()">▶ Play</button>
+      <button class="ibox-btn" onclick="resetDecay()">↺ Reset</button>
+      <label>speed
+        <input type="range" id="decaySpeed" min="0.5" max="5" step="0.25" value="1.5">
+      </label>
+    </div>
+    <div class="ibox-stats">
+      <div class="ibox-stat"><div class="stat-label">current value</div><div class="stat-value" id="statVal">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">half-life</div><div class="stat-value" id="statHalf">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">time elapsed</div><div class="stat-value" id="statTime">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">area (∫)</div><div class="stat-value" id="statAUC">—</div></div>
+    </div>
+  </div>
+
+  <div class="prose reveal">
+    <p>One thing worth noticing: the <span class="hi">area under the curve</span> — the integral — has a direct physical meaning in every scenario. For the coffee, it measures total heat lost. For the drug, it is the "area under the curve" or AUC, the single most important number in pharmacokinetics, because it represents the body's total exposure to the drug. A larger AUC means more drug absorbed; clinical trials live and die by this number. The integral is not an abstraction. It is the thing the doctor actually cares about.</p>
+
+    <p>And the half-life itself is pure calculus in disguise. Set the exponential equal to half its initial value, solve for time, and you get ln(2)/|k| — the natural logarithm of 2 divided by the rate constant. <span class="ac">The number ln(2) ≈ 0.693 is quietly one of the most important constants in applied mathematics.</span> It appears every time something halves or doubles. The "Rule of 72" that bankers use — divide 72 by the interest rate to estimate the doubling time — is just ln(2) wearing a disguise friendly to mental arithmetic.</p>
+  </div>
+
+  <div class="pull-quote reveal">
+    <p>One equation. A coffee cup, a pill bottle, a savings account, a Geiger counter. Calculus does not care what it measures — it only knows the shape of change.</p>
+  </div>
+
+  <div class="section-divider"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- § 3 — Downhill to the Answer                -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="chapter-section" id="s3">
+  <div class="reveal">
+    <div class="section-num">§ 3</div>
+    <h2 class="section-title">Downhill to the <em>Answer</em></h2>
+  </div>
+
+  <div class="prose reveal">
+    <p class="prose-drop">Nature is lazy in the most elegant possible way. Soap bubbles minimize surface area. Light travels the fastest path between two points — Fermat proved this in 1662, and it explained why glass bends a beam. A chain hanging under its own weight finds the shape that minimizes potential energy, tracing a curve called the catenary that is not a parabola, no matter how much it looks like one. Galileo guessed parabola. Leibniz, Huygens, and Johann Bernoulli proved him wrong in 1691. The correct answer required the calculus that Galileo never had.</p>
+
+    <p>Behind every one of these natural optimizations is a single principle: <span class="ac">the derivative points downhill.</span> Compute the slope of a function at any point, and you know which direction decreases the value fastest. Take a small step in that direction, recompute the slope, step again. This is <span class="hi">gradient descent</span>, and it is the oldest optimization algorithm in existence — Newton described a version of it in 1669 for finding roots of equations. Three and a half centuries later, it is the engine that trains every neural network on Earth.</p>
+
+    <p>The idea is disarmingly simple. You have a function — a landscape of hills and valleys. You want the lowest point. You cannot see the whole landscape; you can only feel the slope beneath your feet. So you walk downhill. Always downhill. The gradient — the multi-dimensional generalization of the derivative — tells you which direction is steepest. You follow it. Step by step, you descend into a valley.</p>
+  </div>
+
+  <div class="block-quote reveal">
+    <p>"In the right direction, even a small step will take you closer. In the wrong direction, even a great leap carries you further away."</p>
+    <div class="bq-attr">— A proverb that gradient descent takes literally</div>
+  </div>
+
+  <div class="prose reveal">
+    <p>But the devil is in the details, and those details are where the mathematics becomes beautiful. How large a step should you take? Too small, and you spend an eternity creeping toward the minimum, a glacial descent that wastes computation. Too large, and you overshoot — you leap past the valley and land on the opposite hillside, or worse, you oscillate wildly back and forth, never settling. The <span class="hi">learning rate</span>, as machine-learning practitioners call the step size, is one of the most consequential numbers in modern technology. Set it well, and a neural network learns to recognize faces, translate languages, fold proteins. Set it badly, and the same network learns nothing at all.</p>
+
+    <p>There is a deeper problem. Most interesting landscapes have more than one valley. Gradient descent, being greedy and local, will settle into the nearest one — which may not be the deepest. These are <span class="ac">local minima</span>, and escaping them requires tricks: adding momentum (let the ball build up speed so it can roll through shallow valleys), injecting noise (shake the landscape randomly), or annealing (start with large chaotic steps and gradually calm down). Every major advance in training neural networks in the past decade has been, at its core, a better strategy for navigating a landscape of a billion dimensions using nothing but the slope at a single point.</p>
+
+    <p>The interactive below gives you two ways to see this. First, a 2D landscape — a topographic map of a function of two variables, drawn with contour lines. Click anywhere to drop a ball, and watch gradient descent carry it into a valley. Adjust the learning rate and toggle momentum. Second, draw your own 1D landscape and watch the algorithm find the bottom. In both cases, the tangent line — the derivative — is your only compass.</p>
+  </div>
+
+  <!-- ── interactive: gradient descent ── -->
+  <div class="ibox reveal" id="gradBox">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">The Descent</div>
+    <div class="ibox-desc">Click on the landscape to place a ball. It will follow the gradient downhill. Adjust the learning rate — too small is slow, too large overshoots. Toggle momentum to help escape shallow valleys. Switch to "Draw" mode to sculpt your own 1D terrain.</div>
+    <canvas id="gradCanvas" width="700" height="420" data-nopz></canvas>
+    <div class="ibox-controls">
+      <button class="ibox-btn active" id="btnMode2D" onclick="setGradMode('2d')">2D Landscape</button>
+      <button class="ibox-btn" id="btnMode1D" onclick="setGradMode('1d')">✏ Draw 1D</button>
+      <button class="ibox-btn" id="btnMomentum" onclick="toggleMomentum()">Momentum</button>
+      <button class="ibox-btn" onclick="resetGrad()">↺ Reset</button>
+      <label>learning rate
+        <input type="range" id="lrSlider" min="0.002" max="0.15" step="0.002" value="0.03">
+      </label>
+    </div>
+    <div class="ibox-stats">
+      <div class="ibox-stat"><div class="stat-label">position</div><div class="stat-value" id="statPos">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">gradient</div><div class="stat-value" id="statGrad">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">steps</div><div class="stat-value" id="statSteps">0</div></div>
+      <div class="ibox-stat"><div class="stat-label">height f(x)</div><div class="stat-value" id="statHeight">—</div></div>
+    </div>
+  </div>
+
+  <div class="prose reveal">
+    <p>Notice what happens when you set the learning rate too high in the 2D landscape. The ball doesn't just miss the minimum — it can spiral outward, gaining energy instead of losing it. This is not a bug in the metaphor; it is precisely what happens in real neural network training when the learning rate is miscalibrated. <span class="hi">Divergence is the dark twin of convergence</span>, and the boundary between them is often razor-thin. Entire research programs — Adam, RMSProp, learning rate warmup, cosine annealing — exist to walk that boundary safely.</p>
+
+    <p>And yet, for all its simplicity, gradient descent works. It works on problems with millions of parameters and billions of data points. It works in spaces so vast that no human could visualize them. It works because <span class="ac">the derivative, computed at a single point, contains just enough information about the global landscape to take one useful step.</span> This is the miracle of local information: you never need to see the whole mountain. You only need to feel the slope beneath your feet.</p>
+
+    <p>The next time a language model answers your question, or a recommendation engine guesses what you want to watch, or a self-driving car nudges its steering — remember that somewhere, a derivative was computed, a step was taken downhill, and a function got a little bit smaller. Millions of times over, until the answer emerged. Calculus, descending.</p>
+  </div>
+
+  <div class="pull-quote reveal">
+    <p>You cannot see the valley from where you stand. But the slope beneath your feet knows the way. Trust the derivative.</p>
+  </div>
+
+  <div class="section-divider"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- § 4 — The Spiral in the Road                -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="chapter-section" id="s4">
+  <div class="reveal">
+    <div class="section-num">§ 4</div>
+    <h2 class="section-title">The Spiral in the <em>Road</em></h2>
+  </div>
+
+  <div class="prose reveal">
+    <p class="prose-drop">Drive onto a highway on-ramp at speed and you will feel nothing unusual — the car sweeps from the straight road into the curve as smoothly as a sentence flows into a clause. But suppose the road went directly from a straight line to a circular arc. At the exact point where the curve begins, the required steering angle would jump from zero to some finite value in an instant. Your hands would jerk the wheel. Your tires would screech. At a hundred kilometres per hour, that jerk can kill. So highway engineers, since the 1930s, have inserted a special curve between every straight section and every circular arc — a curve whose curvature increases <span class="hi">linearly with distance</span>. Zero curvature at the beginning, where it meets the straight road. Full curvature at the end, where it meets the circle. The steering wheel turns at a constant rate. The transition is imperceptible. Calculus keeps you alive, and you never notice.</p>
+
+    <p>This transition curve is the <span class="ac">Euler spiral</span>, also called the clothoid or Cornu spiral. Leonhard Euler studied it in 1744 in connection with the elastica — the shape of a thin beam bent by forces at its ends. But its mathematics had appeared even earlier: Augustin-Jean Fresnel encountered the same integrals in 1818 while working on the diffraction of light. The curve is defined by a pair of integrals that have no closed-form solution. You cannot write down a formula for the x and y coordinates in terms of elementary functions. The curve exists only as an integral — it is calculus that refuses to simplify, and is more beautiful for the refusal.</p>
+
+    <p>The defining property is almost absurdly simple: <span class="hi">curvature equals arc length.</span> Walk one metre along the spiral and the curvature is one. Walk two metres and it doubles. Walk ten and it is ten. This linearity means the steering wheel turns at a constant angular rate — the most comfortable motion a driver can make. Roller coaster designers use the same curve to prevent whiplash. Railway engineers used it decades before highway engineers adopted it. Every high-speed rail line in the world — the Shinkansen, the TGV, the KTX — threads its passengers through clothoids dozens of times per journey.</p>
+  </div>
+
+  <div class="block-quote reveal">
+    <p>"The corrected alignment employs a transition spiral to effect a gradual change from the tangent to the circular curve, and from the circular curve back to the tangent."</p>
+    <div class="bq-attr">— AASHTO, A Policy on Geometric Design of Highways and Streets, 1st ed. (1954)</div>
+  </div>
+
+  <div class="prose reveal">
+    <p>The Fresnel integrals that define the spiral — C(t) = ∫cos(πs²/2) ds and S(t) = ∫sin(πs²/2) ds — produce one of the most recognisable shapes in mathematics. Plot them parametrically and you get the <span class="ac">Cornu spiral</span>: a double spiral that winds inward toward two focus points, one in each half-plane, curling tighter and tighter but never arriving. It is the shape of curvature itself made visible.</p>
+
+    <p>In optics, the same integrals describe how light bends around a sharp edge. Fresnel diffraction — the pattern of bright and dark bands you see at the boundary of a shadow — is computed directly from the Cornu spiral. The same mathematics that prevents your car from skidding also explains why shadows are never perfectly sharp. One integral, worn in two entirely different uniforms.</p>
+
+    <p>The interactive below lets you design a road. You have a straight segment and a circular arc, and you connect them — first with an abrupt join, then with a clothoid transition. A simulated car drives through both. Below, a curvature graph shows the difference: the abrupt case has a step discontinuity, the clothoid has a smooth ramp. A steering-wheel animation shows what the driver's hands must do. In a second mode, you can adjust the spiral parameter and watch the Cornu spiral draw itself in real time — each point computed by numerical integration, the curve emerging from the integral the way a photograph emerges in a darkroom.</p>
+  </div>
+
+  <!-- ── interactive: Euler spiral / clothoid ── -->
+  <div class="ibox reveal" id="spiralBox">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">The Clothoid</div>
+    <div class="ibox-desc">Toggle between road-design mode and Cornu spiral mode. In road mode, a car drives through an abrupt join (red) and a clothoid transition (gold). The curvature graph below shows the difference. In Cornu mode, adjust the parameter to watch the spiral grow — each point computed by Fresnel integrals.</div>
+    <canvas id="spiralCanvas" width="700" height="440" data-nopz></canvas>
+    <div class="ibox-controls">
+      <button class="ibox-btn active" id="btnRoadMode" onclick="setSpiralMode('road')">🛣 Road Design</button>
+      <button class="ibox-btn" id="btnCornuMode" onclick="setSpiralMode('cornu')">🌀 Cornu Spiral</button>
+      <button class="ibox-btn" id="btnDriveRoad" onclick="driveRoad()">▶ Drive</button>
+      <button class="ibox-btn" onclick="resetSpiral()">↺ Reset</button>
+      <label>transition length
+        <input type="range" id="transSlider" min="0" max="1" step="0.01" value="0.5">
+      </label>
+    </div>
+    <div class="ibox-stats">
+      <div class="ibox-stat"><div class="stat-label">curvature κ</div><div class="stat-value" id="statKappa">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">spiral param</div><div class="stat-value" id="statSpiralA">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">steering angle</div><div class="stat-value" id="statSteer">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">lateral jerk</div><div class="stat-value" id="statJerk">—</div></div>
+    </div>
+  </div>
+
+  <div class="prose reveal">
+    <p>The curvature graph tells the whole story. Without the transition, curvature jumps from zero to a constant — an infinite derivative, an infinite jerk. The passengers lurch. With the clothoid, curvature climbs a smooth ramp, and its derivative — the <span class="hi">rate of change of curvature</span>, which engineers call the jerk — stays bounded. The longer the transition, the gentler the jerk. But longer transitions cost money: more land, more asphalt, more earthwork. Highway geometry is an optimisation problem with real stakes, and the calculus of the clothoid is at its centre.</p>
+
+    <p>There is something quietly moving about the Euler spiral. It is a curve that <span class="ac">cannot be written down</span> — not in the sense that mathematicians haven't tried, but in the precise sense that the Fresnel integrals are not elementary functions. They join the error function, the sine integral, and a handful of others in a special class: functions defined entirely by their integrals, known only through their properties, and computed only by approximation. And yet this curve, which exists only as an act of integration, is <span class="hi">the curve under your wheels every time you merge onto a motorway.</span></p>
+
+    <p>Calculus does not ask to be noticed. It does not announce itself when your steering wheel turns smoothly, or when the shadow on your desk has softly blurred edges, or when the Shinkansen rounds a bend at 300 km/h and you do not spill your coffee. It simply works — the way gravity works, the way time passes — woven so deeply into the fabric of the built world that separating it out would unravel everything.</p>
+  </div>
+
+  <div class="section-divider"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- § 5 — The Price of Uncertainty              -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="chapter-section" id="s5">
+  <div class="reveal">
+    <div class="section-num">§ 5</div>
+    <h2 class="section-title">The Price of <em>Uncertainty</em></h2>
+  </div>
+
+  <div class="prose reveal">
+    <p class="prose-drop">On a spring morning in 1973, Fischer Black and Myron Scholes published a paper that would reshape the world's financial system. Their question was deceptively simple: what is an option worth? An option is a contract that gives you the <em>right</em>, but not the obligation, to buy a share of stock at a fixed price on a future date. If the stock rises above that price, the option is valuable. If it doesn't, the option expires worthless. The question is: how much should you pay for such a contract today, when the future is unknown?</p>
+
+    <p>Their answer was a differential equation. Not just any differential equation — a <span class="ac">partial differential equation</span>, the kind that governs heat flow, wave propagation, and the diffusion of smoke through air. Black and Scholes realised that if you continuously adjust a portfolio of stock and bonds to exactly offset the risk of the option, the result is riskless — it must grow at the risk-free interest rate, or arbitrage would be possible. This hedging argument, combined with Itô's stochastic calculus from the 1940s, produced an equation that looks startlingly like the heat equation from physics, run <span class="hi">backwards in time</span>.</p>
+
+    <p>The heat equation describes how temperature spreads through a metal bar: regions of high heat diffuse into cooler neighbours, gradually smoothing toward equilibrium. The Black–Scholes equation does the same, but what diffuses is not heat — it is <span class="ac">uncertainty about the future price</span>. Far from expiry, the option's value is smooth and spread out, because anything could happen. As expiry approaches, uncertainty collapses and the value sharpens into a hard edge: either the option is in the money or it is not. Time flows backward. Diffusion runs in reverse. The equation knows this.</p>
+  </div>
+
+  <div class="block-quote reveal">
+    <p>"The striking thing about the Black–Scholes formula is that the expected return of the stock does not appear in it. The option price depends on volatility, but not on where the stock is going — only on how much it wanders."</p>
+    <div class="bq-attr">— Emanuel Derman, My Life as a Quant (2004)</div>
+  </div>
+
+  <div class="prose reveal">
+    <p>The formula that Black and Scholes derived — and that Robert Merton simultaneously proved using a different method — is built from pieces that any calculus student would recognise. The cumulative normal distribution function, which measures the probability that a random variable falls below a threshold. The exponential function, discounting future cash flows to the present. The natural logarithm, converting multiplicative growth into additive arithmetic. And at its heart, a single parameter that governs everything: <span class="ac">volatility</span>, denoted σ, the standard deviation of the stock's logarithmic returns. Volatility is not a prediction of direction. It is a measure of how much the price <em>wanders</em> — how vigorously the random walk shakes the future.</p>
+
+    <p>The Black–Scholes formula earned Scholes and Merton the 1997 Nobel Prize in Economics. Black had died two years earlier. The formula was already, by then, the oxygen of modern finance. The Chicago Board Options Exchange had opened in 1973 — the same year the paper appeared — and within a decade, traders on the floor were using handheld calculators loaded with Black–Scholes to price options in real time. The formula did not merely describe the market; <span class="hi">it became the market</span>. Prices converged to what the equation said they should be, because every participant was using the same equation to set them.</p>
+
+    <p>But the equation's deepest lesson is not about money. It is about the relationship between calculus and randomness. <span class="hi">Kiyosi Itô</span>, working in near-isolation in wartime Japan, had extended the classical calculus of Newton and Leibniz to functions driven by Brownian motion — the erratic jittering of a pollen grain in water, first described by Robert Brown in 1827 and explained by Einstein in 1905. Itô's calculus introduced a correction term that has no classical analogue: because Brownian paths are so rough, the ordinary chain rule of calculus breaks. In its place, <span class="ac">Itô's lemma</span> adds an extra term proportional to the second derivative — and it is this term that produces the diffusion in the Black–Scholes equation. Without it, there would be no formula for the price of risk.</p>
+  </div>
+
+  <div class="pull-quote reveal">
+    <p>The price of an option is not a guess about the future. It is the cost of hedging against every possible future, computed by a differential equation that runs time in reverse.</p>
+  </div>
+
+  <div class="prose reveal">
+    <p>But what does it actually <em>mean</em> for a stock price to follow Brownian motion? Imagine standing at the present moment and peering forward in time. The stock could go anywhere. Each possible future is a single path — a jagged, wandering line that jitters upward or downward at every instant. The Black–Scholes equation prices an option by considering <span class="hi">every one of these paths simultaneously</span>, weighting each by its probability, and computing the average payoff. This is the Monte Carlo method: simulate thousands of parallel universes, and the price is what you'd expect to pay across all of them.</p>
+
+    <p>The interactive below lets you see these parallel universes. Press "Spawn Paths" and watch hundreds of possible futures fan out from today's price, each tracing a geometric Brownian motion. On the right, a histogram builds itself: the distribution of final prices, which is <span class="ac">log-normal</span> — not symmetric, but skewed, with a long right tail of unlikely windfalls. The gold strike line marks the option's exercise price. Paths that finish above it are in the money; paths below are worthless. The option's price is the average payoff across all these parallel worlds, discounted back to the present. Drag the volatility slider and watch the cone of possibility expand or contract — this is what σ means, made visible.</p>
+  </div>
+
+  <!-- ── interactive: Parallel Universes ── -->
+  <div class="ibox reveal" id="bsBox">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">Parallel Universes</div>
+    <div class="ibox-desc">Watch hundreds of possible stock price futures fan out from the present. Each path is a geometric Brownian motion — the mathematical model behind Black–Scholes. The histogram shows the log-normal distribution of final prices. Paths above the strike line (gold) finish in the money.</div>
+    <canvas id="bsCanvas" width="700" height="480" data-nopz></canvas>
+    <div class="ibox-controls">
+      <button class="ibox-btn active" id="btnSpawn" onclick="spawnPaths()">✦ Spawn Paths</button>
+      <button class="ibox-btn" id="btnClearPaths" onclick="clearPaths()">↺ Clear</button>
+      <label>volatility σ
+        <input type="range" id="bsSigma" min="0.05" max="0.8" step="0.01" value="0.25">
+      </label>
+      <label>drift μ
+        <input type="range" id="bsMu" min="-0.1" max="0.3" step="0.01" value="0.08">
+      </label>
+    </div>
+    <div class="ibox-controls">
+      <label>strike K
+        <input type="range" id="bsK" min="60" max="160" step="1" value="110">
+      </label>
+      <label>time horizon
+        <input type="range" id="bsT" min="0.25" max="3" step="0.25" value="1">
+      </label>
+      <label>paths per burst
+        <input type="range" id="bsN" min="20" max="200" step="10" value="80">
+      </label>
+    </div>
+    <div class="ibox-stats">
+      <div class="ibox-stat"><div class="stat-label">total paths</div><div class="stat-value" id="statPaths">0</div></div>
+      <div class="ibox-stat"><div class="stat-label">in the money</div><div class="stat-value" id="statITM">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">BS call price</div><div class="stat-value" id="statBSPrice">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">MC estimate</div><div class="stat-value" id="statMC">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">delta (Δ)</div><div class="stat-value" id="statDelta">—</div></div>
+    </div>
+  </div>
+
+  <div class="prose reveal">
+    <p>Did you notice? As you spawn more and more paths, the Monte Carlo estimate — the average discounted payoff across all simulated futures — converges toward the Black–Scholes price. This is not a coincidence. It is the <span class="ac">law of large numbers</span>, applied to an integral. The Black–Scholes formula computes that integral analytically; the Monte Carlo method computes it by brute-force sampling. They agree because they are answering the same question: across every possible future weighted by its probability, what is the expected payoff? The formula is elegant. The simulation is honest. They arrive at the same number.</p>
+
+    <p>There is a poetic irony in the Black–Scholes story. The formula assumes that volatility is constant — that the roughness of the market's random walk never changes. Real markets violate this assumption spectacularly. The crash of 1987, the collapse of Long-Term Capital Management in 1998 (whose board included Scholes and Merton themselves), the financial crisis of 2008 — each was, in part, a reckoning with the gap between the equation's serene assumptions and the market's actual wildness. <span class="hi">Fat tails, volatility smiles, regime changes</span> — the phenomena that the equation cannot capture are precisely the phenomena that cause financial catastrophes.</p>
+
+    <p>And yet the formula endures, not because it is perfect, but because it is the <span class="ac">first correct question</span>. Every refinement — stochastic volatility models, jump-diffusion models, rough volatility — begins with Black–Scholes and asks: what happens when we relax this assumption? The formula is not the final answer. It is the coordinate system in which all subsequent answers are expressed. In this way, it is very much like Newton's laws: wrong in detail, indispensable in structure, and utterly dependent on calculus for every breath it takes.</p>
+  </div>
+
+  <div class="section-divider"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- CODA                                        -->
+<!-- ═══════════════════════════════════════════ -->
+<section class="chapter-section" style="padding-top:2rem">
+  <div class="reveal" style="text-align:center;margin-bottom:2rem">
+    <svg width="40" height="40" viewBox="0 0 40 40" style="opacity:.15">
+      <circle cx="20" cy="20" r="18" fill="none" stroke="var(--gold)" stroke-width=".5"/>
+      <circle cx="20" cy="20" r="8" fill="none" stroke="var(--gold)" stroke-width=".5"/>
+      <circle cx="20" cy="20" r="1.5" fill="var(--gold)"/>
+    </svg>
+  </div>
+  <div class="coda reveal">
+    <p>You woke up this morning and calculus had already been at work —<br>
+    drawing the letters on your screen,<br>
+    cooling your coffee to exactly the right temperature,<br>
+    curving the road beneath your wheels,<br>
+    pricing the risk in your retirement fund,<br>
+    training the model that answered your question.</p>
+    <p>It asked nothing in return.<br>
+    It did not even ask to be noticed.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- REFERENCES                                  -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="ref-section reveal">
+  <h3 class="ref-heading">References</h3>
+  <ul class="ref-list">
+    <li><span class="ref-author">Farin, G.,</span> <span class="ref-title">Curves and Surfaces for CAGD: A Practical Guide,</span> <span class="ref-detail">5th ed., Morgan Kaufmann, 2002.</span></li>
+    <li><span class="ref-author">De Casteljau, P.,</span> <span class="ref-title">Courbes et surfaces à pôles,</span> <span class="ref-detail">André Citroën Automobiles SA, Paris (internal report), 1959.</span></li>
+    <li><span class="ref-author">Bézier, P.,</span> <span class="ref-title">Définition numérique des courbes et surfaces I & II,</span> <span class="ref-detail">Automatisme, 11(12):625–632, 1966.</span></li>
+    <li><span class="ref-author">Strang, G.,</span> <span class="ref-title">Calculus,</span> <span class="ref-detail">Wellesley-Cambridge Press, 1991.</span></li>
+    <li><span class="ref-author">Newton, I.,</span> <span class="ref-title">Scala graduum caloris,</span> <span class="ref-detail">Philosophical Transactions of the Royal Society, 22:824–829, 1701.</span></li>
+    <li><span class="ref-author">Rowland, M. & Tozer, T. N.,</span> <span class="ref-title">Clinical Pharmacokinetics and Pharmacodynamics,</span> <span class="ref-detail">4th ed., Lippincott Williams & Wilkins, 2010.</span></li>
+    <li><span class="ref-author">Ruder, S.,</span> <span class="ref-title">An Overview of Gradient Descent Optimization Algorithms,</span> <span class="ref-detail">arXiv:1609.04747, 2016.</span></li>
+    <li><span class="ref-author">Cauchy, A.,</span> <span class="ref-title">Méthode générale pour la résolution des systèmes d'équations simultanées,</span> <span class="ref-detail">Comptes rendus de l'Académie des Sciences, 25:536–538, 1847.</span></li>
+    <li><span class="ref-author">Euler, L.,</span> <span class="ref-title">De curvis elasticis, Additamentum I to Methodus inveniendi,</span> <span class="ref-detail">Lausanne & Geneva, 1744.</span></li>
+    <li><span class="ref-author">Fresnel, A.,</span> <span class="ref-title">Mémoire sur la diffraction de la lumière,</span> <span class="ref-detail">Annales de chimie et de physique, 1:239–281, 1816.</span></li>
+    <li><span class="ref-author">Walton, D. J. & Meek, D. S.,</span> <span class="ref-title">A planar cubic Bézier spiral,</span> <span class="ref-detail">Journal of Computational and Applied Mathematics, 72(1):85–100, 1996.</span></li>
+    <li><span class="ref-author">AASHTO,</span> <span class="ref-title">A Policy on Geometric Design of Highways and Streets,</span> <span class="ref-detail">7th ed., American Association of State Highway and Transportation Officials, 2018.</span></li>
+    <li><span class="ref-author">Goodfellow, I., Bengio, Y. & Courville, A.,</span> <span class="ref-title">Deep Learning,</span> <span class="ref-detail">MIT Press, 2016.</span></li>
+    <li><span class="ref-author">Thompson, D. W.,</span> <span class="ref-title">On Growth and Form,</span> <span class="ref-detail">Cambridge University Press, 1917.</span></li>
+    <li><span class="ref-author">Black, F. & Scholes, M.,</span> <span class="ref-title">The Pricing of Options and Corporate Liabilities,</span> <span class="ref-detail">Journal of Political Economy, 81(3):637–654, 1973.</span></li>
+    <li><span class="ref-author">Merton, R. C.,</span> <span class="ref-title">Theory of Rational Option Pricing,</span> <span class="ref-detail">Bell Journal of Economics and Management Science, 4(1):141–183, 1973.</span></li>
+    <li><span class="ref-author">Itô, K.,</span> <span class="ref-title">On Stochastic Differential Equations,</span> <span class="ref-detail">Memoirs of the American Mathematical Society, 4:1–51, 1951.</span></li>
+    <li><span class="ref-author">Derman, E.,</span> <span class="ref-title">My Life as a Quant: Reflections on Physics and Finance,</span> <span class="ref-detail">Wiley, 2004.</span></li>
+    <li><span class="ref-author">Hull, J. C.,</span> <span class="ref-title">Options, Futures, and Other Derivatives,</span> <span class="ref-detail">11th ed., Pearson, 2022.</span></li>
+  </ul>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- FOOTER                                      -->
+<!-- ═══════════════════════════════════════════ -->
+<footer>
+  <div style="text-align:center;margin-bottom:2rem;opacity:.35">
+    <p style="font-family:var(--font-mono);font-size:.55rem;letter-spacing:.1em;color:var(--muted);line-height:1.8">
+      Every visualization is computed in real time.<br>
+      No recordings, no pre-rendered assets — just math.
+    </p>
+  </div>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study</div>
+    <div class="footer-inst">AI4MATH, KAIST</div>
+    <a class="footer-url" href="https://kimsh.kr">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- NARRATOR                                    -->
+<!-- ═══════════════════════════════════════════ -->
+<button class="narrator-toggle" id="narratorToggle" onclick="toggleNarratorBar()" title="Voice narration">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+</button>
+
+<div class="narrator-bar" id="narratorBar">
+  <div class="narrator-inner">
+    <div class="narrator-controls">
+      <button class="narrator-btn" onclick="narratorPrev()" title="Previous section">⏮</button>
+      <button class="narrator-btn play" id="narratorPlayBtn" onclick="narratorPlayPause()" title="Play / Pause">▶</button>
+      <button class="narrator-btn" onclick="narratorNext()" title="Next section">⏭</button>
+    </div>
+    <div class="narrator-voice-select">
+      <button class="narrator-voice-btn active" id="voiceFemale" onclick="setNarratorVoice('female')">female</button>
+      <button class="narrator-voice-btn" id="voiceMale" onclick="setNarratorVoice('male')">male</button>
+    </div>
+    <div class="narrator-progress" id="narratorProgress" onclick="narratorSeek(event)">
+      <div class="narrator-progress-fill" id="narratorProgressFill"></div>
+    </div>
+    <button class="narrator-speed" id="narratorSpeedBtn" onclick="cycleNarratorSpeed()">1×</button>
+    <div class="narrator-status" id="narratorStatus">§1 ready</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- AMBIENT PARTICLES                           -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+(function createParticles(){
+  const colors = ['rgba(201,168,76,','rgba(212,168,83,','rgba(180,150,60,'];
+  for(let i=0;i<22;i++){
+    const p=document.createElement('div');
+    p.className='ambient-particle';
+    const s=Math.random()*3+1.5;
+    const c=colors[Math.floor(Math.random()*colors.length)];
+    p.style.cssText=`left:${Math.random()*100}%;width:${s}px;height:${s}px;
+      background:radial-gradient(circle,${c}0.6) 0%,${c}0) 100%);
+      box-shadow:0 0 ${s*2}px ${c}0.2);
+      animation-duration:${14+Math.random()*20}s;animation-delay:${-Math.random()*22}s`;
+    document.body.appendChild(p);
+  }
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SCROLL REVEAL                               -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+const revealObs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revealObs.unobserve(e.target)}});
+},{threshold:0.12});
+document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+</script>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- HERO ANIMATION — flowing vector field       -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+(function heroAnim(){
+  const c=document.getElementById('heroCanvas');
+  const ctx=c.getContext('2d');
+  let W,H,dpr;
+  let _heroVisible=true, _heroTimer=0, _heroTimeout=300;
+  const NPARTICLES=500;
+  let particles=[];
+  let time=0;
+  let mouseX=0.5,mouseY=0.5;
+
+  function resize(){
+    dpr=window.devicePixelRatio||1;
+    W=c.clientWidth; H=c.clientHeight;
+    c.width=W*dpr; c.height=H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    // reinit particles to new size
+    particles=[];
+    for(let i=0;i<NPARTICLES;i++) spawnParticle(particles,true);
+  }
+
+  function spawnParticle(arr,randomAge){
+    arr.push({
+      x:Math.random()*W, y:Math.random()*H,
+      age:randomAge?Math.random()*300:0,
+      maxAge:180+Math.random()*200,
+      size:0.6+Math.random()*2.0,
+      hue:30+Math.random()*30, // amber to gold
+      sat:40+Math.random()*25,
+      light:45+Math.random()*20,
+      trail:[]
+    });
+  }
+
+  window.addEventListener('resize',resize);
+  resize();
+
+  // vector field: morphing between regimes
+  function field(x,y,t){
+    const nx=x/W-0.5, ny=y/H-0.5;
+    const mx=mouseX-0.5, my=mouseY-0.5;
+    const phase=t*0.00025;
+    const s=Math.sin(phase), cs=Math.cos(phase);
+    // layered: gentle rotation + sinusoidal waves + spiral
+    let vx= Math.sin(ny*3.5+phase)*0.7 + cs*ny*1.8 - mx*0.6;
+    let vy= Math.cos(nx*3.5+phase*1.2)*0.7 - s*nx*1.8 - my*0.6;
+    const r=Math.sqrt(nx*nx+ny*ny);
+    const spiral=Math.sin(r*6-t*0.0015)*0.6;
+    vx += -ny*spiral;
+    vy += nx*spiral;
+    // secondary wave
+    vx += Math.sin(ny*7+phase*2.1)*0.15;
+    vy += Math.cos(nx*7+phase*1.7)*0.15;
+    const mag=Math.sqrt(vx*vx+vy*vy)||1;
+    return{vx:vx/mag,vy:vy/mag,mag};
+  }
+
+  c.addEventListener('mousemove',e=>{
+    const r=c.getBoundingClientRect();
+    mouseX=(e.clientX-r.left)/W;
+    mouseY=(e.clientY-r.top)/H;
+    _heroTimer=0;
+  });
+  c.addEventListener('touchmove',e=>{
+    const r=c.getBoundingClientRect();
+    mouseX=(e.touches[0].clientX-r.left)/W;
+    mouseY=(e.touches[0].clientY-r.top)/H;
+    _heroTimer=0;
+  },{passive:true});
+
+  const heroObs=new IntersectionObserver(entries=>{
+    _heroVisible=entries[0].isIntersecting;
+  },{threshold:0.05});
+  heroObs.observe(c);
+
+  function draw(ts){
+    if(!_heroVisible){requestAnimationFrame(draw);return;}
+    _heroTimer++;
+    if(_heroTimer>_heroTimeout*60){requestAnimationFrame(draw);return;}
+    time=ts;
+
+    // very slow fade — long comet trails
+    ctx.fillStyle='rgba(4,5,12,0.04)';
+    ctx.fillRect(0,0,W,H);
+
+    for(let i=0;i<particles.length;i++){
+      const p=particles[i];
+      const f=field(p.x,p.y,time);
+      const speed=1.0+p.size*0.3;
+      p.x+=f.vx*speed;
+      p.y+=f.vy*speed;
+      p.age++;
+
+      // lifecycle alpha
+      const life=p.age/p.maxAge;
+      const alpha=life<0.08?life/0.08 : life>0.8?(1-(life-0.8)/0.2) : 1;
+
+      if(p.age>p.maxAge||p.x<-20||p.x>W+20||p.y<-20||p.y>H+20){
+        // respawn
+        p.x=Math.random()*W; p.y=Math.random()*H;
+        p.age=0; p.maxAge=180+Math.random()*200;
+        p.hue=30+Math.random()*30;
+        p.size=0.6+Math.random()*2.0;
+        continue;
+      }
+
+      // draw with glow
+      const a=alpha*0.65;
+      const sz=p.size;
+      ctx.shadowColor=`hsla(${p.hue},${p.sat}%,${p.light}%,${a*0.5})`;
+      ctx.shadowBlur=sz*4;
+      ctx.fillStyle=`hsla(${p.hue},${p.sat}%,${p.light}%,${a})`;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,sz,0,Math.PI*2);
+      ctx.fill();
+    }
+    ctx.shadowBlur=0;
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- BÉZIER INTERACTIVE                          -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+(function bezierInteractive(){
+  const c=document.getElementById('bezierCanvas');
+  const ctx=c.getContext('2d');
+  let W,H,dpr;
+  let showConstruction=true, showHodograph=false, animating=false;
+  let animT=0, animDir=1, animSpeed=1;
+
+  // control points (CSS coords)
+  const defaultPts=[
+    {x:80,y:350},{x:200,y:60},{x:500,y:60},{x:620,y:350}
+  ];
+  let pts=defaultPts.map(p=>({...p}));
+  let dragging=-1;
+  let hoverT=-1; // t value at mouse position
+
+  function resize(){
+    dpr=window.devicePixelRatio||1;
+    W=c.clientWidth; H=c.clientHeight;
+    c.width=W*dpr; c.height=H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    draw();
+  }
+  window.addEventListener('resize',resize);
+
+  // lazy init
+  const lazyObs=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting){resize();lazyObs.unobserve(c);}
+  },{threshold:0.05});
+  lazyObs.observe(c);
+
+  // Bézier math
+  function bezier(t,p0,p1,p2,p3){
+    const u=1-t;
+    return{
+      x:u*u*u*p0.x+3*u*u*t*p1.x+3*u*t*t*p2.x+t*t*t*p3.x,
+      y:u*u*u*p0.y+3*u*u*t*p1.y+3*u*t*t*p2.y+t*t*t*p3.y
+    };
+  }
+  function bezierDeriv(t,p0,p1,p2,p3){
+    const u=1-t;
+    return{
+      x:3*(u*u*(p1.x-p0.x)+2*u*t*(p2.x-p1.x)+t*t*(p3.x-p2.x)),
+      y:3*(u*u*(p1.y-p0.y)+2*u*t*(p2.y-p1.y)+t*t*(p3.y-p2.y))
+    };
+  }
+  function bezierDeriv2(t,p0,p1,p2,p3){
+    const u=1-t;
+    return{
+      x:6*(u*(p2.x-2*p1.x+p0.x)+t*(p3.x-2*p2.x+p1.x)),
+      y:6*(u*(p2.y-2*p1.y+p0.y)+t*(p3.y-2*p2.y+p1.y))
+    };
+  }
+  function curveLength(){
+    let len=0;const N=200;
+    for(let i=1;i<=N;i++){
+      const a=bezier((i-1)/N,...pts);
+      const b=bezier(i/N,...pts);
+      len+=Math.sqrt((b.x-a.x)**2+(b.y-a.y)**2);
+    }
+    return len;
+  }
+  function curvature(t){
+    const d=bezierDeriv(t,...pts);
+    const dd=bezierDeriv2(t,...pts);
+    const cross=d.x*dd.y-d.y*dd.x;
+    const speed=Math.pow(d.x*d.x+d.y*d.y,1.5);
+    return speed>0.001?Math.abs(cross)/speed:0;
+  }
+
+  // de Casteljau construction
+  function deCasteljau(t){
+    const [p0,p1,p2,p3]=pts;
+    const u=1-t;
+    const a={x:u*p0.x+t*p1.x, y:u*p0.y+t*p1.y};
+    const b={x:u*p1.x+t*p2.x, y:u*p1.y+t*p2.y};
+    const cc={x:u*p2.x+t*p3.x, y:u*p2.y+t*p3.y};
+    const d={x:u*a.x+t*b.x, y:u*a.y+t*b.y};
+    const e={x:u*b.x+t*cc.x, y:u*b.y+t*cc.y};
+    const f={x:u*d.x+t*e.x, y:u*d.y+t*e.y};
+    return{l1:[a,b,cc],l2:[d,e],point:f};
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const t=animating?animT:(hoverT>=0?hoverT:0.5);
+
+    // control polygon
+    ctx.strokeStyle='rgba(255,255,255,0.08)';
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x,pts[0].y);
+    for(let i=1;i<4;i++) ctx.lineTo(pts[i].x,pts[i].y);
+    ctx.stroke();
+
+    // construction
+    if(showConstruction){
+      const dc=deCasteljau(t);
+      // level 1 lines
+      ctx.strokeStyle='rgba(138,106,191,0.3)';
+      ctx.lineWidth=1;
+      ctx.beginPath();
+      ctx.moveTo(dc.l1[0].x,dc.l1[0].y);
+      ctx.lineTo(dc.l1[1].x,dc.l1[1].y);
+      ctx.lineTo(dc.l1[2].x,dc.l1[2].y);
+      ctx.stroke();
+      // level 2 line
+      ctx.strokeStyle='rgba(201,168,76,0.4)';
+      ctx.beginPath();
+      ctx.moveTo(dc.l2[0].x,dc.l2[0].y);
+      ctx.lineTo(dc.l2[1].x,dc.l2[1].y);
+      ctx.stroke();
+      // level 1 dots
+      dc.l1.forEach(p=>{
+        ctx.fillStyle='rgba(138,106,191,0.6)';
+        ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fill();
+      });
+      // level 2 dots
+      dc.l2.forEach(p=>{
+        ctx.fillStyle='rgba(201,168,76,0.7)';
+        ctx.beginPath();ctx.arc(p.x,p.y,3.5,0,Math.PI*2);ctx.fill();
+      });
+      // point on curve
+      ctx.fillStyle='#fff';
+      ctx.shadowColor='rgba(255,255,255,0.6)';ctx.shadowBlur=10;
+      ctx.beginPath();ctx.arc(dc.point.x,dc.point.y,5,0,Math.PI*2);ctx.fill();
+      ctx.shadowBlur=0;
+    }
+
+    // main curve
+    ctx.strokeStyle='rgba(236,232,224,0.9)';
+    ctx.lineWidth=2.5;
+    ctx.shadowColor='rgba(236,232,224,0.25)';ctx.shadowBlur=12;
+    ctx.beginPath();
+    for(let i=0;i<=200;i++){
+      const p=bezier(i/200,...pts);
+      i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y);
+    }
+    ctx.stroke();
+    ctx.shadowBlur=0;
+
+    // hodograph
+    if(showHodograph){
+      const hOff={x:W-180,y:H-120};
+      const scale=0.15;
+      ctx.save();
+      // hodograph background
+      ctx.fillStyle='rgba(14,17,40,0.7)';
+      ctx.strokeStyle='rgba(255,255,255,0.06)';
+      ctx.lineWidth=1;
+      ctx.beginPath();
+      ctx.roundRect(hOff.x-90,hOff.y-80,180,160,8);
+      ctx.fill();ctx.stroke();
+      ctx.fillStyle='rgba(82,86,106,0.8)';
+      ctx.font='9px "JetBrains Mono"';
+      ctx.fillText('HODOGRAPH (B′)',hOff.x-55,hOff.y-62);
+      // draw hodograph curve
+      ctx.strokeStyle='rgba(201,168,76,0.6)';
+      ctx.lineWidth=1.5;
+      ctx.beginPath();
+      for(let i=0;i<=100;i++){
+        const d=bezierDeriv(i/100,...pts);
+        const px=hOff.x+d.x*scale, py=hOff.y+d.y*scale;
+        i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+      }
+      ctx.stroke();
+      // current velocity
+      const d=bezierDeriv(t,...pts);
+      ctx.fillStyle='var(--gold)';
+      ctx.beginPath();
+      ctx.arc(hOff.x+d.x*scale,hOff.y+d.y*scale,3,0,Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // tangent vector at animation point
+    if(animating||hoverT>=0){
+      const bp=bezier(t,...pts);
+      const bd=bezierDeriv(t,...pts);
+      const mag=Math.sqrt(bd.x*bd.x+bd.y*bd.y);
+      const tScale=40/Math.max(mag,1);
+      ctx.strokeStyle='rgba(201,168,76,0.7)';
+      ctx.lineWidth=1.5;
+      ctx.beginPath();
+      ctx.moveTo(bp.x,bp.y);
+      ctx.lineTo(bp.x+bd.x*tScale,bp.y+bd.y*tScale);
+      ctx.stroke();
+      // arrowhead
+      const ax=bp.x+bd.x*tScale, ay=bp.y+bd.y*tScale;
+      const angle=Math.atan2(bd.y,bd.x);
+      ctx.fillStyle='rgba(201,168,76,0.7)';
+      ctx.beginPath();
+      ctx.moveTo(ax,ay);
+      ctx.lineTo(ax-8*Math.cos(angle-0.4),ay-8*Math.sin(angle-0.4));
+      ctx.lineTo(ax-8*Math.cos(angle+0.4),ay-8*Math.sin(angle+0.4));
+      ctx.fill();
+    }
+
+    // control points
+    pts.forEach((p,i)=>{
+      ctx.fillStyle='var(--gold)';
+      ctx.shadowColor='rgba(201,168,76,0.4)';ctx.shadowBlur=8;
+      ctx.beginPath();ctx.arc(p.x,p.y,7,0,Math.PI*2);ctx.fill();
+      ctx.shadowBlur=0;
+      ctx.fillStyle='rgba(4,5,12,0.8)';
+      ctx.font='bold 8px "JetBrains Mono"';
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText('P'+i,p.x,p.y);
+    });
+
+    // update stats
+    const deriv=bezierDeriv(t,...pts);
+    const speed=Math.sqrt(deriv.x*deriv.x+deriv.y*deriv.y);
+    document.getElementById('statT').textContent=t.toFixed(2);
+    document.getElementById('statLen').textContent=curveLength().toFixed(1)+'px';
+    document.getElementById('statCurv').textContent=curvature(t).toFixed(4);
+    document.getElementById('statSpeed').textContent=speed.toFixed(1);
+  }
+
+  // animation loop
+  function animLoop(){
+    if(!animating) return;
+    animT+=0.004*animDir*animSpeed;
+    if(animT>1){animT=1;animDir=-1;}
+    if(animT<0){animT=0;animDir=1;}
+    draw();
+    requestAnimationFrame(animLoop);
+  }
+
+  // mouse interaction
+  function getMousePos(e){
+    const r=c.getBoundingClientRect();
+    return{x:e.clientX-r.left,y:e.clientY-r.top};
+  }
+  c.addEventListener('mousedown',e=>{
+    const m=getMousePos(e);
+    for(let i=0;i<4;i++){
+      const dx=m.x-pts[i].x, dy=m.y-pts[i].y;
+      if(dx*dx+dy*dy<400){dragging=i;break;}
+    }
+  });
+  c.addEventListener('mousemove',e=>{
+    const m=getMousePos(e);
+    if(dragging>=0){
+      pts[dragging].x=Math.max(10,Math.min(W-10,m.x));
+      pts[dragging].y=Math.max(10,Math.min(H-10,m.y));
+      draw();
+    } else {
+      // find nearest t
+      let bestDist=Infinity,bestT=0;
+      for(let i=0;i<=200;i++){
+        const t=i/200;
+        const p=bezier(t,...pts);
+        const d=(p.x-m.x)**2+(p.y-m.y)**2;
+        if(d<bestDist){bestDist=d;bestT=t;}
+      }
+      hoverT=bestDist<2000?bestT:-1;
+      if(!animating) draw();
+    }
+  });
+  c.addEventListener('mouseup',()=>{dragging=-1;});
+  c.addEventListener('mouseleave',()=>{dragging=-1;hoverT=-1;if(!animating)draw();});
+
+  // touch
+  c.addEventListener('touchstart',e=>{
+    e.preventDefault();
+    const t=e.touches[0];
+    const m=getMousePos(t);
+    for(let i=0;i<4;i++){
+      const dx=m.x-pts[i].x,dy=m.y-pts[i].y;
+      if(dx*dx+dy*dy<800){dragging=i;break;}
+    }
+  },{passive:false});
+  c.addEventListener('touchmove',e=>{
+    e.preventDefault();
+    if(dragging>=0){
+      const m=getMousePos(e.touches[0]);
+      pts[dragging].x=Math.max(10,Math.min(W-10,m.x));
+      pts[dragging].y=Math.max(10,Math.min(H-10,m.y));
+      draw();
+    }
+  },{passive:false});
+  c.addEventListener('touchend',()=>{dragging=-1;});
+
+  // buttons
+  window.toggleConstruction=()=>{
+    showConstruction=!showConstruction;
+    document.getElementById('btnConstruction').classList.toggle('active',showConstruction);
+    draw();
+  };
+  window.toggleHodograph=()=>{
+    showHodograph=!showHodograph;
+    document.getElementById('btnHodograph').classList.toggle('active',showHodograph);
+    draw();
+  };
+  window.toggleAnimate=()=>{
+    animating=!animating;
+    const btn=document.getElementById('btnAnimate');
+    btn.textContent=animating?'⏸ Pause':'▶ Animate';
+    btn.classList.toggle('active',animating);
+    if(animating){animT=0;animDir=1;animLoop();}
+    else draw();
+  };
+  window.resetBezier=()=>{
+    pts=defaultPts.map(p=>({...p}));
+    animating=false;animT=0;
+    document.getElementById('btnAnimate').textContent='▶ Animate';
+    document.getElementById('btnAnimate').classList.remove('active');
+    draw();
+  };
+  document.getElementById('animSpeed').addEventListener('input',e=>{
+    animSpeed=parseFloat(e.target.value);
+  });
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- DECAY / GROWTH INTERACTIVE                  -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+(function decayInteractive(){
+  const c=document.getElementById('decayCanvas');
+  if(!c) return;
+  const ctx=c.getContext('2d');
+  let W,H,dpr;
+
+  const presets={
+    coffee:{
+      label:'Coffee Cooling',k:-0.07,y0:90,yEnv:22,
+      unit:'°C',tMax:60,tUnit:'min',
+      window:null,color:'hsl(25,70%,55%)',doseAmt:0
+    },
+    drug:{
+      label:'Drug Concentration',k:-0.18,y0:0,yEnv:0,
+      unit:'mg/L',tMax:48,tUnit:'hr',
+      window:[2,8],color:'hsl(340,60%,55%)',doseAmt:10
+    },
+    battery:{
+      label:'Battery Discharge',k:-0.04,y0:100,yEnv:0,
+      unit:'%',tMax:80,tUnit:'hr',
+      window:null,color:'hsl(130,50%,50%)',doseAmt:0
+    },
+    bacteria:{
+      label:'Bacterial Growth',k:0.35,y0:100,yEnv:0,
+      unit:'cells',tMax:24,tUnit:'hr',
+      window:null,color:'hsl(50,65%,50%)',doseAmt:0
+    },
+    interest:{
+      label:'Compound Interest (5%)',k:0.05,y0:1000,yEnv:0,
+      unit:'$',tMax:50,tUnit:'yr',
+      window:null,color:'hsl(200,55%,50%)',doseAmt:0
+    }
+  };
+
+  let current='coffee';
+  let playing=false;
+  let simTime=0;
+  let history=[]; // {t, y} points
+  let doses=[]; // times when doses were added
+  let simSpeed=1.5;
+  let animId=null;
+
+  // compute y at time t considering doses (for drug mode)
+  function computeY(t){
+    const p=presets[current];
+    if(current==='drug'){
+      // superposition of exponential decays from each dose
+      let total=0;
+      for(const doseT of doses){
+        if(t>=doseT){
+          total+=p.doseAmt*Math.exp(p.k*(t-doseT));
+        }
+      }
+      return total;
+    }
+    if(current==='coffee'){
+      // Newton cooling: y(t) = yEnv + (y0-yEnv)*exp(kt)
+      return p.yEnv+(p.y0-p.yEnv)*Math.exp(p.k*t);
+    }
+    // general: y0*exp(kt)
+    return p.y0*Math.exp(p.k*t);
+  }
+
+  function computeAUC(){
+    // trapezoidal integration of history
+    let auc=0;
+    for(let i=1;i<history.length;i++){
+      auc+=0.5*(history[i-1].y+history[i].y)*(history[i].t-history[i-1].t);
+    }
+    return auc;
+  }
+
+  function resize(){
+    dpr=window.devicePixelRatio||1;
+    W=c.clientWidth;H=c.clientHeight;
+    c.width=W*dpr;c.height=H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    draw();
+  }
+
+  const lazyObs=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting){resize();lazyObs.unobserve(c);}
+  },{threshold:0.05});
+  lazyObs.observe(c);
+  window.addEventListener('resize',resize);
+
+  function getYRange(){
+    const p=presets[current];
+    if(current==='bacteria') return{min:0,max:Math.max(p.y0*Math.exp(p.k*p.tMax),500)};
+    if(current==='interest') return{min:0,max:p.y0*Math.exp(p.k*p.tMax)*1.1};
+    if(current==='drug') return{min:0,max:Math.max(15,Math.max(...history.map(h=>h.y),10)*1.2)};
+    if(current==='coffee') return{min:0,max:p.y0*1.1};
+    return{min:0,max:p.y0*1.1};
+  }
+
+  const PAD={l:60,r:20,t:30,b:40};
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const p=presets[current];
+    const yr=getYRange();
+    const plotW=W-PAD.l-PAD.r, plotH=H-PAD.t-PAD.b;
+
+    function tx(t){return PAD.l+t/p.tMax*plotW;}
+    function ty(y){return PAD.t+plotH-(y-yr.min)/(yr.max-yr.min)*plotH;}
+
+    // axes
+    ctx.strokeStyle='rgba(255,255,255,0.08)';
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.moveTo(PAD.l,PAD.t);ctx.lineTo(PAD.l,H-PAD.b);ctx.lineTo(W-PAD.r,H-PAD.b);
+    ctx.stroke();
+
+    // grid lines
+    ctx.fillStyle='rgba(82,86,106,0.7)';
+    ctx.font='9px "JetBrains Mono"';
+    ctx.textAlign='center';
+    const nTicksX=6;
+    for(let i=0;i<=nTicksX;i++){
+      const t=p.tMax*i/nTicksX;
+      const x=tx(t);
+      ctx.strokeStyle='rgba(255,255,255,0.03)';
+      ctx.beginPath();ctx.moveTo(x,PAD.t);ctx.lineTo(x,H-PAD.b);ctx.stroke();
+      ctx.fillText(t.toFixed(0),x,H-PAD.b+14);
+    }
+    ctx.fillText(p.tUnit,W-PAD.r,H-PAD.b+14);
+
+    ctx.textAlign='right';
+    const nTicksY=5;
+    for(let i=0;i<=nTicksY;i++){
+      const y=yr.min+(yr.max-yr.min)*i/nTicksY;
+      const yy=ty(y);
+      ctx.strokeStyle='rgba(255,255,255,0.03)';
+      ctx.beginPath();ctx.moveTo(PAD.l,yy);ctx.lineTo(W-PAD.r,yy);ctx.stroke();
+      let label=y.toFixed(0);
+      if(yr.max>9999) label=(y/1000).toFixed(1)+'k';
+      ctx.fillText(label,PAD.l-8,yy+3);
+    }
+
+    // therapeutic window
+    if(p.window){
+      const y1=ty(p.window[1]),y2=ty(p.window[0]);
+      ctx.fillStyle='rgba(90,154,114,0.08)';
+      ctx.fillRect(PAD.l,y1,plotW,y2-y1);
+      ctx.strokeStyle='rgba(90,154,114,0.25)';
+      ctx.setLineDash([4,4]);
+      ctx.beginPath();ctx.moveTo(PAD.l,y1);ctx.lineTo(W-PAD.r,y1);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(PAD.l,y2);ctx.lineTo(W-PAD.r,y2);ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle='rgba(90,154,114,0.5)';
+      ctx.font='8px "JetBrains Mono"';
+      ctx.textAlign='left';
+      ctx.fillText('effective',PAD.l+4,y2-4);
+      ctx.fillText('toxic',PAD.l+4,y1+12);
+    }
+
+    // dose markers
+    if(current==='drug'){
+      ctx.fillStyle='rgba(201,168,76,0.15)';
+      doses.forEach(dt=>{
+        if(dt<=p.tMax){
+          const x=tx(dt);
+          ctx.fillRect(x-1,PAD.t,2,plotH);
+        }
+      });
+    }
+
+    // environment line (coffee)
+    if(current==='coffee'){
+      const yRoom=ty(p.yEnv);
+      ctx.strokeStyle='rgba(201,168,76,0.2)';
+      ctx.setLineDash([6,4]);
+      ctx.beginPath();ctx.moveTo(PAD.l,yRoom);ctx.lineTo(W-PAD.r,yRoom);ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle='rgba(201,168,76,0.4)';
+      ctx.font='8px "JetBrains Mono"';ctx.textAlign='left';
+      ctx.fillText('room temp',PAD.l+4,yRoom-4);
+    }
+
+    // full theoretical curve (faint)
+    ctx.strokeStyle='rgba(255,255,255,0.06)';
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    const N=300;
+    for(let i=0;i<=N;i++){
+      const t=p.tMax*i/N;
+      const y=computeY(t);
+      const px=tx(t),py=ty(Math.max(yr.min,Math.min(yr.max,y)));
+      i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+    }
+    ctx.stroke();
+
+    // traced history
+    if(history.length>1){
+      // area fill under curve
+      ctx.fillStyle=p.color.replace(')',',0.04)').replace('hsl','hsla');
+      ctx.beginPath();
+      ctx.moveTo(tx(history[0].t),ty(0));
+      history.forEach((h)=>{
+        const px=tx(h.t),py=ty(Math.max(yr.min,Math.min(yr.max,h.y)));
+        ctx.lineTo(px,py);
+      });
+      ctx.lineTo(tx(history[history.length-1].t),ty(0));
+      ctx.closePath();ctx.fill();
+
+      ctx.strokeStyle=p.color;
+      ctx.lineWidth=2.5;
+      ctx.shadowColor=p.color;ctx.shadowBlur=10;
+      ctx.beginPath();
+      history.forEach((h,i)=>{
+        const px=tx(h.t),py=ty(Math.max(yr.min,Math.min(yr.max,h.y)));
+        i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+      });
+      ctx.stroke();
+      ctx.shadowBlur=0;
+
+      // current point
+      const last=history[history.length-1];
+      const lx=tx(last.t),ly=ty(Math.max(yr.min,Math.min(yr.max,last.y)));
+      ctx.fillStyle='#fff';
+      ctx.shadowColor='rgba(255,255,255,0.7)';ctx.shadowBlur=12;
+      ctx.beginPath();ctx.arc(lx,ly,4.5,0,Math.PI*2);ctx.fill();
+      ctx.shadowBlur=0;
+    }
+
+    // label
+    ctx.fillStyle='rgba(236,232,224,0.6)';
+    ctx.font='11px "Fraunces"';ctx.textAlign='left';
+    ctx.fillText(p.label,PAD.l+8,PAD.t+16);
+
+    // stats
+    const curY=history.length?history[history.length-1].y:computeY(0);
+    const halfLife=p.k<0?(Math.LN2/Math.abs(p.k)):p.k>0?(Math.LN2/p.k):'∞';
+    document.getElementById('statVal').textContent=
+      curY>9999?(curY/1000).toFixed(1)+'k':curY.toFixed(1)+' '+p.unit;
+    document.getElementById('statHalf').textContent=
+      typeof halfLife==='number'?halfLife.toFixed(1)+' '+p.tUnit:'∞';
+    document.getElementById('statTime').textContent=simTime.toFixed(1)+' '+p.tUnit;
+    const auc=computeAUC();
+    document.getElementById('statAUC').textContent=
+      auc>9999?(auc/1000).toFixed(1)+'k':auc.toFixed(1);
+  }
+
+  function step(){
+    const p=presets[current];
+    const dt=0.05*simSpeed;
+    simTime+=dt;
+    if(simTime>p.tMax){
+      playing=false;
+      document.getElementById('btnPlayDecay').textContent='▶ Play';
+      document.getElementById('btnPlayDecay').classList.remove('active');
+      return;
+    }
+    const y=computeY(simTime);
+    history.push({t:simTime,y});
+    draw();
+    if(playing) animId=requestAnimationFrame(step);
+  }
+
+  function initPreset(){
+    const p=presets[current];
+    simTime=0;
+    history=[];
+    doses=[];
+    if(current==='drug'){
+      doses.push(0);
+      document.getElementById('btnDose').style.display='';
+    } else {
+      document.getElementById('btnDose').style.display='none';
+    }
+    history.push({t:0,y:computeY(0)});
+    playing=false;
+    if(animId) cancelAnimationFrame(animId);
+    document.getElementById('btnPlayDecay').textContent='▶ Play';
+    document.getElementById('btnPlayDecay').classList.remove('active');
+    draw();
+  }
+
+  window.setPreset=function(name){
+    current=name;
+    // update button states
+    Object.keys(presets).forEach(k=>{
+      const btn=document.getElementById('preset'+k.charAt(0).toUpperCase()+k.slice(1));
+      if(btn) btn.classList.toggle('active',k===name);
+    });
+    initPreset();
+  };
+
+  window.addDose=function(){
+    if(current!=='drug') return;
+    doses.push(simTime);
+    // recompute current point
+    const y=computeY(simTime);
+    history.push({t:simTime,y});
+    draw();
+  };
+
+  window.togglePlayDecay=function(){
+    playing=!playing;
+    const btn=document.getElementById('btnPlayDecay');
+    btn.textContent=playing?'⏸ Pause':'▶ Play';
+    btn.classList.toggle('active',playing);
+    if(playing) step();
+  };
+
+  window.resetDecay=function(){
+    if(animId) cancelAnimationFrame(animId);
+    initPreset();
+  };
+
+  document.getElementById('decaySpeed').addEventListener('input',e=>{
+    simSpeed=parseFloat(e.target.value);
+  });
+
+  // start with coffee
+  initPreset();
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- GRADIENT DESCENT INTERACTIVE                -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+(function gradInteractive(){
+  const c=document.getElementById('gradCanvas');
+  if(!c) return;
+  const ctx=c.getContext('2d');
+  let W,H,dpr;
+  let mode='2d'; // '2d' or '1d'
+  let useMomentum=false;
+  let lr=0.03;
+  let ball=null; // {x,y} in function space
+  let velocity={x:0,y:0};
+  let trail=[];
+  let steps=0;
+  let animId=null;
+  let running=false;
+
+  // 1D draw mode
+  let drawPts=[];
+  let ball1D=null; // {x, vx}
+
+  const PAD={l:10,r:10,t:10,b:10};
+
+  // 2D landscape function: two Gaussians + a saddle
+  // f(x,y) domain ~ [-3,3] x [-3,3]
+  function f2d(x,y){
+    const g1=2.5*Math.exp(-((x-1)**2+(y-1)**2)/0.8);
+    const g2=3.0*Math.exp(-((x+1.2)**2+(y+0.8)**2)/0.6);
+    const g3=1.5*Math.exp(-((x-0.3)**2+(y+1.5)**2)/1.0);
+    const bowl=0.08*(x*x+y*y);
+    return -(g1+g2+g3)+bowl+4.0;
+  }
+  function grad2d(x,y){
+    const eps=0.001;
+    return{
+      x:(f2d(x+eps,y)-f2d(x-eps,y))/(2*eps),
+      y:(f2d(x,y+eps)-f2d(x,y-eps))/(2*eps)
+    };
+  }
+
+  // mapping: function space <-> canvas
+  const RANGE=3.2;
+  function fx2c(x){return PAD.l+(x+RANGE)/(2*RANGE)*(W-PAD.l-PAD.r);}
+  function fy2c(y){return PAD.t+(y+RANGE)/(2*RANGE)*(H-PAD.t-PAD.b);}
+  function fc2x(cx){return (cx-PAD.l)/(W-PAD.l-PAD.r)*(2*RANGE)-RANGE;}
+  function fc2y(cy){return (cy-PAD.t)/(H-PAD.t-PAD.b)*(2*RANGE)-RANGE;}
+
+  // 1D: spline through drawPts
+  function f1d(x){
+    if(drawPts.length<2) return 0;
+    // linear interpolation with smoothing
+    const sorted=[...drawPts].sort((a,b)=>a.x-b.x);
+    if(x<=sorted[0].x) return sorted[0].y;
+    if(x>=sorted[sorted.length-1].x) return sorted[sorted.length-1].y;
+    for(let i=0;i<sorted.length-1;i++){
+      if(x>=sorted[i].x && x<=sorted[i+1].x){
+        const t=(x-sorted[i].x)/(sorted[i+1].x-sorted[i].x);
+        // smooth hermite
+        const t2=t*t, t3=t2*t;
+        const h1=2*t3-3*t2+1, h2=t3-2*t2+t, h3=-2*t3+3*t2, h4=t3-t2;
+        const m0=i>0?(sorted[i+1].y-sorted[i-1].y)/(sorted[i+1].x-sorted[i-1].x)*
+          (sorted[i+1].x-sorted[i].x):0;
+        const m1=i<sorted.length-2?(sorted[i+2].y-sorted[i].y)/(sorted[i+2].x-sorted[i].x)*
+          (sorted[i+1].x-sorted[i].x):0;
+        return h1*sorted[i].y+h2*m0+h3*sorted[i+1].y+h4*m1;
+      }
+    }
+    return 0;
+  }
+  function grad1d(x){
+    const eps=0.002;
+    return (f1d(x+eps)-f1d(x-eps))/(2*eps);
+  }
+
+  function resize(){
+    dpr=window.devicePixelRatio||1;
+    W=c.clientWidth;H=c.clientHeight;
+    c.width=W*dpr;c.height=H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    draw();
+  }
+
+  const lazyObs=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting){resize();lazyObs.unobserve(c);}
+  },{threshold:0.05});
+  lazyObs.observe(c);
+  window.addEventListener('resize',resize);
+
+  // precompute 2D heatmap
+  let heatmapData=null;
+  function buildHeatmap(){
+    const res=2;
+    const cols=Math.ceil(W/res), rows=Math.ceil(H/res);
+    const img=ctx.createImageData(cols,rows);
+    let fmin=Infinity,fmax=-Infinity;
+    const vals=new Float32Array(cols*rows);
+    for(let j=0;j<rows;j++){
+      for(let i=0;i<cols;i++){
+        const x=fc2x(i*res+res/2), y=fc2y(j*res+res/2);
+        const v=f2d(x,y);
+        vals[j*cols+i]=v;
+        if(v<fmin)fmin=v;if(v>fmax)fmax=v;
+      }
+    }
+    for(let j=0;j<rows;j++){
+      for(let i=0;i<cols;i++){
+        const idx=(j*cols+i)*4;
+        const t=(vals[j*cols+i]-fmin)/(fmax-fmin);
+        // color ramp: deep indigo → teal → gold → warm cream
+        let r,g,b;
+        if(t<0.25){const s=t/0.25;r=6+s*10;g=8+s*45;b=35+s*55;}
+        else if(t<0.5){const s=(t-0.25)/0.25;r=16+s*40;g=53+s*50;b=90+s*(-20);}
+        else if(t<0.75){const s=(t-0.5)/0.25;r=56+s*140;g=103+s*55;b=70-s*25;}
+        else{const s=(t-0.75)/0.25;r=196+s*40;g=158+s*74;b=45+s*40;}
+        img.data[idx]=r;img.data[idx+1]=g;img.data[idx+2]=b;img.data[idx+3]=255;
+      }
+    }
+    heatmapData={img,cols,rows,res,fmin,fmax};
+  }
+
+  function drawContours(){
+    if(!heatmapData) return;
+    const{fmin,fmax}=heatmapData;
+    const nLevels=12;
+    ctx.strokeStyle='rgba(255,255,255,0.1)';
+    ctx.lineWidth=0.5;
+    // simple marching: horizontal scan
+    const step=3;
+    for(let lev=0;lev<nLevels;lev++){
+      const val=fmin+(fmax-fmin)*(lev+1)/(nLevels+1);
+      for(let cy=PAD.t;cy<H-PAD.b;cy+=step){
+        let prevV=f2d(fc2x(PAD.l),fc2y(cy));
+        for(let cx=PAD.l+step;cx<W-PAD.r;cx+=step){
+          const curV=f2d(fc2x(cx),fc2y(cy));
+          if((prevV-val)*(curV-val)<0){
+            ctx.fillStyle='rgba(255,255,255,0.12)';
+            ctx.fillRect(cx,cy,1,1);
+          }
+          prevV=curV;
+        }
+      }
+    }
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    if(mode==='2d'){
+      // heatmap
+      if(!heatmapData||heatmapData.cols!==Math.ceil(W/2)) buildHeatmap();
+      if(heatmapData){
+        const tmp=document.createElement('canvas');
+        tmp.width=heatmapData.cols;tmp.height=heatmapData.rows;
+        tmp.getContext('2d').putImageData(heatmapData.img,0,0);
+        ctx.imageSmoothingEnabled=true;
+        ctx.drawImage(tmp,0,0,W,H);
+      }
+      drawContours();
+
+      // trail
+      if(trail.length>1){
+        ctx.strokeStyle='rgba(236,232,224,0.5)';
+        ctx.lineWidth=1.5;
+        ctx.setLineDash([3,3]);
+        ctx.beginPath();
+        trail.forEach((p,i)=>{
+          const cx=fx2c(p.x),cy=fy2c(p.y);
+          i===0?ctx.moveTo(cx,cy):ctx.lineTo(cx,cy);
+        });
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // trail dots
+        trail.forEach((p,i)=>{
+          const cx=fx2c(p.x),cy=fy2c(p.y);
+          const alpha=0.15+0.85*(i/trail.length);
+          ctx.fillStyle=`rgba(201,168,76,${alpha})`;
+          ctx.beginPath();ctx.arc(cx,cy,2,0,Math.PI*2);ctx.fill();
+        });
+      }
+
+      // ball
+      if(ball){
+        const cx=fx2c(ball.x),cy=fy2c(ball.y);
+        // gradient arrow
+        const g=grad2d(ball.x,ball.y);
+        const gMag=Math.sqrt(g.x*g.x+g.y*g.y);
+        if(gMag>0.01){
+          const arrowScale=25/Math.max(gMag,0.5);
+          const ax=cx-g.x*arrowScale, ay=cy-g.y*arrowScale;
+          ctx.strokeStyle='rgba(201,168,76,0.6)';
+          ctx.lineWidth=1.5;
+          ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(ax,ay);ctx.stroke();
+          // arrowhead
+          const angle=Math.atan2(-g.y,-g.x);
+          ctx.fillStyle='rgba(201,168,76,0.6)';
+          ctx.beginPath();ctx.moveTo(ax,ay);
+          ctx.lineTo(ax-7*Math.cos(angle-0.4),ay-7*Math.sin(angle-0.4));
+          ctx.lineTo(ax-7*Math.cos(angle+0.4),ay-7*Math.sin(angle+0.4));ctx.fill();
+        }
+        // ball glow
+        ctx.fillStyle='#fff';
+        ctx.shadowColor='rgba(255,255,255,0.7)';ctx.shadowBlur=12;
+        ctx.beginPath();ctx.arc(cx,cy,5,0,Math.PI*2);ctx.fill();
+        ctx.shadowBlur=0;
+      }
+
+      // labels
+      ctx.fillStyle='rgba(82,86,106,0.6)';
+      ctx.font='8px "JetBrains Mono"';
+      ctx.textAlign='left';
+      ctx.fillText('click to place ball',10,H-8);
+
+    } else {
+      // 1D mode
+      const plotL=50,plotR=W-20,plotT=40,plotB=H-40;
+      const plotW=plotR-plotL, plotH=plotB-plotT;
+
+      // axes
+      ctx.strokeStyle='rgba(255,255,255,0.08)';
+      ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(plotL,plotT);ctx.lineTo(plotL,plotB);ctx.lineTo(plotR,plotB);ctx.stroke();
+
+      if(drawPts.length>=2){
+        // function curve
+        ctx.strokeStyle='rgba(236,232,224,0.5)';
+        ctx.lineWidth=2;
+        ctx.beginPath();
+        const sorted=[...drawPts].sort((a,b)=>a.x-b.x);
+        const xMin=sorted[0].x,xMax=sorted[sorted.length-1].x;
+        // y range
+        let yMin=Infinity,yMax=-Infinity;
+        for(let i=0;i<=200;i++){
+          const x=xMin+(xMax-xMin)*i/200;
+          const y=f1d(x);
+          if(y<yMin)yMin=y;if(y>yMax)yMax=y;
+        }
+        const yPad=(yMax-yMin)*0.15||1;
+        yMin-=yPad;yMax+=yPad;
+
+        function t1x(x){return plotL+(x-xMin)/(xMax-xMin)*plotW;}
+        function t1y(y){return plotT+(1-(y-yMin)/(yMax-yMin))*plotH;}
+
+        for(let i=0;i<=300;i++){
+          const x=xMin+(xMax-xMin)*i/300;
+          const y=f1d(x);
+          const cx=t1x(x),cy=t1y(y);
+          i===0?ctx.moveTo(cx,cy):ctx.lineTo(cx,cy);
+        }
+        ctx.stroke();
+
+        // draw pts
+        drawPts.forEach(p=>{
+          ctx.fillStyle='rgba(138,106,191,0.5)';
+          ctx.beginPath();ctx.arc(t1x(p.x),t1y(p.y),4,0,Math.PI*2);ctx.fill();
+        });
+
+        // 1D ball
+        if(ball1D){
+          const bx=ball1D.x;
+          const by=f1d(bx);
+          const cx=t1x(bx),cy=t1y(by);
+
+          // trail
+          if(trail.length>1){
+            ctx.strokeStyle='rgba(201,168,76,0.3)';
+            ctx.lineWidth=1;
+            ctx.setLineDash([2,2]);
+            ctx.beginPath();
+            trail.forEach((p,i)=>{
+              const px=t1x(p.x),py=t1y(p.y);
+              i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
+            });
+            ctx.stroke();
+            ctx.setLineDash([]);
+          }
+
+          // tangent line
+          const g=grad1d(bx);
+          const tangentLen=40;
+          const dx=tangentLen/Math.sqrt(1+g*g);
+          ctx.strokeStyle='rgba(201,168,76,0.5)';
+          ctx.lineWidth=1;
+          ctx.beginPath();
+          ctx.moveTo(t1x(bx-dx*(xMax-xMin)/plotW),t1y(by-g*dx*(xMax-xMin)/plotW));
+          ctx.lineTo(t1x(bx+dx*(xMax-xMin)/plotW),t1y(by+g*dx*(xMax-xMin)/plotW));
+          ctx.stroke();
+
+          // ball
+          ctx.fillStyle='#fff';
+          ctx.shadowColor='rgba(255,255,255,0.7)';ctx.shadowBlur=10;
+          ctx.beginPath();ctx.arc(cx,cy,5,0,Math.PI*2);ctx.fill();
+          ctx.shadowBlur=0;
+        }
+      }
+
+      ctx.fillStyle='rgba(82,86,106,0.6)';
+      ctx.font='8px "JetBrains Mono"';
+      ctx.textAlign='left';
+      ctx.fillText(drawPts.length<2?'click to draw landscape':'click curve to place ball · right-click to add points',10,H-8);
+    }
+
+    updateStats();
+  }
+
+  function updateStats(){
+    if(mode==='2d' && ball){
+      const g=grad2d(ball.x,ball.y);
+      const gMag=Math.sqrt(g.x*g.x+g.y*g.y);
+      document.getElementById('statPos').textContent=`(${ball.x.toFixed(2)}, ${ball.y.toFixed(2)})`;
+      document.getElementById('statGrad').textContent=gMag.toFixed(3);
+      document.getElementById('statSteps').textContent=steps;
+      document.getElementById('statHeight').textContent=f2d(ball.x,ball.y).toFixed(3);
+    } else if(mode==='1d' && ball1D){
+      const g=grad1d(ball1D.x);
+      document.getElementById('statPos').textContent=ball1D.x.toFixed(3);
+      document.getElementById('statGrad').textContent=g.toFixed(3);
+      document.getElementById('statSteps').textContent=steps;
+      document.getElementById('statHeight').textContent=f1d(ball1D.x).toFixed(3);
+    } else {
+      document.getElementById('statPos').textContent='—';
+      document.getElementById('statGrad').textContent='—';
+      document.getElementById('statSteps').textContent=steps;
+      document.getElementById('statHeight').textContent='—';
+    }
+  }
+
+  function stepGrad(){
+    if(mode==='2d' && ball){
+      const g=grad2d(ball.x,ball.y);
+      const gMag=Math.sqrt(g.x*g.x+g.y*g.y);
+      if(gMag<0.0005){stopGrad();return;}
+      if(useMomentum){
+        const mu=0.9;
+        velocity.x=mu*velocity.x-lr*g.x;
+        velocity.y=mu*velocity.y-lr*g.y;
+        ball.x+=velocity.x;
+        ball.y+=velocity.y;
+      } else {
+        ball.x-=lr*g.x;
+        ball.y-=lr*g.y;
+      }
+      // clamp
+      ball.x=Math.max(-RANGE,Math.min(RANGE,ball.x));
+      ball.y=Math.max(-RANGE,Math.min(RANGE,ball.y));
+      trail.push({x:ball.x,y:ball.y});
+      if(trail.length>500) trail.shift();
+      steps++;
+    } else if(mode==='1d' && ball1D && drawPts.length>=2){
+      const g=grad1d(ball1D.x);
+      if(Math.abs(g)<0.0005){stopGrad();return;}
+      const sorted=[...drawPts].sort((a,b)=>a.x-b.x);
+      if(useMomentum){
+        ball1D.vx=0.9*ball1D.vx-lr*g*3;
+        ball1D.x+=ball1D.vx;
+      } else {
+        ball1D.x-=lr*g*3;
+      }
+      ball1D.x=Math.max(sorted[0].x,Math.min(sorted[sorted.length-1].x,ball1D.x));
+      trail.push({x:ball1D.x,y:f1d(ball1D.x)});
+      if(trail.length>500) trail.shift();
+      steps++;
+    }
+    draw();
+    if(running) animId=requestAnimationFrame(stepGrad);
+  }
+
+  function stopGrad(){
+    running=false;
+    if(animId) cancelAnimationFrame(animId);
+  }
+
+  // click handler
+  c.addEventListener('click',e=>{
+    const r=c.getBoundingClientRect();
+    const cx=e.clientX-r.left, cy=e.clientY-r.top;
+
+    if(mode==='2d'){
+      ball={x:fc2x(cx),y:fc2y(cy)};
+      velocity={x:0,y:0};
+      trail=[{x:ball.x,y:ball.y}];
+      steps=0;
+      running=true;
+      stepGrad();
+    } else {
+      if(drawPts.length<2){
+        // add draw points
+        const plotL=50,plotR=W-20,plotT=40,plotB=H-40;
+        const nx=(cx-plotL)/(plotR-plotL);
+        const ny=1-(cy-plotT)/(plotB-plotT);
+        drawPts.push({x:nx*4,y:ny*4});
+        draw();
+      } else {
+        // place ball on curve
+        const plotL=50,plotR=W-20;
+        const sorted=[...drawPts].sort((a,b)=>a.x-b.x);
+        const xMin=sorted[0].x,xMax=sorted[sorted.length-1].x;
+        const bx=xMin+(cx-plotL)/(plotR-plotL)*(xMax-xMin);
+        ball1D={x:Math.max(xMin,Math.min(xMax,bx)),vx:0};
+        trail=[{x:ball1D.x,y:f1d(ball1D.x)}];
+        steps=0;
+        running=true;
+        stepGrad();
+      }
+    }
+  });
+
+  c.addEventListener('contextmenu',e=>{
+    e.preventDefault();
+    if(mode==='1d'){
+      const r=c.getBoundingClientRect();
+      const cx=e.clientX-r.left,cy=e.clientY-r.top;
+      const plotL=50,plotR=W-20,plotT=40,plotB=H-40;
+      const nx=(cx-plotL)/(plotR-plotL);
+      const ny=1-(cy-plotT)/(plotB-plotT);
+      drawPts.push({x:nx*4,y:ny*4});
+      ball1D=null;trail=[];steps=0;
+      draw();
+    }
+  });
+
+  window.setGradMode=function(m){
+    mode=m;
+    stopGrad();
+    ball=null;ball1D=null;trail=[];steps=0;
+    if(m==='1d') drawPts=[];
+    heatmapData=null;
+    document.getElementById('btnMode2D').classList.toggle('active',m==='2d');
+    document.getElementById('btnMode1D').classList.toggle('active',m==='1d');
+    draw();
+  };
+  window.toggleMomentum=function(){
+    useMomentum=!useMomentum;
+    document.getElementById('btnMomentum').classList.toggle('active',useMomentum);
+  };
+  window.resetGrad=function(){
+    stopGrad();
+    ball=null;ball1D=null;trail=[];steps=0;
+    if(mode==='1d') drawPts=[];
+    draw();
+  };
+  document.getElementById('lrSlider').addEventListener('input',e=>{
+    lr=parseFloat(e.target.value);
+  });
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- EULER SPIRAL / CLOTHOID INTERACTIVE         -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+(function spiralInteractive(){
+  const c=document.getElementById('spiralCanvas');
+  if(!c) return;
+  const ctx=c.getContext('2d');
+  let W,H,dpr;
+  let spiralMode='road'; // 'road' or 'cornu'
+  let transLen=0.5; // 0..1 normalized transition
+  let driving=false;
+  let driveT=0;
+  let driveAnim=null;
+
+  // Fresnel integrals by Simpson's rule
+  function fresnel(t,N){
+    N=N||200;
+    const h=t/N;
+    let C=0,S=0;
+    for(let i=0;i<=N;i++){
+      const s=i*h;
+      const arg=Math.PI*s*s/2;
+      const w=(i===0||i===N)?1:(i%2===0?2:4);
+      C+=w*Math.cos(arg);
+      S+=w*Math.sin(arg);
+    }
+    C*=h/3;S*=h/3;
+    return{C,S};
+  }
+
+  // Generate clothoid points for a given max parameter
+  function clothoidPts(tMax,N){
+    const pts=[];
+    for(let i=0;i<=N;i++){
+      const t=tMax*i/N;
+      const f=fresnel(t);
+      pts.push({x:f.C,y:f.S,t});
+    }
+    return pts;
+  }
+
+  // Road geometry: straight → transition → circle
+  // transition length = transLen (0 = abrupt, 1 = full clothoid)
+  function buildRoad(){
+    const roadLen=600;
+    const circleR=120;
+    const circleK=1/circleR;
+    const straightLen=roadLen*0.3;
+    const arcLen=roadLen*0.35;
+    const maxTrans=roadLen*0.35;
+    const tLen=maxTrans*transLen;
+    const N=300;
+
+    // abrupt road (red): straight then circle
+    const abrupt=[];
+    let ax=0,ay=0,aAngle=0;
+    const stepA=roadLen/N;
+    for(let i=0;i<=N;i++){
+      const s=i*stepA;
+      let k=0;
+      if(s>straightLen) k=circleK;
+      abrupt.push({x:ax,y:ay,k,s});
+      aAngle+=k*stepA;
+      ax+=Math.cos(aAngle)*stepA;
+      ay+=Math.sin(aAngle)*stepA;
+    }
+
+    // clothoid road (gold): straight → clothoid → circle
+    const smooth=[];
+    let sx=0,sy=0,sAngle=0;
+    const stepS=roadLen/N;
+    for(let i=0;i<=N;i++){
+      const s=i*stepS;
+      let k=0;
+      if(tLen<0.01){
+        // almost abrupt
+        if(s>straightLen) k=circleK;
+      } else {
+        if(s<=straightLen){
+          k=0;
+        } else if(s<=straightLen+tLen){
+          k=circleK*(s-straightLen)/tLen;
+        } else {
+          k=circleK;
+        }
+      }
+      smooth.push({x:sx,y:sy,k,s});
+      sAngle+=k*stepS;
+      sx+=Math.cos(sAngle)*stepS;
+      sy+=Math.sin(sAngle)*stepS;
+    }
+
+    return{abrupt,smooth,straightLen,tLen,circleK,roadLen};
+  }
+
+  function resize(){
+    dpr=window.devicePixelRatio||1;
+    W=c.clientWidth;H=c.clientHeight;
+    c.width=W*dpr;c.height=H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    draw();
+  }
+
+  const lazyObs=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting){resize();lazyObs.unobserve(c);}
+  },{threshold:0.05});
+  lazyObs.observe(c);
+  window.addEventListener('resize',resize);
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    if(spiralMode==='road'){
+      drawRoadMode();
+    } else {
+      drawCornuMode();
+    }
+  }
+
+  function drawRoadMode(){
+    const road=buildRoad();
+    // split canvas: top = road view, bottom = curvature graph
+    const roadH=H*0.6;
+    const graphH=H*0.35;
+    const graphY=H*0.62;
+
+    // fit roads in view
+    let allPts=[...road.abrupt,...road.smooth];
+    let xMin=Infinity,xMax=-Infinity,yMin=Infinity,yMax=-Infinity;
+    allPts.forEach(p=>{
+      if(p.x<xMin)xMin=p.x;if(p.x>xMax)xMax=p.x;
+      if(p.y<yMin)yMin=p.y;if(p.y>yMax)yMax=p.y;
+    });
+    const pad=30;
+    const scaleX=(W-2*pad)/(xMax-xMin||1);
+    const scaleY=(roadH-2*pad)/(yMax-yMin||1);
+    const scale=Math.min(scaleX,scaleY)*0.85;
+    const offX=pad-xMin*scale+((W-2*pad)-(xMax-xMin)*scale)/2;
+    const offY=pad-yMin*scale+((roadH-2*pad)-(yMax-yMin)*scale)/2;
+
+    function tx(x){return x*scale+offX;}
+    function ty(y){return y*scale+offY;}
+
+    // draw abrupt road
+    ctx.strokeStyle='rgba(200,80,80,0.35)';
+    ctx.lineWidth=3;
+    ctx.beginPath();
+    road.abrupt.forEach((p,i)=>{
+      i===0?ctx.moveTo(tx(p.x),ty(p.y)):ctx.lineTo(tx(p.x),ty(p.y));
+    });
+    ctx.stroke();
+
+    // draw smooth road
+    ctx.strokeStyle='rgba(201,168,76,0.8)';
+    ctx.lineWidth=3;
+    ctx.shadowColor='rgba(201,168,76,0.3)';ctx.shadowBlur=6;
+    ctx.beginPath();
+    road.smooth.forEach((p,i)=>{
+      i===0?ctx.moveTo(tx(p.x),ty(p.y)):ctx.lineTo(tx(p.x),ty(p.y));
+    });
+    ctx.stroke();
+    ctx.shadowBlur=0;
+
+    // car position
+    if(driving){
+      const idx=Math.min(Math.floor(driveT*road.smooth.length),road.smooth.length-1);
+      const sp=road.smooth[idx];
+      // car on smooth
+      ctx.fillStyle='#fff';
+      ctx.shadowColor='rgba(255,255,255,0.6)';ctx.shadowBlur=10;
+      ctx.beginPath();ctx.arc(tx(sp.x),ty(sp.y),5,0,Math.PI*2);ctx.fill();
+      ctx.shadowBlur=0;
+      // car on abrupt
+      const ap=road.abrupt[idx];
+      ctx.fillStyle='rgba(200,80,80,0.8)';
+      ctx.beginPath();ctx.arc(tx(ap.x),ty(ap.y),4,0,Math.PI*2);ctx.fill();
+
+      // update stats
+      document.getElementById('statKappa').textContent=sp.k.toFixed(4);
+      document.getElementById('statSteer').textContent=(sp.k*180/Math.PI*10).toFixed(1)+'°';
+      // jerk: dk/ds
+      const idx2=Math.min(idx+1,road.smooth.length-1);
+      const dk=road.smooth[idx2].k-sp.k;
+      const ds=road.smooth[idx2].s-sp.s||1;
+      document.getElementById('statJerk').textContent=(Math.abs(dk/ds)*1000).toFixed(2);
+    }
+
+    // labels
+    ctx.font='8px "JetBrains Mono"';
+    ctx.fillStyle='rgba(200,80,80,0.5)';ctx.textAlign='left';
+    ctx.fillText('abrupt',10,roadH-8);
+    ctx.fillStyle='rgba(201,168,76,0.6)';
+    ctx.fillText('clothoid',60,roadH-8);
+
+    // ── curvature graph ──
+    ctx.fillStyle='rgba(82,86,106,0.5)';ctx.font='8px "JetBrains Mono"';ctx.textAlign='left';
+    ctx.fillText('CURVATURE κ vs ARC LENGTH',gL+4,gT-6);
+    ctx.strokeStyle='rgba(255,255,255,0.06)';
+    ctx.lineWidth=1;
+    const gL=50,gR=W-20,gT=graphY,gB=graphY+graphH;
+    ctx.beginPath();ctx.moveTo(gL,gT);ctx.lineTo(gL,gB);ctx.lineTo(gR,gB);ctx.stroke();
+
+    // axis labels
+    ctx.fillStyle='rgba(82,86,106,0.7)';
+    ctx.font='8px "JetBrains Mono"';
+    ctx.textAlign='center';
+    ctx.fillText('arc length',gL+(gR-gL)/2,gB+14);
+    ctx.save();ctx.translate(gL-14,(gT+gB)/2);ctx.rotate(-Math.PI/2);
+    ctx.fillText('curvature κ',0,0);ctx.restore();
+
+    const kMax=road.circleK*1.3;
+    function gx(s){return gL+(s/road.roadLen)*(gR-gL);}
+    function gy(k){return gB-(k/kMax)*(gB-gT-10);}
+
+    // abrupt curvature — area fill + stroke
+    ctx.fillStyle='rgba(200,80,80,0.04)';
+    ctx.beginPath();
+    ctx.moveTo(gx(road.abrupt[0].s),gB);
+    road.abrupt.forEach(p=>ctx.lineTo(gx(p.s),gy(p.k)));
+    ctx.lineTo(gx(road.abrupt[road.abrupt.length-1].s),gB);
+    ctx.closePath();ctx.fill();
+    ctx.strokeStyle='rgba(200,80,80,0.5)';
+    ctx.lineWidth=1.5;
+    ctx.beginPath();
+    road.abrupt.forEach((p,i)=>{
+      i===0?ctx.moveTo(gx(p.s),gy(p.k)):ctx.lineTo(gx(p.s),gy(p.k));
+    });
+    ctx.stroke();
+
+    // smooth curvature — area fill + stroke with glow
+    ctx.fillStyle='rgba(201,168,76,0.04)';
+    ctx.beginPath();
+    ctx.moveTo(gx(road.smooth[0].s),gB);
+    road.smooth.forEach(p=>ctx.lineTo(gx(p.s),gy(p.k)));
+    ctx.lineTo(gx(road.smooth[road.smooth.length-1].s),gB);
+    ctx.closePath();ctx.fill();
+    ctx.strokeStyle='rgba(201,168,76,0.85)';
+    ctx.lineWidth=2;
+    ctx.shadowColor='rgba(201,168,76,0.25)';ctx.shadowBlur=8;
+    ctx.beginPath();
+    road.smooth.forEach((p,i)=>{
+      i===0?ctx.moveTo(gx(p.s),gy(p.k)):ctx.lineTo(gx(p.s),gy(p.k));
+    });
+    ctx.stroke();
+    ctx.shadowBlur=0;
+
+    // drive cursor on curvature graph
+    if(driving){
+      const idx=Math.min(Math.floor(driveT*road.smooth.length),road.smooth.length-1);
+      const sp=road.smooth[idx];
+      ctx.strokeStyle='rgba(255,255,255,0.15)';
+      ctx.beginPath();ctx.moveTo(gx(sp.s),gT);ctx.lineTo(gx(sp.s),gB);ctx.stroke();
+    }
+
+    // transition region highlight
+    if(road.tLen>0.01){
+      const x1=gx(road.straightLen),x2=gx(road.straightLen+road.tLen);
+      ctx.fillStyle='rgba(201,168,76,0.05)';
+      ctx.fillRect(x1,gT,x2-x1,gB-gT);
+    }
+
+    document.getElementById('statSpiralA').textContent=
+      transLen<0.01?'none':(transLen*100).toFixed(0)+'%';
+  }
+
+  function drawCornuMode(){
+    const tMax=1+transLen*6; // 1..7
+    const pts=clothoidPts(tMax,500);
+    // also negative
+    const ptsNeg=clothoidPts(tMax,500).map(p=>({x:-p.x,y:-p.y,t:-p.t}));
+
+    // bounds
+    let xMin=Infinity,xMax=-Infinity,yMin=Infinity,yMax=-Infinity;
+    [...pts,...ptsNeg].forEach(p=>{
+      if(p.x<xMin)xMin=p.x;if(p.x>xMax)xMax=p.x;
+      if(p.y<yMin)yMin=p.y;if(p.y>yMax)yMax=p.y;
+    });
+    const pad=50;
+    const sx=(W-2*pad)/(xMax-xMin||1);
+    const sy=(H-2*pad)/(yMax-yMin||1);
+    const scale=Math.min(sx,sy)*0.9;
+    const cx=W/2,cy=H/2;
+    const ox=(xMax+xMin)/2,oy=(yMax+yMin)/2;
+
+    function tx(x){return cx+(x-ox)*scale;}
+    function ty(y){return cy-(y-oy)*scale;}
+
+    // axes
+    ctx.strokeStyle='rgba(255,255,255,0.05)';
+    ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(0,ty(0));ctx.lineTo(W,ty(0));ctx.stroke();
+    ctx.beginPath();ctx.moveTo(tx(0),0);ctx.lineTo(tx(0),H);ctx.stroke();
+
+    // negative arm
+    ctx.strokeStyle='rgba(138,106,191,0.6)';
+    ctx.lineWidth=2;
+    ctx.shadowColor='rgba(138,106,191,0.3)';ctx.shadowBlur=8;
+    ctx.beginPath();
+    ptsNeg.forEach((p,i)=>{
+      i===0?ctx.moveTo(tx(p.x),ty(p.y)):ctx.lineTo(tx(p.x),ty(p.y));
+    });
+    ctx.stroke();
+    ctx.shadowBlur=0;
+
+    // positive arm
+    ctx.strokeStyle='rgba(201,168,76,0.85)';
+    ctx.lineWidth=2.5;
+    ctx.shadowColor='rgba(201,168,76,0.4)';ctx.shadowBlur=12;
+    ctx.beginPath();
+    pts.forEach((p,i)=>{
+      i===0?ctx.moveTo(tx(p.x),ty(p.y)):ctx.lineTo(tx(p.x),ty(p.y));
+    });
+    ctx.stroke();
+    ctx.shadowBlur=0;
+
+    // end dots with glow
+    const last=pts[pts.length-1];
+    ctx.fillStyle='#c9a84c';
+    ctx.shadowColor='rgba(201,168,76,0.6)';ctx.shadowBlur=10;
+    ctx.beginPath();ctx.arc(tx(last.x),ty(last.y),4.5,0,Math.PI*2);ctx.fill();
+    const lastN=ptsNeg[ptsNeg.length-1];
+    ctx.fillStyle='rgba(138,106,191,0.85)';
+    ctx.shadowColor='rgba(138,106,191,0.5)';
+    ctx.beginPath();ctx.arc(tx(lastN.x),ty(lastN.y),4.5,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;
+
+    // focus points (0.5, 0.5) and (-0.5, -0.5)
+    ctx.strokeStyle='rgba(255,255,255,0.1)';
+    ctx.setLineDash([2,3]);
+    [{ x:0.5,y:0.5},{x:-0.5,y:-0.5}].forEach(fp=>{
+      ctx.beginPath();ctx.arc(tx(fp.x),ty(fp.y),8,0,Math.PI*2);ctx.stroke();
+    });
+    ctx.setLineDash([]);
+
+    // labels
+    ctx.fillStyle='rgba(82,86,106,0.6)';
+    ctx.font='9px "JetBrains Mono"';ctx.textAlign='left';
+    ctx.fillText('C(t)',tx(last.x)+8,ty(last.y)-4);
+    ctx.fillText('t_max = '+tMax.toFixed(1),10,H-10);
+    ctx.fillText('CORNU SPIRAL (Fresnel integrals)',10,16);
+
+    // stats
+    document.getElementById('statKappa').textContent=(Math.PI*tMax).toFixed(2);
+    document.getElementById('statSpiralA').textContent=tMax.toFixed(2);
+    document.getElementById('statSteer').textContent='—';
+    document.getElementById('statJerk').textContent='—';
+  }
+
+  function driveAnim_(){
+    if(!driving) return;
+    driveT+=0.003;
+    if(driveT>=1){driveT=0;driving=false;return;}
+    draw();
+    driveAnim=requestAnimationFrame(driveAnim_);
+  }
+
+  window.setSpiralMode=function(m){
+    spiralMode=m;
+    driving=false;driveT=0;
+    if(driveAnim) cancelAnimationFrame(driveAnim);
+    document.getElementById('btnRoadMode').classList.toggle('active',m==='road');
+    document.getElementById('btnCornuMode').classList.toggle('active',m==='cornu');
+    document.getElementById('btnDriveRoad').style.display=m==='road'?'':'none';
+    draw();
+  };
+  window.driveRoad=function(){
+    if(spiralMode!=='road') return;
+    driving=true;driveT=0;
+    driveAnim_();
+  };
+  window.resetSpiral=function(){
+    driving=false;driveT=0;
+    if(driveAnim) cancelAnimationFrame(driveAnim);
+    transLen=0.5;
+    document.getElementById('transSlider').value=0.5;
+    draw();
+  };
+  document.getElementById('transSlider').addEventListener('input',e=>{
+    transLen=parseFloat(e.target.value);
+    driving=false;driveT=0;
+    draw();
+  });
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- PARALLEL UNIVERSES — Brownian Motion        -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+(function bsInteractive(){
+  const c=document.getElementById('bsCanvas');
+  if(!c) return;
+  const ctx=c.getContext('2d');
+  let W,H,dpr;
+  const S0=100; // starting price
+  const r=0.05; // risk-free rate
+  let allPaths=[]; // each: array of prices
+  let finalPrices=[];
+
+  // BS analytics
+  function cdf(x){
+    const a1=0.254829592,a2=-0.284496736,a3=1.421413741,a4=-1.453152027,a5=1.061405429;
+    const p=0.3275911;
+    const sign=x<0?-1:1;
+    x=Math.abs(x)/Math.SQRT2;
+    const t=1/(1+p*x);
+    const y=1-((((a5*t+a4)*t+a3)*t+a2)*t+a1)*t*Math.exp(-x*x);
+    return 0.5*(1+sign*y);
+  }
+  function pdf(x){return Math.exp(-0.5*x*x)/Math.sqrt(2*Math.PI);}
+  function bsCall(S,K,T,r,sigma){
+    if(T<0.001) return Math.max(S-K,0);
+    const d1=(Math.log(S/K)+(r+0.5*sigma*sigma)*T)/(sigma*Math.sqrt(T));
+    const d2=d1-sigma*Math.sqrt(T);
+    return S*cdf(d1)-K*Math.exp(-r*T)*cdf(d2);
+  }
+  function bsDelta(S,K,T,r,sigma){
+    if(T<0.001) return S>K?1:0;
+    const d1=(Math.log(S/K)+(r+0.5*sigma*sigma)*T)/(sigma*Math.sqrt(T));
+    return cdf(d1);
+  }
+
+  function getParams(){
+    return{
+      sigma:parseFloat(document.getElementById('bsSigma').value),
+      mu:parseFloat(document.getElementById('bsMu').value),
+      K:parseFloat(document.getElementById('bsK').value),
+      T:parseFloat(document.getElementById('bsT').value),
+      N:parseInt(document.getElementById('bsN').value)
+    };
+  }
+
+  function resize(){
+    dpr=window.devicePixelRatio||1;
+    W=c.clientWidth;H=c.clientHeight;
+    c.width=W*dpr;c.height=H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    draw();
+  }
+
+  const lazyObs=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting){resize();lazyObs.unobserve(c);}
+  },{threshold:0.05});
+  lazyObs.observe(c);
+  window.addEventListener('resize',resize);
+
+  // Generate one GBM path
+  function generatePath(sigma,mu,T){
+    const steps=200;
+    const dt=T/steps;
+    const path=[S0];
+    let s=S0;
+    for(let i=0;i<steps;i++){
+      // Box-Muller for normal random
+      const u1=Math.random(),u2=Math.random();
+      const z=Math.sqrt(-2*Math.log(u1))*Math.cos(2*Math.PI*u2);
+      s=s*Math.exp((mu-0.5*sigma*sigma)*dt+sigma*Math.sqrt(dt)*z);
+      path.push(s);
+    }
+    return path;
+  }
+
+  // Layout constants
+  const PAD={l:50,r:80,t:25,b:35}; // right padding for histogram
+  const HIST_W=60; // histogram width
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const p=getParams();
+    const plotW=W-PAD.l-PAD.r;
+    const plotH=H-PAD.t-PAD.b;
+
+    // price range
+    let pMin=S0*0.3, pMax=S0*2.2;
+    if(finalPrices.length>2){
+      const sorted=[...finalPrices].sort((a,b)=>a-b);
+      pMin=Math.min(pMin,sorted[Math.floor(sorted.length*0.01)]*0.85);
+      pMax=Math.max(pMax,sorted[Math.floor(sorted.length*0.99)]*1.1);
+    }
+
+    function tx(i,steps){return PAD.l+i/steps*plotW;}
+    function ty(price){
+      const logP=Math.log(price), logMin=Math.log(pMin), logMax=Math.log(pMax);
+      return PAD.t+plotH*(1-(logP-logMin)/(logMax-logMin));
+    }
+
+    // subtle grid
+    ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=0.5;
+    const gridPrices=[40,60,80,100,120,150,200,300,400];
+    ctx.font='8px "JetBrains Mono"';ctx.textAlign='right';
+    gridPrices.forEach(gp=>{
+      if(gp<pMin||gp>pMax) return;
+      const y=ty(gp);
+      ctx.strokeStyle='rgba(255,255,255,0.04)';
+      ctx.beginPath();ctx.moveTo(PAD.l,y);ctx.lineTo(PAD.l+plotW,y);ctx.stroke();
+      ctx.fillStyle='rgba(82,86,106,0.5)';
+      ctx.fillText('$'+gp,PAD.l-6,y+3);
+    });
+
+    // time axis
+    ctx.textAlign='center';
+    ctx.fillStyle='rgba(82,86,106,0.4)';
+    const tLabels=p.T<=1?[0,0.25,0.5,0.75,1]:[0,0.5,1,1.5,2,2.5,3];
+    tLabels.forEach(tl=>{
+      if(tl>p.T) return;
+      const x=tx(tl/p.T*200,200);
+      ctx.fillText(tl.toFixed(tl%1===0?0:1)+'y',x,H-PAD.b+14);
+    });
+
+    // ±1σ and ±2σ confidence cones
+    const steps=200;
+    [2,1].forEach((nSig,ci)=>{
+      const alpha=ci===0?0.03:0.06;
+      ctx.fillStyle=`rgba(201,168,76,${alpha})`;
+      ctx.beginPath();
+      for(let i=0;i<=steps;i++){
+        const t=p.T*i/steps;
+        const upper=S0*Math.exp((p.mu-0.5*p.sigma*p.sigma)*t+nSig*p.sigma*Math.sqrt(t));
+        ctx.lineTo(tx(i,steps),ty(Math.min(upper,pMax*2)));
+      }
+      for(let i=steps;i>=0;i--){
+        const t=p.T*i/steps;
+        const lower=S0*Math.exp((p.mu-0.5*p.sigma*p.sigma)*t-nSig*p.sigma*Math.sqrt(t));
+        ctx.lineTo(tx(i,steps),ty(Math.max(lower,pMin*0.5)));
+      }
+      ctx.closePath();ctx.fill();
+    });
+
+    // cone boundary lines
+    [1,2].forEach(nSig=>{
+      ctx.strokeStyle=`rgba(201,168,76,${nSig===1?0.2:0.1})`;
+      ctx.lineWidth=1;ctx.setLineDash([3,4]);
+      [1,-1].forEach(sign=>{
+        ctx.beginPath();
+        for(let i=0;i<=steps;i++){
+          const t=p.T*i/steps;
+          const val=S0*Math.exp((p.mu-0.5*p.sigma*p.sigma)*t+sign*nSig*p.sigma*Math.sqrt(t));
+          const y=ty(Math.max(pMin*0.5,Math.min(pMax*2,val)));
+          i===0?ctx.moveTo(tx(i,steps),y):ctx.lineTo(tx(i,steps),y);
+        }
+        ctx.stroke();
+      });
+      ctx.setLineDash([]);
+    });
+
+    // σ labels on right
+    ctx.font='7px "JetBrains Mono"';ctx.textAlign='left';
+    ctx.fillStyle='rgba(201,168,76,0.3)';
+    [1,-1].forEach(sign=>{
+      const val=S0*Math.exp((p.mu-0.5*p.sigma*p.sigma)*p.T+sign*p.sigma*Math.sqrt(p.T));
+      const y=ty(Math.max(pMin*0.5,Math.min(pMax*2,val)));
+      ctx.fillText(sign>0?'+1σ':'−1σ',PAD.l+plotW+3,y+3);
+    });
+
+    // strike line
+    if(p.K>=pMin&&p.K<=pMax){
+      const ky=ty(p.K);
+      ctx.strokeStyle='rgba(201,168,76,0.5)';
+      ctx.lineWidth=1.5;
+      ctx.setLineDash([6,4]);
+      ctx.beginPath();ctx.moveTo(PAD.l,ky);ctx.lineTo(PAD.l+plotW,ky);ctx.stroke();
+      ctx.setLineDash([]);
+      // strike label
+      ctx.fillStyle='rgba(201,168,76,0.6)';ctx.font='8px "JetBrains Mono"';ctx.textAlign='left';
+      ctx.fillText('K = $'+p.K,PAD.l+4,ky-6);
+      // shade in-the-money region at right edge
+      ctx.fillStyle='rgba(90,154,114,0.04)';
+      ctx.fillRect(PAD.l,PAD.t,plotW,ky-PAD.t);
+    }
+
+    // S0 line
+    const s0y=ty(S0);
+    ctx.strokeStyle='rgba(255,255,255,0.1)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(PAD.l,s0y);ctx.lineTo(PAD.l+plotW,s0y);ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,0.25)';ctx.font='8px "JetBrains Mono"';ctx.textAlign='right';
+    ctx.fillText('S₀ = $'+S0,PAD.l-6,s0y-4);
+
+    // draw all paths
+    allPaths.forEach((path,pi)=>{
+      const steps=path.length-1;
+      const finalP=path[path.length-1];
+      const itm=finalP>p.K;
+      // color: in-the-money paths are greenish-gold, out-of-money are dim
+      const hue=itm?45:220;
+      const sat=itm?55:20;
+      const light=itm?55:35;
+      const age=1-pi/Math.max(allPaths.length,1)*0.5; // older paths fade
+      const alpha=Math.min(0.4,1.5/Math.sqrt(Math.max(allPaths.length,1)))*age;
+
+      ctx.strokeStyle=`hsla(${hue},${sat}%,${light}%,${alpha})`;
+      ctx.lineWidth=1;
+      ctx.beginPath();
+      path.forEach((price,i)=>{
+        const x=tx(i,steps);
+        const y=ty(Math.max(pMin*0.3,Math.min(pMax*3,price)));
+        i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+      });
+      ctx.stroke();
+    });
+
+    // latest batch with glow
+    if(allPaths.length>0){
+      const batchSize=Math.min(getParams().N,allPaths.length);
+      const startIdx=Math.max(0,allPaths.length-batchSize);
+      for(let pi=startIdx;pi<allPaths.length;pi++){
+        const path=allPaths[pi];
+        const steps=path.length-1;
+        const finalP=path[path.length-1];
+        const itm=finalP>p.K;
+        const hue=itm?48:210;
+        const sat=itm?60:25;
+        const light=itm?60:40;
+
+        ctx.strokeStyle=`hsla(${hue},${sat}%,${light}%,0.25)`;
+        ctx.lineWidth=1.2;
+        ctx.shadowColor=`hsla(${hue},${sat}%,${light}%,0.15)`;
+        ctx.shadowBlur=3;
+        ctx.beginPath();
+        path.forEach((price,i)=>{
+          const x=tx(i,steps);
+          const y=ty(Math.max(pMin*0.3,Math.min(pMax*3,price)));
+          i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+        });
+        ctx.stroke();
+      }
+      ctx.shadowBlur=0;
+    }
+
+    // median path (bright)
+    if(allPaths.length>0){
+      const steps=allPaths[0].length-1;
+      ctx.strokeStyle='rgba(236,232,224,0.5)';ctx.lineWidth=1.5;
+      ctx.setLineDash([2,3]);
+      ctx.beginPath();
+      for(let i=0;i<=steps;i++){
+        const t=p.T*i/steps;
+        const med=S0*Math.exp(p.mu*t); // expected path (risk-neutral: use r)
+        const y=ty(Math.max(pMin*0.3,Math.min(pMax*3,med)));
+        i===0?ctx.moveTo(tx(i,steps),y):ctx.lineTo(tx(i,steps),y);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // histogram of final prices on right edge
+    if(finalPrices.length>5){
+      const histL=PAD.l+plotW+2;
+      const histR=W-5;
+      const histW=histR-histL;
+      const nBins=35;
+      const logMin=Math.log(pMin),logMax=Math.log(pMax);
+      const bins=new Array(nBins).fill(0);
+      finalPrices.forEach(fp=>{
+        const lp=Math.log(fp);
+        const bi=Math.floor((lp-logMin)/(logMax-logMin)*nBins);
+        if(bi>=0&&bi<nBins) bins[bi]++;
+      });
+      const maxBin=Math.max(...bins,1);
+
+      bins.forEach((count,bi)=>{
+        if(count===0) return;
+        const y1=PAD.t+plotH*(1-(bi+1)/nBins);
+        const y2=PAD.t+plotH*(1-bi/nBins);
+        const bw=count/maxBin*histW;
+        // color by ITM
+        const midPrice=Math.exp(logMin+(bi+0.5)/nBins*(logMax-logMin));
+        const itm=midPrice>p.K;
+        const alpha=0.15+count/maxBin*0.45;
+        ctx.fillStyle=itm?`rgba(90,154,114,${alpha})`:`rgba(82,86,106,${alpha})`;
+        ctx.fillRect(histL,y1,bw,y2-y1-1);
+      });
+
+      // histogram label
+      ctx.save();
+      ctx.fillStyle='rgba(82,86,106,0.4)';ctx.font='7px "JetBrains Mono"';
+      ctx.translate(W-3,PAD.t+plotH/2);ctx.rotate(-Math.PI/2);
+      ctx.textAlign='center';
+      ctx.fillText('DISTRIBUTION',0,0);
+      ctx.restore();
+    }
+
+    // starting price dot
+    ctx.fillStyle='#fff';ctx.shadowColor='rgba(255,255,255,0.6)';ctx.shadowBlur=10;
+    ctx.beginPath();ctx.arc(PAD.l,s0y,4,0,Math.PI*2);ctx.fill();
+    ctx.shadowBlur=0;
+
+    // stats
+    const bsPrice=bsCall(S0,p.K,p.T,r,p.sigma);
+    const delta=bsDelta(S0,p.K,p.T,r,p.sigma);
+    document.getElementById('statPaths').textContent=allPaths.length;
+    document.getElementById('statBSPrice').textContent='$'+bsPrice.toFixed(2);
+    document.getElementById('statDelta').textContent=delta.toFixed(3);
+
+    if(finalPrices.length>0){
+      const itm=finalPrices.filter(fp=>fp>p.K).length;
+      document.getElementById('statITM').textContent=
+        (itm/finalPrices.length*100).toFixed(1)+'%';
+      // MC estimate
+      const mcPayoffs=finalPrices.map(fp=>Math.max(fp-p.K,0));
+      const mcPrice=mcPayoffs.reduce((a,b)=>a+b,0)/mcPayoffs.length*Math.exp(-r*p.T);
+      document.getElementById('statMC').textContent='$'+mcPrice.toFixed(2);
+    } else {
+      document.getElementById('statITM').textContent='—';
+      document.getElementById('statMC').textContent='—';
+    }
+
+    // label
+    ctx.fillStyle='rgba(201,168,76,0.4)';ctx.font='8px "JetBrains Mono"';ctx.textAlign='left';
+    ctx.fillText('GBM · σ='+(p.sigma*100).toFixed(0)+'% · T='+p.T.toFixed(2)+'y',PAD.l+4,PAD.t+12);
+  }
+
+  // animated spawn
+  let spawnQueue=[];
+  let spawnAnimId=null;
+
+  function animateSpawn(){
+    if(spawnQueue.length===0){spawnAnimId=null;draw();return;}
+    // add a small batch each frame
+    const batch=Math.min(4,spawnQueue.length);
+    for(let i=0;i<batch;i++){
+      const path=spawnQueue.shift();
+      allPaths.push(path);
+      finalPrices.push(path[path.length-1]);
+    }
+    draw();
+    spawnAnimId=requestAnimationFrame(animateSpawn);
+  }
+
+  window.spawnPaths=function(){
+    const p=getParams();
+    const newPaths=[];
+    for(let i=0;i<p.N;i++){
+      newPaths.push(generatePath(p.sigma,p.mu,p.T));
+    }
+    spawnQueue.push(...newPaths);
+    if(!spawnAnimId) spawnAnimId=requestAnimationFrame(animateSpawn);
+  };
+
+  window.clearPaths=function(){
+    allPaths=[];finalPrices=[];spawnQueue=[];
+    if(spawnAnimId) cancelAnimationFrame(spawnAnimId);
+    spawnAnimId=null;
+    draw();
+  };
+
+  // redraw when params change (but keep paths — they'll be re-rendered with new strike/view)
+  ['bsSigma','bsMu','bsK','bsT','bsN'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.addEventListener('input',()=>{
+      // if sigma or T or mu changed, paths are stale — auto-clear
+      if(id==='bsSigma'||id==='bsT'||id==='bsMu'){
+        allPaths=[];finalPrices=[];spawnQueue=[];
+      }
+      draw();
+    });
+  });
+})();
+</script>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- VOICE NARRATOR                              -->
+<!-- ═══════════════════════════════════════════ -->
+<script>
+(function narrator(){
+  const synth=window.speechSynthesis;
+  if(!synth){
+    const toggle=document.getElementById('narratorToggle');
+    if(toggle) toggle.style.display='none';
+    return;
+  }
+
+  let barOpen=false;
+  let isPlaying=false;
+  let currentIdx=0;
+  let segments=[]; // {el, text, sectionIdx}
+  let voices=[];
+  let femaleVoice=null, maleVoice=null;
+  let chosenGender='female';
+  let speed=1;
+  const speeds=[0.8,1,1.2,1.5];
+  let speedIdx=1;
+  let currentUtterance=null;
+  let charOffset=0; // track character progress within segment
+
+  // ── collect narration segments ──
+  function buildSegments(){
+    segments=[];
+    const sections=document.querySelectorAll('.chapter-section');
+    sections.forEach((sec,si)=>{
+      // section title
+      const title=sec.querySelector('.section-title');
+      if(title) segments.push({el:title,text:title.textContent.trim(),sectionIdx:si});
+      // prose paragraphs
+      sec.querySelectorAll('.prose p').forEach(p=>{
+        const txt=p.textContent.trim();
+        if(txt.length>10) segments.push({el:p,text:txt,sectionIdx:si});
+      });
+      // pull quotes
+      sec.querySelectorAll('.pull-quote p').forEach(p=>{
+        segments.push({el:p,text:p.textContent.trim(),sectionIdx:si});
+      });
+      // block quotes
+      sec.querySelectorAll('.block-quote p').forEach(p=>{
+        segments.push({el:p,text:p.textContent.trim(),sectionIdx:si});
+      });
+      // coda
+      sec.querySelectorAll('.coda p').forEach(p=>{
+        segments.push({el:p,text:p.textContent.trim(),sectionIdx:si});
+      });
+    });
+  }
+
+  // ── voice selection ──
+  function rankVoice(v){
+    // higher = better quality
+    let score=0;
+    const n=v.name.toLowerCase();
+    // premium indicators
+    if(n.includes('neural')) score+=100;
+    if(n.includes('enhanced')) score+=80;
+    if(n.includes('premium')) score+=90;
+    if(n.includes('natural')) score+=70;
+    if(n.includes('online')) score+=50;
+    // well-known high-quality voices
+    if(n.includes('samantha')) score+=60; // macOS
+    if(n.includes('karen')) score+=55;
+    if(n.includes('daniel')) score+=55;
+    if(n.includes('alex')) score+=50;
+    if(n.includes('allison')) score+=55;
+    if(n.includes('ava')) score+=55;
+    if(n.includes('zoe')) score+=50;
+    if(n.includes('tom')) score+=50;
+    if(n.includes('microsoft') && (n.includes('aria') || n.includes('jenny') || n.includes('guy') || n.includes('ryan'))) score+=85;
+    if(n.includes('google')) score+=40;
+    // local voices are lower quality
+    if(v.localService && score<50) score-=20;
+    return score;
+  }
+
+  function guessGender(v){
+    const n=v.name.toLowerCase();
+    const maleNames=['daniel','alex','tom','guy','ryan','james','aaron','albert',
+      'bruce','carlos','david','fred','gordon','henry','jorge','juan','malcolm',
+      'lee','oliver','ralph','reed','rishi','jacques','thomas','grandpa'];
+    const femaleNames=['samantha','karen','victoria','allison','ava','zoe','fiona',
+      'jenny','aria','susan','tessa','kate','moira','serena','veena','ellen',
+      'kathy','princess','grandma','alice','amelie','anna','carmela','catarina',
+      'cecilia','claire','daria','edith','ellen','ioana','joana','laura','lekha',
+      'lesya','linh','luciana','majed','marge','mei-jia','melina','milena',
+      'monica','montse','nora','paulina','petra','renee','satu','shelley',
+      'sinji','tessa','tingting','xander','yuna','zosia'];
+    if(maleNames.some(nm=>n.includes(nm))) return 'male';
+    if(femaleNames.some(nm=>n.includes(nm))) return 'female';
+    // heuristic: many default female voices
+    if(n.includes('female') || n.includes('woman')) return 'female';
+    if(n.includes('male') || n.includes(' man')) return 'male';
+    return 'unknown';
+  }
+
+  function pickVoices(){
+    voices=synth.getVoices().filter(v=>v.lang.startsWith('en'));
+    if(voices.length===0) return;
+
+    // rank and sort
+    const ranked=voices.map(v=>({v,score:rankVoice(v),gender:guessGender(v)}))
+      .sort((a,b)=>b.score-a.score);
+
+    // pick best female
+    const females=ranked.filter(r=>r.gender==='female');
+    femaleVoice=females.length?females[0].v:ranked[0].v;
+
+    // pick best male
+    const males=ranked.filter(r=>r.gender==='male');
+    maleVoice=males.length?males[0].v:(ranked.length>1?ranked[1].v:ranked[0].v);
+
+    // if we still have unknown-gender voices ranked highly, try to assign them
+    if(!females.length && !males.length){
+      femaleVoice=ranked[0].v;
+      maleVoice=ranked.length>1?ranked[1].v:ranked[0].v;
+    }
+  }
+
+  // voices may load async
+  pickVoices();
+  synth.onvoiceschanged=pickVoices;
+
+  // ── playback ──
+  function getVoice(){
+    return chosenGender==='female'?femaleVoice:maleVoice;
+  }
+
+  function speakSegment(idx){
+    if(idx<0||idx>=segments.length){
+      stop();
+      return;
+    }
+    synth.cancel();
+    currentIdx=idx;
+    charOffset=0;
+    const seg=segments[idx];
+
+    // highlight
+    clearHighlights();
+    seg.el.classList.add('narrating');
+    seg.el.scrollIntoView({behavior:'smooth',block:'center'});
+
+    const utt=new SpeechSynthesisUtterance(seg.text);
+    const v=getVoice();
+    if(v) utt.voice=v;
+    utt.rate=speed;
+    utt.pitch=1.0;
+    utt.volume=1.0;
+
+    utt.onboundary=function(e){
+      if(e.name==='word') charOffset=e.charIndex;
+      updateProgress();
+    };
+    utt.onend=function(){
+      seg.el.classList.remove('narrating');
+      seg.el.classList.add('narrating-done');
+      setTimeout(()=>seg.el.classList.remove('narrating-done'),2000);
+      if(isPlaying && currentIdx<segments.length-1){
+        speakSegment(currentIdx+1);
+      } else {
+        stop();
+      }
+    };
+    utt.onerror=function(){
+      if(isPlaying && currentIdx<segments.length-1){
+        speakSegment(currentIdx+1);
+      } else {
+        stop();
+      }
+    };
+
+    currentUtterance=utt;
+    synth.speak(utt);
+    updateStatus();
+    updateProgress();
+
+    // Chrome bug: synth pauses on long utterances. Keep it alive.
+    if(window._narratorKeepAlive) clearInterval(window._narratorKeepAlive);
+    window._narratorKeepAlive=setInterval(()=>{
+      if(synth.speaking && !synth.paused){
+        synth.pause();synth.resume();
+      }
+    },10000);
+  }
+
+  function stop(){
+    synth.cancel();
+    isPlaying=false;
+    clearHighlights();
+    document.getElementById('narratorPlayBtn').innerHTML='▶';
+    if(window._narratorKeepAlive) clearInterval(window._narratorKeepAlive);
+    updateStatus();
+    updateProgress();
+  }
+
+  function clearHighlights(){
+    document.querySelectorAll('.narrating,.narrating-done').forEach(el=>{
+      el.classList.remove('narrating','narrating-done');
+    });
+  }
+
+  function updateStatus(){
+    const el=document.getElementById('narratorStatus');
+    if(!segments.length){el.textContent='loading…';return;}
+    const sec=segments[currentIdx]?segments[currentIdx].sectionIdx+1:1;
+    el.textContent=isPlaying?`§${sec} playing`:`§${sec} ${currentIdx===0?'ready':'paused'}`;
+  }
+
+  function updateProgress(){
+    const fill=document.getElementById('narratorProgressFill');
+    if(!segments.length){fill.style.width='0';return;}
+    // coarse: segment-level progress + char-level within segment
+    const segProgress=currentIdx/segments.length;
+    const charProgress=segments[currentIdx]?
+      charOffset/Math.max(segments[currentIdx].text.length,1)/segments.length:0;
+    fill.style.width=((segProgress+charProgress)*100).toFixed(1)+'%';
+  }
+
+  // ── public API ──
+  window.toggleNarratorBar=function(){
+    barOpen=!barOpen;
+    document.getElementById('narratorBar').classList.toggle('open',barOpen);
+    document.getElementById('narratorToggle').classList.toggle('active',barOpen);
+    if(barOpen && !segments.length) buildSegments();
+  };
+
+  window.narratorPlayPause=function(){
+    if(!segments.length) buildSegments();
+    if(isPlaying){
+      // pause
+      synth.pause();
+      isPlaying=false;
+      document.getElementById('narratorPlayBtn').innerHTML='▶';
+      updateStatus();
+    } else {
+      // resume or start
+      if(synth.paused){
+        synth.resume();
+        isPlaying=true;
+      } else {
+        isPlaying=true;
+        speakSegment(currentIdx);
+      }
+      document.getElementById('narratorPlayBtn').innerHTML='⏸';
+      updateStatus();
+    }
+  };
+
+  window.narratorNext=function(){
+    if(!segments.length) buildSegments();
+    // jump to next section
+    const curSec=segments[currentIdx]?segments[currentIdx].sectionIdx:-1;
+    let next=currentIdx+1;
+    while(next<segments.length && segments[next].sectionIdx===curSec) next++;
+    if(next>=segments.length) next=0;
+    currentIdx=next;
+    if(isPlaying) speakSegment(currentIdx);
+    else{updateStatus();updateProgress();}
+  };
+
+  window.narratorPrev=function(){
+    if(!segments.length) buildSegments();
+    // jump to start of current section, or prev section
+    const curSec=segments[currentIdx]?segments[currentIdx].sectionIdx:-1;
+    // find start of current section
+    let start=currentIdx;
+    while(start>0 && segments[start-1].sectionIdx===curSec) start--;
+    if(currentIdx===start && curSec>0){
+      // go to prev section
+      start--;
+      const prevSec=segments[start].sectionIdx;
+      while(start>0 && segments[start-1].sectionIdx===prevSec) start--;
+    }
+    currentIdx=start;
+    if(isPlaying) speakSegment(currentIdx);
+    else{updateStatus();updateProgress();}
+  };
+
+  window.setNarratorVoice=function(gender){
+    chosenGender=gender;
+    document.getElementById('voiceFemale').classList.toggle('active',gender==='female');
+    document.getElementById('voiceMale').classList.toggle('active',gender==='male');
+    // if playing, restart current segment with new voice
+    if(isPlaying){
+      speakSegment(currentIdx);
+    }
+  };
+
+  window.cycleNarratorSpeed=function(){
+    speedIdx=(speedIdx+1)%speeds.length;
+    speed=speeds[speedIdx];
+    document.getElementById('narratorSpeedBtn').textContent=speed+'×';
+    if(isPlaying) speakSegment(currentIdx);
+  };
+
+  window.narratorSeek=function(e){
+    if(!segments.length) return;
+    const bar=document.getElementById('narratorProgress');
+    const rect=bar.getBoundingClientRect();
+    const pct=(e.clientX-rect.left)/rect.width;
+    const idx=Math.max(0,Math.min(segments.length-1,Math.floor(pct*segments.length)));
+    currentIdx=idx;
+    if(isPlaying) speakSegment(idx);
+    else{updateStatus();updateProgress();}
+  };
+
+  // clean up on page leave
+  window.addEventListener('beforeunload',()=>{
+    synth.cancel();
+    if(window._narratorKeepAlive) clearInterval(window._narratorKeepAlive);
+  });
+})();
+</script>
+
+</body>
+</html>
