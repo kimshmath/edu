@@ -1,0 +1,3603 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>완벽한 음색의 꿈 — Mellow Math</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<style>
+/* ═══════════════════════════════════════════════════
+   DESIGN SYSTEM — edu.kimsh.kr Mellow Math
+   ═══════════════════════════════════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#06070e;--bg2:#0a0c14;--surface:#0e1019;
+  --text:#c8cad4;--heading:#edeef2;
+  --gold:#d4a853;--gold2:#f0cc6b;--gold-dim:rgba(212,168,83,.12);
+  --sky:#38bdf8;--cyan:#5ec4d4;--cyan-dim:rgba(94,196,212,.12);
+  --purple:#a78bfa;--purple-dim:rgba(167,139,250,.12);
+  --coral:#fb7185;--coral-dim:rgba(251,113,133,.12);
+  --mint:#34d399;
+  --muted:#5c6178;--border:rgba(255,255,255,.06);
+  --font-display:'Fraunces',Georgia,serif;
+  --font-body:'EB Garamond',Georgia,serif;
+  --font-ui:'DM Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --max-w:44rem;
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;
+  scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.08) transparent}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);
+  font-size:1.08rem;line-height:1.78;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::selection{background:rgba(212,168,83,.25);color:#fff}
+
+/* ── AUDIO OVERLAY ── */
+#audio-overlay{position:fixed;inset:0;z-index:90000;background:rgba(4,5,10,.92);
+  backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;
+  transition:opacity .5s ease,visibility .5s ease}
+#audio-overlay.gone{opacity:0;visibility:hidden;pointer-events:none}
+.ao-card{text-align:center;max-width:400px;padding:2rem}
+.ao-icon{font-size:3rem;display:block;margin-bottom:1.2rem}
+.ao-card h2{font-family:var(--font-display);font-size:1.5rem;font-weight:400;
+  color:var(--heading);margin-bottom:.6rem}
+.ao-card p{font-family:var(--font-ui);font-size:.85rem;color:var(--muted);
+  line-height:1.6;margin-bottom:1.5rem}
+.ao-vol{display:flex;align-items:center;justify-content:center;gap:.4rem;
+  margin-bottom:1.5rem}
+.ao-vol .vbar{width:3px;background:var(--gold);border-radius:2px;
+  animation:vb .6s ease-in-out infinite alternate}
+.ao-vol .vbar:nth-child(1){height:6px;animation-delay:0s}
+.ao-vol .vbar:nth-child(2){height:12px;animation-delay:.1s}
+.ao-vol .vbar:nth-child(3){height:18px;animation-delay:.2s}
+.ao-vol .vbar:nth-child(4){height:12px;animation-delay:.3s}
+.ao-vol .vbar:nth-child(5){height:6px;animation-delay:.4s}
+@keyframes vb{from{transform:scaleY(.5);opacity:.5}to{transform:scaleY(1);opacity:1}}
+#ao-start{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.14em;
+  text-transform:uppercase;background:transparent;border:1px solid var(--gold-dim);
+  color:var(--gold);padding:.7rem 2rem;border-radius:4px;cursor:pointer;
+  transition:all .25s}
+#ao-start:hover{background:rgba(212,168,83,.1);border-color:var(--gold)}
+
+/* ── NAV DOTS ── */
+#nav-dots{position:fixed;right:1.5rem;top:50%;transform:translateY(-50%);
+  z-index:1000;display:flex;flex-direction:column;gap:.6rem}
+.nav-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.15);
+  cursor:pointer;transition:all .3s}
+.nav-dot.active{background:var(--gold);box-shadow:0 0 8px rgba(212,168,83,.5)}
+
+/* ── FLOATING BADGE ── */
+.floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;
+  font-family:var(--font-mono);font-size:.6rem;letter-spacing:.12em;
+  text-transform:lowercase;color:#8db830;background:transparent;
+  text-decoration:none;transition:all .3s;
+  text-shadow:0 0 12px rgba(141,184,48,.4)}
+.floating-badge:hover{color:#a8e030;text-shadow:0 0 18px rgba(141,184,48,.7)}
+
+/* ── SECTIONS ── */
+section{padding:6rem 2rem;position:relative}
+section+section::before{content:'';display:block;width:40px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold-dim),transparent);
+  margin:0 auto 3rem;position:absolute;top:2rem;left:50%;transform:translateX(-50%)}
+.section-inner{max-width:var(--max-w);margin:0 auto}
+.section-num{font-family:var(--font-mono);font-size:.65rem;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:1.2rem}
+h2{font-family:var(--font-display);font-size:clamp(1.8rem,5vw,2.8rem);
+  font-weight:300;color:var(--heading);line-height:1.15;margin-bottom:1.6rem;
+  letter-spacing:-.01em}
+.accent-gold{color:var(--gold2)}
+.accent-sky{color:var(--sky)}
+.accent-purple{color:var(--purple)}
+.accent-coral{color:var(--coral)}
+.accent-mint{color:var(--mint)}
+.accent-cyan{color:var(--cyan)}
+
+/* ── HERO ── */
+#hero{position:relative;width:100%;height:100vh;min-height:600px;
+  display:flex;align-items:center;justify-content:center;overflow:hidden}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-vignette{position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 55% at 50% 48%,transparent 0%,rgba(5,6,15,.35) 55%,rgba(5,6,15,.92) 100%),
+  linear-gradient(to bottom,rgba(5,6,15,0) 65%,var(--bg) 100%)}
+.hero-content{position:relative;z-index:10;text-align:center;padding:2rem;max-width:760px}
+.hero-label{font-family:var(--font-display);font-size:.78rem;letter-spacing:.35em;
+  text-transform:uppercase;color:var(--gold);margin-bottom:2rem;opacity:.85}
+.hero-title{font-family:var(--font-display);font-size:clamp(2.6rem,8vw,6.5rem);
+  font-weight:300;line-height:1.06;letter-spacing:-.02em;margin-bottom:1.5rem;
+  color:var(--heading);text-shadow:0 0 60px rgba(212,168,83,.15)}
+.hero-title em{font-style:italic;color:var(--gold2)}
+.hero-sub{font-size:1.1rem;color:var(--muted);max-width:520px;margin:0 auto 3rem;
+  font-weight:400;line-height:1.7}
+.hero-scroll{display:inline-flex;flex-direction:column;align-items:center;gap:.5rem;
+  color:var(--muted);font-family:var(--font-mono);font-size:.6rem;letter-spacing:.25em;
+  text-transform:uppercase;text-decoration:none;cursor:pointer;
+  animation:float 2.4s ease-in-out infinite;transition:color .3s}
+.hero-scroll:hover{color:var(--gold)}
+.hero-scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--gold),transparent)}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+/* ── DEMO CARDS ── */
+.demo-card{background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:1.8rem;margin:2rem 0;overflow:hidden}
+.audio-note{font-family:var(--font-mono);font-size:.65rem;letter-spacing:.06em;
+  color:var(--muted);margin-bottom:1rem;text-align:center}
+.canvas-wrap{position:relative;border-radius:6px;overflow:hidden;
+  background:rgba(0,0,0,.25);margin-bottom:1rem}
+.canvas-wrap canvas{display:block;width:100%;height:auto}
+.wave-label{position:absolute;top:.6rem;left:.8rem;font-family:var(--font-mono);
+  font-size:.6rem;letter-spacing:.06em;color:var(--muted);z-index:2}
+
+/* ── CONTROLS ── */
+.slider-row{display:flex;align-items:center;gap:.8rem;margin:.6rem 0;
+  font-family:var(--font-mono);font-size:.65rem;letter-spacing:.08em;
+  color:var(--muted);text-transform:uppercase;white-space:nowrap}
+.slider-row input[type=range]{-webkit-appearance:none;appearance:none;height:3px;
+  background:var(--border);border-radius:2px;outline:none;flex:1;min-width:80px;
+  transition:background .2s}
+.slider-row input[type=range]:hover{background:rgba(255,255,255,.1)}
+.slider-row input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;
+  width:14px;height:14px;border-radius:50%;background:var(--gold);cursor:pointer;
+  transition:box-shadow .2s;box-shadow:0 0 0 0 rgba(212,168,83,0)}
+.slider-row input[type=range]::-webkit-slider-thumb:hover{
+  box-shadow:0 0 8px rgba(212,168,83,.4)}
+.slider-row input[type=range]::-moz-range-thumb{
+  width:14px;height:14px;border-radius:50%;background:var(--gold);cursor:pointer;border:none}
+.slider-row .val{font-family:var(--font-mono);font-size:.72rem;
+  color:var(--gold2);min-width:55px;text-align:right}
+.btn-group{display:flex;flex-wrap:wrap;gap:.4rem;margin:.8rem 0}
+.btn{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;
+  text-transform:uppercase;background:transparent;border:1px solid var(--gold-dim);
+  color:var(--gold);padding:.4rem .8rem;border-radius:4px;cursor:pointer;transition:all .25s}
+.btn:hover{background:rgba(212,168,83,.08);border-color:var(--gold)}
+.btn.active,.btn.playing{background:rgba(212,168,83,.15);border-color:var(--gold);color:var(--gold2)}
+.btn-gold{border-color:rgba(212,168,83,.3);color:var(--gold2)}
+
+/* ── EXPLANATION CARDS ── */
+.explanation-card{border-left:2px solid var(--gold);padding:1.2rem 1.5rem;
+  margin:2rem 0;background:rgba(212,168,83,.03);border-radius:0 6px 6px 0;
+  font-size:.95rem;line-height:1.7}
+.explanation-card p+p{margin-top:.8rem}
+
+/* ── STAT ROW ── */
+.stat-row{display:flex;gap:1rem;margin:1rem 0;flex-wrap:wrap}
+.stat-box{flex:1;min-width:100px;text-align:center;padding:.8rem;
+  background:rgba(0,0,0,.2);border-radius:6px;border:1px solid var(--border)}
+.stat-box .sl{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
+.stat-box .sv{font-family:var(--font-mono);font-size:.85rem;color:var(--gold2)}
+
+/* ── ORGAN PIPES (custom for this section) ── */
+.organ-pipes-container{display:flex;align-items:flex-end;justify-content:center;
+  gap:6px;padding:2rem 1rem;min-height:320px;position:relative}
+.organ-pipe{display:flex;flex-direction:column;align-items:center;cursor:pointer;
+  transition:all .3s ease}
+.organ-pipe:hover .pipe-body{filter:brightness(1.3)}
+.organ-pipe.ringing .pipe-body{filter:brightness(1.5)}
+.organ-pipe.ringing .pipe-glow{opacity:1}
+.pipe-body{width:100%;border-radius:4px 4px 0 0;position:relative;
+  transition:filter .3s ease;min-width:18px}
+.pipe-glow{position:absolute;inset:-4px;border-radius:6px 6px 0 0;opacity:0;
+  transition:opacity .4s ease;pointer-events:none}
+.pipe-label{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.08em;
+  color:var(--muted);margin-top:.5rem;text-align:center;white-space:nowrap}
+.pipe-note{font-family:var(--font-mono);font-size:.55rem;color:var(--gold);
+  margin-top:.2rem}
+
+/* ── ORGAN STOP TOGGLES ── */
+.stops-panel{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin:1.2rem 0}
+.stop-btn{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.1em;
+  text-transform:uppercase;background:rgba(0,0,0,.3);border:1px solid var(--border);
+  color:var(--muted);padding:.5rem 1rem;border-radius:4px;cursor:pointer;
+  transition:all .25s;position:relative;overflow:hidden}
+.stop-btn.active{border-color:var(--gold);color:var(--gold);
+  background:rgba(212,168,83,.08)}
+.stop-btn .stop-indicator{display:inline-block;width:6px;height:6px;
+  border-radius:50%;background:var(--muted);margin-right:.5rem;
+  transition:all .25s;vertical-align:middle}
+.stop-btn.active .stop-indicator{background:var(--gold);
+  box-shadow:0 0 8px rgba(212,168,83,.6)}
+
+/* ── SPECTRUM BARS ── */
+.spectrum-display{display:flex;align-items:flex-end;justify-content:center;
+  gap:3px;height:120px;padding:1rem;background:rgba(0,0,0,.2);
+  border-radius:6px;border:1px solid var(--border)}
+.spec-bar{width:100%;max-width:28px;min-height:2px;border-radius:2px 2px 0 0;
+  transition:height .4s ease,background .4s ease;position:relative}
+.spec-bar-label{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);
+  font-family:var(--font-mono);font-size:.45rem;color:var(--muted);white-space:nowrap}
+
+/* ── TONEWHEEL (§02) ── */
+.tonewheel-container{display:flex;align-items:center;justify-content:center;
+  gap:2rem;flex-wrap:wrap;padding:1.5rem 0}
+.tonewheel-visual{position:relative;width:180px;height:180px;flex-shrink:0}
+.tonewheel-svg{width:100%;height:100%}
+.tonewheel-info{flex:1;min-width:200px}
+
+/* Drawbar panel */
+.drawbar-panel{display:flex;flex-direction:column;gap:.3rem;margin:1rem 0}
+.drawbar-row{display:flex;align-items:center;gap:.6rem}
+.drawbar-label{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.08em;
+  color:var(--muted);min-width:45px;text-align:right}
+.drawbar-track{flex:1;position:relative;height:24px;display:flex;align-items:center}
+.drawbar-track input[type=range]{-webkit-appearance:none;appearance:none;width:100%;
+  height:4px;background:var(--border);border-radius:2px;outline:none}
+.drawbar-track input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;
+  width:14px;height:22px;border-radius:3px;cursor:pointer;
+  border:1px solid rgba(255,255,255,.15)}
+.drawbar-val{font-family:var(--font-mono);font-size:.6rem;min-width:22px;text-align:center}
+
+/* Drawbar colors matching Hammond tradition */
+.db-16{color:#d44;}.db-16 input::-webkit-slider-thumb{background:#c04040}
+.db-513{color:#c90;}.db-513 input::-webkit-slider-thumb{background:#b08020}
+.db-8{color:#eee;}.db-8 input::-webkit-slider-thumb{background:#d0d0d0}
+.db-4{color:#eee;}.db-4 input::-webkit-slider-thumb{background:#d0d0d0}
+.db-223{color:#333;}.db-223 input::-webkit-slider-thumb{background:#606060}
+.db-2{color:#eee;}.db-2 input::-webkit-slider-thumb{background:#d0d0d0}
+.db-135{color:#333;}.db-135 input::-webkit-slider-thumb{background:#606060}
+.db-113{color:#333;}.db-113 input::-webkit-slider-thumb{background:#606060}
+.db-1{color:#eee;}.db-1 input::-webkit-slider-thumb{background:#d0d0d0}
+
+/* Theremin */
+.theremin-field{position:relative;width:100%;height:280px;border-radius:8px;
+  background:radial-gradient(ellipse at center,rgba(94,196,212,.04),rgba(6,7,14,.6));
+  border:1px solid var(--border);cursor:crosshair;overflow:hidden;touch-action:none}
+.theremin-crosshair{position:absolute;pointer-events:none;transition:none}
+.theremin-h,.theremin-v{position:absolute;background:rgba(94,196,212,.15)}
+.theremin-h{height:1px;left:0;right:0}
+.theremin-v{width:1px;top:0;bottom:0}
+.theremin-dot{position:absolute;width:12px;height:12px;border-radius:50%;
+  background:var(--cyan);box-shadow:0 0 16px rgba(94,196,212,.6);
+  transform:translate(-50%,-50%);pointer-events:none;transition:none}
+.theremin-label-x,.theremin-label-y{position:absolute;font-family:var(--font-mono);
+  font-size:.55rem;color:var(--cyan);pointer-events:none}
+.theremin-label-x{bottom:6px;left:50%;transform:translateX(-50%)}
+.theremin-label-y{left:8px;top:50%;transform:translateY(-50%) rotate(-90deg)}
+.theremin-antenna{position:absolute;bottom:0;width:2px;height:100%;
+  background:linear-gradient(to top,rgba(94,196,212,.4),rgba(94,196,212,.05));pointer-events:none}
+.theremin-antenna.left{left:8px}
+.theremin-antenna.right{right:8px}
+.theremin-readout{position:absolute;top:8px;right:10px;font-family:var(--font-mono);
+  font-size:.6rem;color:var(--cyan);text-align:right;line-height:1.6}
+
+/* Timeline */
+.timeline{position:relative;padding-left:2rem;margin:2rem 0}
+.timeline::before{content:'';position:absolute;left:6px;top:0;bottom:0;
+  width:1px;background:linear-gradient(to bottom,var(--gold-dim),var(--border),var(--gold-dim))}
+.timeline-item{position:relative;margin-bottom:2rem;padding-left:1rem}
+.timeline-item::before{content:'';position:absolute;left:-2rem;top:.5rem;
+  width:9px;height:9px;border-radius:50%;border:1.5px solid var(--gold);
+  background:var(--bg)}
+.timeline-year{font-family:var(--font-mono);font-size:.65rem;letter-spacing:.15em;
+  color:var(--gold);margin-bottom:.3rem}
+.timeline-title{font-family:var(--font-display);font-size:1.05rem;color:var(--heading);
+  margin-bottom:.3rem}
+.timeline-desc{font-size:.92rem;color:var(--text);line-height:1.65}
+
+/* ── SYNTH PATCH BUILDER (§03) ── */
+.synth-signal-flow{display:flex;flex-direction:column;gap:1.2rem;margin:1rem 0}
+.synth-module{background:rgba(0,0,0,.25);border:1px solid var(--border);
+  border-radius:8px;padding:1.2rem;position:relative;overflow:hidden}
+.synth-module::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.synth-module.mod-osc::before{background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.synth-module.mod-filter::before{background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
+.synth-module.mod-env::before{background:linear-gradient(90deg,transparent,var(--purple),transparent)}
+.module-header{display:flex;align-items:center;gap:.6rem;margin-bottom:.8rem}
+.module-tag{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.18em;
+  text-transform:uppercase;padding:.2rem .5rem;border-radius:3px;border:1px solid}
+.mod-osc .module-tag{color:var(--gold);border-color:var(--gold-dim);background:rgba(212,168,83,.06)}
+.mod-filter .module-tag{color:var(--cyan);border-color:var(--cyan-dim);background:rgba(94,196,212,.06)}
+.mod-env .module-tag{color:var(--purple);border-color:var(--purple-dim);background:rgba(167,139,250,.06)}
+.module-title{font-family:var(--font-display);font-size:.95rem;color:var(--heading)}
+
+.signal-arrow{text-align:center;color:var(--muted);font-size:1.2rem;line-height:1;opacity:.4}
+
+/* Waveform selector buttons */
+.wave-select{display:flex;gap:.4rem;flex-wrap:wrap}
+.wave-btn{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.08em;
+  text-transform:uppercase;background:transparent;border:1px solid var(--border);
+  color:var(--muted);padding:.35rem .7rem;border-radius:3px;cursor:pointer;transition:all .2s}
+.wave-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(212,168,83,.08)}
+
+/* Filter display */
+.filter-display{position:relative;height:160px;background:rgba(0,0,0,.2);
+  border-radius:6px;border:1px solid var(--border);overflow:hidden;margin:.8rem 0}
+.filter-display canvas{position:absolute;inset:0;width:100%;height:100%}
+
+/* ADSR display */
+.adsr-display{position:relative;height:140px;background:rgba(0,0,0,.2);
+  border-radius:6px;border:1px solid var(--border);overflow:hidden;margin:.8rem 0}
+.adsr-display canvas{position:absolute;inset:0;width:100%;height:100%}
+
+/* Combined output display */
+.synth-output{margin-top:1rem}
+.output-canvases{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+@media(max-width:640px){.output-canvases{grid-template-columns:1fr}}
+.output-canvas-wrap{position:relative;height:120px;background:rgba(0,0,0,.2);
+  border-radius:6px;border:1px solid var(--border);overflow:hidden}
+.output-canvas-wrap canvas{position:absolute;inset:0;width:100%;height:100%}
+.output-canvas-label{position:absolute;top:.4rem;left:.6rem;font-family:var(--font-mono);
+  font-size:.5rem;letter-spacing:.08em;color:var(--muted);z-index:2}
+
+/* ── MODERN GALLERY (§07) ── */
+.synth-gallery{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin:1.5rem 0}
+@media(max-width:640px){.synth-gallery{grid-template-columns:1fr}}
+.gallery-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  overflow:hidden;transition:border-color .3s,transform .3s}
+.gallery-card:hover{border-color:rgba(212,168,83,.2);transform:translateY(-2px)}
+.gallery-img{width:100%;height:180px;object-fit:cover;display:block;
+  filter:brightness(.85) contrast(1.05);transition:filter .3s}
+.gallery-card:hover .gallery-img{filter:brightness(.95) contrast(1.05)}
+.gallery-body{padding:1rem 1.2rem}
+.gallery-tag{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.15em;
+  text-transform:uppercase;margin-bottom:.3rem}
+.gallery-title{font-family:var(--font-display);font-size:1rem;color:var(--heading);
+  margin-bottom:.4rem;font-weight:400}
+.gallery-desc{font-family:var(--font-ui);font-size:.8rem;color:var(--text);line-height:1.55}
+
+.artist-row{display:flex;gap:1.5rem;flex-wrap:wrap;justify-content:center;margin:2rem 0}
+.artist-card{text-align:center;width:130px}
+.artist-img{width:90px;height:90px;border-radius:50%;object-fit:cover;
+  border:2px solid var(--border);margin:0 auto .6rem;display:block;
+  filter:grayscale(.3) brightness(.9);transition:all .3s}
+.artist-card:hover .artist-img{filter:grayscale(0) brightness(1);border-color:var(--gold-dim)}
+.artist-name{font-family:var(--font-display);font-size:.85rem;color:var(--heading)}
+.artist-role{font-family:var(--font-mono);font-size:.5rem;color:var(--muted);
+  letter-spacing:.05em;margin-top:.15rem}
+
+/* ── IMPERFECTION TOGGLES (§06) ── */
+.imperfection-panel{display:flex;flex-direction:column;gap:.6rem;margin:1rem 0}
+.imperf-toggle{display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;
+  background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:6px;
+  cursor:pointer;transition:all .3s;user-select:none}
+.imperf-toggle:hover{border-color:rgba(255,255,255,.1)}
+.imperf-toggle.active{border-color:rgba(212,168,83,.25);background:rgba(212,168,83,.04)}
+.imperf-switch{width:36px;height:18px;border-radius:9px;background:rgba(255,255,255,.08);
+  position:relative;transition:all .3s;flex-shrink:0}
+.imperf-switch::after{content:'';position:absolute;top:2px;left:2px;width:14px;height:14px;
+  border-radius:50%;background:var(--muted);transition:all .3s}
+.imperf-toggle.active .imperf-switch{background:rgba(212,168,83,.3)}
+.imperf-toggle.active .imperf-switch::after{left:20px;background:var(--gold)}
+.imperf-label{flex:1}
+.imperf-name{font-family:var(--font-ui);font-size:.85rem;color:var(--heading);margin-bottom:.1rem}
+.imperf-desc{font-family:var(--font-mono);font-size:.55rem;color:var(--muted);letter-spacing:.03em}
+
+/* ── AB COMPARISON (§06) ── */
+.ab-compare{display:flex;gap:1rem;margin:1rem 0;justify-content:center;flex-wrap:wrap}
+.ab-btn{font-family:var(--font-display);font-size:1rem;padding:.8rem 2rem;
+  border-radius:6px;cursor:pointer;transition:all .3s;background:transparent}
+.ab-btn.clean{border:1px solid var(--cyan-dim);color:var(--cyan)}
+.ab-btn.warm{border:1px solid var(--gold-dim);color:var(--gold)}
+.ab-btn:hover{transform:translateY(-1px)}
+.ab-btn.clean:hover{background:rgba(94,196,212,.06);border-color:var(--cyan)}
+.ab-btn.warm:hover{background:rgba(212,168,83,.06);border-color:var(--gold)}
+
+/* ── CLOSING ── */
+.closing-choices{display:flex;flex-wrap:wrap;gap:.8rem;justify-content:center;margin:2rem 0}
+.choice-btn{font-family:var(--font-display);font-size:.95rem;padding:.7rem 1.5rem;
+  border-radius:6px;cursor:pointer;transition:all .3s;background:transparent;
+  border:1px solid var(--border);color:var(--muted)}
+.choice-btn:hover{border-color:var(--gold-dim);color:var(--gold);transform:translateY(-2px)}
+.choice-btn.chosen{border-color:var(--gold);color:var(--gold);background:rgba(212,168,83,.06)}
+
+/* ── REFERENCES ── */
+.ref-section{margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border)}
+.ref-section h3{font-family:var(--font-display);font-size:1rem;color:var(--muted);
+  margin-bottom:1rem;font-weight:400}
+.ref-list{list-style:none;counter-reset:ref}
+.ref-list li{counter-increment:ref;font-family:var(--font-ui);font-size:.78rem;
+  color:var(--muted);line-height:1.65;margin-bottom:.5rem;padding-left:1.8rem;position:relative}
+.ref-list li::before{content:'['counter(ref)']';position:absolute;left:0;
+  font-family:var(--font-mono);font-size:.65rem;color:var(--gold-dim)}
+
+/* ── WAVETABLE MORPH (§05) ── */
+.wavetable-3d{position:relative;height:280px;background:rgba(0,0,0,.2);
+  border-radius:6px;border:1px solid var(--border);overflow:hidden;margin:.8rem 0}
+.wavetable-3d canvas{position:absolute;inset:0;width:100%;height:100%}
+.wt-morph-track{margin:.8rem 0}
+.wt-morph-track input[type=range]{width:100%}
+.wt-position-marker{font-family:var(--font-mono);font-size:.6rem;color:var(--mint);
+  text-align:center;margin-top:.3rem}
+
+/* ── FM SYNTH (§04) ── */
+.fm-diagram{display:flex;align-items:center;justify-content:center;gap:1rem;
+  margin:1rem 0;flex-wrap:wrap}
+.fm-box{background:rgba(0,0,0,.25);border:1px solid var(--border);border-radius:8px;
+  padding:1rem 1.2rem;text-align:center;min-width:120px}
+.fm-box-label{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.15em;
+  text-transform:uppercase;margin-bottom:.3rem}
+.fm-box-value{font-family:var(--font-mono);font-size:1rem;font-weight:400}
+.fm-arrow{color:var(--muted);font-size:1.2rem;opacity:.4}
+.fm-output-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:1rem 0}
+@media(max-width:640px){.fm-output-grid{grid-template-columns:1fr}}
+.fm-canvas-wrap{position:relative;height:140px;background:rgba(0,0,0,.2);
+  border-radius:6px;border:1px solid var(--border);overflow:hidden}
+.fm-canvas-wrap canvas{position:absolute;inset:0;width:100%;height:100%}
+.fm-canvas-label{position:absolute;top:.4rem;left:.6rem;font-family:var(--font-mono);
+  font-size:.5rem;letter-spacing:.08em;color:var(--muted);z-index:2}
+.math-block{font-family:var(--font-mono);font-size:.85rem;text-align:center;
+  color:var(--gold2);padding:1.2rem;margin:1.5rem 0;background:rgba(212,168,83,.03);
+  border:1px solid var(--gold-dim);border-radius:6px;line-height:1.8;
+  letter-spacing:.02em}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s ease,transform .8s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ── FOOTER ── */
+footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid var(--border);margin-top:2rem}
+.footer-attr{display:flex;flex-direction:column;gap:.2rem;align-items:center;margin-top:1.5rem}
+.footer-name{font-family:'Fraunces',Georgia,serif;font-size:.85rem;font-weight:400;
+  color:#edeef2;letter-spacing:-.01em}
+.footer-inst{font-family:var(--font-ui);font-size:.72rem;font-weight:300;
+  color:#5c6178;letter-spacing:.01em}
+.footer-link{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.08em;
+  color:#d4a853;text-decoration:none;margin-top:.25rem}
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  section{padding:4rem 1.2rem}
+  #nav-dots{display:none}
+  .demo-card{padding:1.2rem}
+  .stat-row{flex-direction:column}
+  .organ-pipes-container{gap:3px;padding:1.5rem .5rem;min-height:240px}
+  .pipe-label{font-size:.4rem}
+  h2{margin-bottom:1.2rem}
+  .tonewheel-container{flex-direction:column;gap:1rem}
+  .tonewheel-visual{width:140px;height:140px}
+  .theremin-field{height:220px}
+  .timeline{padding-left:1.5rem}
+  .output-canvases{grid-template-columns:1fr}
+  .synth-module{padding:1rem}
+  .filter-display{height:130px}
+  .adsr-display{height:110px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ AUDIO OVERLAY ═══════════ -->
+<div id="audio-overlay">
+  <div class="ao-card">
+    <span class="ao-icon">🎹</span>
+    <h2>완벽한 음색의 꿈</h2>
+    <p>이 페이지는 <strong style="color:var(--heading);">실시간 소리 합성</strong>을 포함합니다.<br>
+    모든 소리는 수학으로 생성됩니다 — 녹음 없이, 오직 방정식만으로.</p>
+    <div class="ao-vol">
+      <div class="vbar"></div><div class="vbar"></div><div class="vbar"></div>
+      <div class="vbar"></div><div class="vbar"></div>
+    </div>
+    <p id="ao-mobile-notice" style="display:none;font-family:var(--font-mono);font-size:.6rem;color:var(--coral);margin-bottom:1rem;line-height:1.5;letter-spacing:.03em;">
+      📱 모바일: <strong>무음 모드를 꺼 주세요</strong>. 볼륨도 올려 주세요.<br>
+      iOS 무음 스위치가 켜져 있으면 이 페이지의 소리가 나지 않습니다.
+    </p>
+    <button id="ao-start">🔊 소리와 함께 시작</button>
+  </div>
+</div>
+
+<!-- ═══════════ FLOATING BADGE ═══════════ -->
+<a class="floating-badge" href="https://edu.kimsh.kr" target="_blank" rel="noopener">edu.kimsh.kr</a>
+
+<!-- ═══════════ NAV DOTS ═══════════ -->
+<nav id="nav-dots"></nav>
+
+<!-- ═══════════════════════════════════════════════════
+     HERO
+     ═══════════════════════════════════════════════════ -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <p class="hero-label">음악 신시사이저의 수학</p>
+    <h1 class="hero-title">완벽한 음색의<br><em>꿈</em></h1>
+    <p class="hero-sub">수백 년 동안 음악가들은 나무와 금속과 현의 제약에서 벗어나, 자유롭게 빚을 수 있는 소리를 꿈꿨습니다. 수학이 그 꿈을 실현했습니다. 이것은 그 여정의 이야기입니다.</p>
+    <a class="hero-scroll" onclick="document.getElementById('sec-01').scrollIntoView({behavior:'smooth'})">
+      Begin<span class="hero-scroll-line"></span>
+    </a>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     §01 — THE ORGAN BUILDER'S CONSTRAINT
+     ═══════════════════════════════════════════════════ -->
+<section id="sec-01">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">01 — 잠긴 목소리, 1500–1750년경</p>
+      <h2>오르간 제작자의 <span class="accent-gold">제약</span></h2>
+      <p>현을 뜯고, 리드에 숨을 불고, 금속 막대를 두드리면 — 그 소리는 전적으로 물체의 물리적 형태에 의해 결정됩니다. 음악가는 <em>어떤</em> 음을 연주할지 선택할 수 있지만, 그 음이 <em>어떻게 들리는지</em>는 선택할 수 없습니다.</p>
+      <p style="margin-top:1rem;">르네상스 시대의 파이프 오르간 제작자들은 이 문제를 누구보다 잘 알았습니다. 각 파이프는 주석과 납으로 고정된 배음의 레시피 — 스펙트럼 지문을 만들어냅니다. 다른 음색을 원하면? 다른 파이프를 만들어야 합니다. 그런데 그들은 놀라운 것을 발견했습니다 — 서로 다른 길이의 파이프를 <em>동시에</em> 울리면, 기존 음색들로 새로운 음색을 빚어낼 수 있다는 것입니다. 그들은 이 조합을 <strong>스톱(stop)</strong>이라 불렀고 — 자신도 모르는 사이에 푸리에 합성을 300년 먼저 수행하고 있었습니다.</p>
+    </div>
+
+    <!-- ── ORGAN PIPE SIMULATOR ── -->
+    <div class="demo-card reveal">
+      <h3 style="font-family:var(--font-display);font-size:1.1rem;color:var(--heading);margin-bottom:.2rem;">파이프 오르간 시뮬레이터</h3>
+      <div class="audio-note">파이프를 클릭하면 소리가 납니다. 아래 스톱을 켜고 꺼서 음색을 조합해 보세요.</div>
+
+      <div class="organ-pipes-container" id="organ-pipes"></div>
+
+      <div class="stops-panel" id="stops-panel"></div>
+
+      <div class="canvas-wrap" style="margin-top:1rem;">
+        <span class="wave-label">합성 스펙트럼</span>
+        <canvas id="organ-spectrum" height="140"></canvas>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="sl">활성 스톱</div>
+          <div class="sv" id="stat-stops">1</div>
+        </div>
+        <div class="stat-box">
+          <div class="sl">배음 수</div>
+          <div class="sv" id="stat-harmonics">8</div>
+        </div>
+        <div class="stat-box">
+          <div class="sl">음색</div>
+          <div class="sv" id="stat-timbre" style="font-size:.7rem;">Principal</div>
+        </div>
+      </div>
+
+      <div class="btn-group" style="justify-content:center;margin-top:1rem;">
+        <button class="btn btn-gold" id="play-organ-btn" onclick="toggleOrganDrone()">▶ C4 지속음</button>
+        <button class="btn" onclick="playOrganChord()">▶ 장화음</button>
+        <button class="btn" onclick="presetOrganFlute()">Flute</button>
+        <button class="btn" onclick="presetOrganPrincipal()">Principal</button>
+        <button class="btn" onclick="presetOrganReed()">Reed</button>
+        <button class="btn" onclick="presetOrganFull()">풀 오르간</button>
+      </div>
+    </div>
+
+    <div class="explanation-card reveal">
+      <p><strong style="color:var(--heading);">수학적으로 왜 중요한가.</strong> 1822년 푸리에가 <em>모든</em> 주기적 파형이 사인파로 분해됨을 증명했을 때, 그는 제작자들이 수백 년간 귀로 알고 있던 것을 공식화한 것이었습니다: 음색은 레시피라는 것. 파이프 오르간은 인류 최초의 신시사이저였지만, 그 레시피는 코드가 아니라 금속에 새겨져 있었습니다.</p>
+    </div>
+
+    <div class="explanation-card reveal" style="border-left-color:var(--purple);">
+      <p><strong style="color:var(--heading);">발명을 이끈 제약.</strong> 바흐 시대의 하프시코드 연주자는 음량을 조절할 수 없었습니다 — 터치와 관계없이 일정한 볼륨을 냈습니다. 파이프 오르간은 음을 구부리거나 연주 중에 음색을 바꿀 수 없었습니다. <em>자유롭게 조절 가능한</em> 소리의 꿈은 전기의 힘을 필요로 했습니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PLACEHOLDER FOR NEXT SECTIONS ═══════════ -->
+
+<!-- ═══════════════════════════════════════════════════
+     §02 — ELECTRICITY LEARNS TO SING
+     ═══════════════════════════════════════════════════ -->
+<section id="sec-02">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">02 — 전기가 노래를 배우다, 1897–1960년대</p>
+      <h2>전류가 <span class="accent-cyan">소리</span>가 되었을 때</h2>
+      <p>1897년, 30세의 발명가 대디어스 캐힐은 200톤짜리 기계의 특허를 출원했습니다. 건물 한 층을 통째로 차지하는 이 기계는 그 어떤 악기도 해본 적 없는 일을 했습니다: <em>회전하는 금속 원반</em>과 전류만으로 음악적 음을 만들어낸 것 — 진동하는 현도, 불어넣는 공기도, 공명체도 없이.</p>
+      <p style="margin-top:1rem;">그는 이것을 <strong>텔하모니움</strong>이라 불렀습니다. 맨해튼 전역의 전화선에 간섭을 일으켜 상업적으로는 실패했지만, 수학적으로는 혁명이었습니다. 처음으로 소리가 전기로 만들어졌고, 전기는 방정식에 따릅니다.</p>
+    </div>
+
+    <!-- Timeline -->
+    <div class="timeline reveal">
+      <div class="timeline-item">
+        <div class="timeline-year">1897</div>
+        <div class="timeline-title">The Telharmonium <span style="color:var(--muted);font-size:.85rem;">(Thaddeus Cahill)</span></div>
+        <div class="timeline-desc">회전하는 톤 휠로 순수한 사인파를 전기적으로 생성하는 200톤 기계. 각 휠의 돌기가 코일 옆에서 회전하면 정확한 주파수의 교류가 발생합니다. 기계적 가산 합성.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1920</div>
+        <div class="timeline-title">The Theremin <span style="color:var(--muted);font-size:.85rem;">(Léon Theremin)</span></div>
+        <div class="timeline-desc">만지지 않고 연주하는 악기. 두 안테나가 연주자의 손을 감지 — 하나는 두 오실레이터의 비트 주파수로 음높이를, 다른 하나는 음량을 제어합니다. 순수한 전자기적 교감.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1935</div>
+        <div class="timeline-title">The Hammond Organ <span style="color:var(--muted);font-size:.85rem;">(Laurens Hammond)</span></div>
+        <div class="timeline-desc">캐힐의 아이디어가 소형화된 것. 캐비닛 안 91개의 회전 톤 휠과 배음을 조합하는 드로바가 장착되어 — 연주자가 실시간 가산 합성을 수행할 수 있게 했습니다. 재즈, 가스펠, 록은 다시는 예전처럼 들리지 않았습니다.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-year">1964</div>
+        <div class="timeline-title">The Moog Synthesizer <span style="color:var(--muted);font-size:.85rem;">(Robert Moog)</span></div>
+        <div class="timeline-desc">패러다임의 전환. 배음을 더하는 대신, 배음이 풍부한 파형에서 <em>빼는</em> 것. 전압 제어 오실레이터, 필터, 앰프를 케이블로 연결. 감산 합성의 탄생.</div>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:1.5rem;">
+      <p>해먼드 오르간은 구세계와 신세계를 잇는 가장 명확한 다리입니다. 톤 휠은 캐힐의 거대한 회전 발전기의 작은 후손이지만, <strong>드로바</strong>는 연주자에게 전례 없는 능력을 주었습니다: 연주하면서 실시간으로 배음 재료를 섞는 능력.</p>
+    </div>
+
+    <!-- ── TONEWHEEL + DRAWBAR SIMULATOR ── -->
+    <div class="demo-card reveal">
+      <h3 style="font-family:var(--font-display);font-size:1.1rem;color:var(--heading);margin-bottom:.2rem;">해먼드 드로바 시뮬레이터</h3>
+      <div class="audio-note">드로바를 당겨 배음을 조합해 보세요 — 진짜 해먼드 오르간처럼</div>
+
+      <div class="tonewheel-container">
+        <div class="tonewheel-visual">
+          <canvas id="tonewheel-canvas" width="360" height="360"></canvas>
+        </div>
+        <div class="tonewheel-info">
+          <div class="drawbar-panel" id="drawbar-panel"></div>
+        </div>
+      </div>
+
+      <div class="canvas-wrap" style="margin-top:.8rem;">
+        <span class="wave-label">결과 파형</span>
+        <canvas id="drawbar-waveform" height="120"></canvas>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="sl">레지스트레이션</div>
+          <div class="sv" id="db-reg" style="font-size:.65rem;letter-spacing:.05em">88 8000 000</div>
+        </div>
+        <div class="stat-box">
+          <div class="sl">음색 특성</div>
+          <div class="sv" id="db-character" style="font-size:.7rem;">Full</div>
+        </div>
+      </div>
+
+      <div class="btn-group" style="justify-content:center;margin-top:.8rem;">
+        <button class="btn btn-gold" id="play-drawbar-btn" onclick="toggleDrawbarDrone()">▶ 연주</button>
+        <button class="btn" onclick="drawbarPreset([0,0,8,8,0,0,0,0,0])">Flute 8'+4'</button>
+        <button class="btn" onclick="drawbarPreset([8,8,8,0,0,0,0,0,0])">Gospel</button>
+        <button class="btn" onclick="drawbarPreset([8,8,8,8,0,0,0,0,0])">Full</button>
+        <button class="btn" onclick="drawbarPreset([0,0,6,8,0,0,0,4,0])">Jazz</button>
+        <button class="btn" onclick="drawbarPreset([8,6,8,8,4,4,2,2,2])">Rock</button>
+        <button class="btn" onclick="drawbarPreset([0,0,8,0,0,0,0,0,0])">Pure 8'</button>
+      </div>
+    </div>
+
+    <!-- ── THEREMIN PLAYGROUND ── -->
+    <div class="demo-card reveal">
+      <h3 style="font-family:var(--font-display);font-size:1.1rem;color:var(--heading);margin-bottom:.2rem;">테레민 놀이터</h3>
+      <div class="audio-note">마우스(또는 손가락)를 움직여 보세요 — 가로 = 음높이, 세로 = 음량. 접촉 불필요.</div>
+
+      <div class="theremin-field" id="theremin-field">
+        <div class="theremin-antenna left"></div>
+        <div class="theremin-antenna right"></div>
+        <div class="theremin-crosshair">
+          <div class="theremin-h" id="th-h"></div>
+          <div class="theremin-v" id="th-v"></div>
+          <div class="theremin-dot" id="th-dot"></div>
+        </div>
+        <div class="theremin-readout" id="theremin-readout">
+          <div id="th-freq">—</div>
+          <div id="th-note">—</div>
+          <div id="th-vol">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="explanation-card reveal" style="border-left-color:var(--cyan);">
+      <p><strong style="color:var(--heading);">수학적 도약.</strong> 어쿠스틱 악기는 물리적 공명으로 소리를 만듭니다 — 현의 배음은 길이, 장력, 질량에 의해 결정됩니다. 전자 악기는 물리학을 완전히 우회합니다. 오실레이터 회로는 <em>미분방정식</em>으로 정의된 파형을 생성하며, 그 해는 회로가 지시하는 어떤 주파수와 형태든 될 수 있습니다. 처음으로 파형이 물질의 결과가 아니라 <em>선택</em>이 되었습니다.</p>
+    </div>
+
+    <div class="explanation-card reveal" style="border-left-color:var(--gold);">
+      <p><strong style="color:var(--heading);">드로바의 수학.</strong> <span style="font-family:var(--font-mono);color:var(--gold2);">88 8000 000</span> 같은 해먼드 드로바 레지스트레이션은 문자 그대로 푸리에 계수 벡터입니다. 각 숫자(0–8)는 하나의 배음 성분의 진폭을 설정합니다. 9개의 드로바는 서브옥타브, 5도, 기음, 옥타브, 12도, 15도, 17도, 19도, 22도에 해당합니다. 재즈 오르간 연주자가 음색을 빚을 때, 그는 손가락으로 푸리에 급수를 쓰고 있는 것입니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PLACEHOLDER FOR NEXT SECTIONS ═══════════ -->
+
+<!-- ═══════════════════════════════════════════════════
+     §03 — VOLTAGE AS MUSIC
+     ═══════════════════════════════════════════════════ -->
+<section id="sec-03">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">03 — 전압이 음악이 되다, 1964–1980년대</p>
+      <h2>무그와 <span class="accent-cyan">뺄셈</span>의 예술</h2>
+      <p>로버트 무그는 모든 것을 뒤집는 통찰을 가졌습니다. 복잡성을 쌓기 위해 배음을 <em>더하는</em> 대신, <em>이미 풍부한</em> 것 — 톱니파, 사각파 — 에서 시작해 원하지 않는 것을 <strong>깎아내는</strong> 것.</p>
+      <p style="margin-top:1rem;">이것이 <strong style="color:var(--cyan);">감산 합성</strong>입니다 — 푸리에 가산 정리의 쌍대(dual). 저역통과 필터는 시간 영역에서의 합성곱, 주파수 영역에서의 곱셈입니다. 전압 제어 모듈 세 개를 케이블로 연결하면, 음악가에게 소리의 우주가 열렸습니다:</p>
+    </div>
+
+    <div class="demo-card reveal">
+      <h3 style="font-family:var(--font-display);font-size:1.1rem;color:var(--heading);margin-bottom:.2rem;">나만의 신스 패치 만들기</h3>
+      <div class="audio-note">오실레이터 → 필터 → 엔벨로프로 소리를 빚어보세요. 각 모듈이 신호를 변환합니다.</div>
+
+      <div class="synth-signal-flow">
+
+        <!-- VCO Module -->
+        <div class="synth-module mod-osc">
+          <div class="module-header">
+            <span class="module-tag">VCO</span>
+            <span class="module-title">전압 제어 오실레이터</span>
+          </div>
+          <div class="wave-select" id="vco-wave-select"></div>
+          <div class="slider-row" style="margin-top:.6rem">
+            <label>Freq</label>
+            <input type="range" id="vco-freq" min="60" max="1200" value="220" step="1" oninput="updateSynth()">
+            <span class="val" id="vco-freq-val">220 Hz</span>
+          </div>
+          <div class="slider-row">
+            <label>Pulse W</label>
+            <input type="range" id="vco-pw" min="5" max="95" value="50" step="1" oninput="updateSynth()" style="opacity:.4" disabled>
+            <span class="val" id="vco-pw-val" style="opacity:.4">50%</span>
+          </div>
+          <div class="canvas-wrap" style="margin-top:.5rem">
+            <span class="wave-label">오실레이터 출력</span>
+            <canvas id="vco-canvas" height="90"></canvas>
+          </div>
+        </div>
+
+        <div class="signal-arrow reveal">↓</div>
+
+        <!-- VCF Module -->
+        <div class="synth-module mod-filter">
+          <div class="module-header">
+            <span class="module-tag">VCF</span>
+            <span class="module-title">전압 제어 필터</span>
+          </div>
+          <div class="slider-row">
+            <label>컷오프</label>
+            <input type="range" id="vcf-cutoff" min="60" max="8000" value="2000" step="10" oninput="updateSynth()">
+            <span class="val" id="vcf-cutoff-val">2000 Hz</span>
+          </div>
+          <div class="slider-row">
+            <label>Resonance</label>
+            <input type="range" id="vcf-reso" min="0" max="25" value="1" step=".5" oninput="updateSynth()">
+            <span class="val" id="vcf-reso-val">1.0</span>
+          </div>
+          <div class="filter-display">
+            <canvas id="vcf-canvas"></canvas>
+          </div>
+          <div style="font-family:var(--font-mono);font-size:.55rem;color:var(--muted);text-align:center;">
+            주파수 응답 — 필터가 컷오프 위의 배음을 깎아냅니다
+          </div>
+        </div>
+
+        <div class="signal-arrow reveal">↓</div>
+
+        <!-- VCA + Envelope Module -->
+        <div class="synth-module mod-env">
+          <div class="module-header">
+            <span class="module-tag">VCA + ENV</span>
+            <span class="module-title">앰프 & 엔벨로프</span>
+          </div>
+          <div class="slider-row">
+            <label>Attack</label>
+            <input type="range" id="env-a" min="1" max="2000" value="10" step="1" oninput="updateSynth()">
+            <span class="val" id="env-a-val">10 ms</span>
+          </div>
+          <div class="slider-row">
+            <label>Decay</label>
+            <input type="range" id="env-d" min="10" max="2000" value="200" step="1" oninput="updateSynth()">
+            <span class="val" id="env-d-val">200 ms</span>
+          </div>
+          <div class="slider-row">
+            <label>Sustain</label>
+            <input type="range" id="env-s" min="0" max="100" value="60" step="1" oninput="updateSynth()">
+            <span class="val" id="env-s-val">60%</span>
+          </div>
+          <div class="slider-row">
+            <label>Release</label>
+            <input type="range" id="env-r" min="10" max="3000" value="300" step="1" oninput="updateSynth()">
+            <span class="val" id="env-r-val">300 ms</span>
+          </div>
+          <div class="adsr-display">
+            <canvas id="adsr-canvas"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Output section -->
+      <div class="synth-output">
+        <div class="output-canvases">
+          <div class="output-canvas-wrap">
+            <span class="output-canvas-label">파형 (필터 후)</span>
+            <canvas id="synth-wave-out"></canvas>
+          </div>
+          <div class="output-canvas-wrap">
+            <span class="output-canvas-label">스펙트럼</span>
+            <canvas id="synth-spec-out"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-row" style="margin-top:1rem;">
+        <div class="stat-box">
+          <div class="sl">파형</div>
+          <div class="sv" id="synth-stat-wave">Sawtooth</div>
+        </div>
+        <div class="stat-box">
+          <div class="sl">Cutoff</div>
+          <div class="sv" id="synth-stat-cutoff">2000 Hz</div>
+        </div>
+        <div class="stat-box">
+          <div class="sl">엔벨로프</div>
+          <div class="sv" id="synth-stat-env" style="font-size:.6rem;">10/200/60/300</div>
+        </div>
+      </div>
+
+      <div class="btn-group" style="justify-content:center;margin-top:1rem;">
+        <button class="btn btn-gold" id="synth-play-btn" onclick="playSynthNote()">▶ 연주</button>
+        <button class="btn" onclick="synthPreset('bass')">Bass</button>
+        <button class="btn" onclick="synthPreset('lead')">Lead</button>
+        <button class="btn" onclick="synthPreset('pad')">Pad</button>
+        <button class="btn" onclick="synthPreset('pluck')">Pluck</button>
+        <button class="btn" onclick="synthPreset('brass')">Brass</button>
+      </div>
+    </div>
+
+    <div class="explanation-card reveal" style="border-left-color:var(--cyan);">
+      <p><strong style="color:var(--heading);">필터링의 수학.</strong> 저역통과 필터는 시간 영역에서 합성곱입니다. 주파수 영역에서는 곱셈 — 각 배음이 전달함수에 의해 스케일링됩니다. 공명에서 필터는 컷오프 근처의 주파수를 <em>증폭</em>시킵니다 — 마치 스스로 노래하듯. 무그의 전설적인 래더 필터는 4단 RC 스테이지로, 총 24 dB/옥타브 — 톱니파를 플루트처럼 들리게 할 만큼 가파릅니다.</p>
+    </div>
+
+    <div class="explanation-card reveal" style="border-left-color:var(--purple);">
+      <p><strong style="color:var(--heading);">ADSR: 음표의 형태.</strong> 어쿠스틱 악기는 자연스러운 역학을 가집니다 — 피아노 음은 강하게 타격되고 사라지며, 바이올린은 무한히 지속될 수 있습니다. ADSR 엔벨로프(어택, 디케이, 서스테인, 릴리스)는 시간에 따른 음량을 형성하는 구간별 선형 함수입니다. 단순하게 숫자 네 개지만, 소리의 본질적인 <em>제스처</em>를 포착합니다. 빠른 어택과 서스테인 없음은 타악기적 뜯음을, 느린 어택과 높은 서스테인은 부풀어오르는 패드를 만듭니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ PLACEHOLDER FOR NEXT SECTIONS ═══════════ -->
+
+<!-- ═══════════════════════════════════════════════════
+     §04 — WHEN BELLS BECAME POSSIBLE
+     ═══════════════════════════════════════════════════ -->
+<section id="sec-04">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">04 — 종소리가 가능해진 날, 1973</p>
+      <h2>FM 합성: <span class="accent-coral">아름다운 우연</span></h2>
+      <p>1967년, 작곡가 존 초우닝은 스탠퍼드에서 비브라토 실험을 하고 있었습니다. 떨림의 속도를 점점 더 올려갔습니다 — 어떤 인간의 손도 달성할 수 없는 속도까지. 이상한 일이 벌어졌습니다: 떨림이 사라지고, 완전히 새로운 음이 나타났습니다. 금속적이고, 종소리 같고, 반짝이는 소리 — 감산 합성으로는 절대 만들 수 없는 소리.</p>
+      <p style="margin-top:1rem;">그는 <strong style="color:var(--coral);">주파수 변조(FM) 합성</strong>을 우연히 발견한 것이었습니다. 하나의 오실레이터(<em>변조기</em>)가 다른 오실레이터(<em>캐리어</em>)의 음높이를 너무 빠르게 흔들어서, 새로운 주파수인 <strong>측대역(sideband)</strong>이 스펙트럼 전체에 피어납니다:</p>
+    </div>
+
+    <div class="math-block reveal">
+      y(t) = sin( 2π·f<sub>c</sub>·t + <span style="color:var(--coral)">I</span> · sin(2π·f<sub>m</sub>·t) )
+    </div>
+
+    <div class="reveal">
+      <p>변조 지수 <span style="font-family:var(--font-mono);color:var(--coral)">I</span>가 측대역의 수를 결정합니다. 낮은 값은 부드러운 따뜻함을, 높은 값은 주파수의 폭발 — 종, 징, 금속 충돌음을 만듭니다. 정수비는 하모닉 음을, 무리수비는 타격된 금속의 반짝이는 비조화 음색을 만들어냅니다.</p>
+      <p style="margin-top:1rem;">야마하가 초우닝의 특허를 라이선스하여 <strong>DX7</strong>(1983)을 만들었습니다 — 역사상 가장 많이 팔린 신시사이저. 일렉트릭 피아노와 종소리는 이 하나의 방정식만으로 10년을 정의했습니다.</p>
+    </div>
+
+    <div class="demo-card reveal">
+      <h3 style="font-family:var(--font-display);font-size:1.1rem;color:var(--heading);margin-bottom:.2rem;">FM 합성 탐험기</h3>
+      <div class="audio-note">캐리어, 변조기 비율, 변조 깊이를 조절하여 스펙트럼을 빚어보세요</div>
+
+      <div class="fm-diagram">
+        <div class="fm-box" style="border-color:var(--coral-dim);">
+          <div class="fm-box-label" style="color:var(--coral);">변조기</div>
+          <div class="fm-box-value" style="color:var(--coral);" id="fm-mod-display">220 Hz</div>
+        </div>
+        <div class="fm-arrow">→</div>
+        <div class="fm-box" style="border-color:var(--gold-dim);">
+          <div class="fm-box-label" style="color:var(--gold);">캐리어</div>
+          <div class="fm-box-value" style="color:var(--gold);" id="fm-car-display">220 Hz</div>
+        </div>
+        <div class="fm-arrow">→</div>
+        <div class="fm-box" style="border-color:var(--border);">
+          <div class="fm-box-label" style="color:var(--heading);">출력</div>
+          <div class="fm-box-value" style="color:var(--heading);font-size:.7rem;" id="fm-out-display">Harmonic</div>
+        </div>
+      </div>
+
+      <div class="slider-row">
+        <label>Carrier</label>
+        <input type="range" id="fm-carrier" min="60" max="880" value="220" step="1" oninput="updateFM()">
+        <span class="val" id="fm-carrier-val">220 Hz</span>
+      </div>
+      <div class="slider-row">
+        <label>C:M Ratio</label>
+        <input type="range" id="fm-ratio" min="0" max="30" value="10" step="1" oninput="updateFM()">
+        <span class="val" id="fm-ratio-val">1 : 1</span>
+      </div>
+      <div class="slider-row">
+        <label>Mod Index</label>
+        <input type="range" id="fm-index" min="0" max="200" value="20" step="1" oninput="updateFM()">
+        <span class="val" id="fm-index-val">2.0</span>
+      </div>
+
+      <div class="fm-output-grid">
+        <div class="fm-canvas-wrap">
+          <span class="fm-canvas-label">Waveform</span>
+          <canvas id="fm-wave-canvas"></canvas>
+        </div>
+        <div class="fm-canvas-wrap">
+          <span class="fm-canvas-label">스펙트럼 (측대역)</span>
+          <canvas id="fm-spec-canvas"></canvas>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="sl">f<sub>c</sub></div>
+          <div class="sv" id="fm-stat-fc">220 Hz</div>
+        </div>
+        <div class="stat-box">
+          <div class="sl">f<sub>m</sub></div>
+          <div class="sv" id="fm-stat-fm">220 Hz</div>
+        </div>
+        <div class="stat-box">
+          <div class="sl">변조지수 (I)</div>
+          <div class="sv" id="fm-stat-idx">2.0</div>
+        </div>
+        <div class="stat-box">
+          <div class="sl">측대역</div>
+          <div class="sv" id="fm-stat-sb">~5</div>
+        </div>
+      </div>
+
+      <div class="btn-group" style="justify-content:center;margin-top:1rem;">
+        <button class="btn btn-gold" onclick="playFMNote()">▶ Play</button>
+        <button class="btn" onclick="fmPreset('epiano')">E. Piano</button>
+        <button class="btn" onclick="fmPreset('bell')">Bell</button>
+        <button class="btn" onclick="fmPreset('brass')">Brass</button>
+        <button class="btn" onclick="fmPreset('metallic')">Metallic</button>
+        <button class="btn" onclick="fmPreset('bass')">DX Bass</button>
+        <button class="btn" onclick="fmPreset('gong')">Gong</button>
+      </div>
+    </div>
+
+    <div class="explanation-card reveal" style="border-left-color:var(--coral);">
+      <p><strong style="color:var(--heading);">정수비가 조화롭게 들리는 이유.</strong> 캐리어와 변조기 주파수가 단순한 정수비일 때, 측대역은 공통 기음의 정수배에 위치하여 하나의 통일된 음높이로 어우러집니다. 피타고라스의 협화음과 같은 원리입니다. 비율이 무리수(1:√2 같은)이면 측대역이 주파수 축 전체에 흩어져 — 종과 금속 타악기의 반짝이는 비조화음을 만듭니다.</p>
+    </div>
+
+    <div class="explanation-card reveal" style="border-left-color:var(--gold);">
+      <p><strong style="color:var(--heading);">베셀 함수의 등장.</strong> FM 측대역의 진폭은 제1종 베셀 함수로 주어집니다: <em>n</em>번째 측대역의 진폭은 J<sub>n</sub>(I)이며, I는 변조 지수입니다. I가 증가하면 고차 베셀 함수가 유의미해지고 더 많은 측대역이 나타납니다. 단 두 개의 오실레이터로 FM의 놀라운 스펙트럼 풍부함을 만들어내는 메커니즘입니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     §05 — STEALING REALITY
+     ═══════════════════════════════════════════════════ -->
+<section id="sec-05">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">05 — 현실을 훔치다, 1980–2000년대</p>
+      <h2>웨이브테이블 합성: <span class="accent-mint">얼어붙은 순간들</span></h2>
+      <p>가산 합성은 사인파로 쌓고, 감산 합성은 필터로 깎고, FM 합성은 결합된 오실레이터에서 측대역을 낳습니다. 하지만 늘 빈틈이 있었습니다: 실제 악기의 소리를 진정으로 <em>포착</em>할 수 없었습니다. 파형의 단일 주기 — 바이올린의 한 진동, 사람 목소리의 한 파동, 부서지는 파도의 한 순간 — 을 녹음하고 재생할 수 있다면?</p>
+      <p style="margin-top:1rem;"><strong style="color:var(--mint);">웨이브테이블 합성</strong>은 단일 주기 파형의 컬렉션을 테이블에 저장한 후 부드럽게 스윕하여 음색이 실시간으로 변형됩니다. 각 위치는 다른 스펙트럼 스냅샷이며, 그 사이를 미끄러지면 끊임없이 진화하는 텍스처가 만들어집니다 — 어떤 어쿠스틱 악기도 만들 수 없는 소리.</p>
+    </div>
+
+    <div class="demo-card reveal">
+      <h3 style="font-family:var(--font-display);font-size:1.1rem;color:var(--heading);margin-bottom:.2rem;">웨이브테이블 모프</h3>
+      <div class="audio-note">슬라이더를 드래그하여 파형 사이를 변형해 보세요. 각 위치는 다른 스펙트럼 스냅샷입니다.</div>
+
+      <div class="wavetable-3d">
+        <canvas id="wt-3d-canvas"></canvas>
+      </div>
+
+      <div class="wt-morph-track">
+        <div class="slider-row">
+          <label style="color:var(--mint)">위치</label>
+          <input type="range" id="wt-position" min="0" max="1000" value="0" step="1" oninput="updateWavetable()" style="accent-color:var(--mint)">
+          <span class="val" id="wt-pos-val" style="color:var(--mint)">0%</span>
+        </div>
+      </div>
+
+      <div class="canvas-wrap" style="margin-top:.5rem;">
+        <span class="wave-label">현재 파형 주기</span>
+        <canvas id="wt-wave-canvas" height="100"></canvas>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="sl">Position</div>
+          <div class="sv" id="wt-stat-pos" style="color:var(--mint)">0%</div>
+        </div>
+        <div class="stat-box">
+          <div class="sl">Character</div>
+          <div class="sv" id="wt-stat-char" style="font-size:.7rem;">Sine</div>
+        </div>
+        <div class="stat-box">
+          <div class="sl">Harmonics</div>
+          <div class="sv" id="wt-stat-harm">1</div>
+        </div>
+      </div>
+
+      <div class="btn-group" style="justify-content:center;margin-top:1rem;">
+        <button class="btn" style="border-color:rgba(52,211,153,.3);color:var(--mint);" id="wt-play-btn" onclick="toggleWTDrone()">▶ Play</button>
+        <button class="btn" onclick="wtSweep()">▶ 자동 스윕</button>
+        <button class="btn" onclick="setWTPos(0)">Sine</button>
+        <button class="btn" onclick="setWTPos(250)">Warm</button>
+        <button class="btn" onclick="setWTPos(500)">Bright</button>
+        <button class="btn" onclick="setWTPos(750)">Harsh</button>
+        <button class="btn" onclick="setWTPos(1000)">Noise</button>
+      </div>
+    </div>
+
+    <div class="explanation-card reveal" style="border-left-color:var(--mint);">
+      <p><strong style="color:var(--heading);">나이퀴스트 경계.</strong> 파형을 충실히 포착하려면 최고 주파수의 주기당 최소 두 번 샘플링해야 합니다 — 나이퀴스트–섀넌 샘플링 정리(1949). CD 오디오는 초당 44,100번 샘플링하여 22,050Hz까지 포착합니다. 이보다 느리면 고주파가 <em>앨리어스</em>로 접혀 돌아와 유령 같은 팬텀 음을 만듭니다. 충분히 빠르게 샘플링하면 아무것도 잃지 않지만, 너무 느리면 현실이 왜곡됩니다.</p>
+    </div>
+
+    <div class="explanation-card reveal" style="border-left-color:var(--purple);">
+      <p><strong style="color:var(--heading);">웨이브테이블에서 신경망으로.</strong> 웨이브테이블은 룩업 테이블 — 보간되는 스펙트럼 스냅샷의 이산 집합입니다. 이 룩업 테이블을 위치에서 스펙트럼으로의 매핑을 <em>학습하는</em> 신경망으로 바꾸면? 이것이 현대 뉴럴 오디오 합성입니다. Google Magenta의 DDSP(2020)는 전통적 신시사이저의 모든 구성 요소를 실제 악기 녹음으로 훈련된 미분 가능한 뉴럴 모듈로 대체합니다. 신시사이저는 원점으로 돌아왔습니다: 손으로 조율된 파이프에서, 전압 제어 회로를 거쳐, 학습된 함수로.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     §06 — IMPERFECTION IS THE POINT
+     ═══════════════════════════════════════════════════ -->
+<section id="sec-06">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">06 — 소리의 불쾌한 골짜기</p>
+      <h2>불완전함이 <span class="accent-gold">핵심이다</span></h2>
+      <p>역설이 있습니다. 수학적으로 완벽한 톱니파를 완벽한 필터와 완벽한 엔벨로프에 통과시키면 — <em>생명 없는</em> 소리가 납니다. 차갑고, 플라스틱 같은. 뇌가 뭐가 잘못된 건지 말 못해도, 귀는 알고 있습니다.</p>
+      <p style="margin-top:1rem;">실제 악기는 불완전합니다. 바이올린 활은 예측 불가능한 미세 리듬으로 걸리고 풀립니다. 아날로그 오실레이터는 <em>표류(drift)</em>합니다 — 부품이 데워지면서 음높이가 미세하게 떠돕니다. 이것은 결함이 아닙니다. <em>살아있음</em>의 수학입니다.</p>
+    </div>
+
+    <div class="demo-card reveal">
+      <h3 style="font-family:var(--font-display);font-size:1.1rem;color:var(--heading);margin-bottom:.2rem;">따뜻함의 기계</h3>
+      <div class="audio-note">각 불완전함을 켜고 꺼 보세요. 음색이 어떻게 더 따뜻하고 살아있게 되는지 들어보세요.</div>
+
+      <div class="canvas-wrap" style="margin-bottom:1rem;">
+        <span class="wave-label" id="imperf-wave-label">클린 신호</span>
+        <canvas id="imperf-canvas" height="140"></canvas>
+      </div>
+
+      <div class="imperfection-panel" id="imperf-panel">
+        <div class="imperf-toggle" data-idx="0" onclick="toggleImperf(this,0)">
+          <div class="imperf-switch"></div>
+          <div class="imperf-label">
+            <div class="imperf-name">오실레이터 표류</div>
+            <div class="imperf-desc">±0.15% 랜덤 피치 변동 — 아날로그 오실레이터는 결코 완벽히 가만히 있지 않습니다</div>
+          </div>
+        </div>
+        <div class="imperf-toggle" data-idx="1" onclick="toggleImperf(this,1)">
+          <div class="imperf-switch"></div>
+          <div class="imperf-label">
+            <div class="imperf-name">코러스 (디튜닝)</div>
+            <div class="imperf-desc">±3센트 차이의 두 복사본 — 현악 섹션이 풍성하게 들리는 것과 같은 원리</div>
+          </div>
+        </div>
+        <div class="imperf-toggle" data-idx="2" onclick="toggleImperf(this,2)">
+          <div class="imperf-switch"></div>
+          <div class="imperf-label">
+            <div class="imperf-name">테이프 새추레이션</div>
+            <div class="imperf-desc">소프트 클리핑 — 피크를 둥글게 하고 미묘한 짝수 배음을 더합니다</div>
+          </div>
+        </div>
+        <div class="imperf-toggle" data-idx="3" onclick="toggleImperf(this,3)">
+          <div class="imperf-switch"></div>
+          <div class="imperf-label">
+            <div class="imperf-name">노이즈 플로어</div>
+            <div class="imperf-desc">희미한 아날로그 히스 — 회로를 흐르는 전자들의 유령</div>
+          </div>
+        </div>
+        <div class="imperf-toggle" data-idx="4" onclick="toggleImperf(this,4)">
+          <div class="imperf-switch"></div>
+          <div class="imperf-label">
+            <div class="imperf-name">스테레오 스프레드</div>
+            <div class="imperf-desc">약간의 좌/우 타이밍 차이 — 어쿠스틱 악기는 점이 아니라 공간으로 소리를 방사합니다</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-box">
+          <div class="sl">활성 효과</div>
+          <div class="sv" id="imperf-stat-count">0 / 5</div>
+        </div>
+        <div class="stat-box">
+          <div class="sl">Character</div>
+          <div class="sv" id="imperf-stat-char" style="font-size:.7rem;">Digital</div>
+        </div>
+      </div>
+
+      <div class="ab-compare">
+        <button class="ab-btn warm" id="imperf-play-btn" onclick="toggleImperfDrone()" style="border-color:var(--gold-dim);color:var(--gold);">▶ 재생 — 위의 효과를 켜고 꺼 보세요</button>
+      </div>
+    </div>
+
+    <div class="explanation-card reveal" style="border-left-color:var(--gold);">
+      <p><strong style="color:var(--heading);">따뜻함의 수학.</strong> 아날로그 따뜻함은 주관적 신비주의가 아닙니다 — 정밀한 스펙트럼 서명이 있습니다. 테이프 새추레이션은 입력의 <em>짝수 배음</em>을 생성하는 소프트 클리핑 함수(보통 쌍곡 탄젠트)입니다. 사인파가 tanh()를 통과하면 2차, 4차 배음이 점차 감소하는 진폭으로 추가됩니다. 인간의 청각은 짝수 배음을 '따뜻하고' '음악적'으로 인식합니다. 홀수 배음은 거칠게 들립니다. 진공관 앰프(짝수 배음 중심)가 트랜지스터 앰프(홀수 배음 경향)보다 높이 평가받는 이유입니다.</p>
+    </div>
+
+    <div class="explanation-card reveal" style="border-left-color:var(--purple);">
+      <p><strong style="color:var(--heading);">1/f 노이즈와 자연의 미학.</strong> 소리를 살아있게 만드는 부드러운 불완전함은 종종 <em>1/f</em> (핑크 노이즈) 파워 스펙트럼을 따릅니다 — 심장박동, 파도, 깜빡이는 촛불, 숙련된 음악가의 타이밍 변화에서 발견되는 같은 패턴입니다. 보스와 클라크(1975)의 연구는 음악 청취자들이 순수하게 무작위적이거나 완벽히 규칙적인 패턴보다 1/f 분포를 따르는 리듬 변동을 일관되게 선호한다는 것을 보여주었습니다. 자연의 수학은 완벽함이 아니라 구조화된 무작위성입니다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     §07 — THE STATE OF THE ART
+     ═══════════════════════════════════════════════════ -->
+<section id="sec-07">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">07 — 살아있는 악기, 2010년대–현재</p>
+      <h2>오늘날 <span class="accent-purple">신시사이저</span>는 어디에</h2>
+      <p>신시사이저는 더 이상 하나의 악기가 아닙니다 — 하나의 생태계입니다. 유로랙 모듈러 포맷으로 하드웨어가 강력하게 귀환했습니다: 수백 제조사의 수천 개 소형 모듈이 무그가 상상했던 것처럼 케이블로 연결되지만, 내부에는 디지털 정밀함이 있습니다. Serum 같은 소프트웨어 신시사이저는 노트북만 있으면 누구나 웨이브테이블 모핑에 접근할 수 있게 했습니다. 그리고 신경망이 합성과 현실의 경계를 흐리기 시작했습니다.</p>
+    </div>
+
+    <div class="synth-gallery reveal">
+      <div class="gallery-card">
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=600&q=80" alt="Eurorack modular synthesizer" loading="lazy" onerror="this.style.background='var(--surface)';this.style.height='120px'">
+        <div class="gallery-body">
+          <div class="gallery-tag" style="color:var(--coral);">Hardware · Eurorack</div>
+          <div class="gallery-title">Modular Synthesis Renaissance</div>
+          <div class="gallery-desc">유로랙 포맷(높이 3U, 전원 ±12V)이 업계 표준이 되면서, 수천 개의 자유롭게 조합 가능한 모듈로 모듈러 합성이 부활했습니다. 각 모듈은 하나의 수학적 함수 — 오실레이터, 필터, 시퀀서, 랜덤 소스 — 를 물리적으로 구현합니다.</div>
+        </div>
+      </div>
+      <div class="gallery-card">
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1563330232-57114bb0823c?w=600&q=80" alt="Music production on laptop" loading="lazy" onerror="this.style.background='var(--surface)';this.style.height='120px'">
+        <div class="gallery-body">
+          <div class="gallery-tag" style="color:var(--mint);">Software · Wavetable</div>
+          <div class="gallery-title">Xfer Serum & the Software Revolution</div>
+          <div class="gallery-desc">Serum(2014)은 웨이브테이블 합성을 대중화했습니다. 사용자가 직접 웨이브테이블을 그리고 수학적 변환을 실시간으로 적용할 수 있습니다. 현대 전자음악 프로덕션의 사실상 표준입니다.</div>
+        </div>
+      </div>
+      <div class="gallery-card">
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1571974599782-87624638275e?w=600&q=80" alt="Analog synthesizer closeup" loading="lazy" onerror="this.style.background='var(--surface)';this.style.height='120px'">
+        <div class="gallery-body">
+          <div class="gallery-tag" style="color:var(--gold);">Hardware · Flagship</div>
+          <div class="gallery-title">Moog One — 아날로그의 정점</div>
+          <div class="gallery-desc">Moog One(2018)은 폴리포닉 아날로그 합성의 정점입니다. 16보이스 각각에 3개의 아날로그 오실레이터, 2개의 래더 필터, 독립적인 ADSR 엔벨로프가 있으며, 이 모든 것이 디지털 제어 아래 아날로그 회로로 동작합니다.</div>
+        </div>
+      </div>
+      <div class="gallery-card">
+        <img class="gallery-img" src="https://images.unsplash.com/photo-1526478806334-5fd488fcaabc?w=600&q=80" alt="Neural network visualization" loading="lazy" onerror="this.style.background='var(--surface)';this.style.height='120px'">
+        <div class="gallery-body">
+          <div class="gallery-tag" style="color:var(--sky);">AI · Neural Synthesis</div>
+          <div class="gallery-title">DDSP & Neural Audio</div>
+          <div class="gallery-desc">Google Magenta의 DDSP(2020)는 신경망이 오실레이터와 필터를 <em>학습</em>하는 새로운 패러다임을 열었습니다. 바이올린 녹음 몇 분만으로 그 악기의 음색을 완벽히 재현하는 신시사이저를 훈련시킬 수 있습니다. 수학이 스스로를 발견하는 시대입니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:2.5rem;">
+      <p class="section-num" style="text-align:center;">선구자와 비전가들</p>
+      <p style="text-align:center;color:var(--muted);font-size:.92rem;max-width:520px;margin:.8rem auto 1.5rem;">아직 존재하지 않는 소리를 들은 사람들 — 그리고 그 소리를 현실로 만든 수학을 세운 사람들.</p>
+    </div>
+
+    <div class="artist-row reveal">
+      <div class="artist-card">
+        <img class="artist-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Robert_Moog_at_Moogfest_2006.jpg/220px-Robert_Moog_at_Moogfest_2006.jpg" alt="Robert Moog" loading="lazy" onerror="this.style.display='none'">
+        <div class="artist-name">Robert Moog</div>
+        <div class="artist-role">모듈러 신스의 아버지</div>
+      </div>
+      <div class="artist-card">
+        <img class="artist-img" src="https://upload.wikimedia.org/wikipedia/en/5/5f/Wendy_Carlos_-_Switched-On_Bach.png" alt="Wendy Carlos" loading="lazy" onerror="this.style.display='none'">
+        <div class="artist-name">Wendy Carlos</div>
+        <div class="artist-role">Switched-On Bach, 1968</div>
+      </div>
+      <div class="artist-card">
+        <img class="artist-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/33/Suzanne_Ciani_2017_%28cropped%29.jpg/220px-Suzanne_Ciani_2017_%28cropped%29.jpg" alt="Suzanne Ciani" loading="lazy" onerror="this.style.display='none'">
+        <div class="artist-name">Suzanne Ciani</div>
+        <div class="artist-role">Buchla 선구자</div>
+      </div>
+      <div class="artist-card">
+        <img class="artist-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Brian_Eno_2017.jpg/220px-Brian_Eno_2017.jpg" alt="Brian Eno" loading="lazy" onerror="this.style.display='none'">
+        <div class="artist-name">Brian Eno</div>
+        <div class="artist-role">앰비언트 음악의 창시자</div>
+      </div>
+      <div class="artist-card">
+        <img class="artist-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/Aphex_Twin_logo.svg/220px-Aphex_Twin_logo.svg.png" alt="Aphex Twin" loading="lazy" onerror="this.style.display='none'">
+        <div class="artist-name">Aphex Twin</div>
+        <div class="artist-role">전자음악의 이단아</div>
+      </div>
+      <div class="artist-card">
+        <img class="artist-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Kraftwerk_live_in_Stockholm_2004.jpg/220px-Kraftwerk_live_in_Stockholm_2004.jpg" alt="Kraftwerk" loading="lazy" onerror="this.style.display='none'">
+        <div class="artist-name">Kraftwerk</div>
+        <div class="artist-role">전자음악의 기원, 1970</div>
+      </div>
+      <div class="artist-card">
+        <img class="artist-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/John_Chowning_2007.jpg/220px-John_Chowning_2007.jpg" alt="John Chowning" loading="lazy" onerror="this.style.display='none'">
+        <div class="artist-name">John Chowning</div>
+        <div class="artist-role">FM 합성 발명가</div>
+      </div>
+      <div class="artist-card">
+        <img class="artist-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Isao_Tomita_%282011%29.jpg/220px-Isao_Tomita_%282011%29.jpg" alt="Isao Tomita" loading="lazy" onerror="this.style.display='none'">
+        <div class="artist-name">Isao Tomita</div>
+        <div class="artist-role">신스 오케스트레이터</div>
+      </div>
+    </div>
+
+    <div class="explanation-card reveal" style="border-left-color:var(--purple);margin-top:1rem;">
+      <p><strong style="color:var(--heading);">합성의 미래: 수학이 스스로를 쓰는 시대.</strong> 전통적인 신시사이저는 인간이 설계한 수학적 모듈들의 조합입니다 — 오실레이터는 삼각함수, 필터는 컨볼루션, 엔벨로프는 구간별 선형함수. 그러나 DDSP 같은 뉴럴 합성기에서는 신경망이 이 모든 함수를 <em>데이터로부터 스스로 배웁니다</em>. 수학의 구조는 같지만 표기법이 바뀌었습니다 — 방정식 대신 가중치, 파라미터 대신 잠재 공간.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════
+     CLOSING
+     ═══════════════════════════════════════════════════ -->
+<section id="sec-closing">
+  <div class="section-inner" style="text-align:center;">
+    <div class="reveal">
+      <h2>그래서 — <span class="accent-gold">완벽한 음색은 존재하는가?</span></h2>
+      <div style="margin:2.5rem 0;line-height:2.6;font-size:1.08rem;">
+        <p><span class="accent-gold">오르간 제작자들</span>은 완벽함이란 올바른 파이프의 조합이라 생각했습니다</p>
+        <p><span class="accent-cyan">해먼드</span>는 음악가들이 손끝으로 푸리에 급수를 쓸 수 있게 했습니다</p>
+        <p><span class="accent-coral">무그</span>는 빼고 남은 것이 아름다움임을 증명했습니다</p>
+        <p><span class="accent-coral">초우닝</span>은 하나의 방정식 안에서 무한한 팔레트를 발견했습니다</p>
+        <p>그리고 우리는 비밀을 배웠습니다:<br><span class="accent-gold">완벽함이야말로 벗어나야 할 것이었다는 것을</span></p>
+      </div>
+      <p style="color:var(--muted);font-family:var(--font-display);font-style:italic;font-size:1.08rem;max-width:560px;margin:2.5rem auto;line-height:1.85;">
+        순수한 사인파는 가능한 가장 단순한 소리이며 — 세상에서 가장 지루한 소리이기도 합니다.<br><br>
+        아름다움은 완벽함으로부터의 구조화된 이탈 속에 삽니다:<br>
+        표류, 노이즈, 따뜻함, 그리고 생명 속에.
+      </p>
+    </div>
+
+    <div class="reveal" style="margin-top:3rem;">
+      <p style="font-family:var(--font-mono);font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-bottom:1.5rem;">어떤 소리가 마음을 움직이나요?</p>
+      <div class="closing-choices" id="closing-choices">
+        <button class="choice-btn" onclick="playClosingChoice(this,'sine')">순수 사인파</button>
+        <button class="choice-btn" onclick="playClosingChoice(this,'analog')">아날로그 신스</button>
+        <button class="choice-btn" onclick="playClosingChoice(this,'fm')">FM 벨</button>
+        <button class="choice-btn" onclick="playClosingChoice(this,'warm')">따뜻함 + 불완전함</button>
+      </div>
+    </div>
+
+    <!-- CLOSING QUOTE -->
+    <div class="reveal" style="margin-top:4rem;padding:2rem 0;">
+      <blockquote style="max-width:580px;margin:0 auto;text-align:center;border:none;padding:0;">
+        <p style="font-family:var(--font-display);font-size:1.15rem;font-style:italic;color:var(--heading);line-height:1.85;letter-spacing:-.005em;">
+          "A synthesiser is a constantly unfinished instrument.<br>You finish it when you tweak it, and play around with it,<br>and decide how to use it."
+        </p>
+        <footer style="margin-top:1.2rem;font-family:var(--font-mono);font-size:.65rem;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;">
+          — Brian Eno, BBC Arena, 2010
+        </footer>
+      </blockquote>
+    </div>
+
+    <!-- REFERENCES -->
+    <div class="ref-section reveal" style="text-align:left;">
+      <h3>참고문헌</h3>
+      <ul class="ref-list">
+        <li>John Chowning, "The Synthesis of Complex Audio Spectra by Means of Frequency Modulation," <em>Journal of the Audio Engineering Society</em> 21(7), 1973.</li>
+        <li>Robert Moog, "Voltage-Controlled Electronic Music Modules," <em>Journal of the Audio Engineering Society</em> 13(3), 1965.</li>
+        <li>Max Mathews, <em>The Technology of Computer Music</em>, MIT Press, 1969.</li>
+        <li>Curtis Roads, <em>The Computer Music Tutorial</em>, MIT Press, 1996.</li>
+        <li>Julius O. Smith III, <em>Physical Audio Signal Processing</em>, CCRMA, Stanford University (online book).</li>
+        <li>Jesse Engel et al., "DDSP: Differentiable Digital Signal Processing," <em>ICLR</em>, 2020.</li>
+        <li>R. F. Voss and J. Clarke, "'1/f noise' in music: Music from 1/f noise," <em>Journal of the Acoustical Society of America</em> 63(1), 1978.</li>
+        <li>Thaddeus Cahill, U.S. Patent No. 580,035, "Art of and Apparatus for Generating and Distributing Music Electrically," 1897.</li>
+        <li>Mark Vail, <em>Vintage Synthesizers: Pioneering Designers, Groundbreaking Instruments, Collecting Tips</em>, Miller Freeman Books, 1993.</li>
+        <li>Dave Smith and Chet Wood, "The MIDI Specification," MIDI Manufacturers Association, 1983.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p style="font-family:var(--font-display);font-size:.9rem;color:var(--muted);font-style:italic;">
+    완벽한 음색의 꿈 — 인터랙티브 탐험
+  </p>
+  <p style="font-family:var(--font-mono);font-size:.6rem;color:var(--muted);margin-top:.3rem;">
+    이 페이지의 모든 소리는 Web Audio API를 통해 실시간으로 생성됩니다. 녹음 없이 — 오직 수학만으로.
+  </p>
+  <div class="footer-attr">
+    <span class="footer-name">Sang-hyun Kim</span>
+    <span class="footer-inst">Korea Institute for Advanced Study · AI4Math, KAIST</span>
+    <a class="footer-link" href="https://kimsh.kr" target="_blank" rel="noopener">kimsh.kr</a>
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+/* ═══════════════════════════════════════════════════
+   AUDIO ENGINE
+   ═══════════════════════════════════════════════════ */
+let actx=null, masterGain=null;
+
+function initAudio(){
+  if(actx) return;
+  try{
+    const A=window.AudioContext||window.webkitAudioContext;
+    if(!A) return;
+    actx=new A();
+    masterGain=actx.createGain();
+    masterGain.gain.value=0.3;
+    masterGain.connect(actx.destination);
+    // silent ping to unlock
+    const o=actx.createOscillator(),g=actx.createGain();
+    g.gain.value=.001;o.connect(g);g.connect(actx.destination);
+    o.start(0);o.stop(actx.currentTime+.05);
+    actx.resume();
+  }catch(e){}
+}
+
+function ensureAudio(){
+  if(!actx) initAudio();
+  if(actx&&actx.state==='suspended') actx.resume();
+}
+
+// Play a note with given harmonic weights
+function playNote(freq, harmonics, duration, vol){
+  ensureAudio();
+  if(!actx||actx.state!=='running') return;
+  vol=vol||0.12;
+  duration=duration||1.2;
+  const now=actx.currentTime;
+  const nodes=[];
+  harmonics.forEach((amp,i)=>{
+    if(amp<0.001) return;
+    const o=actx.createOscillator();
+    const g=actx.createGain();
+    o.type='sine';
+    o.frequency.value=freq*(i+1);
+    g.gain.setValueAtTime(amp*vol, now);
+    g.gain.setValueAtTime(amp*vol, now+duration*0.7);
+    g.gain.exponentialRampToValueAtTime(0.0001, now+duration);
+    o.connect(g);g.connect(masterGain);
+    o.start(now);o.stop(now+duration+0.05);
+    nodes.push({o,g});
+  });
+  return nodes;
+}
+
+// Chime for UI feedback
+function chime(f,d,v){
+  ensureAudio();
+  if(!actx||actx.state!=='running') return;
+  const o=actx.createOscillator(),g=actx.createGain();
+  o.type='sine';o.frequency.value=f;
+  g.gain.setValueAtTime(v||.06,actx.currentTime);
+  g.gain.exponentialRampToValueAtTime(.0001,actx.currentTime+(d||.4));
+  o.connect(g);g.connect(masterGain);
+  o.start(0);o.stop(actx.currentTime+(d||.4)+.05);
+}
+
+/* ═══════════════════════════════════════════════════
+   AUDIO OVERLAY
+   ═══════════════════════════════════════════════════ */
+document.getElementById('ao-start').addEventListener('click',function(){
+  initAudio();
+  document.getElementById('audio-overlay').classList.add('gone');
+  // Gentle ascending triad: C5 → E5 → G5
+  const t=actx.currentTime;
+  [523.25,659.25,783.99].forEach((f,i)=>{
+    const o=actx.createOscillator(),g=actx.createGain();
+    o.type='sine';o.frequency.value=f;
+    g.gain.setValueAtTime(0,t+i*0.12);
+    g.gain.linearRampToValueAtTime(0.06,t+i*0.12+0.02);
+    g.gain.exponentialRampToValueAtTime(0.001,t+i*0.12+0.8);
+    o.connect(g);g.connect(masterGain);
+    o.start(t+i*0.12);o.stop(t+i*0.12+0.85);
+  });
+});
+
+// Detect mobile/tablet and show silent mode warning
+(function(){
+  const isMobile=/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||
+    (navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  if(isMobile){
+    const notice=document.getElementById('ao-mobile-notice');
+    if(notice) notice.style.display='block';
+  }
+})();
+
+/* ═══════════════════════════════════════════════════
+   HERO CANVAS — Morphing waveform visualization
+   ═══════════════════════════════════════════════════ */
+(function(){
+  const cv=document.getElementById('hero-canvas');
+  const ctx=cv.getContext('2d');
+  let W,H,t=0;
+
+  function resize(){
+    const dpr=Math.min(window.devicePixelRatio||1,2);
+    W=cv.clientWidth;H=cv.clientHeight;
+    cv.width=W*dpr;cv.height=H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  resize();
+  window.addEventListener('resize',resize);
+
+  // Waveform presets to morph between
+  const presets=[
+    [1,0,0,0,0,0,0,0],                          // sine
+    [1,.5,.33,.25,.2,.167,.143,.125],             // sawtooth
+    [1,0,.33,0,.2,0,.143,0],                     // square
+    [1,.85,.65,.42,.28,.18,.1,.05],               // warm pad
+    [.3,1,.6,.8,.5,.35,.2,.1],                    // oboe-like
+    [1,.15,.06,.02,0,0,0,0],                      // flute
+  ];
+
+  let morphIdx=0, morphT=0;
+
+  function getAmps(time){
+    const speed=0.12;
+    morphT+=speed*0.016;
+    if(morphT>=1){morphT=0;morphIdx=(morphIdx+1)%presets.length;}
+    const a=presets[morphIdx];
+    const b=presets[(morphIdx+1)%presets.length];
+    const s=morphT*morphT*(3-2*morphT); // smoothstep
+    return a.map((v,i)=>v+(b[i]-v)*s);
+  }
+
+  // Particles — mix gold and cool blue-purple
+  const particles=[];
+  for(let i=0;i<80;i++){
+    const isWarm=Math.random()>0.4;
+    particles.push({
+      x:Math.random()*1.2-.1, y:Math.random(),
+      vx:(Math.random()-.5)*.0004, vy:-Math.random()*.0006-.0001,
+      r:Math.random()*1.8+.3, a:Math.random()*.25+.05,
+      hue:isWarm?38+Math.random()*20:220+Math.random()*40
+    });
+  }
+
+  function drawParticles(){
+    particles.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.y<-0.05){p.y=1.05;p.x=Math.random()*1.2-.1;}
+      if(p.x<-0.1||p.x>1.1){p.x=Math.random();p.y=1;}
+      const sx=p.x*W, sy=p.y*H;
+      ctx.beginPath();
+      ctx.arc(sx,sy,p.r,0,Math.PI*2);
+      ctx.fillStyle=`hsla(${p.hue},60%,70%,${p.a})`;
+      ctx.fill();
+    });
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    // Background gradient
+    const grad=ctx.createRadialGradient(W/2,H*0.45,0,W/2,H*0.45,W*0.6);
+    grad.addColorStop(0,'rgba(20,18,35,0.3)');
+    grad.addColorStop(1,'rgba(6,7,14,0)');
+    ctx.fillStyle=grad;
+    ctx.fillRect(0,0,W,H);
+
+    drawParticles();
+
+    // Draw morphing waveform
+    const amps=getAmps(t);
+    const cy=H*0.52;
+    const amplitude=H*0.12;
+    const waveW=W*0.7;
+    const startX=(W-waveW)/2;
+
+    // Helper to draw one waveform path
+    function drawWavePath(timeOff,phaseOff){
+      const pts=[];
+      for(let i=0;i<=waveW;i++){
+        const phase=(i/waveW)*Math.PI*4;
+        let y=0;
+        for(let h=0;h<amps.length;h++){
+          y+=amps[h]*Math.sin(phase*(h+1)+(t+timeOff)*0.8*(h+1)*0.3+phaseOff);
+        }
+        const maxAmp=amps.reduce((s,v)=>s+Math.abs(v),0)||1;
+        y=y/maxAmp*amplitude;
+        const edgeFade=Math.min(i/80,(waveW-i)/80,1);
+        y*=edgeFade;
+        pts.push({x:startX+i,y:cy+y});
+      }
+      return pts;
+    }
+
+    // Ghost echo waveform (trailing, dimmer)
+    const ghost=drawWavePath(-0.3,0.4);
+    ctx.beginPath();
+    ghost.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+    ctx.strokeStyle='rgba(167,139,250,0.12)';
+    ctx.lineWidth=1.5;ctx.stroke();
+
+    // Glow layer
+    const main=drawWavePath(0,0);
+    ctx.save();
+    ctx.shadowColor='rgba(212,168,83,0.3)';
+    ctx.shadowBlur=20;
+    ctx.beginPath();
+    main.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+    ctx.strokeStyle='rgba(212,168,83,0.5)';
+    ctx.lineWidth=2.5;
+    ctx.stroke();
+    ctx.restore();
+
+    // Bright line
+    ctx.beginPath();
+    main.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+    ctx.strokeStyle='rgba(240,204,107,0.85)';
+    ctx.lineWidth=1.2;
+    ctx.stroke();
+
+    // Harmonic indicator dots along bottom
+    const dotY=H*0.78;
+    amps.forEach((a,i)=>{
+      if(a<0.01) return;
+      const dx=startX+waveW*0.15+i*(waveW*0.7/(amps.length-1));
+      const r=a*4+1;
+      ctx.beginPath();ctx.arc(dx,dotY,r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(212,168,83,${a*0.6})`;
+      ctx.fill();
+      ctx.fillStyle=`rgba(92,97,120,${a*0.4+0.15})`;
+      ctx.font='8px JetBrains Mono';
+      ctx.textAlign='center';
+      ctx.fillText((i+1)+'f',dx,dotY+13);
+    });
+
+    // Waveform morph name
+    const morphNames=['sine','sawtooth','square','warm pad','oboe','flute'];
+    const curName=morphNames[morphIdx];
+    const nextName=morphNames[(morphIdx+1)%morphNames.length];
+    const label=morphT<0.15?curName:morphT>0.85?nextName:curName+' → '+nextName;
+    ctx.fillStyle='rgba(92,97,120,0.3)';
+    ctx.font='9px JetBrains Mono';
+    ctx.textAlign='right';
+    ctx.fillText(label,startX+waveW,H*0.88);
+
+    t+=0.016;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ═══════════════════════════════════════════════════
+   ORGAN PIPE SIMULATOR
+   ═══════════════════════════════════════════════════ */
+const ORGAN={
+  // C major scale pipes: C4, D4, E4, F4, G4, A4, B4, C5
+  notes:[
+    {name:'C4',freq:261.63},{name:'D4',freq:293.66},{name:'E4',freq:329.63},
+    {name:'F4',freq:349.23},{name:'G4',freq:392.00},{name:'A4',freq:440.00},
+    {name:'B4',freq:493.88},{name:'C5',freq:523.25}
+  ],
+  // Stop definitions: name, footLength (visual), harmonic weights
+  stops:[
+    {name:"8' Principal",foot:8,harmonics:[1,.55,.3,.18,.1,.06,.03,.015],color:'var(--gold)'},
+    {name:"4' Octave",foot:4,harmonics:[0,1,.4,.2,.1,.05,.025,0],color:'var(--sky)'},
+    {name:"2⅔' Nasard",foot:2.67,harmonics:[0,0,1,.3,.15,.07,0,0],color:'var(--purple)'},
+    {name:"2' Super",foot:2,harmonics:[0,0,0,1,.35,.15,.07,.03],color:'var(--coral)'},
+    {name:"8' Flute",foot:8,harmonics:[1,.12,.04,.01,0,0,0,0],color:'var(--mint)'},
+    {name:"8' Reed",foot:8,harmonics:[.6,.9,.7,.55,.4,.3,.2,.15],color:'#f97316'},
+  ],
+  activeStops:new Set([0]),
+  ringingPipe:-1
+};
+
+function buildOrganUI(){
+  const container=document.getElementById('organ-pipes');
+  const stopsPanel=document.getElementById('stops-panel');
+
+  // Build pipes
+  ORGAN.notes.forEach((note,i)=>{
+    const pipe=document.createElement('div');
+    pipe.className='organ-pipe';
+    pipe.dataset.idx=i;
+    // Height proportional to wavelength (lower = taller)
+    const maxH=220,minH=80;
+    const hRange=ORGAN.notes[ORGAN.notes.length-1].freq-ORGAN.notes[0].freq;
+    const h=maxH-(note.freq-ORGAN.notes[0].freq)/hRange*(maxH-minH);
+    const w=Math.max(20,36-i*2);
+
+    pipe.innerHTML=`
+      <div class="pipe-glow" style="background:radial-gradient(ellipse at center,rgba(212,168,83,.15),transparent);height:${h}px"></div>
+      <div class="pipe-body" style="height:${h}px;width:${w}px;
+        background:linear-gradient(135deg,#3a3528 0%,#5a5040 30%,#4a4538 60%,#3a3528 100%);
+        box-shadow:inset -2px 0 6px rgba(0,0,0,.4),inset 2px 0 6px rgba(255,255,255,.05),0 -1px 3px rgba(212,168,83,.1);"></div>
+      <div class="pipe-note">${note.name}</div>`;
+
+    pipe.addEventListener('click',()=>playPipe(i));
+    container.appendChild(pipe);
+  });
+
+  // Build stop buttons
+  ORGAN.stops.forEach((stop,i)=>{
+    const btn=document.createElement('button');
+    btn.className='stop-btn'+(i===0?' active':'');
+    btn.innerHTML=`<span class="stop-indicator"></span>${stop.name}`;
+    btn.style.borderColor=i===0?'rgba(212,168,83,.3)':'';
+    btn.addEventListener('click',()=>toggleStop(i,btn));
+    stopsPanel.appendChild(btn);
+  });
+
+  updateOrganStats();
+  drawOrganSpectrum();
+}
+
+function getCombinedHarmonics(){
+  const combined=new Float32Array(8);
+  ORGAN.activeStops.forEach(si=>{
+    const h=ORGAN.stops[si].harmonics;
+    for(let i=0;i<8;i++) combined[i]+=h[i];
+  });
+  // Normalize
+  let mx=0;
+  for(let i=0;i<8;i++) if(combined[i]>mx) mx=combined[i];
+  if(mx>0) for(let i=0;i<8;i++) combined[i]/=mx;
+  return Array.from(combined);
+}
+
+function playPipe(idx){
+  ensureAudio();
+  const note=ORGAN.notes[idx];
+  const harmonics=getCombinedHarmonics();
+  playNote(note.freq, harmonics, 1.4, 0.15);
+
+  // Visual feedback
+  const pipes=document.querySelectorAll('.organ-pipe');
+  pipes.forEach(p=>p.classList.remove('ringing'));
+  pipes[idx].classList.add('ringing');
+  ORGAN.ringingPipe=idx;
+  setTimeout(()=>{
+    pipes[idx].classList.remove('ringing');
+    if(ORGAN.ringingPipe===idx) ORGAN.ringingPipe=-1;
+  },1400);
+}
+
+function toggleStop(idx,btn){
+  if(ORGAN.activeStops.has(idx)){
+    if(ORGAN.activeStops.size<=1) return; // keep at least one
+    ORGAN.activeStops.delete(idx);
+    btn.classList.remove('active');
+  }else{
+    ORGAN.activeStops.add(idx);
+    btn.classList.add('active');
+  }
+  chime(600+idx*80,.15,.04);
+  updateOrganStats();
+  drawOrganSpectrum();
+}
+
+function updateOrganStats(){
+  document.getElementById('stat-stops').textContent=ORGAN.activeStops.size;
+  const h=getCombinedHarmonics();
+  const active=h.filter(v=>v>0.02).length;
+  document.getElementById('stat-harmonics').textContent=active;
+  // Determine timbre name
+  let name='Custom';
+  if(ORGAN.activeStops.size===1){
+    const si=[...ORGAN.activeStops][0];
+    name=ORGAN.stops[si].name.split("' ")[1]||ORGAN.stops[si].name;
+  }else if(ORGAN.activeStops.size>=4) name='Full Chorus';
+  else if(ORGAN.activeStops.has(0)&&ORGAN.activeStops.has(1)) name='Principal+Octave';
+  document.getElementById('stat-timbre').textContent=name;
+}
+
+function drawOrganSpectrum(){
+  const cv=document.getElementById('organ-spectrum');
+  const ctx=cv.getContext('2d');
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  cv.width=cv.clientWidth*dpr;
+  cv.height=140*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const W=cv.clientWidth,H=140;
+
+  ctx.clearRect(0,0,W,H);
+
+  const h=getCombinedHarmonics();
+  const barW=Math.min(28,W/(h.length*2));
+  const gap=barW*0.6;
+  const totalW=(barW+gap)*h.length-gap;
+  const startX=(W-totalW)/2;
+  const maxH=H-35;
+
+  // Color per active stop contribution
+  const stopColors=[];
+  ORGAN.activeStops.forEach(si=>stopColors.push(ORGAN.stops[si].color));
+
+  h.forEach((amp,i)=>{
+    const x=startX+i*(barW+gap);
+    const bh=Math.max(2,amp*maxH);
+
+    // Gradient bar
+    const grad=ctx.createLinearGradient(x,H-10,x,H-10-bh);
+    grad.addColorStop(0,'rgba(212,168,83,0.8)');
+    grad.addColorStop(1,'rgba(212,168,83,0.2)');
+    ctx.fillStyle=grad;
+    ctx.fillRect(x,H-10-bh,barW,bh);
+
+    // Glow
+    ctx.shadowColor='rgba(212,168,83,0.3)';
+    ctx.shadowBlur=8;
+    ctx.fillRect(x,H-10-bh,barW,bh);
+    ctx.shadowBlur=0;
+
+    // Label
+    ctx.fillStyle='rgba(92,97,120,0.7)';
+    ctx.font='9px JetBrains Mono';
+    ctx.textAlign='center';
+    ctx.fillText((i+1)+'f',x+barW/2,H-0);
+  });
+}
+
+// Organ drone
+let organDroneNodes=null;
+
+function toggleOrganDrone(){
+  ensureAudio();
+  const btn=document.getElementById('play-organ-btn');
+  if(organDroneNodes){
+    organDroneNodes.forEach(({o,g})=>{
+      g.gain.exponentialRampToValueAtTime(0.0001,actx.currentTime+0.15);
+      setTimeout(()=>{try{o.stop();}catch(e){}},200);
+    });
+    organDroneNodes=null;
+    btn.textContent='▶ Sustain C4';btn.classList.remove('playing');
+    return;
+  }
+  const freq=261.63;
+  const harmonics=getCombinedHarmonics();
+  const now=actx.currentTime;
+  const nodes=[];
+  harmonics.forEach((amp,i)=>{
+    if(amp<0.005) return;
+    const o=actx.createOscillator();
+    const g=actx.createGain();
+    o.type='sine';
+    o.frequency.value=freq*(i+1);
+    g.gain.setValueAtTime(0,now);
+    g.gain.linearRampToValueAtTime(amp*0.12,now+0.08);
+    o.connect(g);g.connect(masterGain);
+    o.start(now);
+    nodes.push({o,g});
+  });
+  organDroneNodes=nodes;
+  btn.textContent='■ Stop';btn.classList.add('playing');
+}
+
+function playOrganChord(){
+  ensureAudio();
+  const harmonics=getCombinedHarmonics();
+  const freqs=[261.63,329.63,392.00]; // C E G
+  freqs.forEach((f,i)=>{
+    setTimeout(()=>playNote(f,harmonics,2.0,0.10),i*80);
+  });
+}
+
+// Presets
+function setStops(indices){
+  ORGAN.activeStops.clear();
+  indices.forEach(i=>ORGAN.activeStops.add(i));
+  document.querySelectorAll('.stop-btn').forEach((btn,i)=>{
+    btn.classList.toggle('active',ORGAN.activeStops.has(i));
+  });
+  updateOrganStats();drawOrganSpectrum();
+  if(organDroneNodes){
+    toggleOrganDrone();setTimeout(toggleOrganDrone,100);
+  }
+}
+function presetOrganFlute(){setStops([4]);}
+function presetOrganPrincipal(){setStops([0]);}
+function presetOrganReed(){setStops([5]);}
+function presetOrganFull(){setStops([0,1,2,3]);}
+
+/* ═══════════════════════════════════════════════════
+   SCROLL REVEAL
+   ═══════════════════════════════════════════════════ */
+const revealObserver=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      revealObserver.unobserve(e.target);
+    }
+  });
+},{threshold:0.12});
+
+document.querySelectorAll('.reveal').forEach(el=>revealObserver.observe(el));
+
+/* ═══════════════════════════════════════════════════
+   NAV DOTS
+   ═══════════════════════════════════════════════════ */
+(function(){
+  const sections=document.querySelectorAll('section[id]');
+  const nav=document.getElementById('nav-dots');
+  sections.forEach(s=>{
+    const dot=document.createElement('div');
+    dot.className='nav-dot';
+    dot.addEventListener('click',()=>s.scrollIntoView({behavior:'smooth'}));
+    nav.appendChild(dot);
+  });
+  const dots=nav.querySelectorAll('.nav-dot');
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const idx=[...sections].indexOf(e.target);
+        dots.forEach((d,i)=>d.classList.toggle('active',i===idx));
+      }
+    });
+  },{threshold:0.4});
+  sections.forEach(s=>obs.observe(s));
+})();
+
+/* ═══════════════════════════════════════════════════
+   HAMMOND DRAWBAR SIMULATOR
+   ═══════════════════════════════════════════════════ */
+const DRAWBAR={
+  // Hammond drawbar footages and their harmonic multipliers
+  bars:[
+    {label:"16'", mult:0.5, cssClass:'db-16'},
+    {label:"5⅓'",mult:1.5, cssClass:'db-513'},
+    {label:"8'",  mult:1,   cssClass:'db-8'},
+    {label:"4'",  mult:2,   cssClass:'db-4'},
+    {label:"2⅔'",mult:3,   cssClass:'db-223'},
+    {label:"2'",  mult:4,   cssClass:'db-2'},
+    {label:"1⅗'",mult:5,   cssClass:'db-135'},
+    {label:"1⅓'",mult:6,   cssClass:'db-113'},
+    {label:"1'",  mult:8,   cssClass:'db-1'},
+  ],
+  values:[8,8,8,0,0,0,0,0,0], // default: 888000000
+  droneNodes:null
+};
+
+function buildDrawbarUI(){
+  const panel=document.getElementById('drawbar-panel');
+  DRAWBAR.bars.forEach((bar,i)=>{
+    const row=document.createElement('div');
+    row.className='drawbar-row '+bar.cssClass;
+    row.innerHTML=`
+      <span class="drawbar-label">${bar.label}</span>
+      <div class="drawbar-track">
+        <input type="range" min="0" max="8" value="${DRAWBAR.values[i]}" step="1"
+          data-idx="${i}" oninput="updateDrawbar(this)">
+      </div>
+      <span class="drawbar-val" id="db-val-${i}">${DRAWBAR.values[i]}</span>`;
+    panel.appendChild(row);
+  });
+  updateDrawbarStats();
+  drawDrawbarWaveform();
+}
+
+function updateDrawbar(el){
+  const idx=+el.dataset.idx;
+  DRAWBAR.values[idx]=+el.value;
+  document.getElementById('db-val-'+idx).textContent=el.value;
+  updateDrawbarStats();
+  drawDrawbarWaveform();
+  // If drone is playing, update live
+  if(DRAWBAR.droneNodes) restartDrawbarDrone();
+  chime(300+idx*60,.08,.02);
+}
+
+function drawbarPreset(vals){
+  vals.forEach((v,i)=>{
+    DRAWBAR.values[i]=v;
+    const slider=document.querySelector(`#drawbar-panel input[data-idx="${i}"]`);
+    if(slider) slider.value=v;
+    const valEl=document.getElementById('db-val-'+i);
+    if(valEl) valEl.textContent=v;
+  });
+  updateDrawbarStats();
+  drawDrawbarWaveform();
+  if(DRAWBAR.droneNodes) restartDrawbarDrone();
+  chime(500,.12,.03);
+}
+
+function updateDrawbarStats(){
+  const reg=DRAWBAR.values.join('');
+  const formatted=reg.substring(0,2)+' '+reg.substring(2,6)+' '+reg.substring(6,9);
+  document.getElementById('db-reg').textContent=formatted;
+
+  // Determine character
+  const v=DRAWBAR.values;
+  let char='Custom';
+  const total=v.reduce((s,x)=>s+x,0);
+  if(total===0) char='Silent';
+  else if(v[2]>6&&total<=v[2]+v[0]+v[1]+2) char='Warm';
+  else if(v[5]>4||v[6]>4||v[7]>4||v[8]>4) char='Bright';
+  else if(v[0]>=6&&v[1]>=6&&v[2]>=6) char='Full';
+  else if(v[2]>5&&total<=v[2]+3) char='Flute-like';
+  document.getElementById('db-character').textContent=char;
+}
+
+function getDrawbarHarmonics(){
+  // Build a harmonic array (up to 16 harmonics) from drawbar settings
+  const h=new Float32Array(16);
+  DRAWBAR.bars.forEach((bar,i)=>{
+    const amp=DRAWBAR.values[i]/8;
+    const m=bar.mult;
+    // Map mult to closest harmonic index
+    const idx=Math.round(m)-1;
+    if(idx>=0&&idx<16) h[idx]+=amp;
+    // For fractional harmonics (sub, 5ths), add to nearest
+    if(m===0.5) h[0]+=amp*0.5; // sub-octave approximation
+    if(m===1.5){ h[1]+=amp*0.7; h[2]+=amp*0.3; }
+  });
+  // Normalize
+  let mx=0;for(let i=0;i<16;i++) if(h[i]>mx) mx=h[i];
+  if(mx>0) for(let i=0;i<16;i++) h[i]/=mx;
+  return Array.from(h).slice(0,10);
+}
+
+function drawDrawbarWaveform(){
+  const cv=document.getElementById('drawbar-waveform');
+  if(!cv) return;
+  const ctx=cv.getContext('2d');
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  cv.width=cv.clientWidth*dpr;
+  cv.height=120*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const W=cv.clientWidth,H=120;
+  ctx.clearRect(0,0,W,H);
+
+  const cy=H/2;
+  const amp=H*0.38;
+
+  // Build waveform from drawbar values directly
+  ctx.beginPath();
+  for(let x=0;x<W;x++){
+    const t=(x/W)*Math.PI*4;
+    let y=0, total=0;
+    DRAWBAR.bars.forEach((bar,i)=>{
+      const a=DRAWBAR.values[i]/8;
+      if(a>0.001){
+        y+=a*Math.sin(t*bar.mult);
+        total+=a;
+      }
+    });
+    if(total>0) y/=total;
+    const py=cy-y*amp;
+    if(x===0) ctx.moveTo(x,py); else ctx.lineTo(x,py);
+  }
+  ctx.strokeStyle='rgba(94,196,212,0.7)';
+  ctx.lineWidth=1.5;
+  ctx.stroke();
+
+  // Glow
+  ctx.save();
+  ctx.shadowColor='rgba(94,196,212,0.3)';
+  ctx.shadowBlur=12;
+  ctx.stroke();
+  ctx.restore();
+
+  // Center line
+  ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(W,cy);
+  ctx.strokeStyle='rgba(255,255,255,0.04)';ctx.lineWidth=1;ctx.stroke();
+}
+
+// Tonewheel animation
+function initTonewheelCanvas(){
+  const cv=document.getElementById('tonewheel-canvas');
+  if(!cv) return;
+  const ctx=cv.getContext('2d');
+  let angle=0;
+
+  function drawWheel(){
+    const W=180,H=180;
+    ctx.clearRect(0,0,360,360);
+    ctx.save();
+    ctx.translate(180,180);
+    ctx.scale(2,2);
+
+    // Outer ring
+    ctx.beginPath();ctx.arc(0,0,82,0,Math.PI*2);
+    ctx.strokeStyle='rgba(94,196,212,0.15)';ctx.lineWidth=1;ctx.stroke();
+
+    // Draw tonewheel teeth
+    const numTeeth=12;
+    const innerR=55,outerR=75;
+    ctx.beginPath();
+    for(let i=0;i<numTeeth;i++){
+      const a=angle+(i/numTeeth)*Math.PI*2;
+      const a2=a+(0.4/numTeeth)*Math.PI*2;
+      const a3=a+(0.5/numTeeth)*Math.PI*2;
+      const a4=a+(0.9/numTeeth)*Math.PI*2;
+      const cos1=Math.cos(a),sin1=Math.sin(a);
+      const cos2=Math.cos(a2),sin2=Math.sin(a2);
+      const cos3=Math.cos(a3),sin3=Math.sin(a3);
+      const cos4=Math.cos(a4),sin4=Math.sin(a4);
+      if(i===0) ctx.moveTo(cos1*innerR,sin1*innerR);
+      else ctx.lineTo(cos1*innerR,sin1*innerR);
+      ctx.lineTo(cos2*outerR,sin2*outerR);
+      ctx.lineTo(cos3*outerR,sin3*outerR);
+      ctx.lineTo(cos4*innerR,sin4*innerR);
+    }
+    ctx.closePath();
+    ctx.fillStyle='rgba(94,196,212,0.12)';
+    ctx.strokeStyle='rgba(94,196,212,0.4)';
+    ctx.lineWidth=1;
+    ctx.fill();ctx.stroke();
+
+    // Center hub
+    ctx.beginPath();ctx.arc(0,0,12,0,Math.PI*2);
+    ctx.fillStyle='rgba(94,196,212,0.2)';ctx.fill();
+    ctx.strokeStyle='rgba(94,196,212,0.3)';ctx.stroke();
+
+    // Pickup coil indicator
+    const pickupAngle=-Math.PI/2;
+    const px=Math.cos(pickupAngle)*82,py=Math.sin(pickupAngle)*82;
+    ctx.beginPath();ctx.arc(px,py,5,0,Math.PI*2);
+    ctx.fillStyle='rgba(212,168,83,0.6)';ctx.fill();
+    ctx.beginPath();ctx.arc(px,py,8,0,Math.PI*2);
+    ctx.strokeStyle='rgba(212,168,83,0.2)';ctx.stroke();
+
+    // Sine wave output indicator (small wave near coil)
+    const waveStartX=px+12,waveStartY=py;
+    ctx.beginPath();
+    for(let j=0;j<30;j++){
+      const wx=waveStartX+j;
+      const wy=waveStartY+Math.sin(j*0.4+angle*numTeeth)*4;
+      if(j===0) ctx.moveTo(wx,wy); else ctx.lineTo(wx,wy);
+    }
+    ctx.strokeStyle='rgba(212,168,83,0.5)';ctx.lineWidth=1;ctx.stroke();
+
+    ctx.restore();
+
+    // Speed based on active drawbars
+    const speed=DRAWBAR.values.reduce((s,x)=>s+x,0)>0?0.02:0.005;
+    angle+=speed;
+    requestAnimationFrame(drawWheel);
+  }
+  drawWheel();
+}
+
+// Drawbar drone
+function toggleDrawbarDrone(){
+  ensureAudio();
+  const btn=document.getElementById('play-drawbar-btn');
+  if(DRAWBAR.droneNodes){
+    stopDrawbarDrone();
+    btn.textContent='▶ Play';btn.classList.remove('playing');
+    return;
+  }
+  startDrawbarDrone();
+  btn.textContent='■ Stop';btn.classList.add('playing');
+}
+
+function startDrawbarDrone(){
+  if(!actx||actx.state!=='running') return;
+  const freq=261.63; // C4
+  const now=actx.currentTime;
+  const nodes=[];
+  DRAWBAR.bars.forEach((bar,i)=>{
+    const amp=DRAWBAR.values[i]/8;
+    if(amp<0.01) return;
+    const o=actx.createOscillator();
+    const g=actx.createGain();
+    o.type='sine';
+    o.frequency.value=freq*bar.mult;
+    g.gain.setValueAtTime(0,now);
+    g.gain.linearRampToValueAtTime(amp*0.1,now+0.06);
+    o.connect(g);g.connect(masterGain);
+    o.start(now);
+    nodes.push({o,g,barIdx:i});
+  });
+  DRAWBAR.droneNodes=nodes;
+}
+
+function stopDrawbarDrone(){
+  if(!DRAWBAR.droneNodes) return;
+  const now=actx.currentTime;
+  DRAWBAR.droneNodes.forEach(({o,g})=>{
+    g.gain.exponentialRampToValueAtTime(0.0001,now+0.12);
+    setTimeout(()=>{try{o.stop();}catch(e){}},150);
+  });
+  DRAWBAR.droneNodes=null;
+}
+
+function restartDrawbarDrone(){
+  stopDrawbarDrone();
+  setTimeout(startDrawbarDrone,60);
+}
+
+/* ═══════════════════════════════════════════════════
+   THEREMIN
+   ═══════════════════════════════════════════════════ */
+function initTheremin(){
+  const field=document.getElementById('theremin-field');
+  if(!field) return;
+  const dot=document.getElementById('th-dot');
+  const hLine=document.getElementById('th-h');
+  const vLine=document.getElementById('th-v');
+
+  let thereminOsc=null, thereminGain=null, thereminVibrato=null;
+  let isPlaying=false;
+
+  const noteNames=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+
+  function freqToNote(f){
+    const n=12*Math.log2(f/440)+69;
+    const nn=Math.round(n);
+    const oct=Math.floor(nn/12)-1;
+    const name=noteNames[((nn%12)+12)%12];
+    return name+oct;
+  }
+
+  function getCoords(e){
+    const rect=field.getBoundingClientRect();
+    let x,y;
+    if(e.touches){
+      x=e.touches[0].clientX-rect.left;
+      y=e.touches[0].clientY-rect.top;
+    }else{
+      x=e.clientX-rect.left;
+      y=e.clientY-rect.top;
+    }
+    return{
+      rx:Math.max(0,Math.min(1,x/rect.width)),
+      ry:Math.max(0,Math.min(1,y/rect.height)),
+      x,y
+    };
+  }
+
+  function startTone(rx,ry){
+    ensureAudio();
+    if(!actx||actx.state!=='running') return;
+    if(thereminOsc) return;
+    // Frequency: exponential mapping from ~130Hz (C3) to ~1047Hz (C6)
+    const freq=130*Math.pow(2,rx*3);
+    // Volume: top = loud, bottom = silent
+    const vol=Math.max(0,1-ry)*0.15;
+
+    thereminOsc=actx.createOscillator();
+    thereminGain=actx.createGain();
+    thereminOsc.type='sine';
+    thereminOsc.frequency.value=freq;
+    thereminGain.gain.value=vol;
+
+    // Add gentle vibrato
+    thereminVibrato=actx.createOscillator();
+    const vibGain=actx.createGain();
+    thereminVibrato.type='sine';
+    thereminVibrato.frequency.value=5.5;
+    vibGain.gain.value=3;
+    thereminVibrato.connect(vibGain);
+    vibGain.connect(thereminOsc.frequency);
+    thereminVibrato.start();
+
+    thereminOsc.connect(thereminGain);
+    thereminGain.connect(masterGain);
+    thereminOsc.start();
+    isPlaying=true;
+  }
+
+  function updateTone(rx,ry){
+    if(!thereminOsc) return;
+    const freq=130*Math.pow(2,rx*3);
+    const vol=Math.max(0,1-ry)*0.15;
+    thereminOsc.frequency.setTargetAtTime(freq,actx.currentTime,0.015);
+    thereminGain.gain.setTargetAtTime(vol,actx.currentTime,0.015);
+
+    // Update readout
+    document.getElementById('th-freq').textContent=Math.round(freq)+' Hz';
+    document.getElementById('th-note').textContent=freqToNote(freq);
+    document.getElementById('th-vol').textContent=Math.round(vol/0.15*100)+'%';
+  }
+
+  function stopTone(){
+    if(thereminOsc){
+      thereminGain.gain.exponentialRampToValueAtTime(0.0001,actx.currentTime+0.08);
+      setTimeout(()=>{
+        try{thereminOsc.stop();thereminVibrato.stop();}catch(e){}
+        thereminOsc=null;thereminGain=null;thereminVibrato=null;
+      },100);
+    }
+    isPlaying=false;
+    document.getElementById('th-freq').textContent='—';
+    document.getElementById('th-note').textContent='—';
+    document.getElementById('th-vol').textContent='—';
+  }
+
+  function updateVisual(x,y,rect){
+    dot.style.left=x+'px';dot.style.top=y+'px';
+    hLine.style.top=y+'px';
+    vLine.style.left=x+'px';
+  }
+
+  // Mouse events
+  field.addEventListener('mouseenter',e=>{
+    const{rx,ry,x,y}=getCoords(e);
+    updateVisual(x,y);
+    startTone(rx,ry);
+  });
+  field.addEventListener('mousemove',e=>{
+    const{rx,ry,x,y}=getCoords(e);
+    updateVisual(x,y);
+    updateTone(rx,ry);
+  });
+  field.addEventListener('mouseleave',()=>stopTone());
+
+  // Touch events
+  field.addEventListener('touchstart',e=>{
+    e.preventDefault();
+    const{rx,ry,x,y}=getCoords(e);
+    updateVisual(x,y);
+    startTone(rx,ry);
+  },{passive:false});
+  field.addEventListener('touchmove',e=>{
+    e.preventDefault();
+    const{rx,ry,x,y}=getCoords(e);
+    updateVisual(x,y);
+    updateTone(rx,ry);
+  },{passive:false});
+  field.addEventListener('touchend',()=>stopTone());
+  field.addEventListener('touchcancel',()=>stopTone());
+}
+
+/* ═══════════════════════════════════════════════════
+   §03 — MODULAR SYNTH PATCH BUILDER
+   ═══════════════════════════════════════════════════ */
+const SYNTH={
+  waveforms:['sawtooth','square','triangle','sine','pulse'],
+  currentWave:'sawtooth',
+  freq:220, pw:50,
+  cutoff:2000, reso:1,
+  envA:10, envD:200, envS:60, envR:300,
+};
+
+function buildSynthUI(){
+  const ws=document.getElementById('vco-wave-select');
+  if(!ws) return;
+  SYNTH.waveforms.forEach(w=>{
+    const btn=document.createElement('button');
+    btn.className='wave-btn'+(w==='sawtooth'?' active':'');
+    btn.textContent=w==='pulse'?'Pulse':w.charAt(0).toUpperCase()+w.slice(1);
+    btn.addEventListener('click',()=>{
+      ws.querySelectorAll('.wave-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      SYNTH.currentWave=w;
+      // Enable/disable pulse width
+      const pwSlider=document.getElementById('vco-pw');
+      const pwVal=document.getElementById('vco-pw-val');
+      if(w==='pulse'){
+        pwSlider.disabled=false;pwSlider.style.opacity='1';pwVal.style.opacity='1';
+      }else{
+        pwSlider.disabled=true;pwSlider.style.opacity='.4';pwVal.style.opacity='.4';
+      }
+      updateSynth();
+      chime(400,.08,.02);
+    });
+    ws.appendChild(btn);
+  });
+  updateSynth();
+}
+
+function updateSynth(){
+  SYNTH.freq=+document.getElementById('vco-freq').value;
+  SYNTH.pw=+document.getElementById('vco-pw').value;
+  SYNTH.cutoff=+document.getElementById('vcf-cutoff').value;
+  SYNTH.reso=+document.getElementById('vcf-reso').value;
+  SYNTH.envA=+document.getElementById('env-a').value;
+  SYNTH.envD=+document.getElementById('env-d').value;
+  SYNTH.envS=+document.getElementById('env-s').value;
+  SYNTH.envR=+document.getElementById('env-r').value;
+
+  // Update display values
+  document.getElementById('vco-freq-val').textContent=SYNTH.freq+' Hz';
+  document.getElementById('vco-pw-val').textContent=SYNTH.pw+'%';
+  document.getElementById('vcf-cutoff-val').textContent=SYNTH.cutoff<1000?SYNTH.cutoff+' Hz':(SYNTH.cutoff/1000).toFixed(1)+' kHz';
+  document.getElementById('vcf-reso-val').textContent=SYNTH.reso.toFixed(1);
+  document.getElementById('env-a-val').textContent=SYNTH.envA+' ms';
+  document.getElementById('env-d-val').textContent=SYNTH.envD+' ms';
+  document.getElementById('env-s-val').textContent=SYNTH.envS+'%';
+  document.getElementById('env-r-val').textContent=SYNTH.envR+' ms';
+
+  // Stats
+  const wName=SYNTH.currentWave.charAt(0).toUpperCase()+SYNTH.currentWave.slice(1);
+  document.getElementById('synth-stat-wave').textContent=wName;
+  document.getElementById('synth-stat-cutoff').textContent=SYNTH.cutoff<1000?SYNTH.cutoff+' Hz':(SYNTH.cutoff/1000).toFixed(1)+' kHz';
+  document.getElementById('synth-stat-env').textContent=`${SYNTH.envA}/${SYNTH.envD}/${SYNTH.envS}/${SYNTH.envR}`;
+
+  drawVCO();
+  drawVCF();
+  drawADSR();
+  drawSynthOutput();
+}
+
+// Generate waveform samples for visualization
+function genWave(type,pw,numSamples){
+  const out=new Float32Array(numSamples);
+  for(let i=0;i<numSamples;i++){
+    const t=(i/numSamples)*2; // two cycles
+    const phase=t%1;
+    switch(type){
+      case 'sine': out[i]=Math.sin(phase*Math.PI*2); break;
+      case 'sawtooth': out[i]=2*phase-1; break;
+      case 'square': out[i]=phase<0.5?1:-1; break;
+      case 'triangle': out[i]=phase<0.5?4*phase-1:3-4*phase; break;
+      case 'pulse': out[i]=phase<(pw/100)?1:-1; break;
+    }
+  }
+  return out;
+}
+
+// Get harmonic amplitudes for waveform type
+function getWaveHarmonics(type,pw,n){
+  const h=new Float32Array(n);
+  for(let k=1;k<=n;k++){
+    switch(type){
+      case 'sine': h[k-1]=(k===1)?1:0; break;
+      case 'sawtooth': h[k-1]=1/k; break;
+      case 'square': h[k-1]=(k%2===1)?1/k:0; break;
+      case 'triangle': h[k-1]=(k%2===1)?1/(k*k):0; break;
+      case 'pulse':
+        const d=pw/100;
+        h[k-1]=Math.abs(Math.sin(Math.PI*k*d)/(Math.PI*k));
+        break;
+    }
+  }
+  return h;
+}
+
+// Filter magnitude response (2nd order Butterworth approximation)
+function filterMag(freq,cutoff,reso){
+  const ratio=freq/cutoff;
+  const r2=ratio*ratio;
+  const Q=Math.max(0.5,reso);
+  const denom=Math.sqrt((1-r2)*(1-r2)+(ratio/Q)*(ratio/Q));
+  return denom>0.0001?1/denom:0;
+}
+
+function drawVCO(){
+  const cv=document.getElementById('vco-canvas');if(!cv) return;
+  const ctx=cv.getContext('2d');
+  const dpr=Math.min(devicePixelRatio||1,2);
+  cv.width=cv.clientWidth*dpr;cv.height=90*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const W=cv.clientWidth,H=90;
+  ctx.clearRect(0,0,W,H);
+
+  const samples=genWave(SYNTH.currentWave,SYNTH.pw,W);
+  ctx.beginPath();
+  for(let i=0;i<W;i++){
+    const y=H/2-samples[i]*(H*0.38);
+    if(i===0) ctx.moveTo(i,y); else ctx.lineTo(i,y);
+  }
+  ctx.strokeStyle='rgba(212,168,83,0.7)';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.save();ctx.shadowColor='rgba(212,168,83,0.25)';ctx.shadowBlur=10;ctx.stroke();ctx.restore();
+  // center line
+  ctx.beginPath();ctx.moveTo(0,H/2);ctx.lineTo(W,H/2);
+  ctx.strokeStyle='rgba(255,255,255,.04)';ctx.lineWidth=1;ctx.stroke();
+}
+
+function drawVCF(){
+  const cv=document.getElementById('vcf-canvas');if(!cv) return;
+  const ctx=cv.getContext('2d');
+  const dpr=Math.min(devicePixelRatio||1,2);
+  const rect=cv.parentElement.getBoundingClientRect();
+  cv.width=rect.width*dpr;cv.height=rect.height*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const W=rect.width,H=rect.height;
+  ctx.clearRect(0,0,W,H);
+
+  // Draw frequency response curve
+  const minF=20,maxF=20000;
+  ctx.beginPath();
+  for(let x=0;x<W;x++){
+    const logF=Math.log10(minF)+(x/W)*(Math.log10(maxF)-Math.log10(minF));
+    const f=Math.pow(10,logF);
+    let mag=filterMag(f,SYNTH.cutoff,SYNTH.reso);
+    // Apply 24dB/oct rolloff (4-pole) above cutoff
+    if(f>SYNTH.cutoff){
+      const ratio=f/SYNTH.cutoff;
+      mag=mag*Math.pow(1/ratio,3.5);
+    }
+    mag=Math.min(mag,4); // clamp for resonance peaks
+    const dB=20*Math.log10(Math.max(mag,0.001));
+    const y=H*0.4-dB*(H/60);
+    const cy=Math.max(4,Math.min(H-4,y));
+    if(x===0) ctx.moveTo(x,cy); else ctx.lineTo(x,cy);
+  }
+  ctx.strokeStyle='rgba(94,196,212,0.75)';ctx.lineWidth=2;ctx.stroke();
+  ctx.save();ctx.shadowColor='rgba(94,196,212,0.3)';ctx.shadowBlur=12;ctx.stroke();ctx.restore();
+
+  // Fill below curve
+  ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();
+  ctx.fillStyle='rgba(94,196,212,0.04)';ctx.fill();
+
+  // Cutoff indicator line
+  const cutoffX=(Math.log10(SYNTH.cutoff)-Math.log10(minF))/(Math.log10(maxF)-Math.log10(minF))*W;
+  ctx.beginPath();ctx.moveTo(cutoffX,0);ctx.lineTo(cutoffX,H);
+  ctx.strokeStyle='rgba(94,196,212,0.2)';ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Frequency labels
+  ctx.fillStyle='rgba(92,97,120,0.5)';ctx.font='8px JetBrains Mono';ctx.textAlign='center';
+  [100,1000,10000].forEach(f=>{
+    const x=(Math.log10(f)-Math.log10(minF))/(Math.log10(maxF)-Math.log10(minF))*W;
+    ctx.fillText(f>=1000?(f/1000)+'k':f+'',x,H-4);
+  });
+
+  // Show harmonic positions from VCO
+  const numH=16;
+  const harmonics=getWaveHarmonics(SYNTH.currentWave,SYNTH.pw,numH);
+  for(let k=1;k<=numH;k++){
+    if(harmonics[k-1]<0.01) continue;
+    const hf=SYNTH.freq*k;
+    if(hf>maxF) break;
+    const hx=(Math.log10(hf)-Math.log10(minF))/(Math.log10(maxF)-Math.log10(minF))*W;
+    // Height = harmonic amplitude * filter response
+    let mag=filterMag(hf,SYNTH.cutoff,SYNTH.reso);
+    if(hf>SYNTH.cutoff) mag*=Math.pow(SYNTH.cutoff/hf,3.5);
+    mag=Math.min(mag,4);
+    const barH=harmonics[k-1]*mag*60;
+    const alpha=Math.min(1,harmonics[k-1]*mag*1.5+0.15);
+    ctx.fillStyle=`rgba(212,168,83,${alpha})`;
+    ctx.fillRect(hx-1.5,H-12-barH,3,barH);
+  }
+}
+
+function drawADSR(){
+  const cv=document.getElementById('adsr-canvas');if(!cv) return;
+  const ctx=cv.getContext('2d');
+  const dpr=Math.min(devicePixelRatio||1,2);
+  const rect=cv.parentElement.getBoundingClientRect();
+  cv.width=rect.width*dpr;cv.height=rect.height*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const W=rect.width,H=rect.height;
+  ctx.clearRect(0,0,W,H);
+
+  const pad=12;
+  const drawW=W-pad*2, drawH=H-pad*2;
+  const totalTime=SYNTH.envA+SYNTH.envD+500+SYNTH.envR; // sustain held for ~500ms visual
+  const sus=SYNTH.envS/100;
+
+  // ADSR points
+  const points=[
+    {x:0,y:0},
+    {x:SYNTH.envA/totalTime,y:1},
+    {x:(SYNTH.envA+SYNTH.envD)/totalTime,y:sus},
+    {x:(SYNTH.envA+SYNTH.envD+500)/totalTime,y:sus},
+    {x:1,y:0}
+  ];
+
+  ctx.beginPath();
+  points.forEach((p,i)=>{
+    const px=pad+p.x*drawW;
+    const py=pad+(1-p.y)*drawH;
+    if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+  });
+  ctx.strokeStyle='rgba(167,139,250,0.8)';ctx.lineWidth=2;ctx.stroke();
+  ctx.save();ctx.shadowColor='rgba(167,139,250,0.3)';ctx.shadowBlur=10;ctx.stroke();ctx.restore();
+
+  // Fill
+  ctx.lineTo(pad+drawW,pad+drawH);ctx.lineTo(pad,pad+drawH);ctx.closePath();
+  ctx.fillStyle='rgba(167,139,250,0.04)';ctx.fill();
+
+  // Labels
+  ctx.fillStyle='rgba(167,139,250,0.5)';ctx.font='8px JetBrains Mono';ctx.textAlign='center';
+  const labels=['A','D','S','R'];
+  const labelX=[
+    pad+(points[0].x+points[1].x)/2*drawW,
+    pad+(points[1].x+points[2].x)/2*drawW,
+    pad+(points[2].x+points[3].x)/2*drawW,
+    pad+(points[3].x+points[4].x)/2*drawW
+  ];
+  labels.forEach((l,i)=>ctx.fillText(l,labelX[i],H-2));
+
+  // Dots at breakpoints
+  points.forEach(p=>{
+    const px=pad+p.x*drawW, py=pad+(1-p.y)*drawH;
+    ctx.beginPath();ctx.arc(px,py,3,0,Math.PI*2);
+    ctx.fillStyle='rgba(167,139,250,0.6)';ctx.fill();
+  });
+}
+
+function drawSynthOutput(){
+  // Waveform after filter
+  const cv1=document.getElementById('synth-wave-out');
+  if(!cv1) return;
+  const ctx1=cv1.getContext('2d');
+  const dpr=Math.min(devicePixelRatio||1,2);
+  const rect1=cv1.parentElement.getBoundingClientRect();
+  cv1.width=rect1.width*dpr;cv1.height=rect1.height*dpr;
+  ctx1.setTransform(dpr,0,0,dpr,0,0);
+  const W1=rect1.width,H1=rect1.height;
+  ctx1.clearRect(0,0,W1,H1);
+
+  // Build filtered waveform from harmonics
+  const numH=16;
+  const harmonics=getWaveHarmonics(SYNTH.currentWave,SYNTH.pw,numH);
+  ctx1.beginPath();
+  for(let x=0;x<W1;x++){
+    const t=(x/W1)*2;
+    let y=0,norm=0;
+    for(let k=1;k<=numH;k++){
+      if(harmonics[k-1]<0.001) continue;
+      const hf=SYNTH.freq*k;
+      let mag=filterMag(hf,SYNTH.cutoff,SYNTH.reso);
+      if(hf>SYNTH.cutoff) mag*=Math.pow(SYNTH.cutoff/hf,3.5);
+      mag=Math.min(mag,4);
+      const a=harmonics[k-1]*mag;
+      y+=a*Math.sin(t*Math.PI*k);
+      norm+=a;
+    }
+    if(norm>0) y/=norm;
+    const py=H1/2-y*(H1*0.38);
+    if(x===0) ctx1.moveTo(x,py); else ctx1.lineTo(x,py);
+  }
+  ctx1.strokeStyle='rgba(240,204,107,0.7)';ctx1.lineWidth=1.5;ctx1.stroke();
+  ctx1.save();ctx1.shadowColor='rgba(240,204,107,0.2)';ctx1.shadowBlur=8;ctx1.stroke();ctx1.restore();
+  ctx1.beginPath();ctx1.moveTo(0,H1/2);ctx1.lineTo(W1,H1/2);
+  ctx1.strokeStyle='rgba(255,255,255,.04)';ctx1.lineWidth=1;ctx1.stroke();
+
+  // Spectrum
+  const cv2=document.getElementById('synth-spec-out');
+  const ctx2=cv2.getContext('2d');
+  const rect2=cv2.parentElement.getBoundingClientRect();
+  cv2.width=rect2.width*dpr;cv2.height=rect2.height*dpr;
+  ctx2.setTransform(dpr,0,0,dpr,0,0);
+  const W2=rect2.width,H2=rect2.height;
+  ctx2.clearRect(0,0,W2,H2);
+
+  const barW=Math.min(16,W2/(numH*1.8));
+  const gap=barW*0.5;
+  const totalBW=(barW+gap)*numH;
+  const startX=(W2-totalBW)/2;
+  for(let k=1;k<=numH;k++){
+    if(harmonics[k-1]<0.001) continue;
+    const hf=SYNTH.freq*k;
+    let mag=filterMag(hf,SYNTH.cutoff,SYNTH.reso);
+    if(hf>SYNTH.cutoff) mag*=Math.pow(SYNTH.cutoff/hf,3.5);
+    mag=Math.min(mag,4);
+    const finalAmp=harmonics[k-1]*mag;
+    const bh=Math.max(1,finalAmp*(H2-25));
+    const x=startX+(k-1)*(barW+gap);
+
+    // Original amplitude (ghost bar)
+    const origH=harmonics[k-1]*(H2-25);
+    ctx2.fillStyle='rgba(255,255,255,0.03)';
+    ctx2.fillRect(x,H2-12-origH,barW,origH);
+
+    // Filtered amplitude
+    const grad=ctx2.createLinearGradient(x,H2-12,x,H2-12-bh);
+    const hue=hf<SYNTH.cutoff?'212,168,83':'94,196,212';
+    grad.addColorStop(0,`rgba(${hue},0.7)`);
+    grad.addColorStop(1,`rgba(${hue},0.15)`);
+    ctx2.fillStyle=grad;
+    ctx2.fillRect(x,H2-12-bh,barW,bh);
+
+    ctx2.fillStyle='rgba(92,97,120,0.5)';ctx2.font='7px JetBrains Mono';
+    ctx2.textAlign='center';ctx2.fillText(k+'',x+barW/2,H2-2);
+  }
+}
+
+// Play the synth note with actual Web Audio
+function playSynthNote(){
+  ensureAudio();
+  if(!actx||actx.state!=='running') return;
+
+  const btn=document.getElementById('synth-play-btn');
+  btn.textContent='● Playing';btn.classList.add('playing');
+
+  const now=actx.currentTime;
+  const freq=SYNTH.freq;
+  const aTime=SYNTH.envA/1000;
+  const dTime=SYNTH.envD/1000;
+  const sus=SYNTH.envS/100;
+  const rTime=SYNTH.envR/1000;
+  const noteLen=aTime+dTime+0.5; // hold sustain for 0.5s
+
+  // Oscillator
+  const osc=actx.createOscillator();
+  if(SYNTH.currentWave==='pulse'){
+    // Approximate pulse with periodicWave
+    const n=32;
+    const real=new Float32Array(n);
+    const imag=new Float32Array(n);
+    real[0]=0;imag[0]=0;
+    const d=SYNTH.pw/100;
+    for(let k=1;k<n;k++){
+      real[k]=0;
+      imag[k]=Math.sin(Math.PI*k*d)/(Math.PI*k)*2;
+    }
+    osc.setPeriodicWave(actx.createPeriodicWave(real,imag,{disableNormalization:false}));
+  }else{
+    osc.type=SYNTH.currentWave;
+  }
+  osc.frequency.value=freq;
+
+  // Filter
+  const filter=actx.createBiquadFilter();
+  filter.type='lowpass';
+  filter.frequency.value=SYNTH.cutoff;
+  filter.Q.value=SYNTH.reso;
+
+  // Gain with ADSR
+  const gain=actx.createGain();
+  gain.gain.setValueAtTime(0,now);
+  gain.gain.linearRampToValueAtTime(0.2,now+aTime);
+  gain.gain.linearRampToValueAtTime(sus*0.2,now+aTime+dTime);
+  gain.gain.setValueAtTime(sus*0.2,now+noteLen);
+  gain.gain.linearRampToValueAtTime(0.0001,now+noteLen+rTime);
+
+  osc.connect(filter);filter.connect(gain);gain.connect(masterGain);
+  osc.start(now);osc.stop(now+noteLen+rTime+0.05);
+
+  const totalDur=(noteLen+rTime)*1000+60;
+  setTimeout(()=>{
+    btn.textContent='▶ Play Note';btn.classList.remove('playing');
+  },totalDur);
+}
+
+// Presets
+function synthPreset(name){
+  const presets={
+    bass:   {wave:'sawtooth',freq:82,pw:50,cutoff:400,reso:3,a:5,d:100,s:80,r:150},
+    lead:   {wave:'sawtooth',freq:440,pw:50,cutoff:3000,reso:4,a:5,d:150,s:70,r:200},
+    pad:    {wave:'sawtooth',freq:220,pw:50,cutoff:1200,reso:0.5,a:800,d:400,s:80,r:1500},
+    pluck:  {wave:'square',freq:330,pw:50,cutoff:4000,reso:2,a:1,d:300,s:0,r:200},
+    brass:  {wave:'sawtooth',freq:196,pw:50,cutoff:1800,reso:1.5,a:80,d:200,s:65,r:250},
+  };
+  const p=presets[name];if(!p) return;
+
+  // Set wave
+  SYNTH.currentWave=p.wave;
+  const ws=document.getElementById('vco-wave-select');
+  if(ws) ws.querySelectorAll('.wave-btn').forEach(b=>{
+    b.classList.toggle('active',b.textContent.toLowerCase()===p.wave);
+  });
+  const pwSlider=document.getElementById('vco-pw');
+  pwSlider.disabled=p.wave!=='pulse';
+  pwSlider.style.opacity=p.wave==='pulse'?'1':'.4';
+  document.getElementById('vco-pw-val').style.opacity=p.wave==='pulse'?'1':'.4';
+
+  // Set values
+  document.getElementById('vco-freq').value=p.freq;
+  document.getElementById('vco-pw').value=p.pw;
+  document.getElementById('vcf-cutoff').value=p.cutoff;
+  document.getElementById('vcf-reso').value=p.reso;
+  document.getElementById('env-a').value=p.a;
+  document.getElementById('env-d').value=p.d;
+  document.getElementById('env-s').value=p.s;
+  document.getElementById('env-r').value=p.r;
+
+  updateSynth();
+  chime(500,.12,.03);
+}
+
+// Init Section 03
+buildSynthUI();
+
+/* ═══════════════════════════════════════════════════
+   §04 — FM SYNTHESIS
+   ═══════════════════════════════════════════════════ */
+
+// Bessel function J_n(x) via series expansion
+function besselJ(n,x){
+  let sum=0;
+  for(let m=0;m<20;m++){
+    const sign=Math.pow(-1,m);
+    const num=Math.pow(x/2,2*m+n);
+    let denom=1;
+    for(let k=1;k<=m;k++) denom*=k;
+    for(let k=1;k<=m+n;k++) denom*=k;
+    sum+=sign*num/denom;
+  }
+  return sum;
+}
+
+// Ratio lookup table (slider 0-30 maps to musical ratios)
+const FM_RATIOS=[
+  {n:1,d:4,label:'1:0.25'},{n:1,d:3,label:'1:0.33'},{n:1,d:2,label:'1:0.5'},
+  {n:2,d:3,label:'1:0.67'},{n:3,d:4,label:'1:0.75'},{n:1,d:1,label:'1:0.9'},
+  // Irrational
+  {n:1,d:1,label:'1:1',rat:1},{n:7,d:6,label:'1:1.17',rat:7/6},
+  {n:5,d:4,label:'1:1.25',rat:1.25},{n:4,d:3,label:'1:1.33',rat:4/3},
+  {n:1,d:1,label:'1:1',rat:1},// idx=10 = 1:1
+  {n:3,d:2,label:'1:1.5',rat:1.5},{n:5,d:3,label:'1:1.67',rat:5/3},
+  {n:2,d:1,label:'1:2',rat:2},{n:5,d:2,label:'1:2.5',rat:2.5},
+  {n:3,d:1,label:'1:3',rat:3},{n:7,d:2,label:'1:3.5',rat:3.5},
+  {n:4,d:1,label:'1:4',rat:4},{n:9,d:2,label:'1:4.5',rat:4.5},
+  {n:5,d:1,label:'1:5',rat:5},{n:11,d:2,label:'1:5.5',rat:5.5},
+  {n:6,d:1,label:'1:6',rat:6},{n:13,d:2,label:'1:6.5',rat:6.5},
+  {n:7,d:1,label:'1:7',rat:7},{n:15,d:2,label:'1:7.5',rat:7.5},
+  {n:8,d:1,label:'1:8',rat:8},
+  // Irrational ratios
+  {n:1,d:1,label:'1:√2',rat:Math.SQRT2},{n:1,d:1,label:'1:π/2',rat:Math.PI/2},
+  {n:1,d:1,label:'1:φ',rat:(1+Math.sqrt(5))/2},{n:1,d:1,label:'1:e/2',rat:Math.E/2},
+  {n:1,d:1,label:'1:√3',rat:Math.sqrt(3)}
+];
+
+// Simpler: map slider 0–30 to ratio directly
+function getFMRatio(sliderVal){
+  const ratios=[
+    0.25, 0.5, 0.75, 1/1, 1.17, 1.25, 1.33, 1.5, 1.67, 2,
+    1, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5,
+    7, 7.5, 8, Math.SQRT2, Math.PI/2, (1+Math.sqrt(5))/2,
+    Math.E/2, Math.sqrt(3), 9, 10, 11
+  ];
+  const labels=[
+    '1:0.25','1:0.5','1:0.75','1:1','1:1.17','1:1.25','1:1.33','1:1.5','1:1.67','1:2',
+    '1:1','1:2.5','1:3','1:3.5','1:4','1:4.5','1:5','1:5.5','1:6','1:6.5',
+    '1:7','1:7.5','1:8','1:√2','1:π/2','1:φ',
+    '1:e/2','1:√3','1:9','1:10','1:11'
+  ];
+  const i=Math.min(sliderVal,ratios.length-1);
+  return {ratio:ratios[i], label:labels[i]};
+}
+
+const FM={carrier:220, ratio:1, index:2.0};
+
+function updateFM(){
+  FM.carrier=+document.getElementById('fm-carrier').value;
+  const ratioSlider=+document.getElementById('fm-ratio').value;
+  FM.index=+document.getElementById('fm-index').value/10;
+
+  const r=getFMRatio(ratioSlider);
+  FM.ratio=r.ratio;
+  const fMod=FM.carrier*FM.ratio;
+
+  document.getElementById('fm-carrier-val').textContent=FM.carrier+' Hz';
+  document.getElementById('fm-ratio-val').textContent=r.label;
+  document.getElementById('fm-index-val').textContent=FM.index.toFixed(1);
+  document.getElementById('fm-car-display').textContent=FM.carrier+' Hz';
+  document.getElementById('fm-mod-display').textContent=Math.round(fMod)+' Hz';
+
+  // Is it harmonic?
+  const isInt=Math.abs(FM.ratio-Math.round(FM.ratio))<0.01;
+  document.getElementById('fm-out-display').textContent=isInt?'Harmonic':'Inharmonic';
+  document.getElementById('fm-out-display').style.color=isInt?'var(--mint)':'var(--coral)';
+
+  document.getElementById('fm-stat-fc').textContent=FM.carrier+' Hz';
+  document.getElementById('fm-stat-fm').textContent=Math.round(fMod)+' Hz';
+  document.getElementById('fm-stat-idx').textContent=FM.index.toFixed(1);
+  const numSB=Math.ceil(FM.index+1)*2+1;
+  document.getElementById('fm-stat-sb').textContent='~'+numSB;
+
+  drawFMWave();
+  drawFMSpectrum();
+}
+
+function drawFMWave(){
+  const cv=document.getElementById('fm-wave-canvas');if(!cv) return;
+  const ctx=cv.getContext('2d');
+  const dpr=Math.min(devicePixelRatio||1,2);
+  const rect=cv.parentElement.getBoundingClientRect();
+  cv.width=rect.width*dpr;cv.height=rect.height*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const W=rect.width,H=rect.height;
+  ctx.clearRect(0,0,W,H);
+
+  const cycles=3;
+  ctx.beginPath();
+  for(let x=0;x<W;x++){
+    const t=(x/W)*cycles;
+    const phase=2*Math.PI*t;
+    const y=Math.sin(phase+FM.index*Math.sin(phase*FM.ratio));
+    const py=H/2-y*(H*0.38);
+    if(x===0) ctx.moveTo(x,py); else ctx.lineTo(x,py);
+  }
+  ctx.strokeStyle='rgba(251,113,133,0.7)';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.save();ctx.shadowColor='rgba(251,113,133,0.25)';ctx.shadowBlur=10;ctx.stroke();ctx.restore();
+  ctx.beginPath();ctx.moveTo(0,H/2);ctx.lineTo(W,H/2);
+  ctx.strokeStyle='rgba(255,255,255,.04)';ctx.lineWidth=1;ctx.stroke();
+}
+
+function drawFMSpectrum(){
+  const cv=document.getElementById('fm-spec-canvas');if(!cv) return;
+  const ctx=cv.getContext('2d');
+  const dpr=Math.min(devicePixelRatio||1,2);
+  const rect=cv.parentElement.getBoundingClientRect();
+  cv.width=rect.width*dpr;cv.height=rect.height*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const W=rect.width,H=rect.height;
+  ctx.clearRect(0,0,W,H);
+
+  // Calculate sidebands using Bessel functions
+  const fc=FM.carrier, fm=fc*FM.ratio, idx=FM.index;
+  const maxOrder=Math.ceil(idx+3);
+  const sidebands=[];
+
+  for(let n=-maxOrder;n<=maxOrder;n++){
+    const freq=fc+n*fm;
+    if(freq<=0||freq>10000) continue;
+    const amp=Math.abs(besselJ(Math.abs(n),idx));
+    if(amp>0.005) sidebands.push({freq,amp,order:n});
+  }
+
+  if(sidebands.length===0) return;
+
+  // Frequency range
+  const maxFreq=Math.max(...sidebands.map(s=>s.freq))*1.15;
+  const minFreq=Math.max(20,Math.min(...sidebands.map(s=>s.freq))*0.85);
+  const logMin=Math.log10(Math.max(20,minFreq));
+  const logMax=Math.log10(Math.max(100,maxFreq));
+
+  const barW=Math.max(3,Math.min(12,W/(sidebands.length*2)));
+
+  sidebands.forEach(sb=>{
+    const logF=Math.log10(sb.freq);
+    const x=((logF-logMin)/(logMax-logMin))*W;
+    const bh=sb.amp*(H-25);
+    if(bh<1) return;
+
+    const isCarrier=sb.order===0;
+    const col=isCarrier?'212,168,83':'251,113,133';
+    const alpha=Math.min(1,sb.amp*1.5+0.2);
+    const grad=ctx.createLinearGradient(x,H-12,x,H-12-bh);
+    grad.addColorStop(0,`rgba(${col},${alpha})`);
+    grad.addColorStop(1,`rgba(${col},${alpha*0.3})`);
+    ctx.fillStyle=grad;
+    ctx.fillRect(x-barW/2,H-12-bh,barW,bh);
+
+    // Glow for carrier
+    if(isCarrier){
+      ctx.save();ctx.shadowColor='rgba(212,168,83,0.4)';ctx.shadowBlur=8;
+      ctx.fillRect(x-barW/2,H-12-bh,barW,bh);ctx.restore();
+    }
+
+    // Label for significant sidebands
+    if(sb.amp>0.08){
+      ctx.fillStyle=`rgba(${col},0.5)`;ctx.font='7px JetBrains Mono';
+      ctx.textAlign='center';
+      ctx.fillText(sb.order===0?'C':(sb.order>0?'+':'')+sb.order,x,H-1);
+    }
+  });
+}
+
+function playFMNote(){
+  ensureAudio();
+  if(!actx||actx.state!=='running') return;
+
+  const now=actx.currentTime;
+  const fc=FM.carrier, fm=fc*FM.ratio, idx=FM.index;
+
+  // Carrier oscillator
+  const carrier=actx.createOscillator();
+  carrier.type='sine';carrier.frequency.value=fc;
+
+  // Modulator oscillator
+  const modulator=actx.createOscillator();
+  modulator.type='sine';modulator.frequency.value=fm;
+
+  // Modulation depth = index * fm
+  const modGain=actx.createGain();
+  modGain.gain.value=idx*fm;
+
+  // Output gain with envelope
+  const outGain=actx.createGain();
+  outGain.gain.setValueAtTime(0,now);
+  outGain.gain.linearRampToValueAtTime(0.15,now+0.01);
+  outGain.gain.setValueAtTime(0.15,now+1.0);
+  outGain.gain.exponentialRampToValueAtTime(0.0001,now+2.5);
+
+  // Modulation index envelope (decay for bell-like sounds)
+  const modEnvGain=actx.createGain();
+  modEnvGain.gain.setValueAtTime(idx*fm,now);
+  modEnvGain.gain.exponentialRampToValueAtTime(Math.max(0.1,idx*fm*0.15),now+2.0);
+
+  modulator.connect(modEnvGain);
+  modEnvGain.connect(carrier.frequency);
+  carrier.connect(outGain);
+  outGain.connect(masterGain);
+
+  carrier.start(now);modulator.start(now);
+  carrier.stop(now+2.6);modulator.stop(now+2.6);
+}
+
+function fmPreset(name){
+  const presets={
+    epiano:  {carrier:220, ratio:10, index:20},  // 1:1, I=2.0
+    bell:    {carrier:440, ratio:13, index:80},   // 1:3.5, I=8.0
+    brass:   {carrier:196, ratio:10, index:30},   // 1:1, I=3.0
+    metallic:{carrier:330, ratio:23, index:60},   // 1:√2, I=6.0
+    bass:    {carrier:82,  ratio:10, index:15},   // 1:1, I=1.5
+    gong:    {carrier:110, ratio:27, index:100},  // 1:√3, I=10.0
+  };
+  const p=presets[name];if(!p) return;
+  document.getElementById('fm-carrier').value=p.carrier;
+  document.getElementById('fm-ratio').value=p.ratio;
+  document.getElementById('fm-index').value=p.index;
+  updateFM();
+  chime(500,.12,.03);
+}
+
+// Init FM
+updateFM();
+
+/* ═══════════════════════════════════════════════════
+   §05 — WAVETABLE MORPH
+   ═══════════════════════════════════════════════════ */
+
+// Build wavetable: 64 single-cycle waveforms morphing from sine → complex → noise-like
+const WT_SIZE=256; // samples per cycle
+const WT_COUNT=64; // number of wavetable positions
+const wavetable=[];
+
+(function buildWavetable(){
+  for(let w=0;w<WT_COUNT;w++){
+    const cycle=new Float32Array(WT_SIZE);
+    const t=w/(WT_COUNT-1); // 0 to 1
+    // Morph: more harmonics, different amplitudes, increasing complexity
+    const numH=Math.floor(1+t*31); // 1 to 32 harmonics
+    for(let i=0;i<WT_SIZE;i++){
+      let y=0;
+      for(let h=1;h<=numH;h++){
+        // Amplitude shaping: evolves from pure sine to bright sawtooth to noisy
+        let amp;
+        if(t<0.3){
+          // Sine → triangle region
+          const s=t/0.3;
+          amp=(h===1)?1:(h%2===1?s*(1/(h*h)):0);
+        }else if(t<0.6){
+          // Triangle → sawtooth region
+          const s=(t-0.3)/0.3;
+          const triAmp=(h%2===1)?1/(h*h):0;
+          const sawAmp=1/h;
+          amp=triAmp+(sawAmp-triAmp)*s;
+        }else if(t<0.85){
+          // Sawtooth → square-ish with resonance
+          const s=(t-0.6)/0.25;
+          const sawAmp=1/h;
+          const sqAmp=(h%2===1)?1/h:0;
+          amp=sawAmp+(sqAmp-sawAmp)*s*0.5;
+          // Add resonance peak around h=8-12
+          if(h>=8&&h<=12) amp+=s*0.3*Math.exp(-((h-10)*(h-10))/4);
+        }else{
+          // Complex → noisy
+          const s=(t-0.85)/0.15;
+          const base=1/h;
+          const noise=(Math.sin(h*137.5+w*7.3)*0.5+0.5);
+          amp=base*(1-s*0.5)+noise*s*0.4/Math.sqrt(h);
+        }
+        const phase=(i/WT_SIZE)*Math.PI*2*h;
+        // Add slight phase randomization for high positions
+        const phaseOff=t>0.5?(Math.sin(h*13.7+w*3.1)*t*0.5):0;
+        y+=amp*Math.sin(phase+phaseOff);
+      }
+      cycle[i]=y;
+    }
+    // Normalize
+    let mx=0;
+    for(let i=0;i<WT_SIZE;i++) if(Math.abs(cycle[i])>mx) mx=Math.abs(cycle[i]);
+    if(mx>0) for(let i=0;i<WT_SIZE;i++) cycle[i]/=mx;
+    wavetable.push(cycle);
+  }
+})();
+
+function getWTCycle(position01){
+  const idx=position01*(WT_COUNT-1);
+  const i0=Math.floor(idx);
+  const i1=Math.min(i0+1,WT_COUNT-1);
+  const frac=idx-i0;
+  const out=new Float32Array(WT_SIZE);
+  for(let i=0;i<WT_SIZE;i++){
+    out[i]=wavetable[i0][i]*(1-frac)+wavetable[i1][i]*frac;
+  }
+  return out;
+}
+
+let wtPos=0;
+let wtDroneNode=null, wtDroneGain=null;
+
+function updateWavetable(){
+  wtPos=+document.getElementById('wt-position').value/1000;
+  document.getElementById('wt-pos-val').textContent=Math.round(wtPos*100)+'%';
+  document.getElementById('wt-stat-pos').textContent=Math.round(wtPos*100)+'%';
+
+  // Character name
+  let ch='Sine';
+  if(wtPos<0.1) ch='Sine';
+  else if(wtPos<0.25) ch='Soft Triangle';
+  else if(wtPos<0.4) ch='Triangle';
+  else if(wtPos<0.55) ch='Warm Saw';
+  else if(wtPos<0.7) ch='Bright Saw';
+  else if(wtPos<0.85) ch='Resonant';
+  else ch='Complex';
+  document.getElementById('wt-stat-char').textContent=ch;
+
+  const numH=Math.floor(1+wtPos*31);
+  document.getElementById('wt-stat-harm').textContent=numH;
+
+  drawWTWave();
+  drawWT3D();
+
+  // Update live audio if playing
+  if(wtDroneNode) updateWTDroneWave();
+}
+
+function drawWTWave(){
+  const cv=document.getElementById('wt-wave-canvas');if(!cv) return;
+  const ctx=cv.getContext('2d');
+  const dpr=Math.min(devicePixelRatio||1,2);
+  cv.width=cv.clientWidth*dpr;cv.height=100*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const W=cv.clientWidth,H=100;
+  ctx.clearRect(0,0,W,H);
+
+  const cycle=getWTCycle(wtPos);
+  ctx.beginPath();
+  for(let x=0;x<W;x++){
+    const si=Math.floor((x/W)*WT_SIZE)%WT_SIZE;
+    const y=H/2-cycle[si]*(H*0.4);
+    if(x===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+  }
+  ctx.strokeStyle='rgba(52,211,153,0.75)';ctx.lineWidth=1.5;ctx.stroke();
+  ctx.save();ctx.shadowColor='rgba(52,211,153,0.25)';ctx.shadowBlur=10;ctx.stroke();ctx.restore();
+  ctx.beginPath();ctx.moveTo(0,H/2);ctx.lineTo(W,H/2);
+  ctx.strokeStyle='rgba(255,255,255,.04)';ctx.lineWidth=1;ctx.stroke();
+}
+
+function drawWT3D(){
+  const cv=document.getElementById('wt-3d-canvas');if(!cv) return;
+  const ctx=cv.getContext('2d');
+  const dpr=Math.min(devicePixelRatio||1,2);
+  const rect=cv.parentElement.getBoundingClientRect();
+  cv.width=rect.width*dpr;cv.height=rect.height*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const W=rect.width,H=rect.height;
+  ctx.clearRect(0,0,W,H);
+
+  // Draw wavetable as stacked waveforms (3D-ish perspective)
+  const numLines=24;
+  const stepSize=Math.floor(WT_COUNT/numLines);
+  const waveW=W*0.65;
+  const startX=W*0.15;
+  const baseY=H*0.85;
+  const depthY=H*0.6;
+  const amplitude=H*0.06;
+
+  // Current position index
+  const curIdx=Math.floor(wtPos*(WT_COUNT-1));
+
+  for(let line=0;line<numLines;line++){
+    const wtIdx=line*stepSize;
+    if(wtIdx>=WT_COUNT) break;
+    const cycle=wavetable[wtIdx];
+    const depth=line/numLines;
+    const lineY=baseY-depth*depthY;
+    const lineX=startX+depth*W*0.08;
+    const lineW=waveW-depth*W*0.05;
+    const lineAmp=amplitude*(1-depth*0.3);
+
+    const isCurrent=Math.abs(wtIdx-curIdx)<=stepSize/2;
+    const alpha=isCurrent?0.9:0.12+depth*0.08;
+    const col=isCurrent?'52,211,153':'200,202,212';
+
+    ctx.beginPath();
+    for(let x=0;x<lineW;x++){
+      const si=Math.floor((x/lineW)*WT_SIZE)%WT_SIZE;
+      const px=lineX+x;
+      const py=lineY-cycle[si]*lineAmp;
+      if(x===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+    }
+    ctx.strokeStyle=`rgba(${col},${alpha})`;
+    ctx.lineWidth=isCurrent?2:0.8;
+    ctx.stroke();
+
+    if(isCurrent){
+      ctx.save();ctx.shadowColor='rgba(52,211,153,0.3)';ctx.shadowBlur=8;ctx.stroke();ctx.restore();
+    }
+  }
+
+  // Position label
+  ctx.fillStyle='rgba(52,211,153,0.6)';ctx.font='10px JetBrains Mono';
+  ctx.textAlign='left';
+  ctx.fillText('Position: '+Math.round(wtPos*100)+'%',8,16);
+  ctx.fillStyle='rgba(92,97,120,0.4)';
+  ctx.fillText('Sine',8,H-6);
+  ctx.textAlign='right';
+  ctx.fillText('Complex',W-8,22);
+}
+
+// Audio: wavetable drone using PeriodicWave
+function toggleWTDrone(){
+  ensureAudio();
+  const btn=document.getElementById('wt-play-btn');
+  if(wtDroneNode){
+    wtDroneGain.gain.exponentialRampToValueAtTime(0.0001,actx.currentTime+0.12);
+    setTimeout(()=>{try{wtDroneNode.stop();}catch(e){}wtDroneNode=null;wtDroneGain=null;},150);
+    btn.textContent='▶ Play';btn.classList.remove('playing');
+    return;
+  }
+  wtDroneNode=actx.createOscillator();
+  wtDroneGain=actx.createGain();
+  wtDroneGain.gain.value=0.15;
+  updateWTDroneWave();
+  wtDroneNode.frequency.value=220;
+  wtDroneNode.connect(wtDroneGain);
+  wtDroneGain.connect(masterGain);
+  wtDroneNode.start();
+  btn.textContent='■ Stop';btn.classList.add('playing');
+}
+
+function updateWTDroneWave(){
+  if(!wtDroneNode||!actx) return;
+  const cycle=getWTCycle(wtPos);
+  // FFT to get real/imag for PeriodicWave
+  const n=WT_SIZE;
+  const real=new Float32Array(n/2);
+  const imag=new Float32Array(n/2);
+  real[0]=0;imag[0]=0;
+  for(let k=1;k<n/2;k++){
+    let re=0,im=0;
+    for(let j=0;j<n;j++){
+      const angle=-2*Math.PI*k*j/n;
+      re+=cycle[j]*Math.cos(angle);
+      im+=cycle[j]*Math.sin(angle);
+    }
+    real[k]=re/(n/2);
+    imag[k]=im/(n/2);
+  }
+  try{
+    const pw=actx.createPeriodicWave(real,imag,{disableNormalization:false});
+    wtDroneNode.setPeriodicWave(pw);
+  }catch(e){}
+}
+
+function setWTPos(val){
+  document.getElementById('wt-position').value=val;
+  updateWavetable();
+  chime(400+val/3,.1,.03);
+}
+
+let wtSweepRAF=null;
+function wtSweep(){
+  if(wtSweepRAF){cancelAnimationFrame(wtSweepRAF);wtSweepRAF=null;return;}
+  // Start drone if not playing
+  if(!wtDroneNode) toggleWTDrone();
+  let pos=0;
+  function step(){
+    pos+=1.5;
+    if(pos>1000){pos=0;}
+    document.getElementById('wt-position').value=pos;
+    updateWavetable();
+    wtSweepRAF=requestAnimationFrame(step);
+  }
+  wtSweepRAF=requestAnimationFrame(step);
+  // Auto-stop after one full sweep
+  setTimeout(()=>{
+    if(wtSweepRAF){cancelAnimationFrame(wtSweepRAF);wtSweepRAF=null;}
+  },12000);
+}
+
+// Init wavetable
+updateWavetable();
+
+/* ═══════════════════════════════════════════════════
+   §06 — IMPERFECTION ENGINE
+   ═══════════════════════════════════════════════════ */
+const IMPERF={
+  active:[false,false,false,false,false],
+  // 0=drift, 1=chorus, 2=saturation, 3=noise, 4=stereo
+  drone:null // will hold the live audio state
+};
+
+function toggleImperf(el,idx){
+  IMPERF.active[idx]=!IMPERF.active[idx];
+  el.classList.toggle('active',IMPERF.active[idx]);
+
+  const count=IMPERF.active.filter(x=>x).length;
+  document.getElementById('imperf-stat-count').textContent=count+' / 5';
+
+  let ch='Digital';
+  if(count===0) ch='Digital';
+  else if(count===1) ch='Subtle';
+  else if(count===2) ch='Warm';
+  else if(count===3) ch='Analog';
+  else if(count===4) ch='Vintage';
+  else ch='Alive';
+  document.getElementById('imperf-stat-char').textContent=ch;
+
+  document.getElementById('imperf-wave-label').textContent=
+    count===0?'Clean Signal':'Signal + '+count+' imperfection'+(count>1?'s':'');
+
+  drawImperfWave();
+
+  // If drone is playing, rebuild the audio chain live
+  if(IMPERF.drone) rebuildImperfDrone();
+}
+
+function drawImperfWave(){
+  const cv=document.getElementById('imperf-canvas');if(!cv) return;
+  const ctx=cv.getContext('2d');
+  const dpr=Math.min(devicePixelRatio||1,2);
+  cv.width=cv.clientWidth*dpr;cv.height=140*dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const W=cv.clientWidth,H=140;
+  ctx.clearRect(0,0,W,H);
+
+  const cy=H/2, amp=H*0.35;
+  const cycles=3;
+
+  // Draw clean signal as ghost
+  ctx.beginPath();
+  for(let x=0;x<W;x++){
+    const t=(x/W)*cycles;
+    let y=0;
+    for(let h=1;h<=6;h++) y+=(1/h)*Math.sin(2*Math.PI*t*h);
+    y/=2;
+    if(x===0) ctx.moveTo(x,cy-y*amp); else ctx.lineTo(x,cy-y*amp);
+  }
+  ctx.strokeStyle='rgba(94,196,212,0.15)';ctx.lineWidth=1;ctx.stroke();
+
+  // Draw processed signal
+  let seed=42;
+  function prand(){seed=(seed*16807)%2147483647;return(seed-1)/2147483646;}
+
+  ctx.beginPath();
+  for(let x=0;x<W;x++){
+    const t=(x/W)*cycles;
+
+    // 0: Drift
+    let tMod=t;
+    if(IMPERF.active[0]) tMod=t*(1+0.008*Math.sin(t*0.7+1.3)*Math.sin(t*1.1));
+
+    let y=0;
+    for(let h=1;h<=6;h++) y+=(1/h)*Math.sin(2*Math.PI*tMod*h);
+    y/=2;
+
+    // 1: Chorus
+    if(IMPERF.active[1]){
+      let y2=0;
+      const t2=t*1.006+0.03;
+      for(let h=1;h<=6;h++) y2+=(1/h)*Math.sin(2*Math.PI*t2*h);
+      y=(y+y2*0.7)/1.7;
+    }
+
+    // 2: Saturation
+    if(IMPERF.active[2]) y=Math.tanh(y*2.2)/1.5;
+
+    // 3: Noise
+    if(IMPERF.active[3]) y+=(prand()-0.5)*0.1;
+
+    // 4: Stereo — show as slight phase offset visually
+    if(IMPERF.active[4]){
+      let y3=0;
+      const t3=t+0.015;
+      for(let h=1;h<=6;h++) y3+=(1/h)*Math.sin(2*Math.PI*t3*h);
+      y=(y+y3/2*0.3)/1.15;
+    }
+
+    if(x===0) ctx.moveTo(x,cy-y*amp); else ctx.lineTo(x,cy-y*amp);
+  }
+
+  const count=IMPERF.active.filter(x=>x).length;
+  const warmth=count/5;
+  const r=Math.round(240-warmth*28);
+  const g=Math.round(204-warmth*36);
+  const b=Math.round(107+warmth*50);
+  ctx.strokeStyle=`rgba(${r},${g},${b},0.8)`;
+  ctx.lineWidth=1.8;ctx.stroke();
+  ctx.save();ctx.shadowColor=`rgba(${r},${g},${b},0.25)`;ctx.shadowBlur=10;ctx.stroke();ctx.restore();
+
+  ctx.beginPath();ctx.moveTo(0,cy);ctx.lineTo(W,cy);
+  ctx.strokeStyle='rgba(255,255,255,.04)';ctx.lineWidth=1;ctx.stroke();
+}
+
+/* ── Live Imperfection Drone ── */
+function toggleImperfDrone(){
+  ensureAudio();
+  const btn=document.getElementById('imperf-play-btn');
+  if(IMPERF.drone){
+    stopImperfDrone();
+    btn.textContent='▶ Play — then toggle effects above';
+    btn.classList.remove('playing');
+    return;
+  }
+  buildImperfDrone();
+  btn.textContent='■ Stop';
+  btn.classList.add('playing');
+}
+
+function buildImperfDrone(){
+  if(!actx||actx.state!=='running') return;
+  const d={};
+  // Pleasant C major chord with triangles: C4, E4, G4
+  const freqs=[261.63, 329.63, 392.00];
+
+  // === Core: 3 triangle oscillators forming a clean chord ===
+  d.oscs=[];
+  d.oscGains=[];
+  d.coreBus=actx.createGain();
+  d.coreBus.gain.value=1;
+
+  freqs.forEach((freq,i)=>{
+    const osc=actx.createOscillator();
+    osc.type='triangle';
+    osc.frequency.value=freq;
+    const g=actx.createGain();
+    g.gain.value=0.12;
+    osc.connect(g);
+    g.connect(d.coreBus);
+    osc.start();
+    d.oscs.push(osc);
+    d.oscGains.push(g);
+  });
+
+  // === 0: Drift — LFOs modulating each oscillator frequency ===
+  d.driftLFOs=[];
+  d.driftGains=[];
+  freqs.forEach((freq,i)=>{
+    const lfo=actx.createOscillator();
+    lfo.type='sine';
+    lfo.frequency.value=0.3+i*0.17; // different rates for each note
+    const lg=actx.createGain();
+    lg.gain.value=0; // off
+    lfo.connect(lg);
+    lg.connect(d.oscs[i].frequency);
+    lfo.start();
+    d.driftLFOs.push(lfo);
+    d.driftGains.push(lg);
+  });
+
+  // === 1: Chorus — 3 extra detuned oscillators ===
+  d.chorusOscs=[];
+  d.chorusGains=[];
+  d.chorusBus=actx.createGain();
+  d.chorusBus.gain.value=0; // off
+  freqs.forEach((freq,i)=>{
+    const osc=actx.createOscillator();
+    osc.type='triangle';
+    osc.frequency.value=freq;
+    osc.detune.value=8+i*2; // slightly different detuning per voice
+    const g=actx.createGain();
+    g.gain.value=0.10;
+    osc.connect(g);
+    g.connect(d.chorusBus);
+    osc.start();
+    d.chorusOscs.push(osc);
+    d.chorusGains.push(g);
+    // Slow detune sweep for movement
+    const lfo=actx.createOscillator();
+    lfo.type='sine';lfo.frequency.value=0.15+i*0.1;
+    const lg=actx.createGain();lg.gain.value=5;
+    lfo.connect(lg);lg.connect(osc.detune);
+    lfo.start();
+  });
+
+  // === 2: Saturation path ===
+  d.preSatGain=actx.createGain();
+  d.preSatGain.gain.value=2.0; // drive into shaper
+  d.shaper=actx.createWaveShaper();
+  const curve=new Float32Array(2048);
+  for(let j=0;j<2048;j++){
+    const x=(j/1024)-1;
+    curve[j]=Math.tanh(x*3.0)*0.7; // aggressive enough to hear harmonics
+  }
+  d.shaper.curve=curve;
+  d.shaper.oversample='4x';
+  d.postSatGain=actx.createGain();
+  d.postSatGain.gain.value=0.5;
+
+  // Clean and saturated paths
+  d.cleanMix=actx.createGain();
+  d.cleanMix.gain.value=1;
+  d.satMix=actx.createGain();
+  d.satMix.gain.value=0; // off
+
+  // === 3: Noise ===
+  const noiseLen=actx.sampleRate*8;
+  d.noiseBuf=actx.createBuffer(1,noiseLen,actx.sampleRate);
+  const nd=d.noiseBuf.getChannelData(0);
+  let b0=0,b1=0,b2=0;
+  for(let i=0;i<noiseLen;i++){
+    const w=Math.random()*2-1;
+    b0=0.99765*b0+w*0.0990460;
+    b1=0.96300*b1+w*0.2965164;
+    b2=0.57000*b2+w*1.0526913;
+    nd[i]=(b0+b1+b2)*0.04;
+  }
+  d.noiseNode=actx.createBufferSource();
+  d.noiseNode.buffer=d.noiseBuf;
+  d.noiseNode.loop=true;
+  d.noiseGain=actx.createGain();
+  d.noiseGain.gain.value=0; // off
+  d.noiseNode.connect(d.noiseGain);
+  d.noiseNode.start();
+
+  // === 4: Stereo ===
+  d.panL=actx.createStereoPanner?actx.createStereoPanner():null;
+  d.panR=actx.createStereoPanner?actx.createStereoPanner():null;
+  if(d.panL) d.panL.pan.value=0;
+  if(d.panR) d.panR.pan.value=0;
+
+  // === Master filter — always-on, gentle ===
+  d.masterFilter=actx.createBiquadFilter();
+  d.masterFilter.type='lowpass';
+  d.masterFilter.frequency.value=4000;
+  d.masterFilter.Q.value=0.2;
+
+  // === Master output ===
+  d.masterOut=actx.createGain();
+  d.masterOut.gain.setValueAtTime(0,actx.currentTime);
+  d.masterOut.gain.linearRampToValueAtTime(1.0,actx.currentTime+0.4);
+
+  // === Wiring ===
+  // Core bus and chorus bus → mix point
+  const mixPoint=actx.createGain();
+  mixPoint.gain.value=1;
+
+  // Clean path: mix → cleanMix → output routing
+  // Sat path: mix → preSat → shaper → postSat → satMix → output routing
+  d.coreBus.connect(mixPoint);
+  d.chorusBus.connect(mixPoint);
+
+  mixPoint.connect(d.cleanMix);
+  mixPoint.connect(d.preSatGain);
+  d.preSatGain.connect(d.shaper);
+  d.shaper.connect(d.postSatGain);
+  d.postSatGain.connect(d.satMix);
+
+  if(d.panL&&d.panR){
+    d.cleanMix.connect(d.panL);
+    d.satMix.connect(d.panL);
+    d.chorusBus.connect(d.panR); // chorus also goes to R panner
+    d.panL.connect(d.masterFilter);
+    d.panR.connect(d.masterFilter);
+  }else{
+    d.cleanMix.connect(d.masterFilter);
+    d.satMix.connect(d.masterFilter);
+  }
+
+  d.noiseGain.connect(d.masterFilter);
+  d.masterFilter.connect(d.masterOut);
+  d.masterOut.connect(masterGain);
+
+  IMPERF.drone=d;
+  applyImperfState();
+}
+
+function applyImperfState(){
+  const d=IMPERF.drone;
+  if(!d) return;
+  const now=actx.currentTime;
+  const sm=0.06; // smooth transition time
+
+  // 0: Drift — LFO depth: 0 → 2.5 Hz wobble per osc
+  d.driftGains.forEach((lg,i)=>{
+    lg.gain.setTargetAtTime(IMPERF.active[0]?2.0+i*0.5:0, now, sm);
+  });
+
+  // 1: Chorus — blend in detuned voices
+  d.chorusBus.gain.setTargetAtTime(IMPERF.active[1]?1:0, now, sm);
+
+  // 2: Saturation — crossfade
+  d.cleanMix.gain.setTargetAtTime(IMPERF.active[2]?0:1, now, sm);
+  d.satMix.gain.setTargetAtTime(IMPERF.active[2]?1:0, now, sm);
+
+  // 3: Noise — audible but not overwhelming
+  d.noiseGain.gain.setTargetAtTime(IMPERF.active[3]?0.5:0, now, sm);
+
+  // 4: Stereo spread
+  if(d.panL&&d.panR){
+    d.panL.pan.setTargetAtTime(IMPERF.active[4]?-0.7:0, now, sm);
+    d.panR.pan.setTargetAtTime(IMPERF.active[4]?0.7:0, now, sm);
+  }
+}
+
+function rebuildImperfDrone(){
+  applyImperfState();
+}
+
+function stopImperfDrone(){
+  const d=IMPERF.drone;
+  if(!d) return;
+  const now=actx.currentTime;
+  d.masterOut.gain.setTargetAtTime(0,now,0.15);
+  setTimeout(()=>{
+    try{d.oscs.forEach(o=>o.stop());}catch(e){}
+    try{d.chorusOscs.forEach(o=>o.stop());}catch(e){}
+    try{d.driftLFOs.forEach(o=>o.stop());}catch(e){}
+    try{d.noiseNode.stop();}catch(e){}
+  },400);
+  IMPERF.drone=null;
+}
+
+// Init imperfection display
+drawImperfWave();
+
+/* ═══════════════════════════════════════════════════
+   CLOSING — four-way comparison
+   ═══════════════════════════════════════════════════ */
+function playClosingChoice(btn,type){
+  ensureAudio();
+  if(!actx||actx.state!=='running') return;
+
+  // Visual feedback
+  document.querySelectorAll('.choice-btn').forEach(b=>b.classList.remove('chosen'));
+  btn.classList.add('chosen');
+
+  const now=actx.currentTime;
+  const freq=261.63; // C4
+  const dur=2.8;
+
+  if(type==='sine'){
+    const osc=actx.createOscillator();
+    const g=actx.createGain();
+    osc.type='sine';osc.frequency.value=freq;
+    g.gain.setValueAtTime(0,now);
+    g.gain.linearRampToValueAtTime(0.15,now+0.01);
+    g.gain.setValueAtTime(0.15,now+dur-0.5);
+    g.gain.exponentialRampToValueAtTime(0.0001,now+dur);
+    osc.connect(g);g.connect(masterGain);
+    osc.start(now);osc.stop(now+dur+.05);
+
+  }else if(type==='analog'){
+    // Classic Moog-style: saw → filter → envelope
+    const osc=actx.createOscillator();
+    const f=actx.createBiquadFilter();
+    const g=actx.createGain();
+    osc.type='sawtooth';osc.frequency.value=freq;
+    f.type='lowpass';f.frequency.value=1500;f.Q.value=3;
+    // Filter envelope
+    f.frequency.setValueAtTime(3000,now);
+    f.frequency.exponentialRampToValueAtTime(600,now+0.4);
+    g.gain.setValueAtTime(0,now);
+    g.gain.linearRampToValueAtTime(0.14,now+0.01);
+    g.gain.setValueAtTime(0.14,now+dur-0.6);
+    g.gain.exponentialRampToValueAtTime(0.0001,now+dur);
+    osc.connect(f);f.connect(g);g.connect(masterGain);
+    osc.start(now);osc.stop(now+dur+.05);
+
+  }else if(type==='fm'){
+    // FM bell: C:M = 1:3.5, high index with decay
+    const carrier=actx.createOscillator();
+    const modulator=actx.createOscillator();
+    const modGain=actx.createGain();
+    const outGain=actx.createGain();
+    carrier.type='sine';carrier.frequency.value=freq;
+    modulator.type='sine';modulator.frequency.value=freq*3.5;
+    modGain.gain.setValueAtTime(freq*3.5*8,now);
+    modGain.gain.exponentialRampToValueAtTime(freq*3.5*0.3,now+dur);
+    outGain.gain.setValueAtTime(0,now);
+    outGain.gain.linearRampToValueAtTime(0.12,now+0.003);
+    outGain.gain.exponentialRampToValueAtTime(0.0001,now+dur);
+    modulator.connect(modGain);modGain.connect(carrier.frequency);
+    carrier.connect(outGain);outGain.connect(masterGain);
+    carrier.start(now);modulator.start(now);
+    carrier.stop(now+dur+.05);modulator.stop(now+dur+.05);
+
+  }else if(type==='warm'){
+    // Warm: lush detuned pad chord — C4 + Eb4 + G4
+    [261.63,311.13,392.00].forEach((nf,ni)=>{
+      [-4,0,4].forEach((det,di)=>{
+        const osc=actx.createOscillator();
+        const f=actx.createBiquadFilter();
+        const shaper=actx.createWaveShaper();
+        const g=actx.createGain();
+        osc.type='sawtooth';osc.frequency.value=nf;osc.detune.value=det+(Math.random()-0.5);
+        f.type='lowpass';
+        f.frequency.setValueAtTime(600,now);
+        f.frequency.linearRampToValueAtTime(1800,now+0.4);
+        f.frequency.exponentialRampToValueAtTime(900,now+dur*0.8);
+        f.Q.value=0.5;
+        const curve=new Float32Array(512);
+        for(let j=0;j<512;j++){const x=(j/256)-1;curve[j]=Math.tanh(x*1.1)*0.85;}
+        shaper.curve=curve;shaper.oversample='2x';
+        g.gain.setValueAtTime(0,now);
+        g.gain.linearRampToValueAtTime(0.02,now+0.1+ni*0.02);
+        g.gain.setValueAtTime(0.02,now+dur-1);
+        g.gain.exponentialRampToValueAtTime(0.0001,now+dur);
+        osc.connect(f);f.connect(shaper);shaper.connect(g);g.connect(masterGain);
+        osc.start(now);osc.stop(now+dur+.05);
+        const lfo=actx.createOscillator();const lg=actx.createGain();
+        lfo.type='sine';lfo.frequency.value=0.12+di*0.06;lg.gain.value=0.3;
+        lfo.connect(lg);lg.connect(osc.frequency);
+        lfo.start(now);lfo.stop(now+dur+.05);
+      });
+    });
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   MASTER INIT — all sections
+   ═══════════════════════════════════════════════════ */
+buildOrganUI();
+buildDrawbarUI();
+initTheremin();
+initTonewheelCanvas();
+
+// Keyboard: press 1-8 to play organ pipes
+document.addEventListener('keydown',e=>{
+  const k=parseInt(e.key);
+  if(k>=1&&k<=8){
+    playPipe(k-1);
+    e.preventDefault();
+  }
+});
+
+// Ambient chord when closing section enters view
+const closingObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      ensureAudio();
+      if(!actx||actx.state!=='running') return;
+      const t=actx.currentTime;
+      // Gentle C major chord, very quiet
+      [261.63,329.63,392,523.25].forEach((f,i)=>{
+        const o=actx.createOscillator(),g=actx.createGain();
+        o.type='sine';o.frequency.value=f;
+        g.gain.setValueAtTime(0,t);
+        g.gain.linearRampToValueAtTime(0.025,t+0.8);
+        g.gain.setValueAtTime(0.025,t+3);
+        g.gain.exponentialRampToValueAtTime(0.001,t+5);
+        o.connect(g);g.connect(masterGain);
+        o.start(t);o.stop(t+5.1);
+      });
+      closingObs.disconnect();
+    }
+  });
+},{threshold:0.3});
+const closingSec=document.getElementById('sec-closing');
+if(closingSec) closingObs.observe(closingSec);
+
+window.addEventListener('resize',()=>{
+  drawOrganSpectrum();
+  drawDrawbarWaveform();
+  updateSynth();
+  updateFM();
+  updateWavetable();
+  drawImperfWave();
+});
+</script>
+</body>
+</html>
