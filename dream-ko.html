@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>기계가 꿈꿀 때 — Mellow Math</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,400&family=JetBrains+Mono:wght@300;400;600&family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #04050c;
+      --bg2: #090b18;
+      --bg3: #0e1128;
+      --text: #b8b4ac;
+      --cream: #ece8e0;
+      --muted: #5b6075;
+      --gold: #d4af37;
+      --gold2: #e8c65d;
+      --gold-dim: rgba(212,175,55,0.08);
+      --violet: #8a6abf;
+      --violet-dim: rgba(138,106,191,0.12);
+      --border: rgba(255,255,255,.05);
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-body: 'Noto Serif KR', 'DM Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-body-en: 'DM Sans', sans-serif;
+      --accent: var(--violet);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      line-height: 1.95;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      letter-spacing: 0.02em;
+      word-break: keep-all;
+    }
+
+    /* Film Grain Overlay */
+    body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 9999;
+      pointer-events: none; opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      background-size: 200px;
+    }
+
+    /* Ambient Particles */
+    #particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+    /* Floating Badge */
+    .floating-badge {
+      position: fixed; bottom: 24px; left: 24px; z-index: 1000;
+      font-family: var(--font-mono); font-size: 0.58rem; text-transform: lowercase;
+      letter-spacing: 0.14em; color: #8db830; text-decoration: none;
+      text-shadow: 0 0 8px rgba(141,184,48,0.4);
+      transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+    .floating-badge:hover { color: #a8d43a; transform: translateY(-1px); text-shadow: 0 0 12px rgba(168,212,58,0.6); }
+
+    /* Typography Utilities */
+    .hi { color: var(--cream); font-weight: 400; text-shadow: 0 0 8px rgba(236,232,224,0.15); }
+    .ac { color: var(--accent); font-weight: 400; text-shadow: 0 0 16px rgba(138,106,191,0.4); }
+    
+    .prose {
+      max-width: 640px; margin: 0 auto 1.8rem auto;
+      font-size: 1.05rem; font-weight: 300; color: #a5a199;
+    }
+    .prose-drop::first-letter {
+      font-family: var(--font-display); font-size: 4.6rem;
+      float: left; line-height: 0.8; margin-right: 0.12em; margin-top: 0.05em;
+      color: var(--cream); font-style: italic; font-weight: 300;
+      text-shadow: 0 4px 16px rgba(0,0,0,0.5);
+    }
+
+    .pull-quote {
+      font-family: var(--font-display); font-style: italic; font-size: 1.5rem;
+      color: var(--cream); text-align: center; max-width: 750px;
+      margin: 5rem auto; line-height: 1.55; font-weight: 300;
+    }
+    .pull-quote::after {
+      content: ''; display: block; width: 60px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 1.8rem auto 0;
+    }
+
+    .block-quote {
+      max-width: 640px; margin: 4rem auto; padding: 2.2rem 2.5rem;
+      background: linear-gradient(90deg, var(--gold-dim), transparent); 
+      border-left: 1px solid var(--gold); border-radius: 0 12px 12px 0;
+    }
+    .block-quote-text {
+      font-family: var(--font-body-en); font-style: italic; color: var(--cream);
+      font-size: 1.05rem; line-height: 1.7; margin-bottom: 1.2rem; font-weight: 300;
+    }
+    .block-quote-author {
+      font-family: var(--font-mono); font-size: 0.75rem; color: var(--gold);
+      text-transform: uppercase; letter-spacing: 0.08em; display: block;
+    }
+
+    /* Scroll Reveal Animation */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 1.2s cubic-bezier(0.23, 1, 0.32, 1), transform 1.2s cubic-bezier(0.23, 1, 0.32, 1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Hero Section */
+    .hero {
+      position: relative; height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden;
+    }
+    #hero-canvas { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; }
+    .hero-vignette { position: absolute; inset: 0; z-index: 1; background: radial-gradient(circle at center, transparent 0%, var(--bg) 95%); }
+    .hero-content { position: relative; z-index: 2; padding: 2rem; }
+    
+    .hero-label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.25em; margin-bottom: 2rem; }
+    .hero-num { 
+      font-family: var(--font-mono); color: var(--gold); font-size: 0.85rem; 
+      letter-spacing: 0.15em; margin-bottom: 1.2rem; display: inline-block;
+      border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 0.4rem;
+    }
+    .hero-title { font-family: var(--font-display); font-size: clamp(2.8rem, 7vw, 5.2rem); color: var(--cream); font-weight: 300; line-height: 1.05; margin-bottom: 1.5rem; letter-spacing: -0.02em; }
+    .hero-title em { color: var(--accent); font-style: italic; text-shadow: 0 0 30px rgba(138,106,191,0.5); }
+    .hero-subtitle-ko {
+      font-family: var(--font-body); font-size: 1.15rem; color: #a5a199; font-weight: 300;
+      margin-bottom: 0.6rem; letter-spacing: 0.05em;
+    }
+    .hero-tagline { font-family: var(--font-display); font-style: italic; color: #7a7670; font-size: 1.15rem; font-weight: 300; }
+    
+    .scroll-indicator {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+      font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted);
+      letter-spacing: 0.15em; text-transform: uppercase; z-index: 2;
+      animation: breathe 3s infinite ease-in-out;
+    }
+    @keyframes breathe { 0%, 100% { opacity: 0.3; transform: translate(-50%, 0); } 50% { opacity: 1; transform: translate(-50%, -6px); } }
+
+    /* Chapter Sections */
+    .chapter-section { position: relative; z-index: 10; padding: 7rem 2rem; max-width: 950px; margin: 0 auto; }
+    .section-num { font-family: var(--font-mono); color: var(--gold); font-size: 0.85rem; letter-spacing: 0.15em; margin-bottom: 1.2rem; display: block; text-align: center; }
+    .section-title { font-family: var(--font-body); font-size: 2.2rem; color: var(--cream); font-weight: 400; text-align: center; margin-bottom: 4.5rem; letter-spacing: -0.01em; }
+
+    /* Interactive Boxes */
+    .ibox {
+      background: var(--bg3); border-radius: 16px; padding: 3rem; margin: 5.5rem auto; position: relative;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05); border: 1px solid var(--border);
+    }
+    .ibox::before {
+      content: ''; position: absolute; top: 0; left: 15%; right: 15%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.4;
+    }
+    .ibox-header { margin-bottom: 2.5rem; }
+    .ibox-label {
+      font-family: var(--font-mono); font-size: 0.65rem; color: var(--gold);
+      text-transform: uppercase; letter-spacing: 0.15em; display: flex; align-items: center; gap: 8px; margin-bottom: 1rem;
+    }
+    .ibox-label .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: pulse 2s infinite; box-shadow: 0 0 8px rgba(212,175,55,0.6); }
+    @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
+    .ibox-title { font-family: var(--font-body); font-size: 1.6rem; color: var(--cream); font-weight: 400; margin-bottom: 0.6rem; }
+    .ibox-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.75; font-weight: 300; }
+    
+    .ibox-content { display: grid; grid-template-columns: 1fr 320px; gap: 3rem; }
+    .ibox-sidebar { display: flex; flex-direction: column; }
+    .ibox-canvas-wrap {
+      width: 100%; aspect-ratio: 1; background: var(--bg); border-radius: 12px;
+      overflow: hidden; position: relative; border: 1px solid var(--border);
+      box-shadow: inset 0 0 50px rgba(0,0,0,0.8);
+    }
+    .ibox-canvas { width: 100%; height: 100%; display: block; cursor: grab; }
+    .ibox-canvas:active { cursor: grabbing; }
+
+    /* Controls */
+    .ibox-controls { margin-bottom: 2rem; }
+    .ctrl-grp { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.8rem; }
+    .ctrl-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); display: flex; justify-content: space-between; text-transform: uppercase; letter-spacing: 0.05em; }
+    .ctrl-val { color: var(--gold); font-weight: 400; }
+
+    input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+    input[type=range]:focus { outline: none; }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, var(--gold2), var(--gold));
+      box-shadow: 0 0 12px rgba(212,175,55,0.4); cursor: pointer; margin-top: -6px; transition: transform 0.2s; border: 1px solid #fff;
+    }
+    input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+    input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; }
+
+    /* Dataset Tabs */
+    .dataset-tabs {
+      display: flex; gap: 4px; background: rgba(255,255,255,0.02);
+      padding: 4px; border-radius: 8px; border: 1px solid var(--border); flex-wrap: wrap; margin-bottom: 2rem;
+    }
+    .d-tab {
+      flex: 1; background: transparent; border: none; color: var(--muted);
+      font-family: var(--font-mono); font-size: 0.65rem; padding: 8px 0;
+      cursor: pointer; border-radius: 4px; text-transform: uppercase;
+      transition: all 0.2s ease; letter-spacing: 0.05em;
+    }
+    .d-tab.active { background: var(--violet-dim); color: var(--cream); font-weight: 500; border: 1px solid var(--violet); }
+    .d-tab:hover:not(.active) { color: var(--cream); background: rgba(255,255,255,0.04); }
+
+    /* Action Buttons */
+    .btn-row { display: flex; gap: 10px; margin-top: 1rem; }
+    .btn {
+      flex: 1; background: transparent; border: 1px solid rgba(212,175,55,0.4); color: var(--gold);
+      padding: 12px 10px; font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 0.1em; border-radius: 6px; cursor: pointer; transition: all 0.3s; text-align: center;
+    }
+    .btn:hover { background: var(--gold-dim); border-color: var(--gold); color: var(--cream); }
+    .btn.active { background: var(--gold); color: var(--bg); font-weight: 600; box-shadow: 0 0 20px rgba(212,175,55,0.3); }
+
+    /* Stats */
+    .ibox-stats {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+      border-top: 1px solid var(--border); padding-top: 1.5rem; margin-top: auto;
+    }
+    .stat-card { background: rgba(255,255,255,0.015); padding: 1.2rem 1rem; border-radius: 8px; text-align: center; border: 1px solid rgba(255,255,255,0.03); transition: all 0.3s; }
+    .stat-card.error-state { border-color: rgba(138,106,191,0.5); background: var(--violet-dim); }
+    .stat-card.success-state { border-color: rgba(212,175,55,0.5); background: var(--gold-dim); }
+    .stat-card.full-width { grid-column: 1 / -1; }
+    .stat-label { font-family: var(--font-mono); font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+    .stat-val { font-family: var(--font-mono); font-size: 1.2rem; color: var(--gold); }
+    .stat-card.error-state .stat-val { color: var(--accent); }
+
+    /* Coda & References */
+    .coda { 
+      text-align: center; font-family: var(--font-body); font-style: normal; 
+      color: var(--cream); font-size: 1.2rem; line-height: 2.2; margin: 9rem auto 5rem; max-width: 600px; font-weight: 300;
+    }
+    .ref-section { max-width: 650px; margin: 6rem auto 2rem; border-top: 1px solid var(--border); padding-top: 3.5rem; }
+    .ref-heading { font-family: var(--font-display); font-size: 1.2rem; color: var(--cream); margin-bottom: 1.5rem; font-weight: 300; }
+    .ref-list { list-style: none; padding: 0; }
+    .ref-list li { font-family: var(--font-body-en); font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem; line-height: 1.6; padding-left: 1rem; text-indent: -1rem; font-weight: 300;}
+    .ref-author { color: #a8a49c; }
+    .ref-title { font-style: italic; color: var(--cream); }
+
+    /* Footer */
+    footer { padding: 4rem 2rem; text-align: center; border-top: 1px solid var(--border); margin-top: 6rem; position: relative; z-index: 10; }
+    .footer-name { font-family: var(--font-display); font-size: 0.85rem; color: var(--cream); margin-bottom: 0.3rem; }
+    .footer-inst { font-size: 0.7rem; color: var(--muted); margin-bottom: 0.2rem; }
+    .footer-url { font-family: var(--font-mono); font-size: 0.58rem; color: var(--gold); text-decoration: none; display: inline-block; margin-top: 1rem; transition: color 0.3s; }
+    .footer-url:hover { color: var(--cream); }
+
+    /* Responsive */
+    @media (max-width: 860px) {
+      .hero-title { font-size: 3.2rem; }
+      .chapter-section { padding: 4rem 1.5rem; }
+      .ibox { padding: 1.8rem; margin: 3rem auto; }
+      .ibox-content { grid-template-columns: 1fr; gap: 2rem; }
+      .ibox-canvas-wrap { max-height: 450px; }
+      .prose-drop::first-letter { font-size: 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+  <div id="particles"></div>
+
+  <section class="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-vignette"></div>
+    <div class="hero-content reveal">
+      <div class="hero-label">Mellow Math</div>
+      <div class="hero-num">Chapter V</div>
+      <h1 class="hero-title">When Machines <em>Dream</em></h1>
+      <div class="hero-subtitle-ko">기계가 꿈꿀 때</div>
+      <div class="hero-tagline">The geometry of synthetic cognition.</div>
+    </div>
+    <div class="scroll-indicator">Begin</div>
+  </section>
+
+  <main>
+    <section class="chapter-section" id="section-1">
+      <div class="reveal">
+        <span class="section-num">01</span>
+        <h2 class="section-title">불꽃과 직선</h2>
+      </div>
+
+      <p class="prose prose-drop reveal">
+        1950년대의 황혼 무렵, 뒤엉킨 전선과 윙윙거리는 전위차계 사이에서, 코넬대학교의 항공공학자 프랭크 로젠블랫은 Mark I 퍼셉트론에 숨결을 불어넣었다. 그것은 정해진 코드를 충실히 실행하는 통상적인 컴퓨터가 아니었다. 인공 망막이 합성 뇌에 연결된, 일종의 감각하는 기계였다. 원자력의 시대에 열광하던 언론은 곧 걷고, 말하고, 발명하게 될 전자 배아라고 떠들어댔다. 그러나 그 선정적인 수사 아래에는 수학적으로 순결한 하나의 아이디어가 놓여 있었다. 학습이라는 혼돈스럽고 생물학적인 행위를, 한 줄의 직선을 긋는 순수한 기하학으로 번역하는 것.
+      </p>
+
+      <p class="prose reveal">
+        인공 뉴런은 실제 생물학적 신경세포의 충실한 모사품이 아니라, 가차 없는 수학적 문지기로서 고안되었다. 이 뉴런은 밀려드는 감각 신호의 합창을 받아들여, 각 신호에 그 긴급도를 측정하는 <span class="hi">가중치</span>를 부여하고, 그 총합을 센다. 가중된 합창의 총량이 엄격한 문턱값—<span class="ac">편향(bias)</span>—을 넘으면, 뉴런은 발화한다. 미치지 못하면, 완전히, 차갑게 침묵한다.
+      </p>
+
+      <div class="pull-quote reveal">
+        "The perceptron is the embryo of an electronic computer<br>that will be able to walk, talk, see, write,<br>reproduce itself and be conscious of its existence."
+      </div>
+
+      <p class="prose reveal">
+        이 단순한 문턱 메커니즘은 본질적으로 심오한 분할의 행위다. 데이터가 살아 숨 쉬는 추상적인 고차원 공간에서, 인공 뉴런 하나는 평평하고 휘지 않는 한 장의 평면을 의미한다. 내부의 가중치를 조정함으로써, 기계는 이 단단한 경계면을 허공 속에서 기울이고 옮긴다. 우주를 두 개의 범주로 갈라놓는 것이다—예 또는 아니오, 금빛 또는 보랏빛, 신호 또는 잡음. 이것은 의사결정의 가장 순수한 표현이며, 단 한 번의 기하학적 절단으로 압축된 것이다.
+      </p>
+
+      <div class="ibox reveal">
+        <div class="ibox-header">
+          <div class="ibox-label"><div class="dot"></div> Interactive</div>
+          <h3 class="ibox-title">선형의 꿈꾸는 자</h3>
+          <p class="ibox-desc">
+            기계의 역할을 맡아보라. 하나의 인공 뉴런이 지닌 감각 가중치와 발화 문턱(편향)을 직접 조절해보라. 이 매개변수를 바꿀 때마다, 단단하고 곧은 결정 경계가 기울고 이동하면서, 금빛 진실과 보랏빛 꿈을 분리하려 시도하는 모습을 관찰할 수 있다. 드래그로 화면을 이동하고 스크롤로 확대·축소할 수 있다.
+          </p>
+        </div>
+        
+        <div class="ibox-content">
+          <div class="ibox-canvas-wrap">
+            <canvas id="s1-canvas" class="ibox-canvas" data-nopz></canvas>
+          </div>
+          
+          <div class="ibox-sidebar">
+            <div class="ibox-controls">
+              <div class="ctrl-grp">
+                <div class="ctrl-label"><span>Weight X (<span class="hi" style="text-transform:none">w₁</span>)</span> <span class="ctrl-val" id="val-s1-w1">1.00</span></div>
+                <input type="range" id="sl-s1-w1" min="-3" max="3" step="0.05" value="1.0">
+              </div>
+              <div class="ctrl-grp">
+                <div class="ctrl-label"><span>Weight Y (<span class="hi" style="text-transform:none">w₂</span>)</span> <span class="ctrl-val" id="val-s1-w2">-1.00</span></div>
+                <input type="range" id="sl-s1-w2" min="-3" max="3" step="0.05" value="-1.0">
+              </div>
+              <div class="ctrl-grp">
+                <div class="ctrl-label"><span>Bias (<span class="hi" style="text-transform:none">b</span>)</span> <span class="ctrl-val" id="val-s1-b">0.00</span></div>
+                <input type="range" id="sl-s1-b" min="-3" max="3" step="0.05" value="0.0">
+              </div>
+            </div>
+
+            <div class="ibox-stats">
+              <div class="stat-card" id="card-s1-acc">
+                <div class="stat-label">Accuracy</div>
+                <div class="stat-val" id="stat-s1-acc">100%</div>
+              </div>
+              <div class="stat-card" id="card-s1-err">
+                <div class="stat-label">Errors</div>
+                <div class="stat-val" id="stat-s1-err">0</div>
+              </div>
+              <div class="stat-card full-width">
+                <div class="stat-label">Decision Boundary</div>
+                <div class="stat-val" id="stat-s1-eq" style="font-size: 1rem;">1.00x - 1.00y + 0.00 = 0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter-section" id="section-2">
+      <div class="reveal">
+        <span class="section-num">02</span>
+        <h2 class="section-title">막다른 길의 기하학</h2>
+      </div>
+
+      <p class="prose prose-drop reveal">
+        1969년, 퍼셉트론이라는 도취적인 꿈은 단단하고 양보 없는 수학적 벽과 정면으로 충돌했다. 초기 컴퓨팅의 거인이었던 마빈 민스키와 시무어 페이퍼트는 신경망의 기하학적 한계를 정밀하게 해부한 저작을 출간했다. 그것은 공격이 아니라, 증명이었다. 결함이 너무나 근본적이었기에, 인공지능이라는 분야 전체를 수십 년에 걸친 겨울—재원의 고갈과 의심의 시대—로 몰아넣은 증명.
+      </p>
+
+      <p class="prose reveal">
+        치명적인 역설은 기만적으로 단순했다. <span class="hi">배타적 논리합(XOR)</span>이라 불리는 논리 퍼즐이었다. 검은 카드 한 장만 들거나 흰 카드 한 장만 들면 이기고, 둘 다 들거나 아무것도 들지 않으면 지는 게임을 떠올려보라. "둘 중 하나, 그러나 둘 다는 아닌" 것을 이해해야만 풀 수 있는 퍼즐이다.
+      </p>
+
+      <p class="prose reveal">
+        기하학적으로 보면, 이 퍼즐은 정사각형의 대각선 방향 두 꼭짓점에 승리 조건을, 나머지 두 꼭짓점에 패배 조건을 배치한다. 민스키와 페이퍼트는 하나의 인공 뉴런이 오직 <span class="ac">하나의 곧은 평면</span>으로만 공간을 나눌 수 있기에, 이 대각선들을 분리하는 것이 원리적으로 불가능함을 증명했다. 정사각형을 가로지르는 하나의 직선으로, 왼쪽 위와 오른쪽 아래를 오른쪽 위와 왼쪽 아래로부터 완벽히 갈라놓을 수는 없다. 그것은 넘을 수 없는 위상적 불가능이다.
+      </p>
+
+      <div class="block-quote reveal">
+        <div class="block-quote-text">
+          "No machine that must rely entirely on linear separation can ever distinguish the corners of a square from one another. It is mathematically blind to the paradox."
+        </div>
+        <span class="block-quote-author">— Adapted from Minsky & Papert (1969)</span>
+      </div>
+
+      <p class="prose reveal">
+        이 우아한 발견은 환상을 산산이 부쉈다. 현실 세계는 지저분하고, 뒤엉켜 있으며, 직선 하나로 분리될 수 있는 경우가 좀처럼 없다는 자각이 밀려왔다. 뉘앙스를 이해하려면 기계는 자신의 시각을 휘어야 했다. 그러나 태동기의 인공 뇌는 평평하고 구부러지지 않는 현실 속에 갇혀 있었다.
+      </p>
+
+      <div class="ibox reveal">
+        <div class="ibox-header">
+          <div class="ibox-label"><div class="dot"></div> Interactive</div>
+          <h3 class="ibox-title">불가능한 절단</h3>
+          <p class="ibox-desc">
+            수학적 환경이 XOR 배치로 전환되었다—허공을 사이에 두고 교차하는 군집들. 동일한 선형 뉴런을 이용하여, 모든 금빛 점과 모든 보랏빛 점을 분리하는 직선 경계를 그어보라. 수학적 확실성이 보장하듯, 언제나 한 군집이 분할선의 잘못된 편에 고립되는 것을 확인할 수 있다.
+          </p>
+        </div>
+        
+        <div class="ibox-content">
+          <div class="ibox-canvas-wrap">
+            <canvas id="s2-canvas" class="ibox-canvas" data-nopz></canvas>
+          </div>
+          
+          <div class="ibox-sidebar">
+            <div class="ibox-controls">
+              <div class="ctrl-grp">
+                <div class="ctrl-label"><span>Weight X (<span class="hi" style="text-transform:none">w₁</span>)</span> <span class="ctrl-val" id="val-s2-w1">1.00</span></div>
+                <input type="range" id="sl-s2-w1" min="-3" max="3" step="0.05" value="1.0">
+              </div>
+              <div class="ctrl-grp">
+                <div class="ctrl-label"><span>Weight Y (<span class="hi" style="text-transform:none">w₂</span>)</span> <span class="ctrl-val" id="val-s2-w2">1.00</span></div>
+                <input type="range" id="sl-s2-w2" min="-3" max="3" step="0.05" value="1.0">
+              </div>
+              <div class="ctrl-grp">
+                <div class="ctrl-label"><span>Bias (<span class="hi" style="text-transform:none">b</span>)</span> <span class="ctrl-val" id="val-s2-b">-1.50</span></div>
+                <input type="range" id="sl-s2-b" min="-3" max="3" step="0.05" value="-1.5">
+              </div>
+            </div>
+
+            <div class="ibox-stats">
+              <div class="stat-card" id="card-s2-acc">
+                <div class="stat-label">Accuracy maxed</div>
+                <div class="stat-val" id="stat-s2-acc">75%</div>
+              </div>
+              <div class="stat-card error-state" id="card-s2-err">
+                <div class="stat-label">Inevitable Errors</div>
+                <div class="stat-val" id="stat-s2-err">20</div>
+              </div>
+              <div class="stat-card full-width">
+                <div class="stat-label">Rigid Boundary</div>
+                <div class="stat-val" id="stat-s2-eq" style="font-size: 1rem;">1.00x + 1.00y - 1.50 = 0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter-section" id="section-3">
+      <div class="reveal">
+        <span class="section-num">03</span>
+        <h2 class="section-title">책임의 미적분학</h2>
+      </div>
+
+      <p class="prose prose-drop reveal">
+        XOR 문제라는 단단한 위상적 감옥에서 탈출하기 위해, 공학자들은 깊이가 필요하다는 것을 알고 있었다. 한 층의 뉴런이 평평한 직선만 그을 수 있다면, 두 번째 은닉층은 그 직선들을 결합하여 모서리와 울타리와 정교한 윤곽을 쌓아 올릴 수 있을 것이었다. 이론적 설계는 완벽했으나, 마비시키는 역설 하나가 도사리고 있었다. <span class="hi">숨겨진 내부의 생각</span>을 가진 기계를 어떻게 가르칠 것인가?
+      </p>
+
+      <p class="prose reveal">
+        심층 신경망이 오답을 내놓을 때, 최종 출력 뉴런에 분명 과실이 있다. 그러나 그 최종 뉴런은 은닉된 내부 뉴런들의 합창에 의존했고, 그 뉴런들은 다시 입력 데이터에 의존했다. 오류의 책임은 누구에게 있는가? 보이지 않는 어떤 내부 연결을 조정해야 하는지 알 수 없으니, 심층 네트워크를 훈련하는 것은 건반을 무작위로 두드리며 화음이 더 아름다워지기를 바라는 것이나 다름없었다.
+      </p>
+
+      <p class="prose reveal">
+        AI의 겨울을 녹인 우아한 해법은 고전적 미적분학의 탁월한 응용이었다. <span class="ac">역전파(backpropagation)</span>라 불리는 이것은 사후적 통찰의 수학적 등가물이다. 도함수의 연쇄 법칙을 체계적으로 적용함으로써, 역전파는 출력의 오차를 수원(水源)을 찾는 물처럼 네트워크를 거슬러 흐르게 하며, 모든 은닉 차원의 모든 가중치에 정확한 수학적 "책임"을 묻는다.
+      </p>
+
+      <p class="prose reveal">
+        책임이 올바르게 배분되면, 네트워크는 스스로를 반복적으로 조정할 수 있다. 고차원 오차 표면의 정확한 기울기를 계산하고, 아래를 향해 작고 신중한 한 걸음을 내딛는다—어둠 속에서 맹목적이되 필연적인 하강, 정답의 깊은 골짜기를 향한 여정. 이 과정에는 <em>경사 하강법(gradient descent)</em>이라는 아름다운 이름이 붙어 있다. 기계는 마침내 자기 자신을 들여다보는 법을 배운 것이다.
+      </p>
+    </section>
+
+    <section class="chapter-section" id="section-4">
+      <div class="reveal">
+        <span class="section-num">04</span>
+        <h2 class="section-title">만능의 조각가</h2>
+      </div>
+
+      <p class="prose prose-drop reveal">
+        역전파가 은닉층의 어두운 통로를 비추자, 수학계에 조용한 깨달음이 퍼져나갔다. 1989년, 조지 시벤코는 다층 신경망을 영리한 알고리즘에서 심오한 수학적 존재로 승격시키는 증명을 발표했다. <span class="hi">보편 근사 정리(Universal Approximation Theorem)</span>.
+      </p>
+
+      <p class="prose reveal">
+        이 정리가 제시한 수학적 보증은 경이로웠다. 충분한 은닉 용량이 주어지면, 심층 신경망은 아무리 거칠고 뒤엉킨 연속 함수라도 원하는 정밀도까지 근사할 수 있다. 기계는 더 이상 평평하고 단단한 직선을 긋는 데 갇혀 있지 않았다. 좌표 공간 자체의 직물을 늘이고, 구부리고, 뒤트는 능력이 부여된 것이다.
+      </p>
+
+      <p class="prose reveal">
+        기계는 교묘한 각도를 찾아 역설을 풀지 않는다. 우주를 접어서, 흩어져 있던 진실의 파편들이 서로 닿게 만드는 것이다. 캔버스를 쥐어짜고 변형하여, 데이터의 불가능한 매듭을 풀고, 마침내 단 한 번의 절단으로 가를 수 있는 형태로 바꾸어놓는다. 기계는 차원의 대가적 조각가가 되었다.
+      </p>
+
+      <div class="ibox reveal">
+        <div class="ibox-header">
+          <div class="ibox-label"><div class="dot"></div> Interactive</div>
+          <h3 class="ibox-title">공간의 조각가</h3>
+          <p class="ibox-desc">
+            브라우저 안에서 실시간 심층 학습 시뮬레이션을 시작해보라. 복잡한 데이터 위상을 선택하고 은닉층의 용량을 조절하라. <strong>Train Network</strong>를 누르면, Adam Optimizer가 2개의 은닉층을 거치는 경사 하강을 구동한다. 배경의 스칼라장 등고선이 눈에 보이게 휘고 접히면서, 네트워크가 형태를 매끄럽게 분리해가는 과정을 지켜볼 수 있다.
+          </p>
+        </div>
+        
+        <div class="ibox-content">
+          <div class="ibox-canvas-wrap">
+            <canvas id="s4-canvas" class="ibox-canvas" data-nopz></canvas>
+          </div>
+          
+          <div class="ibox-sidebar">
+            <div class="ibox-controls">
+              
+              <div class="dataset-tabs">
+                <button class="d-tab" data-type="ring">Ring</button>
+                <button class="d-tab" data-type="xor">XOR</button>
+                <button class="d-tab active" data-type="spiral">Spiral</button>
+                <button class="d-tab" data-type="star">Star</button>
+                <button class="d-tab" data-type="eight">Eight</button>
+              </div>
+
+              <div class="ctrl-grp">
+                <div class="ctrl-label"><span>Layer Capacity (<span class="hi" style="text-transform:none">N</span>×<span class="hi" style="text-transform:none">N</span>)</span> <span class="ctrl-val" id="val-s4-n">16</span></div>
+                <input type="range" id="sl-s4-n" min="4" max="24" step="1" value="16">
+              </div>
+              <div class="ctrl-grp">
+                <div class="ctrl-label"><span>Learning Rate (<span class="hi" style="text-transform:none">α</span>)</span> <span class="ctrl-val" id="val-s4-lr">0.05</span></div>
+                <input type="range" id="sl-s4-lr" min="0.01" max="0.2" step="0.01" value="0.05">
+              </div>
+              
+              <div class="btn-row">
+                <button class="btn" id="btn-s4-train">Train Network</button>
+                <button class="btn" id="btn-s4-reset" style="flex: 0.5;">Reset</button>
+              </div>
+            </div>
+
+            <div class="ibox-stats">
+              <div class="stat-card">
+                <div class="stat-label">Epoch</div>
+                <div class="stat-val" id="stat-s4-epoch">0</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Loss</div>
+                <div class="stat-val" id="stat-s4-loss">0.000</div>
+              </div>
+              <div class="stat-card full-width" id="card-s4-acc">
+                <div class="stat-label">Accuracy</div>
+                <div class="stat-val" id="stat-s4-acc">0.0%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="coda reveal">
+      우리는 실리콘에게 생각하라 했고, 그것은 단단한 직선을 그었다.<br>
+      우리는 배우라 했고, 그것은 불가능 앞에 부서졌다.<br>
+      그러나 어둠 속 산길을 더듬어 내려가는 법을 깨우치자,<br>
+      그것은 답이 들어맞을 때까지 우주를 구부리는 법을 배웠다.
+    </div>
+
+    <div class="ref-section reveal">
+      <h3 class="ref-heading">References</h3>
+      <ul class="ref-list">
+        <li><span class="ref-author">Rosenblatt, F.</span> <span class="ref-title">The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain.</span> <span class="ref-detail">Psychological Review, 1958.</span></li>
+        <li><span class="ref-author">Minsky, M., & Papert, S.</span> <span class="ref-title">Perceptrons: An Introduction to Computational Geometry.</span> <span class="ref-detail">MIT Press, 1969.</span></li>
+        <li><span class="ref-author">Rumelhart, D. E., Hinton, G. E., & Williams, R. J.</span> <span class="ref-title">Learning Representations by Back-Propagating Errors.</span> <span class="ref-detail">Nature, 1986.</span></li>
+        <li><span class="ref-author">Cybenko, G.</span> <span class="ref-title">Approximation by Superpositions of a Sigmoidal Function.</span> <span class="ref-detail">Mathematics of Control, Signals and Systems, 1989.</span></li>
+        <li><span class="ref-author">Kingma, D. P., & Ba, J.</span> <span class="ref-title">Adam: A Method for Stochastic Optimization.</span> <span class="ref-detail">ICLR, 2015.</span></li>
+      </ul>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="footer-attr">
+      <div class="footer-name">Sang-hyun Kim</div>
+      <div class="footer-inst">Korea Institute for Advanced Study</div>
+      <div class="footer-inst">AI4MATH, KAIST</div>
+      <a class="footer-url" href="https://kimsh.kr">kimsh.kr</a>
+    </div>
+  </footer>
+
+  <script>
+    // Global Architecture
+    const App = {
+      _paused: false, _heroPaused: false, _heroVisible: true, lastInteraction: Date.now(),
+      get dpr() { return window.devicePixelRatio || 1; }
+    };
+
+    function initGlobal() {
+      const wake = () => App.lastInteraction = Date.now();
+      ['mousemove','touchstart','wheel','keydown'].forEach(e => window.addEventListener(e, wake, {passive: true}));
+
+      const rev = new IntersectionObserver(ents => { ents.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
+      document.querySelectorAll('.reveal').forEach(el => rev.observe(el));
+      
+      const heroObs = new IntersectionObserver(ents => { App._heroVisible = ents[0].isIntersecting; }, { threshold: 0 });
+      heroObs.observe(document.querySelector('.hero'));
+
+      const pContainer = document.getElementById('particles');
+      for(let i=0; i<25; i++) {
+        const p = document.createElement('div');
+        p.style.position = 'absolute'; p.style.bottom = '-20px'; p.style.left = `${Math.random() * 100}vw`;
+        const size = Math.random() * 6 + 2; p.style.width = `${size}px`; p.style.height = `${size}px`; p.style.borderRadius = '50%';
+        p.style.background = 'radial-gradient(circle, var(--accent) 0%, transparent 70%)'; p.style.opacity = '0.3';
+        p.style.animation = `drift ${Math.random() * 20 + 20}s linear infinite`; p.style.animationDelay = `${Math.random() * -40}s`;
+        pContainer.appendChild(p);
+      }
+
+      setInterval(() => {
+        const idle = Date.now() - App.lastInteraction;
+        App._paused = idle > 15000; App._heroPaused = idle > 300000;
+      }, 1000);
+    }
+
+    function addDragPan(canvas, state, onInteraction) {
+      let isDragging = false, lx, ly;
+      canvas.addEventListener('mousedown', e => { isDragging = true; lx = e.clientX; ly = e.clientY; canvas.style.cursor = 'grabbing'; });
+      window.addEventListener('mouseup', () => { isDragging = false; canvas.style.cursor = 'grab'; });
+      window.addEventListener('mouseleave', () => { isDragging = false; canvas.style.cursor = 'grab'; });
+      window.addEventListener('mousemove', e => {
+        if (!isDragging) return;
+        state.panX += (e.clientX - lx) * App.dpr; state.panY += (e.clientY - ly) * App.dpr;
+        lx = e.clientX; ly = e.clientY; onInteraction();
+      });
+      canvas.addEventListener('wheel', e => {
+        e.preventDefault(); state.zoom = Math.max(0.3, Math.min(state.zoom * (e.deltaY < 0 ? 1.05 : 0.95), 5)); onInteraction();
+      }, { passive: false });
+      canvas.addEventListener('dblclick', e => { e.preventDefault(); state.zoom = Math.min(state.zoom * 1.5, 5); onInteraction(); });
+      canvas.addEventListener('contextmenu', e => { e.preventDefault(); state.zoom = Math.max(0.3, state.zoom / 1.5); onInteraction(); });
+      canvas.style.cursor = 'grab';
+    }
+
+    // Hero Animation (Gossamer Network)
+    function initHero() {
+      const canvas = document.getElementById('hero-canvas'), ctx = canvas.getContext('2d');
+      let w, h; const nodes = [];
+      function resize() { w = canvas.parentElement.clientWidth; h = canvas.parentElement.clientHeight; canvas.width = w * App.dpr; canvas.height = h * App.dpr; ctx.setTransform(App.dpr, 0, 0, App.dpr, 0, 0); }
+      window.addEventListener('resize', resize); resize();
+      for(let i=0; i<85; i++) nodes.push({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random()-0.5)*0.25, vy: (Math.random()-0.5)*0.25, act: 0 });
+
+      function draw() {
+        requestAnimationFrame(draw);
+        if (!App._heroVisible || App._heroPaused) return;
+        ctx.clearRect(0, 0, w, h);
+        nodes.forEach(n => { n.x += n.vx; n.y += n.vy; if(n.x < 0 || n.x > w) n.vx *= -1; if(n.y < 0 || n.y > h) n.vy *= -1; n.act *= 0.95; if (Math.random() < 0.003) n.act = 1.3; });
+        const maxDist = 220; ctx.lineWidth = 1;
+        for(let i=0; i<nodes.length; i++) {
+          for(let j=i+1; j<nodes.length; j++) {
+            const dx = nodes[i].x - nodes[j].x, dy = nodes[i].y - nodes[j].y, distSq = dx*dx + dy*dy;
+            if(distSq < maxDist * maxDist) {
+              const dist = Math.sqrt(distSq), alpha = 1 - dist/maxDist;
+              if (nodes[i].act > 0.1 && nodes[j].act < nodes[i].act) nodes[j].act += (nodes[i].act - nodes[j].act) * 0.05;
+              if (nodes[j].act > 0.1 && nodes[i].act < nodes[j].act) nodes[i].act += (nodes[j].act - nodes[i].act) * 0.05;
+              const act = Math.max(nodes[i].act, nodes[j].act);
+              ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y);
+              if (act > 0.15) { ctx.strokeStyle = `rgba(138,106,191,${alpha * act * 0.8})`; ctx.lineWidth = 1 + act * 1.5; } 
+              else { ctx.strokeStyle = `rgba(236,232,224,${alpha * 0.15})`; ctx.lineWidth = 0.5; }
+              ctx.stroke();
+            }
+          }
+        }
+        nodes.forEach(n => {
+          ctx.beginPath(); ctx.arc(n.x, n.y, 1.5 + n.act, 0, Math.PI*2);
+          if(n.act > 0.15) { ctx.fillStyle = '#8a6abf'; ctx.shadowBlur = 12; ctx.shadowColor = '#8a6abf'; } 
+          else { ctx.fillStyle = 'rgba(236,232,224,0.3)'; ctx.shadowBlur = 0; }
+          ctx.fill();
+        });
+        ctx.shadowBlur = 0;
+      }
+      requestAnimationFrame(draw);
+    }
+
+    function renderLinearBoundary(ctx, w, h, state, data, time, w1, w2, b, cx, cy, scale) {
+      const norm = Math.hypot(w1, w2) || 0.001, dist = -b / norm, nx = w1 / norm, ny = -w2 / norm; 
+      const bx = cx + nx * dist * scale, by = cy + ny * dist * scale, tx = -ny, ty = nx, huge = 5000;
+      
+      ctx.beginPath(); ctx.moveTo(bx + tx * huge, by + ty * huge); ctx.lineTo(bx - tx * huge, by - ty * huge);
+      ctx.lineTo(bx - tx * huge + nx * huge, by - ty * huge + ny * huge); ctx.lineTo(bx + tx * huge + nx * huge, by + ty * huge + ny * huge);
+      ctx.fillStyle = 'rgba(138,106,191,0.15)'; ctx.fill();
+
+      ctx.beginPath(); ctx.moveTo(bx + tx * huge, by + ty * huge); ctx.lineTo(bx - tx * huge, by - ty * huge);
+      ctx.lineTo(bx - tx * huge - nx * huge, by - ty * huge - ny * huge); ctx.lineTo(bx + tx * huge - nx * huge, by + ty * huge - ny * huge);
+      ctx.fillStyle = 'rgba(212,175,55,0.08)'; ctx.fill();
+
+      ctx.beginPath(); ctx.moveTo(bx + tx * huge, by + ty * huge); ctx.lineTo(bx - tx * huge, by - ty * huge);
+      ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.lineWidth = 2; ctx.stroke();
+
+      ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(w, cy); ctx.moveTo(cx, 0); ctx.lineTo(cx, h);
+      ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = 1; ctx.stroke();
+
+      let correct = 0;
+      data.forEach(pt => {
+          const val = w1 * pt.x + w2 * pt.y + b, pred = val >= 0 ? 1 : 0;
+          if (pred === pt.label) correct++;
+          const px = cx + (pt.x + Math.sin(time + pt.phase)*0.05) * scale, py = cy - (pt.y + Math.cos(time*0.8 + pt.phase)*0.05) * scale;
+          if (px < -20 || px > w+20 || py < -20 || py > h+20) return;
+
+          ctx.beginPath(); ctx.arc(px, py, 6, 0, Math.PI * 2);
+          ctx.fillStyle = pt.label === 1 ? '#d4af37' : '#8a6abf'; ctx.fill();
+          ctx.lineWidth = pred !== pt.label ? 2 : 1; ctx.strokeStyle = pred !== pt.label ? '#fff' : 'rgba(0,0,0,0.5)'; ctx.stroke();
+      });
+      return correct;
+    }
+
+    function updateCardState(card, isSuccess, isError) {
+      if(isSuccess) { card.classList.add('success-state'); card.classList.remove('error-state'); }
+      else if(isError) { card.classList.add('error-state'); card.classList.remove('success-state'); }
+      else { card.classList.remove('error-state'); card.classList.remove('success-state'); }
+    }
+
+    function initSec1() {
+      const canvas = document.getElementById('s1-canvas'), ctx = canvas.getContext('2d');
+      let w, h, time = 0, needRedraw = true; const state = { panX: 0, panY: 0, zoom: 1 };
+      const slW1 = document.getElementById('sl-s1-w1'), slW2 = document.getElementById('sl-s1-w2'), slB = document.getElementById('sl-s1-b');
+      const valW1 = document.getElementById('val-s1-w1'), valW2 = document.getElementById('val-s1-w2'), valB = document.getElementById('val-s1-b');
+      const statAcc = document.getElementById('stat-s1-acc'), statErr = document.getElementById('stat-s1-err'), statEq = document.getElementById('stat-s1-eq');
+      const cardAcc = document.getElementById('card-s1-acc'), cardErr = document.getElementById('card-s1-err');
+
+      const data = [];
+      for(let i=0; i<80; i++) {
+        let x = (Math.random() - 0.5) * 8, y = (Math.random() - 0.5) * 8, dist = x - y;
+        if (Math.abs(dist) < 1.0) { let push = (1.0 - Math.abs(dist)) / 2; x += (dist > 0 ? push : -push); y -= (dist > 0 ? push : -push); }
+        data.push({ x: x, y: y, label: (x - y >= 0) ? 1 : 0, phase: Math.random() * Math.PI * 2 });
+      }
+
+      function resize() { w = canvas.clientWidth; h = canvas.clientHeight; canvas.width = w * App.dpr; canvas.height = h * App.dpr; ctx.setTransform(App.dpr, 0, 0, App.dpr, 0, 0); needRedraw = true; }
+      window.addEventListener('resize', resize); resize();
+
+      function draw() {
+        requestAnimationFrame(draw);
+        if (App._paused && !needRedraw) return;
+        if (!App._paused) { time += 0.01; needRedraw = true; } else needRedraw = false;
+
+        const w1 = parseFloat(slW1.value), w2 = parseFloat(slW2.value), b = parseFloat(slB.value);
+        valW1.textContent = w1.toFixed(2); valW2.textContent = w2.toFixed(2); valB.textContent = b.toFixed(2);
+
+        ctx.clearRect(0, 0, w, h);
+        const correct = renderLinearBoundary(ctx, w, h, state, data, time, w1, w2, b, w/2 + state.panX, h/2 + state.panY, (Math.min(w, h)/10) * state.zoom);
+        const errs = data.length - correct;
+        statAcc.textContent = (correct / data.length * 100).toFixed(0) + '%'; statErr.textContent = errs;
+        statEq.textContent = `${w1.toFixed(2)}x ${w2>=0?'+':'-'} ${Math.abs(w2).toFixed(2)}y ${b>=0?'+':'-'} ${Math.abs(b).toFixed(2)} = 0`;
+        updateCardState(cardAcc, errs === 0, false); updateCardState(cardErr, false, errs > 0);
+      }
+      requestAnimationFrame(draw);
+      const trigger = () => { needRedraw = true; App.lastInteraction = Date.now(); };
+      [slW1, slW2, slB].forEach(el => el.addEventListener('input', trigger));
+      addDragPan(canvas, state, trigger);
+    }
+
+    function initSec2() {
+      const canvas = document.getElementById('s2-canvas'), ctx = canvas.getContext('2d');
+      let w, h, time = 0, needRedraw = true; const state = { panX: 0, panY: 0, zoom: 1 };
+      const slW1 = document.getElementById('sl-s2-w1'), slW2 = document.getElementById('sl-s2-w2'), slB = document.getElementById('sl-s2-b');
+      const valW1 = document.getElementById('val-s2-w1'), valW2 = document.getElementById('val-s2-w2'), valB = document.getElementById('val-s2-b');
+      const statAcc = document.getElementById('stat-s2-acc'), statErr = document.getElementById('stat-s2-err'), statEq = document.getElementById('stat-s2-eq'), cardErr = document.getElementById('card-s2-err');
+
+      const data = [];
+      [{ cx: 2.5, cy: 2.5, label: 1 }, { cx: -2.5, cy: -2.5, label: 1 }, { cx: -2.5, cy: 2.5, label: 0 }, { cx: 2.5, cy: -2.5, label: 0 }].forEach(c => {
+        for(let i=0; i<20; i++) data.push({ x: c.cx + (Math.random()-0.5)*2.5, y: c.cy + (Math.random()-0.5)*2.5, label: c.label, phase: Math.random() * Math.PI * 2 });
+      });
+
+      function resize() { w = canvas.clientWidth; h = canvas.clientHeight; canvas.width = w * App.dpr; canvas.height = h * App.dpr; ctx.setTransform(App.dpr, 0, 0, App.dpr, 0, 0); needRedraw = true; }
+      window.addEventListener('resize', resize); resize();
+
+      function draw() {
+        requestAnimationFrame(draw);
+        if (App._paused && !needRedraw) return;
+        if (!App._paused) { time += 0.01; needRedraw = true; } else needRedraw = false;
+
+        const w1 = parseFloat(slW1.value), w2 = parseFloat(slW2.value), b = parseFloat(slB.value);
+        valW1.textContent = w1.toFixed(2); valW2.textContent = w2.toFixed(2); valB.textContent = b.toFixed(2);
+
+        ctx.clearRect(0, 0, w, h);
+        const correct = renderLinearBoundary(ctx, w, h, state, data, time, w1, w2, b, w/2 + state.panX, h/2 + state.panY, (Math.min(w, h)/10) * state.zoom);
+        const errs = data.length - correct;
+        statAcc.textContent = (correct / data.length * 100).toFixed(0) + '%'; statErr.textContent = errs;
+        statEq.textContent = `${w1.toFixed(2)}x ${w2>=0?'+':'-'} ${Math.abs(w2).toFixed(2)}y ${b>=0?'+':'-'} ${Math.abs(b).toFixed(2)} = 0`;
+        updateCardState(cardErr, false, errs > 0);
+      }
+      requestAnimationFrame(draw);
+      const trigger = () => { needRedraw = true; App.lastInteraction = Date.now(); };
+      [slW1, slW2, slB].forEach(el => el.addEventListener('input', trigger));
+      addDragPan(canvas, state, trigger);
+    }
+
+    // Section 4: Advanced 2-Layer Deep Neural Network Simulation with Adam Optimizer
+    function initSec4() {
+      const canvas = document.getElementById('s4-canvas'), ctx = canvas.getContext('2d');
+      let w, h, needRedraw = true, isTraining = false;
+      const state = { panX: 0, panY: 0, zoom: 1 };
+      
+      const slN = document.getElementById('sl-s4-n'), slLr = document.getElementById('sl-s4-lr');
+      const valN = document.getElementById('val-s4-n'), valLr = document.getElementById('val-s4-lr');
+      const btnTrain = document.getElementById('btn-s4-train'), btnReset = document.getElementById('btn-s4-reset');
+      const dataBtns = document.querySelectorAll('.d-tab');
+      const statEpoch = document.getElementById('stat-s4-epoch'), statLoss = document.getElementById('stat-s4-loss'), statAcc = document.getElementById('stat-s4-acc');
+      const cardAcc = document.getElementById('card-s4-acc');
+
+      let currentDataset = 'spiral', data = [];
+      let N = 16, epoch = 0;
+      
+      let W1, b1, W2, b2, W3, b3;
+      let mW1, mb1, mW2, mb2, mW3, mb3;
+      let vW1, vb1, vW2, vb2, vW3, vb3;
+      let t = 0; 
+
+      function createMatrix(rows, cols) { return Array(rows).fill(0).map(() => Array(cols).fill(0).map(()=> (Math.random()-0.5)*2)); }
+      function createVector(size) { return Array(size).fill(0).map(()=> (Math.random()-0.5)*2); }
+      function zerosMatrix(rows, cols) { return Array(rows).fill(0).map(() => Array(cols).fill(0)); }
+      function zerosVector(size) { return Array(size).fill(0); }
+
+      function generateData(type) {
+        data = []; const numPts = 300;
+        if(type === 'ring') {
+          for(let i=0; i<numPts; i++) {
+            let r = Math.random() * 8, a = Math.random() * Math.PI * 2;
+            let label = r < 3.5 ? 1 : 0;
+            if (r < 2.5 || (r > 4.5 && r < 7.5)) data.push({ x: r*Math.cos(a), y: r*Math.sin(a), label });
+          }
+        } else if(type === 'xor') {
+          for(let i=0; i<numPts; i++) {
+            let x = (Math.random()-0.5)*12, y = (Math.random()-0.5)*12;
+            if (Math.abs(x) < 1.0 || Math.abs(y) < 1.0) continue;
+            data.push({ x, y, label: x*y > 0 ? 1 : 0 });
+          }
+        } else if(type === 'spiral') {
+          for(let i=0; i<numPts/2; i++) {
+            let n = i/(numPts/2), r = n * 7 + 0.5, a = n * Math.PI * 3;
+            let label = 1;
+            let nx = (Math.random()-0.5)*0.8, ny = (Math.random()-0.5)*0.8;
+            data.push({ x: r*Math.cos(a)+nx, y: r*Math.sin(a)+ny, label });
+            data.push({ x: r*Math.cos(a + Math.PI)+nx, y: r*Math.sin(a + Math.PI)+ny, label: 0 });
+          }
+        } else if(type === 'star') {
+          for(let i=0; i<numPts; i++) {
+            let r = Math.random() * 8, a = Math.random() * Math.PI * 2;
+            let starR = 4.5 + 2 * Math.cos(5 * a);
+            let label = r < starR ? 1 : 0;
+            if (Math.abs(r - starR) > 0.6 && r < 8) data.push({x: r*Math.cos(a), y: r*Math.sin(a), label});
+          }
+        } else if(type === 'eight') {
+          for(let i=0; i<numPts; i++) {
+            let a = Math.random() * Math.PI * 2;
+            let r = 7 * Math.sqrt(Math.max(0, Math.cos(2*a)));
+            let x = r * Math.cos(a) + (Math.random()-0.5)*1.2;
+            let y = r * Math.sin(a) + (Math.random()-0.5)*1.2;
+            if (x*x + y*y < 2) continue;
+            data.push({ x, y, label: x > 0 ? 1 : 0 });
+          }
+        }
+      }
+
+      function initNetwork() {
+        N = parseInt(slN.value); epoch = 0; t = 0;
+        
+        W1 = createMatrix(2, N); b1 = createVector(N);
+        W2 = createMatrix(N, N); b2 = createVector(N);
+        W3 = createMatrix(N, 1); b3 = createVector(1);
+        
+        mW1 = zerosMatrix(2, N); mb1 = zerosVector(N);
+        mW2 = zerosMatrix(N, N); mb2 = zerosVector(N);
+        mW3 = zerosMatrix(N, 1); mb3 = zerosVector(1);
+
+        vW1 = zerosMatrix(2, N); vb1 = zerosVector(N);
+        vW2 = zerosMatrix(N, N); vb2 = zerosVector(N);
+        vW3 = zerosMatrix(N, 1); vb3 = zerosVector(1);
+
+        needRedraw = true;
+      }
+
+      function forward(x, y) {
+        let a1 = Array(N).fill(0), a2 = Array(N).fill(0);
+        for(let i=0; i<N; i++) a1[i] = Math.tanh(W1[0][i]*x + W1[1][i]*y + b1[i]);
+        for(let i=0; i<N; i++) {
+          let sum = b2[i];
+          for(let j=0; j<N; j++) sum += W2[j][i]*a1[j];
+          a2[i] = Math.tanh(sum);
+        }
+        let z = b3[0];
+        for(let i=0; i<N; i++) z += W3[i][0]*a2[i];
+        return { a1, a2, out: 1 / (1 + Math.exp(-z)) };
+      }
+
+      function trainStepAdam(lr) {
+        let totalLoss = 0, correct = 0;
+        const beta1 = 0.9, beta2 = 0.999, eps = 1e-8;
+        t++;
+
+        let dW1 = zerosMatrix(2, N), db1 = zerosVector(N);
+        let dW2 = zerosMatrix(N, N), db2 = zerosVector(N);
+        let dW3 = zerosMatrix(N, 1), db3 = zerosVector(1);
+
+        for(let p=0; p<data.length; p++) {
+          let pt = data[p];
+          let { a1, a2, out } = forward(pt.x, pt.y);
+          
+          totalLoss += pt.label === 1 ? -Math.log(out + 1e-15) : -Math.log(1 - out + 1e-15);
+          if ((out > 0.5 ? 1 : 0) === pt.label) correct++;
+
+          let dz3 = out - pt.label;
+          db3[0] += dz3;
+          for(let i=0; i<N; i++) dW3[i][0] += a2[i] * dz3;
+
+          let da2 = Array(N).fill(0);
+          for(let i=0; i<N; i++) da2[i] = dz3 * W3[i][0];
+          
+          let dz2 = Array(N).fill(0);
+          for(let i=0; i<N; i++) {
+            dz2[i] = da2[i] * (1 - a2[i]*a2[i]);
+            db2[i] += dz2[i];
+            for(let j=0; j<N; j++) dW2[j][i] += a1[j] * dz2[i];
+          }
+
+          let da1 = Array(N).fill(0);
+          for(let j=0; j<N; j++) {
+            let sum = 0;
+            for(let i=0; i<N; i++) sum += dz2[i] * W2[j][i];
+            da1[j] = sum;
+          }
+
+          for(let j=0; j<N; j++) {
+            let dz1 = da1[j] * (1 - a1[j]*a1[j]);
+            db1[j] += dz1;
+            dW1[0][j] += pt.x * dz1;
+            dW1[1][j] += pt.y * dz1;
+          }
+        }
+
+        let m = data.length;
+        let fix1 = 1 - Math.pow(beta1, t), fix2 = 1 - Math.pow(beta2, t);
+
+        let grad_b3 = db3[0]/m;
+        mb3[0] = beta1*mb3[0] + (1-beta1)*grad_b3; vb3[0] = beta2*vb3[0] + (1-beta2)*grad_b3*grad_b3;
+        b3[0] -= lr * (mb3[0]/fix1) / (Math.sqrt(vb3[0]/fix2) + eps);
+        for(let i=0; i<N; i++) {
+          let grad_W3 = dW3[i][0]/m;
+          mW3[i][0] = beta1*mW3[i][0] + (1-beta1)*grad_W3; vW3[i][0] = beta2*vW3[i][0] + (1-beta2)*grad_W3*grad_W3;
+          W3[i][0] -= lr * (mW3[i][0]/fix1) / (Math.sqrt(vW3[i][0]/fix2) + eps);
+        }
+
+        for(let i=0; i<N; i++) {
+          let grad_b2 = db2[i]/m;
+          mb2[i] = beta1*mb2[i] + (1-beta1)*grad_b2; vb2[i] = beta2*vb2[i] + (1-beta2)*grad_b2*grad_b2;
+          b2[i] -= lr * (mb2[i]/fix1) / (Math.sqrt(vb2[i]/fix2) + eps);
+          for(let j=0; j<N; j++) {
+            let grad_W2 = dW2[j][i]/m;
+            mW2[j][i] = beta1*mW2[j][i] + (1-beta1)*grad_W2; vW2[j][i] = beta2*vW2[j][i] + (1-beta2)*grad_W2*grad_W2;
+            W2[j][i] -= lr * (mW2[j][i]/fix1) / (Math.sqrt(vW2[j][i]/fix2) + eps);
+          }
+        }
+
+        for(let i=0; i<N; i++) {
+          let grad_b1 = db1[i]/m;
+          mb1[i] = beta1*mb1[i] + (1-beta1)*grad_b1; vb1[i] = beta2*vb1[i] + (1-beta2)*grad_b1*grad_b1;
+          b1[i] -= lr * (mb1[i]/fix1) / (Math.sqrt(vb1[i]/fix2) + eps);
+          for(let j=0; j<2; j++) {
+            let grad_W1 = dW1[j][i]/m;
+            mW1[j][i] = beta1*mW1[j][i] + (1-beta1)*grad_W1; vW1[j][i] = beta2*vW1[j][i] + (1-beta2)*grad_W1*grad_W1;
+            W1[j][i] -= lr * (mW1[j][i]/fix1) / (Math.sqrt(vW1[j][i]/fix2) + eps);
+          }
+        }
+
+        epoch++;
+        return { loss: totalLoss / m, acc: correct / m };
+      }
+
+      const gridRes = 90; 
+      const offCanvas = document.createElement('canvas'); offCanvas.width = gridRes; offCanvas.height = gridRes;
+      const offCtx = offCanvas.getContext('2d', {willReadFrequently: true});
+      const imgData = offCtx.createImageData(gridRes, gridRes);
+
+      function resize() { w = canvas.clientWidth; h = canvas.clientHeight; canvas.width = w * App.dpr; canvas.height = h * App.dpr; ctx.setTransform(App.dpr, 0, 0, App.dpr, 0, 0); ctx.imageSmoothingEnabled = true; needRedraw = true; }
+      window.addEventListener('resize', resize); resize();
+
+      function draw() {
+        requestAnimationFrame(draw);
+        if (App._paused && !needRedraw && !isTraining) return;
+
+        let stats = null;
+        if (isTraining && !App._paused) {
+          let lr = parseFloat(slLr.value);
+          for(let k=0; k<3; k++) stats = trainStepAdam(lr); 
+          needRedraw = true;
+        }
+
+        if (needRedraw) {
+          ctx.clearRect(0, 0, w, h);
+          const scale = (Math.min(w, h) / 20) * state.zoom;
+          const cx = w/2 + state.panX, cy = h/2 + state.panY;
+
+          let idx = 0;
+          for(let iy=0; iy<gridRes; iy++) {
+            for(let ix=0; ix<gridRes; ix++) {
+              let px = (ix / (gridRes-1)) * w, py = (iy / (gridRes-1)) * h;
+              let dx = (px - cx) / scale, dy = -(py - cy) / scale;
+              let out = forward(dx, dy).out;
+              
+              let r=4, g=5, b=12, a=255;
+              if (out > 0.5) {
+                let intensity = Math.pow((out - 0.5) * 2, 0.75);
+                r += (212 - r) * intensity * 0.45; g += (175 - g) * intensity * 0.45; b += (55 - b) * intensity * 0.45;
+              } else {
+                let intensity = Math.pow((0.5 - out) * 2, 0.75);
+                r += (138 - r) * intensity * 0.45; g += (106 - g) * intensity * 0.45; b += (191 - b) * intensity * 0.45;
+              }
+
+              let val = out * 12;
+              let distToContour = Math.abs(val - Math.round(val));
+              if (distToContour < 0.05) { r += 20; g += 20; b += 20; } 
+              
+              imgData.data[idx++] = r; imgData.data[idx++] = g; imgData.data[idx++] = b; imgData.data[idx++] = a;
+            }
+          }
+          offCtx.putImageData(imgData, 0, 0);
+          ctx.globalAlpha = 0.9;
+          ctx.drawImage(offCanvas, 0, 0, w, h);
+          ctx.globalAlpha = 1.0;
+
+          ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(w, cy); ctx.moveTo(cx, 0); ctx.lineTo(cx, h);
+          ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = 1; ctx.stroke();
+
+          data.forEach(pt => {
+            let px = cx + pt.x * scale, py = cy - pt.y * scale;
+            if (px < -15 || px > w+15 || py < -15 || py > h+15) return;
+            ctx.beginPath(); ctx.arc(px, py, 4.5, 0, Math.PI * 2);
+            ctx.fillStyle = pt.label === 1 ? '#d4af37' : '#8a6abf'; ctx.fill();
+            let pred = forward(pt.x, pt.y).out > 0.5 ? 1 : 0;
+            ctx.lineWidth = pred !== pt.label ? 2 : 1; ctx.strokeStyle = pred !== pt.label ? '#fff' : 'rgba(0,0,0,0.6)'; ctx.stroke();
+          });
+
+          if (stats) {
+            statEpoch.textContent = epoch;
+            statLoss.textContent = stats.loss.toFixed(3);
+            let accP = (stats.acc * 100);
+            statAcc.textContent = accP.toFixed(1) + '%';
+            updateCardState(cardAcc, accP > 96, accP < 60);
+          }
+          if (!isTraining) needRedraw = false;
+        }
+      }
+      
+      generateData(currentDataset); initNetwork();
+      requestAnimationFrame(draw);
+
+      dataBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          dataBtns.forEach(b => b.classList.remove('active'));
+          e.target.classList.add('active');
+          currentDataset = e.target.dataset.type;
+          isTraining = false; btnTrain.textContent = 'Train Network'; btnTrain.classList.remove('active');
+          
+          if(currentDataset === 'spiral' || currentDataset === 'eight') { slN.value = 16; valN.textContent = 16; }
+          else if(currentDataset === 'ring' || currentDataset === 'star') { slN.value = 10; valN.textContent = 10; }
+          else { slN.value = 8; valN.textContent = 8; }
+          
+          generateData(currentDataset); initNetwork();
+          statEpoch.textContent = 0; statLoss.textContent = '0.000'; statAcc.textContent = '0.0%';
+          updateCardState(cardAcc, false, false); App.lastInteraction = Date.now();
+        });
+      });
+
+      slN.addEventListener('input', e => { 
+        valN.textContent = e.target.value; 
+        isTraining = false; btnTrain.textContent = 'Train Network'; btnTrain.classList.remove('active');
+        initNetwork(); statEpoch.textContent = 0; statLoss.textContent = '0.000'; statAcc.textContent = '0.0%'; updateCardState(cardAcc, false, false);
+      });
+      slLr.addEventListener('input', e => { valLr.textContent = parseFloat(e.target.value).toFixed(2); });
+      
+      btnTrain.addEventListener('click', () => {
+        isTraining = !isTraining;
+        btnTrain.textContent = isTraining ? 'Pause Training' : 'Train Network';
+        btnTrain.classList.toggle('active');
+        App.lastInteraction = Date.now();
+      });
+      
+      btnReset.addEventListener('click', () => { 
+        isTraining = false; btnTrain.textContent = 'Train Network'; btnTrain.classList.remove('active');
+        initNetwork(); statEpoch.textContent = 0; statLoss.textContent = '0.000'; statAcc.textContent = '0.0%'; 
+        updateCardState(cardAcc, false, false); App.lastInteraction = Date.now();
+      });
+      
+      addDragPan(canvas, state, () => { needRedraw = true; App.lastInteraction = Date.now(); });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initGlobal(); initHero(); initSec1(); initSec2(); initSec4();
+    });
+  </script>
+</body>
+</html>
