@@ -1,2205 +1,1306 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-RQVK6SF2E6');
-    </script>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>콩 한 알로 태양 만들기 — 바나흐-타르스키 역설</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+KR:wght@400;600;700&family=Noto+Sans+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
-<script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-<link rel="stylesheet" href="mellow_ios.css">
-<style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>완두콩 한 알로 태양 만들기 — Mellow Math</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,400&family=JetBrains+Mono:wght@300;400&family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
 
-:root {
-  --bg: #080d1a;
-  --bg2: #0c1326;
-  --bg3: #111b38;
-  --card: #131f42;
-  --gold: #f0b429;
-  --gold-dim: #c4912080;
-  --sky: #38bdf8;
-  --purple: #a78bfa;
-  --coral: #fb7185;
-  --mint: #34d399;
-  --amber: #fbbf24;
-  --text: #e0e6f0;
-  --muted: #7b8db5;
-  --font-display: 'Noto Serif KR', 'Fraunces', Georgia, serif;
-  --font-body: 'Noto Sans KR', 'DM Sans', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
 
-html { scroll-behavior: smooth; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-body);
-  font-weight: 300;
-  line-height: 1.7;
-  overflow-x: hidden;
-}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/lines/LineSegmentsGeometry.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/lines/LineMaterial.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/lines/LineSegments2.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/globe.gl@2.30.0/dist/globe.gl.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
 
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+  <style>
+    /* Design System */
+    :root {
+      --bg: #04050c;        
+      --bg2: #090b18;       
+      --bg3: #0e1128;       
+      --text: #b8b4ac;      
+      --cream: #ece8e0;     
+      --muted: #52566a;     
+      --gold: #c9a84c;      
+      --gold2: #d4a853;     
+      --gold-dim: rgba(201,168,76,.08); 
+      --violet: #8a6abf;    
+      --fern: #5a9a72;
+      --rose: #d17a86;
+      --sky: #38bdf8;
+      --border: rgba(255,255,255,.04);
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-kr: 'Noto Serif KR', serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
 
-body::before {
-  content: '';
-  position: fixed; inset: 0;
-  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events: none; z-index: 9999;
-}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-section {
-  min-height: 100vh;
-  padding: 6rem 2rem;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
+    body {
+      background-color: var(--bg); color: var(--text);
+      font-family: var(--font-body); font-weight: 300;
+      line-height: 1.7; font-size: 18px; overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
 
-.section-inner { max-width: 900px; width: 100%; }
+    /* Film Grain Overlay */
+    body::after {
+      content: ''; position: fixed; inset: 0; z-index: 9999;
+      pointer-events: none; opacity: .035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      background-size: 200px;
+    }
 
-h1 {
-  font-family: var(--font-display);
-  font-size: clamp(2.8rem, 6vw, 5rem);
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
-  color: #fff;
-}
-h2 {
-  font-family: var(--font-display);
-  font-size: clamp(1.8rem, 4vw, 3rem);
-  font-weight: 700;
-  line-height: 1.2;
-  color: #fff;
-  margin-bottom: 1.5rem;
-}
-h3 {
-  font-family: var(--font-body);
-  font-size: 1.1rem;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  margin-bottom: 0.5rem;
-}
-p { margin-bottom: 1rem; }
-.accent-gold { color: var(--gold); }
-.accent-sky { color: var(--sky); }
-.accent-purple { color: var(--purple); }
-.accent-coral { color: var(--coral); }
-.accent-mint { color: var(--mint); }
+    /* Ambient Particles */
+    #ambient-particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .particle {
+      position: absolute; border-radius: 50%;
+      background: radial-gradient(circle at center, var(--violet) 0%, transparent 70%);
+      opacity: 0.15; animation: drift linear infinite;
+    }
+    @keyframes drift {
+      from { transform: translateY(100vh) scale(1); opacity: 0; }
+      10% { opacity: 0.3; } 90% { opacity: 0.3; }
+      to { transform: translateY(-20vh) scale(1.5); opacity: 0; }
+    }
 
-.formula {
-  font-family: var(--font-mono);
-  font-size: clamp(1rem, 2.5vw, 1.3rem);
-  color: var(--gold);
-  background: var(--bg3);
-  padding: 1rem 1.5rem;
-  border-radius: 8px;
-  border-left: 3px solid var(--gold);
-  display: block;
-  margin: 1.2rem 0;
-  line-height: 2;
-  overflow-x: auto;
-}
+    /* Typography */
+    h1, h2, h3 { font-family: var(--font-display); color: var(--cream); font-weight: 300; }
+    .mono { font-family: var(--font-mono); }
+    .hi { color: var(--cream); font-weight: 400; text-shadow: 0 0 12px rgba(236,232,224,0.15); }
+    .ac { color: var(--gold); font-weight: 400; }
+    .math-ktx { font-size: 1.05em !important; padding: 0 0.1em; color: var(--cream); }
 
-/* Hero */
-#hero {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-#hero-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.5;
-}
-#hero .content {
-  position: relative;
-  z-index: 2;
-}
-#hero h1 { margin-bottom: 1rem; }
-#hero .subtitle {
-  font-family: var(--font-display);
-  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-  color: var(--gold);
-  font-style: italic;
-  margin-bottom: 2.5rem;
-}
-#hero .tagline {
-  color: var(--muted);
-  font-size: 0.95rem;
-  max-width: 560px;
-  margin: 0 auto 2.5rem;
-}
+    /* Scroll Reveal */
+    .reveal { opacity: 0; transform: translateY(24px); transition: all 1s cubic-bezier(.23,1,.32,1); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
 
-.start-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.9rem 2.2rem;
-  background: transparent;
-  border: 1.5px solid var(--gold);
-  color: var(--gold);
-  font-family: var(--font-body);
-  font-size: 1rem;
-  font-weight: 500;
-  border-radius: 60px;
-  cursor: pointer;
-  transition: all 0.3s;
-  letter-spacing: 0.05em;
-}
-.start-btn:hover {
-  background: var(--gold);
-  color: var(--bg);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(240, 180, 41, 0.25);
-}
+    /* Floating Badge */
+    .floating-badge {
+      position: fixed; bottom: 2rem; left: 2rem; font-family: var(--font-mono); font-size: 0.58rem;
+      color: #8db830; text-decoration: none; text-transform: lowercase; letter-spacing: 0.14em;
+      text-shadow: 0 0 8px rgba(141,184,48,0.4); z-index: 100; transition: all 0.3s ease;
+    }
+    .floating-badge:hover { color: #a8d43a; transform: translateY(-1px); text-shadow: 0 0 12px rgba(168,212,58,0.6); }
 
-/* Nav dots */
-#nav-dots {
-  position: fixed;
-  right: 1.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.nav-dot {
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  background: var(--muted);
-  opacity: 0.3;
-  cursor: pointer;
-  transition: all 0.3s;
-  border: none;
-}
-.nav-dot.active {
-  opacity: 1;
-  background: var(--gold);
-  transform: scale(1.4);
-}
+    /* Hero Section */
+    .hero {
+      position: relative; height: 100vh; display: flex; flex-direction: column; 
+      align-items: center; justify-content: center; text-align: center; z-index: 1;
+    }
+    #hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; }
+    .hero-vignette {
+      position: absolute; inset: 0; z-index: -1; pointer-events: none;
+      background: radial-gradient(circle at center, transparent 0%, var(--bg) 100%);
+    }
+    .hero-label {
+      font-family: var(--font-mono); color: var(--muted); font-size: 0.8rem;
+      letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 2rem;
+    }
+    .hero-chapter { font-family: var(--font-display); font-size: 1.4rem; color: var(--gold); font-style: italic; margin-bottom: 1rem; }
+    .hero-title { font-size: clamp(2.4rem, 5vw, 4.6rem); line-height: 1.1; max-width: 900px; margin: 0 auto 1.5rem; padding: 0 1rem; }
+    .hero-title em { color: var(--violet); font-style: italic; }
+    .hero-tagline { font-family: var(--font-display); font-style: italic; font-size: 1.25rem; color: var(--text); max-width: 600px; margin: 0 auto; padding: 0 1rem; opacity: 0.9; }
+    .hero-scroll {
+      position: absolute; bottom: 3rem; font-family: var(--font-mono); font-size: 0.7rem;
+      letter-spacing: 0.2em; color: var(--violet); text-transform: uppercase;
+      animation: breathe 3s ease-in-out infinite;
+    }
+    @keyframes breathe { 0%, 100% { opacity: 0.3; transform: translateY(0); } 50% { opacity: 1; transform: translateY(5px); } }
 
-/* Cards */
-.demo-card {
-  background: var(--card);
-  border-radius: 16px;
-  padding: 2rem;
-  margin: 1.5rem 0;
-  position: relative;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.04);
-}
-.demo-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--gold), var(--sky), var(--purple));
-  opacity: 0.6;
-}
+    /* Chapter Layout */
+    .chapter-container { max-width: 720px; margin: 0 auto; padding: 6rem 1.5rem 4rem; position: relative; z-index: 2; }
+    .chapter-section { margin-bottom: 8rem; }
+    .sec-num { font-family: var(--font-mono); color: var(--gold); font-size: 0.9rem; margin-bottom: 1rem; display: block; }
+    .sec-title { font-size: 2.4rem; margin-bottom: 3rem; }
 
-/* Buttons */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.55rem 1.3rem;
-  border: 1px solid rgba(255,255,255,0.15);
-  background: rgba(255,255,255,0.04);
-  color: var(--text);
-  font-family: var(--font-body);
-  font-size: 0.85rem;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.25s;
-  font-weight: 400;
-}
-.btn:hover {
-  background: rgba(255,255,255,0.1);
-  border-color: rgba(255,255,255,0.25);
-  transform: translateY(-1px);
-}
-.btn.active, .btn.playing {
-  border-color: var(--gold);
-  background: rgba(240, 180, 41, 0.12);
-  color: var(--gold);
-}
-.btn-gold { border-color: var(--gold); color: var(--gold); }
-.btn-gold:hover { background: var(--gold); color: var(--bg); }
-.btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; }
+    /* Prose & Quotes */
+    .prose { margin-bottom: 1.5rem; font-size: 1.05rem; }
+    .prose-drop::first-letter { font-family: var(--font-display); float: left; font-size: 4.5rem; line-height: 0.8; margin-right: 0.75rem; margin-top: 0.2rem; color: var(--violet); }
+    
+    .pull-quote {
+      text-align: center; font-family: var(--font-display); font-style: italic;
+      font-size: 1.4rem; color: var(--cream); margin: 5rem auto; max-width: 90%;
+      line-height: 1.5; padding-bottom: 2rem; position: relative;
+    }
+    .pull-quote::after {
+      content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+    
+    .block-quote {
+      padding: 2rem 2.5rem; border-left: 2px solid var(--gold); margin: 3.5rem 0;
+      background: linear-gradient(90deg, var(--gold-dim), transparent);
+      font-family: var(--font-display); font-style: italic; color: var(--cream); font-size: 1.15rem; line-height: 1.6;
+    }
+    .block-quote .quote-attr { font-family: var(--font-body); font-size: 0.85rem; font-style: normal; color: var(--muted); display: block; margin-top: 1rem; }
 
-/* Canvas */
-.canvas-wrap {
-  position: relative;
-  width: 100%;
-  background: rgba(0,0,0,0.25);
-  border-radius: 12px;
-  overflow: hidden;
-  margin: 1rem 0;
-}
-.canvas-wrap canvas { display: block; width: 100%; }
+    .coda { text-align: center; font-family: var(--font-display); font-style: italic; font-size: 1.25rem; color: var(--cream); margin: 6rem auto 2rem; line-height: 1.8; }
 
-/* Reveal */
-.reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-.reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+    /* Interactive Boxes */
+    .ibox {
+      background: var(--bg3); border-radius: 16px; padding: 2.5rem; margin: 4rem 0;
+      position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.4); border: 1px solid var(--border);
+    }
+    .ibox::before {
+      content: ''; position: absolute; top: 0; left: 2.5rem; right: 2.5rem; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent); opacity: 0.3;
+    }
+    .ibox-label {
+      font-family: var(--font-mono); font-size: 0.7rem; color: var(--gold); text-transform: uppercase;
+      letter-spacing: 0.15em; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 8px;
+    }
+    .pulse-dot { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(201,168,76,0.4); } 70% { box-shadow: 0 0 0 6px rgba(201,168,76,0); } 100% { box-shadow: 0 0 0 0 rgba(201,168,76,0); } }
+    .ibox-title { font-size: 1.6rem; margin-bottom: 0.8rem; }
+    .ibox-desc { font-size: 0.9rem; color: var(--text); margin-bottom: 2rem; line-height: 1.6; }
+    
+    .canvas-container {
+      width: 100%; height: 400px; background: var(--bg2); border-radius: 8px;
+      overflow: hidden; position: relative; margin-bottom: 2rem; border: 1px solid var(--border);
+    }
+    canvas.interactive { display: block; width: 100%; height: 100%; cursor: grab; outline: none; }
+    canvas.interactive:active { cursor: grabbing; }
 
-.section-num {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--gold);
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  margin-bottom: 0.5rem;
-  opacity: 0.7;
-}
+    /* Controls & Stats */
+    .controls { display: flex; gap: 1.5rem; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; }
+    .ctrl-group { display: flex; flex-direction: column; gap: 0.5rem; flex: 1; min-width: 200px; }
+    .ctrl-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    
+    input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; background: transparent; }
+    input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 2px; background: var(--border); }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none; height: 16px; width: 16px; border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, var(--gold), #8a6a23);
+      margin-top: -7px; cursor: pointer; box-shadow: 0 0 10px rgba(201,168,76,0.3); transition: transform 0.1s;
+    }
+    input[type=range]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 
-/* Floating badge */
-.floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:lowercase;color:#8db830;background:transparent;padding:.35rem .7rem;text-decoration:none;transition:color .25s,text-shadow .25s,transform .25s;text-shadow:0 0 6px rgba(141,184,48,.4),0 0 16px rgba(141,184,48,.15)}
-.floating-badge:hover{color:#a8d43a;text-shadow:0 0 8px rgba(141,184,48,.65),0 0 22px rgba(141,184,48,.28);transform:translateY(-1px)}
+    /* Buttons & Toggles */
+    .btn {
+      background: rgba(201,168,76,0.05); border: 1px solid var(--border); color: var(--text);
+      font-family: var(--font-mono); font-size: 0.75rem; padding: 0.6rem 1.2rem;
+      border-radius: 4px; cursor: pointer; transition: all 0.2s cubic-bezier(.23,1,.32,1); text-transform: uppercase;
+      letter-spacing: 0.05em; outline: none; flex: 1; min-width: 60px; text-align: center;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn:disabled { opacity: 0.3; cursor: not-allowed; border-color: var(--border); background: transparent; color: var(--muted); box-shadow: none !important; }
+    
+    .btn-n { border-color: var(--fern); color: var(--fern); }
+    .btn-n:hover:not(:disabled) { background: var(--fern); color: var(--bg); box-shadow: 0 0 12px rgba(90,154,114,0.4); }
+    .btn-s { border-color: var(--sky); color: var(--sky); }
+    .btn-s:hover:not(:disabled) { background: var(--sky); color: var(--bg); box-shadow: 0 0 12px rgba(56,189,248,0.4); }
+    .btn-e { border-color: var(--gold); color: var(--gold); }
+    .btn-e:hover:not(:disabled) { background: var(--gold); color: var(--bg); box-shadow: 0 0 12px rgba(201,168,76,0.4); }
+    .btn-w { border-color: var(--rose); color: var(--rose); }
+    .btn-w:hover:not(:disabled) { background: var(--rose); color: var(--bg); box-shadow: 0 0 12px rgba(209,122,134,0.4); }
+    
+    .btn-outline { border-color: var(--muted); color: var(--text); background: transparent; flex: 0.5; min-width: 80px;}
+    .btn-outline:hover:not(:disabled) { background: var(--muted); color: var(--cream); }
 
-/* Attribution */
-.attr-overlay {
-  position: fixed;
-  bottom: 1.75rem;
-  right: 1.75rem;
-  z-index: 10000;
-  text-align: right;
-  pointer-events: none;
-}
-.attr-name {
-  font-family: 'Fraunces', Georgia, serif;
-  font-size: 0.85rem;
-  font-weight: 400;
-  color: #edeef2;
-  letter-spacing: -0.01em;
-  display: block;
-}
-.attr-inst {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 300;
-  color: #5c6178;
-  letter-spacing: 0.01em;
-  display: block;
-  margin-top: 0.2rem;
-}
-.attr-url {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.08em;
-  color: #d4a853;
-  display: inline-block;
-  margin-top: 0.25rem;
-  text-decoration: none;
-  pointer-events: all;
-}
-.attr-url:hover { text-decoration: underline; }
+    .toggle-wrapper { display: flex; align-items: center; gap: 1rem; }
+    .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider-toggle {
+      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+      background-color: transparent; border: 1px solid var(--muted); transition: .3s; border-radius: 24px;
+    }
+    .slider-toggle:before {
+      position: absolute; content: ""; height: 14px; width: 14px; left: 4px; bottom: 4px;
+      background-color: var(--muted); transition: .3s; border-radius: 50%;
+    }
+    input:checked + .slider-toggle { background-color: rgba(201,168,76,0.15); border-color: var(--gold); }
+    input:checked + .slider-toggle:before { transform: translateX(20px); background-color: var(--gold); box-shadow: 0 0 8px rgba(201,168,76,0.5); }
 
-footer {
-  text-align: center;
-  padding: 3rem 2rem;
-  color: var(--muted);
-  font-size: 0.8rem;
-}
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 1rem; }
+    .stat-card { background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 8px; border: 1px solid var(--border); }
+    .stat-val { font-family: var(--font-mono); font-size: 1.3rem; color: var(--gold); margin-top: 0.25rem; transition: color 0.3s; }
+    .stat-val.error { color: var(--rose); text-shadow: 0 0 8px rgba(209,122,134,0.3); }
 
-/* ── Bean-Sun Demo ── */
-#bean-sun-canvas { display: block; width: 100%; border-radius: 12px; }
+    /* Canvas Overlays & Centering Fixes */
+    .overlay-hint { position: absolute; bottom: 12px; left: 0; right: 0; text-align: center; font-family: var(--font-mono); font-size: 10px; color: rgba(255,255,255,0.3); pointer-events: none; user-select: none; letter-spacing: 0.08em;}
+    
+    /* Strict Globe Container Fix */
+    #globe-wrapper { position: relative; height: 480px; width: 100%; border-radius: 8px; overflow: hidden; background: #04050c; border: 1px solid var(--border); margin-bottom: 2rem; }
+    #globe-container { position: absolute; inset: 0; cursor: grab; }
+    #globe-container canvas { display: block; outline: none; }
+    #globe-container:active { cursor: grabbing; }
+    
+    #city-labels { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
+    .city-label {
+      position: absolute; transform: translate(-50%, -180%); font-family: var(--font-mono);
+      font-size: 10px; font-weight: 500; letter-spacing: .06em; white-space: nowrap; pointer-events: none; user-select: none;
+    }
+    .city-dot { position: absolute; width: 7px; height: 7px; border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 10;}
+    
+    #globe-loading {
+      position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: var(--bg2); z-index: 20; transition: opacity 0.6s;
+    }
+    .spinner { width: 28px; height: 28px; border: 2px solid rgba(201,168,76,0.22); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.9s linear infinite; margin-bottom: 12px; }
+    
+    sup { font-size: 0.7em; }
 
-.phase-indicator {
-  display: flex;
-  gap: 4px;
-  justify-content: center;
-  margin: 1rem 0 0.5rem;
-}
-.phase-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.12);
-  transition: all 0.4s;
-}
-.phase-dot.active {
-  background: var(--gold);
-  box-shadow: 0 0 10px rgba(240,180,41,0.5);
-  transform: scale(1.3);
-}
+    /* 참고문헌 */
+    .ref-section { margin-top: 6rem; padding-top: 3rem; border-top: 1px solid var(--border); }
+    .ref-heading { font-family: var(--font-mono); font-size: 0.9rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 2rem; }
+    .ref-list { list-style: none; display: flex; flex-direction: column; gap: 1.2rem; }
+    .ref-list li { font-size: 0.85rem; color: var(--text); padding-left: 1.5rem; position: relative; }
+    .ref-list li::before { content: '—'; position: absolute; left: 0; color: var(--muted); }
+    .ref-author { color: var(--cream); font-weight: 400; }
+    .ref-title { font-style: italic; color: var(--text); }
+    .ref-detail { color: var(--muted); }
 
-.phase-label {
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--muted);
-  margin-bottom: 1rem;
-  min-height: 1.2em;
-}
+    /* Footer */
+    footer { padding: 4rem 1.5rem; text-align: center; border-top: 1px solid var(--border); position: relative; z-index: 2; margin-top: 4rem; }
+    .footer-attr { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; }
+    .footer-name { font-family: var(--font-display); font-size: 0.85rem; color: var(--cream); }
+    .footer-inst { font-family: var(--font-body); font-size: 0.7rem; color: var(--muted); }
+    .footer-url { font-family: var(--font-mono); font-size: 0.58rem; color: var(--gold); text-decoration: none; margin-top: 0.8rem; }
+    .footer-url:hover { color: var(--cream); }
 
-/* ── Cayley Tree ── */
-#cayley-canvas { display: block; position: absolute; inset: 0; border-radius: 12px; cursor: grab; touch-action: none; }
-#cayley-canvas:active { cursor: grabbing; }
-
-.radius-control {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  margin: 1rem 0;
-}
-.radius-control .cbtn {
-  background: rgba(80,120,210,.13);
-  border: 0.5px solid rgba(100,150,255,.30);
-  color: rgba(190,215,255,.90);
-  width: 36px; height: 36px;
-  border-radius: 8px;
-  font-size: 20px;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: background .15s;
-}
-.radius-control .cbtn:hover { background: rgba(80,120,210,.28); }
-.radius-control .cbtn:disabled { opacity: 0.22; cursor: not-allowed; }
-.radius-control .rval {
-  font-size: 28px;
-  font-family: var(--font-mono);
-  color: rgba(225,238,255,.95);
-  min-width: 32px;
-  text-align: center;
-}
-.radius-control input[type=range] {
-  width: 140px;
-}
-
-/* ── Socks & Shoes ── */
-.drawer-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-  gap: 10px;
-  margin: 1rem 0;
-}
-.drawer-box {
-  aspect-ratio: 1;
-  background: var(--bg3);
-  border: 1.5px solid rgba(255,255,255,0.06);
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  cursor: pointer;
-  transition: all 0.3s;
-  position: relative;
-  overflow: hidden;
-}
-.drawer-box:hover {
-  border-color: var(--gold);
-  transform: translateY(-3px);
-}
-.drawer-box.chosen {
-  border-color: var(--gold);
-  background: rgba(240,180,41,0.08);
-  box-shadow: 0 0 16px rgba(240,180,41,0.15);
-}
-.drawer-box .item-icon { font-size: 1.8rem; line-height: 1; }
-.drawer-box .item-label {
-  font-family: var(--font-mono);
-  font-size: 0.55rem;
-  color: var(--muted);
-  letter-spacing: 0.05em;
-}
-.drawer-box .chosen-mark {
-  position: absolute;
-  top: 4px; right: 6px;
-  font-size: 0.7rem;
-  color: var(--gold);
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-.drawer-box.chosen .chosen-mark { opacity: 1; }
-
-/* ── Quote block ── */
-.quote-block {
-  border-left: 3px solid var(--purple);
-  padding: 1.2rem 1.5rem;
-  background: rgba(167,139,250,0.05);
-  border-radius: 0 12px 12px 0;
-  margin: 1.5rem 0;
-  font-style: italic;
-  color: var(--text);
-}
-.quote-block .quote-author {
-  display: block;
-  font-style: normal;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--purple);
-  margin-top: 0.6rem;
-  letter-spacing: 0.05em;
-}
-
-/* ── Timeline ── */
-.timeline {
-  position: relative;
-  padding-left: 2rem;
-  margin: 1.5rem 0;
-}
-.timeline::before {
-  content: '';
-  position: absolute;
-  left: 6px;
-  top: 0;
-  bottom: 0;
-  width: 2px;
-  background: linear-gradient(to bottom, var(--gold), var(--purple), var(--sky));
-  border-radius: 2px;
-}
-.tl-item {
-  position: relative;
-  margin-bottom: 1.5rem;
-  padding-left: 1rem;
-}
-.tl-item::before {
-  content: '';
-  position: absolute;
-  left: -2rem;
-  top: 6px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 2px solid var(--gold);
-  background: var(--bg);
-}
-.tl-year {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--gold);
-  letter-spacing: 0.08em;
-  margin-bottom: 0.2rem;
-}
-.tl-title {
-  font-family: var(--font-display);
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 0.3rem;
-}
-.tl-desc {
-  font-size: 0.85rem;
-  color: var(--muted);
-  line-height: 1.7;
-}
-
-/* ── Globe section ── */
-.globe-wrapper {
-  position: relative;
-  width: 100%;
-  height: 480px;
-  border-radius: 12px;
-  overflow: hidden;
-  background: #06101e;
-  margin: 1rem 0;
-}
-#globe-container {
-  position: absolute;
-  inset: 0;
-}
-#city-labels {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 5;
-}
-.city-label {
-  position: absolute;
-  transform: translate(-50%, -180%);
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 400;
-  letter-spacing: .06em;
-  white-space: nowrap;
-  pointer-events: none;
-  user-select: none;
-}
-.city-dot {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-}
-
-/* ── Debate cards ── */
-.debate-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin: 1.5rem 0;
-}
-.debate-card {
-  background: var(--bg3);
-  border-radius: 12px;
-  padding: 1.3rem;
-  border: 1px solid rgba(255,255,255,0.04);
-  transition: all 0.3s;
-}
-.debate-card:hover {
-  border-color: rgba(255,255,255,0.1);
-  transform: translateY(-2px);
-}
-.debate-card h4 {
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 0.4rem;
-}
-.debate-card .tag {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.1em;
-  padding: 0.15rem 0.5rem;
-  border-radius: 4px;
-  margin-bottom: 0.5rem;
-}
-.debate-card .tag.pro { background: rgba(52,211,153,0.12); color: var(--mint); }
-.debate-card .tag.con { background: rgba(251,113,133,0.12); color: var(--coral); }
-.debate-card p { font-size: 0.82rem; color: var(--muted); margin-bottom: 0; line-height: 1.7; }
-
-/* ── KaTeX in flow ── */
-.math-inline { display: inline; }
-.katex { font-size: 1em; }
-
-/* ── Photo card ── */
-.photo-card {
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
-  background: var(--bg3);
-  border-radius: 16px;
-  padding: 1.5rem;
-  margin: 1.5rem 0;
-  border: 1px solid rgba(255,255,255,0.04);
-}
-.photo-placeholder {
-  width: 120px;
-  height: 140px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--bg2), rgba(167,139,250,0.15));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 3rem;
-  flex-shrink: 0;
-  border: 1px solid rgba(167,139,250,0.2);
-}
-.photo-info h4 {
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 0.2rem;
-}
-.photo-info .sub {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--purple);
-  letter-spacing: 0.06em;
-  margin-bottom: 0.5rem;
-}
-.photo-info p {
-  font-size: 0.85rem;
-  color: var(--muted);
-  line-height: 1.7;
-  margin-bottom: 0;
-}
-
-@media (max-width: 640px) {
-  section { padding: 4rem 1.2rem; }
-  #nav-dots { display: none; }
-  .demo-card { padding: 1.2rem; }
-  .debate-grid { grid-template-columns: 1fr; }
-  .photo-card { flex-direction: column; text-align: center; }
-  .globe-wrapper { height: 360px; }
-  .drawer-grid { grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 8px rgba(240,180,41,0.2); }
-  50% { box-shadow: 0 0 24px rgba(240,180,41,0.5); }
-}
-
-/* ── Loading overlay for globe ── */
-#globe-loading {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  background: #06101e; z-index: 20; gap: 14px;
-  transition: opacity 0.6s;
-  border-radius: 12px;
-}
-#globe-loading.hide { opacity: 0; pointer-events: none; }
-.spinner {
-  width: 28px; height: 28px;
-  border: 2px solid rgba(80,120,210,.22);
-  border-top-color: #6670c8;
-  border-radius: 50%;
-  animation: spin 0.9s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-#globe-loading p {
-  font-size: 0.68rem;
-  color: rgba(150,185,240,.38);
-  font-family: var(--font-mono);
-  letter-spacing: .05em;
-}
-
-/* ── Orbit info bar ── */
-.orbit-info {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin: 0.5rem 0;
-}
-.orbit-stat {
-  background: var(--bg3);
-  border-radius: 8px;
-  padding: 0.5rem 1rem;
-  border: 1px solid rgba(255,255,255,0.03);
-  text-align: center;
-}
-.orbit-stat .osl {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 0.15rem;
-}
-.orbit-stat .osv {
-  font-family: var(--font-mono);
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--gold);
-}
-.orbit-stat .osu { font-size: 0.7rem; color: var(--muted); }
-</style>
+    @media (max-width: 768px) {
+      .hero-title { font-size: 2.8rem; }
+      .chapter-container { padding: 4rem 1.5rem 6rem; }
+      .ibox { padding: 1.5rem; border-radius: 12px; margin: 3rem 0; }
+      .ibox::before { left: 1.5rem; right: 1.5rem; }
+      .canvas-container { height: 350px !important; }
+      #globe-wrapper { height: 350px !important; }
+      .floating-badge { bottom: 1rem; left: 1rem; }
+      .controls { gap: 0.5rem; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- Navigation dots -->
-<nav id="nav-dots"></nav>
+  <div id="ambient-particles"></div>
+  <a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
 
-<!-- ═══════════════════ HERO ═══════════════════ -->
-<section id="hero">
-  <canvas id="hero-canvas"></canvas>
-  <div class="content">
-    <h3 class="accent-gold">바나흐–타르스키 역설</h3>
-    <h1>콩 한 알로<br>태양 만들기</h1>
-    <p class="subtitle">유한 개의 조각으로 벌이는 수학적 마술</p>
-    <p class="tagline">콩알만 한 공을 다섯 조각으로 쪼갠 뒤, 회전과 평행이동만으로 다시 맞추면 — 태양만 한 공이 됩니다. 추측이 아닙니다. 수학이 증명한 정리입니다.</p>
-    <button class="start-btn" onclick="document.getElementById('sec-paradox').scrollIntoView({behavior:'smooth'})">
-      ▶ 탐험 시작
-    </button>
-  </div>
-</section>
+  <header class="hero" id="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-vignette"></div>
+    <div class="hero-label reveal">Mellow Math</div>
+    <div class="hero-chapter reveal" style="transition-delay: 0.1s">제5장</div>
+    <h1 class="hero-title reveal" style="transition-delay: 0.2s">완두콩 한 알로 <em>태양</em> 만들기</h1>
+    <div class="hero-tagline reveal" style="transition-delay: 0.3s">무한의 균열 속으로, 순수한 논리의 의지에 기하학이 굴복하는 곳까지.</div>
+    <div class="hero-scroll">시작</div>
+  </header>
 
-<!-- ═══════════════════ 1. THE PARADOX ═══════════════════ -->
-<section id="sec-paradox">
-  <div class="section-inner">
-    <div class="reveal">
-      <p class="section-num">01 — 불가능한 정리</p>
-      <h2>공 하나가 <span class="accent-coral">둘</span>이 된다</h2>
-      <p>1924년, 스테판 바나흐와 알프레드 타르스키는 수학 역사상 가장 충격적인 결과 중 하나를 증명했습니다. 3차원 공간의 단단한 공을 <strong>유한 개(다섯이면 충분)</strong>의 조각으로 분해한 뒤, 강체 운동(회전과 평행이동)만으로 재조립하면 <strong>원래와 똑같은 공 두 개</strong>가 됩니다.</p>
-      <p>추측도, 사고실험도 아닙니다. 완벽한 논리로 증명된 <em>정리</em>입니다. 한번 복제할 수 있으면 반복하면 됩니다 — 콩알에서 태양을 만드는 것은 인내의 문제일 뿐이죠.</p>
+  <main class="chapter-container">
+    
+    <section class="chapter-section" id="section-1">
+      <span class="sec-num reveal">01</span>
+      <h2 class="sec-title reveal">기적의 해부학</h2>
+      <p class="prose prose-drop reveal">1924년, 두 명의 폴란드 수학자 스테판 바나흐와 알프레트 타르스키가 너무나 반직관적이어서 보편적으로 '역설'이라 불리는 정리를 담은 논문을 발표했다. 그들은 하나의 단단한 3차원 구를 단 다섯 개의 들쭉날쭉하고 눈에 보이지 않는 조각으로 쪼갠 뒤, 그 조각들을 재조립하여 <span class="hi">원래와 정확히 같은 크기의 완벽한 구 두 개</span>를 만들 수 있음을 증명했다. 늘림도 없고, 구부림도 없고, 새로운 재료의 추가도 없다. 조각들을 단지 공간 속에서 이동시켜 다시 맞추기만 하면 된다.</p>
+      <p class="prose reveal">논리적으로 확장하면, 평범한 완두콩 하나를 유한 개의 조각으로 나눈 뒤 재조립하여 태양 크기의 구를 만들 수 있다. 물리적 직관으로는 완전한 연금술처럼 들린다. 질량 보존 법칙에 대한 노골적인 위반이자, 현실이라는 개념 자체에 대한 모독처럼 느껴진다. 그러나 순수하고 엄밀한 현대 기하학의 규칙 안에서, 이것은 부정할 수 없는 진실이다.</p>
+
+      <div class="block-quote reveal">
+        “On peut décomposer une sphère en un nombre fini de morceaux et les réassembler pour former deux sphères de même rayon.”
+        <span class="quote-attr">— 스테판 바나흐 & 알프레트 타르스키, Fundamenta Mathematicae (1924)</span>
+      </div>
+
+      <p class="prose reveal">이것은 물리학의 속임수가 아니라, <span class="ac">수학적 공간의 무한한 조밀성</span>에 대한 심오한 계시이다. 물리 세계에서 물질은 원자로 이루어져 있고, 물체를 계속 자르면 결국 더 이상 나눌 수 없는 입자에 도달한다. 하지만 수학의 우주에서 기하학적 구는 셀 수 없이 무한한 차원 없는 점들로 이루어져 있다. 이 역설은 바로 이 무한의 바닥 없는, 프랙탈적 본성을 이용한다—전체가 그 부분의 극히 일부 안에 완벽하게 숨겨질 수 있는 세계.</p>
+
+      <div class="ibox reveal" id="ibox-infinity">
+        <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
+        <h3 class="ibox-title">무한의 엔진</h3>
+        <p class="ibox-desc">바나흐-타르스키 역설은 무한의 기묘한 산술에 의존한다. 무한히 조밀한 공간에서는 모든 점을 바깥으로 이동시켜 원래 부피의 한 방울도 잃지 않고도 빈 공간을 무에서 만들어낼 수 있다. 슬라이더를 드래그하여 빛나는 점들을 황금 나선을 따라 이동시켜 보라. 나선이 원천을 고갈시키지 않고도 영원히 늘어나며, 중심에 완벽히 비어 있는 자리를 남겨 완전히 새로운 점들을 수용하는 기적을 관찰해 보라.</p>
+        
+        <div class="canvas-container" style="height: 380px;">
+          <canvas id="canvas-1" class="interactive"></canvas>
+        </div>
+        
+        <div class="controls">
+          <div class="ctrl-group">
+            <span class="ctrl-label">원소 이동 (n → n + k)</span>
+            <input type="range" id="slider-shift" min="0" max="40" value="0" step="0.1">
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stat-card">
+            <div class="ctrl-label">이동량 (k)</div>
+            <div class="stat-val" id="stat-k">0.0</div>
+          </div>
+          <div class="stat-card">
+            <div class="ctrl-label">생성된 빈자리</div>
+            <div class="stat-val" id="stat-vacated">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="ctrl-label">전체 점의 수</div>
+            <div class="stat-val">∞</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter-section" id="section-2">
+      <span class="sec-num reveal">02</span>
+      <h2 class="sec-title reveal">회전의 미궁</h2>
+      
+      <p class="prose prose-drop reveal">이 역설의 진정한 설계자는 바나흐도 타르스키도 아닌, 독일의 수학자 펠릭스 하우스도르프였다. 그보다 10년 전, 하우스도르프는 마법이 구 자체에 있는 것이 아니라, 3차원 공간의 보이지 않는 뼈대—회전의 법칙—안에 있음을 발견했다. 물체를 회전시킬 때, 움직임의 순서가 결과를 근본적으로 바꾼다. 구를 왼쪽으로 돌린 뒤 위로 돌리면, 위로 먼저 돌린 뒤 왼쪽으로 돌린 것과 다른 위치에 놓인다. 이 비교환성이 프랙탈적인 가능성의 우주를 낳는다.</p>
+      
+      <p class="prose reveal">보이지 않는 미궁의 한가운데 서 있다고 상상하라. 모든 발걸음이 강체 회전이다. 네 가지 방향으로 돌 수 있다. 이 회전들의 각도를 정밀하게 선택하면, 그것들은 결코 깔끔하게 상쇄되거나 반복되지 않는다. 매번 새로운 움직임의 조합은 완전히 고유한, 이전에 한 번도 본 적 없는 배향을 만들어낸다. 출발점으로 돌아가는 유일한 방법은 정확히 자신의 발자취를 되돌아가는 것뿐이다. 수학자들은 이 무한히 분기하고, 고리가 없는 구조를 <span class="ac">자유군(free group)</span>이라 부른다.</p>
+
+      <p class="prose reveal">역설은 전적으로 이 군의 무한한 가지들 안에서 꽃핀다. 나무가 영원히 뻗어 나가기 때문에, 하나의 하위 가지 안에 전체 나무의 완벽하고 동일한 복사본이 숨겨져 있다. 하나의 가지만 잡고 단 한 번의 역회전을 적용하면, 그것은 즉시 미궁 전체를 거의 다 뒤덮을 만큼 팽창한다. 이 수학적 마술—극히 일부에서 전체를 소환하는 것—이 바로 구를 복제하는 정확한 메커니즘이다.</p>
+
+      <div class="ibox reveal" id="ibox-cayley">
+        <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
+        <h3 class="ibox-title">3차원 속의 자유군</h3>
+        <p class="ibox-desc">이것은 자유군의 케일리 그래프이다. 얼핏 보면 변의 길이가 점점 줄어드는 평면 프랙탈처럼 보인다. 하지만 <span class="hi">캔버스를 드래그하여 공간을 회전시켜 보라</span>. 실은 모든 가지가 정확히 같은 단위 길이를 가진 완벽하게 대칭적인 3차원 유클리드 구조임을 발견하게 될 것이다. "줄어듦"은 단지 원근법의 환상이었다.</p>
+        
+        <div class="canvas-container" style="height: 480px; position: relative;">
+          <canvas id="cayley-canvas" style="position: absolute; inset: 0; width: 100%; height: 100%; outline: none; cursor: grab;"></canvas>
+          <div class="overlay-hint">드래그하여 회전 · Shift+드래그로 이동 · 스크롤로 확대/축소</div>
+        </div>
+        
+        <div class="controls">
+          <div class="ctrl-group">
+            <span class="ctrl-label">분기 깊이</span>
+            <input type="range" id="slider-cayley" min="0" max="5" value="0" step="1">
+          </div>
+        </div>
+        
+        <div class="stats">
+          <div class="stat-card">
+            <div class="ctrl-label">깊이</div>
+            <div class="stat-val" id="stat-cay-depth">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="ctrl-label">고유 노드</div>
+            <div class="stat-val" id="stat-cay-nodes">1</div>
+          </div>
+          <div class="stat-card">
+            <div class="ctrl-label">가지</div>
+            <div class="stat-val" id="stat-cay-edges">0</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter-section" id="section-3">
+      <span class="sec-num reveal">03</span>
+      <h2 class="sec-title reveal">마법의 각도</h2>
+      
+      <p class="prose prose-drop reveal">이제 우리는 무한히 분기하는, 역설적인 회전의 나무를 가지고 있다. 하지만 이것이 실제 구로 어떻게 번역될까? 비밀은 매우 특수한 기하학에 있다: 정확히 <span class="hi math-ktx">\arccos(1/3)</span>, 대략 70.53도의 마법의 각도.</p>
+      
+      <p class="prose reveal">하우스도르프는 이 정확한 각도로 두 직교 축(적도와 본초 자오선처럼)을 따라 구를 회전시키면, 그 움직임이 정확히 추상적 자유군처럼 행동함을 증명했다. 북·남·동·서 회전을 조합하면, 하나의 점이 구의 표면 위에서 춤을 춘다. 이 특정 각도들이 완전한 원에 대해 수학적으로 "무리수적"이기 때문에, 결코 닫힌 고리를 형성하지 않는다.</p>
+      
+      <p class="prose reveal">이 구면 미궁을 아무리 오래 헤매더라도, 점은 결코 자신의 발자국을 다시 밟지 않는다. 매 순서열은 완전히 고유한 목적지를 만들어낸다.</p>
+
+      <div class="ibox reveal" id="ibox-manual">
+        <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
+        <h3 class="ibox-title">역설의 나침반</h3>
+        <p class="ibox-desc">적도 위에서 시작하는 하나의 점을 보고 있다. 아래 버튼을 클릭하여 정확히 70.53° 회전을 수동으로 적용해 보라. 빛나는 궤적이 지구 위에서 혼돈스럽고 반복되지 않는 패턴을 짜나가는 것을 관찰하라. 출발점으로 돌아가려면, 정확히 자신의 걸음 순서를 되돌아가야 한다.</p>
+        
+        <div class="canvas-container" style="height: 400px; position: relative;">
+          <canvas id="manual-canvas" style="position: absolute; inset: 0; width: 100%; height: 100%; outline: none; cursor: grab;"></canvas>
+          <div class="overlay-hint">드래그하여 구 회전</div>
+        </div>
+        
+        <div class="controls" style="justify-content: center; gap: 0.8rem;">
+          <button class="btn btn-n" id="btn-m-N">북</button>
+          <button class="btn btn-s" id="btn-m-S">남</button>
+          <button class="btn btn-e" id="btn-m-E">동</button>
+          <button class="btn btn-w" id="btn-m-W">서</button>
+          <button class="btn btn-outline" id="btn-m-reset">초기화</button>
+        </div>
+        
+        <div class="stats">
+          <div class="stat-card" style="flex: 2;">
+            <div class="ctrl-label">회전 순서열</div>
+            <div class="stat-val" id="stat-m-word" style="font-size: 1.1rem; padding-top: 4px; letter-spacing: 2px;">시작</div>
+          </div>
+          <div class="stat-card">
+            <div class="ctrl-label">걸음 수</div>
+            <div class="stat-val" id="stat-m-len">0</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter-section" id="section-4">
+      <span class="sec-num reveal">04</span>
+      <h2 class="sec-title reveal">무한의 안무</h2>
+      
+      <p class="prose prose-drop reveal">이제, 방금 한 것을 자동화한다고 상상하라. 지구 위의 한 점을—가령 런던이나 도쿄 같은 도시를—고르고, 네 가지 회전의 <em>가능한 모든 순서열</em>을 동시에 무한까지 적용한다.</p>
+      
+      <p class="prose reveal">도달점들의 전체 모음을 그 점의 <span class="hi">궤도(orbit)</span>라 부른다. 자유군이 결코 스스로에게 되돌아가지 않으므로, 궤도는 결코 겹치지 않는다. 지구 전체를 감싸는, 조밀하게 무한히 흩어진 수학적 먼지 구름을 형성한다. 구름에 아직 속하지 않은 다른 출발점을 고르면, 완전히 별개의, 겹치지 않는 궤도를 얻는다.</p>
+
+      <p class="prose reveal">이것이 바나흐와 타르스키의 산산조각난 조각들의 비밀이다. 구의 전체 연속적 표면은 이 별개의 무한 궤도들로 완벽하게 분할될 수 있다. 이 구름들을 자유군의 경로를 따라 이동시킴으로써, 수학자들은 사실상 구 전체를 복제할 수 있다.</p>
+
+      <div class="ibox reveal" id="ibox-globe">
+        <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
+        <h3 class="ibox-title">궤도 전파</h3>
+        <p class="ibox-desc">지구 위에 일곱 개의 서로 다른 색을 가진 출발점(도시)을 배치했다. 슬라이더를 드래그하여 모든 도시의 회전 나무 깊이를 동시에 체계적으로 증가시켜 보라. 각각의 도시가 팽창하는 프랙탈 점 구름을 발생시키며, 부드럽게 교차하면서 지구를 찬란한 색채의 모자이크로 뒤덮는 것을 관찰하라. 진정한 수학적 역설에서, 이 먼지의 폭발은 절대적 무한까지 계속된다.</p>
+        
+        <div id="globe-wrapper">
+          <div id="globe-container"></div>
+          <div id="city-labels"></div>
+          <div id="globe-loading">
+            <div class="spinner"></div>
+            <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em;">지도 불러오는 중...</div>
+          </div>
+        </div>
+        
+        <div class="controls">
+          <div class="ctrl-group">
+            <span class="ctrl-label">전파 깊이</span>
+            <input type="range" id="slider-globe" min="0" max="4" value="0" step="1">
+          </div>
+        </div>
+        
+        <div class="stats">
+          <div class="stat-card">
+            <div class="ctrl-label">궤도 깊이</div>
+            <div class="stat-val" id="stat-gl-depth">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="ctrl-label">도시당 점 수</div>
+            <div class="stat-val" id="stat-gl-pts">1</div>
+          </div>
+          <div class="stat-card">
+            <div class="ctrl-label">전체 점의 수</div>
+            <div class="stat-val" id="stat-gl-tot">7</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter-section" id="section-5">
+      <span class="sec-num reveal">05</span>
+      <h2 class="sec-title reveal">공리 속의 유령</h2>
+      
+      <p class="prose prose-drop reveal">역설적 조각들을 실제로 만들기 위해서는 물리적인 칼을 쓸 수 없다. 칼은 연속적이고 매끄러운 표면을 잘라, 부피가 잘 정의된 뚜렷한 형상을 남긴다. 바나흐-타르스키 역설을 실행하려면, 수학자들은 순수하게 논리적인 칼날을 소환해야 한다: <span class="hi">선택 공리(Axiom of Choice)</span>. 그들은 별개의 궤도들로 이루어진 셀 수 없는 심연 속에 손을 뻗어, 각각에서 정확히 하나의 대표 점을 뽑아내야 한다.</p>
+      
+      <p class="prose reveal">1904년 에른스트 체르멜로가 공식화한 이 공리는 기만적으로 단순한 전제를 진술한다: 무한한 상자 모음이 있을 때, 각 상자에서 정확히 하나의 항목을 꺼내 새로운 집합을 만들 수 있다—선택 방법에 대한 명시적 규칙이 없더라도. 유한의 세계에서 이것은 사소하다. 그러나 무한의 영역에서, 이 공리는 수학자들이 셀 수 없이 무한한 수의 임의적 선택을 동시에 할 수 있게 한다.</p>
+
+      <div class="block-quote reveal">
+        “Dass auch für jede unendliche Menge ein solches Auswahlprinzip gültig sei, ist ein logisches Gesetz... welches bei mathematischen Deduktionen vielfach angewendet wird.”
+        <span class="quote-attr">— 에른스트 체르멜로, Mathematische Annalen (1904)</span>
+      </div>
+
+      <p class="prose reveal">이 공리를 적용함으로써, 바나흐와 타르스키는 개념적으로 구에서 점들을 뽑아 다섯 조각을 형성했다. 결과물인 조각들은 너무나 흩어져 있고, 너무나 무한히 들쭉날쭉하고 단절되어 있어서, 기하학 자체의 틈새로 빠져 나간다. 그것들은 <span class="ac">비가측 집합(non-measurable set)</span>—안과 밖이 전혀 없는 먼지 같은 구름이다. 이것이 공리 속의 유령이다: 역설이 부피 보존을 위반하지 않는 이유는, 조각들에게 애초에 보존할 부피가 없기 때문이다.</p>
+
+      <div class="ibox reveal" id="ibox-dust">
+        <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
+        <h3 class="ibox-title">측정 불가능한 먼지</h3>
+        <p class="ibox-desc">부피는 공간의 근본적 속성이 아니다; 잘 행동하는 도형에만 적용되는 인간의 구성물이다. 슬라이더를 드래그하여 선택 공리를 적용하라. 단단하고 측정 가능한 기하학이 무한한 무리수적 동치류로 갈라지는 것을 관찰하라. 점들이 흩어지면서, 부피라는 개념 자체가 격렬히 요동치기 시작하고, 마침내 완전히 무너진다.</p>
+        
+        <div class="canvas-container" style="height: 380px;">
+          <canvas id="canvas-4" class="interactive"></canvas>
+        </div>
+        
+        <div class="controls">
+          <div class="ctrl-group">
+            <span class="ctrl-label">선택 공리 발동 (산란)</span>
+            <input type="range" id="slider-choice" min="0" max="1" value="0" step="0.01">
+          </div>
+        </div>
+        
+        <div class="stats">
+          <div class="stat-card" style="flex: 1.5;">
+            <div class="ctrl-label">수학적 부피 (V)</div>
+            <div class="stat-val" id="stat-vol">1.0000 V₀</div>
+          </div>
+          <div class="stat-card">
+            <div class="ctrl-label">기하학 상태</div>
+            <div class="stat-val" id="stat-state" style="font-size: 1rem; padding-top: 4px; color: var(--fern);">가측</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter-section" id="section-6">
+      <span class="sec-num reveal">06</span>
+      <h2 class="sec-title reveal">다중우주의 건축가</h2>
+      
+      <p class="prose prose-drop reveal">수십 년간, 선택 공리는 깊은 불안의 원천이었다. 논리적 규칙이 완두콩을 태양으로 조각하는 것을 허용한다면, 수학에서 추방해야 할까? 아니면 이 아름답고 두려운 역설들을 현대 수학을 하기 위한 대가로 받아들여야 할까? 궁극적 해결은 1963년, 폴 코헨이라는 빛나는 정신을 통해 도래했다.</p>
+      
+      <p class="prose reveal">코헨은 <span class="hi">강제법(forcing)</span>이라는 혁명적 기법을 발명했고, 이를 통해 선택 공리가 집합론의 기초적 규칙들로부터 완전히 독립적임을 수학적으로 증명할 수 있었다. 표준 논리로는 그것을 참이라 증명할 수도 거짓이라 증명할 수도 없다. 수학은 유일한 진리를 지시하는 단일한 절대적 현실이 아니라, <span class="ac">논리적 가능성의 다중우주</span>이다.</p>
+
+      <div class="block-quote reveal">
+        “A point of view which the author feels may eventually come to be accepted is that CH [and the Axiom of Choice] is obviously false... the continuum is an incredibly rich set given to us by one bold new axiom.”
+        <span class="quote-attr">— 폴 J. 코헨, Set Theory and the Continuum Hypothesis (1966)</span>
+      </div>
+
+      <p class="prose reveal">우리에게는 심오한 선택이 남는다. 선택 공리가 참인 표준 우주(ZFC)를 걸으며, 비가측 먼지의 혼돈스러운 자유와 복제된 구의 마법을 포용할 수 있다. 아니면, 공리가 거부된 대안적 우주(ZF)로 발을 내디딜 수 있다—모든 도형이 엄격히 보존된 부피를 갖고, 바나흐-타르스키 역설이 원천적으로 불가능한 강직하고 대칭적인 세계. 현실의 형상은 전적으로 우리가 받아들이기로 선택한 보이지 않는 규칙들에 달려 있다.</p>
+
+      <div class="ibox reveal" id="ibox-sandbox">
+        <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
+        <h3 class="ibox-title">다중우주 샌드박스</h3>
+        <p class="ibox-desc">당신이 건축가다. 선택 공리를 토글하여 두 개의 별개의 수학적 우주 사이를 전환하라. OFF일 때, 생성된 입자들은 엄격한 대칭에 묶여 부피가 완벽히 보존되는 가측 결정 격자를 형성한다. ON일 때, 격자가 산산조각 나며; 입자들이 복제되어 자유군의 역설적 가지를 따라가고, 소용돌이치며 두 개의 별개의 복사본을 이룬다.</p>
+        
+        <div class="canvas-container" style="height: 380px;">
+          <canvas id="canvas-5" class="interactive"></canvas>
+        </div>
+        
+        <div class="controls">
+          <div class="ctrl-group" style="flex: 0; min-width: 150px;">
+            <span class="ctrl-label">선택 공리</span>
+            <div class="toggle-wrapper">
+              <span class="mono" style="font-size: 0.8rem; color: var(--text);">OFF</span>
+              <label class="switch">
+                <input type="checkbox" id="toggle-axiom" checked>
+                <span class="slider-toggle"></span>
+              </label>
+              <span class="mono" style="font-size: 0.8rem; color: var(--gold);">ON</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="stats">
+          <div class="stat-card">
+            <div class="ctrl-label">우주의 논리</div>
+            <div class="stat-val" id="stat-univ">ZFC</div>
+          </div>
+          <div class="stat-card">
+            <div class="ctrl-label">역설</div>
+            <div class="stat-val" id="stat-para">활성</div>
+          </div>
+          <div class="stat-card">
+            <div class="ctrl-label">구조 / 부피</div>
+            <div class="stat-val" id="stat-struct" style="font-size: 1rem; padding-top: 4px; color: var(--violet);">분열됨 (미정의 V₀)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="pull-quote reveal" style="margin-top: 2rem;">
+      “수학의 본질은 그 자유에 있다.”<br>
+      <span style="font-size: 0.9rem; font-family: var(--font-body); font-style: normal; color: var(--muted); display: block; margin-top: 1rem;">— 게오르크 칸토어</span>
     </div>
 
-    <div class="demo-card reveal">
-      <h3 class="accent-gold" style="margin-bottom:0.5rem;">직접 지켜보세요</h3>
-      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.5rem;"><strong>분해</strong>를 누르면 콩이 다섯 조각으로 쪼개진 뒤, 태양으로 재조립됩니다. 소리를 켜면 더 재밌습니다.</p>
-      <canvas id="bean-sun-canvas" width="900" height="400"></canvas>
-      <div class="phase-indicator" id="phase-indicator">
-        <div class="phase-dot active" data-phase="0"></div>
-        <div class="phase-dot" data-phase="1"></div>
-        <div class="phase-dot" data-phase="2"></div>
-        <div class="phase-dot" data-phase="3"></div>
-        <div class="phase-dot" data-phase="4"></div>
-      </div>
-      <div class="phase-label" id="phase-label">콩 — 평범한 공 하나</div>
-      <div class="btn-group" style="justify-content:center;">
-        <button class="btn btn-gold" id="bean-start-btn" onclick="startBeanAnimation()">▶ 분해 & 재조립</button>
-        <button class="btn" onclick="resetBeanAnimation()">↺ 초기화</button>
-      </div>
+    <div class="coda reveal">
+      결국, 현실은 단지 우리가 보는 것이 아니다.<br>
+      그것은 우리가 믿기로 선택한 보이지 않는 규칙의 뼈대이며,<br>
+      그 규칙이 열어젖히는 아름답고 두려운 무한이다.
     </div>
 
-    <div class="reveal" style="margin-top:1.5rem;">
-      <p>핵심은 이겁니다 — 이 조각들은 보통 도형이 아닙니다. 부피를 매길 수 없는, 무한히 복잡한 프랙탈 같은 점들의 "구름"이에요. 이런 조각이 존재할 수 있는 이유는 집합론의 강력한 공리 하나 덕분입니다 — 바로 <strong class="accent-purple">선택 공리(Axiom of Choice)</strong>.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════ 2. ROTATION GROUP ═══════════════════ -->
-<section id="sec-rotations">
-  <div class="section-inner">
-    <div class="reveal">
-      <p class="section-num">02 — 자유군 F₂</p>
-      <h2>절대 <span class="accent-sky">되돌아오지 않는</span> 회전</h2>
-      <p>이 역설의 핵심에는 놀라운 대수적 사실이 있습니다. 구의 두 가지 특별한 회전을 생각해 봅시다:</p>
-      <div class="formula" id="rotation-formula"></div>
-      <p>각도 <span class="math-inline" id="math-arccos"></span>가 특별한 이유는 코사인 값이 정확히 1/3이 되기 때문입니다. 이 각도에서 두 회전은 <strong>자유군(free group)</strong>을 생성합니다 — 이 회전들과 역회전을 아무리 조합해도, 항등원(제자리)으로 절대 돌아오지 않는다는 뜻이죠.</p>
-      <p>이 대수적 구조를 <span class="math-inline" id="math-f2-label"></span>, 두 생성원의 자유군이라 합니다. 그 <strong>케일리 그래프(Cayley graph)</strong>는 무한한 4-정칙 나무 — 매 꼭짓점에서 정확히 4개의 가지가 뻗어나갑니다(각 회전에 역원이 있고, 바로 되돌리는 건 하지 않으니까요).</p>
+    <div class="ref-section reveal">
+      <h3 class="ref-heading">참고문헌</h3>
+      <ul class="ref-list">
+        <li><span class="ref-author">Banach, S. & Tarski, A.,</span> <span class="ref-title">Sur la décomposition des ensembles de points en parties respectivement congruentes,</span> <span class="ref-detail">Fundamenta Mathematicae, 1924.</span></li>
+        <li><span class="ref-author">Hausdorff, F.,</span> <span class="ref-title">Bemerkung über den Inhalt von Punktmengen,</span> <span class="ref-detail">Mathematische Annalen, 1914.</span></li>
+        <li><span class="ref-author">Zermelo, E.,</span> <span class="ref-title">Beweis, dass jede Menge wohlgeordnet werden kann,</span> <span class="ref-detail">Mathematische Annalen, 1904.</span></li>
+        <li><span class="ref-author">Cohen, P. J.,</span> <span class="ref-title">Set Theory and the Continuum Hypothesis,</span> <span class="ref-detail">W. A. Benjamin, 1966.</span></li>
+        <li><span class="ref-author">Wagon, S.,</span> <span class="ref-title">The Banach-Tarski Paradox,</span> <span class="ref-detail">Cambridge University Press, 1985.</span></li>
+      </ul>
     </div>
 
-    <div class="demo-card reveal">
-      <h3 class="accent-gold" style="margin-bottom:0.5rem;">F₂의 케일리 그래프 — 3D</h3>
-      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.5rem;">처음엔 변이 점점 줄어드는 평면 나무처럼 보입니다. <strong>드래그해서 회전</strong>시켜 보세요. 사실 3차원 구조이고 <em>모든 변의 길이가 동일</em>하다는 걸 발견하게 됩니다. "줄어듦"은 원근 투영의 착시였을 뿐이에요.</p>
-      <div class="canvas-wrap" style="position:relative;touch-action:none;height:420px;">
-        <canvas id="cayley-canvas" style="touch-action:none;position:absolute;inset:0;"></canvas>
-        <div style="position:absolute;top:8px;left:0;right:0;text-align:center;font-size:9px;letter-spacing:.07em;color:rgba(150,185,240,.22);pointer-events:none;user-select:none;font-family:'JetBrains Mono',monospace;">드래그 · 회전 &nbsp;|&nbsp; shift-드래그 · 이동 &nbsp;|&nbsp; 스크롤 · 확대</div>
-        <div style="position:absolute;bottom:12px;left:0;right:0;text-align:center;font-family:'Fraunces',Georgia,serif;font-size:12px;font-style:italic;color:rgba(180,200,255,0.45);pointer-events:none;user-select:none;" id="cayley-subtitle">3차원에서 모든 변의 길이가 동일합니다</div>
-      </div>
-      <div class="radius-control">
-        <button class="cbtn" id="cay-dec" onclick="setCayleyR(cayleyR-1)" disabled>−</button>
-        <span class="rval" id="cay-rval">0</span>
-        <input type="range" id="cay-slider" min="0" max="5" value="0" step="1" oninput="setCayleyR(+this.value)">
-        <button class="cbtn" id="cay-inc" onclick="setCayleyR(cayleyR+1)">+</button>
-      </div>
-      <div class="orbit-info">
-        <div class="orbit-stat"><div class="osl">깊이</div><div class="osv" id="cay-depth">0</div></div>
-        <div class="orbit-stat"><div class="osl">꼭짓점</div><div class="osv" id="cay-nodes">1</div></div>
-        <div class="orbit-stat"><div class="osl">변</div><div class="osv" id="cay-edges">0</div></div>
-      </div>
+  </main>
+
+  <footer>
+    <div class="footer-attr">
+      <div class="footer-name">Sang-hyun Kim</div>
+      <div class="footer-inst">Korea Institute for Advanced Study</div>
+      <div class="footer-inst">AI4MATH, KAIST</div>
+      <a class="footer-url" href="https://kimsh.kr">kimsh.kr</a>
     </div>
-
-    <div class="reveal" style="margin-top:1rem;">
-      <p>이 나무의 지수적 성장이 역설의 엔진입니다. 문자 <em>E</em>(동쪽 회전)로 시작하는 "단어"들의 모임은 전체의 4분의 1이 빠져 있습니다 — 그런데 역회전 <em>W</em>를 한번 적용하면, 마법처럼 <em>전체</em>가 됩니다. 4분의 1이 전체와 같아지는 거죠. 바나흐와 타르스키가 이용한 것이 바로 자유군의 이 역설적 자기닮음입니다.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════ 3. ORBITS ON S² ═══════════════════ -->
-<section id="sec-orbits">
-  <div class="section-inner">
-    <div class="reveal">
-      <p class="section-num">03 — 구 위의 궤도</p>
-      <h2><span class="accent-gold">F₂</span>가 <span class="accent-sky">S²</span> 위에서 움직이다</h2>
-      <p>구 위의 아무 점 하나를 찍어보세요. F₂의 모든 원소 — 즉, 네 가지 회전의 가능한 모든 조합 — 를 적용하면, 점들의 구름이 생깁니다. 이것을 그 점의 <strong>궤도(orbit)</strong>라 합니다. F₂가 자유군이기 때문에, 이 궤도는 구 위를 빽빽하게 채우면서도 같은 점을 다시 방문하는 일은 결코 없습니다.</p>
-      <p>아래에서 세계 각국의 도시가 출발점이 됩니다. 나무의 깊이를 높이면 궤도가 지구 전체로 퍼져나가는 모습을 관찰할 수 있습니다. 회전각은 <span class="math-inline" id="math-angle"></span>, x축과 z축 — 정확히 자유군의 생성원입니다.</p>
-    </div>
-
-    <div class="demo-card reveal">
-      <h3 class="accent-gold" style="margin-bottom:0.5rem;">지구 위의 궤도 전파</h3>
-      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:0.5rem;">깊이를 높여 일곱 도시에서 F₂ 궤도를 전파시켜 보세요. 지구를 드래그해서 탐색하세요. 각 색깔은 출발 도시 하나의 궤도입니다.</p>
-      <div class="globe-wrapper">
-        <div id="globe-container"></div>
-        <div id="city-labels"></div>
-        <div id="globe-loading"><div class="spinner"></div><p>지도 불러오는 중…</p></div>
-      </div>
-      <div class="radius-control">
-        <button class="cbtn" id="globe-dec" onclick="setGlobeR(globeR-1)" disabled>−</button>
-        <span class="rval" id="globe-rval">0</span>
-        <input type="range" id="globe-slider" min="0" max="4" value="0" step="1" oninput="setGlobeR(+this.value)">
-        <button class="cbtn" id="globe-inc" onclick="setGlobeR(globeR+1)">+</button>
-      </div>
-      <div class="orbit-info">
-        <div class="orbit-stat"><div class="osl">궤도 깊이</div><div class="osv" id="globe-depth">0</div></div>
-        <div class="orbit-stat"><div class="osl">도시별 점 수</div><div class="osv" id="globe-pts">1</div></div>
-        <div class="orbit-stat"><div class="osl">총 점 수</div><div class="osv" id="globe-total">7</div></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════ 4. AXIOM OF CHOICE ═══════════════════ -->
-<section id="sec-axiom">
-  <div class="section-inner">
-    <div class="reveal">
-      <p class="section-num">04 — 선택 공리</p>
-      <h2><span class="accent-purple">구두</span>와 <span class="accent-coral">양말</span></h2>
-      <p>이 역설에는 결정적 재료가 하나 필요합니다: <strong>선택 공리(Axiom of Choice, AC)</strong>. 구를 분해하려면, 셀 수 없이 많은 궤도 각각에서 대표 원소를 하나씩 골라야 합니다 — 무한한 선택 능력을 요구하는 작업이죠.</p>
-      <p>1906년 버트런드 러셀이 가장 유명한 비유를 남겼습니다:</p>
-      <div class="quote-block">
-        "무한히 많은 <strong>구두</strong> 쌍에서 하나씩 고르는 데는 공리가 필요 없다 — 항상 왼쪽을 고르면 된다. 하지만 무한히 많은 <strong>양말</strong> 쌍에서 하나씩 고르려면? 양말은 좌우가 구별되지 않으니, 선택 공리가 반드시 필요하다."
-        <span class="quote-author">— 버트런드 러셀, 1906</span>
-      </div>
-    </div>
-
-    <div class="demo-card reveal">
-      <h3 class="accent-gold" style="margin-bottom:0.5rem;">러셀의 서랍 실험</h3>
-      <p style="font-size:0.82rem;color:var(--muted);margin-bottom:1rem;">구두 서랍을 클릭하면 — 항상 왼쪽 구두를 고를 수 있습니다. 그런데 양말 서랍은? <em>직접 선택</em>해야 합니다. 각 쌍에서 양말 하나를 골라보세요.</p>
-      <p style="font-size:0.7rem;font-family:var(--font-mono);color:var(--gold);letter-spacing:0.1em;margin-bottom:0.5rem;">구두 — 선택 불필요 (항상 왼쪽)</p>
-      <div class="drawer-grid" id="shoe-drawers"></div>
-      <p style="font-size:0.7rem;font-family:var(--font-mono);color:var(--coral);letter-spacing:0.1em;margin-bottom:0.5rem;margin-top:1.5rem;">양말 — 선택 필요!</p>
-      <div class="drawer-grid" id="sock-drawers"></div>
-      <div style="text-align:center;margin-top:1rem;">
-        <span class="btn" id="sock-progress" style="cursor:default;pointer-events:none;">0 / 8 쌍 선택 완료</span>
-        <button class="btn btn-gold" id="ac-auto-btn" onclick="autoChooseSocks()" style="margin-left:0.5rem;">⚡ 선택 공리 발동</button>
-      </div>
-    </div>
-
-    <div class="reveal" style="margin-top:1.5rem;">
-      <p>바나흐-타르스키 증명에서 우리는 정확히 이 양말 문제와 마주합니다 — 단, <em>비가산 무한개의 서랍</em>을 가지고요. S² 위의 F₂ 궤도 하나하나가 구별 불가능한 점들을 담은 "서랍"이고, 우리는 매 서랍에서 대표를 하나씩 골라야 합니다. 모든 궤도에서 동시에 이것을 보장해주는 것이 오직 선택 공리뿐입니다.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════ 5. THE GREAT DEBATE ═══════════════════ -->
-<section id="sec-debate">
-  <div class="section-inner">
-    <div class="reveal">
-      <p class="section-num">05 — 백 년의 논쟁</p>
-      <h2>받아들여야 <span class="accent-coral">할까?</span></h2>
-      <p>선택 공리는 수학을 현실에서 멀어지게 합니다 — 부피를 매길 수 없는 집합, 만들어 보일 수 없는 대상, 직관에 반하는 역설을 낳으니까요. 그런데 이것 없이는 현대 수학의 광활한 영역이 무너집니다. 이 긴장이 수학 역사상 가장 오래된 논쟁 중 하나를 만들어냈습니다.</p>
-    </div>
-
-    <div class="debate-grid reveal">
-      <div class="debate-card">
-        <span class="tag pro">AC 필요</span>
-        <h4>티호노프 정리</h4>
-        <p>콤팩트 공간의 임의의 곱은 콤팩트하다. 위상수학의 주춧돌이며, AC와 동치입니다.</p>
-      </div>
-      <div class="debate-card">
-        <span class="tag pro">AC 필요</span>
-        <h4>모든 벡터공간에 기저 존재</h4>
-        <p>무한차원이라도요. AC 없이는 기저가 아예 존재하지 않는 벡터공간이 생깁니다.</p>
-      </div>
-      <div class="debate-card">
-        <span class="tag con">AC의 귀결</span>
-        <h4>비가측 집합</h4>
-        <p>AC는 일관된 부피를 매길 수 없는 집합을 만들어냅니다 — 바나흐-타르스키의 원동력이죠.</p>
-      </div>
-      <div class="debate-card">
-        <span class="tag con">AC의 귀결</span>
-        <h4>ℝ의 정렬가능성</h4>
-        <p>모든 집합을 정렬할 수 있다 — 실수 전체도. 하지만 그 정렬을 구체적으로 보여준 사람은 아무도 없습니다.</p>
-      </div>
-      <div class="debate-card">
-        <span class="tag pro">AC 필요</span>
-        <h4>초른의 보조정리</h4>
-        <p>귀납적 순서집합에 극대 원소가 존재한다. AC와 동치이며, 대수학 곳곳에서 쓰입니다.</p>
-      </div>
-      <div class="debate-card">
-        <span class="tag con">AC의 귀결</span>
-        <h4>역설적 분해</h4>
-        <p>바나흐-타르스키 역설 그 자체. 공 하나가 둘이 됩니다 — "부피"의 변화 없이.</p>
-      </div>
-    </div>
-
-    <div class="reveal" style="margin-top:1.5rem;">
-      <div class="quote-block" style="border-left-color:var(--coral);">
-        "신은 정수만을 만들었고, 나머지는 전부 인간이 만들어 낸 것이다."
-        <span class="quote-author" style="color:var(--coral);">— 레오폴트 크로네커, 1886</span>
-      </div>
-      <p><strong class="accent-sky">직관주의자</strong>들 — 크로네커, 브라우어와 그 후예들 — 은 주장했습니다: 수학은 명시적으로 구성할 수 있는 대상만 다뤄야 한다고. 만드는 절차를 쓸 수 없다면, 그건 존재하지 않는 것이라고요. 이 관점에서 선택 공리는 부당합니다 — <em>어떻게</em> 고르는지 한번도 말해주지 않으면서 선택의 존재를 주장하니까요.</p>
-      <p>반대편에서 <strong class="accent-gold">힐베르트</strong>를 비롯한 주류 수학자들은 정반대 입장을 취했습니다: AC는 깊은 정리를 증명할 수 있게 해주는 강력한 도구이고, 기이한 귀결은 입장료 같은 것이라고요. 칸토어의 무한이 그랬듯, AC는 수학이 닿을 수 있는 지평을 넓혀준다고.</p>
-    </div>
-
-    <div class="demo-card reveal" style="border-left:3px solid var(--mint);margin-top:1.5rem;">
-      <h3 class="accent-mint" style="margin-bottom:0.5rem;">🤖 구성주의의 귀환: AI가 논쟁에 뛰어들다</h3>
-      <p style="font-size:0.88rem;">직관주의자들은 20세기 논쟁에서 졌습니다 — 그런데 그들의 아이디어가 <strong>AI 수학 연구</strong> 시대에 극적으로 부활하고 있습니다.</p>
-      <p style="font-size:0.85rem;color:var(--muted);">형식 증명 도우미(Lean, Coq, Isabelle)와 AI 검증 시스템은 <em>계산적으로 기반이 있는</em> 수학만 다룰 수 있습니다. 증명에 선택 공리가 0.001%라도 묻으면, 형식 검증 시스템은 <strong style="color:var(--coral);">빨간 딱지</strong>를 붙입니다: "경고: 이 단계는 비구성적입니다." 컴퓨터가 처음부터 끝까지 검증할 수 있는 수학과 영원히 따로 관리되죠.</p>
-      <p style="font-size:0.85rem;color:var(--muted);">이런 의미에서, 크로네커가 1880년대에 던진 질문 — <em>"존재"에 만드는 법이 있어야 하나?</em> — 은 21세기 수학의 실용적 공학 문제가 되었습니다.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════ 6. PAUL COHEN ═══════════════════ -->
-<section id="sec-cohen">
-  <div class="section-inner">
-    <div class="reveal">
-      <p class="section-num">06 — 독립성</p>
-      <h2><span class="accent-purple">폴 코언</span>과 강제법</h2>
-      <p>선택 공리는 <em>참</em>일까, <em>거짓</em>일까? 놀라운 답은: <strong>둘 다 아닙니다</strong> — 더 정확히는, <em>독립적</em>입니다.</p>
-    </div>
-
-    <div class="photo-card reveal">
-      <div class="photo-placeholder">🧠</div>
-      <div class="photo-info">
-        <h4>폴 조셉 코언</h4>
-        <div class="sub">1934 — 2007 · 스탠퍼드 대학교</div>
-        <p>코언은 혁명적 기법인 <strong>강제법(forcing)</strong>을 발명했습니다 — 특정 명제의 진릿값이 바뀌는 새로운 수학적 우주를 구성하는 방법이죠. 이 업적으로 1966년 필즈 메달을 수상했으며, 수리논리학으로 필즈 메달을 받은 유일한 수학자입니다.</p>
-      </div>
-    </div>
-
-    <div class="timeline reveal">
-      <div class="tl-item">
-        <div class="tl-year">1908</div>
-        <div class="tl-title">체르멜로, AC를 공리화</div>
-        <div class="tl-desc">에른스트 체르멜로가 선택 공리를 명시적으로 진술하고, 이를 이용해 모든 집합의 정렬가능성을 증명합니다 — 격렬한 논쟁의 서막.</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-year">1924</div>
-        <div class="tl-title">바나흐-타르스키 역설</div>
-        <div class="tl-desc">스테판 바나흐와 알프레드 타르스키가 AC를 사용하면 공 하나를 분해해 같은 크기의 공 둘로 재조립할 수 있음을 보입니다.</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-year">1938</div>
-        <div class="tl-title">괴델의 구성 가능 우주 L</div>
-        <div class="tl-desc">쿠르트 괴델이 AC가 집합론(ZF)의 다른 공리들과 <strong>무모순</strong>임을 보입니다. ZF로는 AC를 반증할 수 없다는 뜻입니다.</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-year">1963</div>
-        <div class="tl-title" style="color:var(--gold);">코언의 강제법</div>
-        <div class="tl-desc">폴 코언이 <strong>강제법</strong>을 발명하여 AC가 ZF로부터 <em>독립적</em>임을 증명합니다 — ZF로 AC를 증명할 수도 없습니다. 괴델의 결과와 합치면 <strong>AC는 결정 불가능</strong>: ZF는 AC를 증명도 반증도 할 수 없습니다.</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-year">1966</div>
-        <div class="tl-title">필즈 메달</div>
-        <div class="tl-desc">코언이 강제법으로 필즈 메달을 수상합니다 — 수리논리학 분야에서 이 상이 수여된 유일한 사례입니다.</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-year">1970년대–현재</div>
-        <div class="tl-title">공리의 표준화</div>
-        <div class="tl-desc">ZFC(ZF + 선택)가 표준 기초 체계가 됩니다. 강제법은 거대한 산업으로 발전하여, 집합론·측도론·조합론에 걸쳐 수백 가지 독립성 결과를 낳습니다.</div>
-      </div>
-      <div class="tl-item">
-        <div class="tl-year">2017</div>
-        <div class="tl-title" style="color:var(--mint);">가측 바나흐-타르스키</div>
-        <div class="tl-desc">놀라운 반전: 공을 <em>부피를 잴 수 있는</em> 조각들로만 나누어, 원래 부피의 절반인 공 두 개로 재조립할 수 있을까? <strong style="color:var(--mint);">가능합니다</strong> — 단, 천문학적으로 많은 조각이 필요합니다 (10<sup>200</sup>개 이상, 관측 가능 우주의 원자 수보다 많습니다). <em>미국 수학연보(Annals of Mathematics)</em>에 발표.</div>
-      </div>
-    </div>
-
-    <div class="reveal" style="margin-top:1rem;">
-      <div class="formula" id="forcing-formula"></div>
-      <p>코언의 통찰은 이것입니다 — 유한 조건으로 조심스럽게 근사하여 수학적 우주에 새로운 집합을 "추가"할 수 있다는 것. 이 기법, 강제법은 특정 질문에 표준 공리 안에서 <strong>답이 없다</strong>는 것을 체계적으로 보이는 방법을 수학자들에게 선사했습니다. 선택 공리가 가장 유명한 사례이지만, 이후 수백 가지 독립성 결과를 확립하는 데 활용되었습니다.</p>
-      <p>바나흐-타르스키 역설은 기묘한 경계에 놓여 있습니다: ZFC에서는 <em>증명 가능</em>하지만, AC 없는 우주에서는 그 분해가 불가능합니다. 이 역설은 수학에 무언가 잘못되었다고 말하는 것이 아닙니다 — <strong>우리가 어떤 공리를 선택하느냐가 가능한 세계를 결정한다</strong>고 말하고 있습니다.</p>
-    </div>
-
-    <div class="demo-card reveal" style="border-left:3px solid var(--gold);margin-top:1.5rem;">
-      <h3 class="accent-gold" style="margin-bottom:0.5rem;">역설은 아직 살아 있다</h3>
-      <p style="font-size:0.85rem;color:var(--muted);">바나흐-타르스키의 변형은 수학의 최전선에 있습니다. 필즈 메달과 아벨 상 수상자들이 그로부터 이어지는 문제를 지금도 연구 중입니다: 부피가 같은 두 도형은 아무 모양이나 잘라 붙여 서로 바꿀 수 있을까? (조각이 아무렇게나 괴상해도 된다면 — <strong>가능합니다</strong>.) "예쁜"(가측) 조각만으로 가능할까? (때로는 가능, 때로는 미해결.) 1924년의 역설은 과거의 호기심이 아닙니다 — 백 년이 지난 지금도 놀라운 결과를 만들어내는, 살아 있는 연구 프로그램입니다.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════════════════ FOOTER ═══════════════════ -->
-<footer>
-  <p style="color:var(--gold);font-family:var(--font-display);font-size:1.1rem;font-style:italic;margin-bottom:0.5rem;">
-    "수학의 본질은 자유에 있다."
-  </p>
-  <p style="font-family:var(--font-mono);font-size:0.7rem;color:var(--muted);letter-spacing:0.08em;">— 게오르크 칸토어</p>
-  <p style="margin-top:1.5rem;">김상현 · 고등과학원(KIAS) 수학 시각화 프로젝트</p>
-</footer>
-
-<!-- ═══ Scripts ═══ -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/lines/LineSegmentsGeometry.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/lines/LineMaterial.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/lines/LineSegments2.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/globe.gl@2.30.0/dist/globe.gl.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
-
-<script>
-'use strict';
-
-// ═══════════════════════════════════════════════════
-// DEPENDENCY LOADER — wait for CDN scripts
-// ═══════════════════════════════════════════════════
-function waitForGlobeDeps(timeout) {
-  timeout = timeout || 8000;
-  return new Promise(function(resolve, reject) {
-    // If already available, resolve immediately
-    if (typeof Globe !== 'undefined' && typeof topojson !== 'undefined') {
-      resolve(); return;
-    }
-    var start = Date.now();
-    function check() {
-      if (typeof Globe !== 'undefined' && typeof topojson !== 'undefined') {
-        resolve();
-      } else if (Date.now() - start > timeout) {
-        reject(new Error('CDN libraries not available'));
-      } else {
-        setTimeout(check, 150);
-      }
-    }
-    check();
-  });
-}
-
-// ═══════════════════════════════════════════════════
-// AUDIO CONTEXT
-// ═══════════════════════════════════════════════════
-let actx = null;
-function ensureAudio() {
-  if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
-  if (actx.state === 'suspended') actx.resume();
-}
-
-function playSfx(type) {
-  ensureAudio();
-  const now = actx.currentTime;
-  const osc = actx.createOscillator();
-  const gain = actx.createGain();
-  osc.connect(gain).connect(actx.destination);
-
-  if (type === 'crack') {
-    osc.type = 'sawtooth';
-    osc.frequency.setValueAtTime(200, now);
-    osc.frequency.exponentialRampToValueAtTime(60, now + 0.3);
-    gain.gain.setValueAtTime(0.15, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-    osc.start(now); osc.stop(now + 0.35);
-  } else if (type === 'scatter') {
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(800, now);
-    osc.frequency.exponentialRampToValueAtTime(200, now + 0.6);
-    gain.gain.setValueAtTime(0.08, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.6);
-    osc.start(now); osc.stop(now + 0.6);
-  } else if (type === 'whoosh') {
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(150, now);
-    osc.frequency.exponentialRampToValueAtTime(600, now + 0.8);
-    gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(0.1, now + 0.2);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
-    osc.start(now); osc.stop(now + 0.8);
-  } else if (type === 'chime') {
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(1200, now);
-    gain.gain.setValueAtTime(0.12, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
-    osc.start(now); osc.stop(now + 1.2);
-    // add overtone
-    const osc2 = actx.createOscillator();
-    const g2 = actx.createGain();
-    osc2.connect(g2).connect(actx.destination);
-    osc2.type = 'sine';
-    osc2.frequency.setValueAtTime(1800, now);
-    g2.gain.setValueAtTime(0.06, now);
-    g2.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
-    osc2.start(now); osc2.stop(now + 0.8);
-  } else if (type === 'click') {
-    osc.type = 'square';
-    osc.frequency.setValueAtTime(1000, now);
-    gain.gain.setValueAtTime(0.06, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
-    osc.start(now); osc.stop(now + 0.05);
-  } else if (type === 'grow') {
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(300, now);
-    osc.frequency.exponentialRampToValueAtTime(900, now + 0.25);
-    gain.gain.setValueAtTime(0.1, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
-    osc.start(now); osc.stop(now + 0.3);
-  }
-}
-
-// ═══════════════════════════════════════════════════
-// KATEX RENDER
-// ═══════════════════════════════════════════════════
-window.addEventListener('DOMContentLoaded', () => {
-  if (typeof katex === 'undefined') { console.warn('KaTeX not loaded'); return; }
-  try {
-    katex.render(String.raw`\sigma_x: \text{rotation by } \theta = \arccos(1/3) \text{ about the } x\text{-axis} \qquad \sigma_z: \text{rotation by } \theta \text{ about the } z\text{-axis}`, document.getElementById('rotation-formula'), {throwOnError:false, displayMode:true});
-    katex.render(String.raw`\arccos(1/3) \approx 70.53°`, document.getElementById('math-arccos'), {throwOnError:false});
-    katex.render(String.raw`F_2 = \langle \sigma_x, \sigma_z \rangle`, document.getElementById('math-f2-label'), {throwOnError:false});
-    katex.render(String.raw`\arccos(1/3)`, document.getElementById('math-angle'), {throwOnError:false});
-    katex.render(String.raw`\text{Con}(\text{ZF}) \;\Longrightarrow\; \text{Con}(\text{ZF} + \text{AC}) \;\;\text{and}\;\; \text{Con}(\text{ZF} + \lnot\text{AC})`, document.getElementById('forcing-formula'), {throwOnError:false, displayMode:true});
-  } catch(e) { console.warn('KaTeX render error:', e); }
-});
-
-// ═══════════════════════════════════════════════════
-// HERO CANVAS — floating particles
-// ═══════════════════════════════════════════════════
-(() => {
-  const canvas = document.getElementById('hero-canvas');
-  const ctx = canvas.getContext('2d');
-  let W, H;
-  const particles = [];
-
-  function resize() {
-    W = canvas.width = canvas.offsetWidth * devicePixelRatio;
-    H = canvas.height = canvas.offsetHeight * devicePixelRatio;
-    ctx.scale(devicePixelRatio, devicePixelRatio);
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  // Create particles: small golden dots drifting
-  for (let i = 0; i < 120; i++) {
-    particles.push({
-      x: Math.random() * (W/devicePixelRatio),
-      y: Math.random() * (H/devicePixelRatio),
-      r: 0.5 + Math.random() * 2,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: (Math.random() - 0.5) * 0.3,
-      alpha: 0.1 + Math.random() * 0.4,
-      hue: 30 + Math.random() * 30,
-    });
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, W/devicePixelRatio, H/devicePixelRatio);
-    const w = W/devicePixelRatio, h = H/devicePixelRatio;
-    for (const p of particles) {
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
-      if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `hsla(${p.hue}, 80%, 65%, ${p.alpha})`;
-      ctx.fill();
-    }
-    // Draw connecting lines for nearby particles
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const d = Math.sqrt(dx*dx + dy*dy);
-        if (d < 100) {
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(240,180,41,${0.06 * (1 - d/100)})`;
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-        }
-      }
-    }
-    requestAnimationFrame(draw);
-  }
-  draw();
-})();
-
-// ═══════════════════════════════════════════════════
-// BEAN→SUN ANIMATION
-// ═══════════════════════════════════════════════════
-const beanCanvas = document.getElementById('bean-sun-canvas');
-const bctx = beanCanvas.getContext('2d');
-let beanPhase = 0; // 0=bean, 1=crack, 2=5pieces, 3=rearrange, 4=sun
-let beanAnim = null;
-let beanT = 0;
-const BEAN_COLORS = ['#f0b429','#38bdf8','#a78bfa','#fb7185','#34d399'];
-
-function drawBean(cx, cy, rx, ry, phase, t) {
-  const dpr = devicePixelRatio;
-  const w = beanCanvas.offsetWidth;
-  const h = beanCanvas.offsetHeight;
-  beanCanvas.width = w * dpr;
-  beanCanvas.height = h * dpr;
-  bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  bctx.clearRect(0, 0, w, h);
-
-  if (phase === 0) {
-    // Draw bean (ellipse)
-    const bx = w * 0.25, by = h * 0.5;
-    const brx = 40, bry = 28;
-    bctx.beginPath();
-    bctx.ellipse(bx, by, brx, bry, 0, 0, Math.PI*2);
-    const grad = bctx.createRadialGradient(bx-10, by-8, 2, bx, by, brx);
-    grad.addColorStop(0, '#f7d774');
-    grad.addColorStop(0.6, '#c89420');
-    grad.addColorStop(1, '#8b6914');
-    bctx.fillStyle = grad;
-    bctx.fill();
-    bctx.strokeStyle = 'rgba(255,255,255,0.15)';
-    bctx.lineWidth = 1;
-    bctx.stroke();
-
-    // Label
-    bctx.font = '13px "DM Sans", sans-serif';
-    bctx.fillStyle = 'rgba(255,255,255,0.5)';
-    bctx.textAlign = 'center';
-    bctx.fillText('콩 한 알', bx, by + bry + 22);
-  }
-  else if (phase === 1) {
-    // Cracking animation
-    const bx = w * 0.25, by = h * 0.5;
-    const brx = 40 + t*8, bry = 28 + t*5;
-    for (let i = 0; i < 5; i++) {
-      const angle = (i / 5) * Math.PI * 2 + t * 0.3;
-      const spread = t * 20;
-      const px = bx + Math.cos(angle) * spread;
-      const py = by + Math.sin(angle) * spread;
-      bctx.beginPath();
-      bctx.arc(px, py, 12 - t*2, 0, Math.PI*2);
-      bctx.fillStyle = BEAN_COLORS[i] + '90';
-      bctx.fill();
-    }
-    // crack lines
-    for (let i = 0; i < 5; i++) {
-      const angle = (i / 5) * Math.PI * 2;
-      bctx.beginPath();
-      bctx.moveTo(bx, by);
-      bctx.lineTo(bx + Math.cos(angle) * t * 30, by + Math.sin(angle) * t * 30);
-      bctx.strokeStyle = `rgba(255,255,255,${0.4 * (1-t)})`;
-      bctx.lineWidth = 1.5;
-      bctx.stroke();
-    }
-  }
-  else if (phase === 2) {
-    // 5 pieces scattered
-    for (let i = 0; i < 5; i++) {
-      const angle = (i / 5) * Math.PI * 2 + 0.3;
-      const dist = 50 + 30 * Math.sin(i * 1.7);
-      const px = w * 0.35 + Math.cos(angle) * dist * (0.5 + t*0.5);
-      const py = h * 0.5 + Math.sin(angle) * dist * (0.5 + t*0.5);
-      // Draw fractal-ish cloud
-      for (let j = 0; j < 20; j++) {
-        const jx = px + (Math.random()-0.5) * 30;
-        const jy = py + (Math.random()-0.5) * 30;
-        bctx.beginPath();
-        bctx.arc(jx, jy, 1 + Math.random()*3, 0, Math.PI*2);
-        bctx.fillStyle = BEAN_COLORS[i] + '60';
-        bctx.fill();
-      }
-      bctx.beginPath();
-      bctx.arc(px, py, 14, 0, Math.PI*2);
-      bctx.fillStyle = BEAN_COLORS[i] + 'aa';
-      bctx.fill();
-
-      // Label
-      bctx.font = '10px "JetBrains Mono", monospace';
-      bctx.fillStyle = BEAN_COLORS[i];
-      bctx.textAlign = 'center';
-      bctx.fillText('S' + (i+1), px, py + 24);
-    }
-  }
-  else if (phase === 3) {
-    // Rearranging — pieces move toward right side
-    const sunX = w * 0.75, sunY = h * 0.5;
-    for (let i = 0; i < 5; i++) {
-      const angle = (i / 5) * Math.PI * 2 + 0.3;
-      const fromDist = 50 + 30 * Math.sin(i * 1.7);
-      const fromX = w * 0.35 + Math.cos(angle) * fromDist;
-      const fromY = h * 0.5 + Math.sin(angle) * fromDist;
-      const px = fromX + (sunX - fromX) * t;
-      const py = fromY + (sunY - fromY) * t;
-      const r = 14 + t * (70 - 14) / 5;
-      // particles trailing
-      for (let j = 0; j < 12; j++) {
-        const tt = Math.max(0, t - j * 0.02);
-        const tx = fromX + (sunX - fromX) * tt + (Math.random()-0.5)*20*(1-t);
-        const ty = fromY + (sunY - fromY) * tt + (Math.random()-0.5)*20*(1-t);
-        bctx.beginPath();
-        bctx.arc(tx, ty, 1 + Math.random()*2, 0, Math.PI*2);
-        bctx.fillStyle = BEAN_COLORS[i] + '30';
-        bctx.fill();
-      }
-      bctx.beginPath();
-      bctx.arc(px, py, r * (1-t*0.5), 0, Math.PI*2);
-      bctx.fillStyle = BEAN_COLORS[i] + Math.round(170 * (1-t*0.6)).toString(16).padStart(2,'0');
-      bctx.fill();
-    }
-    // Growing sun outline
-    if (t > 0.5) {
-      const st = (t - 0.5) * 2;
-      bctx.beginPath();
-      bctx.arc(sunX, sunY, 70 * st, 0, Math.PI*2);
-      const sg = bctx.createRadialGradient(sunX - 20, sunY - 20, 5, sunX, sunY, 70*st);
-      sg.addColorStop(0, `rgba(255,240,180,${0.6*st})`);
-      sg.addColorStop(0.7, `rgba(240,180,41,${0.4*st})`);
-      sg.addColorStop(1, `rgba(200,100,20,${0.2*st})`);
-      bctx.fillStyle = sg;
-      bctx.fill();
-    }
-  }
-  else if (phase === 4) {
-    // Sun!
-    const sunX = w * 0.75, sunY = h * 0.5;
-    const R = 70 + Math.sin(Date.now() * 0.002) * 3;
-    // Glow
-    bctx.beginPath();
-    bctx.arc(sunX, sunY, R + 30, 0, Math.PI*2);
-    const gg = bctx.createRadialGradient(sunX, sunY, R * 0.5, sunX, sunY, R + 30);
-    gg.addColorStop(0, 'rgba(255,240,180,0.15)');
-    gg.addColorStop(1, 'rgba(255,200,50,0)');
-    bctx.fillStyle = gg;
-    bctx.fill();
-    // Sun body
-    bctx.beginPath();
-    bctx.arc(sunX, sunY, R, 0, Math.PI*2);
-    const sg = bctx.createRadialGradient(sunX - 20, sunY - 20, 5, sunX, sunY, R);
-    sg.addColorStop(0, '#fff8e0');
-    sg.addColorStop(0.3, '#ffd54f');
-    sg.addColorStop(0.7, '#f0a020');
-    sg.addColorStop(1, '#c06000');
-    bctx.fillStyle = sg;
-    bctx.fill();
-    // Surface detail
-    for (let i = 0; i < 12; i++) {
-      const a = i * Math.PI * 2 / 12 + Date.now() * 0.0003;
-      const d = R * 0.4 + Math.sin(Date.now() * 0.001 + i) * R * 0.15;
-      bctx.beginPath();
-      bctx.arc(sunX + Math.cos(a)*d, sunY + Math.sin(a)*d, 3 + Math.random()*4, 0, Math.PI*2);
-      bctx.fillStyle = 'rgba(255,240,200,0.2)';
-      bctx.fill();
-    }
-    bctx.font = '13px "DM Sans", sans-serif';
-    bctx.fillStyle = 'rgba(255,255,255,0.5)';
-    bctx.textAlign = 'center';
-    bctx.fillText('태양 ☀', sunX, sunY + R + 25);
-
-    // ghost bean
-    const bx = w * 0.15, by = h * 0.5;
-    bctx.beginPath();
-    bctx.ellipse(bx, by, 20, 14, 0, 0, Math.PI*2);
-    bctx.strokeStyle = 'rgba(255,255,255,0.1)';
-    bctx.lineWidth = 1;
-    bctx.setLineDash([4,4]);
-    bctx.stroke();
-    bctx.setLineDash([]);
-    bctx.font = '11px "DM Sans", sans-serif';
-    bctx.fillStyle = 'rgba(255,255,255,0.2)';
-    bctx.fillText('원래 콩', bx, by + 28);
-
-    // Arrow
-    bctx.beginPath();
-    bctx.moveTo(bx + 30, by);
-    bctx.lineTo(sunX - R - 15, by);
-    bctx.strokeStyle = 'rgba(240,180,41,0.2)';
-    bctx.lineWidth = 1;
-    bctx.stroke();
-    bctx.beginPath();
-    bctx.moveTo(sunX - R - 15, by);
-    bctx.lineTo(sunX - R - 25, by - 5);
-    bctx.moveTo(sunX - R - 15, by);
-    bctx.lineTo(sunX - R - 25, by + 5);
-    bctx.stroke();
-  }
-}
-
-function updatePhaseUI(phase) {
-  document.querySelectorAll('.phase-dot').forEach((d, i) => d.classList.toggle('active', i === phase));
-  const labels = [
-    '콩 — 평범한 공 하나',
-    '비가측 조각 다섯 개로 분해 중…',
-    '프랙탈 조각 다섯 개, 공간에 흩어진 채',
-    '강체 운동만으로 — 회전과 평행이동…',
-    '동일한 공 두 개 — 아니, 태양! ☀'
-  ];
-  document.getElementById('phase-label').textContent = labels[phase];
-}
-
-function startBeanAnimation() {
-  ensureAudio();
-  if (beanAnim) return;
-  beanPhase = 0;
-  beanT = 0;
-  const btn = document.getElementById('bean-start-btn');
-  btn.classList.add('active');
-  btn.textContent = '⏸ 실행 중…';
-
-  const phases = [
-    { dur: 500, sfx: null },        // hold bean
-    { dur: 800, sfx: 'crack' },     // crack
-    { dur: 800, sfx: 'scatter' },   // scatter
-    { dur: 1500, sfx: 'whoosh' },   // rearrange
-    { dur: 100, sfx: 'chime' },     // sun reveal
-  ];
-
-  let phaseIdx = 0;
-  let phaseStart = performance.now();
-  beanPhase = 0;
-  updatePhaseUI(0);
-
-  function tick(now) {
-    const elapsed = now - phaseStart;
-    const dur = phases[phaseIdx].dur;
-    beanT = Math.min(1, elapsed / dur);
-    beanPhase = phaseIdx;
-    drawBean(0, 0, 0, 0, beanPhase, beanT);
-
-    if (elapsed >= dur) {
-      phaseIdx++;
-      if (phaseIdx >= phases.length) {
-        beanPhase = 4;
-        updatePhaseUI(4);
-        drawBean(0, 0, 0, 0, 4, 1);
-        // Continue animating the sun
-        function sunLoop() {
-          drawBean(0, 0, 0, 0, 4, 1);
-          beanAnim = requestAnimationFrame(sunLoop);
-        }
-        sunLoop();
-        btn.classList.remove('active');
-        btn.textContent = '▶ 분해 & 재조립';
-        return;
-      }
-      phaseStart = now;
-      updatePhaseUI(phaseIdx);
-      if (phases[phaseIdx].sfx) playSfx(phases[phaseIdx].sfx);
-    }
-    beanAnim = requestAnimationFrame(tick);
-  }
-  playSfx('click');
-  beanAnim = requestAnimationFrame(tick);
-}
-
-function resetBeanAnimation() {
-  if (beanAnim) { cancelAnimationFrame(beanAnim); beanAnim = null; }
-  beanPhase = 0; beanT = 0;
-  updatePhaseUI(0);
-  drawBean(0, 0, 0, 0, 0, 0);
-  const btn = document.getElementById('bean-start-btn');
-  btn.classList.remove('active');
-  btn.textContent = '▶ 분해 & 재조립';
-}
-
-// Initial draw
-setTimeout(() => drawBean(0,0,0,0,0,0), 100);
-
-// ═══════════════════════════════════════════════════
-// CAYLEY TREE — Three.js 3D (matching banach.html)
-// ═══════════════════════════════════════════════════
-let cayleyR = 0;
-const CAY_MAX_R = 5;
-
-if (typeof THREE === 'undefined') {
-  // THREE didn't load — show fallback
-  const _cc = document.getElementById('cayley-canvas');
-  if (_cc) {
-    const _wrap = _cc.parentElement;
-    _wrap.style.display = 'flex';
-    _wrap.style.alignItems = 'center';
-    _wrap.style.justifyContent = 'center';
-    _cc.style.display = 'none';
-    const _msg = document.createElement('div');
-    _msg.style.cssText = 'text-align:center;padding:2rem;';
-    _msg.innerHTML = '<p style="color:rgba(240,180,41,0.6);font-family:var(--font-mono);font-size:0.8rem;margin-bottom:0.5rem;">⚠ Three.js를 불러올 수 없습니다</p><p style="color:var(--muted);font-size:0.78rem;">인터넷이 연결된 브라우저에서 열어주세요.<br>3D 케일리 그래프를 보실 수 있습니다.</p>';
-    _wrap.appendChild(_msg);
-  }
-  window.setCayleyR = function() {};
-} else {
-// ── THREE.js is available ──
-
-// --- Tree geometry params (same as banach.html) ---
-// S0 = edge length in 3D space. BRAT > 1 means the xy-projection
-// of edges shrinks each level, while z drops so that the 3D
-// Euclidean edge length stays exactly S0 for every edge.
-const S0   = 0.88;
-const BRAT = 2.2;
-
-function computeZlevels(maxR) {
-  // Each edge has xy-projection Lk = S0/BRAT^k and z-drop dz = sqrt(1 - Lk²).
-  // So the 3D edge length = sqrt(Lk² + dz²) = sqrt(Lk² + 1 - Lk²) = 1.
-  // ALL edges in 3-space have equal unit length!
-  const z = [0];
-  for (let k = 0; k < maxR; k++) {
-    const Lk = S0 / Math.pow(BRAT, k);
-    const dz = Math.sqrt(Math.max(0, 1 - Lk * Lk));
-    z.push(z[k] - dz);
-  }
-  return z;
-}
-
-function hslToRgb(h, s, l) {
-  let r, g, b;
-  if (s === 0) { r = g = b = l; }
-  else {
-    const q = l < 0.5 ? l*(1+s) : l+s-l*s, p = 2*l - q;
-    const hue2rgb = (p,q,t) => {
-      if(t<0) t+=1; if(t>1) t-=1;
-      if(t<1/6) return p+(q-p)*6*t;
-      if(t<1/2) return q;
-      if(t<2/3) return p+(q-p)*(2/3-t)*6;
-      return p;
-    };
-    r=hue2rgb(p,q,h+1/3); g=hue2rgb(p,q,h); b=hue2rgb(p,q,h-1/3);
-  }
-  return [r,g,b];
-}
-
-let treeHueOffset = 0;
-function nodeColor3(d, maxD) {
-  if (d === 0) return new THREE.Color(1, 1, 1);
-  const hue = ((d * 137.508 + treeHueOffset) % 360) / 360;
-  const sat = 0.92;
-  const lit = 0.62 - Math.min(d, maxD) / maxD * 0.22;
-  return new THREE.Color().setHSL(hue, sat, lit);
-}
-
-function ptRadius3(k) {
-  const n = k === 0 ? 1 : 4 * Math.pow(3, k - 1);
-  return Math.max(7, 22 / Math.sqrt(n));
-}
-
-const DIR3 = [[1,0],[0,1],[-1,0],[0,-1]];
-const rotL3 = d => (d + 1) & 3;
-const rotR3 = d => (d + 3) & 3;
-
-function buildTreeData3(R) {
-  const zL = computeZlevels(R);
-  const edgePos = [], edgeCol = [];
-  const levelVtx = [];
-  for (let k = 0; k <= R; k++) levelVtx.push({ pos:[], col:[] });
-  const maxD = Math.max(1, R);
-  const C = d => nodeColor3(d, maxD);
-
-  function addV(k, x, y) {
-    const c = C(k);
-    levelVtx[k].pos.push(x, y, zL[k]);
-    levelVtx[k].col.push(c.r, c.g, c.b);
-  }
-  function addE(x1,y1,z1,x2,y2,z2,d1,d2) {
-    const c1=C(d1), c2=C(d2);
-    edgePos.push(x1,y1,z1,x2,y2,z2);
-    edgeCol.push(c1.r,c1.g,c1.b,c2.r,c2.g,c2.b);
-  }
-
-  addV(0, 0, 0);
-  if (R === 0) return { edgePos, edgeCol, levelVtx, zL, nodeCount: 1, edgeCount: 0 };
-
-  let nodeCount = 1, edgeCount = 0;
-  const queue = [];
-  for (let dir = 0; dir < 4; dir++) {
-    const [dx,dy] = DIR3[dir];
-    const cx = S0*dx, cy = S0*dy;
-    addV(1, cx, cy);
-    addE(0,0,zL[0], cx,cy,zL[1], 0,1);
-    nodeCount++; edgeCount++;
-    if (R > 1) queue.push({ d:1, x:cx, y:cy, dir });
-  }
-  while (queue.length) {
-    const { d, x, y, dir } = queue.shift();
-    if (d >= R) continue;
-    const cd = d + 1;
-    const Ld = S0 / Math.pow(BRAT, d);
-    for (const cdir of [dir, rotL3(dir), rotR3(dir)]) {
-      const [dx,dy] = DIR3[cdir];
-      const cx = x + Ld*dx, cy = y + Ld*dy;
-      addV(cd, cx, cy);
-      addE(x,y,zL[d], cx,cy,zL[cd], d,cd);
-      nodeCount++; edgeCount++;
-      if (cd < R) queue.push({ d:cd, x:cx, y:cy, dir:cdir });
-    }
-  }
-  return { edgePos, edgeCol, levelVtx, zL, nodeCount, edgeCount };
-}
-
-// --- Three.js setup for Cayley tree ---
-const cayleyCanvas = document.getElementById('cayley-canvas');
-const cayleyRenderer = new THREE.WebGLRenderer({ canvas: cayleyCanvas, antialias: true });
-cayleyRenderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-cayleyRenderer.setClearColor(0x080d1a, 1);
-
-const cayleyScene  = new THREE.Scene();
-const cayleyCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.001, 3000);
-cayleyCamera.position.set(0, 0, 10);
-let cayOrthoH = 1.6;
-
-// Stars
-(() => {
-  const geo = new THREE.BufferGeometry();
-  const pos = [];
-  for (let i = 0; i < 600; i++) {
-    const r  = 800 + Math.random() * 1200;
-    const th = Math.random() * Math.PI * 2;
-    const ph = Math.acos(2 * Math.random() - 1);
-    pos.push(r*Math.sin(ph)*Math.cos(th), r*Math.sin(ph)*Math.sin(th), r*Math.cos(ph));
-  }
-  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  cayleyScene.add(new THREE.Points(geo, new THREE.PointsMaterial({
-    color: 0x2a4060, size: 2.0, transparent: true, opacity: 0.45,
-    blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true,
-  })));
-})();
-
-const cayGroup = new THREE.Group();
-cayleyScene.add(cayGroup);
-
-let cayEdgeMesh = null, cayAxisMesh = null;
-let cayPtMeshes = [];
-
-function disposeCayTree() {
-  const rm = m => { cayGroup.remove(m); m.geometry.dispose(); m.material.dispose(); };
-  if (cayEdgeMesh) { rm(cayEdgeMesh); cayEdgeMesh = null; }
-  if (cayAxisMesh) { rm(cayAxisMesh); cayAxisMesh = null; }
-  cayPtMeshes.forEach(rm); cayPtMeshes = [];
-}
-
-function rebuildCayTree(R) {
-  disposeCayTree();
-  const { edgePos, edgeCol, levelVtx, zL, nodeCount, edgeCount } = buildTreeData3(R);
-
-  // Fit view
-  const xyMax = S0 * BRAT / (BRAT - 1);
-  cayOrthoH = xyMax * 1.2;
-  resizeCayTree();
-
-  // Detect whether fat-line extensions loaded
-  const hasFatLines = typeof THREE.LineSegmentsGeometry === 'function'
-                   && typeof THREE.LineMaterial === 'function'
-                   && typeof THREE.LineSegments2 === 'function';
-
-  // Edges
-  if (edgePos.length) {
-    if (hasFatLines) {
-      // Fat lines (pixel-width, looks great)
-      const geo = new THREE.LineSegmentsGeometry();
-      geo.setPositions(edgePos);
-      geo.setColors(edgeCol);
-      const wrap = cayleyCanvas.parentElement;
-      const mat = new THREE.LineMaterial({
-        vertexColors: true,
-        linewidth: 3.5,
-        transparent: true,
-        opacity: 0.92,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-        resolution: new THREE.Vector2(wrap.clientWidth || 800, wrap.clientHeight || 600),
+  </footer>
+
+  <script>
+    // --- KaTeX Auto-Render ---
+    document.addEventListener("DOMContentLoaded", function() {
+      document.querySelectorAll('.math-ktx').forEach(el => {
+        if (typeof katex !== 'undefined') katex.render(el.textContent, el, { throwOnError: false });
       });
-      cayEdgeMesh = new THREE.LineSegments2(geo, mat);
-    } else {
-      // Fallback: basic thin lines (still 3D, still rotatable)
-      const geo = new THREE.BufferGeometry();
-      geo.setAttribute('position', new THREE.Float32BufferAttribute(edgePos, 3));
-      geo.setAttribute('color', new THREE.Float32BufferAttribute(edgeCol, 3));
-      cayEdgeMesh = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({
-        vertexColors: true,
-        transparent: true,
-        opacity: 0.85,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-      }));
+    });
+
+    // --- Global State & Utilities ---
+    const State = { paused: false, heroVisible: true, lastInteraction: Date.now(), idleTimeout: 15000, heroTimeout: 300000 };
+    const pieceColors = ['#8a6abf', '#c9a84c', '#ece8e0', '#5a9a72', '#d17a86'];
+
+    function resetIdleTimer() { State.lastInteraction = Date.now(); State.paused = false; }
+    window.addEventListener('mousemove', resetIdleTimer, {passive: true});
+    window.addEventListener('touchstart', resetIdleTimer, {passive: true});
+    window.addEventListener('keydown', resetIdleTimer, {passive: true});
+    window.addEventListener('wheel', resetIdleTimer, {passive: true});
+    window.addEventListener('click', resetIdleTimer, {passive: true});
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }});
+    }, { threshold: 0.15, rootMargin: "0px 0px -50px 0px" });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    const heroObserver = new IntersectionObserver((entries) => { State.heroVisible = entries[0].isIntersecting; }, { threshold: 0 });
+    heroObserver.observe(document.getElementById('hero'));
+
+    const particlesContainer = document.getElementById('ambient-particles');
+    for (let i = 0; i < 22; i++) {
+      const p = document.createElement('div'); p.className = 'particle';
+      const size = Math.random() * 4 + 2; p.style.width = `${size}px`; p.style.height = `${size}px`;
+      p.style.left = `${Math.random() * 100}vw`; p.style.animationDuration = `${Math.random() * 15 + 15}s`; p.style.animationDelay = `${Math.random() * -30}s`;
+      particlesContainer.appendChild(p);
     }
-    cayGroup.add(cayEdgeMesh);
-  }
 
-  // Nodes per level
-  for (let k = 0; k <= R; k++) {
-    const lv = levelVtx[k];
-    if (!lv.pos.length) continue;
-    const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.Float32BufferAttribute(lv.pos, 3));
-    g.setAttribute('color',    new THREE.Float32BufferAttribute(lv.col, 3));
-    const m = new THREE.Points(g, new THREE.PointsMaterial({
-      vertexColors: true, size: ptRadius3(k),
-      transparent: true, opacity: 1.0,
-      blending: THREE.AdditiveBlending, depthWrite: false,
-      sizeAttenuation: false,
-    }));
-    cayGroup.add(m);
-    cayPtMeshes.push(m);
-  }
+    function setupCanvas(canvas) {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr; canvas.height = rect.height * dpr;
+      const ctx = canvas.getContext('2d');
+      return { ctx, width: canvas.width, height: canvas.height, dpr };
+    }
 
-  // Vertical axis hint
-  if (R > 0) {
-    const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.Float32BufferAttribute([0,0,zL[0],0,0,zL[R]], 3));
-    cayAxisMesh = new THREE.Line(g, new THREE.LineBasicMaterial({
-      color: 0x1a3055, transparent: true, opacity: 0.45,
-      blending: THREE.AdditiveBlending, depthWrite: false,
-    }));
-    cayGroup.add(cayAxisMesh);
-  }
+    function addDragPan(canvas, onPanZoom) {
+      let isDragging = false; let lastX, lastY; let panX = 0, panY = 0, zoom = 1;
+      canvas.addEventListener('mousedown', e => { isDragging = true; lastX = e.clientX; lastY = e.clientY; });
+      window.addEventListener('mousemove', e => {
+        if (!isDragging) return;
+        panX += (e.clientX - lastX); panY += (e.clientY - lastY);
+        lastX = e.clientX; lastY = e.clientY; onPanZoom(panX, panY, zoom);
+      });
+      window.addEventListener('mouseup', () => isDragging = false);
+      window.addEventListener('mouseleave', () => isDragging = false);
+      canvas.addEventListener('wheel', e => { e.preventDefault(); zoom *= (e.deltaY > 0 ? 0.9 : 1.1); onPanZoom(panX, panY, zoom); }, {passive: false});
+      canvas.addEventListener('touchstart', e => { isDragging = true; lastX = e.touches[0].clientX; lastY = e.touches[0].clientY; }, {passive: true});
+      window.addEventListener('touchmove', e => {
+        if (!isDragging) return;
+        panX += (e.touches[0].clientX - lastX); panY += (e.touches[0].clientY - lastY);
+        lastX = e.touches[0].clientX; lastY = e.touches[0].clientY; onPanZoom(panX, panY, zoom);
+      }, {passive: true});
+      window.addEventListener('touchend', () => isDragging = false);
+    }
 
-  // Update stats
-  document.getElementById('cay-depth').textContent = R;
-  document.getElementById('cay-nodes').textContent = nodeCount;
-  document.getElementById('cay-edges').textContent = edgeCount;
-}
+    // --- Hero Canvas Animation ---
+    const heroCanvas = document.getElementById('hero-canvas');
+    let heroCtx, heroW, heroH, heroDpr, heroPoints = [];
+    const numHeroPoints = 2500;
 
-function resizeCayTree() {
-  const wrap = cayleyCanvas.parentElement;
-  const w = wrap.clientWidth, h = wrap.clientHeight;
-  if (w < 1 || h < 1) return;
-  cayleyRenderer.setSize(w, h);
-  const aspect = w / h;
-  const cx = cayleyCamera.position.x, cy = cayleyCamera.position.y;
-  cayleyCamera.left   = cx - cayOrthoH * aspect;
-  cayleyCamera.right  = cx + cayOrthoH * aspect;
-  cayleyCamera.top    = cy + cayOrthoH;
-  cayleyCamera.bottom = cy - cayOrthoH;
-  cayleyCamera.near   = 0.001;
-  cayleyCamera.far    = 3000;
-  cayleyCamera.updateProjectionMatrix();
-  if (cayEdgeMesh && cayEdgeMesh.material && cayEdgeMesh.material.resolution) {
-    cayEdgeMesh.material.resolution.set(w, h);
-  }
-}
-
-// --- Interaction: drag=rotate, shift-drag=pan, scroll=zoom ---
-let cRotDrag=false, crlx=0, crly=0, crvx=0, crvy=0;
-let cPanDrag=false, cplx=0, cply=0, cpvx=0, cpvy=0;
-
-function cStartRot(x,y) { cRotDrag=true; crlx=x; crly=y; crvx=crvy=0; }
-function cMoveRot(x,y) {
-  if(!cRotDrag) return;
-  crvx=(y-crly)*0.014; crvy=(x-crlx)*0.014;
-  cayGroup.rotation.x+=crvx; cayGroup.rotation.y+=crvy;
-  crlx=x; crly=y;
-}
-function cStartPan(x,y) { cPanDrag=true; cplx=x; cply=y; cpvx=cpvy=0; }
-function cMovePan(x,y) {
-  if(!cPanDrag) return;
-  const s = cayOrthoH * 0.003;
-  cpvx=-(x-cplx)*s; cpvy=(y-cply)*s;
-  cayleyCamera.position.x-=(x-cplx)*s;
-  cayleyCamera.position.y+=(y-cply)*s;
-  resizeCayTree();
-  cplx=x; cply=y;
-}
-function cEndAll() { cRotDrag=false; cPanDrag=false; }
-
-cayleyCanvas.addEventListener('mousedown', e=>{
-  e.preventDefault();
-  if(e.button===2||e.shiftKey) cStartPan(e.clientX,e.clientY);
-  else                          cStartRot(e.clientX,e.clientY);
-});
-window.addEventListener('mousemove', e=>{
-  if(cPanDrag) cMovePan(e.clientX,e.clientY);
-  else if(cRotDrag) cMoveRot(e.clientX,e.clientY);
-});
-window.addEventListener('mouseup',    cEndAll);
-cayleyCanvas.addEventListener('contextmenu', e=>e.preventDefault());
-
-// Touch: 1 finger = rotate, 2 fingers = pan
-cayleyCanvas.addEventListener('touchstart', e=>{
-  e.preventDefault();
-  if(e.touches.length===1) cStartRot(e.touches[0].clientX, e.touches[0].clientY);
-  else { cEndAll(); cStartPan(e.touches[0].clientX, e.touches[0].clientY); }
-}, {passive:false});
-cayleyCanvas.addEventListener('touchmove', e=>{
-  e.preventDefault();
-  if(e.touches.length===1&&cRotDrag) cMoveRot(e.touches[0].clientX,e.touches[0].clientY);
-  else if(cPanDrag) cMovePan(e.touches[0].clientX,e.touches[0].clientY);
-}, {passive:false});
-cayleyCanvas.addEventListener('touchend', cEndAll);
-
-cayleyCanvas.addEventListener('wheel', e=>{
-  e.preventDefault();
-  cayOrthoH *= (1 + e.deltaY * 0.001);
-  cayOrthoH = Math.max(0.2, Math.min(20, cayOrthoH));
-  resizeCayTree();
-}, {passive:false});
-
-// Render loop with inertia
-(function cayAnimate() {
-  requestAnimationFrame(cayAnimate);
-  if(!cRotDrag&&(Math.abs(crvx)>4e-5||Math.abs(crvy)>4e-5)){
-    cayGroup.rotation.x+=crvx; cayGroup.rotation.y+=crvy; crvx*=0.90; crvy*=0.90;
-  }
-  if(!cPanDrag&&(Math.abs(cpvx)>2e-5||Math.abs(cpvy)>2e-5)){
-    cayleyCamera.position.x+=cpvx; cayleyCamera.position.y+=cpvy; cpvx*=0.88; cpvy*=0.88;
-  }
-  cayleyRenderer.render(cayleyScene, cayleyCamera);
-})();
-
-window.setCayleyR = function(r) {
-  cayleyR = Math.max(0, Math.min(CAY_MAX_R, r));
-  document.getElementById('cay-rval').textContent = cayleyR;
-  document.getElementById('cay-slider').value = cayleyR;
-  document.getElementById('cay-dec').disabled = cayleyR === 0;
-  document.getElementById('cay-inc').disabled = cayleyR === CAY_MAX_R;
-  playSfx('grow');
-  rebuildCayTree(cayleyR);
-};
-
-// Initial build & resize
-rebuildCayTree(0);
-resizeCayTree();
-window.addEventListener('resize', resizeCayTree);
-
-} // end THREE guard for Cayley tree
-
-// ═══════════════════════════════════════════════════
-// GLOBE (from banach.html, adapted)
-// ═══════════════════════════════════════════════════
-let globeR = 0;
-let globe = null;
-
-const CITIES = [
-  { name:'서울',    lat:37.5665,  lng:126.978,  color:'#FF2040' },
-  { name:'바르샤바',   lat:52.2297,  lng:21.0122,  color:'#FF8000' },
-  { name:'런던',   lat:51.5074,  lng:-0.1278,  color:'#00FF88' },
-  { name:'도쿄',    lat:35.6762,  lng:139.6503, color:'#FFE600' },
-  { name:'베이징',  lat:39.9042,  lng:116.4074, color:'#00CFFF' },
-  { name:'바그다드',  lat:33.3152,  lng:44.3661,  color:'#CC00FF' },
-  { name:'호놀룰루', lat:21.3069,  lng:-157.858, color:'#FF0080' },
-];
-
-const GCOS=1/3, GSIN=Math.sqrt(8/9);
-const MAT_E=[[GCOS,-GSIN,0],[GSIN,GCOS,0],[0,0,1]];
-const MAT_W=[[GCOS, GSIN,0],[-GSIN,GCOS,0],[0,0,1]];
-const MAT_N=[[1,0,0],[0,GCOS,-GSIN],[0,GSIN,GCOS]];
-const MAT_S=[[1,0,0],[0,GCOS, GSIN],[0,-GSIN,GCOS]];
-const GGENS=[{key:'E',mat:MAT_E,inv:'W'},{key:'W',mat:MAT_W,inv:'E'},
-             {key:'N',mat:MAT_N,inv:'S'},{key:'S',mat:MAT_S,inv:'N'}];
-const GINV={E:'W',W:'E',N:'S',S:'N'};
-
-const gApplyMat=(mat,v)=>[
-  mat[0][0]*v[0]+mat[0][1]*v[1]+mat[0][2]*v[2],
-  mat[1][0]*v[0]+mat[1][1]*v[1]+mat[1][2]*v[2],
-  mat[2][0]*v[0]+mat[2][1]*v[1]+mat[2][2]*v[2],
-];
-const gToVec=(lat,lng)=>{
-  const p=lat*Math.PI/180, l=lng*Math.PI/180;
-  return [Math.cos(p)*Math.cos(l), Math.cos(p)*Math.sin(l), Math.sin(p)];
-};
-const gToLL=v=>({
-  lat:Math.asin(Math.max(-1,Math.min(1,v[2])))*180/Math.PI,
-  lng:Math.atan2(v[1],v[0])*180/Math.PI,
-});
-const gHexA=(hex,a)=>{
-  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
-  return `rgba(${r},${g},${b},${a.toFixed(2)})`;
-};
-
-const gCache=new Map();
-function getOrbit(ci,depth){
-  const key=`${ci}:${depth}`;
-  if(gCache.has(key)) return gCache.get(key);
-  const c=CITIES[ci];
-  const rv=gToVec(c.lat,c.lng);
-  if(depth===0){gCache.set(key,{nodes:[{vec:rv,depth:0}],arcs:[]});return gCache.get(key);}
-  const root={vec:rv,lastKey:null,depth:0};
-  const nodes=[root], arcs=[];
-  let frontier=[root];
-  for(let d=0;d<depth;d++){
-    const next=[];
-    for(const node of frontier){
-      for(const gen of GGENS){
-        if(node.lastKey&&gen.key===GINV[node.lastKey]) continue;
-        const child={vec:gApplyMat(gen.mat,node.vec),lastKey:gen.key,depth:d+1};
-        nodes.push(child);
-        arcs.push({fromVec:node.vec,toVec:child.vec,genKey:gen.key,depth:d+1});
-        next.push(child);
+    function initHero() {
+      const setup = setupCanvas(heroCanvas);
+      heroCtx = setup.ctx; heroW = setup.width; heroH = setup.height; heroDpr = setup.dpr;
+      if (heroPoints.length === 0) {
+        const phi = Math.PI * (3 - Math.sqrt(5));
+        for (let i = 0; i < numHeroPoints; i++) {
+          const y = 1 - (i / (numHeroPoints - 1)) * 2;
+          const radius = Math.sqrt(1 - y * y); const theta = phi * i;
+          heroPoints.push({ x: Math.cos(theta) * radius, y, z: Math.sin(theta) * radius, pieceId: i % 5, side: (i % 5 < 3) ? -1 : 1 });
+        }
       }
     }
-    frontier=next;
-  }
-  gCache.set(key,{nodes,arcs});
-  return gCache.get(key);
-}
+    window.addEventListener('resize', initHero); initHero();
 
-function updateGlobe(){
-  if(!globe) return;
-  const allPts=[];
-  const r=globeR;
-  let totalPts = 0;
-  let ptsPerCity = 0;
-  CITIES.forEach((city,i)=>{
-    const {nodes}=getOrbit(i,r);
-    if (i === 0) ptsPerCity = nodes.length;
-    totalPts += nodes.length;
-    nodes.forEach(node=>{
-      const pos = gToLL(node.vec);
-      const alpha = Math.max(0.30,0.95-node.depth*0.07);
-      allPts.push({lat:pos.lat,lng:pos.lng,
-        color:gHexA(city.color,alpha),
-        radius: Math.max(0.36,1.26-node.depth*0.10),
-        altitude: 0.005 + node.depth * 0.002});
-    });
-  });
-  globe.pointsData(allPts);
-  document.getElementById('globe-depth').textContent = r;
-  document.getElementById('globe-pts').textContent = ptsPerCity;
-  document.getElementById('globe-total').textContent = totalPts;
-}
+    let heroTime = 0;
+    function renderHero() {
+      if (!State.heroVisible || (State.paused && heroTime > State.heroTimeout/1000)) return;
+      heroTime += 0.005; heroCtx.clearRect(0, 0, heroW, heroH);
+      const cx = heroW / 2, cy = heroH / 2, radius = Math.min(heroW, heroH) * 0.22;
+      const phase = (Math.sin(heroTime * 0.8) + 1) / 2, smoothPhase = phase * phase * (3 - 2 * phase);
+      const splitDist = radius * 2.2 * smoothPhase, rotX = heroTime * 0.4, rotY = heroTime * 0.6;
+      const cosX = Math.cos(rotX), sinX = Math.sin(rotX), cosY = Math.cos(rotY), sinY = Math.sin(rotY);
 
-async function initGlobe(){
-  const container = document.getElementById('globe-container');
-  if (!container || container.clientWidth < 10) return;
-
-  try {
-    // Wait for CDN scripts (Globe, topojson, THREE)
-    await waitForGlobeDeps(15000);
-
-    const topoRaw=await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(r=>r.json());
-    const countries=topojson.feature(topoRaw,topoRaw.objects.countries);
-
-    const loadEl=document.getElementById('globe-loading');
-    loadEl.classList.add('hide');
-    setTimeout(()=>loadEl.style.display='none',700);
-
-    globe=Globe()(container)
-      .globeImageUrl('https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-night.jpg')
-      .backgroundImageUrl('')
-      .backgroundColor('#06101e')
-      .atmosphereColor('rgba(80,100,200,0.9)')
-      .atmosphereAltitude(0.12)
-      .polygonsData(countries.features)
-      .polygonCapColor(()=>'rgba(18,24,68,0.55)')
-      .polygonSideColor(()=>'rgba(40,60,160,0.12)')
-      .polygonStrokeColor(()=>'rgba(70,95,195,0.45)')
-      .polygonAltitude(0.003)
-      .pointsData([])
-      .pointLat(d=>d.lat).pointLng(d=>d.lng)
-      .pointColor(d=>d.color).pointAltitude(d=>d.altitude)
-      .pointRadius(d=>d.radius).pointResolution(10);
-
-    globe.pointOfView({lat:35,lng:60,altitude:2.3},0);
-    globe.controls().enableDamping=true;
-
-    function resizeGlobe(){
-      if (!globe) return;
-      globe.width(container.clientWidth).height(container.clientHeight);
+      for (let i = 0; i < numHeroPoints; i++) {
+        const p = heroPoints[i];
+        let y1 = p.y * cosX - p.z * sinX, z1 = p.y * sinX + p.z * cosX;
+        let x2 = p.x * cosY + z1 * sinY, z2 = -p.x * sinY + z1 * cosY;
+        const fx = x2 * radius + p.side * splitDist, fy = y1 * radius, fz = z2 * radius;
+        const fov = 1000 * heroDpr, zDepth = fz + fov * 0.6;
+        if (zDepth < 0.1) continue;
+        const scale = fov / zDepth, px = cx + fx * scale, py = cy + fy * scale;
+        const alpha = Math.min(1, Math.max(0.1, scale * 0.8));
+        
+        heroCtx.beginPath();
+        heroCtx.arc(px, py, Math.max(0.5, 1.8 * heroDpr * scale), 0, Math.PI * 2);
+        if (smoothPhase > 0.1) { heroCtx.fillStyle = pieceColors[p.pieceId]; heroCtx.globalAlpha = alpha * 0.8; } 
+        else { heroCtx.fillStyle = '#ece8e0'; heroCtx.globalAlpha = alpha; }
+        heroCtx.fill();
+      }
+      heroCtx.globalAlpha = 1.0;
     }
-    window.addEventListener('resize', resizeGlobe);
-    resizeGlobe();
 
-    // City labels
-    const labelContainer = document.getElementById('city-labels');
-    const labelEls = CITIES.map(city => {
-      const dot = document.createElement('div');
-      dot.className = 'city-dot';
-      dot.style.background = city.color;
-      dot.style.boxShadow = `0 0 6px ${city.color}bb`;
-      labelContainer.appendChild(dot);
-      const el = document.createElement('div');
-      el.className = 'city-label';
-      el.textContent = city.name;
-      el.style.color = city.color;
-      el.style.textShadow = `0 0 7px ${city.color}99, 0 1px 4px #000c`;
-      labelContainer.appendChild(el);
-      return { el, dot, city };
+    // --- Interactive 1: Engine of Infinity (Robust Fermat's Spiral) ---
+    const canvas1 = document.getElementById('canvas-1'), sliderShift = document.getElementById('slider-shift');
+    let ctx1, w1, h1, dpr1, currentShift = 0, targetShift = 0, i1PanX = 0, i1PanY = 0, i1Zoom = 1;
+
+    sliderShift.addEventListener('input', (e) => {
+      targetShift = parseFloat(e.target.value);
+      document.getElementById('stat-k').innerText = targetShift.toFixed(1);
+      document.getElementById('stat-vacated').innerText = Math.floor(targetShift);
+      resetIdleTimer();
     });
 
-    function updateLabels() {
-      requestAnimationFrame(updateLabels);
-      const rect = container.getBoundingClientRect();
+    function initCanvas1() { const setup = setupCanvas(canvas1); ctx1 = setup.ctx; w1 = setup.width; h1 = setup.height; dpr1 = setup.dpr; }
+    window.addEventListener('resize', initCanvas1);
+    let canvas1Visible = false;
+    new IntersectionObserver((entries) => { canvas1Visible = entries[0].isIntersecting; if (canvas1Visible && !ctx1) initCanvas1(); }).observe(document.getElementById('ibox-infinity'));
+    addDragPan(canvas1, (px, py, z) => { i1PanX = px * dpr1; i1PanY = py * dpr1; i1Zoom = z; resetIdleTimer(); });
+
+    function renderCanvas1() {
+      if (!canvas1Visible || !ctx1 || (State.paused && Math.abs(currentShift - targetShift) < 0.005)) return;
+      currentShift += (targetShift - currentShift) * 0.05; 
+      
+      const W = w1 / dpr1, H = h1 / dpr1;
+      ctx1.fillStyle = '#0e1128'; ctx1.fillRect(0, 0, w1, h1);
+      
+      ctx1.save();
+      ctx1.setTransform(dpr1, 0, 0, dpr1, 0, 0); 
+      ctx1.translate(W/2 + i1PanX/dpr1, H/2 + i1PanY/dpr1); 
+      ctx1.scale(i1Zoom, i1Zoom);
+      
+      const numPoints = 800;
+      const phi = Math.PI * (3 - Math.sqrt(5));
+      const c = (Math.min(W, H) / 2 * 0.85) / Math.sqrt(numPoints);
+      
+      ctx1.globalCompositeOperation = 'lighter';
+      
+      // Draw smooth track guideline
+      ctx1.beginPath();
+      for (let n = 0; n < numPoints; n++) {
+        const r = c * Math.sqrt(n), theta = n * phi;
+        if (n === 0) ctx1.moveTo(r * Math.cos(theta), r * Math.sin(theta)); 
+        else ctx1.lineTo(r * Math.cos(theta), r * Math.sin(theta));
+      }
+      ctx1.strokeStyle = 'rgba(255, 255, 255, 0.08)'; ctx1.lineWidth = 1; ctx1.stroke();
+
+      for (let n = 0; n < numPoints; n++) {
+        const shiftedN = n + currentShift;
+        const r = c * Math.sqrt(shiftedN), theta = shiftedN * phi;
+        const opacity = Math.max(0, 1 - (shiftedN / numPoints));
+        const px = r * Math.cos(theta), py = r * Math.sin(theta);
+        
+        ctx1.beginPath(); ctx1.arc(px, py, 3.5, 0, Math.PI * 2);
+        
+        if (n < Math.floor(currentShift)) {
+            // Newly created points
+            ctx1.fillStyle = `rgba(201, 168, 76, ${opacity})`; ctx1.shadowColor = '#c9a84c'; ctx1.shadowBlur = 12;
+        } else if (n === Math.floor(currentShift) && (currentShift % 1) > 0.01) {
+            // Morphing transition point
+            const fade = currentShift % 1; ctx1.fillStyle = `rgba(201, 168, 76, ${opacity * fade})`; ctx1.shadowColor = '#c9a84c'; ctx1.shadowBlur = 12 * fade;
+        } else {
+            // Existing original points
+            ctx1.fillStyle = `rgba(138, 106, 191, ${opacity * 0.8})`; ctx1.shadowBlur = 0;
+        }
+        ctx1.fill();
+
+        // Emphasize the empty ghost sockets left behind
+        if (currentShift > 0.05 && n < Math.ceil(currentShift)) {
+            const oR = c * Math.sqrt(n), oTheta = n * phi;
+            ctx1.beginPath(); ctx1.arc(oR * Math.cos(oTheta), oR * Math.sin(oTheta), 2.5, 0, Math.PI * 2);
+            ctx1.strokeStyle = `rgba(236, 232, 224, ${Math.min(0.6, currentShift - n)})`; 
+            ctx1.lineWidth = 1.5; ctx1.shadowBlur = 0; ctx1.stroke();
+        }
+      }
+      ctx1.restore();
+    }
+
+    // --- Interactive 2: 3D Cayley Graph of F2 ---
+    let cayleyR = 0;
+    const cayleyCanvas = document.getElementById('cayley-canvas');
+    let cayleyRenderer, cayleyScene, cayleyCamera, cayGroup;
+    let cayEdgeMesh = null, cayPtMeshes = [];
+    let cayOrthoH = 1.6, cayleyInitialized = false;
+    let cRotDrag=false, crlx=0, crly=0, crvx=0, crvy=0;
+    let cPanDrag=false, cplx=0, cply=0, cpvx=0, cpvy=0;
+
+    const S0 = 0.88, BRAT = 2.2;
+    function computeZlevels(maxR) {
+      const z = [0];
+      for (let k = 0; k < maxR; k++) { const Lk = S0 / Math.pow(BRAT, k); z.push(z[k] - Math.sqrt(Math.max(0, 1 - Lk * Lk))); }
+      return z;
+    }
+    function nodeColor3(d, maxD) { if (d === 0) return new THREE.Color(1, 1, 1); return new THREE.Color().setHSL(((d * 137.508) % 360) / 360, 0.92, 0.62 - Math.min(d, maxD)/maxD * 0.22); }
+    function ptRadius3(k) { return Math.max(7, 22 / Math.sqrt(k === 0 ? 1 : 4 * Math.pow(3, k - 1))); }
+    const DIR3 = [[1,0],[0,1],[-1,0],[0,-1]], rotL3 = d => (d + 1) & 3, rotR3 = d => (d + 3) & 3;
+
+    function buildTreeData3(R) {
+      const zL = computeZlevels(R), edgePos = [], edgeCol = [], levelVtx = [];
+      for (let k = 0; k <= R; k++) levelVtx.push({ pos:[], col:[] });
+      const maxD = Math.max(1, R);
+
+      function addV(k, x, y) { const c = nodeColor3(k, maxD); levelVtx[k].pos.push(x, y, zL[k]); levelVtx[k].col.push(c.r, c.g, c.b); }
+      function addE(x1,y1,z1,x2,y2,z2,d1,d2) { const c1=nodeColor3(d1, maxD), c2=nodeColor3(d2, maxD); edgePos.push(x1,y1,z1,x2,y2,z2); edgeCol.push(c1.r,c1.g,c1.b,c2.r,c2.g,c2.b); }
+
+      addV(0, 0, 0);
+      if (R === 0) return { edgePos, edgeCol, levelVtx, nodeCount: 1, edgeCount: 0 };
+
+      let nodeCount = 1, edgeCount = 0; const queue = [];
+      for (let dir = 0; dir < 4; dir++) {
+        const cx = S0*DIR3[dir][0], cy = S0*DIR3[dir][1]; addV(1, cx, cy); addE(0,0,zL[0], cx,cy,zL[1], 0,1);
+        nodeCount++; edgeCount++; if (R > 1) queue.push({ d:1, x:cx, y:cy, dir });
+      }
+      while (queue.length) {
+        const { d, x, y, dir } = queue.shift(); if (d >= R) continue;
+        const cd = d + 1, Ld = S0 / Math.pow(BRAT, d);
+        for (const cdir of [dir, rotL3(dir), rotR3(dir)]) {
+          const cx = x + Ld*DIR3[cdir][0], cy = y + Ld*DIR3[cdir][1]; addV(cd, cx, cy); addE(x,y,zL[d], cx,cy,zL[cd], d,cd);
+          nodeCount++; edgeCount++; if (cd < R) queue.push({ d:cd, x:cx, y:cy, dir:cdir });
+        }
+      }
+      return { edgePos, edgeCol, levelVtx, nodeCount, edgeCount };
+    }
+
+    function initCayley3D() {
+      if (typeof THREE === 'undefined' || cayleyInitialized) return;
+      cayleyRenderer = new THREE.WebGLRenderer({ canvas: cayleyCanvas, antialias: true, alpha: true });
+      cayleyRenderer.setPixelRatio(Math.min(devicePixelRatio, 2)); cayleyRenderer.setClearColor(0x0e1128, 1);
+      cayleyScene = new THREE.Scene(); cayleyCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.001, 3000); cayleyCamera.position.set(0, 0, 10);
+      cayGroup = new THREE.Group(); cayleyScene.add(cayGroup);
+
+      const geo = new THREE.BufferGeometry(); const pos = [];
+      for (let i = 0; i < 400; i++) {
+        const r=800+Math.random()*1200, th=Math.random()*Math.PI*2, ph=Math.acos(2*Math.random()-1); pos.push(r*Math.sin(ph)*Math.cos(th), r*Math.sin(ph)*Math.sin(th), r*Math.cos(ph));
+      }
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+      cayleyScene.add(new THREE.Points(geo, new THREE.PointsMaterial({ color: 0x8a6abf, size: 2.0, transparent: true, opacity: 0.25, blending: THREE.AdditiveBlending, depthWrite: false })));
+
+      rebuildCayTree(0); resizeCayTree(); window.addEventListener('resize', resizeCayTree);
+
+      cayleyCanvas.addEventListener('mousedown', e=>{ e.preventDefault(); resetIdleTimer(); if(e.button===2||e.shiftKey){ cPanDrag=true; cplx=e.clientX; cply=e.clientY; cpvx=cpvy=0; }else{ cRotDrag=true; crlx=e.clientX; crly=e.clientY; crvx=crvy=0; }});
+      window.addEventListener('mousemove', e=>{ if(cPanDrag){ const s=cayOrthoH*0.003; cpvx=-(e.clientX-cplx)*s; cpvy=(e.clientY-cply)*s; cayleyCamera.position.x+=cpvx; cayleyCamera.position.y+=cpvy; cplx=e.clientX; cply=e.clientY; resizeCayTree(); resetIdleTimer(); }else if(cRotDrag){ crvx=(e.clientY-crly)*0.014; crvy=(e.clientX-crlx)*0.014; cayGroup.rotation.x+=crvx; cayGroup.rotation.y+=crvy; crlx=e.clientX; crly=e.clientY; resetIdleTimer(); }});
+      window.addEventListener('mouseup', () => { cRotDrag=false; cPanDrag=false; }); cayleyCanvas.addEventListener('contextmenu', e=>e.preventDefault());
+      cayleyCanvas.addEventListener('wheel', e=>{ e.preventDefault(); resetIdleTimer(); cayOrthoH = Math.max(0.2, Math.min(20, cayOrthoH*(1+e.deltaY*0.001))); resizeCayTree(); }, {passive:false});
+      
+      cayleyCanvas.addEventListener('touchstart', e=>{ e.preventDefault(); resetIdleTimer(); if(e.touches.length===1){ cRotDrag=true; crlx=e.touches[0].clientX; crly=e.touches[0].clientY; }else{ cPanDrag=true; cplx=e.touches[0].clientX; cply=e.touches[0].clientY; } }, {passive:false});
+      cayleyCanvas.addEventListener('touchmove', e=>{ e.preventDefault(); resetIdleTimer(); if(e.touches.length===1&&cRotDrag){ crvx=(e.touches[0].clientY-crly)*0.014; crvy=(e.touches[0].clientX-crlx)*0.014; cayGroup.rotation.x+=crvx; cayGroup.rotation.y+=crvy; crlx=e.touches[0].clientX; crly=e.touches[0].clientY; }else if(cPanDrag){ const s=cayOrthoH*0.003; cpvx=-(e.touches[0].clientX-cplx)*s; cpvy=(e.touches[0].clientY-cply)*s; cayleyCamera.position.x+=cpvx; cayleyCamera.position.y+=cpvy; cplx=e.touches[0].clientX; cply=e.touches[0].clientY; resizeCayTree(); } }, {passive:false});
+      cayleyCanvas.addEventListener('touchend', () => { cRotDrag=false; cPanDrag=false; });
+      cayleyInitialized = true;
+    }
+
+    function rebuildCayTree(R) {
+      if(!cayGroup) return;
+      if (cayEdgeMesh) { cayGroup.remove(cayEdgeMesh); cayEdgeMesh.geometry.dispose(); cayEdgeMesh.material.dispose(); cayEdgeMesh = null; }
+      cayPtMeshes.forEach(m => { cayGroup.remove(m); m.geometry.dispose(); m.material.dispose(); }); cayPtMeshes = [];
+
+      const { edgePos, edgeCol, levelVtx, nodeCount, edgeCount } = buildTreeData3(R);
+      cayOrthoH = (S0 * BRAT / (BRAT - 1)) * 1.2; resizeCayTree();
+
+      if (edgePos.length) {
+        const geo = new THREE.BufferGeometry(); 
+        geo.setAttribute('position', new THREE.Float32BufferAttribute(edgePos, 3)); 
+        geo.setAttribute('color', new THREE.Float32BufferAttribute(edgeCol, 3));
+        cayEdgeMesh = new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.85, blending: THREE.AdditiveBlending, depthWrite: false }));
+        cayGroup.add(cayEdgeMesh);
+      }
+
+      for (let k = 0; k <= R; k++) {
+        if (!levelVtx[k].pos.length) continue;
+        const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(levelVtx[k].pos, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(levelVtx[k].col, 3));
+        const m = new THREE.Points(g, new THREE.PointsMaterial({ vertexColors: true, size: ptRadius3(k), transparent: true, opacity: 1.0, blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: false }));
+        cayGroup.add(m); cayPtMeshes.push(m);
+      }
+      document.getElementById('stat-cay-depth').textContent = R; document.getElementById('stat-cay-nodes').textContent = nodeCount; document.getElementById('stat-cay-edges').textContent = edgeCount;
+    }
+
+    function resizeCayTree() {
+      if(!cayleyRenderer) return;
+      const w = cayleyCanvas.parentElement.clientWidth, h = cayleyCanvas.parentElement.clientHeight;
+      if (w < 1 || h < 1) return;
+      cayleyRenderer.setSize(w, h);
+      cayleyCamera.left = -cayOrthoH * (w/h); cayleyCamera.right = cayOrthoH * (w/h);
+      cayleyCamera.top = cayOrthoH; cayleyCamera.bottom = -cayOrthoH; cayleyCamera.updateProjectionMatrix();
+    }
+
+    document.getElementById('slider-cayley').addEventListener('input', e => { cayleyR = parseInt(e.target.value); rebuildCayTree(cayleyR); resetIdleTimer(); });
+    let cayleyVisible = false;
+    new IntersectionObserver((entries) => { cayleyVisible = entries[0].isIntersecting; if (cayleyVisible && !cayleyInitialized) initCayley3D(); }).observe(document.getElementById('ibox-cayley'));
+
+    function renderCayley() {
+      if (!cayleyInitialized || !cayleyVisible || State.paused) return;
+      if(!cRotDrag&&(Math.abs(crvx)>4e-5||Math.abs(crvy)>4e-5)){ cayGroup.rotation.x+=crvx; cayGroup.rotation.y+=crvy; crvx*=0.90; crvy*=0.90; }
+      if(!cPanDrag&&(Math.abs(cpvx)>2e-5||Math.abs(cpvy)>2e-5)){ cayleyCamera.position.x+=cpvx; cayleyCamera.position.y+=cpvy; cpvx*=0.88; cpvy*=0.88; }
+      cayleyRenderer.render(cayleyScene, cayleyCamera);
+    }
+
+    // --- Interactive 3: Manual Spherical Dance (Three.js) ---
+    const manualCanvas = document.getElementById('manual-canvas');
+    let manRenderer, manScene, manCamera, manSphereGroup, manPathGroup;
+    let manInitialized = false, manAnimating = false;
+    let manWord = [], manHistory = [];
+    let manCurrentVec = new THREE.Vector3(0, 0, 1); 
+    let manAnimStart, manAnimTarget, manAnimProgress = 0;
+    let manIsBacktracking = false;
+    let manPointMesh;
+    
+    // N/S applies rotation around X axis. E/W applies around Y axis.
+    const MAN_THETA = Math.acos(1/3); // ~70.528 degrees
+    const AXIS_X = new THREE.Vector3(1,0,0);
+    const AXIS_Y = new THREE.Vector3(0,1,0);
+
+    const MAN_MOVES = {
+      'N': { axis: AXIS_X, angle: -MAN_THETA, inv: 'S' },
+      'S': { axis: AXIS_X, angle: MAN_THETA, inv: 'N' },
+      'E': { axis: AXIS_Y, angle: MAN_THETA, inv: 'W' },
+      'W': { axis: AXIS_Y, angle: -MAN_THETA, inv: 'E' }
+    };
+
+    function initManual3D() {
+      if (typeof THREE === 'undefined' || manInitialized) return;
+      manRenderer = new THREE.WebGLRenderer({ canvas: manualCanvas, antialias: true, alpha: true });
+      manRenderer.setPixelRatio(Math.min(devicePixelRatio, 2)); manRenderer.setClearColor(0x0e1128, 1);
+      manScene = new THREE.Scene(); manCamera = new THREE.PerspectiveCamera(45, manualCanvas.parentElement.clientWidth/manualCanvas.parentElement.clientHeight, 0.1, 100);
+      manCamera.position.set(0, 0, 3.8); manCamera.lookAt(0,0,0);
+      manSphereGroup = new THREE.Group(); manScene.add(manSphereGroup);
+
+      const globeGeo = new THREE.SphereGeometry(1, 32, 16);
+      const globeMat = new THREE.MeshBasicMaterial({ color: 0x52566a, wireframe: true, transparent: true, opacity: 0.15 });
+      manSphereGroup.add(new THREE.Mesh(globeGeo, globeMat));
+
+      const ptGeo = new THREE.SphereGeometry(0.06, 16, 16);
+      const ptMat = new THREE.MeshBasicMaterial({ color: 0xc9a84c });
+      manPointMesh = new THREE.Mesh(ptGeo, ptMat);
+      manPointMesh.position.copy(manCurrentVec);
+      manSphereGroup.add(manPointMesh);
+
+      manPathGroup = new THREE.Group();
+      manSphereGroup.add(manPathGroup);
+
+      manHistory.push(manCurrentVec.clone());
+      resizeManual3D(); window.addEventListener('resize', resizeManual3D);
+
+      let isDragging = false, lastX=0, lastY=0;
+      manualCanvas.addEventListener('mousedown', e => { isDragging=true; lastX=e.clientX; lastY=e.clientY; resetIdleTimer(); });
+      window.addEventListener('mousemove', e => { if(isDragging) { manSphereGroup.rotation.y += (e.clientX-lastX)*0.01; manSphereGroup.rotation.x += (e.clientY-lastY)*0.01; lastX=e.clientX; lastY=e.clientY; resetIdleTimer(); } });
+      window.addEventListener('mouseup', () => isDragging = false);
+      
+      manualCanvas.addEventListener('touchstart', e => { isDragging=true; lastX=e.touches[0].clientX; lastY=e.touches[0].clientY; resetIdleTimer(); }, {passive:false});
+      window.addEventListener('touchmove', e => { if(isDragging) { manSphereGroup.rotation.y += (e.touches[0].clientX-lastX)*0.01; manSphereGroup.rotation.x += (e.touches[0].clientY-lastY)*0.01; lastX=e.touches[0].clientX; lastY=e.touches[0].clientY; resetIdleTimer(); } }, {passive:false});
+      window.addEventListener('touchend', () => isDragging = false);
+
+      manInitialized = true;
+    }
+
+    function resizeManual3D() {
+      if(!manRenderer) return;
+      const w = manualCanvas.parentElement.clientWidth, h = manualCanvas.parentElement.clientHeight;
+      if (w < 1 || h < 1) return;
+      manRenderer.setSize(w, h); manCamera.aspect = w/h; manCamera.updateProjectionMatrix();
+    }
+
+    function updateManualTrail() {
+      manPathGroup.clear();
+      const pts = [];
+      for(let i=0; i<manHistory.length-1; i++){
+        const p1 = manHistory[i], p2 = manHistory[i+1];
+        // Draw curved Great Circle arc by lerping and normalizing
+        for(let t=0; t<=1.01; t+=0.05) pts.push(new THREE.Vector3().copy(p1).lerp(p2, Math.min(1,t)).normalize().multiplyScalar(1.01));
+      }
+      if (pts.length < 2) return;
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      const mat = new THREE.LineBasicMaterial({ color: 0x8a6abf });
+      manPathGroup.add(new THREE.Line(geo, mat));
+
+      manHistory.forEach((p, idx) => {
+        if (idx === 0) return; 
+        const dot = new THREE.Mesh(new THREE.SphereGeometry(0.02, 8, 8), new THREE.MeshBasicMaterial({ color: 0x8a6abf }));
+        dot.position.copy(p).multiplyScalar(1.01); manPathGroup.add(dot);
+      });
+    }
+
+    function applyManualMove(dir) {
+      if (!manInitialized || manAnimating) return;
+      resetIdleTimer();
+      const move = MAN_MOVES[dir];
+      const lastMove = manWord.length ? manWord[manWord.length-1] : null;
+
+      if (lastMove === move.inv) { 
+        manWord.pop(); manHistory.pop(); 
+        manAnimTarget = manHistory[manHistory.length-1].clone(); 
+        manIsBacktracking = true;
+      } else { 
+        manWord.push(dir); 
+        manAnimTarget = manCurrentVec.clone().applyAxisAngle(move.axis, move.angle); 
+        manIsBacktracking = false;
+      }
+
+      manAnimStart = manCurrentVec.clone();
+      manAnimProgress = 0; manAnimating = true;
+
+      document.getElementById('stat-m-word').innerHTML = manWord.length === 0 ? "시작" : manWord.map(w => {
+        if (w==='N') return '<span style="color:var(--fern);">북</span>';
+        if (w==='S') return '<span style="color:var(--sky);">남</span>';
+        if (w==='E') return '<span style="color:var(--gold);">동</span>';
+        if (w==='W') return '<span style="color:var(--rose);">서</span>';
+      }).join(' ');
+      document.getElementById('stat-m-len').innerText = manWord.length;
+    }
+
+    ['n','s','e','w'].forEach(dir => document.getElementById(`btn-m-${dir.toUpperCase()}`).addEventListener('click', () => applyManualMove(dir.toUpperCase())));
+    
+    document.getElementById('btn-m-reset').addEventListener('click', () => {
+      manWord = []; manCurrentVec = new THREE.Vector3(0, 0, 1); manHistory = [manCurrentVec.clone()];
+      manPointMesh.position.copy(manCurrentVec); updateManualTrail(); manSphereGroup.rotation.set(0,0,0);
+      document.getElementById('stat-m-word').innerHTML = "시작"; document.getElementById('stat-m-len').innerText = 0;
+      resetIdleTimer();
+    });
+
+    let manVisible = false;
+    new IntersectionObserver((entries) => { manVisible = entries[0].isIntersecting; if (manVisible && !manInitialized) initManual3D(); }).observe(document.getElementById('ibox-manual'));
+
+    function renderManual3D() {
+      if (!manInitialized || !manVisible || State.paused) return;
+      if (manAnimating) {
+        manAnimProgress += 0.05;
+        if (manAnimProgress >= 1) {
+          manAnimProgress = 1; manAnimating = false;
+          manCurrentVec = manAnimTarget.clone();
+          manPointMesh.position.copy(manCurrentVec);
+          if (!manIsBacktracking) { manHistory.push(manCurrentVec.clone()); }
+          updateManualTrail();
+        } else {
+          const ease = manAnimProgress < 0.5 ? 2 * manAnimProgress * manAnimProgress : 1 - Math.pow(-2 * manAnimProgress + 2, 2) / 2;
+          const curVec = manAnimStart.clone().lerp(manAnimTarget, ease).normalize();
+          manPointMesh.position.copy(curVec);
+        }
+      } else { manSphereGroup.rotation.y += 0.001; } 
+      manRenderer.render(manScene, manCamera);
+    }
+
+    // --- Interactive 4: Orbit Propagation (Globe.gl) ---
+    let targetGlobeR = 0;
+    let globe = null, globeVisible = false;
+    const containerGlobe = document.getElementById('globe-container'), labelContainer = document.getElementById('city-labels');
+    let labelEls = [], allGlobePts = [];
+
+    // Vivid, original requested colors for maximum visual pop
+    const CITIES = [
+      { name:'Seoul',    lat:37.5665,  lng:126.978,  color:'#FF2020' },  // red       ~  4°
+      { name:'Warsaw',   lat:52.2297,  lng:21.0122,  color:'#FF9000' },  // orange    ~ 35°
+      { name:'London',   lat:51.5074,  lng:-0.1278,  color:'#CCFF00' },  // chartreuse~ 72°
+      { name:'Tokyo',    lat:35.6762,  lng:139.6503, color:'#00FF77' },  // spring grn~148°
+      { name:'Beijing',  lat:39.9042,  lng:116.4074, color:'#00AAFF' },  // sky blue  ~200°
+      { name:'Baghdad',  lat:33.3152,  lng:44.3661,  color:'#7733FF' },  // blue-vlt  ~253°
+      { name:'Honolulu', lat:21.3069,  lng:-157.858, color:'#FF00BB' }   // magenta   ~308°
+    ];
+
+    const GCOS=1/3, GSIN=Math.sqrt(8/9);
+    const MAT_E=[[GCOS,-GSIN,0],[GSIN,GCOS,0],[0,0,1]], MAT_W=[[GCOS,GSIN,0],[-GSIN,GCOS,0],[0,0,1]];
+    const MAT_N=[[1,0,0],[0,GCOS,-GSIN],[0,GSIN,GCOS]], MAT_S=[[1,0,0],[0,GCOS,GSIN],[0,-GSIN,GCOS]];
+    const GGENS=[{key:'E',mat:MAT_E},{key:'W',mat:MAT_W},{key:'N',mat:MAT_N},{key:'S',mat:MAT_S}];
+    const GINV={E:'W',W:'E',N:'S',S:'N'};
+    const gApplyMat=(mat,v)=>[mat[0][0]*v[0]+mat[0][1]*v[1]+mat[0][2]*v[2], mat[1][0]*v[0]+mat[1][1]*v[1]+mat[1][2]*v[2], mat[2][0]*v[0]+mat[2][1]*v[1]+mat[2][2]*v[2]];
+    const gToVec=(lat,lng)=>{ const p=lat*Math.PI/180, l=lng*Math.PI/180; return [Math.cos(p)*Math.cos(l), Math.cos(p)*Math.sin(l), Math.sin(p)]; };
+    const gToLL=v=>({ lat:Math.asin(Math.max(-1,Math.min(1,v[2])))*180/Math.PI, lng:Math.atan2(v[1],v[0])*180/Math.PI });
+    
+    // Fast hex-to-rgba converter 
+    const gHexA = (hex, a) => {
+      let r = parseInt(hex.slice(1, 3), 16);
+      let g = parseInt(hex.slice(3, 5), 16);
+      let b = parseInt(hex.slice(5, 7), 16);
+      return `rgba(${r},${g},${b},${a.toFixed(2)})`;
+    };
+
+    function precomputeOrbits(maxDepth) {
+      allGlobePts = [];
+      CITIES.forEach((city) => {
+        const root = {vec: gToVec(city.lat, city.lng), lastKey: null, depth: 0};
+        const nodes = [root]; let frontier = [root];
+        for(let d=0; d<maxDepth; d++){
+          const next=[];
+          for(const node of frontier){
+            for(const gen of GGENS){
+              if(node.lastKey && gen.key===GINV[node.lastKey]) continue;
+              const child={vec:gApplyMat(gen.mat,node.vec), lastKey:gen.key, depth:d+1};
+              nodes.push(child); next.push(child);
+            }
+          }
+          frontier=next;
+        }
+        nodes.forEach(n => {
+          const pos = gToLL(n.vec);
+          allGlobePts.push({
+            lat: pos.lat, lng: pos.lng, depth: n.depth, colorBase: city.color,
+            color: gHexA(city.color, Math.max(0.4, 0.95 - n.depth*0.07)), 
+            radius: Math.max(0.4, 1.4 - n.depth*0.15), 
+            altitude: 0.005 + n.depth*0.003
+          });
+        });
+      });
+    }
+
+    async function initGlobe() {
+      if (globe || typeof Globe === 'undefined' || typeof topojson === 'undefined') return;
+      try {
+        precomputeOrbits(4); 
+        const topoRaw=await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(r=>r.json());
+        const countries=topojson.feature(topoRaw,topoRaw.objects.countries);
+        
+        document.getElementById('globe-loading').style.opacity = '0';
+        setTimeout(() => document.getElementById('globe-loading').style.display = 'none', 600);
+
+        const w = containerGlobe.parentElement.clientWidth || 800;
+        const h = containerGlobe.parentElement.clientHeight || 480;
+
+        globe=Globe()(containerGlobe)
+          .width(w)
+          .height(h)
+          .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-night.jpg')
+          .backgroundColor('rgba(0,0,0,0)')
+          .atmosphereColor('rgba(80, 100, 200, 0.6)')
+          .atmosphereAltitude(0.12)
+          .polygonsData(countries.features)
+          .polygonCapColor(()=>'rgba(14, 17, 40, 0.5)')
+          .polygonSideColor(()=>'rgba(40, 60, 160, 0.1)')
+          .polygonStrokeColor(()=>'rgba(70, 95, 195, 0.3)')
+          .polygonAltitude(0.003)
+          .pointLat(d=>d.lat).pointLng(d=>d.lng).pointColor(d=>d.color).pointAltitude(d=>d.altitude).pointRadius(d=>d.radius).pointResolution(16);
+        
+        globe.pointTransitionDuration(400); 
+        globe.pointOfView({lat:35,lng:60,altitude:2.3},0);
+        globe.controls().enableDamping=true;
+        globe.controls().addEventListener('change', resetIdleTimer);
+
+        // Strict centering fix with layout-bound ResizeObserver
+        const roGlobe = new ResizeObserver(entries => {
+          if (!globe) return;
+          for (let entry of entries) {
+            if (entry.contentRect.width > 0 && entry.contentRect.height > 0) {
+              globe.width(entry.contentRect.width).height(entry.contentRect.height);
+            }
+          }
+        });
+        roGlobe.observe(containerGlobe.parentElement);
+
+        labelEls = CITIES.map(city => {
+          const dot = document.createElement('div'); dot.className = 'city-dot'; dot.style.background = city.color; dot.style.boxShadow = `0 0 6px ${city.color}bb`;
+          const el = document.createElement('div'); el.className = 'city-label'; el.textContent = city.name; el.style.color = city.color;
+          el.style.textShadow = `0 0 6px ${city.color}, 0 1px 4px #000c`;
+          labelContainer.appendChild(dot); labelContainer.appendChild(el);
+          return { el, dot, city };
+        });
+        
+        updateGlobeData();
+      } catch(e) { console.warn("Globe load failed", e); }
+    }
+
+    function updateGlobeData() {
+      if(!globe) return;
+      const filteredPts = allGlobePts.filter(d => d.depth <= targetGlobeR);
+      globe.pointsData([...filteredPts]); 
+      
+      document.getElementById('stat-gl-depth').textContent = targetGlobeR;
+      document.getElementById('stat-gl-pts').textContent = filteredPts.filter(d => d.colorBase === CITIES[0].color).length;
+      document.getElementById('stat-gl-tot').textContent = filteredPts.length;
+    }
+
+    document.getElementById('slider-globe').addEventListener('input', (e) => {
+      targetGlobeR = parseInt(e.target.value); updateGlobeData(); resetIdleTimer();
+    });
+
+    let globePausedState = false;
+    new IntersectionObserver((entries) => {
+      globeVisible = entries[0].isIntersecting;
+      if (globeVisible && !globe) initGlobe();
+      if (!globeVisible && globe && !globePausedState) { globe.pauseAnimation(); globePausedState = true; }
+    }, { threshold: 0.05 }).observe(document.getElementById('ibox-globe'));
+
+    function renderGlobeLabels() {
+      if (!globe || !globeVisible || State.paused) return;
+      const rect = containerGlobe.getBoundingClientRect();
       labelEls.forEach(({ el, dot, city }) => {
         const coords = globe.getScreenCoords(city.lat, city.lng, 0.015);
         if (!coords) { el.style.display='none'; dot.style.display='none'; return; }
-        const x=coords.x, y=coords.y;
-        const off = x<-50||x>rect.width+50||y<-50||y>rect.height+50;
-        el.style.display = off?'none':'block';
-        dot.style.display = off?'none':'block';
-        el.style.left = x+'px'; el.style.top = y+'px';
-        dot.style.left = x+'px'; dot.style.top = y+'px';
+        const off = coords.x<-50 || coords.x>rect.width+50 || coords.y<-50 || coords.y>rect.height+50;
+        el.style.display = off?'none':'block'; dot.style.display = off?'none':'block';
+        el.style.left = coords.x+'px'; el.style.top = coords.y+'px';
+        dot.style.left = coords.x+'px'; dot.style.top = coords.y+'px';
       });
     }
-    updateLabels();
-    updateGlobe();
-  } catch(e) {
-    console.warn('Globe init:', e.message);
-    const loadEl = document.getElementById('globe-loading');
-    if (loadEl) {
-      loadEl.classList.remove('hide');
-      loadEl.innerHTML = `
-        <div style="text-align:center;padding:1.5rem;max-width:320px;">
-          <div style="font-size:2.5rem;margin-bottom:0.8rem;opacity:0.5;">🌍</div>
-          <p style="color:var(--gold);font-family:var(--font-display);font-size:1rem;font-weight:600;margin-bottom:0.5rem;">
-            인터랙티브 지구본
-          </p>
-          <p style="color:var(--muted);font-size:0.8rem;line-height:1.7;margin-bottom:0.8rem;">
-            3D 지구본에 필요한 외부 라이브러리를 불러올 수 없습니다.
-          </p>
-          <p style="color:rgba(150,185,240,0.4);font-size:0.7rem;font-family:var(--font-mono);line-height:1.6;">
-            아래 주소에서 열어보세요<br>
-            <span style="color:var(--gold);">edu.kimsh.kr</span><br>
-            S² 위의 F₂ 궤도를 3D로 확인할 수 있습니다.
-          </p>
-        </div>`;
+
+    // --- Interactive 5: The Unmeasurable Dust ---
+    const canvas4_c = document.getElementById('canvas-4'), sliderChoice = document.getElementById('slider-choice');
+    let ctx4, w4, h4, dpr4, c4Points = [], choiceTarget = 0, choiceCurrent = 0;
+
+    sliderChoice.addEventListener('input', (e) => {
+      choiceTarget = parseFloat(e.target.value);
+      const statVol = document.getElementById('stat-vol'), statState = document.getElementById('stat-state');
+      if (choiceTarget === 0) { statVol.innerText = "1.0000 V₀"; statVol.classList.remove("error"); statVol.style.color = "var(--fern)"; statState.innerText = "가측"; statState.style.color = "var(--fern)"; } 
+      else if (choiceTarget === 1) { statVol.innerText = "미정의"; statVol.classList.add("error"); statState.innerText = "비가측 먼지"; statState.style.color = "var(--rose)"; } 
+      else { statVol.innerText = (1 + Math.random() * choiceTarget * 3).toFixed(4) + " V₀"; statVol.classList.remove("error"); statVol.style.color = "var(--gold)"; statState.innerText = "분열 중..."; statState.style.color = "var(--violet)"; }
+      resetIdleTimer();
+    });
+
+    function initCanvas4() {
+      const setup = setupCanvas(canvas4_c); ctx4 = setup.ctx; w4 = setup.width; h4 = setup.height; dpr4 = setup.dpr;
+      if (c4Points.length === 0) { for(let i=0; i<8000; i++) { const r = Math.sqrt(Math.random()), theta = Math.random() * Math.PI * 2; c4Points.push({ r0: r, t0: theta, colorId: Math.floor((theta / (Math.PI*2)) * 5) % 5, speed: Math.random()*2+1 }); } }
     }
-  }
-}
+    window.addEventListener('resize', initCanvas4);
+    let canvas4Visible = false;
+    new IntersectionObserver((entries) => { canvas4Visible = entries[0].isIntersecting; if (canvas4Visible && !ctx4) initCanvas4(); }).observe(document.getElementById('ibox-dust'));
 
-window.setGlobeR = function(r) {
-  globeR = Math.max(0, Math.min(4, r));
-  document.getElementById('globe-rval').textContent = globeR;
-  document.getElementById('globe-slider').value = globeR;
-  document.getElementById('globe-dec').disabled = globeR === 0;
-  document.getElementById('globe-inc').disabled = globeR === 4;
-  playSfx('grow');
-  updateGlobe();
-};
+    function renderCanvas4() {
+      if (!canvas4Visible || !ctx4) return;
+      if (State.paused && Math.abs(choiceCurrent - choiceTarget) < 0.001) return;
+      choiceCurrent += (choiceTarget - choiceCurrent) * 0.08;
+      ctx4.fillStyle = '#0e1128'; ctx4.fillRect(0, 0, w4, h4);
+      const cx = w4/2, cy = h4/2, maxRadius = Math.min(w4, h4) * 0.25;
 
-// ═══════════════════════════════════════════════════
-// SOCKS & SHOES
-// ═══════════════════════════════════════════════════
-const SHOE_PAIRS = 8;
-const SOCK_PAIRS = 8;
-const SHOE_COLORS = ['#8B4513','#000000','#1a1a2e','#654321','#2d1b00','#3d2b1f','#4a3728','#5c4033'];
-const SOCK_COLORS = ['#ff6b6b','#ffa07a','#ee82ee','#6495ed','#77dd77','#fdfd96','#b19cd9','#ffb347'];
-let sockChoices = new Array(SOCK_PAIRS).fill(-1);
-
-function buildShoeDrawers() {
-  const cont = document.getElementById('shoe-drawers');
-  cont.innerHTML = '';
-  for (let i = 0; i < SHOE_PAIRS; i++) {
-    const box = document.createElement('div');
-    box.className = 'drawer-box chosen';
-    box.innerHTML = `
-      <div class="item-icon">👞</div>
-      <div class="item-label" style="color:${SHOE_COLORS[i]}">${i+1}번 쌍</div>
-      <span class="chosen-mark">✓ 왼쪽</span>
-    `;
-    box.style.borderColor = 'rgba(52,211,153,0.3)';
-    cont.appendChild(box);
-  }
-}
-
-function buildSockDrawers() {
-  const cont = document.getElementById('sock-drawers');
-  cont.innerHTML = '';
-  sockChoices = new Array(SOCK_PAIRS).fill(-1);
-  for (let i = 0; i < SOCK_PAIRS; i++) {
-    const box = document.createElement('div');
-    box.className = 'drawer-box';
-    box.dataset.pair = i;
-    const c = SOCK_COLORS[i];
-    box.innerHTML = `
-      <div style="display:flex;gap:6px;">
-        <span class="sock-item" data-pair="${i}" data-side="0" style="font-size:1.5rem;cursor:pointer;opacity:0.5;transition:all 0.3s;" onclick="chooseSock(${i},0)">🧦</span>
-        <span class="sock-item" data-pair="${i}" data-side="1" style="font-size:1.5rem;cursor:pointer;opacity:0.5;transition:all 0.3s;" onclick="chooseSock(${i},1)">🧦</span>
-      </div>
-      <div class="item-label" style="color:${c}">${i+1}번 쌍</div>
-      <span class="chosen-mark">✓</span>
-    `;
-    cont.appendChild(box);
-  }
-  updateSockProgress();
-}
-
-window.chooseSock = function(pair, side) {
-  ensureAudio();
-  playSfx('click');
-  sockChoices[pair] = side;
-  // Update UI
-  const box = document.querySelector(`.drawer-box[data-pair="${pair}"]`);
-  box.classList.add('chosen');
-  box.querySelectorAll('.sock-item').forEach(s => {
-    const sd = parseInt(s.dataset.side);
-    s.style.opacity = sd === side ? '1' : '0.25';
-    s.style.transform = sd === side ? 'scale(1.2)' : 'scale(0.9)';
-  });
-  updateSockProgress();
-};
-
-window.autoChooseSocks = function() {
-  ensureAudio();
-  let i = 0;
-  function chooseNext() {
-    if (i >= SOCK_PAIRS) return;
-    if (sockChoices[i] === -1) {
-      const side = Math.random() < 0.5 ? 0 : 1;
-      chooseSock(i, side);
+      ctx4.globalCompositeOperation = 'lighter';
+      for(let i=0; i<c4Points.length; i++) {
+        const p = c4Points[i], ease = choiceCurrent * choiceCurrent * (3 - 2 * choiceCurrent);
+        const tFracture = p.t0 + (i * 0.618033 * Math.PI * 2) * ease * p.speed, rFracture = p.r0 * (1 + ease * (p.speed * 1.5));
+        ctx4.beginPath(); ctx4.arc(cx + Math.cos(tFracture) * rFracture * maxRadius, cy + Math.sin(tFracture) * rFracture * maxRadius, 1.2 * dpr4, 0, Math.PI*2);
+        ctx4.fillStyle = ease < 0.05 ? 'rgba(236, 232, 224, 0.6)' : pieceColors[p.colorId] + 'aa'; ctx4.fill();
+      }
+      ctx4.globalCompositeOperation = 'source-over';
     }
-    i++;
-    setTimeout(chooseNext, 120);
-  }
-  playSfx('chime');
-  chooseNext();
-};
 
-function updateSockProgress() {
-  const chosen = sockChoices.filter(c => c >= 0).length;
-  document.getElementById('sock-progress').textContent = `${chosen} / ${SOCK_PAIRS} 쌍 선택 완료`;
-  if (chosen === SOCK_PAIRS) {
-    document.getElementById('sock-progress').style.borderColor = 'var(--mint)';
-    document.getElementById('sock-progress').style.color = 'var(--mint)';
-  }
-}
+    // --- Interactive 6: The Multiverse Sandbox ---
+    const canvas5_c = document.getElementById('canvas-5'), toggleAxiom = document.getElementById('toggle-axiom');
+    let ctx5, w5, h5, dpr5, c5Time = 0, axiomOfChoice = true, smoothAxiom = 1.0, c5Rendered = false;
 
-buildShoeDrawers();
-buildSockDrawers();
+    toggleAxiom.addEventListener('change', (e) => {
+      axiomOfChoice = e.target.checked;
+      document.getElementById('stat-univ').innerText = axiomOfChoice ? "ZFC" : "ZF (선택 공리 OFF)"; document.getElementById('stat-para').innerText = axiomOfChoice ? "활성" : "불가능";
+      document.getElementById('stat-struct').innerText = axiomOfChoice ? "분열됨 (미정의 V₀)" : "강직한 대칭 (1.000 V₀)"; document.getElementById('stat-struct').style.color = axiomOfChoice ? "var(--violet)" : "var(--fern)";
+      resetIdleTimer();
+    });
 
-// ═══════════════════════════════════════════════════
-// NAV DOTS
-// ═══════════════════════════════════════════════════
-const SECTIONS = ['hero','sec-paradox','sec-rotations','sec-orbits','sec-axiom','sec-debate','sec-cohen'];
-const navContainer = document.getElementById('nav-dots');
-SECTIONS.forEach((id, i) => {
-  const dot = document.createElement('button');
-  dot.className = 'nav-dot';
-  dot.onclick = () => document.getElementById(id).scrollIntoView({behavior:'smooth'});
-  navContainer.appendChild(dot);
-});
+    function initCanvas5() { const setup = setupCanvas(canvas5_c); ctx5 = setup.ctx; w5 = setup.width; h5 = setup.height; dpr5 = setup.dpr; }
+    window.addEventListener('resize', initCanvas5);
+    let canvas5Visible = false;
+    new IntersectionObserver((entries) => { canvas5Visible = entries[0].isIntersecting; if (canvas5Visible && !ctx5) initCanvas5(); }).observe(document.getElementById('ibox-sandbox'));
 
-function updateNavDots() {
-  const scrollY = window.scrollY + window.innerHeight / 2;
-  let activeIdx = 0;
-  SECTIONS.forEach((id, i) => {
-    const el = document.getElementById(id);
-    if (el && scrollY >= el.offsetTop) activeIdx = i;
-  });
-  document.querySelectorAll('.nav-dot').forEach((d, i) => d.classList.toggle('active', i === activeIdx));
-}
-window.addEventListener('scroll', updateNavDots, {passive:true});
-updateNavDots();
+    function renderCanvas5() {
+      if (!canvas5Visible || !ctx5) return;
+      if (State.paused && Math.abs((axiomOfChoice ? 1.0 : 0.0) - smoothAxiom) < 0.01 && c5Rendered) return;
+      c5Rendered = true; c5Time += 0.02; smoothAxiom += ((axiomOfChoice ? 1.0 : 0.0) - smoothAxiom) * 0.05;
+      ctx5.fillStyle = '#0e1128'; ctx5.fillRect(0, 0, w5, h5);
+      
+      const cx = w5/2, cy = h5/2, numC5 = 800, phi = Math.PI * (3 - Math.sqrt(5)), scale = Math.min(w5, h5) * 0.18;
+      ctx5.globalCompositeOperation = 'lighter';
+      for(let i=0; i<numC5; i++) {
+        const r_base = Math.sqrt(i) * (scale / Math.sqrt(numC5)), theta = i * phi + c5Time * 0.2;
+        const baseX = Math.cos(theta) * r_base * 1.5, baseY = Math.sin(theta) * r_base * 1.5;
+        const targetX = baseX + (i % 2 === 0 ? -scale*1.8 : scale*1.8), targetY = baseY + Math.sin(c5Time + i) * scale * 0.2;
+        const finalX = cx + baseX * (1 - smoothAxiom) + targetX * smoothAxiom, finalY = cy + baseY * (1 - smoothAxiom) + targetY * smoothAxiom;
 
-// ═══════════════════════════════════════════════════
-// REVEAL ANIMATION
-// ═══════════════════════════════════════════════════
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.1 });
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-// Globe lazy-init when section scrolls into view
-const globeObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting && !globe) {
-      initGlobe();
-      globeObserver.disconnect();
+        ctx5.beginPath(); ctx5.arc(finalX, finalY, 1.8 * dpr5, 0, Math.PI*2);
+        ctx5.fillStyle = smoothAxiom < 0.1 ? `rgba(90, 154, 114, ${1 - i/numC5})` : (i % 2 === 0 ? `rgba(201, 168, 76, ${1 - i/numC5})` : `rgba(138, 106, 191, ${1 - i/numC5})`);
+        ctx5.fill();
+      }
+      ctx5.globalCompositeOperation = 'source-over';
     }
-  });
-}, { threshold: 0.05 });
-const orbitsSection = document.getElementById('sec-orbits');
-if (orbitsSection) globeObserver.observe(orbitsSection);
 
-// Keyboard
-document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowRight' || e.key === '+' || e.key === '=') {
-    if (document.activeElement === document.getElementById('cay-slider')) setCayleyR(cayleyR+1);
-    else if (document.activeElement === document.getElementById('globe-slider')) setGlobeR(globeR+1);
-  }
-  if (e.key === 'ArrowLeft' || e.key === '-') {
-    if (document.activeElement === document.getElementById('cay-slider')) setCayleyR(cayleyR-1);
-    else if (document.activeElement === document.getElementById('globe-slider')) setGlobeR(globeR-1);
-  }
-});
-</script>
+    // --- Global Render Loop ---
+    function renderLoop() {
+      const now = Date.now();
+      if (now - State.lastInteraction > State.idleTimeout) { State.paused = true; }
+      
+      if (globe) {
+        if (State.paused && !globePausedState) { globe.pauseAnimation(); globePausedState = true; }
+        else if (!State.paused && globePausedState && globeVisible) { globe.resumeAnimation(); globePausedState = false; }
+      }
 
-<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+      renderHero();
+      renderCanvas1();
+      renderCayley();
+      renderManual3D();
+      renderGlobeLabels();
+      renderCanvas4();
+      renderCanvas5();
+      
+      requestAnimationFrame(renderLoop);
+    }
+    requestAnimationFrame(renderLoop);
 
-<div class="attr-overlay">
-  <span class="attr-name">김상현</span>
-  <span class="attr-inst">고등과학원(KIAS) 수학부</span>
-  <a class="attr-url" href="https://kimsh.kr">kimsh.kr</a>
-</div>
-
-<div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
-  <script src="https://giscus.app/client.js"
-    data-repo="kimshmath/edu"
-    data-repo-id="R_kgDORrE8sw"
-    data-category="Comments"
-    data-category-id="DIC_kwDORrE8s84C45oL"
-    data-mapping="pathname"
-    data-strict="0"
-    data-reactions-enabled="1"
-    data-emit-metadata="0"
-    data-input-position="top"
-    data-theme="dark"
-    data-lang="ko"
-    crossorigin="anonymous"
-    async>
   </script>
-</div>
-<script src="mellow_ios_bridge.js"></script>
 </body>
 </html>
