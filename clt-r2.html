@@ -1472,9 +1472,9 @@
         
         // Physics: Smooth Zoom Interpolation
         currentZoomLevel += (targetZoomLevel - currentZoomLevel) * 0.1;
-        if (Math.abs(targetZoomLevel - currentZoomLevel) > 0.01) {
-            document.getElementById('stat-walk3d-zoom').innerText = Math.round(currentZoomLevel * 100) + "%";
-        }
+        const zoomPct = Math.round(currentZoomLevel * 100) + "%";
+        document.getElementById('stat-walk3d-zoom').innerText = zoomPct;
+        document.getElementById('btn-zoom-reset').innerText = zoomPct;
 
         if (walk3DActive && walk3DSteps < 3500) {
             const step = parseFloat(uiWalk3dStep.value) * 3.5; 
