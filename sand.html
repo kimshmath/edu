@@ -1,0 +1,2956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Sand That Learned to Think — Mellow Math</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400&family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Variables ── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#04050c;--bg2:#090b18;--bg3:#0e1128;
+  --text:#b8b4ac;--cream:#ece8e0;--muted:#52566a;
+  --gold:#c9a84c;--gold2:#d4a853;--gold-dim:rgba(201,168,76,.08);
+  --violet:#8a6abf;--violet-dim:rgba(138,106,191,.12);
+  --amber:#d4a853;--amber-glow:rgba(212,168,83,.25);
+  --rose:#c47a8a;--rose-dim:rgba(196,122,138,.10);
+  --fern:#5a9a72;--fern-glow:#7cc89a;
+  --border:rgba(255,255,255,.04);
+  --font-display:'Fraunces',Georgia,serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-kr:'Noto Serif KR',serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:var(--font-body);font-weight:300;
+  line-height:1.75;font-size:clamp(.92rem,1.6vw,1.05rem);
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+body::after{
+  content:'';position:fixed;inset:0;z-index:9999;
+  pointer-events:none;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px;
+}
+::selection{background:rgba(138,106,191,.25);color:var(--cream)}
+
+/* ── Typography ── */
+h2,h3{font-family:var(--font-display);color:var(--cream);font-weight:400;line-height:1.2}
+p{margin-bottom:1.15em;max-width:42em}
+.hi{color:var(--cream);text-shadow:0 0 20px rgba(236,232,224,.08)}
+.ac{color:var(--gold);text-shadow:0 0 18px rgba(201,168,76,.1)}
+.prose{font-size:clamp(.93rem,1.5vw,1.05rem);line-height:1.85}
+.prose-drop::first-letter{
+  font-family:var(--font-display);font-size:3.6em;float:left;
+  line-height:.82;margin-right:.1em;margin-top:.06em;
+  color:var(--gold);font-weight:700;
+  filter:drop-shadow(0 0 8px rgba(201,168,76,.2));
+}
+
+/* ── Pull-quote ── */
+.pull-quote{
+  text-align:center;margin:3.5rem auto;max-width:34em;
+  font-family:var(--font-display);font-style:italic;
+  font-size:clamp(1.1rem,2vw,1.35rem);color:var(--cream);
+  line-height:1.65;padding:0 1.5rem;
+  text-shadow:0 0 30px rgba(236,232,224,.05);
+}
+.pull-quote::after{
+  content:'';display:block;width:60%;max-width:12rem;height:1px;
+  margin:1.6rem auto 0;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+
+/* ── Block-quote ── */
+.block-quote{
+  background:var(--gold-dim);border-left:2px solid var(--gold);
+  padding:1.4rem 1.8rem;margin:2.5rem 0;border-radius:0 12px 12px 0;
+  font-family:var(--font-display);font-style:italic;
+  font-size:.97rem;color:var(--cream);line-height:1.7;
+  box-shadow:inset 0 0 40px rgba(201,168,76,.02);
+}
+.block-quote .bq-attr{
+  display:block;margin-top:.8rem;font-style:normal;
+  font-family:var(--font-mono);font-size:.72rem;color:var(--muted);
+  letter-spacing:.03em;
+}
+
+/* ── Layout ── */
+.chapter-body{max-width:52rem;margin:0 auto;padding:0 clamp(1.2rem,4vw,3rem)}
+.chapter-section{
+  padding:6rem 0 3rem;opacity:0;transform:translateY(28px);
+  transition:opacity .9s cubic-bezier(.23,1,.32,1),transform .9s cubic-bezier(.23,1,.32,1);
+}
+.chapter-section.visible{opacity:1;transform:translateY(0)}
+
+/* Section divider */
+.chapter-section + .chapter-section::before{
+  content:'';display:block;width:60px;height:1px;
+  margin:0 auto 4rem;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:.4;
+}
+
+.section-num{
+  font-family:var(--font-mono);font-size:.72rem;font-weight:400;
+  color:var(--gold);letter-spacing:.18em;text-transform:uppercase;
+  margin-bottom:.6rem;
+  text-shadow:0 0 15px rgba(201,168,76,.15);
+}
+.section-title{font-size:clamp(1.5rem,3.2vw,2.2rem);margin-bottom:.3rem}
+.section-title-kr{
+  font-family:var(--font-kr);font-size:.95rem;color:var(--muted);
+  margin-bottom:2.2rem;font-weight:300;
+}
+
+/* ── Hero ── */
+.hero{
+  position:relative;height:100vh;min-height:600px;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.hero-canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero-vignette{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 48%,transparent 0%,var(--bg) 100%),
+    linear-gradient(to bottom,transparent 60%,var(--bg) 100%);
+}
+.hero-content{
+  position:relative;z-index:2;text-align:center;
+  padding:0 1.5rem;
+}
+.hero-label{
+  font-family:var(--font-mono);font-size:.65rem;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:1.2rem;
+  opacity:.7;
+}
+.hero-chapter{
+  font-family:var(--font-mono);font-size:.7rem;letter-spacing:.22em;
+  color:var(--gold);margin-bottom:1.2rem;
+  text-shadow:0 0 20px rgba(201,168,76,.2);
+}
+.hero-title{
+  font-family:var(--font-display);font-weight:700;
+  font-size:clamp(2.4rem,5.5vw,4.6rem);color:var(--cream);
+  line-height:1.08;margin-bottom:.7rem;
+  text-shadow:0 2px 40px rgba(0,0,0,.5);
+}
+.hero-title em{
+  font-style:normal;color:var(--violet);
+  text-shadow:0 0 40px rgba(138,106,191,.3);
+}
+.hero-kr{
+  font-family:var(--font-kr);font-size:clamp(.85rem,1.6vw,1.1rem);
+  color:var(--muted);margin-bottom:1.5rem;font-weight:300;
+}
+.hero-tagline{
+  font-family:var(--font-display);font-style:italic;font-weight:300;
+  font-size:clamp(.85rem,1.4vw,1.05rem);color:var(--text);
+  max-width:30em;margin:0 auto 3rem;line-height:1.65;
+  opacity:.8;
+}
+.hero-scroll{
+  font-family:var(--font-mono);font-size:.6rem;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--muted);
+  animation:breathe 3s ease-in-out infinite;
+}
+.hero-scroll span{display:block;margin-top:.5rem;font-size:.9rem;opacity:.6}
+@keyframes breathe{0%,100%{opacity:.35;transform:translateY(0)}50%{opacity:.8;transform:translateY(5px)}}
+
+/* ── Interactive Box ── */
+.ibox{
+  background:var(--bg3);border-radius:18px;padding:2.5rem;
+  margin:3rem 0;position:relative;overflow:hidden;
+  box-shadow:0 4px 40px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.03);
+  transition:box-shadow .4s ease;
+}
+.ibox:hover{box-shadow:0 8px 50px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.04)}
+.ibox::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent 5%,var(--violet),var(--amber),transparent 95%);
+  opacity:.7;
+}
+.ibox-label{
+  font-family:var(--font-mono);font-size:.68rem;letter-spacing:.12em;
+  color:var(--gold);margin-bottom:.9rem;display:flex;align-items:center;gap:.5rem;
+}
+.ibox-label .dot{
+  width:6px;height:6px;border-radius:50%;background:var(--gold);
+  animation:pulse-dot 2s ease-in-out infinite;
+  box-shadow:0 0 6px var(--gold);
+}
+@keyframes pulse-dot{0%,100%{opacity:.4;box-shadow:0 0 4px var(--gold)}50%{opacity:1;box-shadow:0 0 12px var(--gold)}}
+.ibox-title{
+  font-family:var(--font-display);font-size:clamp(1.15rem,2.2vw,1.45rem);
+  color:var(--cream);margin-bottom:.5rem;font-weight:400;
+}
+.ibox-desc{
+  font-family:var(--font-body);font-size:.82rem;color:var(--muted);
+  margin-bottom:1.6rem;max-width:38em;line-height:1.75;
+}
+.ibox canvas{
+  width:100%;border-radius:12px;display:block;
+  background:var(--bg);margin-bottom:1.2rem;cursor:crosshair;
+  box-shadow:inset 0 0 30px rgba(0,0,0,.4);
+}
+.ibox-controls{
+  display:flex;flex-wrap:wrap;gap:1rem;align-items:center;
+  margin-bottom:1.2rem;
+}
+.ibox-controls label{
+  font-family:var(--font-mono);font-size:.68rem;color:var(--muted);
+  letter-spacing:.06em;display:flex;align-items:center;gap:.5rem;
+}
+.ibox-controls input[type=range]{
+  -webkit-appearance:none;appearance:none;width:clamp(100px,16vw,180px);
+  height:4px;background:rgba(255,255,255,.06);border-radius:2px;outline:none;
+  transition:background .2s;
+}
+.ibox-controls input[type=range]:hover{background:rgba(255,255,255,.1)}
+.ibox-controls input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:16px;height:16px;border-radius:50%;
+  background:radial-gradient(circle at 38% 32%,var(--gold2),#8a6a2a);
+  cursor:pointer;box-shadow:0 0 8px rgba(201,168,76,.4),0 2px 4px rgba(0,0,0,.3);
+  transition:box-shadow .2s;
+}
+.ibox-controls input[type=range]::-webkit-slider-thumb:hover{
+  box-shadow:0 0 14px rgba(201,168,76,.6),0 2px 6px rgba(0,0,0,.4);
+}
+.ibox-controls button{
+  font-family:var(--font-mono);font-size:.68rem;letter-spacing:.08em;
+  padding:.5rem 1.1rem;border:1px solid rgba(82,86,106,.5);border-radius:6px;
+  background:transparent;color:var(--muted);cursor:pointer;
+  transition:all .25s ease;
+}
+.ibox-controls button:hover,
+.ibox-controls button.active{
+  border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.04);
+  box-shadow:0 0 12px rgba(201,168,76,.1);
+}
+.ibox-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:.7rem;
+}
+.ibox-stat{
+  background:rgba(255,255,255,.02);border-radius:10px;padding:.7rem .9rem;
+  border:1px solid rgba(255,255,255,.025);
+  transition:border-color .3s;
+}
+.ibox-stat:hover{border-color:rgba(201,168,76,.1)}
+.ibox-stat .stat-label{
+  font-family:var(--font-mono);font-size:.55rem;letter-spacing:.1em;
+  color:var(--muted);text-transform:uppercase;margin-bottom:.2rem;
+}
+.ibox-stat .stat-value{
+  font-family:var(--font-mono);font-size:1.2rem;color:var(--gold);font-weight:400;
+  text-shadow:0 0 12px rgba(201,168,76,.1);
+}
+
+/* ── Particles ── */
+.ambient-particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.ambient-particles span{
+  position:absolute;border-radius:50%;
+  background:radial-gradient(circle,var(--violet),transparent 70%);
+  animation:float-up linear infinite;opacity:0;
+}
+@keyframes float-up{
+  0%{transform:translateY(100vh) scale(.5);opacity:0}
+  10%{opacity:.5}
+  90%{opacity:.3}
+  100%{transform:translateY(-10vh) scale(1);opacity:0}
+}
+
+/* ── Footer & Badge ── */
+.floating-badge{
+  position:fixed;bottom:1.4rem;left:1.4rem;z-index:100;
+  font-family:var(--font-mono);font-size:.58rem;letter-spacing:.14em;
+  color:#8db830;text-decoration:none;text-transform:lowercase;
+  text-shadow:0 0 12px rgba(141,184,48,.4),0 0 30px rgba(141,184,48,.15);
+  transition:all .3s ease;
+}
+.floating-badge:hover{color:#a8d43a;transform:translateY(-1px);text-shadow:0 0 16px rgba(141,184,48,.6),0 0 40px rgba(141,184,48,.25)}
+footer{
+  text-align:center;padding:4rem 1.5rem 3rem;
+  border-top:1px solid var(--border);margin-top:4rem;
+}
+.footer-name{font-family:var(--font-display);font-size:.85rem;color:var(--cream);margin-bottom:.3rem}
+.footer-inst{font-family:var(--font-body);font-size:.7rem;color:var(--muted);margin-bottom:.15rem}
+.footer-url{font-family:var(--font-mono);font-size:.58rem;color:var(--gold);text-decoration:none;letter-spacing:.1em}
+.footer-url:hover{color:var(--gold2)}
+
+/* ── References ── */
+.ref-section{padding:3rem 0 1rem}
+.ref-heading{
+  font-family:var(--font-display);font-size:1.1rem;color:var(--cream);
+  margin-bottom:1.2rem;font-weight:400;
+}
+.ref-list{list-style:none;padding:0}
+.ref-list li{
+  font-size:.78rem;color:var(--muted);margin-bottom:.6rem;
+  padding-left:1.2em;text-indent:-1.2em;line-height:1.6;
+}
+.ref-author{color:var(--text)}
+.ref-title{font-style:italic;color:var(--cream)}
+.ref-detail{color:var(--muted)}
+
+/* ── Coda ── */
+.coda{
+  text-align:center;padding:4.5rem 1.5rem 2rem;
+  font-family:var(--font-display);font-style:italic;
+  font-size:clamp(.9rem,1.5vw,1.05rem);color:var(--text);
+  line-height:2;max-width:30em;margin:0 auto;
+  opacity:.85;
+}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .ibox{padding:1.5rem;border-radius:14px}
+  .ibox-stats{grid-template-columns:repeat(2,1fr)}
+  .chapter-section{padding:4rem 0 2rem}
+  .chapter-section + .chapter-section::before{margin-bottom:3rem}
+}
+@media(max-width:480px){
+  .ibox{padding:1.2rem;border-radius:12px}
+  .ibox-stats{grid-template-columns:1fr 1fr}
+  .ibox-controls{flex-direction:column;align-items:flex-start}
+  .hero-tagline{font-size:.85rem}
+}
+
+/* ── Narration ── */
+.narration-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:rgba(9,11,24,.92);backdrop-filter:blur(12px);
+  border-top:1px solid var(--border);padding:.6rem 1.2rem;
+  display:flex;align-items:center;gap:.8rem;
+  transform:translateY(100%);transition:transform .4s cubic-bezier(.23,1,.32,1);
+}
+.narration-bar.show{transform:translateY(0)}
+.narr-btn{
+  width:36px;height:36px;border-radius:50%;border:1px solid var(--muted);
+  background:transparent;color:var(--cream);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;transition:all .25s ease;flex-shrink:0;
+}
+.narr-btn:hover{border-color:var(--gold);color:var(--gold)}
+.narr-btn.playing{border-color:var(--gold);color:var(--gold);box-shadow:0 0 10px rgba(201,168,76,.2)}
+.narr-progress{flex:1;height:3px;background:rgba(255,255,255,.06);border-radius:2px;cursor:pointer;position:relative}
+.narr-progress-fill{height:100%;background:var(--gold);border-radius:2px;width:0%;transition:width .3s linear}
+.narr-lang{
+  font-family:var(--font-mono);font-size:.6rem;letter-spacing:.1em;
+  color:var(--muted);cursor:pointer;border:1px solid var(--border);
+  padding:.25rem .55rem;border-radius:4px;background:transparent;
+  transition:all .25s ease;
+}
+.narr-lang:hover,.narr-lang.active{color:var(--gold);border-color:var(--gold)}
+.narr-time{font-family:var(--font-mono);font-size:.58rem;color:var(--muted);min-width:3.5em}
+.narr-toggle{
+  position:fixed;bottom:1.4rem;right:1.4rem;z-index:201;
+  width:40px;height:40px;border-radius:50%;
+  background:var(--bg2);border:1px solid var(--border);
+  color:var(--muted);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;transition:all .3s ease;
+}
+.narr-toggle:hover{border-color:var(--gold);color:var(--gold)}
+</style>
+</head>
+<body>
+
+<!-- ── Ambient Particles ── -->
+<div class="ambient-particles" id="particles"></div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!--                        HERO                           -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="hero" id="hero">
+  <canvas class="hero-canvas" id="heroCanvas"></canvas>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-label">Mellow Math</div>
+    <div class="hero-chapter">Machine · 기계</div>
+    <h1 class="hero-title">The Sand That Learned<br>to <em>Think</em></h1>
+    <div class="hero-kr">생각하는 법을 배운 모래</div>
+    <div class="hero-tagline">Between conductor and insulator, a grain of sand found a third way — and the world was never the same.</div>
+    <div class="hero-scroll">Begin<span>↓</span></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!--                CHAPTER BODY                           -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div class="chapter-body">
+
+<!-- ── §1 The Humblest Element ── -->
+<section class="chapter-section" id="s1">
+  <div class="section-num">§ 1</div>
+  <h2 class="section-title">The Humblest Element</h2>
+  <div class="section-title-kr">가장 하찮은 원소</div>
+
+  <p class="prose prose-drop">Walk barefoot on any beach and you are standing on silicon. Not the pure crystalline wafers that power your phone, but silicon dioxide — quartz grains tumbled smooth by millennia of tides. Silicon is the <span class="hi">second most abundant element in Earth's crust</span>, exceeded only by oxygen. It composes every grain of sand, every shard of granite, every pane of glass. And yet for most of human history, no one thought it was interesting.</p>
+
+  <p class="prose">In 1824, a Swedish chemist named Jöns Jacob Berzelius managed to isolate the element in its pure form for the first time — a dark, amorphous powder, unremarkable in every way. He had already isolated selenium and cerium; silicon was just another entry in his growing catalogue. The periodic table, when Mendeleev assembled it half a century later, placed silicon directly beneath carbon — same column, same four outer electrons, the same eagerness to form bonds. But where <span class="ac">carbon became the backbone of life</span>, silicon became the backbone of rocks. One built cathedrals of protein and DNA; the other just sat in the dirt.</p>
+
+  <p class="prose">The indifference was understandable. Silicon's compounds are brittle where carbon's are supple. It forms no double bonds under ordinary conditions, no rings of aromatic elegance, no helical polymers that can encode a genome. In the great lottery of chemistry, silicon appeared to have drawn the dull ticket. It would take <span class="hi">a world war and a desperate need for better radar detectors</span> to reveal what had been hiding in plain sight all along.</p>
+
+  <p class="prose">The year was 1940. Microwave radar, the technology that would decide the outcome of the Battle of Britain, required signal rectifiers — devices that could convert alternating current to direct current at frequencies far beyond what vacuum tubes could handle. Researchers at Purdue, Bell Labs, and MIT turned in desperation to an old curiosity: certain crystals, when touched with a fine wire, allowed current to pass in only one direction. They were called <span class="ac">"cat's whisker" detectors</span>, relics of early radio, and the best ones were made from silicon. No one fully understood why they worked. But they worked. And in the crucible of wartime urgency, a generation of physicists was forced to take silicon seriously for the first time.</p>
+
+  <p class="prose">What they found astonished them. Silicon was not merely a conductor, nor merely an insulator. It was something in between — a <span class="hi">semiconductor</span> — and its electrical behavior could be controlled with a precision that no other material could match. The dull element, the overlooked sibling of carbon, turned out to be hiding the most extraordinary secret in all of materials science. It just needed someone to look.</p>
+
+  <div class="pull-quote">
+    Silicon was there all along — in every handful of beach sand, in every cliff face, in every window. We simply had to learn to see what it already was.
+  </div>
+
+  <!-- ── Interactive: Crystal Lattice Thermal Explorer ── -->
+  <div class="ibox" id="ibox1">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">The Diamond Cubic Lattice</div>
+    <div class="ibox-desc">
+      Silicon atoms arrange themselves in a diamond cubic crystal — each atom bonded to exactly four neighbors in a perfect tetrahedron. Raise the temperature to watch electrons break free from their bonds, leaving behind "holes" that behave like positive charges. Click any atom to inspect its bonding.
+    </div>
+    <canvas id="latticeCanvas" width="800" height="500" data-nopz></canvas>
+    <div class="ibox-controls">
+      <label>Temperature
+        <input type="range" id="tempSlider" min="0" max="1200" value="300" step="10">
+        <span id="tempVal" style="font-family:var(--font-mono);font-size:.75rem;color:var(--gold);min-width:3em">300 K</span>
+      </label>
+      <button id="resetLattice">Reset</button>
+    </div>
+    <div class="ibox-stats">
+      <div class="ibox-stat"><div class="stat-label">Temperature</div><div class="stat-value" id="statTemp">300 K</div></div>
+      <div class="ibox-stat"><div class="stat-label">Free electrons</div><div class="stat-value" id="statElec">0</div></div>
+      <div class="ibox-stat"><div class="stat-label">Holes</div><div class="stat-value" id="statHoles">0</div></div>
+      <div class="ibox-stat"><div class="stat-label">Conductivity</div><div class="stat-value" id="statCond">Low</div></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ── §2 The Forbidden Gap ── -->
+<section class="chapter-section" id="s2">
+  <div class="section-num">§ 2</div>
+  <h2 class="section-title">The Forbidden Gap</h2>
+  <div class="section-title-kr">금지된 틈</div>
+
+  <p class="prose prose-drop">In 1928, a twenty-three-year-old Swiss physics student named Felix Bloch sat down to solve a problem that should have been impossible. He wanted to know what happens to an electron moving through a crystal — not a single atom, not a molecule, but an infinite, perfectly repeating lattice of atoms stretching in every direction. His advisor was Werner Heisenberg. The tools were brand-new: Schrödinger's wave equation was barely two years old. The mathematics was ferocious. And the answer, when it came, was one of the most beautiful results in all of quantum mechanics.</p>
+
+  <p class="prose">Bloch showed that an electron in a periodic crystal does not behave like a pinball bouncing off atoms at random. Instead, it organizes itself into a <span class="hi">wave that feels the rhythm of the lattice</span> — a quantum wave whose allowed energies fall into bands, separated by gaps where no electron is permitted to exist. The metaphor is musical: imagine a concert hall designed so that only certain frequencies can resonate. A singer can sustain a C or a D, but the notes in between are physically forbidden. The hall itself shapes what can be heard. In a crystal, the atomic lattice shapes what energies an electron can have.</p>
+
+  <p class="prose">The lower band — the <span class="ac">valence band</span> — is where electrons sit in their bonds, holding the crystal together. The upper band — the <span class="ac">conduction band</span> — is where electrons roam freely, carrying current. Between them lies the <span class="hi">band gap</span>: an energy range no electron is allowed to occupy. This single number — the width of the forbidden gap, measured in electron-volts — determines the electrical fate of every solid material in the universe.</p>
+
+  <p class="prose">For metals like copper or gold, the valence and conduction bands overlap. There is no gap. Electrons flow freely, and the material conducts electricity with ease — the orchestra plays without pause. For insulators like diamond, the gap is enormous: 5.5 electron-volts, an energy no room-temperature electron can muster. The hall falls silent between movements, and no current flows. But for a small, special class of materials — the semiconductors — the gap is <span class="hi">just narrow enough</span> that a modest push of energy can send an electron across.</p>
+
+  <p class="prose">Silicon's band gap is 1.12 electron-volts at room temperature. This is not an accident of geology. It is a consequence of silicon's atomic number, its crystal structure, and the quantum mechanical interactions of its fourteen electrons. But what matters is the practical result: at room temperature, where thermal energy provides about 0.026 electron-volts per degree of freedom, <span class="ac">a tiny fraction of electrons can jump the gap</span>. Not many — only about one in ten billion at 300 Kelvin. But that is enough. That whisper of conductivity, tunable by temperature, by light, by impurities, is what makes everything possible.</p>
+
+  <div class="block-quote">
+    "The concept of allowed and forbidden energy bands in crystals is perhaps the single most important idea in solid-state physics. Everything else follows from it."
+    <span class="bq-attr">— Charles Kittel, Introduction to Solid State Physics</span>
+  </div>
+
+  <p class="prose">What Bloch could not have foreseen was the engineering consequence of his theorem. The band gap is not just a physical fact — it is a <span class="hi">design parameter</span>. Change the material, and you change the gap. Germanium: 0.67 eV — a narrower gap, more leakage, the first transistors used it anyway. Gallium arsenide: 1.42 eV — a wider gap, perfect for LEDs and solar cells. Silicon carbide: 3.3 eV — wide enough for power electronics that operate at scorching temperatures. Each material is a different instrument, tuned by quantum mechanics to play a different role in the electronic orchestra.</p>
+
+  <div class="pull-quote">
+    The band gap is the most consequential number in modern technology — a sliver of forbidden energy that separates the age of vacuum tubes from the age of silicon.
+  </div>
+
+  <!-- ── Interactive: Energy Band Diagram ── -->
+  <div class="ibox" id="ibox2">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">The Band Gap</div>
+    <div class="ibox-desc">
+      Slide between materials to see how the band gap changes. The valence band (violet, filled with electrons) and the conduction band (amber, where free electrons carry current) are separated by a forbidden zone. The thermal energy marker shows how much energy is available at room temperature — when it reaches into the gap, electrons can jump.
+    </div>
+    <canvas id="bandCanvas" width="800" height="480" data-nopz></canvas>
+    <div class="ibox-controls">
+      <label>Material
+        <input type="range" id="materialSlider" min="0" max="5" value="2" step="1">
+        <span id="materialName" style="font-family:var(--font-mono);font-size:.75rem;color:var(--gold);min-width:5em">Silicon</span>
+      </label>
+      <label>Temperature
+        <input type="range" id="bandTempSlider" min="4" max="5000" value="300" step="10">
+        <span id="bandTempVal" style="font-family:var(--font-mono);font-size:.75rem;color:var(--gold);min-width:3.5em">300 K</span>
+      </label>
+    </div>
+    <div class="ibox-stats">
+      <div class="ibox-stat"><div class="stat-label">Material</div><div class="stat-value" id="statMat">Si</div></div>
+      <div class="ibox-stat"><div class="stat-label">Band gap</div><div class="stat-value" id="statGap">1.12 eV</div></div>
+      <div class="ibox-stat"><div class="stat-label">Thermal energy (kT)</div><div class="stat-value" id="statKT">0.026 eV</div></div>
+      <div class="ibox-stat"><div class="stat-label">Crossing gap</div><div class="stat-value" id="statJump">0</div></div>
+      <div class="ibox-stat"><div class="stat-label">Free electrons</div><div class="stat-value" id="statBandE">0</div></div>
+      <div class="ibox-stat"><div class="stat-label">Classification</div><div class="stat-value" id="statClass">Semiconductor</div></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ── §3 Impurity as Alchemy ── -->
+<section class="chapter-section" id="s3">
+  <div class="section-num">§ 3</div>
+  <h2 class="section-title">Impurity as Alchemy</h2>
+  <div class="section-title-kr">불순물의 연금술</div>
+
+  <p class="prose prose-drop">Here is the great paradox at the heart of semiconductor technology: to make a pure crystal useful, you must make it <span class="hi">deliberately impure</span>. The process is called doping, and it is one of the most precise acts of chemistry ever performed by human hands. A single foreign atom, placed among ten million silicon atoms, can change the crystal's conductivity by a factor of a million. This is not a metaphor. It is a measured fact, reproducible in any fabrication lab on Earth, and it is the reason you are reading these words on a screen right now.</p>
+
+  <p class="prose">The logic begins with counting. Silicon has four outer electrons, and in a perfect crystal, every one of them is shared with a neighbor — four bonds per atom, every electron spoken for, no carriers free to move. Now replace one silicon atom with <span class="ac">phosphorus</span>. Phosphorus sits one column to the right in the periodic table: five outer electrons instead of four. Four of them slot neatly into the crystal's bonding pattern. But the fifth has no bond to join. It orbits its phosphorus host loosely, bound by only 0.045 electron-volts — a whisper of energy that room temperature easily supplies. That electron breaks free and wanders the crystal, ready to carry current. The material is now <span class="hi">n-type silicon</span>: "n" for the negative charge of the extra electrons.</p>
+
+  <p class="prose">Now try the opposite. Replace a silicon atom with <span class="ac">boron</span>, which sits one column to the left: three outer electrons instead of four. Three bonds form perfectly, but the fourth is left empty — a missing electron, a vacancy in the crystalline bookkeeping. This vacancy behaves, astonishingly, like a <span class="hi">positive particle</span>. When a neighboring electron hops over to fill the gap, the gap itself moves in the opposite direction. Physicists call it a "hole," and it carries current just as surely as an electron does, only with the opposite sign. Boron-doped silicon is <span class="ac">p-type</span>: "p" for positive.</p>
+
+  <p class="prose">The concentrations involved are staggering in their smallness. Pure silicon has about five times ten to the twenty-second atoms per cubic centimeter. A typical doping level might be ten to the fifteenth dopant atoms per cubic centimeter — one impurity for every fifty million host atoms. Imagine a stadium holding fifty million spectators, all wearing white. Somewhere among them sits <span class="hi">a single person in a red shirt</span>. That one person changes everything about how the crowd moves. This is doping. This is what makes transistors possible.</p>
+
+  <div class="block-quote">
+    "We knew that impurities affected conductivity, but we didn't know it was so fantastically sensitive. One part in ten million — it was almost unbelievable."
+    <span class="bq-attr">— Walter Brattain, Nobel Lecture, 1956</span>
+  </div>
+
+  <p class="prose">The discovery was not entirely accidental, but it was not entirely planned, either. In 1939, <span class="ac">Russell Ohl</span> at Bell Labs was studying silicon crystals for use as radar detectors. One day he noticed that a particular ingot produced a voltage when light shone on it — and only at a specific crack in the crystal. When metallurgists examined the crack, they found that impurities had segregated during cooling: one side of the crack was rich in phosphorus, the other in boron. Ohl had stumbled upon the world's first p-n junction and, without quite realizing it, the first silicon solar cell. A manufacturing defect had revealed the mechanism that would power the digital age.</p>
+
+  <p class="prose">What makes doping so powerful is not just that it adds charge carriers — it is that the number of carriers can be <span class="hi">precisely controlled</span>. Double the dopant concentration and you double the conductivity. Increase it by a factor of a thousand and the crystal transforms from a reluctant semiconductor into something that behaves almost like a metal. Decrease it and the crystal becomes nearly insulating again. This tunability, spanning twelve orders of magnitude of resistivity, is what no other material system on Earth can match. It is silicon's secret weapon, and it was hiding in plain sight, waiting for someone to add the right impurity in the right amount.</p>
+
+  <div class="pull-quote">
+    One foreign atom among fifty million — and the crystal remembers. It conducts differently, responds differently, thinks differently. Purity was never the point. Control was.
+  </div>
+
+  <!-- ── Interactive: Doping Simulator ── -->
+  <div class="ibox" id="ibox3">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">The Doping Simulator</div>
+    <div class="ibox-desc">
+      Choose a dopant type and adjust its concentration. Phosphorus (n-type) adds free electrons shown as amber dots; boron (p-type) creates holes shown as rose circles. Watch how even tiny concentrations flood the lattice with carriers. The conductivity meter spans twelve orders of magnitude.
+    </div>
+    <canvas id="dopingCanvas" width="800" height="520" data-nopz></canvas>
+    <div class="ibox-controls">
+      <button id="dopNone" class="active">Intrinsic</button>
+      <button id="dopN">Phosphorus (n)</button>
+      <button id="dopP">Boron (p)</button>
+      <label style="margin-left:.8rem">Concentration
+        <input type="range" id="dopConc" min="12" max="20" value="15" step="0.2">
+        <span id="dopConcVal" style="font-family:var(--font-mono);font-size:.72rem;color:var(--gold);min-width:5em">10¹⁵ cm⁻³</span>
+      </label>
+    </div>
+    <div class="ibox-stats">
+      <div class="ibox-stat"><div class="stat-label">Dopant</div><div class="stat-value" id="statDopant">None</div></div>
+      <div class="ibox-stat"><div class="stat-label">Type</div><div class="stat-value" id="statDopType">Intrinsic</div></div>
+      <div class="ibox-stat"><div class="stat-label">Concentration</div><div class="stat-value" id="statDopConc">—</div></div>
+      <div class="ibox-stat"><div class="stat-label">Resistivity</div><div class="stat-value" id="statResist">2.3×10⁵</div></div>
+      <div class="ibox-stat"><div class="stat-label">Conductivity change</div><div class="stat-value" id="statCondChange">1×</div></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ── §4 The One-Way Gate ── -->
+<section class="chapter-section" id="s4">
+  <div class="section-num">§ 4</div>
+  <h2 class="section-title">The One-Way Gate</h2>
+  <div class="section-title-kr">한쪽으로만 열리는 문</div>
+
+  <p class="prose prose-drop">Take a piece of n-type silicon and press it against a piece of p-type silicon. In practice, both regions are grown inside the same crystal, the dopant changing from phosphorus to boron at a precise plane. What happens at that boundary is one of the most consequential phenomena in the history of technology, and it arises from nothing more than the tendency of nature to <span class="hi">equalize what is unequal</span>.</p>
+
+  <p class="prose">On the n-side, free electrons are abundant. On the p-side, holes are abundant. When the two regions meet, electrons from the n-side drift across the junction into the p-side, where they encounter holes and vanish — recombination, the annihilation of carrier and anti-carrier. Simultaneously, holes from the p-side drift into the n-side and are swallowed by electrons there. This mutual diffusion strips a thin region around the junction of all mobile charges. What remains are the <span class="ac">naked atomic cores</span>: positively charged phosphorus ions on the n-side (their donated electron has wandered away), negatively charged boron ions on the p-side (the hole they created has been filled). These exposed charges create an electric field that points from n to p — a field that <span class="hi">opposes further diffusion</span>. The system reaches equilibrium. The stripped region is called the <span class="ac">depletion zone</span>, and it is, in effect, a wall built from the junction's own physics.</p>
+
+  <p class="prose">The depletion zone is extraordinarily thin — typically a fraction of a micrometer — but the electric field within it is fierce, on the order of ten thousand volts per centimeter. It creates a built-in voltage, about 0.7 volts for silicon, that must be overcome before current can flow. This voltage is not something you can measure with a voltmeter across the terminals; it is a <span class="hi">contact potential</span>, hidden inside the crystal, visible only through its effects.</p>
+
+  <p class="prose">Now apply an external voltage. If you connect the positive terminal to the p-side and the negative to the n-side — <span class="ac">forward bias</span> — you are pushing against the built-in field, narrowing the depletion zone, lowering the barrier. Above about 0.6 volts, the wall collapses: electrons and holes flood across the junction, and current surges. The relationship is exponential — a tiny increase in voltage produces an enormous increase in current. But reverse the polarity — <span class="ac">reverse bias</span> — and you reinforce the built-in field, widen the depletion zone, and raise the barrier higher. Current drops to nearly zero. The junction has become a <span class="hi">one-way valve for electricity</span>, a diode, the simplest and most fundamental electronic device.</p>
+
+  <div class="block-quote">
+    "The p-n junction is the basic building block of all semiconductor electronics. Virtually every semiconductor device of any importance contains at least one p-n junction."
+    <span class="bq-attr">— Simon M. Sze, Physics of Semiconductor Devices</span>
+  </div>
+
+  <p class="prose">On December 23, 1947, <span class="ac">John Bardeen and Walter Brattain</span>, working under William Shockley at Bell Labs, demonstrated something even more remarkable. They placed two closely spaced metal contacts on a slab of germanium and showed that a small current flowing through one contact could control a much larger current flowing through the other. Two p-n junctions, back to back, with a thin shared region between them. A valve that controls another valve — <span class="hi">amplification</span>. They called it the transistor, from "transfer resistor," and within a decade it had replaced the vacuum tube in nearly every application. Within two decades it was being etched by the millions onto single chips of silicon. Within five decades it had become the most manufactured object in human history.</p>
+
+  <p class="prose">Every digital circuit ever built — every logic gate, every memory cell, every processor — is a pattern of transistors, which are patterns of p-n junctions, which are patterns of dopant atoms in silicon. The entire computational edifice of modern civilization rests on a <span class="hi">one-way gate</span> made from the physics of a boundary where two types of impurity meet.</p>
+
+  <div class="pull-quote">
+    We were not inventing something new. We were discovering what silicon already knew how to do — we simply had to arrange the impurities and step back.
+  </div>
+
+  <!-- ── Interactive: P-N Junction Explorer ── -->
+  <div class="ibox" id="ibox4">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">The P-N Junction</div>
+    <div class="ibox-desc">
+      Sweep the voltage from reverse bias to forward bias and watch the depletion zone respond. In reverse bias, the zone widens and blocks current. In forward bias, it collapses and carriers flood across. The I-V curve traces the characteristic diode exponential in real time.
+    </div>
+    <canvas id="pnCanvas" width="800" height="420" data-nopz></canvas>
+    <div class="ibox-controls">
+      <label>Applied voltage
+        <input type="range" id="pnVoltage" min="-200" max="80" value="0" step="1">
+        <span id="pnVoltVal" style="font-family:var(--font-mono);font-size:.75rem;color:var(--gold);min-width:4em">0.00 V</span>
+      </label>
+      <button id="pnSweep">Sweep I-V</button>
+      <button id="pnReset">Reset</button>
+    </div>
+    <div class="ibox-stats">
+      <div class="ibox-stat"><div class="stat-label">Voltage</div><div class="stat-value" id="statPNV">0.00 V</div></div>
+      <div class="ibox-stat"><div class="stat-label">Depletion width</div><div class="stat-value" id="statDepl">0.5 µm</div></div>
+      <div class="ibox-stat"><div class="stat-label">Current</div><div class="stat-value" id="statCurr">~0</div></div>
+      <div class="ibox-stat"><div class="stat-label">State</div><div class="stat-value" id="statState">Equilibrium</div></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ── §5 The Limit of Smallness ── -->
+<section class="chapter-section" id="s5">
+  <div class="section-num">§ 5</div>
+  <h2 class="section-title">The Limit of Smallness</h2>
+  <div class="section-title-kr">작음의 한계</div>
+
+  <p class="prose prose-drop">In 1965, a thirty-six-year-old chemist named Gordon Moore published a short article in <em>Electronics</em> magazine. It was not a research paper. It was more like a memo — four pages, one graph, a few speculative paragraphs about the future of integrated circuits. His observation was simple: <span class="hi">the number of components on a chip had been doubling roughly every year</span> since the integrated circuit was invented in 1958. He predicted the trend would continue for at least another decade. He was wrong about the timescale — it would continue for six decades — and he was wrong about the doubling period — it settled to about two years — but the essence of his observation became the most famous law in technology, a self-fulfilling prophecy that drove an entire industry to shrink transistors at an exponential pace for longer than most human lifetimes.</p>
+
+  <p class="prose">The numbers are staggering. The Intel 4004, released in 1971, contained <span class="ac">2,300 transistors</span> etched at a 10-micrometer process — each transistor roughly the width of a red blood cell. By 1989, the Intel 486 packed 1.2 million transistors at 1 micrometer. By 2004, the Pentium 4 Prescott held 125 million at 90 nanometers. Apple's M2 Ultra, released in 2023, contains <span class="ac">134 billion transistors</span> at 5 nanometers — each gate barely twenty silicon atoms across. In fifty-two years, the transistor count increased by a factor of sixty million. No other technology in human history has improved at this rate. Nothing else is even close.</p>
+
+  <p class="prose">But quantum mechanics, which made semiconductors possible in the first place, now threatens to <span class="hi">unmake them</span>. The problem is fundamental, and it has a name: <span class="ac">quantum tunneling</span>. In classical physics, a barrier is a barrier — a ball rolling toward a hill too steep to climb simply rolls back. But an electron is not a ball. It is a wave, described by Schrödinger's equation, and waves do not stop abruptly at a wall. They decay exponentially inside the barrier, and if the barrier is thin enough, a non-zero fraction of the wave emerges on the other side. The electron passes through a wall it classically cannot cross. It tunnels.</p>
+
+  <p class="prose">This is not a theoretical curiosity. It is an engineering catastrophe. When transistor gates were hundreds of nanometers wide, the gate oxide — the insulating layer that controls current flow — was thick enough to be an impenetrable wall. But at 5 nanometers, the oxide is roughly <span class="hi">five atoms thick</span>. Electrons tunnel through it as casually as light passing through a thin curtain. Leakage current rises. Power consumption soars. The transistor, which is supposed to be a switch with a clean on and off state, becomes <span class="ac">a switch that is always slightly on</span>. The distinction between zero and one — the foundation of all digital logic — begins to blur.</p>
+
+  <div class="block-quote">
+    "The fundamental physical limits are not some far-off abstract concern. We are bumping into them right now, at every process node, in every fabrication facility on the planet."
+    <span class="bq-attr">— Mark Bohr, Intel Senior Fellow, 2023</span>
+  </div>
+
+  <p class="prose">The industry has fought back with extraordinary ingenuity. At 22 nanometers, Intel introduced <span class="ac">FinFETs</span> — transistors with three-dimensional fins that wrap the gate around the channel on three sides, giving better electrostatic control. Samsung and TSMC have pushed to <span class="ac">gate-all-around</span> architectures, where the gate surrounds the channel completely, squeezing out every last volt of control. Extreme ultraviolet lithography, using light with a wavelength of just 13.5 nanometers, prints features so small that the masks themselves must be manufactured in a near-vacuum by the most precise machines ever built. Each of these innovations buys another few years, another factor of two. But the trend cannot continue forever.</p>
+
+  <p class="prose">Below about 3 nanometers, the channel itself is only a few atoms wide. Quantum effects dominate completely: the electron's position becomes fundamentally uncertain, the distinction between channel and gate dissolves, and the transistor ceases to behave like a transistor. <span class="hi">The sand reaches the edge of what physics permits.</span> What comes after is an open question — one of the great questions of our time. New materials: graphene, carbon nanotubes, transition metal dichalcogenides. New paradigms: quantum computing, neuromorphic architectures, optical logic. Or perhaps new physics entirely, something no one has yet imagined, waiting to be discovered the way the band gap was discovered a century ago — hiding in plain sight, in a material everyone had overlooked.</p>
+
+  <div class="pull-quote">
+    For sixty years, we made transistors smaller. Now we must make them different. The age of shrinking is ending. The age of reinvention has begun.
+  </div>
+
+  <!-- ── Interactive: Moore's Law + Tunneling Demo ── -->
+  <div class="ibox" id="ibox5">
+    <div class="ibox-label"><span class="dot"></span> Interactive</div>
+    <div class="ibox-title">Moore's Wall</div>
+    <div class="ibox-desc">
+      Left: the exponential arc of Moore's Law — transistor counts from 1971 to 2025, plotted on a logarithmic scale. Each dot is a landmark chip. Right: a quantum tunneling simulator. Narrow the barrier and watch the electron wavefunction leak through. This is why Moore's Law must end.
+    </div>
+    <canvas id="mooreCanvas" width="800" height="500" data-nopz></canvas>
+    <div class="ibox-controls">
+      <label>Barrier width
+        <input type="range" id="barrierSlider" min="1" max="30" value="15" step="0.5">
+        <span id="barrierVal" style="font-family:var(--font-mono);font-size:.75rem;color:var(--gold);min-width:3em">15 nm</span>
+      </label>
+      <label>Particle energy
+        <input type="range" id="energySlider" min="10" max="90" value="40" step="1">
+        <span id="energyVal" style="font-family:var(--font-mono);font-size:.75rem;color:var(--gold);min-width:3em">40%</span>
+      </label>
+      <button id="mooreReset">Reset</button>
+    </div>
+    <div class="ibox-stats">
+      <div class="ibox-stat"><div class="stat-label">Barrier width</div><div class="stat-value" id="statBarrier">15 nm</div></div>
+      <div class="ibox-stat"><div class="stat-label">Tunneling prob.</div><div class="stat-value" id="statTunnel">0.1%</div></div>
+      <div class="ibox-stat"><div class="stat-label">Moore's Law equiv.</div><div class="stat-value" id="statMooreYear">~2008</div></div>
+      <div class="ibox-stat"><div class="stat-label">Leakage risk</div><div class="stat-value" id="statLeak">Low</div></div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ── Coda ── -->
+<div class="coda">
+  The sand beneath your feet is still there.<br>
+  It still looks like nothing — dull, common, beneath notice.<br>
+  But for a brief century, we learned to arrange its atoms<br>
+  so precisely that they could hold a thought.<br>
+  Every word you are reading began as a grain of sand<br>
+  that crossed a forbidden gap.
+</div>
+
+<div class="pull-quote" style="margin-top:2rem;">
+  "There's plenty of room at the bottom."<br>
+  <span style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted);font-style:normal;">— Richard Feynman, 1959</span>
+</div>
+
+<!-- ── References ── -->
+<div class="ref-section">
+  <h3 class="ref-heading">References</h3>
+  <ul class="ref-list">
+    <li><span class="ref-author">Kittel, C.,</span> <span class="ref-title">Introduction to Solid State Physics,</span> <span class="ref-detail">8th ed., Wiley, 2004.</span></li>
+    <li><span class="ref-author">Ashcroft, N. W. & Mermin, N. D.,</span> <span class="ref-title">Solid State Physics,</span> <span class="ref-detail">Cengage Learning, 1976.</span></li>
+    <li><span class="ref-author">Sze, S. M. & Ng, K. K.,</span> <span class="ref-title">Physics of Semiconductor Devices,</span> <span class="ref-detail">3rd ed., Wiley, 2006.</span></li>
+    <li><span class="ref-author">Riordan, M. & Hoddeson, L.,</span> <span class="ref-title">Crystal Fire: The Invention of the Transistor and the Birth of the Information Age,</span> <span class="ref-detail">Norton, 1997.</span></li>
+    <li><span class="ref-author">Shockley, W.,</span> <span class="ref-title">Transistor Technology Evokes New Physics,</span> <span class="ref-detail">Nobel Lecture, December 11, 1956.</span></li>
+    <li><span class="ref-author">Bloch, F.,</span> <span class="ref-title">Über die Quantenmechanik der Elektronen in Kristallgittern,</span> <span class="ref-detail">Zeitschrift für Physik, 52, 555–600, 1928.</span></li>
+    <li><span class="ref-author">Moore, G. E.,</span> <span class="ref-title">Cramming More Components onto Integrated Circuits,</span> <span class="ref-detail">Electronics, 38(8), April 19, 1965.</span></li>
+    <li><span class="ref-author">Feynman, R. P.,</span> <span class="ref-title">There's Plenty of Room at the Bottom,</span> <span class="ref-detail">Caltech Engineering and Science, 23(5), 22–36, 1960.</span></li>
+    <li><span class="ref-author">Bardeen, J. & Brattain, W. H.,</span> <span class="ref-title">The Transistor, a Semi-Conductor Triode,</span> <span class="ref-detail">Physical Review, 74(2), 230–231, 1948.</span></li>
+    <li><span class="ref-author">Lundstrom, M.,</span> <span class="ref-title">Fundamentals of Nanotransistors,</span> <span class="ref-detail">World Scientific, 2017.</span></li>
+    <li><span class="ref-author">Thompson, S. E. & Parthasarathy, S.,</span> <span class="ref-title">Moore's Law: The Future of Si Microelectronics,</span> <span class="ref-detail">Materials Today, 9(6), 20–25, 2006.</span></li>
+    <li><span class="ref-author">International Roadmap for Devices and Systems (IRDS),</span> <span class="ref-title">More Moore,</span> <span class="ref-detail">IEEE, 2022 Edition.</span></li>
+    <li><span class="ref-author">Bohr, M.,</span> <span class="ref-title">The Evolution of Scaling from the Homogeneous Era to the Heterogeneous Era,</span> <span class="ref-detail">IEEE IEDM, 2011.</span></li>
+  </ul>
+</div>
+
+<footer>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study</div>
+    <div class="footer-inst">AI4MATH, KAIST</div>
+    <a class="footer-url" href="https://kimsh.kr">kimsh.kr</a>
+  </div>
+</footer>
+
+</div><!-- .chapter-body -->
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
+<!-- Narration toggle -->
+<button class="narr-toggle" id="narrToggle" title="Narration">🎧</button>
+<div class="narration-bar" id="narrBar">
+  <button class="narr-btn" id="narrPlay" title="Play/Pause">▶</button>
+  <div class="narr-progress" id="narrProgress"><div class="narr-progress-fill" id="narrFill"></div></div>
+  <span class="narr-time" id="narrTime">0:00</span>
+  <button class="narr-lang active" data-lang="en">EN</button>
+  <button class="narr-lang" data-lang="ko">KO</button>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   GLOBALS & UTILITIES
+   ══════════════════════════════════════════════════════════ */
+let _paused = false, _heroVisible = true;
+const DPR = window.devicePixelRatio || 1;
+
+function sizeCanvas(canvas, w, h) {
+  canvas.width = w * DPR;
+  canvas.height = h * DPR;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  return canvas.getContext('2d');
+}
+
+/* ── Ambient Particles ── */
+(function(){
+  const c = document.getElementById('particles');
+  for(let i = 0; i < 22; i++){
+    const s = document.createElement('span');
+    const sz = Math.random()*3+1.5;
+    s.style.cssText = `
+      width:${sz}px;height:${sz}px;
+      left:${Math.random()*100}%;
+      animation-duration:${Math.random()*18+14}s;
+      animation-delay:${Math.random()*20}s;
+    `;
+    // Alternating violet and amber particles
+    if(i % 3 === 0) s.style.background = 'radial-gradient(circle,rgba(212,168,83,.6),transparent 70%)';
+    else s.style.background = 'radial-gradient(circle,rgba(138,106,191,.5),transparent 70%)';
+    c.appendChild(s);
+  }
+})();
+
+/* ── Scroll Reveal ── */
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.chapter-section').forEach(s => revealObs.observe(s));
+
+/* ── Hero Visibility ── */
+const heroObs = new IntersectionObserver(([e]) => { _heroVisible = e.isIntersecting; }, { threshold: 0.05 });
+heroObs.observe(document.getElementById('hero'));
+
+/* ══════════════════════════════════════════════════════════
+   HERO: 3D CRYSTAL LATTICE WITH PERSPECTIVE
+   ══════════════════════════════════════════════════════════ */
+(function(){
+  const canvas = document.getElementById('heroCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+
+  // 3D lattice — diamond cubic, projected with perspective
+  let atoms3D = [], bonds3D = [];
+  const freeElectrons = [], freeHoles = [];
+  const heroStart = performance.now();
+  const HERO_TIMEOUT = 300000;
+
+  function buildLattice(){
+    atoms3D = []; bonds3D = [];
+    const span = Math.max(W || 800, H || 600);
+    const GRID = Math.ceil(span / 65);
+    const sp = 65;
+
+    for(let i = 0; i < GRID; i++){
+      for(let j = 0; j < GRID; j++){
+        const x3 = (i - GRID/2) * sp;
+        const y3 = (j - GRID/2) * sp;
+        const z3 = Math.sin(i*0.7)*25 + Math.cos(j*0.7)*25;
+        atoms3D.push({ x3, y3, z3, base: true, id: atoms3D.length });
+        if(i < GRID-1 && j < GRID-1){
+          atoms3D.push({
+            x3: x3 + sp*0.5, y3: y3 + sp*0.5,
+            z3: z3 + 30,
+            base: false, id: atoms3D.length
+          });
+        }
+      }
+    }
+    for(let a = 0; a < atoms3D.length; a++){
+      for(let b = a+1; b < atoms3D.length; b++){
+        const dx = atoms3D[a].x3 - atoms3D[b].x3;
+        const dy = atoms3D[a].y3 - atoms3D[b].y3;
+        const dz = atoms3D[a].z3 - atoms3D[b].z3;
+        const d = Math.sqrt(dx*dx + dy*dy + dz*dz);
+        if(d < sp * 0.85){
+          bonds3D.push([a, b]);
+        }
+      }
+    }
+  }
+
+  function resize(){
+    W = canvas.clientWidth; H = canvas.clientHeight;
+    canvas.width = W * DPR; canvas.height = H * DPR;
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    buildLattice();
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let rotAngle = 0;
+  const FL = 800; // focal length for perspective
+
+  function project(x3, y3, z3, t){
+    // Gentle rotation
+    const cos = Math.cos(t), sin = Math.sin(t);
+    const rx = x3 * cos - z3 * sin;
+    const rz = x3 * sin + z3 * cos;
+    const ry = y3;
+    // Perspective
+    const scale = FL / (FL + rz + 200);
+    return {
+      x: W/2 + rx * scale,
+      y: H/2 + ry * scale,
+      z: rz,
+      scale: scale
+    };
+  }
+
+  function spawnElectron(){
+    if(freeElectrons.length > 25) return;
+    const a = atoms3D[Math.floor(Math.random()*atoms3D.length)];
+    const p = project(a.x3, a.y3, a.z3, rotAngle);
+    freeElectrons.push({
+      x: p.x, y: p.y,
+      vx: (Math.random()-0.5)*0.8,
+      vy: -Math.random()*1.2 - 0.5,
+      life: 1.0, decay: 0.003 + Math.random()*0.003,
+      size: 2 + Math.random()*2
+    });
+    freeHoles.push({
+      x: p.x, y: p.y,
+      vx: (Math.random()-0.5)*0.4,
+      vy: Math.random()*0.6 + 0.2,
+      life: 1.0, decay: 0.004 + Math.random()*0.003
+    });
+  }
+
+  function drawHero(){
+    if(_paused || !_heroVisible) { requestAnimationFrame(drawHero); return; }
+    if(performance.now() - heroStart > HERO_TIMEOUT){ return; }
+
+    ctx.clearRect(0,0,W,H);
+    rotAngle += 0.0008;
+
+    // Draw bonds — batch by depth for efficiency
+    for(const [a,b] of bonds3D){
+      const pa = project(atoms3D[a].x3, atoms3D[a].y3, atoms3D[a].z3, rotAngle);
+      const pb = project(atoms3D[b].x3, atoms3D[b].y3, atoms3D[b].z3, rotAngle);
+      // Cull offscreen
+      if(pa.x < -50 || pa.x > W+50 || pa.y < -50 || pa.y > H+50) continue;
+      if(pb.x < -50 || pb.x > W+50 || pb.y < -50 || pb.y > H+50) continue;
+      const avgDepth = (pa.scale + pb.scale) / 2;
+      const alpha = 0.04 + avgDepth * 0.1;
+      ctx.beginPath();
+      ctx.moveTo(pa.x, pa.y);
+      ctx.lineTo(pb.x, pb.y);
+      ctx.strokeStyle = `rgba(138,106,191,${alpha})`;
+      ctx.lineWidth = avgDepth * 1.2;
+      ctx.stroke();
+    }
+
+    // Draw atoms — depth-sorted glow
+    for(const a of atoms3D){
+      const p = project(a.x3, a.y3, a.z3, rotAngle);
+      if(p.x < -40 || p.x > W+40 || p.y < -40 || p.y > H+40) continue;
+      const r = (a.base ? 3.5 : 2.5) * p.scale;
+      const alpha = 0.15 + p.scale * 0.25;
+      const breathe = 0.05 * Math.sin(rotAngle*3 + a.id * 0.2);
+
+      // Soft glow halo (depth-of-field effect)
+      const glowR = r + 6 * p.scale;
+      const g = ctx.createRadialGradient(p.x, p.y, r*0.3, p.x, p.y, glowR);
+      g.addColorStop(0, `rgba(138,106,191,${(alpha + breathe)*0.35})`);
+      g.addColorStop(1, 'transparent');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(p.x, p.y, glowR, 0, Math.PI*2); ctx.fill();
+
+      // Core
+      ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(138,106,191,${alpha + breathe})`;
+      ctx.fill();
+    }
+
+    // Spawn electrons periodically
+    if(Math.random() < 0.025) spawnElectron();
+
+    // Free electrons — amber sparks rising with trails
+    for(let i = freeElectrons.length-1; i >= 0; i--){
+      const e = freeElectrons[i];
+      e.x += e.vx + Math.sin(e.y*0.008 + rotAngle*5)*0.6;
+      e.y += e.vy;
+      e.life -= e.decay;
+      if(e.life <= 0){ freeElectrons.splice(i,1); continue; }
+
+      // Trail
+      ctx.beginPath(); ctx.arc(e.x, e.y, e.size*0.6, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(212,168,83,${e.life*0.2})`;
+      ctx.fill();
+
+      // Core glow
+      ctx.beginPath(); ctx.arc(e.x, e.y, e.size, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(212,168,83,${e.life*0.85})`;
+      ctx.shadowColor = `rgba(212,168,83,${e.life*0.6})`;
+      ctx.shadowBlur = 12 * e.life;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+
+    // Holes — dim rose rings sinking
+    for(let i = freeHoles.length-1; i >= 0; i--){
+      const h = freeHoles[i];
+      h.x += h.vx; h.y += h.vy; h.life -= h.decay;
+      if(h.life <= 0){ freeHoles.splice(i,1); continue; }
+      ctx.beginPath(); ctx.arc(h.x, h.y, 3.5, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(196,122,138,${h.life*0.4})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    requestAnimationFrame(drawHero);
+  }
+  requestAnimationFrame(drawHero);
+})();
+
+/* ══════════════════════════════════════════════════════════
+   §1 INTERACTIVE: CRYSTAL LATTICE THERMAL EXPLORER
+   ══════════════════════════════════════════════════════════ */
+(function(){
+  const canvas = document.getElementById('latticeCanvas');
+  let W = canvas.clientWidth, H = 500;
+  const ctx = sizeCanvas(canvas, W, H);
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+
+  const COLS = 10, ROWS = 7;
+  const spacingX = W / (COLS + 1);
+  const spacingY = H / (ROWS + 1);
+  const atoms = [];
+  const bonds = [];
+  let freeElectrons = [];
+  let freeHoles = [];
+  let temp = 300;
+  let selectedAtom = -1;
+  let animId = null;
+  let isVisible = false;
+
+  // Build lattice
+  for(let r = 0; r < ROWS; r++){
+    for(let c = 0; c < COLS; c++){
+      const offsetX = (r % 2) ? spacingX * 0.5 : 0;
+      atoms.push({
+        x: spacingX * (c+1) + offsetX,
+        y: spacingY * (r+1),
+        electrons: 4, // valence electrons
+        freed: 0,
+        id: atoms.length,
+        vibAmp: 0, vibPhase: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  // Connect neighbors
+  for(let a = 0; a < atoms.length; a++){
+    for(let b = a+1; b < atoms.length; b++){
+      const dx = atoms[a].x - atoms[b].x;
+      const dy = atoms[a].y - atoms[b].y;
+      const d = Math.sqrt(dx*dx+dy*dy);
+      if(d < spacingX*1.2 && bonds.filter(bo=>bo[0]===a||bo[1]===a).length < 4
+         && bonds.filter(bo=>bo[0]===b||bo[1]===b).length < 4){
+        bonds.push([a, b, true]); // [atomA, atomB, intact]
+      }
+    }
+  }
+
+  // Thermal excitation model
+  function updateThermal(){
+    const kT = temp / 11600; // kT in eV (Boltzmann)
+    const Eg = 1.12; // Silicon band gap in eV
+    const excitationProb = Math.exp(-Eg / (2 * Math.max(kT, 0.001)));
+
+    // Reset
+    freeElectrons = [];
+    freeHoles = [];
+    bonds.forEach(b => b[2] = true);
+    atoms.forEach(a => { a.freed = 0; a.vibAmp = Math.min(temp / 300 * 2, 8); });
+
+    // Excite electrons based on temperature
+    const numFree = Math.min(Math.round(excitationProb * atoms.length * 30), atoms.length * 2);
+    const shuffled = [...Array(bonds.length).keys()].sort(() => Math.random()-0.5);
+
+    for(let i = 0; i < Math.min(numFree, shuffled.length); i++){
+      const bi = shuffled[i];
+      const bond = bonds[bi];
+      if(!bond[2]) continue;
+      bond[2] = false;
+      const a = atoms[bond[0]];
+
+      freeElectrons.push({
+        x: (a.x + atoms[bond[1]].x)/2,
+        y: (a.y + atoms[bond[1]].y)/2,
+        vx: (Math.random()-0.5)*2,
+        vy: (Math.random()-0.5)*2,
+        life: 1
+      });
+      freeHoles.push({
+        x: (a.x + atoms[bond[1]].x)/2,
+        y: (a.y + atoms[bond[1]].y)/2,
+        vx: (Math.random()-0.5)*1.2,
+        vy: (Math.random()-0.5)*1.2,
+        life: 1
+      });
+    }
+
+    updateStats();
+  }
+
+  function updateStats(){
+    document.getElementById('statTemp').textContent = temp + ' K';
+    document.getElementById('statElec').textContent = freeElectrons.length;
+    document.getElementById('statHoles').textContent = freeHoles.length;
+    const cond = freeElectrons.length === 0 ? 'Insulating'
+      : freeElectrons.length < 5 ? 'Low'
+      : freeElectrons.length < 15 ? 'Moderate'
+      : freeElectrons.length < 30 ? 'High'
+      : 'Very High';
+    document.getElementById('statCond').textContent = cond;
+  }
+
+  let time = 0;
+  function draw(){
+    if(!isVisible){ animId = requestAnimationFrame(draw); return; }
+    time += 0.02;
+    ctx.clearRect(0,0,W,H);
+
+    // Draw bonds
+    for(const [a,b,intact] of bonds){
+      const at = atoms[a], bt = atoms[b];
+      const ax = at.x + Math.sin(time*2 + at.vibPhase) * at.vibAmp;
+      const ay = at.y + Math.cos(time*2.3 + at.vibPhase) * at.vibAmp;
+      const bx = bt.x + Math.sin(time*2 + bt.vibPhase) * bt.vibAmp;
+      const by = bt.y + Math.cos(time*2.3 + bt.vibPhase) * bt.vibAmp;
+
+      ctx.beginPath();
+      ctx.moveTo(ax, ay);
+      ctx.lineTo(bx, by);
+      if(intact){
+        ctx.strokeStyle = 'rgba(138,106,191,0.25)';
+        ctx.lineWidth = 2;
+      } else {
+        ctx.strokeStyle = 'rgba(138,106,191,0.07)';
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3,4]);
+      }
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Draw atoms
+    for(let i = 0; i < atoms.length; i++){
+      const a = atoms[i];
+      const ax = a.x + Math.sin(time*2 + a.vibPhase) * a.vibAmp;
+      const ay = a.y + Math.cos(time*2.3 + a.vibPhase) * a.vibAmp;
+      const r = 7;
+
+      // Outer glow — larger and softer
+      const grd = ctx.createRadialGradient(ax,ay,r*0.3,ax,ay,r+14);
+      grd.addColorStop(0, 'rgba(138,106,191,0.35)');
+      grd.addColorStop(0.5, 'rgba(138,106,191,0.08)');
+      grd.addColorStop(1, 'transparent');
+      ctx.fillStyle = grd;
+      ctx.beginPath(); ctx.arc(ax,ay,r+14,0,Math.PI*2); ctx.fill();
+
+      // Core
+      ctx.beginPath(); ctx.arc(ax,ay,r,0,Math.PI*2);
+      ctx.fillStyle = i === selectedAtom ? 'rgba(201,168,76,0.85)' : 'rgba(138,106,191,0.55)';
+      ctx.fill();
+      // Inner highlight
+      ctx.beginPath(); ctx.arc(ax-1.5,ay-1.5,r*0.4,0,Math.PI*2);
+      ctx.fillStyle = i === selectedAtom ? 'rgba(236,232,224,0.2)' : 'rgba(180,160,220,0.15)';
+      ctx.fill();
+
+      // Selected atom info panel
+      if(i === selectedAtom){
+        // Connection line
+        const panelX = ax + 20, panelY = ay - 40;
+        ctx.strokeStyle = 'rgba(201,168,76,0.3)';
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(ax, ay - r); ctx.lineTo(panelX, panelY + 14); ctx.stroke();
+        // Panel background
+        ctx.fillStyle = 'rgba(14,17,40,0.85)';
+        const pw = 110, ph = 48;
+        ctx.beginPath();
+        const prx = panelX - 4, pry = panelY - 4, prr = 6;
+        ctx.moveTo(prx+prr,pry); ctx.lineTo(prx+pw-prr,pry);
+        ctx.quadraticCurveTo(prx+pw,pry,prx+pw,pry+prr);
+        ctx.lineTo(prx+pw,pry+ph-prr);
+        ctx.quadraticCurveTo(prx+pw,pry+ph,prx+pw-prr,pry+ph);
+        ctx.lineTo(prx+prr,pry+ph);
+        ctx.quadraticCurveTo(prx,pry+ph,prx,pry+ph-prr);
+        ctx.lineTo(prx,pry+prr);
+        ctx.quadraticCurveTo(prx,pry,prx+prr,pry);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(201,168,76,0.2)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        // Text
+        ctx.font = '600 11px "JetBrains Mono"';
+        ctx.fillStyle = 'rgba(201,168,76,0.9)';
+        ctx.textAlign = 'left';
+        ctx.fillText('Si — Silicon', panelX + 4, panelY + 10);
+        ctx.font = '9px "JetBrains Mono"';
+        ctx.fillStyle = 'rgba(184,180,172,0.7)';
+        ctx.fillText('4 valence electrons', panelX + 4, panelY + 24);
+        ctx.fillText('Band gap: 1.12 eV', panelX + 4, panelY + 36);
+      }
+
+      // Valence electron dots orbiting the atom
+      const numShown = 4;
+      for(let e = 0; e < numShown; e++){
+        const angle = (e / numShown) * Math.PI * 2 + time * 0.4;
+        const er = r + 4;
+        const ex = ax + Math.cos(angle) * er;
+        const ey = ay + Math.sin(angle) * er;
+        ctx.beginPath();
+        ctx.arc(ex, ey, 1.8, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(212,168,83,0.35)';
+        ctx.fill();
+      }
+    }
+
+    // Animate free electrons — with glow trail
+    for(const e of freeElectrons){
+      e.x += e.vx + Math.sin(time*3 + e.x*0.01)*0.5;
+      e.y += e.vy + Math.cos(time*2.7 + e.y*0.01)*0.5;
+      if(e.x < 10 || e.x > W-10) e.vx *= -1;
+      if(e.y < 10 || e.y > H-10) e.vy *= -1;
+      e.x = Math.max(10, Math.min(W-10, e.x));
+      e.y = Math.max(10, Math.min(H-10, e.y));
+
+      // Glow halo
+      const eg = ctx.createRadialGradient(e.x,e.y,1,e.x,e.y,10);
+      eg.addColorStop(0, 'rgba(212,168,83,0.35)');
+      eg.addColorStop(1, 'transparent');
+      ctx.fillStyle = eg;
+      ctx.beginPath(); ctx.arc(e.x,e.y,10,0,Math.PI*2); ctx.fill();
+
+      // Core
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, 3.5, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(212,168,83,0.8)';
+      ctx.shadowColor = 'rgba(212,168,83,0.6)';
+      ctx.shadowBlur = 10;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+
+    // Animate holes — with glow
+    for(const h of freeHoles){
+      h.x += h.vx + Math.sin(time*2 + h.x*0.02)*0.3;
+      h.y += h.vy + Math.cos(time*2.5 + h.y*0.02)*0.3;
+      if(h.x < 10 || h.x > W-10) h.vx *= -1;
+      if(h.y < 10 || h.y > H-10) h.vy *= -1;
+      h.x = Math.max(10, Math.min(H-10, h.x));
+      h.y = Math.max(10, Math.min(H-10, h.y));
+
+      // Glow
+      const hg = ctx.createRadialGradient(h.x,h.y,2,h.x,h.y,9);
+      hg.addColorStop(0, 'rgba(196,122,138,0.15)');
+      hg.addColorStop(1, 'transparent');
+      ctx.fillStyle = hg;
+      ctx.beginPath(); ctx.arc(h.x,h.y,9,0,Math.PI*2); ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(h.x, h.y, 4.5, 0, Math.PI*2);
+      ctx.strokeStyle = 'rgba(196,122,138,0.55)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+
+    animId = requestAnimationFrame(draw);
+  }
+
+  // Intersection observer for lazy loading
+  const obs = new IntersectionObserver(([entry]) => {
+    isVisible = entry.isIntersecting;
+    if(isVisible && !animId){
+      updateThermal();
+      animId = requestAnimationFrame(draw);
+    }
+  }, { threshold: 0.05 });
+  obs.observe(document.getElementById('ibox1'));
+
+  // Temperature slider
+  const slider = document.getElementById('tempSlider');
+  const tempValEl = document.getElementById('tempVal');
+  slider.addEventListener('input', () => {
+    temp = parseInt(slider.value);
+    tempValEl.textContent = temp + ' K';
+    updateThermal();
+  });
+
+  // Click to select atom
+  canvas.addEventListener('click', (ev) => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = ev.clientX - rect.left;
+    const my = ev.clientY - rect.top;
+    selectedAtom = -1;
+    for(let i = 0; i < atoms.length; i++){
+      const a = atoms[i];
+      const ax = a.x + Math.sin(time*2 + a.vibPhase) * a.vibAmp;
+      const ay = a.y + Math.cos(time*2.3 + a.vibPhase) * a.vibAmp;
+      if(Math.hypot(mx-ax, my-ay) < 14){
+        selectedAtom = i;
+        break;
+      }
+    }
+  });
+
+  // Reset
+  document.getElementById('resetLattice').addEventListener('click', () => {
+    slider.value = 300; temp = 300; tempValEl.textContent = '300 K';
+    selectedAtom = -1;
+    updateThermal();
+  });
+
+  // Resize
+  window.addEventListener('resize', () => {
+    W = canvas.clientWidth;
+    sizeCanvas(canvas, W, H);
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    // Recalculate atom positions
+    const sx = W / (COLS + 1);
+    const sy = H / (ROWS + 1);
+    let idx = 0;
+    for(let r = 0; r < ROWS; r++){
+      for(let c = 0; c < COLS; c++){
+        const offsetX = (r % 2) ? sx * 0.5 : 0;
+        atoms[idx].x = sx * (c+1) + offsetX;
+        atoms[idx].y = sy * (r+1);
+        idx++;
+      }
+    }
+    updateThermal();
+  });
+
+})();
+
+/* ══════════════════════════════════════════════════════════
+   §2 INTERACTIVE: ENERGY BAND DIAGRAM
+   ══════════════════════════════════════════════════════════ */
+(function(){
+  const canvas = document.getElementById('bandCanvas');
+  let W = canvas.clientWidth, H = 480;
+  let ctx = sizeCanvas(canvas, W, H);
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+
+  const materials = [
+    { name:'Lead',     sym:'Pb',   gap:0.0,  type:'Metal',         color:'#7a8a9a' },
+    { name:'Tin (α)',  sym:'Sn',   gap:0.08, type:'Semimetal',     color:'#8a9a8a' },
+    { name:'Silicon',  sym:'Si',   gap:1.12, type:'Semiconductor', color:'#8a6abf' },
+    { name:'GaAs',     sym:'GaAs', gap:1.42, type:'Semiconductor', color:'#6a9abf' },
+    { name:'SiC',      sym:'SiC',  gap:3.26, type:'Wide-gap SC',  color:'#5a9a72' },
+    { name:'Diamond',  sym:'C',    gap:5.47, type:'Insulator',     color:'#9a8a7a' }
+  ];
+
+  let matIdx = 2, bandTemp = 300;
+  let animId = null, isVisible = false, time = 0;
+
+  // Floating electrons in conduction band
+  let floaters = [];
+  // Electrons currently jumping across the gap
+  let jumpers = [];
+  // Holes left behind in the valence band
+  let holes = [];
+
+  function excitationRate(){
+    const mat = materials[matIdx];
+    const kT = bandTemp / 11600;
+    if(mat.gap === 0) return 0.18;
+    if(mat.gap < 0.1) return 0.14;
+    const prob = Math.exp(-mat.gap / (2 * Math.max(kT, 0.001)));
+    return Math.min(0.35, prob * 12);
+  }
+
+  function generateFloaters(){
+    floaters = [];
+    holes = [];
+    jumpers = [];
+    const mat = materials[matIdx];
+    const kT = bandTemp / 11600;
+    // Number of visible conduction electrons (steady-state)
+    let numFloat;
+    if(mat.gap === 0) numFloat = 25;
+    else if(mat.gap < 0.1) numFloat = 20;
+    else numFloat = Math.min(50, Math.round(Math.exp(-mat.gap/(2*Math.max(kT,0.001))) * 6000));
+    for(let i = 0; i < numFloat; i++){
+      floaters.push({
+        x: 100 + Math.random()*(W-200),
+        y: 0,
+        vx: (Math.random()-0.5)*1.5,
+        phase: Math.random()*Math.PI*2
+      });
+    }
+    // Seed some holes to match floaters
+    for(let i = 0; i < numFloat; i++){
+      holes.push({
+        x: 100 + Math.random()*(W-200),
+        vx: (Math.random()-0.5)*0.8,
+        phase: Math.random()*Math.PI*2,
+        life: 0.3 + Math.random()*0.7
+      });
+    }
+  }
+
+  function updateStats(){
+    const mat = materials[matIdx];
+    const kT = bandTemp / 11600;
+    document.getElementById('statMat').textContent = mat.sym;
+    document.getElementById('statGap').textContent = mat.gap.toFixed(2) + ' eV';
+    document.getElementById('statKT').textContent = kT.toFixed(3) + ' eV';
+    document.getElementById('statClass').textContent = mat.type;
+    document.getElementById('materialName').textContent = mat.name;
+    document.getElementById('bandTempVal').textContent = bandTemp.toLocaleString() + ' K';
+  }
+
+  function draw(){
+    if(!isVisible){ animId = requestAnimationFrame(draw); return; }
+    time += 0.015;
+    ctx.clearRect(0,0,W,H);
+
+    const mat = materials[matIdx];
+    const kT = bandTemp / 11600;
+
+    // Layout
+    const margin = 60;
+    const bandW = W - margin*2;
+    const centerY = H * 0.5;
+    // Gap in pixels (scale: 1 eV = 40px, capped)
+    const pxPerEV = Math.min(40, (H - 160) / Math.max(mat.gap, 0.5) * 0.4);
+    const gapPx = mat.gap * pxPerEV;
+    const valenceTop = centerY + gapPx/2;
+    const conductionBot = centerY - gapPx/2;
+    const bandHeight = 80;
+
+    // ── Valence band (filled, violet) ──
+    const vGrad = ctx.createLinearGradient(0, valenceTop, 0, valenceTop + bandHeight);
+    vGrad.addColorStop(0, 'rgba(138,106,191,0.45)');
+    vGrad.addColorStop(1, 'rgba(138,106,191,0.08)');
+    ctx.fillStyle = vGrad;
+    roundRect(ctx, margin, valenceTop, bandW, bandHeight, 6);
+    ctx.fill();
+    // Hatching to show "filled"
+    ctx.save();
+    ctx.globalAlpha = 0.15;
+    ctx.strokeStyle = '#8a6abf';
+    ctx.lineWidth = 0.5;
+    for(let x = margin; x < margin + bandW; x += 8){
+      ctx.beginPath();
+      ctx.moveTo(x, valenceTop);
+      ctx.lineTo(x + bandHeight*0.3, valenceTop + bandHeight);
+      ctx.stroke();
+    }
+    ctx.restore();
+    // Label
+    ctx.font = '11px "JetBrains Mono"';
+    ctx.fillStyle = 'rgba(138,106,191,0.8)';
+    ctx.textAlign = 'left';
+    ctx.fillText('VALENCE BAND', margin + 10, valenceTop + bandHeight - 10);
+
+    // ── Conduction band (empty, amber) ──
+    const cGrad = ctx.createLinearGradient(0, conductionBot - bandHeight, 0, conductionBot);
+    cGrad.addColorStop(0, 'rgba(212,168,83,0.08)');
+    cGrad.addColorStop(1, 'rgba(212,168,83,0.3)');
+    ctx.fillStyle = cGrad;
+    roundRect(ctx, margin, conductionBot - bandHeight, bandW, bandHeight, 6);
+    ctx.fill();
+    // Dashed border to show "empty"
+    ctx.strokeStyle = 'rgba(212,168,83,0.25)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4,4]);
+    roundRect(ctx, margin, conductionBot - bandHeight, bandW, bandHeight, 6);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.font = '11px "JetBrains Mono"';
+    ctx.fillStyle = 'rgba(212,168,83,0.8)';
+    ctx.fillText('CONDUCTION BAND', margin + 10, conductionBot - bandHeight + 18);
+
+    // ── Band gap region ──
+    if(gapPx > 4){
+      // Forbidden zone shading
+      const fGrad = ctx.createLinearGradient(0, conductionBot, 0, valenceTop);
+      fGrad.addColorStop(0, 'rgba(255,255,255,0.015)');
+      fGrad.addColorStop(0.5, 'rgba(255,255,255,0.03)');
+      fGrad.addColorStop(1, 'rgba(255,255,255,0.015)');
+      ctx.fillStyle = fGrad;
+      ctx.fillRect(margin, conductionBot, bandW, gapPx);
+
+      // Gap label
+      ctx.save();
+      ctx.font = '600 13px "JetBrains Mono"';
+      ctx.fillStyle = 'rgba(236,232,224,0.6)';
+      ctx.textAlign = 'center';
+      ctx.fillText(mat.gap.toFixed(2) + ' eV', W/2, centerY + 4);
+      ctx.font = '10px "JetBrains Mono"';
+      ctx.fillStyle = 'rgba(82,86,106,0.8)';
+      ctx.fillText('FORBIDDEN GAP', W/2, centerY + 18);
+      ctx.restore();
+
+      // Bracket lines
+      ctx.strokeStyle = 'rgba(236,232,224,0.15)';
+      ctx.lineWidth = 1;
+      const bx = W - margin - 20;
+      ctx.beginPath();
+      ctx.moveTo(bx, conductionBot); ctx.lineTo(bx + 8, conductionBot);
+      ctx.moveTo(bx + 4, conductionBot); ctx.lineTo(bx + 4, valenceTop);
+      ctx.moveTo(bx, valenceTop); ctx.lineTo(bx + 8, valenceTop);
+      ctx.stroke();
+    } else {
+      // Overlapping bands — draw merge indicator
+      ctx.font = '10px "JetBrains Mono"';
+      ctx.fillStyle = 'rgba(236,232,224,0.5)';
+      ctx.textAlign = 'center';
+      ctx.fillText('BANDS OVERLAP — NO GAP', W/2, centerY + 4);
+    }
+
+    // ── Thermal energy marker ──
+    const kTPx = kT * pxPerEV;
+    const thermX = margin + 24;
+    const thermTop = valenceTop - kTPx;
+    // Arrow from valence band top
+    ctx.strokeStyle = 'rgba(196,122,138,0.6)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(thermX, valenceTop);
+    ctx.lineTo(thermX, Math.max(thermTop, conductionBot - bandHeight));
+    ctx.stroke();
+    // Arrow head
+    ctx.fillStyle = 'rgba(196,122,138,0.6)';
+    ctx.beginPath();
+    const arrowY = Math.max(thermTop, conductionBot - bandHeight);
+    ctx.moveTo(thermX - 4, arrowY + 8);
+    ctx.lineTo(thermX, arrowY);
+    ctx.lineTo(thermX + 4, arrowY + 8);
+    ctx.fill();
+    // kT label
+    ctx.font = '9px "JetBrains Mono"';
+    ctx.fillStyle = 'rgba(196,122,138,0.8)';
+    ctx.textAlign = 'left';
+    ctx.fillText('kT = ' + kT.toFixed(3) + ' eV', thermX + 8, Math.max(thermTop, conductionBot - bandHeight) + 4);
+
+    // ── Spawn jumping electrons ──
+    const rate = excitationRate();
+    if(Math.random() < rate && jumpers.length < 20 && materials[matIdx].gap > 0.01){
+      const startX = margin + 60 + Math.random()*(bandW - 120);
+      jumpers.push({
+        x: startX,
+        startY: valenceTop,
+        endY: conductionBot,
+        progress: 0, // 0→1
+        speed: 0.008 + Math.random()*0.008,
+        wobble: (Math.random()-0.5)*30,
+        trail: []
+      });
+    }
+
+    // ── Draw & update jumping electrons (crossing the gap) ──
+    for(let i = jumpers.length - 1; i >= 0; i--){
+      const j = jumpers[i];
+      j.progress += j.speed;
+
+      // Ease-out arc: fast departure, slow arrival
+      const t = j.progress;
+      const ease = 1 - Math.pow(1 - t, 3); // cubic ease-out
+      const curY = j.startY + (j.endY - j.startY) * ease;
+      // Horizontal wobble as a sine arc
+      const curX = j.x + Math.sin(t * Math.PI) * j.wobble;
+
+      // Store trail point
+      j.trail.push({ x: curX, y: curY, alpha: 1.0 });
+      if(j.trail.length > 18) j.trail.shift();
+
+      // Draw trail
+      for(let k = 0; k < j.trail.length; k++){
+        const pt = j.trail[k];
+        const a = (k / j.trail.length) * 0.5;
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 2 + (k/j.trail.length)*1.5, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(212,168,83,${a})`;
+        ctx.fill();
+      }
+
+      // Draw electron head
+      ctx.beginPath();
+      ctx.arc(curX, curY, 4, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(212,168,83,0.9)';
+      ctx.fill();
+      ctx.shadowColor = 'rgba(212,168,83,0.7)';
+      ctx.shadowBlur = 14;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Spark effect at the head
+      for(let s = 0; s < 3; s++){
+        const sx = curX + (Math.random()-0.5)*10;
+        const sy = curY + (Math.random()-0.5)*10;
+        ctx.beginPath();
+        ctx.arc(sx, sy, 1, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(236,232,224,${Math.random()*0.3})`;
+        ctx.fill();
+      }
+
+      // Completed jump → becomes a floater + leaves a hole
+      if(j.progress >= 1){
+        floaters.push({
+          x: j.x,
+          y: 0,
+          vx: (Math.random()-0.5)*1.5,
+          phase: Math.random()*Math.PI*2
+        });
+        holes.push({
+          x: j.x + (Math.random()-0.5)*20,
+          vx: (Math.random()-0.5)*0.8,
+          phase: Math.random()*Math.PI*2,
+          life: 1.0
+        });
+        jumpers.splice(i, 1);
+      }
+    }
+
+    // ── Floating conduction electrons ──
+    // Cap floaters to avoid runaway
+    while(floaters.length > 60) floaters.shift();
+    for(const f of floaters){
+      f.x += f.vx;
+      if(f.x < margin + 10 || f.x > margin + bandW - 10) f.vx *= -1;
+      f.x = Math.max(margin+10, Math.min(margin+bandW-10, f.x));
+      const fy = conductionBot - bandHeight*0.3 - Math.sin(time*2 + f.phase)*bandHeight*0.25;
+      ctx.beginPath();
+      ctx.arc(f.x, fy, 3, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(212,168,83,0.7)';
+      ctx.fill();
+      ctx.shadowColor = 'rgba(212,168,83,0.4)';
+      ctx.shadowBlur = 6;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+
+    // ── Holes in valence band ──
+    while(holes.length > 60) holes.shift();
+    for(let i = holes.length - 1; i >= 0; i--){
+      const h = holes[i];
+      h.x += h.vx;
+      h.life -= 0.0008;
+      if(h.life <= 0){ holes.splice(i, 1); continue; }
+      if(h.x < margin + 10 || h.x > margin + bandW - 10) h.vx *= -1;
+      h.x = Math.max(margin+10, Math.min(margin+bandW-10, h.x));
+      const hy = valenceTop + bandHeight*0.35 + Math.sin(time*1.5 + h.phase)*bandHeight*0.15;
+      const alpha = Math.min(h.life, 0.55);
+      // Hole: open circle
+      ctx.beginPath();
+      ctx.arc(h.x, hy, 4, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(196,122,138,${alpha})`;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      // Soft glow
+      ctx.beginPath();
+      ctx.arc(h.x, hy, 7, 0, Math.PI*2);
+      const hg = ctx.createRadialGradient(h.x,hy,2,h.x,hy,8);
+      hg.addColorStop(0, `rgba(196,122,138,${alpha*0.25})`);
+      hg.addColorStop(1, 'transparent');
+      ctx.fillStyle = hg;
+      ctx.fill();
+    }
+
+    // ── Live stats ──
+    document.getElementById('statJump').textContent = jumpers.length;
+    document.getElementById('statBandE').textContent = floaters.length;
+
+    // ── Fermi level indicator (dashed line) ──
+    if(mat.gap > 0){
+      const fermiY = centerY; // mid-gap for intrinsic semiconductor
+      ctx.strokeStyle = 'rgba(236,232,224,0.12)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([6,6]);
+      ctx.beginPath();
+      ctx.moveTo(margin, fermiY);
+      ctx.lineTo(margin + bandW, fermiY);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.font = '9px "JetBrains Mono"';
+      ctx.fillStyle = 'rgba(236,232,224,0.25)';
+      ctx.textAlign = 'right';
+      ctx.fillText('E_F', margin + bandW - 6, fermiY - 5);
+    }
+
+    // ── Energy axis ──
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(margin - 10, conductionBot - bandHeight - 20);
+    ctx.lineTo(margin - 10, valenceTop + bandHeight + 20);
+    ctx.stroke();
+    // Arrow
+    ctx.fillStyle = 'rgba(255,255,255,0.15)';
+    ctx.beginPath();
+    ctx.moveTo(margin - 14, conductionBot - bandHeight - 10);
+    ctx.lineTo(margin - 10, conductionBot - bandHeight - 22);
+    ctx.lineTo(margin - 6, conductionBot - bandHeight - 10);
+    ctx.fill();
+    ctx.font = '10px "JetBrains Mono"';
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.textAlign = 'center';
+    ctx.save();
+    ctx.translate(margin - 25, centerY);
+    ctx.rotate(-Math.PI/2);
+    ctx.fillText('ENERGY', 0, 0);
+    ctx.restore();
+
+    // Material name overlay
+    ctx.font = '300 24px "Fraunces"';
+    ctx.fillStyle = 'rgba(236,232,224,0.12)';
+    ctx.textAlign = 'right';
+    ctx.fillText(mat.name, W - margin, valenceTop + bandHeight + 30);
+
+    animId = requestAnimationFrame(draw);
+  }
+
+  function roundRect(c, x, y, w, h, r){
+    c.beginPath();
+    c.moveTo(x+r,y); c.lineTo(x+w-r,y); c.quadraticCurveTo(x+w,y,x+w,y+r);
+    c.lineTo(x+w,y+h-r); c.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+    c.lineTo(x+r,y+h); c.quadraticCurveTo(x,y+h,x,y+h-r);
+    c.lineTo(x,y+r); c.quadraticCurveTo(x,y,x+r,y);
+    c.closePath();
+  }
+
+  // Observers
+  const obs = new IntersectionObserver(([entry]) => {
+    isVisible = entry.isIntersecting;
+    if(isVisible && !animId){
+      generateFloaters();
+      animId = requestAnimationFrame(draw);
+    }
+  }, { threshold: 0.05 });
+  obs.observe(document.getElementById('ibox2'));
+
+  // Material slider
+  document.getElementById('materialSlider').addEventListener('input', function(){
+    matIdx = parseInt(this.value);
+    generateFloaters();
+    updateStats();
+  });
+
+  // Temperature slider
+  document.getElementById('bandTempSlider').addEventListener('input', function(){
+    bandTemp = parseInt(this.value);
+    generateFloaters();
+    updateStats();
+  });
+
+  // Initial
+  updateStats();
+  generateFloaters();
+
+  // Resize
+  window.addEventListener('resize', () => {
+    W = canvas.clientWidth;
+    ctx = sizeCanvas(canvas, W, H);
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    generateFloaters();
+  });
+
+})();
+
+/* ══════════════════════════════════════════════════════════
+   §3 INTERACTIVE: DOPING SIMULATOR
+   ══════════════════════════════════════════════════════════ */
+(function(){
+  const canvas = document.getElementById('dopingCanvas');
+  let W = canvas.clientWidth, H = 520;
+  let ctx = sizeCanvas(canvas, W, H);
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+
+  const COLS = 10, ROWS = 8;
+  let dopType = 'none'; // 'none', 'n', 'p'
+  let dopConc = 15; // log10 of concentration
+  let animId = null, isVisible = false, time = 0;
+
+  // Lattice
+  const atoms = [];
+  const bonds = [];
+  let carriers = []; // free electrons or holes
+  let dopantIndices = []; // which atoms are dopants
+
+  function buildLattice(){
+    atoms.length = 0; bonds.length = 0;
+    const sx = W / (COLS + 1.5);
+    const sy = (H - 40) / (ROWS + 1);
+    for(let r = 0; r < ROWS; r++){
+      for(let c = 0; c < COLS; c++){
+        const offsetX = (r % 2) ? sx * 0.45 : 0;
+        atoms.push({
+          x: sx * (c + 1) + offsetX,
+          y: sy * (r + 1) + 10,
+          isDopant: false,
+          vibPhase: Math.random() * Math.PI * 2
+        });
+      }
+    }
+    // Connect neighbors
+    for(let a = 0; a < atoms.length; a++){
+      for(let b = a+1; b < atoms.length; b++){
+        const dx = atoms[a].x - atoms[b].x;
+        const dy = atoms[a].y - atoms[b].y;
+        const d = Math.sqrt(dx*dx + dy*dy);
+        if(d < sx * 1.15 && bonds.filter(bo=>bo[0]===a||bo[1]===a).length < 4
+           && bonds.filter(bo=>bo[0]===b||bo[1]===b).length < 4){
+          bonds.push([a, b]);
+        }
+      }
+    }
+  }
+  buildLattice();
+
+  function assignDopants(){
+    atoms.forEach(a => a.isDopant = false);
+    dopantIndices = [];
+    carriers = [];
+
+    if(dopType === 'none'){
+      // Intrinsic: ~1-2 thermal carriers
+      for(let i = 0; i < 2; i++){
+        const idx = Math.floor(Math.random() * atoms.length);
+        carriers.push(makeCarrier(atoms[idx], 'electron'));
+        carriers.push(makeCarrier(atoms[idx], 'hole'));
+      }
+      return;
+    }
+
+    // Dopant fraction: map log concentration to visible dopants
+    // Real: 10^15 in 5×10^22 → 1 in 50 million
+    // Visual: map [12..20] → [1..COLS*ROWS*0.4] dopants for visibility
+    const frac = (dopConc - 12) / (20 - 12); // 0 to 1
+    const numDop = Math.max(1, Math.round(1 + frac * frac * atoms.length * 0.35));
+    const shuffled = [...Array(atoms.length).keys()].sort(() => Math.random() - 0.5);
+    for(let i = 0; i < numDop && i < shuffled.length; i++){
+      const idx = shuffled[i];
+      atoms[idx].isDopant = true;
+      dopantIndices.push(idx);
+    }
+
+    // Generate carriers from dopants
+    for(const idx of dopantIndices){
+      const a = atoms[idx];
+      if(dopType === 'n'){
+        // Phosphorus: extra electron freed
+        carriers.push(makeCarrier(a, 'electron'));
+      } else {
+        // Boron: hole created
+        carriers.push(makeCarrier(a, 'hole'));
+      }
+    }
+  }
+
+  function makeCarrier(atom, type){
+    return {
+      x: atom.x + (Math.random()-0.5)*20,
+      y: atom.y + (Math.random()-0.5)*20,
+      vx: (Math.random()-0.5)*1.8,
+      vy: (Math.random()-0.5)*1.8,
+      type: type,
+      phase: Math.random()*Math.PI*2
+    };
+  }
+
+  function updateStats(){
+    const sup = ['⁰','¹','²','³','⁴','⁵','⁶','⁷','⁸','⁹'];
+    function toSup(n){ return String(n).split('').map(d=>sup[+d]).join(''); }
+    const concStr = '10' + toSup(Math.round(dopConc));
+
+    document.getElementById('statDopant').textContent =
+      dopType === 'n' ? 'P' : dopType === 'p' ? 'B' : 'None';
+    document.getElementById('statDopType').textContent =
+      dopType === 'n' ? 'n-type' : dopType === 'p' ? 'p-type' : 'Intrinsic';
+    document.getElementById('statDopConc').textContent =
+      dopType === 'none' ? '—' : concStr + ' cm⁻³';
+
+    // Resistivity model (rough): intrinsic Si ~2.3×10⁵ Ω·cm
+    // Doped: drops by ~10^(conc-10)/2 orders of magnitude
+    if(dopType === 'none'){
+      document.getElementById('statResist').textContent = '2.3×10⁵ Ω·cm';
+      document.getElementById('statCondChange').textContent = '1×';
+    } else {
+      const logRes = Math.max(-3, 5 - (dopConc - 12) * 1.0);
+      const resStr = logRes >= 0
+        ? '~10' + toSup(Math.round(logRes)) + ' Ω·cm'
+        : '~10⁻' + toSup(Math.abs(Math.round(logRes))) + ' Ω·cm';
+      document.getElementById('statResist').textContent = resStr;
+      const condFactor = Math.pow(10, Math.round(dopConc - 12));
+      const condStr = condFactor >= 1e6
+        ? '~10' + toSup(String(condFactor).length-1) + '×'
+        : '~' + condFactor.toLocaleString() + '×';
+      document.getElementById('statCondChange').textContent = condStr;
+    }
+
+    // Concentration display
+    document.getElementById('dopConcVal').textContent = concStr + ' cm⁻³';
+  }
+
+  function draw(){
+    if(!isVisible){ animId = requestAnimationFrame(draw); return; }
+    time += 0.018;
+    ctx.clearRect(0,0,W,H);
+
+    const vibAmp = 1.5;
+
+    // Draw bonds
+    for(const [a, b] of bonds){
+      const at = atoms[a], bt = atoms[b];
+      const ax = at.x + Math.sin(time*2 + at.vibPhase)*vibAmp;
+      const ay = at.y + Math.cos(time*2.3 + at.vibPhase)*vibAmp;
+      const bx = bt.x + Math.sin(time*2 + bt.vibPhase)*vibAmp;
+      const by = bt.y + Math.cos(time*2.3 + bt.vibPhase)*vibAmp;
+
+      // If either atom is a dopant, the bond is different
+      const dopBond = at.isDopant || bt.isDopant;
+      ctx.beginPath();
+      ctx.moveTo(ax, ay); ctx.lineTo(bx, by);
+      if(dopBond){
+        ctx.strokeStyle = dopType === 'n'
+          ? 'rgba(212,168,83,0.18)' : 'rgba(196,122,138,0.18)';
+        ctx.lineWidth = 1.5;
+      } else {
+        ctx.strokeStyle = 'rgba(138,106,191,0.18)';
+        ctx.lineWidth = 1;
+      }
+      ctx.stroke();
+    }
+
+    // Draw atoms
+    for(let i = 0; i < atoms.length; i++){
+      const a = atoms[i];
+      const ax = a.x + Math.sin(time*2 + a.vibPhase)*vibAmp;
+      const ay = a.y + Math.cos(time*2.3 + a.vibPhase)*vibAmp;
+      const r = 7;
+
+      if(a.isDopant){
+        // Dopant atom: different color, larger glow
+        const col = dopType === 'n' ? '212,168,83' : '196,122,138';
+        const grd = ctx.createRadialGradient(ax,ay,r-2,ax,ay,r+14);
+        grd.addColorStop(0, `rgba(${col},0.35)`);
+        grd.addColorStop(1, 'transparent');
+        ctx.fillStyle = grd;
+        ctx.beginPath(); ctx.arc(ax,ay,r+14,0,Math.PI*2); ctx.fill();
+
+        ctx.beginPath(); ctx.arc(ax,ay,r+1,0,Math.PI*2);
+        ctx.fillStyle = `rgba(${col},0.7)`;
+        ctx.fill();
+
+        // Label
+        ctx.font = '700 9px "JetBrains Mono"';
+        ctx.fillStyle = `rgba(${col},0.9)`;
+        ctx.textAlign = 'center';
+        ctx.fillText(dopType === 'n' ? 'P' : 'B', ax, ay + 3);
+
+        // Show extra electron or missing bond for nearest dopant
+        if(dopType === 'n'){
+          // Extra electron orbit (the one about to break free)
+          const orbitR = r + 8;
+          const angle = time * 1.5 + i;
+          ctx.beginPath();
+          ctx.arc(ax + Math.cos(angle)*orbitR, ay + Math.sin(angle)*orbitR, 2, 0, Math.PI*2);
+          ctx.fillStyle = 'rgba(212,168,83,0.5)';
+          ctx.fill();
+          // Dashed orbit
+          ctx.beginPath();
+          ctx.arc(ax, ay, orbitR, 0, Math.PI*2);
+          ctx.strokeStyle = 'rgba(212,168,83,0.12)';
+          ctx.lineWidth = 0.5;
+          ctx.setLineDash([2,4]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        } else {
+          // Boron: show the missing 4th bond as a dashed stub
+          const stubAngle = a.vibPhase; // consistent direction
+          const sx = ax + Math.cos(stubAngle) * (r+6);
+          const sy = ay + Math.sin(stubAngle) * (r+6);
+          const ex = ax + Math.cos(stubAngle) * (r+18);
+          const ey = ay + Math.sin(stubAngle) * (r+18);
+          ctx.beginPath();
+          ctx.moveTo(sx,sy); ctx.lineTo(ex,ey);
+          ctx.strokeStyle = 'rgba(196,122,138,0.3)';
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([3,3]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+          // "?" at end
+          ctx.font = '8px "Fraunces"';
+          ctx.fillStyle = 'rgba(196,122,138,0.5)';
+          ctx.fillText('?', ex + 2, ey + 3);
+        }
+      } else {
+        // Normal silicon atom
+        const grd = ctx.createRadialGradient(ax,ay,r-2,ax,ay,r+10);
+        grd.addColorStop(0, 'rgba(138,106,191,0.25)');
+        grd.addColorStop(1, 'transparent');
+        ctx.fillStyle = grd;
+        ctx.beginPath(); ctx.arc(ax,ay,r+10,0,Math.PI*2); ctx.fill();
+
+        ctx.beginPath(); ctx.arc(ax,ay,r,0,Math.PI*2);
+        ctx.fillStyle = 'rgba(138,106,191,0.4)';
+        ctx.fill();
+
+        // "Si" label — only show on some for legibility
+        if(i % 7 === 0){
+          ctx.font = '8px "JetBrains Mono"';
+          ctx.fillStyle = 'rgba(138,106,191,0.5)';
+          ctx.textAlign = 'center';
+          ctx.fillText('Si', ax, ay + 3);
+        }
+      }
+    }
+
+    // ── Animate carriers ──
+    for(const c of carriers){
+      c.x += c.vx + Math.sin(time*2.5 + c.phase)*0.4;
+      c.y += c.vy + Math.cos(time*2.2 + c.phase)*0.4;
+      // Bounce
+      if(c.x < 15 || c.x > W-15) c.vx *= -1;
+      if(c.y < 15 || c.y > H-15) c.vy *= -1;
+      c.x = Math.max(15, Math.min(W-15, c.x));
+      c.y = Math.max(15, Math.min(H-15, c.y));
+
+      if(c.type === 'electron'){
+        // Amber filled dot
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, 3.5, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(212,168,83,0.75)';
+        ctx.fill();
+        ctx.shadowColor = 'rgba(212,168,83,0.5)';
+        ctx.shadowBlur = 8;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      } else {
+        // Rose open circle (hole)
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, 4.5, 0, Math.PI*2);
+        ctx.strokeStyle = 'rgba(196,122,138,0.6)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        // Glow
+        const hg = ctx.createRadialGradient(c.x,c.y,2,c.x,c.y,9);
+        hg.addColorStop(0, 'rgba(196,122,138,0.15)');
+        hg.addColorStop(1, 'transparent');
+        ctx.fillStyle = hg;
+        ctx.beginPath(); ctx.arc(c.x,c.y,9,0,Math.PI*2); ctx.fill();
+      }
+    }
+
+    // ── Conductivity bar (bottom) ──
+    const barY = H - 22;
+    const barH = 8;
+    const barX = 60;
+    const barW = W - 120;
+    // Background
+    ctx.fillStyle = 'rgba(255,255,255,0.03)';
+    roundRect3(ctx, barX, barY, barW, barH, 4);
+    ctx.fill();
+    // Fill: map carrier count to bar
+    const fillFrac = Math.min(1, carriers.length / 30);
+    const fillCol = dopType === 'n' ? 'rgba(212,168,83,' : dopType === 'p' ? 'rgba(196,122,138,' : 'rgba(138,106,191,';
+    const bGrad = ctx.createLinearGradient(barX, 0, barX + barW * fillFrac, 0);
+    bGrad.addColorStop(0, fillCol + '0.6)');
+    bGrad.addColorStop(1, fillCol + '0.15)');
+    ctx.fillStyle = bGrad;
+    roundRect3(ctx, barX, barY, barW * fillFrac, barH, 4);
+    ctx.fill();
+    // Labels
+    ctx.font = '8px "JetBrains Mono"';
+    ctx.fillStyle = 'rgba(82,86,106,0.6)';
+    ctx.textAlign = 'left';
+    ctx.fillText('INSULATING', barX, barY - 4);
+    ctx.textAlign = 'right';
+    ctx.fillText('METALLIC', barX + barW, barY - 4);
+    ctx.textAlign = 'center';
+    ctx.fillText('CONDUCTIVITY', barX + barW/2, barY - 4);
+
+    animId = requestAnimationFrame(draw);
+  }
+
+  function roundRect3(c, x, y, w, h, r){
+    if(w < 0) w = 0;
+    c.beginPath();
+    c.moveTo(x+r,y); c.lineTo(x+w-r,y); c.quadraticCurveTo(x+w,y,x+w,y+r);
+    c.lineTo(x+w,y+h-r); c.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+    c.lineTo(x+r,y+h); c.quadraticCurveTo(x,y+h,x,y+h-r);
+    c.lineTo(x,y+r); c.quadraticCurveTo(x,y,x+r,y);
+    c.closePath();
+  }
+
+  // Observers
+  const obs = new IntersectionObserver(([entry]) => {
+    isVisible = entry.isIntersecting;
+    if(isVisible && !animId){
+      assignDopants();
+      animId = requestAnimationFrame(draw);
+    }
+  }, { threshold: 0.05 });
+  obs.observe(document.getElementById('ibox3'));
+
+  // Dopant type buttons
+  ['dopNone','dopN','dopP'].forEach(id => {
+    document.getElementById(id).addEventListener('click', function(){
+      document.querySelectorAll('#ibox3 .ibox-controls button').forEach(b=>b.classList.remove('active'));
+      this.classList.add('active');
+      if(id === 'dopNone') dopType = 'none';
+      else if(id === 'dopN') dopType = 'n';
+      else dopType = 'p';
+      assignDopants();
+      updateStats();
+    });
+  });
+
+  // Concentration slider
+  document.getElementById('dopConc').addEventListener('input', function(){
+    dopConc = parseFloat(this.value);
+    assignDopants();
+    updateStats();
+  });
+
+  // Initial
+  assignDopants();
+  updateStats();
+
+  // Resize
+  window.addEventListener('resize', () => {
+    W = canvas.clientWidth;
+    ctx = sizeCanvas(canvas, W, H);
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    buildLattice();
+    assignDopants();
+  });
+
+})();
+
+/* ══════════════════════════════════════════════════════════
+   §4 INTERACTIVE: P-N JUNCTION EXPLORER
+   ══════════════════════════════════════════════════════════ */
+(function(){
+  const canvas = document.getElementById('pnCanvas');
+  let W = canvas.clientWidth, H = 420;
+  let ctx = sizeCanvas(canvas, W, H);
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+
+  let voltage = 0; // in 0.01V steps internally, slider is -200..80 → -2.00V..0.80V
+  let animId = null, isVisible = false, time = 0;
+  let sweeping = false, sweepV = -200;
+
+  // I-V curve data
+  let ivPoints = [];
+
+  // Carriers
+  let electrons = [];
+  let holes = [];
+  let crossingParticles = []; // particles actively crossing the junction
+
+  const junctionX = () => W * 0.42; // junction line (leave room for I-V plot)
+  const plotX = () => W * 0.72; // I-V plot left edge
+  const regionH = H - 60; // vertical extent of the junction diagram
+  const regionTop = 30;
+
+  function getVoltage(){ return voltage / 100; }
+
+  // Depletion zone half-width (in px) as function of voltage
+  function deplHalf(){
+    const V = getVoltage();
+    const Vbi = 0.7; // built-in potential
+    const baseW = 40; // half-width at equilibrium in px
+    // W ∝ sqrt(Vbi - V) for V < Vbi
+    const effective = Math.max(0.01, Vbi - V);
+    return Math.min(W*0.18, baseW * Math.sqrt(effective / Vbi));
+  }
+
+  // Current (Shockley diode equation)
+  function diodeCurrent(){
+    const V = getVoltage();
+    const Is = 1e-12; // reverse saturation
+    const Vt = 0.026; // thermal voltage at 300K
+    return Is * (Math.exp(V / Vt) - 1);
+  }
+
+  function generateCarriers(){
+    electrons = []; holes = []; crossingParticles = [];
+    const jx = junctionX();
+    const dh = deplHalf();
+    // n-side electrons (right of junction + depletion)
+    for(let i = 0; i < 35; i++){
+      electrons.push({
+        x: jx + dh + 10 + Math.random() * (W*0.26 - dh),
+        y: regionTop + 15 + Math.random() * (regionH - 30),
+        vx: (Math.random()-0.5)*1.2,
+        vy: (Math.random()-0.5)*0.8,
+        phase: Math.random()*Math.PI*2
+      });
+    }
+    // p-side holes (left of junction - depletion)
+    for(let i = 0; i < 35; i++){
+      holes.push({
+        x: 15 + Math.random() * (jx - dh - 25),
+        y: regionTop + 15 + Math.random() * (regionH - 30),
+        vx: (Math.random()-0.5)*1.2,
+        vy: (Math.random()-0.5)*0.8,
+        phase: Math.random()*Math.PI*2
+      });
+    }
+  }
+
+  function updateStats(){
+    const V = getVoltage();
+    const dh = deplHalf();
+    const I = diodeCurrent();
+    document.getElementById('statPNV').textContent = V.toFixed(2) + ' V';
+    document.getElementById('pnVoltVal').textContent = V.toFixed(2) + ' V';
+    document.getElementById('statDepl').textContent = (dh*2/80).toFixed(2) + ' µm';
+
+    let currStr;
+    if(Math.abs(I) < 1e-9) currStr = '~0';
+    else if(I < 1e-6) currStr = (I*1e9).toFixed(1) + ' nA';
+    else if(I < 1e-3) currStr = (I*1e6).toFixed(1) + ' µA';
+    else if(I < 1) currStr = (I*1e3).toFixed(1) + ' mA';
+    else currStr = I.toFixed(1) + ' A';
+    document.getElementById('statCurr').textContent = currStr;
+
+    let state;
+    if(V < -0.05) state = 'Reverse bias';
+    else if(V < 0.3) state = 'Equilibrium';
+    else if(V < 0.55) state = 'Weak forward';
+    else state = 'Forward bias';
+    document.getElementById('statState').textContent = state;
+  }
+
+  function draw(){
+    if(!isVisible){ animId = requestAnimationFrame(draw); return; }
+    time += 0.02;
+    ctx.clearRect(0,0,W,H);
+
+    const V = getVoltage();
+    const jx = junctionX();
+    const dh = deplHalf();
+    const I = diodeCurrent();
+
+    // ── P-type region (left) ── rose tint
+    const pGrad = ctx.createLinearGradient(0,0,jx,0);
+    pGrad.addColorStop(0, 'rgba(196,122,138,0.08)');
+    pGrad.addColorStop(1, 'rgba(196,122,138,0.03)');
+    ctx.fillStyle = pGrad;
+    ctx.fillRect(0, regionTop, jx - dh, regionH);
+
+    // ── N-type region (right) ── amber tint
+    const nGrad = ctx.createLinearGradient(jx,0,W*0.68,0);
+    nGrad.addColorStop(0, 'rgba(212,168,83,0.03)');
+    nGrad.addColorStop(1, 'rgba(212,168,83,0.08)');
+    ctx.fillStyle = nGrad;
+    ctx.fillRect(jx + dh, regionTop, W*0.68 - jx - dh, regionH);
+
+    // ── Depletion zone ──
+    const depGrad = ctx.createLinearGradient(jx-dh,0,jx+dh,0);
+    depGrad.addColorStop(0, 'rgba(196,122,138,0.06)');
+    depGrad.addColorStop(0.5, 'rgba(255,255,255,0.04)');
+    depGrad.addColorStop(1, 'rgba(212,168,83,0.06)');
+    ctx.fillStyle = depGrad;
+    ctx.fillRect(jx - dh, regionTop, dh*2, regionH);
+
+    // Depletion zone borders
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4,4]);
+    ctx.beginPath();
+    ctx.moveTo(jx - dh, regionTop); ctx.lineTo(jx - dh, regionTop + regionH);
+    ctx.moveTo(jx + dh, regionTop); ctx.lineTo(jx + dh, regionTop + regionH);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Junction center line
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(jx, regionTop); ctx.lineTo(jx, regionTop + regionH);
+    ctx.stroke();
+
+    // ── Exposed ion cores in depletion zone ──
+    // p-side: negative ions (boron cores, −)
+    const ionRows = 5;
+    const ionCols = Math.max(1, Math.round(dh / 18));
+    for(let r = 0; r < ionRows; r++){
+      for(let c = 0; c < ionCols; c++){
+        const ix = jx - dh + 6 + c * (dh-6)/Math.max(1,ionCols);
+        const iy = regionTop + 30 + r * (regionH-60)/(ionRows-1);
+        ctx.font = '700 11px "JetBrains Mono"';
+        ctx.fillStyle = 'rgba(196,122,138,0.5)';
+        ctx.textAlign = 'center';
+        ctx.fillText('−', ix, iy + 4);
+      }
+    }
+    // n-side: positive ions (phosphorus cores, +)
+    for(let r = 0; r < ionRows; r++){
+      for(let c = 0; c < ionCols; c++){
+        const ix = jx + 6 + c * (dh-6)/Math.max(1,ionCols);
+        const iy = regionTop + 30 + r * (regionH-60)/(ionRows-1);
+        ctx.font = '700 11px "JetBrains Mono"';
+        ctx.fillStyle = 'rgba(212,168,83,0.5)';
+        ctx.textAlign = 'center';
+        ctx.fillText('+', ix, iy + 4);
+      }
+    }
+
+    // ── Electric field arrow in depletion zone ──
+    if(dh > 15){
+      const ey = regionTop + regionH/2;
+      ctx.strokeStyle = 'rgba(236,232,224,0.2)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(jx + dh - 8, ey);
+      ctx.lineTo(jx - dh + 8, ey);
+      ctx.stroke();
+      // Arrow head pointing left (field from + to -)
+      ctx.fillStyle = 'rgba(236,232,224,0.25)';
+      ctx.beginPath();
+      ctx.moveTo(jx - dh + 8, ey);
+      ctx.lineTo(jx - dh + 16, ey - 5);
+      ctx.lineTo(jx - dh + 16, ey + 5);
+      ctx.fill();
+      ctx.font = '8px "JetBrains Mono"';
+      ctx.fillStyle = 'rgba(236,232,224,0.25)';
+      ctx.textAlign = 'center';
+      ctx.fillText('E-field', jx, ey - 10);
+    }
+
+    // ── Labels ──
+    ctx.font = '11px "JetBrains Mono"';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = 'rgba(196,122,138,0.6)';
+    ctx.fillText('P-TYPE', (jx - dh)/2, regionTop + 16);
+    ctx.fillStyle = 'rgba(212,168,83,0.6)';
+    ctx.fillText('N-TYPE', jx + dh + (W*0.68 - jx - dh)/2, regionTop + 16);
+    ctx.fillStyle = 'rgba(236,232,224,0.3)';
+    ctx.fillText('DEPLETION', jx, regionTop + regionH + 18);
+
+    // ── Animate carriers ──
+    const leftBound = 12;
+    const rightBound = W * 0.67;
+
+    // Spawn crossing particles in forward bias
+    if(V > 0.4 && Math.random() < Math.min(0.4, (V-0.4)*3)){
+      // Electron crosses from n to p
+      crossingParticles.push({
+        x: jx + dh,
+        y: regionTop + 30 + Math.random()*(regionH-60),
+        vx: -2.5 - Math.random()*2,
+        vy: (Math.random()-0.5)*0.6,
+        type: 'electron', life: 1.0
+      });
+      // Hole crosses from p to n
+      crossingParticles.push({
+        x: jx - dh,
+        y: regionTop + 30 + Math.random()*(regionH-60),
+        vx: 2.5 + Math.random()*2,
+        vy: (Math.random()-0.5)*0.6,
+        type: 'hole', life: 1.0
+      });
+    }
+
+    // Update & draw crossing particles
+    for(let i = crossingParticles.length - 1; i >= 0; i--){
+      const p = crossingParticles[i];
+      p.x += p.vx; p.y += p.vy; p.life -= 0.015;
+      if(p.life <= 0 || p.x < leftBound || p.x > rightBound){
+        crossingParticles.splice(i, 1); continue;
+      }
+      if(p.type === 'electron'){
+        ctx.beginPath(); ctx.arc(p.x, p.y, 3, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(212,168,83,${p.life*0.8})`;
+        ctx.fill();
+        ctx.shadowColor = 'rgba(212,168,83,0.5)'; ctx.shadowBlur = 10;
+        ctx.fill(); ctx.shadowBlur = 0;
+      } else {
+        ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI*2);
+        ctx.strokeStyle = `rgba(196,122,138,${p.life*0.7})`;
+        ctx.lineWidth = 1.5; ctx.stroke();
+      }
+    }
+
+    // n-side electrons — repelled from depletion zone
+    for(const e of electrons){
+      e.x += e.vx + Math.sin(time*1.8 + e.phase)*0.3;
+      e.y += e.vy + Math.cos(time*1.6 + e.phase)*0.3;
+      // Bounce off walls and depletion zone
+      const eLeftWall = jx + dh + 5;
+      if(e.x < eLeftWall){ e.x = eLeftWall; e.vx = Math.abs(e.vx)*0.8 + 0.2; }
+      if(e.x > rightBound){ e.x = rightBound; e.vx *= -1; }
+      if(e.y < regionTop + 10){ e.y = regionTop + 10; e.vy *= -1; }
+      if(e.y > regionTop + regionH - 10){ e.y = regionTop + regionH - 10; e.vy *= -1; }
+      ctx.beginPath(); ctx.arc(e.x, e.y, 2.5, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(212,168,83,0.55)';
+      ctx.fill();
+    }
+
+    // p-side holes — repelled from depletion zone
+    for(const h of holes){
+      h.x += h.vx + Math.sin(time*1.6 + h.phase)*0.3;
+      h.y += h.vy + Math.cos(time*1.9 + h.phase)*0.3;
+      const hRightWall = jx - dh - 5;
+      if(h.x > hRightWall){ h.x = hRightWall; h.vx = -Math.abs(h.vx)*0.8 - 0.2; }
+      if(h.x < leftBound){ h.x = leftBound; h.vx *= -1; }
+      if(h.y < regionTop + 10){ h.y = regionTop + 10; h.vy *= -1; }
+      if(h.y > regionTop + regionH - 10){ h.y = regionTop + regionH - 10; h.vy *= -1; }
+      ctx.beginPath(); ctx.arc(h.x, h.y, 3, 0, Math.PI*2);
+      ctx.strokeStyle = 'rgba(196,122,138,0.45)';
+      ctx.lineWidth = 1; ctx.stroke();
+    }
+
+    // ═══ I-V CURVE (right panel) ═══
+    const px = plotX(), pw = W - px - 15, ph = regionH - 20;
+    const pTop = regionTop + 10;
+    const pCx = px + pw * 0.4; // V=0 position
+    const pCy = pTop + ph * 0.65; // I=0 position
+
+    // Axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(px, pCy); ctx.lineTo(px + pw, pCy); // V axis
+    ctx.moveTo(pCx, pTop); ctx.lineTo(pCx, pTop + ph); // I axis
+    ctx.stroke();
+    // Labels
+    ctx.font = '8px "JetBrains Mono"';
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.textAlign = 'right';
+    ctx.fillText('I', pCx - 4, pTop + 6);
+    ctx.textAlign = 'left';
+    ctx.fillText('V', px + pw - 2, pCy - 4);
+
+    // Draw the ideal diode curve
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(138,106,191,0.2)';
+    ctx.lineWidth = 1;
+    for(let pxV = -2.0; pxV <= 0.8; pxV += 0.01){
+      const Idiode = 1e-12 * (Math.exp(pxV/0.026) - 1);
+      const screenX = pCx + (pxV / 0.8) * (pw * 0.55);
+      const screenY = pCy - Math.min(ph*0.6, Math.max(-ph*0.15, Idiode * 2e4));
+      if(pxV === -2.0) ctx.moveTo(screenX, screenY);
+      else ctx.lineTo(screenX, screenY);
+    }
+    ctx.stroke();
+
+    // Current marker on curve
+    const markerX = pCx + (V / 0.8) * (pw * 0.55);
+    const markerI = diodeCurrent();
+    const markerY = pCy - Math.min(ph*0.6, Math.max(-ph*0.15, markerI * 2e4));
+    ctx.beginPath(); ctx.arc(markerX, markerY, 5, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(201,168,76,0.8)';
+    ctx.fill();
+    ctx.shadowColor = 'rgba(201,168,76,0.5)'; ctx.shadowBlur = 10;
+    ctx.fill(); ctx.shadowBlur = 0;
+
+    // Traced I-V points (from sweep)
+    if(ivPoints.length > 1){
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(201,168,76,0.6)';
+      ctx.lineWidth = 2;
+      for(let i = 0; i < ivPoints.length; i++){
+        const p = ivPoints[i];
+        const sx = pCx + (p.v / 0.8) * (pw * 0.55);
+        const sy = pCy - Math.min(ph*0.6, Math.max(-ph*0.15, p.i * 2e4));
+        if(i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+      }
+      ctx.stroke();
+    }
+
+    // I-V plot labels
+    ctx.font = '7px "JetBrains Mono"';
+    ctx.fillStyle = 'rgba(255,255,255,0.15)';
+    ctx.textAlign = 'center';
+    ctx.fillText('I-V CURVE', px + pw/2, pTop + ph + 14);
+    // Voltage tick marks
+    for(const vt of [-1.5, -1, -0.5, 0.5]){
+      const tx = pCx + (vt / 0.8) * (pw * 0.55);
+      if(tx > px && tx < px+pw){
+        ctx.fillText(vt.toFixed(1), tx, pCy + 12);
+      }
+    }
+
+    // Auto-sweep
+    if(sweeping){
+      sweepV += 2;
+      if(sweepV > 80){ sweeping = false; }
+      else {
+        voltage = sweepV;
+        document.getElementById('pnVoltage').value = voltage;
+        const sv = sweepV/100;
+        const si = 1e-12 * (Math.exp(sv/0.026)-1);
+        ivPoints.push({ v: sv, i: si });
+        generateCarriers();
+        updateStats();
+      }
+    }
+
+    animId = requestAnimationFrame(draw);
+  }
+
+  // Observers
+  const obs = new IntersectionObserver(([entry]) => {
+    isVisible = entry.isIntersecting;
+    if(isVisible && !animId){
+      generateCarriers();
+      animId = requestAnimationFrame(draw);
+    }
+  }, { threshold: 0.05 });
+  obs.observe(document.getElementById('ibox4'));
+
+  // Voltage slider
+  document.getElementById('pnVoltage').addEventListener('input', function(){
+    voltage = parseInt(this.value);
+    generateCarriers();
+    updateStats();
+  });
+
+  // Sweep button
+  document.getElementById('pnSweep').addEventListener('click', function(){
+    ivPoints = [];
+    sweepV = -200;
+    sweeping = true;
+  });
+
+  // Reset
+  document.getElementById('pnReset').addEventListener('click', function(){
+    voltage = 0;
+    document.getElementById('pnVoltage').value = 0;
+    ivPoints = [];
+    sweeping = false;
+    generateCarriers();
+    updateStats();
+  });
+
+  // Initial
+  generateCarriers();
+  updateStats();
+
+  // Resize
+  window.addEventListener('resize', () => {
+    W = canvas.clientWidth;
+    ctx = sizeCanvas(canvas, W, H);
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    generateCarriers();
+  });
+
+})();
+
+/* ══════════════════════════════════════════════════════════
+   §5 INTERACTIVE: MOORE'S LAW + QUANTUM TUNNELING
+   ══════════════════════════════════════════════════════════ */
+(function(){
+  const canvas = document.getElementById('mooreCanvas');
+  let W = canvas.clientWidth, H = 500;
+  let ctx = sizeCanvas(canvas, W, H);
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+
+  let barrierWidth = 15; // nm
+  let particleEnergy = 40; // % of barrier height
+  let animId = null, isVisible = false, time = 0;
+
+  // Moore's Law data: [year, name, transistors, process_nm]
+  const chips = [
+    [1971, '4004',            2300,         10000],
+    [1974, '8080',            4500,         6000],
+    [1978, '8086',            29000,        3000],
+    [1982, '80286',           134000,       1500],
+    [1985, '386',             275000,       1500],
+    [1989, '486',             1200000,      1000],
+    [1993, 'Pentium',         3100000,      800],
+    [1997, 'Pentium II',      7500000,      350],
+    [1999, 'Pentium III',     9500000,      250],
+    [2000, 'Pentium 4',       42000000,     180],
+    [2004, 'Prescott',        125000000,    90],
+    [2006, 'Core 2',          291000000,    65],
+    [2008, 'Atom',            47000000,     45],
+    [2010, 'Westmere',        1170000000,   32],
+    [2012, 'Ivy Bridge',      1400000000,   22],
+    [2015, 'Skylake',         1750000000,   14],
+    [2017, 'A11 Bionic',      4300000000,   10],
+    [2020, 'M1',              16000000000,  5],
+    [2022, 'M2',              20000000000,  5],
+    [2023, 'M2 Ultra',        134000000000, 5],
+    [2024, 'M4',              28000000000,  3],
+  ];
+
+  const yearMin = 1968, yearMax = 2028;
+  const logMin = 3, logMax = 12; // log10 of transistor count
+
+  // Barrier → approximate Moore's Law year
+  function barrierToYear(){
+    // Map barrier nm to approximate process year
+    if(barrierWidth >= 25) return 1985;
+    if(barrierWidth >= 15) return 2000;
+    if(barrierWidth >= 10) return 2008;
+    if(barrierWidth >= 7) return 2012;
+    if(barrierWidth >= 5) return 2017;
+    if(barrierWidth >= 3) return 2022;
+    if(barrierWidth >= 2) return 2025;
+    return 2026;
+  }
+
+  // Tunneling probability: T ≈ exp(-2κd)
+  // κ = sqrt(2m(V-E)) / ℏ, simplified to unitless model
+  function tunnelingProb(){
+    const V0 = 1.0; // barrier height (normalized)
+    const E = particleEnergy / 100 * V0;
+    if(E >= V0) return 1.0;
+    const kappa = Math.sqrt(V0 - E) * 2.0; // coupling strength
+    const d = barrierWidth; // nm
+    const T = Math.exp(-2 * kappa * d * 0.3); // 0.3 is a scaling factor for visual clarity
+    return Math.min(1, T);
+  }
+
+  function updateStats(){
+    const T = tunnelingProb();
+    document.getElementById('statBarrier').textContent = barrierWidth.toFixed(1) + ' nm';
+    document.getElementById('barrierVal').textContent = barrierWidth.toFixed(1) + ' nm';
+    document.getElementById('energyVal').textContent = particleEnergy + '%';
+
+    let tStr;
+    if(T > 0.5) tStr = (T*100).toFixed(0) + '%';
+    else if(T > 0.01) tStr = (T*100).toFixed(1) + '%';
+    else if(T > 0.0001) tStr = (T*100).toFixed(3) + '%';
+    else tStr = '<0.001%';
+    document.getElementById('statTunnel').textContent = tStr;
+
+    const yr = barrierToYear();
+    document.getElementById('statMooreYear').textContent = '~' + yr;
+
+    let leak;
+    if(T > 0.3) leak = 'Critical';
+    else if(T > 0.05) leak = 'Severe';
+    else if(T > 0.005) leak = 'Moderate';
+    else if(T > 0.0005) leak = 'Low';
+    else leak = 'Negligible';
+    document.getElementById('statLeak').textContent = leak;
+  }
+
+  // Wavepacket animation state
+  let wavePhase = 0;
+
+  function draw(){
+    if(!isVisible){ animId = requestAnimationFrame(draw); return; }
+    time += 0.02;
+    wavePhase += 0.06;
+    ctx.clearRect(0,0,W,H);
+
+    // ═══ LEFT PANEL: MOORE'S LAW TIMELINE ═══
+    const mW = W * 0.42, mH = H - 60, mL = 50, mT = 30;
+    const mR = mL + mW, mB = mT + mH;
+
+    // Background grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+    ctx.lineWidth = 1;
+    for(let y = logMin; y <= logMax; y++){
+      const py = mB - ((y - logMin) / (logMax - logMin)) * mH;
+      ctx.beginPath(); ctx.moveTo(mL, py); ctx.lineTo(mR, py); ctx.stroke();
+    }
+    for(let yr = 1970; yr <= 2030; yr += 10){
+      const px = mL + ((yr - yearMin) / (yearMax - yearMin)) * mW;
+      ctx.beginPath(); ctx.moveTo(px, mT); ctx.lineTo(px, mB); ctx.stroke();
+    }
+
+    // Axes
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.beginPath();
+    ctx.moveTo(mL, mT); ctx.lineTo(mL, mB); ctx.lineTo(mR, mB);
+    ctx.stroke();
+
+    // Axis labels
+    ctx.font = '8px "JetBrains Mono"';
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.textAlign = 'center';
+    for(let yr = 1970; yr <= 2025; yr += 10){
+      const px = mL + ((yr - yearMin) / (yearMax - yearMin)) * mW;
+      ctx.fillText(yr, px, mB + 14);
+    }
+    ctx.textAlign = 'right';
+    const labels = ['1K','10K','100K','1M','10M','100M','1B','10B','100B','1T'];
+    for(let y = logMin; y <= logMax; y++){
+      const py = mB - ((y - logMin) / (logMax - logMin)) * mH;
+      ctx.fillText(labels[y - logMin] || '', mL - 6, py + 3);
+    }
+
+    // Moore's Law trend line (doubling every 2 years from 1971)
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(138,106,191,0.2)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4,4]);
+    for(let yr = 1971; yr <= 2028; yr += 0.5){
+      const logT = Math.log10(2300) + (yr - 1971) * Math.log10(2) / 2;
+      const px = mL + ((yr - yearMin) / (yearMax - yearMin)) * mW;
+      const py = mB - ((logT - logMin) / (logMax - logMin)) * mH;
+      if(yr === 1971) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // "Physics limit" zone (right side, fading red)
+    const limitYear = 2020;
+    const limitX = mL + ((limitYear - yearMin) / (yearMax - yearMin)) * mW;
+    const lgr = ctx.createLinearGradient(limitX, 0, mR, 0);
+    lgr.addColorStop(0, 'transparent');
+    lgr.addColorStop(1, 'rgba(196,122,138,0.06)');
+    ctx.fillStyle = lgr;
+    ctx.fillRect(limitX, mT, mR - limitX, mH);
+    ctx.font = '8px "JetBrains Mono"';
+    ctx.fillStyle = 'rgba(196,122,138,0.35)';
+    ctx.textAlign = 'right';
+    ctx.fillText('QUANTUM LIMITS', mR - 4, mT + 14);
+
+    // Plot chips
+    for(const [yr, name, count, nm] of chips){
+      const logT = Math.log10(count);
+      const px = mL + ((yr - yearMin) / (yearMax - yearMin)) * mW;
+      const py = mB - ((logT - logMin) / (logMax - logMin)) * mH;
+
+      // Glow
+      const g = ctx.createRadialGradient(px,py,1,px,py,8);
+      g.addColorStop(0, nm >= 2020 ? 'rgba(196,122,138,0.4)' : 'rgba(201,168,76,0.4)');
+      g.addColorStop(1, 'transparent');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(px,py,8,0,Math.PI*2); ctx.fill();
+
+      // Dot
+      ctx.beginPath(); ctx.arc(px,py,3,0,Math.PI*2);
+      ctx.fillStyle = yr >= 2020 ? 'rgba(196,122,138,0.8)' : 'rgba(201,168,76,0.8)';
+      ctx.fill();
+
+      // Label (stagger to avoid overlap)
+      const labelUp = chips.indexOf(chips.find(c=>c[0]===yr)) % 2 === 0;
+      ctx.font = '7px "JetBrains Mono"';
+      ctx.fillStyle = 'rgba(236,232,224,0.35)';
+      ctx.textAlign = 'center';
+      ctx.fillText(name, px, labelUp ? py - 10 : py + 14);
+    }
+
+    // Barrier width marker on timeline
+    const markerYear = barrierToYear();
+    const markerX = mL + ((markerYear - yearMin) / (yearMax - yearMin)) * mW;
+    ctx.strokeStyle = 'rgba(201,168,76,0.4)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.moveTo(markerX, mT); ctx.lineTo(markerX, mB); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.font = '8px "JetBrains Mono"';
+    ctx.fillStyle = 'rgba(201,168,76,0.6)';
+    ctx.textAlign = 'center';
+    ctx.fillText('≈ ' + barrierWidth.toFixed(0) + ' nm node', markerX, mT - 4);
+
+    // Title
+    ctx.font = '300 11px "Fraunces"';
+    ctx.fillStyle = 'rgba(236,232,224,0.3)';
+    ctx.textAlign = 'center';
+    ctx.fillText("MOORE'S LAW", mL + mW/2, mB + 32);
+
+    // ═══ RIGHT PANEL: QUANTUM TUNNELING ═══
+    const tL = W * 0.52, tW = W * 0.44, tH = H - 100, tT = 50;
+    const tB = tT + tH;
+    const tCenterY = tT + tH * 0.5;
+
+    // Barrier position and size
+    const barrierCx = tL + tW * 0.5;
+    const barrierPxW = Math.max(4, barrierWidth * 3.5); // visual width
+    const barrierLeft = barrierCx - barrierPxW/2;
+    const barrierRight = barrierCx + barrierPxW/2;
+    const barrierH = tH * 0.55;
+    const barrierTop = tCenterY - barrierH/2;
+    const barrierBot = tCenterY + barrierH/2;
+
+    // Draw barrier — glass-like with inner structure
+    const bGrad = ctx.createLinearGradient(barrierLeft, 0, barrierRight, 0);
+    bGrad.addColorStop(0, 'rgba(138,106,191,0.08)');
+    bGrad.addColorStop(0.3, 'rgba(138,106,191,0.22)');
+    bGrad.addColorStop(0.7, 'rgba(138,106,191,0.22)');
+    bGrad.addColorStop(1, 'rgba(138,106,191,0.08)');
+    ctx.fillStyle = bGrad;
+    ctx.fillRect(barrierLeft, barrierTop, barrierPxW, barrierH);
+    // Inner vertical lines hinting at crystal planes
+    ctx.strokeStyle = 'rgba(138,106,191,0.08)';
+    ctx.lineWidth = 0.5;
+    const planeSpacing = Math.max(6, barrierPxW / 8);
+    for(let px = barrierLeft + planeSpacing; px < barrierRight; px += planeSpacing){
+      ctx.beginPath(); ctx.moveTo(px, barrierTop); ctx.lineTo(px, barrierBot); ctx.stroke();
+    }
+    // Edge glow
+    ctx.strokeStyle = 'rgba(138,106,191,0.35)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(barrierLeft, barrierTop); ctx.lineTo(barrierLeft, barrierBot); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(barrierRight, barrierTop); ctx.lineTo(barrierRight, barrierBot); ctx.stroke();
+    // Top/bottom edges
+    ctx.strokeStyle = 'rgba(138,106,191,0.2)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(barrierLeft, barrierTop); ctx.lineTo(barrierRight, barrierTop); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(barrierLeft, barrierBot); ctx.lineTo(barrierRight, barrierBot); ctx.stroke();
+    // Label
+    ctx.font = '8px "JetBrains Mono"';
+    ctx.fillStyle = 'rgba(138,106,191,0.5)';
+    ctx.textAlign = 'center';
+    ctx.fillText('BARRIER', barrierCx, barrierTop - 6);
+    ctx.fillText(barrierWidth.toFixed(1) + ' nm', barrierCx, barrierBot + 14);
+
+    // Energy level line
+    const energyY = tCenterY + barrierH/2 * (1 - particleEnergy/50);
+    ctx.strokeStyle = 'rgba(212,168,83,0.15)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(tL, energyY); ctx.lineTo(tL+tW, energyY); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.font = '7px "JetBrains Mono"';
+    ctx.fillStyle = 'rgba(212,168,83,0.3)';
+    ctx.textAlign = 'left';
+    ctx.fillText('E', tL + 2, energyY - 4);
+
+    // ── Wavefunction ──
+    const T = tunnelingProb();
+    const kappa = Math.sqrt(Math.max(0.01, 1 - particleEnergy/100)) * 2.0;
+
+    // Incoming wave (left of barrier) — filled area + stroke
+    const incAmp = 50;
+    const waveK = 0.08;
+
+    // Area fill (glow under the wave)
+    ctx.beginPath();
+    ctx.moveTo(tL + 10, energyY);
+    for(let x = tL + 10; x < barrierLeft; x += 1){
+      const phase = waveK * (x - tL) - wavePhase;
+      const amp = incAmp * Math.cos(phase);
+      const envelope = 1 - Math.exp(-(x - tL - 10)*0.03);
+      ctx.lineTo(x, energyY - amp * envelope);
+    }
+    ctx.lineTo(barrierLeft, energyY);
+    ctx.closePath();
+    const incFill = ctx.createLinearGradient(0, energyY - incAmp, 0, energyY + incAmp);
+    incFill.addColorStop(0, 'rgba(212,168,83,0.12)');
+    incFill.addColorStop(0.5, 'rgba(212,168,83,0.02)');
+    incFill.addColorStop(1, 'rgba(212,168,83,0.12)');
+    ctx.fillStyle = incFill;
+    ctx.fill();
+
+    // Stroke
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(212,168,83,0.8)';
+    ctx.lineWidth = 2.5;
+    ctx.shadowColor = 'rgba(212,168,83,0.35)';
+    ctx.shadowBlur = 8;
+    for(let x = tL + 10; x < barrierLeft; x += 1){
+      const phase = waveK * (x - tL) - wavePhase;
+      const amp = incAmp * Math.cos(phase);
+      const envelope = 1 - Math.exp(-(x - tL - 10)*0.03);
+      const y = energyY - amp * envelope;
+      if(x === tL + 10) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Wave inside barrier (exponential decay) — dimming stroke
+    ctx.beginPath();
+    const ampAtBarrier = incAmp;
+    for(let x = barrierLeft; x < barrierRight; x += 1){
+      const frac = (x - barrierLeft) / barrierPxW;
+      const decayFactor = Math.exp(-kappa * frac * barrierPxW * 0.12);
+      const phase = waveK * (x - tL) - wavePhase;
+      const amp = ampAtBarrier * decayFactor * Math.cos(phase);
+      const y = energyY - amp;
+      if(x === barrierLeft) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = 'rgba(212,168,83,0.45)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Transmitted wave (right of barrier) — glowing emergence
+    const transAmp = incAmp * Math.sqrt(T);
+    if(transAmp > 0.3){
+      // Area fill
+      ctx.beginPath();
+      ctx.moveTo(barrierRight, energyY);
+      for(let x = barrierRight; x < tL + tW - 10; x += 1){
+        const phase = waveK * (x - tL) - wavePhase;
+        const fadeOut = 1 - Math.max(0, (x - tL - tW + 40)*0.02);
+        const amp = transAmp * Math.cos(phase) * Math.max(0, fadeOut);
+        ctx.lineTo(x, energyY - amp);
+      }
+      ctx.lineTo(tL + tW - 10, energyY);
+      ctx.closePath();
+      const transFill = ctx.createLinearGradient(0, energyY - transAmp, 0, energyY + transAmp);
+      transFill.addColorStop(0, `rgba(212,168,83,${Math.min(0.15, T*0.4)})`);
+      transFill.addColorStop(0.5, 'rgba(212,168,83,0.01)');
+      transFill.addColorStop(1, `rgba(212,168,83,${Math.min(0.15, T*0.4)})`);
+      ctx.fillStyle = transFill;
+      ctx.fill();
+
+      // Stroke with glow
+      ctx.beginPath();
+      const tAlpha = Math.min(0.8, T * 2.5 + 0.15);
+      ctx.strokeStyle = `rgba(212,168,83,${tAlpha})`;
+      ctx.lineWidth = 2;
+      ctx.shadowColor = `rgba(212,168,83,${tAlpha * 0.5})`;
+      ctx.shadowBlur = 12;
+      for(let x = barrierRight; x < tL + tW - 10; x += 1){
+        const phase = waveK * (x - tL) - wavePhase;
+        const fadeOut = 1 - Math.max(0, (x - tL - tW + 40)*0.02);
+        const amp = transAmp * Math.cos(phase) * Math.max(0, fadeOut);
+        const y = energyY - amp;
+        if(x === barrierRight) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    }
+
+    // Reflected wave (interference on left) — fainter, going backwards
+    const reflAmp = incAmp * Math.sqrt(1 - T) * 0.3;
+    if(reflAmp > 1){
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(196,122,138,0.2)';
+      ctx.lineWidth = 1;
+      for(let x = barrierLeft; x > tL + 10; x -= 1){
+        const phase = -waveK * (x - tL) - wavePhase;
+        const envelope = 1 - Math.exp(-(barrierLeft - x)*0.015);
+        const amp = reflAmp * Math.cos(phase) * envelope;
+        const y = energyY - amp - 2;
+        if(x === barrierLeft) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+
+    // ── Probability indicator ──
+    const probBarX = tL + tW * 0.1;
+    const probBarW = tW * 0.8;
+    const probBarY = tB + 20;
+    const probBarH = 6;
+    // Background
+    ctx.fillStyle = 'rgba(255,255,255,0.03)';
+    roundRect4(ctx, probBarX, probBarY, probBarW, probBarH, 3);
+    ctx.fill();
+    // Fill
+    const pbGrad = ctx.createLinearGradient(probBarX, 0, probBarX + probBarW * Math.min(1, T), 0);
+    pbGrad.addColorStop(0, 'rgba(212,168,83,0.6)');
+    pbGrad.addColorStop(1, T > 0.3 ? 'rgba(196,122,138,0.6)' : 'rgba(212,168,83,0.2)');
+    ctx.fillStyle = pbGrad;
+    roundRect4(ctx, probBarX, probBarY, probBarW * Math.min(1, T), probBarH, 3);
+    ctx.fill();
+    ctx.font = '7px "JetBrains Mono"';
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+    ctx.textAlign = 'center';
+    ctx.fillText('TUNNELING PROBABILITY', tL + tW/2, probBarY - 4);
+
+    // Title
+    ctx.font = '300 11px "Fraunces"';
+    ctx.fillStyle = 'rgba(236,232,224,0.3)';
+    ctx.textAlign = 'center';
+    ctx.fillText('QUANTUM TUNNELING', tL + tW/2, tT - 16);
+
+    // Direction arrows
+    ctx.font = '8px "JetBrains Mono"';
+    ctx.fillStyle = 'rgba(212,168,83,0.3)';
+    ctx.textAlign = 'left';
+    ctx.fillText('→ incident', tL + 10, tT + 4);
+    if(transAmp > 2){
+      ctx.textAlign = 'right';
+      ctx.fillText('transmitted →', tL + tW - 10, tT + 4);
+    }
+
+    animId = requestAnimationFrame(draw);
+  }
+
+  function roundRect4(c, x, y, w, h, r){
+    if(w < 1) w = 1;
+    c.beginPath();
+    c.moveTo(x+r,y); c.lineTo(x+w-r,y); c.quadraticCurveTo(x+w,y,x+w,y+r);
+    c.lineTo(x+w,y+h-r); c.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+    c.lineTo(x+r,y+h); c.quadraticCurveTo(x,y+h,x,y+h-r);
+    c.lineTo(x,y+r); c.quadraticCurveTo(x,y,x+r,y);
+    c.closePath();
+  }
+
+  // Observer
+  const obs = new IntersectionObserver(([entry]) => {
+    isVisible = entry.isIntersecting;
+    if(isVisible && !animId){
+      animId = requestAnimationFrame(draw);
+    }
+  }, { threshold: 0.05 });
+  obs.observe(document.getElementById('ibox5'));
+
+  // Barrier slider
+  document.getElementById('barrierSlider').addEventListener('input', function(){
+    barrierWidth = parseFloat(this.value);
+    updateStats();
+  });
+
+  // Energy slider
+  document.getElementById('energySlider').addEventListener('input', function(){
+    particleEnergy = parseInt(this.value);
+    updateStats();
+  });
+
+  // Reset
+  document.getElementById('mooreReset').addEventListener('click', function(){
+    barrierWidth = 15; particleEnergy = 40;
+    document.getElementById('barrierSlider').value = 15;
+    document.getElementById('energySlider').value = 40;
+    updateStats();
+  });
+
+  // Initial
+  updateStats();
+
+  // Resize
+  window.addEventListener('resize', () => {
+    W = canvas.clientWidth;
+    ctx = sizeCanvas(canvas, W, H);
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  });
+
+})();
+
+/* ── Narration bar toggle ── */
+(function(){
+  const toggle = document.getElementById('narrToggle');
+  const bar = document.getElementById('narrBar');
+  let open = false;
+  toggle.addEventListener('click', () => {
+    open = !open;
+    bar.classList.toggle('show', open);
+  });
+})();
+
+</script>
+</body>
+</html>

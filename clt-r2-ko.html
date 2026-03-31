@@ -741,10 +741,10 @@
       </p>
 
       <div class="ibox">
-        <div class="ibox-label"><div class="pulse-dot"></div> Interactive Module</div>
-        <h3 class="ibox-title">The Quincunx Engine</h3>
+        <div class="ibox-label"><div class="pulse-dot"></div> 인터랙티브 모듈</div>
+        <h3 class="ibox-title">퀴컨퀝스 엔진</h3>
         <p class="ibox-desc">
-          A high-performance physics simulation of Galton’s board. Adjust the drop rate to unleash a flood of independent particles. Alter the probability bias to simulate a weighted coin. Watch as the glowing theoretical bell curve perfectly maps the exact shape of the accumulating chaos.
+          골턴 보드의 고성능 물리 시뮬레이션. 낙하 속도를 조절하여 독립 입자의 홍수를 쏟아내 보라. 확률 편향을 바꿈 가중된 동전을 시뮬레이션해 보라. 빛나는 이론적 종형 곡선이 축적되는 혼돈의 정확한 형태를 완벽하게 그려내는 것을 지켜보라.
         </p>
 
         <div class="ibox-canvas-container">
@@ -754,30 +754,30 @@
         <div class="ibox-controls">
           <div class="control-group">
             <div class="control-header">
-              <span>Drop Rate</span>
-              <span class="control-val" id="val-rate">Steady</span>
+              <span>낙하 속도</span>
+              <span class="control-val" id="val-rate">보통</span>
             </div>
             <input type="range" id="slider-rate" min="1" max="25" value="5">
           </div>
           
           <div class="control-group">
             <div class="control-header">
-              <span>Probability Bias</span>
-              <span class="control-val" id="val-bias">Center</span>
+              <span>확률 편향</span>
+              <span class="control-val" id="val-bias">중앙</span>
             </div>
             <input type="range" id="slider-bias" min="0.1" max="0.9" step="0.01" value="0.5">
           </div>
 
-          <button class="btn" id="btn-reset" style="margin-left: auto;">Clear Board</button>
+          <button class="btn" id="btn-reset" style="margin-left: auto;">보드 초기화</button>
         </div>
 
         <div class="ibox-stats">
           <div class="stat-card">
-            <span class="stat-label">Total Drops</span>
+            <span class="stat-label">총 낙하 수</span>
             <span class="stat-value" id="stat-total">0</span>
           </div>
           <div class="stat-card">
-            <span class="stat-label">Expected Peak</span>
+            <span class="stat-label">예상 피크</span>
             <span class="stat-value" id="stat-peak">-</span>
           </div>
         </div>
@@ -786,45 +786,45 @@
 
     <section class="chapter-section" id="section-2">
       <span class="sec-num">02</span>
-      <h2 class="sec-title">The Universal Eraser</h2>
+      <h2 class="sec-title">보편적 지우개</h2>
       
       <p class="prose prose-drop">
-        The anatomy of a coin toss is a story of perfect symmetry. But the deepest magic of the Central Limit Theorem is its terrifying mathematical amnesia. The law does not require symmetry. It does not require fairness. It requires nothing but sheer independence. No matter how unnatural, jagged, or wildly skewed the original probabilities are, the act of adding them together violently scrubs away their unique histories.
+        동전 던지기의 해부학은 완벽한 대칭의 이야기다. 그러나 중심극한정리의 가장 깊은 마법은 그 소름끼치는 수학적 기억상실에 있다. 이 법칙은 대칭을 요구하지 않는다. 공정함도 요구하지 않는다. 오직 순수한 독립성만을 요구한다. 원래 확률이 아무리 부자연스럽거나, 들쭉날쭉하거나, 극단적으로 치우쳐 있어도, 그것들을 더하는 행위가 그들의 고유한 역사를 난폭하게 지워버린다.
       </p>
       
       <p class="prose">
-        When the brilliant French mathematician Pierre-Simon Laplace turned his eyes from the mechanics of the heavens to the mathematics of probability, he realized something profound. Whether you are measuring the minute errors of astronomical telescopes, the distribution of human heights, or the chaos of rolling a bizarrely loaded die, the underlying shape of the individual events simply stops mattering. Laplace saw that the theorem acts as a <span class="hi">mathematical black hole</span>, annihilating all initial information until only the pristine bell remains.
+        프랑스의 천재 수학자 피에르시몽 라플라스가 천체역학에서 확률의 수학으로 시선을 돌렸을 때, 그는 심오한 사실을 깨달았다. 천문 망원경의 미세한 오차를 측정하든, 인간 키의 분포를 살펴보든, 기괴하게 가중된 주사위를 굴리는 혼돈이든, 개별 사건의 기저 형태는 단순히 더 이상 중요하지 않게 된다. 라플라스는 이 정리가 <span class="hi">수학적 블랙홀</span>처럼 작용하여, 깨끗한 종형 곡선만 남을 때까지 모든 초기 정보를 소멸시킨다는 것을 간파했다.
       </p>
       
       <div class="pull-quote">
-        All history is lost;<br>only the bell remains.
+        모든 역사는 사라지고,<br>오직 종형 곡선만 남는다.
       </div>
       
       <p class="prose">
-        This mathematical blending is known as <span class="ac">convolution</span>. As more independent variables interact, their unique probability landscapes bleed into one another. Any initial bias, sharp cliff, or bizarre asymmetry is slowly, inevitably eroded. The universe deeply favors the bell curve because there are infinite ways to be average, and very few ways to be extreme.
+        이 수학적 혼합을 <span class="ac">합성곱(convolution)</span>이라 한다. 더 많은 독립 변수가 상호작용할수록, 그들의 고유한 확률 지형은 서로 스며들며 녹아든다. 어떤 초기 편향이든, 가파른 절벽이든, 기이한 비대칭이든, 천천히 그러나 필연적으로 침식된다. 우주는 종형 곡선을 깊이 편애한다 — 평범해질 방법은 무한하지만, 극단적일 방법은 거의 없기 때문이다.
       </p>
 
       <div class="ibox">
-        <div class="ibox-label"><div class="pulse-dot"></div> Interactive Module</div>
-        <h3 class="ibox-title">The Shape of Forgetting</h3>
+        <div class="ibox-label"><div class="pulse-dot"></div> 인터랙티브 모듈</div>
+        <h3 class="ibox-title">망각의 형태</h3>
         <p class="ibox-desc">
-          <strong>Trace your chaos on the left canvas.</strong> Draw your own custom probability distribution—make it as jagged or unnatural as you wish. Then, slowly drag the convolution slider to see what happens when you mathematically sum <em>N</em> of these independent random variables together.
+          <strong>왼쪽 캔버스에 혼돈을 그려 보라.</strong> 원하는 대로 확률 분포를 직접 그려라 — 아무리 들쭉날쭉하거나 부자연스러워도 좋다. 그런 다음, 합성곱 슬라이더를 천천히 드래그하여 <em>N</em>개의 독립 확률 변수를 수학적으로 합산하면 어떤 일이 일어나는지 지켜보라.
         </p>
 
         <div class="dual-canvas-container">
           <div class="canvas-panel panel-left">
             <div class="control-header">
-              <span>Your Shape</span>
-              <span class="control-val">Base PDF</span>
+              <span>당신의 형태</span>
+              <span class="control-val">기본 PDF</span>
             </div>
             <div class="canvas-wrapper">
-              <div class="canvas-hint" id="canvas-hint">Draw Here<br>↓</div>
+              <div class="canvas-hint" id="canvas-hint">여기에 그리기<br>↓</div>
               <canvas id="base-canvas" data-nopz></canvas>
             </div>
           </div>
           <div class="canvas-panel panel-right">
             <div class="control-header">
-              <span>Standardized Sum</span>
+              <span>표준화된 합</span>
               <span class="control-val" id="val-conv-n">N = 1</span>
             </div>
             <div class="canvas-wrapper">
@@ -836,21 +836,21 @@
         <div class="ibox-controls">
           <div class="control-group" style="flex: 2;">
             <div class="control-header">
-              <span>Variables Added (N)</span>
+              <span>더한 변수 수 (N)</span>
               <span class="control-val" id="val-n-slider">1.00</span>
             </div>
             <input type="range" id="slider-n" min="1" max="10" step="0.01" value="1">
           </div>
-          <button class="btn" id="btn-reset-shape" style="margin-left: auto;">Reset Drawing</button>
+          <button class="btn" id="btn-reset-shape" style="margin-left: auto;">그림 초기화</button>
         </div>
 
         <div class="ibox-stats">
           <div class="stat-card">
-            <span class="stat-label">Current N</span>
+            <span class="stat-label">현재 N</span>
             <span class="stat-value" id="stat-n">1.00</span>
           </div>
           <div class="stat-card">
-            <span class="stat-label">Gaussian Fit</span>
+            <span class="stat-label">가우시안 적합도</span>
             <span class="stat-value" id="stat-fit">-</span>
           </div>
         </div>
@@ -859,58 +859,58 @@
 
     <section class="chapter-section" id="section-3">
       <span class="sec-num">03</span>
-      <h2 class="sec-title">A Walk in the Dark</h2>
+      <h2 class="sec-title">어둠 속의 산책</h2>
       
       <p class="prose prose-drop">
-        When the Central Limit Theorem escapes the abstract, isolated graphs of a single dimension and spills into the physical space around us, it ceases to be a mere statistical curiosity. It becomes the very shape of physical reality. Consider a single drop of glowing ink falling into a glass of dark water, or the gentle heat radiating from a dying ember. 
+        중심극한정리가 단일 차원의 추상적이고 고립된 그래프를 벗어나 우리 주변의 물리적 공간으로 쏟아져 나올 때, 그것은 단순한 통계적 호기심이 아니게 된다. 그것은 물리적 현실 그 자체의 형태가 된다. 빛나는 잉크 한 방울이 어두운 물잔 속으로 떨어지거나, 꺼져가는 불씨에서 은은한 열기가 퍼져나가는 장면을 떠올려 보라.
       </p>
       
       <p class="prose">
-        At the microscopic level, there is no smooth, expanding ring of color or warmth. There are only billions of individual molecules colliding, ricocheting, and stumbling blindly through the void. This blind stumbling is mathematically known as a <span class="hi">random walk</span>. A single particle taking steps in random directions traces a jagged, unpredictable, and entirely chaotic path. But because the final position of a particle is merely the sum of many independent, random steps, Laplace’s eraser is instantly triggered.
+        미시적 차원에서는 부드럽고 확장되는 색이나 온기의 고리 따위는 존재하지 않는다. 오직 수십억 개의 개별 분자들이 충돌하고, 튕기고, 허공 속을 맹목적으로 비틀거릴 뿐이다. 이 맹목적인 비틀거림은 수학적으로 <span class="hi">랜덤 워크</span>라 알려져 있다. 무작위 방향으로 걸음을 옮기는 하나의 입자는 들쭉날쭉하고, 예측 불가능하며, 완전히 혼란스러운 경로를 그린다. 그러나 입자의 최종 위치는 단지 많은 독립적이고 무작위적인 발걸음의 합에 불과하기에, 라플라스의 지우개가 즉시 작동한다.
       </p>
 
       <div class="pull-quote">
-        The macroscopic world is stable purely<br>because of mathematical amnesia.
+        거시적 세계가 안정적인 이유는 순전히<br>수학적 기억상실 덕분이다.
       </div>
       
       <p class="prose">
-        If you release tens of thousands of particles simultaneously from a single point, their collective chaotic journeys form a flawless, radially symmetric nebula. A perfect <span class="ac">bivariate Gaussian</span> distribution emerges, mathematically identical to the shadow cast by a rotating bell curve. The macroscopic smoothness of our universe—the even warmth of a room, the gentle diffusion of scent, the stable pressure of the atmosphere—is a direct illusion, born from the mathematical averaging of infinite underlying chaos.
+        한 점에서 수만 개의 입자를 동시에 방출하면, 그들의 집단적 혼돈의 여정은 흠 없는 방사 대칭의 성운을 형성한다. 완벽한 <span class="ac">이변량 가우시안</span> 분포가 출현하며, 이는 회전하는 종형 곡선이 드리우는 그림자와 수학적으로 동일하다. 우리 우주의 거시적 부드러움 — 방 안의 균일한 온기, 향기의 부드러운 확산, 대기의 안정적인 압력 — 은 직접적인 환상이며, 무한한 기저의 혼돈을 수학적으로 평균한 결과에서 태어난 것이다.
       </p>
 
       <div class="ibox">
-        <div class="ibox-label"><div class="pulse-dot"></div> Interactive Module</div>
-        <h3 class="ibox-title">The Drunkard's Glow</h3>
+        <div class="ibox-label"><div class="pulse-dot"></div> 인터랙티브 모듈</div>
+        <h3 class="ibox-title">취객의 빛</h3>
         <p class="ibox-desc">
-          Click the canvas to unleash 100,000 microscopic wanderers from the center of the void. Each calculates its own independent, entirely random 2D path. Watch as their blind stumbling seamlessly paints an expanding, glowing heat map. The rings denote the theoretical standard deviation (&sigma;).
+          캔버스를 클릭하여 100,000마리의 미시적 방랑자를 허공의 중심에서 풀어놓아 보라. 각각은 자신만의 독립적이고 완전히 무작위인 2D 경로를 계산한다. 그들의 맹목적인 비틀거림이 확장되는 빛나는 열지도를 매끄럽게 그려내는 것을 지켜보라. 고리는 이론적 표준편차(σ)를 나타낸다.
         </p>
 
         <div class="ibox-canvas-container square" style="cursor: pointer;">
-          <div class="canvas-hint" id="walk-hint">Click to Unleash Chaos<br>↓</div>
+          <div class="canvas-hint" id="walk-hint">클릭하여 혼돈 풀어놓기<br>↓</div>
           <canvas id="walk-canvas" data-nopz></canvas>
         </div>
 
         <div class="ibox-controls">
           <div class="control-group">
             <div class="control-header">
-              <span>Step Volatility</span>
-              <span class="control-val" id="val-walk-step">Medium</span>
+              <span>걸음 변동성</span>
+              <span class="control-val" id="val-walk-step">보통</span>
             </div>
             <input type="range" id="slider-walk-step" min="0.5" max="3" step="0.1" value="1.5">
           </div>
-          <button class="btn" id="btn-walk-reset" style="margin-left: auto;">Clear Void</button>
+          <button class="btn" id="btn-walk-reset" style="margin-left: auto;">허공 초기화</button>
         </div>
 
         <div class="ibox-stats">
           <div class="stat-card">
-            <span class="stat-label">Active Particles</span>
+            <span class="stat-label">활성 입자 수</span>
             <span class="stat-value" id="stat-walk-count">0</span>
           </div>
           <div class="stat-card">
-            <span class="stat-label">Time Steps</span>
+            <span class="stat-label">시간 단계</span>
             <span class="stat-value" id="stat-walk-steps">0</span>
           </div>
           <div class="stat-card">
-            <span class="stat-label">Theoretical Radius (2&sigma;)</span>
+            <span class="stat-label">이론적 반경 (2σ)</span>
             <span class="stat-value" id="stat-walk-radius">0 px</span>
           </div>
         </div>
@@ -919,39 +919,39 @@
 
     <section class="chapter-section" id="section-4">
       <span class="sec-num">04</span>
-      <h2 class="sec-title">The Escape into the Void</h2>
+      <h2 class="sec-title">허공으로의 탈출</h2>
       
       <p class="prose prose-drop">
-        In one and two dimensions, the mathematics of chance contains a comforting certainty. If you track a random walk on a single line or a flat plane, the geometry of space is tight enough that probability ensures a homecoming. The mathematics strictly guarantees that, given an infinite amount of time, the wandering particle will eventually return to its exact starting point.
+        1차원과 2차원에서 우연의 수학에는 위안이 되는 확실성이 있다. 직선 위나 평면 위에서 랜덤 워크를 추적하면, 공간의 기하학이 충분히 조밀하여 확률이 귀환을 보장한다. 수학은 무한한 시간이 주어지면 방황하는 입자가 결국 정확히 출발점으로 돌아올 것을 엄격히 보장한다.
       </p>
       
       <p class="prose">
-        But when we add a third dimension—the <em>Z</em>-axis of true physical space—the universe suddenly becomes overwhelmingly vast. The spell of return is broken. The Central Limit Theorem still holds true; the collective swarm of thousands of particles will still form a beautiful, expanding spherical Gaussian cloud. Yet, the <span class="hi">individual history</span> of a single particle is quickly swallowed by the sheer volume of the void. 
+        그러나 3차원 — 진정한 물리적 공간의 <em>Z</em>축 — 을 추가하면, 우주는 갑자기 압도적으로 방대해진다. 귀환의 마법이 깨진다. 중심극한정리는 여전히 성립한다 — 수천 개 입자의 집단적 군집은 여전히 아름다운 확장되는 구형 가우시안 구름을 형성한다. 그러나 단일 입자의 <span class="hi">개별적 역사</span>는 허공의 순전한 부피에 의해 맹렬히 삼켜진다.
       </p>
 
       <div class="pull-quote">
-        "A drunk man will find his way home,<br>but a drunk bird may get lost forever."<br>
-        <span style="font-size:0.85rem; font-family:var(--font-mono); font-style:normal; letter-spacing:0.15em; color:var(--gold); display:block; margin-top:1.5rem; text-transform: uppercase;">— Shizuo Kakutani</span>
+        "취한 사람은 집으로 돌아갈 수 있지만,<br>취한 새는 영원히 길을 잃을 수도 있다."<br>
+        <span style="font-size:0.85rem; font-family:var(--font-mono); font-style:normal; letter-spacing:0.15em; color:var(--gold); display:block; margin-top:1.5rem; text-transform: uppercase;">— 각타니 시즈오(Shizuo Kakutani)</span>
       </div>
 
       <p class="prose">
-        In 1921, the mathematician George Pólya proved that a random walk in three-dimensional space is transient. The probability of returning home drops precipitously to roughly 34%. The path of the bird becomes a fleeting, jagged golden thread tangling infinitely outward. It is overwhelmingly likely to never retrace its steps, leaving behind a magnificent, ghostly architecture of pure chance.
+        1921년, 수학자 조지 폴리아(George Pólya)는 3차원 공간에서의 랜덤 워크가 일시적이라는 것을 증명했다. 귀환 확률은 급감하여 대략 34%로 떨어진다. 새의 경로는 덧없고 무한히 바깥으로 얽히는 들쭉날쭉한 황금의 실이 된다. 그것은 자신의 발자취를 절대 되밟지 않을 것이 거의 확실하며, 순수한 우연의 장엄하고 유령같은 건축물을 남긴다.
       </p>
 
       <div class="ibox">
-        <div class="ibox-label"><div class="pulse-dot"></div> Interactive Module</div>
-        <h3 class="ibox-title">The Flight of the Lost Bird</h3>
+        <div class="ibox-label"><div class="pulse-dot"></div> 인터랙티브 모듈</div>
+        <h3 class="ibox-title">길 잃은 새의 비행</h3>
         <p class="ibox-desc">
-          <strong>Drag to orbit, scroll or use buttons to zoom.</strong> Watch 10,000 independent particles released into a 3D volume, forming an expanding spherical Gaussian nebula. One distinct "bird" leaves a permanent golden trail. Zoom in up to 2000% to explore the dense, microscopic core.
+          <strong>드래그하여 궤도를 회전하고, 스크롤 또는 버튼으로 확대/축소하라.</strong> 3D 공간에 방출된 10,000개의 독립 입자가 확장되는 구형 가우시안 성운을 형성하는 것을 지켜보라. 하나의 특별한 "새"가 영구적인 황금의 궤적을 남긴다. 최대 2000%까지 확대하여 조밀한 미시적 핵심을 탐구해 보라.
         </p>
 
         <div class="ibox-canvas-container square" style="cursor: grab;" id="walk3d-wrapper">
-          <div class="canvas-hint" id="walk3d-hint">Drag to Orbit<br>⟲</div>
+          <div class="canvas-hint" id="walk3d-hint">드래그하여 회전<br>⟲</div>
           
           <div class="zoom-controls">
-            <button class="zoom-btn" id="btn-zoom-in" title="Zoom In">+</button>
-            <button class="zoom-btn zoom-reset" id="btn-zoom-reset" title="Reset Zoom">1x</button>
-            <button class="zoom-btn" id="btn-zoom-out" title="Zoom Out">−</button>
+            <button class="zoom-btn" id="btn-zoom-in" title="확대">+</button>
+            <button class="zoom-btn zoom-reset" id="btn-zoom-reset" title="초기화">1x</button>
+            <button class="zoom-btn" id="btn-zoom-out" title="축소">−</button>
           </div>
           
           <canvas id="walk3d-canvas" data-nopz></canvas>
@@ -960,29 +960,29 @@
         <div class="ibox-controls">
           <div class="control-group">
             <div class="control-header">
-              <span>Flight Speed</span>
-              <span class="control-val" id="val-walk3d-step">Normal</span>
+              <span>비행 속도</span>
+              <span class="control-val" id="val-walk3d-step">보통</span>
             </div>
             <input type="range" id="slider-walk3d-step" min="0.5" max="2.5" step="0.1" value="1">
           </div>
-          <button class="btn" id="btn-walk3d-reset" style="margin-left: auto;">Respawn Swarm</button>
+          <button class="btn" id="btn-walk3d-reset" style="margin-left: auto;">군집 재생성</button>
         </div>
 
         <div class="ibox-stats">
           <div class="stat-card">
-            <span class="stat-label">Active Birds</span>
+            <span class="stat-label">활성 새</span>
             <span class="stat-value">10,000</span>
           </div>
           <div class="stat-card">
-            <span class="stat-label">Flight Epochs</span>
+            <span class="stat-label">비행 에폭크</span>
             <span class="stat-value" id="stat-walk3d-steps">0</span>
           </div>
           <div class="stat-card">
-            <span class="stat-label">Current Zoom</span>
+            <span class="stat-label">현재 확대율</span>
             <span class="stat-value" id="stat-walk3d-zoom" style="color:var(--cream);">100%</span>
           </div>
           <div class="stat-card">
-            <span class="stat-label">Return Probability</span>
+            <span class="stat-label">귀환 확률</span>
             <span class="stat-value" style="color:var(--fern-glow); text-shadow: 0 0 15px rgba(124,200,154,0.3);">~34.05%</span>
           </div>
         </div>
@@ -991,21 +991,21 @@
 
     <div class="coda-block chapter-section">
       <div class="coda-prose">
-        We build our fragile towers of certainty<br>
-        upon an ocean of tumbling dice.<br>
-        The beauty of the world is not the absence of chaos,<br>
-        but the flawless shape it takes when it forgets itself.
+        우리는 확실성의 연약한 탑을<br>
+        구르는 주사위의 바다 위에 세운다.<br>
+        세상의 아름다움은 혼돈의 부재가 아니라,<br>
+        혼돈이 스스로 잊을 때 빚어지는 흠 없는 형태이다.
       </div>
 
       <div class="grand-quote">
-        <p>“For surely the atoms did not hold council, assigning order to each, flexing their keen minds with questions of place and motion... But shuffled and jumbled in many ways, in the course of infinite time they are driven together, trying every motion and union, until at last they fall into the arrangements by which this universe is created.”</p>
-        <cite>Lucretius</cite>
-        <span class="cite-detail">De Rerum Natura (On the Nature of Things), c. 50 BC</span>
+        <p>“원자들이 회의를 열어 각각에게 질서를 부여하고, 위치와 운동의 문제로 예리한 정신을 발휘한 것은 분명 아니다… 그러나 수많은 방식으로 뒤섞이고 뒤엉키며, 무한한 시간의 흐름 속에서 함께 이끌려, 모든 운동과 결합을 시도하다가, 마침내 이 우주가 창조되는 배열로 빠져드는 것이다.”</p>
+        <cite>루크레티우스</cite>
+        <span class="cite-detail">사물의 본성에 관하여 (De Rerum Natura), 기원전 50년경</span>
       </div>
     </div>
 
     <div class="ref-section chapter-section">
-      <h3 class="ref-heading">References</h3>
+      <h3 class="ref-heading">참고 문헌</h3>
       <ul class="ref-list">
         <li><span class="ref-author">Laplace, Pierre-Simon,</span> <span class="ref-title">Théorie analytique des probabilités,</span> <span class="ref-detail">Courcier, 1812.</span></li>
         <li><span class="ref-author">Galton, Francis,</span> <span class="ref-title">Natural Inheritance,</span> <span class="ref-detail">Macmillan and Co., 1889.</span></li>
@@ -1226,9 +1226,9 @@
     }
     updateIdeal();
 
-    uiRate.addEventListener('input', (e) => { document.getElementById('val-rate').innerText = parseInt(e.target.value) < 8 ? "Slow" : parseInt(e.target.value) > 18 ? "Flood" : "Steady"; });
+    uiRate.addEventListener('input', (e) => { document.getElementById('val-rate').innerText = parseInt(e.target.value) < 8 ? "느림" : parseInt(e.target.value) > 18 ? "홍수" : "보통"; });
     uiBias.addEventListener('input', (e) => {
-      let v = parseFloat(e.target.value); document.getElementById('val-bias').innerText = v < 0.45 ? "Left" : v > 0.55 ? "Right" : "Center";
+      let v = parseFloat(e.target.value); document.getElementById('val-bias').innerText = v < 0.45 ? "왼쪽" : v > 0.55 ? "오른쪽" : "중앙";
       updateIdeal(); document.getElementById('btn-reset').click();
     });
     document.getElementById('btn-reset').addEventListener('click', () => { qxBins.fill(0); qxBalls = []; statCount = 0; document.getElementById('stat-total').innerText = "0"; });
@@ -1340,7 +1340,7 @@
     const NUM_WALKERS = 100000; const walkersX = new Float32Array(NUM_WALKERS); const walkersY = new Float32Array(NUM_WALKERS);
     let walkActive = false; let walkSteps = 0; let walkImageData = null; let walkDensity = null;
     const uiWalkStep = document.getElementById('slider-walk-step');
-    uiWalkStep.addEventListener('input', (e) => { document.getElementById('val-walk-step').innerText = parseFloat(e.target.value) < 1 ? "Low" : parseFloat(e.target.value) > 2 ? "High" : "Medium"; });
+    uiWalkStep.addEventListener('input', (e) => { document.getElementById('val-walk-step').innerText = parseFloat(e.target.value) < 1 ? "낮음" : parseFloat(e.target.value) > 2 ? "높음" : "보통"; });
 
     const walkCanvasObj = setupCanvas('walk-canvas', (c) => {
         const w = c.size.w * c.dpr; const h = c.size.h * c.dpr;
@@ -1431,7 +1431,7 @@
     const MIN_ZOOM = 0.5;
 
     const uiWalk3dStep = document.getElementById('slider-walk3d-step');
-    uiWalk3dStep.addEventListener('input', (e) => { document.getElementById('val-walk3d-step').innerText = parseFloat(e.target.value) < 0.8 ? "Slow" : parseFloat(e.target.value) > 1.8 ? "Fast" : "Normal"; });
+    uiWalk3dStep.addEventListener('input', (e) => { document.getElementById('val-walk3d-step').innerText = parseFloat(e.target.value) < 0.8 ? "느림" : parseFloat(e.target.value) > 1.8 ? "빠름" : "보통"; });
 
     // Zoom Buttons
     document.getElementById('btn-zoom-in').addEventListener('click', (e) => {
