@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Inevitable Curve — Mellow Math</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;1,9..40,300&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #030408;
+      --bg-gradient: radial-gradient(circle at top center, #0b0e1d 0%, #030408 100%);
+      --bg2: #080a15;
+      --bg3: rgba(16, 19, 38, 0.65); /* Translucent Obsidian */
+      --text: #bab6ad;
+      --cream: #f4f0e6;
+      --muted: #62677d;
+      --gold: #d4a853;
+      --gold-bright: #ebd08d;
+      --gold-dim: rgba(212,168,83,.1);
+      --violet: #8a6abf;
+      --border: rgba(255,255,255,.06);
+      --border-highlight: rgba(212, 168, 83, 0.25);
+      
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      
+      --shadow-soft: 0 24px 60px rgba(0,0,0,0.8);
+      --glow-text: 0 0 20px rgba(244,240,230,0.15);
+      --glow-gold: 0 0 15px rgba(212,168,83,0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    ::selection {
+      background: rgba(212, 168, 83, 0.25);
+      color: var(--cream);
+    }
+
+    body {
+      background: var(--bg);
+      background-image: var(--bg-gradient);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.85;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Cinematic Film Grain Overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    /* Elegant Custom Scrollbar */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 2px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+    /* Floating Badge */
+    .floating-badge {
+      position: fixed;
+      bottom: 2rem;
+      left: 2rem;
+      z-index: 1000;
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      text-transform: lowercase;
+      letter-spacing: 0.15em;
+      color: #9abf42;
+      text-decoration: none;
+      text-shadow: 0 0 12px rgba(154,191,66,0.4);
+      transition: all 0.4s cubic-bezier(0.23,1,0.32,1);
+    }
+    .floating-badge:hover {
+      color: #c4f255;
+      transform: translateY(-2px);
+      text-shadow: 0 0 20px rgba(196,242,85,0.6);
+    }
+
+    /* Typography & Accents */
+    h1, h2, h3 { font-family: var(--font-display); font-weight: 300; color: var(--cream); text-wrap: balance; }
+    p { text-wrap: pretty; }
+    em { font-style: italic; }
+    
+    span.hi { color: var(--cream); font-weight: 400; text-shadow: var(--glow-text); transition: text-shadow 0.3s; }
+    span.hi:hover { text-shadow: 0 0 25px rgba(244,240,230,0.4); }
+    
+    span.ac { color: var(--gold-bright); font-style: italic; font-weight: 400; text-shadow: var(--glow-gold); transition: text-shadow 0.3s; }
+    span.ac:hover { text-shadow: 0 0 25px rgba(235,208,141,0.5); }
+
+    .pull-quote {
+      text-align: center;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: clamp(1.4rem, 4vw, 1.8rem);
+      color: var(--cream);
+      margin: 6rem auto;
+      max-width: 680px;
+      line-height: 1.45;
+      letter-spacing: -0.01em;
+      text-shadow: var(--glow-text);
+      position: relative;
+    }
+    .pull-quote::before {
+      content: '“';
+      position: absolute;
+      top: -3.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 6rem;
+      color: var(--gold-dim);
+      font-family: var(--font-display);
+      z-index: -1;
+    }
+    .pull-quote::after {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 2.5rem auto 0;
+    }
+
+    /* Ambient Particles */
+    #ambient-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      z-index: 1;
+    }
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      width: 100%;
+      height: 100%;
+    }
+    .hero-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, transparent 0%, var(--bg) 100%);
+      z-index: -1;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 2rem;
+      margin-top: -5vh;
+      animation: fadeUp 2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hero-label {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      margin-bottom: 2rem;
+    }
+    .hero-chapter {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      color: var(--gold-bright);
+      margin-bottom: 1.2rem;
+      letter-spacing: 0.1em;
+      text-shadow: var(--glow-gold);
+    }
+    .hero-title {
+      font-size: clamp(3.2rem, 8vw, 6rem);
+      line-height: 1.05;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+      text-shadow: 0 12px 40px rgba(0,0,0,0.8);
+    }
+    .hero-tagline {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: clamp(1.2rem, 3vw, 1.45rem);
+      color: var(--text);
+      max-width: 600px;
+      margin: 1.5rem auto 0;
+      opacity: 0.9;
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 3.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      animation: breathe 3.5s ease-in-out infinite;
+    }
+    @keyframes breathe {
+      0%, 100% { opacity: 0.2; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(-6px); text-shadow: 0 0 10px rgba(255,255,255,0.2); }
+    }
+
+    /* Chapter Structure - Editorial Breakout */
+    .chapter-content {
+      position: relative;
+      z-index: 2;
+      max-width: 760px; /* Base reading width */
+      margin: 0 auto;
+      padding: 6rem 2rem 4rem;
+    }
+    .chapter-section {
+      margin-bottom: 10rem;
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 1.4s cubic-bezier(0.23,1,0.32,1), transform 1.4s cubic-bezier(0.23,1,0.32,1);
+    }
+    .chapter-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .sec-num {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      margin-bottom: 1.5rem;
+      display: block;
+    }
+    .sec-title {
+      font-size: clamp(2.4rem, 5vw, 3rem);
+      margin-bottom: 3.5rem;
+      letter-spacing: -0.01em;
+      line-height: 1.15;
+    }
+    
+    .prose {
+      font-size: 1.15rem;
+      margin-bottom: 1.8rem;
+      letter-spacing: 0.01em;
+    }
+    .prose-drop::first-letter {
+      font-family: var(--font-display);
+      float: left;
+      font-size: 5.8rem;
+      line-height: 0.75;
+      padding-top: 0.35rem;
+      padding-right: 0.8rem;
+      color: var(--gold-bright);
+      font-style: italic;
+      text-shadow: 0 4px 20px rgba(212,168,83,0.3);
+    }
+
+    /* Interactive Box (ibox) - Glassmorphism */
+    .ibox {
+      background: var(--bg3);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 20px;
+      padding: 4rem;
+      margin: 6.5rem -4rem; /* Bleeds elegantly out of the text column */
+      position: relative;
+      box-shadow: var(--shadow-soft), inset 0 1px 1px rgba(255,255,255,0.08);
+      border: 1px solid var(--border);
+    }
+    .ibox::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 15%; right: 15%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0.6;
+    }
+    .ibox-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--gold-bright);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+    .pulse-dot {
+      width: 6px; height: 6px;
+      background: var(--gold-bright);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--gold-bright);
+      animation: pulse 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; transform: scale(0.8); }
+      50% { opacity: 1; transform: scale(1.3); }
+    }
+    .ibox-title {
+      font-size: 2.2rem;
+      margin-bottom: 0.8rem;
+    }
+    .ibox-desc {
+      font-size: 0.95rem;
+      color: #9297ab;
+      margin-bottom: 3rem;
+      max-width: 620px;
+      line-height: 1.65;
+    }
+    
+    .ibox-canvas-container {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: var(--bg2);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      margin-bottom: 2.5rem;
+      position: relative;
+      box-shadow: inset 0 0 60px rgba(0,0,0,0.8);
+    }
+    .ibox-canvas-container.square {
+      aspect-ratio: 1/1;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .ibox-canvas-container canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      outline: none;
+    }
+
+    /* Overlay Zoom Controls */
+    .zoom-controls {
+      position: absolute;
+      right: 1.5rem;
+      bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 10;
+    }
+    .zoom-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(16, 19, 38, 0.8);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--gold-bright);
+      font-family: var(--font-mono);
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+    .zoom-btn:hover {
+      background: rgba(212,168,83,0.15);
+      border-color: var(--gold);
+      transform: scale(1.1);
+    }
+    .zoom-btn:active {
+      transform: scale(0.95);
+    }
+    .zoom-btn.zoom-reset {
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      font-weight: bold;
+    }
+
+    /* Section 2 Dual Canvas Layout */
+    .dual-canvas-container {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+    }
+    .canvas-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .panel-left { flex: 1; min-width: 220px; }
+    .panel-right { flex: 2; min-width: 320px; }
+    .canvas-wrapper {
+      background: var(--bg2);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 4px 30px rgba(0,0,0,0.6);
+    }
+    .panel-left .canvas-wrapper { aspect-ratio: 1/1; cursor: crosshair; touch-action: none; }
+    .panel-right .canvas-wrapper { aspect-ratio: 16/9; touch-action: none; }
+    .canvas-wrapper canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      outline: none;
+    }
+    .canvas-hint {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: rgba(212,168,83,0.6);
+      pointer-events: none;
+      transition: opacity 0.4s;
+      text-align: center;
+      line-height: 1.8;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(0,0,0,0.8);
+    }
+    
+    /* Controls Styling */
+    .ibox-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+      margin-bottom: 2.5rem;
+      align-items: flex-end;
+    }
+    .control-group {
+      flex: 1;
+      min-width: 180px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .control-header {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--cream);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .control-val { 
+      color: var(--gold-bright); 
+      font-variant-numeric: tabular-nums; 
+      text-shadow: var(--glow-gold);
+    }
+    
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      background: transparent;
+    }
+    input[type=range]:focus { outline: none; }
+    input[type=range]::-webkit-slider-runnable-track {
+      width: 100%; height: 2px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 1px;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 18px; width: 18px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fff, var(--gold));
+      margin-top: -8px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(212,168,83,0.6);
+      transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+        transform: scale(1.3);
+    }
+    
+    .btn {
+      background: rgba(212, 168, 83, 0.05);
+      border: 1px solid var(--border-highlight);
+      color: var(--gold-bright);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 0.8rem 1.6rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.23,1,0.32,1);
+      backdrop-filter: blur(4px);
+    }
+    .btn:hover { 
+      background: var(--gold-dim); 
+      border-color: var(--gold); 
+      transform: translateY(-2px); 
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .btn:active { transform: translateY(1px); }
+
+    /* Glassmorphic Stats Grid */
+    .ibox-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1.5rem;
+      border-top: 1px solid var(--border);
+      padding-top: 2.5rem;
+    }
+    .stat-card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 10px;
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .stat-value {
+      font-family: var(--font-mono);
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: var(--gold-bright);
+      font-variant-numeric: tabular-nums;
+      text-shadow: var(--glow-gold);
+    }
+
+    /* Final Quote & Coda */
+    .coda-block {
+      margin: 12rem auto 8rem;
+      max-width: 720px;
+    }
+    .coda-prose {
+      text-align: center;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.6rem;
+      color: var(--cream);
+      line-height: 1.9;
+      margin-bottom: 8rem;
+      text-shadow: var(--glow-text);
+      opacity: 0.95;
+    }
+    
+    .grand-quote {
+      position: relative;
+      padding: 4rem 2rem;
+      text-align: center;
+      background: linear-gradient(180deg, transparent, rgba(212,168,83,0.03), transparent);
+      border-radius: 20px;
+    }
+    .grand-quote::before {
+      content: '';
+      display: block;
+      width: 1px;
+      height: 80px;
+      background: linear-gradient(180deg, transparent, var(--gold), transparent);
+      margin: 0 auto 3.5rem;
+    }
+    .grand-quote p {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-style: italic;
+      font-size: clamp(1.4rem, 4vw, 1.85rem);
+      color: var(--cream);
+      line-height: 1.6;
+      letter-spacing: 0.01em;
+      text-shadow: var(--glow-text);
+    }
+    .grand-quote cite {
+      display: block;
+      margin-top: 3rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--gold-bright);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-style: normal;
+    }
+    .grand-quote .cite-detail {
+      display: block;
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* References */
+    .ref-section {
+      border-top: 1px solid var(--border);
+      padding-top: 5rem;
+      margin-top: 6rem;
+    }
+    .ref-heading {
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 0.85rem;
+      margin-bottom: 2.5rem;
+      color: var(--muted);
+    }
+    .ref-list {
+      list-style: none;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+    .ref-list li {
+      margin-bottom: 1.2rem;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+    .ref-list li::before {
+      content: '■';
+      position: absolute;
+      left: 0;
+      top: 0.35rem;
+      font-size: 0.45rem;
+      color: var(--gold);
+      opacity: 0.6;
+    }
+    .ref-author { color: #a19f98; font-weight: 400; }
+    .ref-title { font-style: italic; color: var(--cream); margin: 0 0.3rem; }
+    .ref-detail { color: var(--muted); }
+
+    /* Footer */
+    footer {
+      padding: 6rem 2rem;
+      text-align: center;
+      position: relative;
+      z-index: 10;
+      border-top: 1px solid var(--border);
+      background: linear-gradient(0deg, #010206, transparent);
+    }
+    .footer-attr {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .footer-name {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      color: var(--cream);
+      letter-spacing: 0.05em;
+    }
+    .footer-inst {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .footer-url {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--gold);
+      text-decoration: none;
+      margin-top: 0.8rem;
+      letter-spacing: 0.15em;
+      transition: color 0.3s;
+    }
+    .footer-url:hover { color: var(--cream); }
+
+    @media (max-width: 768px) {
+      .hero-title { font-size: 3.2rem; }
+      .chapter-content { padding: 4rem 1.5rem; }
+      .ibox { padding: 2.5rem 1.5rem; margin: 4rem 0; border-radius: 12px; }
+      .dual-canvas-container { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="ambient-canvas"></canvas>
+  <a class="floating-badge" href="https://edu.kimsh.kr" target="_blank">edu.kimsh.kr</a>
+
+  <section class="hero" id="hero-section">
+    <canvas id="hero-canvas" data-nopz></canvas>
+    <div class="hero-vignette"></div>
+    <div class="hero-content">
+      <div class="hero-label">Mellow Math</div>
+      <div class="hero-chapter">Chapter IV</div>
+      <h1 class="hero-title">The Inevitable <em class="ac">Curve</em></h1>
+      <div class="hero-tagline">How chaotic noise learns to sing a single, perfect melody.</div>
+    </div>
+    <div class="hero-scroll">Begin</div>
+  </section>
+
+  <main class="chapter-content">
+    
+    <section class="chapter-section" id="section-1">
+      <span class="sec-num">01</span>
+      <h2 class="sec-title">The Anatomy of a Coin Toss</h2>
+      
+      <p class="prose prose-drop">
+        Consider a single coin tumbling through the air. At the microscopic scale, the event is fiercely independent—a tiny, metallic prisoner to the whims of momentum, air turbulence, and gravity. To look at one isolated result, heads or tails, is to look at raw, untamed chaos. The cold metal possesses no memory; it does not know what it did a moment ago, nor does it possess the capacity to care what it will do next.
+      </p>
+      
+      <p class="prose">
+        Yet, a profound mathematical paradox lies in wait the moment we step back. If you record ten coin flips, a faint, whispering pattern begins to emerge. If you record ten thousand, a breathtaking geometry roars into existence. The noise ceases to be noise. The jagged, entirely unpredictable individual choices collapse inward, forced by an unseen hand to obey a flawless architectural blueprint known as the <span class="hi">Gaussian distribution</span>, or the bell curve. 
+      </p>
+
+      <div class="pull-quote">
+        What is fiercely wild in isolation<br>becomes perfectly docile in aggregate.
+      </div>
+
+      <p class="prose">
+        When the nineteenth-century polymath Francis Galton first constructed a mechanical device to demonstrate this phenomenon, he was struck by sheer reverence. Watching hundreds of falling beads bounce blindly through a forest of wooden pegs, only to inevitably build a perfect, smooth bell at the bottom, he realized that from the darkest depths of absolute uncertainty, nature distills an exquisite, untouchable order. He built the <span class="ac">quincunx</span> to prove that chance is not the absence of law, but the very foundation of it.
+      </p>
+
+      <div class="ibox">
+        <div class="ibox-label"><div class="pulse-dot"></div> Interactive Module</div>
+        <h3 class="ibox-title">The Quincunx Engine</h3>
+        <p class="ibox-desc">
+          A high-performance physics simulation of Galton’s board. Adjust the drop rate to unleash a flood of independent particles. Alter the probability bias to simulate a weighted coin. Watch as the glowing theoretical bell curve perfectly maps the exact shape of the accumulating chaos.
+        </p>
+
+        <div class="ibox-canvas-container">
+          <canvas id="galton-canvas" data-nopz></canvas>
+        </div>
+
+        <div class="ibox-controls">
+          <div class="control-group">
+            <div class="control-header">
+              <span>Drop Rate</span>
+              <span class="control-val" id="val-rate">Steady</span>
+            </div>
+            <input type="range" id="slider-rate" min="1" max="25" value="5">
+          </div>
+          
+          <div class="control-group">
+            <div class="control-header">
+              <span>Probability Bias</span>
+              <span class="control-val" id="val-bias">Center</span>
+            </div>
+            <input type="range" id="slider-bias" min="0.1" max="0.9" step="0.01" value="0.5">
+          </div>
+
+          <button class="btn" id="btn-reset" style="margin-left: auto;">Clear Board</button>
+        </div>
+
+        <div class="ibox-stats">
+          <div class="stat-card">
+            <span class="stat-label">Total Drops</span>
+            <span class="stat-value" id="stat-total">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Expected Peak</span>
+            <span class="stat-value" id="stat-peak">-</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter-section" id="section-2">
+      <span class="sec-num">02</span>
+      <h2 class="sec-title">The Universal Eraser</h2>
+      
+      <p class="prose prose-drop">
+        The anatomy of a coin toss is a story of perfect symmetry. But the deepest magic of the Central Limit Theorem is its terrifying mathematical amnesia. The law does not require symmetry. It does not require fairness. It requires nothing but sheer independence. No matter how unnatural, jagged, or wildly skewed the original probabilities are, the act of adding them together violently scrubs away their unique histories.
+      </p>
+      
+      <p class="prose">
+        When the brilliant French mathematician Pierre-Simon Laplace turned his eyes from the mechanics of the heavens to the mathematics of probability, he realized something profound. Whether you are measuring the minute errors of astronomical telescopes, the distribution of human heights, or the chaos of rolling a bizarrely loaded die, the underlying shape of the individual events simply stops mattering. Laplace saw that the theorem acts as a <span class="hi">mathematical black hole</span>, annihilating all initial information until only the pristine bell remains.
+      </p>
+      
+      <div class="pull-quote">
+        All history is lost;<br>only the bell remains.
+      </div>
+      
+      <p class="prose">
+        This mathematical blending is known as <span class="ac">convolution</span>. As more independent variables interact, their unique probability landscapes bleed into one another. Any initial bias, sharp cliff, or bizarre asymmetry is slowly, inevitably eroded. The universe deeply favors the bell curve because there are infinite ways to be average, and very few ways to be extreme.
+      </p>
+
+      <div class="ibox">
+        <div class="ibox-label"><div class="pulse-dot"></div> Interactive Module</div>
+        <h3 class="ibox-title">The Shape of Forgetting</h3>
+        <p class="ibox-desc">
+          <strong>Trace your chaos on the left canvas.</strong> Draw your own custom probability distribution—make it as jagged or unnatural as you wish. Then, slowly drag the convolution slider to see what happens when you mathematically sum <em>N</em> of these independent random variables together.
+        </p>
+
+        <div class="dual-canvas-container">
+          <div class="canvas-panel panel-left">
+            <div class="control-header">
+              <span>Your Shape</span>
+              <span class="control-val">Base PDF</span>
+            </div>
+            <div class="canvas-wrapper">
+              <div class="canvas-hint" id="canvas-hint">Draw Here<br>↓</div>
+              <canvas id="base-canvas" data-nopz></canvas>
+            </div>
+          </div>
+          <div class="canvas-panel panel-right">
+            <div class="control-header">
+              <span>Standardized Sum</span>
+              <span class="control-val" id="val-conv-n">N = 1</span>
+            </div>
+            <div class="canvas-wrapper">
+              <canvas id="conv-canvas" data-nopz></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="ibox-controls">
+          <div class="control-group" style="flex: 2;">
+            <div class="control-header">
+              <span>Variables Added (N)</span>
+              <span class="control-val" id="val-n-slider">1.00</span>
+            </div>
+            <input type="range" id="slider-n" min="1" max="10" step="0.01" value="1">
+          </div>
+          <button class="btn" id="btn-reset-shape" style="margin-left: auto;">Reset Drawing</button>
+        </div>
+
+        <div class="ibox-stats">
+          <div class="stat-card">
+            <span class="stat-label">Current N</span>
+            <span class="stat-value" id="stat-n">1.00</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Gaussian Fit</span>
+            <span class="stat-value" id="stat-fit">-</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter-section" id="section-3">
+      <span class="sec-num">03</span>
+      <h2 class="sec-title">A Walk in the Dark</h2>
+      
+      <p class="prose prose-drop">
+        When the Central Limit Theorem escapes the abstract, isolated graphs of a single dimension and spills into the physical space around us, it ceases to be a mere statistical curiosity. It becomes the very shape of physical reality. Consider a single drop of glowing ink falling into a glass of dark water, or the gentle heat radiating from a dying ember. 
+      </p>
+      
+      <p class="prose">
+        At the microscopic level, there is no smooth, expanding ring of color or warmth. There are only billions of individual molecules colliding, ricocheting, and stumbling blindly through the void. This blind stumbling is mathematically known as a <span class="hi">random walk</span>. A single particle taking steps in random directions traces a jagged, unpredictable, and entirely chaotic path. But because the final position of a particle is merely the sum of many independent, random steps, Laplace’s eraser is instantly triggered.
+      </p>
+
+      <div class="pull-quote">
+        The macroscopic world is stable purely<br>because of mathematical amnesia.
+      </div>
+      
+      <p class="prose">
+        If you release tens of thousands of particles simultaneously from a single point, their collective chaotic journeys form a flawless, radially symmetric nebula. A perfect <span class="ac">bivariate Gaussian</span> distribution emerges, mathematically identical to the shadow cast by a rotating bell curve. The macroscopic smoothness of our universe—the even warmth of a room, the gentle diffusion of scent, the stable pressure of the atmosphere—is a direct illusion, born from the mathematical averaging of infinite underlying chaos.
+      </p>
+
+      <div class="ibox">
+        <div class="ibox-label"><div class="pulse-dot"></div> Interactive Module</div>
+        <h3 class="ibox-title">The Drunkard's Glow</h3>
+        <p class="ibox-desc">
+          Click the canvas to unleash 100,000 microscopic wanderers from the center of the void. Each calculates its own independent, entirely random 2D path. Watch as their blind stumbling seamlessly paints an expanding, glowing heat map. The rings denote the theoretical standard deviation (&sigma;).
+        </p>
+
+        <div class="ibox-canvas-container square" style="cursor: pointer;">
+          <div class="canvas-hint" id="walk-hint">Click to Unleash Chaos<br>↓</div>
+          <canvas id="walk-canvas" data-nopz></canvas>
+        </div>
+
+        <div class="ibox-controls">
+          <div class="control-group">
+            <div class="control-header">
+              <span>Step Volatility</span>
+              <span class="control-val" id="val-walk-step">Medium</span>
+            </div>
+            <input type="range" id="slider-walk-step" min="0.5" max="3" step="0.1" value="1.5">
+          </div>
+          <button class="btn" id="btn-walk-reset" style="margin-left: auto;">Clear Void</button>
+        </div>
+
+        <div class="ibox-stats">
+          <div class="stat-card">
+            <span class="stat-label">Active Particles</span>
+            <span class="stat-value" id="stat-walk-count">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Time Steps</span>
+            <span class="stat-value" id="stat-walk-steps">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Theoretical Radius (2&sigma;)</span>
+            <span class="stat-value" id="stat-walk-radius">0 px</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter-section" id="section-4">
+      <span class="sec-num">04</span>
+      <h2 class="sec-title">The Escape into the Void</h2>
+      
+      <p class="prose prose-drop">
+        In one and two dimensions, the mathematics of chance contains a comforting certainty. If you track a random walk on a single line or a flat plane, the geometry of space is tight enough that probability ensures a homecoming. The mathematics strictly guarantees that, given an infinite amount of time, the wandering particle will eventually return to its exact starting point.
+      </p>
+      
+      <p class="prose">
+        But when we add a third dimension—the <em>Z</em>-axis of true physical space—the universe suddenly becomes overwhelmingly vast. The spell of return is broken. The Central Limit Theorem still holds true; the collective swarm of thousands of particles will still form a beautiful, expanding spherical Gaussian cloud. Yet, the <span class="hi">individual history</span> of a single particle is quickly swallowed by the sheer volume of the void. 
+      </p>
+
+      <div class="pull-quote">
+        "A drunk man will find his way home,<br>but a drunk bird may get lost forever."<br>
+        <span style="font-size:0.85rem; font-family:var(--font-mono); font-style:normal; letter-spacing:0.15em; color:var(--gold); display:block; margin-top:1.5rem; text-transform: uppercase;">— Shizuo Kakutani</span>
+      </div>
+
+      <p class="prose">
+        In 1921, the mathematician George Pólya proved that a random walk in three-dimensional space is transient. The probability of returning home drops precipitously to roughly 34%. The path of the bird becomes a fleeting, jagged golden thread tangling infinitely outward. It is overwhelmingly likely to never retrace its steps, leaving behind a magnificent, ghostly architecture of pure chance.
+      </p>
+
+      <div class="ibox">
+        <div class="ibox-label"><div class="pulse-dot"></div> Interactive Module</div>
+        <h3 class="ibox-title">The Flight of the Lost Bird</h3>
+        <p class="ibox-desc">
+          <strong>Drag to orbit, scroll or use buttons to zoom.</strong> Watch 10,000 independent particles released into a 3D volume, forming an expanding spherical Gaussian nebula. One distinct "bird" leaves a permanent golden trail. Zoom in up to 2000% to explore the dense, microscopic core.
+        </p>
+
+        <div class="ibox-canvas-container square" style="cursor: grab;" id="walk3d-wrapper">
+          <div class="canvas-hint" id="walk3d-hint">Drag to Orbit<br>⟲</div>
+          
+          <div class="zoom-controls">
+            <button class="zoom-btn" id="btn-zoom-in" title="Zoom In">+</button>
+            <button class="zoom-btn zoom-reset" id="btn-zoom-reset" title="Reset Zoom">1x</button>
+            <button class="zoom-btn" id="btn-zoom-out" title="Zoom Out">−</button>
+          </div>
+          
+          <canvas id="walk3d-canvas" data-nopz></canvas>
+        </div>
+
+        <div class="ibox-controls">
+          <div class="control-group">
+            <div class="control-header">
+              <span>Flight Speed</span>
+              <span class="control-val" id="val-walk3d-step">Normal</span>
+            </div>
+            <input type="range" id="slider-walk3d-step" min="0.5" max="2.5" step="0.1" value="1">
+          </div>
+          <button class="btn" id="btn-walk3d-reset" style="margin-left: auto;">Respawn Swarm</button>
+        </div>
+
+        <div class="ibox-stats">
+          <div class="stat-card">
+            <span class="stat-label">Active Birds</span>
+            <span class="stat-value">10,000</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Flight Epochs</span>
+            <span class="stat-value" id="stat-walk3d-steps">0</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Current Zoom</span>
+            <span class="stat-value" id="stat-walk3d-zoom" style="color:var(--cream);">100%</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Return Probability</span>
+            <span class="stat-value" style="color:var(--fern-glow); text-shadow: 0 0 15px rgba(124,200,154,0.3);">~34.05%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="coda-block chapter-section">
+      <div class="coda-prose">
+        We build our fragile towers of certainty<br>
+        upon an ocean of tumbling dice.<br>
+        The beauty of the world is not the absence of chaos,<br>
+        but the flawless shape it takes when it forgets itself.
+      </div>
+
+      <div class="grand-quote">
+        <p>“For surely the atoms did not hold council, assigning order to each, flexing their keen minds with questions of place and motion... But shuffled and jumbled in many ways, in the course of infinite time they are driven together, trying every motion and union, until at last they fall into the arrangements by which this universe is created.”</p>
+        <cite>Lucretius</cite>
+        <span class="cite-detail">De Rerum Natura (On the Nature of Things), c. 50 BC</span>
+      </div>
+    </div>
+
+    <div class="ref-section chapter-section">
+      <h3 class="ref-heading">References</h3>
+      <ul class="ref-list">
+        <li><span class="ref-author">Laplace, Pierre-Simon,</span> <span class="ref-title">Théorie analytique des probabilités,</span> <span class="ref-detail">Courcier, 1812.</span></li>
+        <li><span class="ref-author">Galton, Francis,</span> <span class="ref-title">Natural Inheritance,</span> <span class="ref-detail">Macmillan and Co., 1889.</span></li>
+        <li><span class="ref-author">Pólya, George,</span> <span class="ref-title">Über eine Aufgabe der Wahrscheinlichkeitsrechnung betreffend die Irrfahrt im Strassennetz,</span> <span class="ref-detail">Mathematische Annalen, 1921.</span></li>
+        <li><span class="ref-author">Kakutani, Shizuo,</span> <span class="ref-title">On Brownian Motion in n-Space,</span> <span class="ref-detail">Proceedings of the Imperial Academy, 1944.</span></li>
+        <li><span class="ref-author">Einstein, Albert,</span> <span class="ref-title">Investigations on the Theory of the Brownian Movement,</span> <span class="ref-detail">Dover Publications, 1956.</span></li>
+        <li><span class="ref-author">Stigler, Stephen M.,</span> <span class="ref-title">The History of Statistics: The Measurement of Uncertainty before 1900,</span> <span class="ref-detail">Harvard University Press, 1986.</span></li>
+      </ul>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="footer-attr">
+      <div class="footer-name">Sang-hyun Kim</div>
+      <div class="footer-inst">Korea Institute for Advanced Study</div>
+      <div class="footer-inst">AI4MATH, KAIST</div>
+      <a class="footer-url" href="https://kimsh.kr" target="_blank">kimsh.kr</a>
+    </div>
+  </footer>
+
+  <script>
+    // --- Global State & Performance ---
+    const STATE = { paused: false, heroVisible: true, lastInteraction: Date.now(), canvases: [] };
+
+    const markActive = () => { STATE.lastInteraction = Date.now(); STATE.paused = false; };
+    ['mousemove', 'touchstart', 'wheel', 'keydown', 'click'].forEach(evt => window.addEventListener(evt, markActive, {passive: true}));
+
+    setInterval(() => {
+      const idleTime = Date.now() - STATE.lastInteraction;
+      if (idleTime > 15000) STATE.paused = true;
+      if (idleTime > 300000) STATE.heroVisible = false;
+    }, 1000);
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          if (entry.target.id === 'hero-section') STATE.heroVisible = true;
+        } else {
+          if (entry.target.id === 'hero-section') STATE.heroVisible = false;
+        }
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.chapter-section, #hero-section, .grand-quote').forEach(el => observer.observe(el));
+
+    // --- Canvas Utility ---
+    function setupCanvas(id, renderFn) {
+      const canvas = document.getElementById(id);
+      if (!canvas) return null;
+      const willRead = (id === 'walk-canvas');
+      const ctx = canvas.getContext('2d', { willReadFrequently: willRead });
+      const size = { w: 0, h: 0 };
+      
+      function resize() {
+        const dpr = window.devicePixelRatio || 1;
+        const isFixed = getComputedStyle(canvas).position === 'absolute' || getComputedStyle(canvas).position === 'fixed';
+        if (isFixed && canvas.parentElement.tagName === 'BODY' || id === 'hero-canvas') {
+            size.w = window.innerWidth; size.h = window.innerHeight;
+        } else {
+            const rect = canvas.parentElement.getBoundingClientRect(); size.w = rect.width; size.h = rect.height;
+        }
+        canvas.width = size.w * dpr; canvas.height = size.h * dpr;
+        if (id !== 'walk3d-canvas' && id !== 'walk-canvas') ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+      resize(); window.addEventListener('resize', resize);
+      const canvasObj = { canvas, ctx, size, dpr: window.devicePixelRatio || 1, render: renderFn };
+      STATE.canvases.push(canvasObj); return canvasObj;
+    }
+
+    function renderLoop() {
+        if (!STATE.paused) {
+            STATE.canvases.forEach(c => {
+                if (c.canvas.id !== 'ambient-canvas' && c.canvas.id !== 'hero-canvas') {
+                    const rect = c.canvas.getBoundingClientRect();
+                    if (rect.bottom < -200 || rect.top > window.innerHeight + 200) return;
+                }
+                c.render(c);
+            });
+        }
+        requestAnimationFrame(renderLoop);
+    }
+
+    // --- 1. Ambient Particles ---
+    const ambientParticles = Array.from({length: 20}, () => ({
+      x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight,
+      r: Math.random() * 1.5 + 0.5, vy: -(Math.random() * 0.2 + 0.1), alpha: Math.random() * 0.4 + 0.1
+    }));
+
+    setupCanvas('ambient-canvas', (c) => {
+      c.ctx.clearRect(0, 0, c.size.w, c.size.h); c.ctx.fillStyle = '#d4a853';
+      ambientParticles.forEach(p => {
+        c.ctx.globalAlpha = p.alpha; c.ctx.beginPath(); c.ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); c.ctx.fill();
+        p.y += p.vy; if (p.y < -10) { p.y = c.size.h + 10; p.x = Math.random() * c.size.w; }
+      });
+      c.ctx.globalAlpha = 1;
+    });
+
+    // --- 2. Hero Canvas: Ethereal Cascade ---
+    const heroDrops = []; const NUM_HERO_BINS = 65; const heroBins = new Array(NUM_HERO_BINS).fill(0);
+    function randomGaussian() {
+      let u = 1 - Math.random(); let v = Math.random();
+      return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+    }
+
+    setupCanvas('hero-canvas', (c) => {
+      if (!STATE.heroVisible) return;
+      c.ctx.fillStyle = 'rgba(3, 4, 10, 0.12)'; c.ctx.fillRect(0, 0, c.size.w, c.size.h);
+      if (Math.random() < 0.6) {
+        const targetX = c.size.w/2 + randomGaussian() * (c.size.w * 0.14);
+        heroDrops.push({ x: c.size.w/2 + (Math.random()-0.5)*40, y: -10, targetX: targetX, vy: Math.random() * 1.2 + 1.2, life: 1 });
+      }
+
+      c.ctx.fillStyle = '#ebd08d'; c.ctx.shadowColor = '#f4f0e6'; c.ctx.shadowBlur = 12;
+      for (let i = heroDrops.length - 1; i >= 0; i--) {
+        let p = heroDrops[i]; p.y += p.vy; p.x += (p.targetX - p.x) * 0.012; p.x += (Math.random() - 0.5) * 1.5; 
+        c.ctx.globalAlpha = p.life * 0.7; c.ctx.beginPath(); c.ctx.arc(p.x, p.y, 1.2, 0, Math.PI * 2); c.ctx.fill();
+        if (p.y > c.size.h - 40) {
+          let binIdx = Math.floor((p.x / c.size.w) * NUM_HERO_BINS);
+          if (binIdx >= 0 && binIdx < NUM_HERO_BINS) heroBins[binIdx] += 0.08;
+          heroDrops.splice(i, 1);
+        }
+      }
+      c.ctx.shadowBlur = 0;
+      c.ctx.globalAlpha = 0.15; c.ctx.beginPath(); c.ctx.moveTo(0, c.size.h);
+      for(let i=0; i<NUM_HERO_BINS; i++) {
+        let bx = (i/NUM_HERO_BINS) * c.size.w; let by = c.size.h - Math.min(heroBins[i] * 18, 250);
+        c.ctx.lineTo(bx, by); heroBins[i] *= 0.993; 
+      }
+      c.ctx.lineTo(c.size.w, c.size.h); c.ctx.fillStyle = '#d4a853'; c.ctx.fill();
+      c.ctx.strokeStyle = 'rgba(212,168,83,0.3)'; c.ctx.lineWidth = 1; c.ctx.stroke(); c.ctx.globalAlpha = 1;
+    });
+
+    // --- 3. Interactive: Quincunx Engine ---
+    const NUM_ROWS = 14; let qxBalls = [], qxBins = new Array(NUM_ROWS + 1).fill(0); let statCount = 0;
+    const uiRate = document.getElementById('slider-rate'); const uiBias = document.getElementById('slider-bias');
+    function getBinomialProb(n, k, p) {
+        let coeff = 1; for (let x = n - k + 1; x <= n; x++) coeff *= x; for (let x = 1; x <= k; x++) coeff /= x;
+        return coeff * Math.pow(p, k) * Math.pow(1 - p, n - k);
+    }
+    function getPegPos(row, col, startX, startY, spacingX, spacingY) {
+        const rowWidth = row * spacingX; const x = startX - rowWidth/2 + col * spacingX; const y = startY + row * spacingY; return {x, y};
+    }
+
+    class QuincunxParticle {
+        constructor() {
+            this.row = 0; this.col = 0; this.progress = 0; this.path = []; const bias = parseFloat(uiBias.value);
+            for (let i = 0; i < NUM_ROWS; i++) this.path.push(Math.random() < bias ? 1 : 0);
+        }
+    }
+
+    setupCanvas('galton-canvas', (c) => {
+        c.ctx.fillStyle = 'rgba(8, 10, 21, 0.4)'; c.ctx.fillRect(0, 0, c.size.w, c.size.h);
+        const rate = parseInt(uiRate.value); const bias = parseFloat(uiBias.value);
+        const gridH = c.size.h * 0.6; const spacingY = gridH / NUM_ROWS;
+        const spacingX = Math.min(spacingY * 1.5, c.size.w / (NUM_ROWS + 2));
+        const startY = c.size.h * 0.1; const startX = c.size.w / 2;
+
+        if (Math.random() < (rate / 25)) for(let i=0; i< (rate > 15 ? 2 : 1); i++) qxBalls.push(new QuincunxParticle());
+
+        c.ctx.fillStyle = 'rgba(244, 240, 230, 0.15)';
+        for (let r = 0; r <= NUM_ROWS; r++) {
+            for (let col = 0; col <= r; col++) {
+                const pos = getPegPos(r, col, startX, startY, spacingX, spacingY);
+                c.ctx.beginPath(); c.ctx.arc(pos.x, pos.y, 2.5, 0, Math.PI*2); c.ctx.fill();
+            }
+        }
+
+        c.ctx.fillStyle = '#ebd08d'; c.ctx.shadowColor = '#d4a853'; c.ctx.shadowBlur = 8;
+        const speed = 0.05 + (rate * 0.002);
+        for (let i = qxBalls.length - 1; i >= 0; i--) {
+            let b = qxBalls[i]; b.progress += speed;
+            if (b.progress >= 1) {
+                b.row++; b.col += b.path[b.row - 1]; b.progress -= 1;
+                if (b.row >= NUM_ROWS) {
+                    qxBins[b.col]++; statCount++; qxBalls.splice(i, 1);
+                    if (statCount % 5 === 0) document.getElementById('stat-total').innerText = statCount.toLocaleString();
+                    continue;
+                }
+            }
+            const p1 = getPegPos(b.row, b.col, startX, startY, spacingX, spacingY);
+            const p2 = getPegPos(b.row + 1, b.col + b.path[b.row], startX, startY, spacingX, spacingY);
+            let currX = p1.x + (p2.x - p1.x) * b.progress; let currY = p1.y + (p2.y - p1.y) * b.progress;
+            const arc = Math.sin(b.progress * Math.PI) * (spacingY * 0.3);
+            c.ctx.beginPath(); c.ctx.arc(currX, currY - arc, 3.5, 0, Math.PI*2); c.ctx.fill();
+        }
+        c.ctx.shadowBlur = 0;
+
+        const maxBinHeight = c.size.h * 0.25; const maxCount = Math.max(...qxBins, 5); const scaleY = maxBinHeight / maxCount;
+        c.ctx.fillStyle = 'rgba(212, 168, 83, 0.35)';
+        for (let i = 0; i <= NUM_ROWS; i++) {
+            let h = qxBins[i] * scaleY; let pos = getPegPos(NUM_ROWS, i, startX, startY, spacingX, spacingY);
+            c.ctx.fillRect(pos.x - spacingX*0.35, c.size.h - 10 - h, spacingX*0.7, h);
+        }
+
+        if (statCount > 0) {
+            c.ctx.strokeStyle = '#f4f0e6'; c.ctx.lineWidth = 2; c.ctx.shadowColor = 'rgba(244, 240, 230, 0.4)';
+            c.ctx.shadowBlur = 10; c.ctx.beginPath();
+            let expectedMaxProb = 0;
+            for (let i = 0; i <= NUM_ROWS; i++) {
+                let prob = getBinomialProb(NUM_ROWS, i, bias);
+                if (prob > expectedMaxProb) expectedMaxProb = prob;
+            }
+            for (let i = 0; i <= NUM_ROWS; i++) {
+                let prob = getBinomialProb(NUM_ROWS, i, bias);
+                let pos = getPegPos(NUM_ROWS, i, startX, startY, spacingX, spacingY);
+                let expectedHeight = statCount > 50 ? (statCount * prob * scaleY) : (prob / expectedMaxProb) * maxBinHeight * 0.8;
+                let y = c.size.h - 10 - expectedHeight;
+                if (i === 0) c.ctx.moveTo(pos.x, y); else c.ctx.lineTo(pos.x, y);
+            }
+            c.ctx.stroke(); c.ctx.shadowBlur = 0;
+        }
+    });
+
+    function updateIdeal() {
+        let b = parseFloat(uiBias.value);
+        document.getElementById('stat-peak').innerText = `Bin ${Math.round(NUM_ROWS * b)}`;
+    }
+    updateIdeal();
+
+    uiRate.addEventListener('input', (e) => { document.getElementById('val-rate').innerText = parseInt(e.target.value) < 8 ? "Slow" : parseInt(e.target.value) > 18 ? "Flood" : "Steady"; });
+    uiBias.addEventListener('input', (e) => {
+      let v = parseFloat(e.target.value); document.getElementById('val-bias').innerText = v < 0.45 ? "Left" : v > 0.55 ? "Right" : "Center";
+      updateIdeal(); document.getElementById('btn-reset').click();
+    });
+    document.getElementById('btn-reset').addEventListener('click', () => { qxBins.fill(0); qxBalls = []; statCount = 0; document.getElementById('stat-total').innerText = "0"; });
+
+    // --- 4. Interactive: The Universal Eraser (Convolution Engine) ---
+    const BINS = 100; const MAX_N = 10;
+    let rawBaseShape = new Array(BINS).fill(0.01); let baseShape = new Array(BINS).fill(0.01);
+    let convolutions = []; let baseMean = 0, baseStd = 1; let currentAnimatedN = 1.0;
+    function convolveArrays(A, B) {
+        let C = new Array(A.length + B.length - 1).fill(0);
+        for(let i=0; i<A.length; i++) { if(A[i] === 0) continue; for(let j=0; j<B.length; j++) C[i+j] += A[i] * B[j]; } return C;
+    }
+    function recalcConvolutions() {
+        let sum = 0; for(let i=0; i<BINS; i++) sum += rawBaseShape[i];
+        if(sum === 0) { rawBaseShape.fill(0.01); sum = BINS * 0.01; }
+        for(let i=0; i<BINS; i++) baseShape[i] = rawBaseShape[i] / sum;
+        baseMean = 0; for(let i=0; i<BINS; i++) baseMean += (i/BINS) * baseShape[i];
+        let variance = 0; for(let i=0; i<BINS; i++) variance += Math.pow((i/BINS) - baseMean, 2) * baseShape[i];
+        baseStd = Math.max(0.01, Math.sqrt(variance)); convolutions = [baseShape.slice()];
+        for(let k=1; k<MAX_N; k++) convolutions.push(convolveArrays(convolutions[k-1], baseShape));
+    }
+    function getDensity(N_int, z) {
+        if(N_int < 1 || N_int > MAX_N) return 0;
+        let pdf = convolutions[N_int - 1]; let targetMean = N_int * baseMean; let targetStd = Math.sqrt(N_int) * baseStd;
+        let k = BINS * (z * targetStd + targetMean); let val = 0;
+        if(k >= 0 && k < pdf.length - 1) { let lower = Math.floor(k); let frac = k - lower; val = pdf[lower] * (1 - frac) + pdf[lower+1] * frac; }
+        return val * BINS * targetStd; 
+    }
+    function initBaseShape() {
+        for(let i=0; i<BINS; i++) {
+            let x = i / BINS; let y = Math.exp(-Math.pow(x - 0.2, 2) / 0.005) + 0.3 * Math.exp(-Math.pow(x - 0.7, 2) / 0.05); rawBaseShape[i] = Math.max(0.01, y);
+        } recalcConvolutions();
+    }
+    initBaseShape();
+
+    const baseCanvasObj = setupCanvas('base-canvas', (c) => {
+        c.ctx.clearRect(0, 0, c.size.w, c.size.h);
+        c.ctx.strokeStyle = 'rgba(255,255,255,0.04)'; c.ctx.lineWidth = 1; c.ctx.beginPath();
+        for(let i=1; i<4; i++) {
+            c.ctx.moveTo(0, c.size.h * (i/4)); c.ctx.lineTo(c.size.w, c.size.h * (i/4));
+            c.ctx.moveTo(c.size.w * (i/4), 0); c.ctx.lineTo(c.size.w * (i/4), c.size.h);
+        } c.ctx.stroke();
+        c.ctx.fillStyle = 'rgba(212, 168, 83, 0.25)'; c.ctx.strokeStyle = '#ebd08d'; c.ctx.lineWidth = 2.5;
+        c.ctx.beginPath(); c.ctx.moveTo(0, c.size.h);
+        let maxVal = Math.max(...rawBaseShape); let scaleY = maxVal > 0 ? (c.size.h * 0.8) / maxVal : 0;
+        for(let i=0; i<BINS; i++) { let x = (i / (BINS-1)) * c.size.w; let y = c.size.h - (rawBaseShape[i] * scaleY); c.ctx.lineTo(x, y); }
+        c.ctx.lineTo(c.size.w, c.size.h); c.ctx.fill(); c.ctx.stroke();
+    });
+
+    let isDrawingShape = false; const sliderN = document.getElementById('slider-n');
+    function applyBrush(e) {
+        const rect = baseCanvasObj.canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX; const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        const x = clientX - rect.left; const y = clientY - rect.top;
+        let val = 1.0 - (y / rect.height); val = Math.max(0.01, Math.min(1, val));
+        let binX = (x / rect.width) * BINS;
+        for(let i=-5; i<=5; i++) {
+            let b = Math.floor(binX) + i;
+            if(b>=0 && b<BINS) { let weight = Math.exp(-(i*i)/4); rawBaseShape[b] = rawBaseShape[b] * (1 - weight*0.4) + val * weight*0.4; }
+        } recalcConvolutions();
+    }
+    function startDrawing(e) {
+        isDrawingShape = true; let hint = document.getElementById('canvas-hint'); if (hint) hint.style.opacity = 0;
+        if (sliderN.value != 1) { sliderN.value = 1; document.getElementById('val-n-slider').innerText = "1.00"; document.getElementById('val-conv-n').innerText = "N = 1"; currentAnimatedN = 1.0; }
+        applyBrush(e);
+    }
+    baseCanvasObj.canvas.addEventListener('mousedown', startDrawing); baseCanvasObj.canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDrawing(e); }, {passive: false});
+    window.addEventListener('mouseup', () => { isDrawingShape = false; }); window.addEventListener('touchend', () => { isDrawingShape = false; });
+    baseCanvasObj.canvas.addEventListener('mousemove', (e) => { if(isDrawingShape) applyBrush(e); }); baseCanvasObj.canvas.addEventListener('touchmove', (e) => { if(isDrawingShape) { e.preventDefault(); applyBrush(e); } }, {passive: false});
+
+    setupCanvas('conv-canvas', (c) => {
+        c.ctx.clearRect(0, 0, c.size.w, c.size.h);
+        let targetN = parseFloat(sliderN.value); currentAnimatedN += (targetN - currentAnimatedN) * 0.15; 
+        c.ctx.strokeStyle = 'rgba(244, 240, 230, 0.15)'; c.ctx.lineWidth = 2; c.ctx.beginPath();
+        const Z_RANGE = 4; const maxDensity = 0.45; const scaleY = (c.size.h * 0.9) / maxDensity;
+        for(let px=0; px<=c.size.w; px+=2) {
+            let z = ((px / c.size.w) * (Z_RANGE * 2)) - Z_RANGE; let theoryY = (1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * z * z);
+            let py = c.size.h - (theoryY * scaleY); if(px===0) c.ctx.moveTo(px, py); else c.ctx.lineTo(px, py);
+        } c.ctx.stroke();
+        if(!convolutions || convolutions.length === 0) return;
+
+        c.ctx.fillStyle = 'rgba(212, 168, 83, 0.55)'; c.ctx.strokeStyle = '#f4f0e6'; c.ctx.lineWidth = 2.5;
+        c.ctx.shadowColor = 'rgba(244, 240, 230, 0.3)'; c.ctx.shadowBlur = 8; c.ctx.beginPath(); c.ctx.moveTo(0, c.size.h);
+        let lowerN = Math.floor(currentAnimatedN); let upperN = Math.min(Math.ceil(currentAnimatedN), MAX_N);
+        let fracN = currentAnimatedN - lowerN; if(lowerN === upperN) fracN = 0; let matchError = 0;
+
+        for(let px=0; px<=c.size.w; px+=2) {
+            let z = ((px / c.size.w) * (Z_RANGE * 2)) - Z_RANGE;
+            let d1 = getDensity(lowerN, z); let d2 = getDensity(upperN, z); let density = d1 * (1 - fracN) + d2 * fracN;
+            let theoryY = (1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * z * z); let dz = (Z_RANGE * 2) / (c.size.w / 2);
+            matchError += Math.abs(density - theoryY) * dz; let py = c.size.h - (density * scaleY); c.ctx.lineTo(px, py);
+        }
+        c.ctx.lineTo(c.size.w, c.size.h); c.ctx.fill(); c.ctx.stroke(); c.ctx.shadowBlur = 0;
+        let fit = Math.max(0, 100 - matchError * 50); if(currentAnimatedN >= MAX_N - 0.05) fit = 99.9;
+        document.getElementById('stat-fit').innerText = currentAnimatedN < 1.05 ? "-" : fit.toFixed(1) + "%";
+        document.getElementById('stat-fit').style.color = fit > 95 ? "var(--fern-glow)" : "var(--gold-bright)";
+        document.getElementById('stat-n').innerText = currentAnimatedN.toFixed(2);
+    });
+
+    sliderN.addEventListener('input', (e) => {
+        let val = parseFloat(e.target.value); document.getElementById('val-n-slider').innerText = val.toFixed(2); document.getElementById('val-conv-n').innerText = `N = ${Math.round(val)}`;
+    });
+    document.getElementById('btn-reset-shape').addEventListener('click', () => {
+        initBaseShape(); sliderN.value = 1; currentAnimatedN = 1.0;
+        document.getElementById('val-n-slider').innerText = "1.00"; document.getElementById('val-conv-n').innerText = "N = 1"; document.getElementById('canvas-hint').style.opacity = 1;
+    });
+
+    // --- 5. Interactive: The Drunkard's Glow (2D Random Walk) ---
+    const NUM_WALKERS = 100000; const walkersX = new Float32Array(NUM_WALKERS); const walkersY = new Float32Array(NUM_WALKERS);
+    let walkActive = false; let walkSteps = 0; let walkImageData = null; let walkDensity = null;
+    const uiWalkStep = document.getElementById('slider-walk-step');
+    uiWalkStep.addEventListener('input', (e) => { document.getElementById('val-walk-step').innerText = parseFloat(e.target.value) < 1 ? "Low" : parseFloat(e.target.value) > 2 ? "High" : "Medium"; });
+
+    const walkCanvasObj = setupCanvas('walk-canvas', (c) => {
+        const w = c.size.w * c.dpr; const h = c.size.h * c.dpr;
+        if (!walkImageData || walkImageData.width !== w || walkImageData.height !== h) {
+            walkImageData = c.ctx.createImageData(w, h); walkDensity = new Float32Array(w * h); const data = walkImageData.data;
+            for (let i = 0; i < w * h; i++) { let ptr = i * 4; data[ptr] = 8; data[ptr+1] = 10; data[ptr+2] = 21; data[ptr+3] = 255; }
+            walkActive = false; let hint = document.getElementById('walk-hint'); if (hint) hint.style.opacity = 1;
+        }
+        if (!walkActive) { c.ctx.putImageData(walkImageData, 0, 0); return; }
+
+        const data = walkImageData.data;
+        for (let i = 0; i < NUM_WALKERS; i++) {
+            let px = Math.floor(walkersX[i]); let py = Math.floor(walkersY[i]);
+            if (px >= 0 && px < w && py >= 0 && py < h) {
+                let idx = py * w + px; walkDensity[idx] = 0; let ptr = idx * 4; data[ptr] = 8; data[ptr+1] = 10; data[ptr+2] = 21;
+            }
+        }
+
+        const stepSize = parseFloat(uiWalkStep.value) * c.dpr;
+        for (let s = 0; s < 2; s++) {
+            for (let i = 0; i < NUM_WALKERS; i++) {
+                let angle = Math.random() * Math.PI * 2; walkersX[i] += Math.cos(angle) * stepSize; walkersY[i] += Math.sin(angle) * stepSize;
+            } walkSteps++;
+        }
+        for (let i = 0; i < NUM_WALKERS; i++) {
+            let px = Math.floor(walkersX[i]); let py = Math.floor(walkersY[i]);
+            if (px >= 0 && px < w && py >= 0 && py < h) walkDensity[py * w + px]++;
+        }
+
+        let currentPeak = Math.max(2, (NUM_WALKERS / (Math.PI * walkSteps * stepSize * stepSize)) * 2.5);
+        for (let i = 0; i < NUM_WALKERS; i++) {
+            let px = Math.floor(walkersX[i]); let py = Math.floor(walkersY[i]);
+            if (px >= 0 && px < w && py >= 0 && py < h) {
+                let idx = py * w + px; let norm = Math.pow(Math.min(1.0, walkDensity[idx] / currentPeak), 0.5); let r, g, b;
+                if (norm < 0.4) { let t = norm / 0.4; r = 8 + t * 204; g = 10 + t * 158; b = 21 + t * 62; }
+                else if (norm < 0.8) { let t = (norm - 0.4) / 0.4; r = 212 + t * 32; g = 168 + t * 72; b = 83 + t * 147; }
+                else { let t = (norm - 0.8) / 0.2; r = 244 + t * 11; g = 240 + t * 15; b = 230 + t * 25; }
+                let ptr = idx * 4; data[ptr] = r; data[ptr+1] = g; data[ptr+2] = b;
+            }
+        }
+        c.ctx.putImageData(walkImageData, 0, 0);
+
+        c.ctx.setTransform(c.dpr, 0, 0, c.dpr, 0, 0);
+        let sigmaCss = (stepSize / c.dpr) * Math.sqrt(walkSteps / 2);
+        c.ctx.lineWidth = 1.5; c.ctx.strokeStyle = 'rgba(244, 240, 230, 0.4)'; c.ctx.setLineDash([4, 4]);
+        c.ctx.beginPath(); c.ctx.arc(c.size.w/2, c.size.h/2, sigmaCss, 0, Math.PI*2); c.ctx.stroke();
+        c.ctx.strokeStyle = 'rgba(212, 168, 83, 0.6)'; c.ctx.setLineDash([]);
+        c.ctx.beginPath(); c.ctx.arc(c.size.w/2, c.size.h/2, sigmaCss * 2, 0, Math.PI*2); c.ctx.stroke();
+        c.ctx.setTransform(1, 0, 0, 1, 0, 0); 
+
+        if (walkSteps % 10 === 0) {
+            document.getElementById('stat-walk-steps').innerText = walkSteps.toLocaleString();
+            document.getElementById('stat-walk-radius').innerText = Math.round(sigmaCss * 2) + " px";
+        }
+        if (walkSteps > 3000) walkActive = false; 
+    });
+
+    walkCanvasObj.canvas.addEventListener('mousedown', () => {
+        let hint = document.getElementById('walk-hint'); if (hint) hint.style.opacity = 0;
+        const w = walkCanvasObj.size.w * walkCanvasObj.dpr; const h = walkCanvasObj.size.h * walkCanvasObj.dpr;
+        for(let i=0; i<NUM_WALKERS; i++) { walkersX[i] = w/2; walkersY[i] = h/2; }
+        walkSteps = 0; if (walkDensity) walkDensity.fill(0);
+        if (walkImageData) { const data = walkImageData.data; for (let i = 0; i < w * h; i++) { let ptr = i*4; data[ptr]=8; data[ptr+1]=10; data[ptr+2]=21; data[ptr+3]=255; } }
+        walkActive = true; document.getElementById('stat-walk-count').innerText = NUM_WALKERS.toLocaleString();
+    });
+    walkCanvasObj.canvas.addEventListener('touchstart', (e) => { e.preventDefault(); walkCanvasObj.canvas.dispatchEvent(new Event('mousedown')); }, {passive: false});
+
+    document.getElementById('btn-walk-reset').addEventListener('click', () => {
+        walkActive = false; let hint = document.getElementById('walk-hint'); if (hint) hint.style.opacity = 1;
+        document.getElementById('stat-walk-count').innerText = "0"; document.getElementById('stat-walk-steps').innerText = "0"; document.getElementById('stat-walk-radius').innerText = "0 px";
+        const w = walkCanvasObj.size.w * walkCanvasObj.dpr; const h = walkCanvasObj.size.h * walkCanvasObj.dpr;
+        if (walkDensity) walkDensity.fill(0);
+        if (walkImageData) { const data = walkImageData.data; for (let i = 0; i < w * h; i++) { let ptr = i*4; data[ptr]=8; data[ptr+1]=10; data[ptr+2]=21; data[ptr+3]=255; } }
+        walkCanvasObj.ctx.putImageData(walkImageData, 0, 0);
+    });
+
+    // --- 6. Interactive: The Flight of the Lost Bird (3D Random Walk) ---
+    const NUM_3D_WALKERS = 10000;
+    const w3dX = new Float32Array(NUM_3D_WALKERS); const w3dY = new Float32Array(NUM_3D_WALKERS); const w3dZ = new Float32Array(NUM_3D_WALKERS);
+    let birdPath = []; let walk3DActive = false; let walk3DSteps = 0;
+    let cameraAngle = 0; let manualRotX = 0; let manualRotY = 0;
+    
+    // Smooth drag & zoom mechanics
+    let dragVx = 0, dragVy = 0;
+    let targetZoomLevel = 1.0;
+    let currentZoomLevel = 1.0;
+    const MAX_ZOOM = 20.0;
+    const MIN_ZOOM = 0.5;
+
+    const uiWalk3dStep = document.getElementById('slider-walk3d-step');
+    uiWalk3dStep.addEventListener('input', (e) => { document.getElementById('val-walk3d-step').innerText = parseFloat(e.target.value) < 0.8 ? "Slow" : parseFloat(e.target.value) > 1.8 ? "Fast" : "Normal"; });
+
+    // Zoom Buttons
+    document.getElementById('btn-zoom-in').addEventListener('click', (e) => {
+        e.stopPropagation();
+        targetZoomLevel = Math.min(MAX_ZOOM, targetZoomLevel * 1.5);
+        let hint = document.getElementById('walk3d-hint'); if(hint) hint.style.opacity = 0;
+    });
+    document.getElementById('btn-zoom-out').addEventListener('click', (e) => {
+        e.stopPropagation();
+        targetZoomLevel = Math.max(MIN_ZOOM, targetZoomLevel / 1.5);
+    });
+    document.getElementById('btn-zoom-reset').addEventListener('click', (e) => {
+        e.stopPropagation();
+        targetZoomLevel = 1.0;
+        manualRotX = 0;
+        manualRotY = 0;
+    });
+
+    function reset3D() {
+        w3dX.fill(0); w3dY.fill(0); w3dZ.fill(0);
+        birdPath = [{x:0, y:0, z:0}]; walk3DSteps = 0; walk3DActive = true;
+        document.getElementById('stat-walk3d-steps').innerText = "0";
+    }
+
+    const walk3dCanvasObj = setupCanvas('walk3d-canvas', (c) => {
+        c.ctx.setTransform(1, 0, 0, 1, 0, 0);
+        const cw = c.size.w * c.dpr; const ch = c.size.h * c.dpr;
+        
+        c.ctx.fillStyle = '#080a15'; c.ctx.fillRect(0, 0, cw, ch);
+        if (!walk3DActive && walk3DSteps === 0) reset3D();
+
+        // Physics: Camera Inertia
+        if (!isDragging3D) {
+            manualRotY += dragVx; manualRotX += dragVy;
+            dragVx *= 0.94; dragVy *= 0.94; cameraAngle += 0.002; 
+        }
+        manualRotX = Math.max(-Math.PI/2.1, Math.min(Math.PI/2.1, manualRotX));
+        
+        // Physics: Smooth Zoom Interpolation
+        currentZoomLevel += (targetZoomLevel - currentZoomLevel) * 0.1;
+        if (Math.abs(targetZoomLevel - currentZoomLevel) > 0.01) {
+            document.getElementById('stat-walk3d-zoom').innerText = Math.round(currentZoomLevel * 100) + "%";
+        }
+
+        if (walk3DActive && walk3DSteps < 3500) {
+            const step = parseFloat(uiWalk3dStep.value) * 3.5; 
+            for (let i = 0; i < NUM_3D_WALKERS; i++) {
+                let u = Math.random(); let v = Math.random(); let theta = 2 * Math.PI * u; let phi = Math.acos(2 * v - 1);
+                w3dX[i] += step * Math.sin(phi) * Math.cos(theta); w3dY[i] += step * Math.sin(phi) * Math.sin(theta); w3dZ[i] += step * Math.cos(phi);
+            }
+            birdPath.push({x: w3dX[0], y: w3dY[0], z: w3dZ[0]});
+            walk3DSteps++;
+            if (walk3DSteps % 5 === 0) document.getElementById('stat-walk3d-steps').innerText = walk3DSteps.toLocaleString();
+            if (walk3DSteps >= 3500) walk3DActive = false;
+        }
+
+        const baseFov = 800 * c.dpr;
+        const fov = baseFov * currentZoomLevel;
+        const dynamicZ = (walk3DSteps * parseFloat(uiWalk3dStep.value) * 1.5) + 800;
+        const viewZ = dynamicZ * c.dpr;
+        const cx = cw / 2; const cy = ch / 2;
+
+        const totalRotY = cameraAngle + manualRotY; const totalRotX = 0.25 + manualRotX; 
+        const cosY = Math.cos(totalRotY); const sinY = Math.sin(totalRotY);
+        const cosX = Math.cos(totalRotX); const sinX = Math.sin(totalRotX);
+
+        c.ctx.globalCompositeOperation = 'lighter';
+        
+        for (let i = 1; i < NUM_3D_WALKERS; i++) {
+            let x = w3dX[i] * c.dpr; let y = w3dY[i] * c.dpr; let z = w3dZ[i] * c.dpr;
+            let rx = x * cosY - z * sinY; let rz = x * sinY + z * cosY;
+            let ry = y * cosX - rz * sinX; rz = y * sinX + rz * cosX;
+
+            let scale = fov / (baseFov + rz + viewZ);
+            if (scale > 0 && rz + viewZ > -baseFov) {
+                let px = cx + rx * scale; let py = cy + ry * scale;
+                
+                // Deep space optimization: cull heavily off-screen particles when zoomed in
+                if (px < -200 || px > cw + 200 || py < -200 || py > ch + 200) continue;
+
+                let r = Math.max(0.5, 2.0 * scale);
+                // Lower opacity significantly as we zoom in so it remains a mist, not a blinding white wall
+                let alpha = Math.min(1, Math.max(0, scale * (1.5 / currentZoomLevel)));
+                c.ctx.fillStyle = `rgba(212, 168, 83, ${alpha * 0.25})`;
+                
+                c.ctx.beginPath(); c.ctx.arc(px, py, r, 0, Math.PI*2); c.ctx.fill();
+            }
+        }
+
+        let oscale = fov / (baseFov + viewZ);
+        c.ctx.beginPath(); c.ctx.arc(cx, cy, 7 * oscale, 0, Math.PI*2);
+        c.ctx.fillStyle = '#ebd08d'; c.ctx.shadowColor = '#d4a853'; c.ctx.shadowBlur = 20;
+        c.ctx.fill(); c.ctx.shadowBlur = 0;
+
+        if (birdPath.length > 1) {
+            c.ctx.strokeStyle = 'rgba(246, 242, 233, 0.9)'; 
+            c.ctx.lineWidth = 1.8 * c.dpr * Math.max(1, Math.pow(currentZoomLevel, 0.3));
+            c.ctx.shadowColor = 'rgba(212, 168, 83, 0.8)'; c.ctx.shadowBlur = 10; c.ctx.beginPath();
+            
+            let isDrawing = false;
+            for (let i = 0; i < birdPath.length; i++) {
+                let p = birdPath[i]; let x = p.x * c.dpr; let y = p.y * c.dpr; let z = p.z * c.dpr;
+                let rx = x * cosY - z * sinY; let rz = x * sinY + z * cosY;
+                let ry = y * cosX - rz * sinX; rz = y * sinX + rz * cosX;
+
+                let scale = fov / (baseFov + rz + viewZ);
+                if (scale > 0 && (baseFov + rz + viewZ) > 10) {
+                    let px = cx + rx * scale; let py = cy + ry * scale;
+                    if (!isDrawing) { c.ctx.moveTo(px, py); isDrawing = true; }
+                    else { c.ctx.lineTo(px, py); }
+                } else {
+                    isDrawing = false;
+                }
+            }
+            c.ctx.stroke();
+
+            let head = birdPath[birdPath.length - 1];
+            let hx = head.x * c.dpr; let hy = head.y * c.dpr; let hz = head.z * c.dpr;
+            let hrx = hx * cosY - hz * sinY; let hrz = hx * sinY + hz * cosY;
+            let hry = hy * cosX - hrz * sinX; hrz = hy * sinX + hrz * cosX;
+            let hscale = fov / (baseFov + hrz + viewZ);
+            
+            if (hscale > 0 && (baseFov + hrz + viewZ) > 10) {
+                let hpx = cx + hrx * hscale; let hpy = cy + hry * hscale;
+                if (hpx > -100 && hpx < cw + 100 && hpy > -100 && hpy < ch + 100) {
+                    c.ctx.fillStyle = '#ffffff'; c.ctx.shadowColor = '#ffffff'; c.ctx.shadowBlur = 15;
+                    c.ctx.beginPath(); c.ctx.arc(hpx, hpy, 4.5 * hscale, 0, Math.PI*2);
+                    c.ctx.fill(); c.ctx.shadowBlur = 0;
+                }
+            }
+        }
+        c.ctx.globalCompositeOperation = 'source-over';
+    });
+
+    let isDragging3D = false; let lastMouseX = 0, lastMouseY = 0;
+    const walk3dWrapper = document.getElementById('walk3d-wrapper');
+
+    // Drag to orbit
+    walk3dCanvasObj.canvas.addEventListener('mousedown', (e) => {
+        isDragging3D = true; dragVx = 0; dragVy = 0; lastMouseX = e.clientX; lastMouseY = e.clientY;
+        walk3dWrapper.style.cursor = 'grabbing';
+        let hint = document.getElementById('walk3d-hint'); if(hint) hint.style.opacity = 0;
+    });
+    window.addEventListener('mouseup', () => { isDragging3D = false; walk3dWrapper.style.cursor = 'grab'; });
+    window.addEventListener('mousemove', (e) => {
+        if(isDragging3D) {
+            let sensitivity = 0.005 / Math.pow(currentZoomLevel, 0.8);
+            dragVx = (e.clientX - lastMouseX) * sensitivity;
+            dragVy = (e.clientY - lastMouseY) * sensitivity;
+            manualRotY += dragVx; manualRotX += dragVy; lastMouseX = e.clientX; lastMouseY = e.clientY;
+        }
+    });
+
+    // Touch support for orbit
+    walk3dCanvasObj.canvas.addEventListener('touchstart', (e) => {
+        if(e.touches.length === 1) {
+            e.preventDefault(); isDragging3D = true; dragVx = 0; dragVy = 0;
+            lastMouseX = e.touches[0].clientX; lastMouseY = e.touches[0].clientY;
+            let hint = document.getElementById('walk3d-hint'); if(hint) hint.style.opacity = 0;
+        }
+    }, {passive: false});
+    window.addEventListener('touchend', () => isDragging3D = false);
+    window.addEventListener('touchmove', (e) => {
+        if(isDragging3D && e.touches.length === 1) {
+            e.preventDefault();
+            let sensitivity = 0.005 / Math.pow(currentZoomLevel, 0.8);
+            dragVx = (e.touches[0].clientX - lastMouseX) * sensitivity;
+            dragVy = (e.touches[0].clientY - lastMouseY) * sensitivity;
+            manualRotY += dragVx; manualRotX += dragVy; lastMouseX = e.touches[0].clientX; lastMouseY = e.touches[0].clientY;
+        }
+    }, {passive: false});
+
+    // Scroll Wheel Zoom
+    walk3dCanvasObj.canvas.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        if (e.deltaY < 0) {
+            targetZoomLevel = Math.min(MAX_ZOOM, targetZoomLevel * 1.15);
+        } else {
+            targetZoomLevel = Math.max(MIN_ZOOM, targetZoomLevel / 1.15);
+        }
+        let hint = document.getElementById('walk3d-hint'); if(hint) hint.style.opacity = 0;
+    }, {passive: false});
+
+    document.getElementById('btn-walk3d-reset').addEventListener('click', reset3D);
+
+    // Start Engine
+    renderLoop();
+
+  </script>
+</body>
+</html>
