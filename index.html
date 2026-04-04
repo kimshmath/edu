@@ -151,21 +151,21 @@
     /* ═══ HEXAGONAL LAYOUT ═══ */
     .hexagon-wrapper {
       position: relative;
-      width: min(480px, 88vw);
-      height: min(540px, 100vw);
-      margin-bottom: 2.5rem;
+      width: min(420px, 82vw);
+      height: min(420px, 82vw);
+      margin-bottom: 2rem;
       overflow: visible;
     }
 
     /* ─── Category Cards (positioned absolutely) ─── */
     .category-card {
       position: absolute;
-      width: clamp(130px, 30vw, 160px);
+      width: clamp(110px, 26vw, 140px);
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      padding: 1.2rem 0.7rem 1rem;
+      padding: 0.9rem 0.6rem 0.8rem;
       border-radius: 22px;
       border: 1px solid var(--border);
       background: var(--surface);
@@ -219,29 +219,29 @@
     }
 
 
-    /* Hexagon vertex positions — pulled inward for tighter clustering */
+    /* Hexagon vertex positions — tight clustering */
     .category-card[data-cat="space"] {
-      left: 50%; top: 8%;
+      left: 50%; top: 6%;
       animation-delay: 0.1s;
     }
     .category-card[data-cat="quantum"] {
-      left: 85%; top: 30%;
+      left: 88%; top: 28%;
       animation-delay: 0.18s;
     }
     .category-card[data-cat="machine"] {
-      left: 85%; top: 70%;
+      left: 88%; top: 72%;
       animation-delay: 0.26s;
     }
     .category-card[data-cat="mechanics"] {
-      left: 50%; top: 92%;
+      left: 50%; top: 94%;
       animation-delay: 0.34s;
     }
     .category-card[data-cat="sense"] {
-      left: 15%; top: 70%;
+      left: 12%; top: 72%;
       animation-delay: 0.42s;
     }
     .category-card[data-cat="flow"] {
-      left: 15%; top: 30%;
+      left: 12%; top: 28%;
       animation-delay: 0.50s;
     }
 
