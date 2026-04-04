@@ -27,6 +27,7 @@
     rel="stylesheet">
   <link rel="stylesheet" href="drum_ios.css">
   <link rel="stylesheet" href="mellow_ios.css">
+  <link rel="stylesheet" href="narration_player.css">
 <style>
     *,
     *::before,
@@ -138,6 +139,7 @@
 
     #pitch-slider {
       -webkit-appearance: none;
+      appearance: none;
       width: 70px;
       height: 2px;
       background: var(--border);
@@ -148,6 +150,7 @@
 
     #pitch-slider::-webkit-slider-thumb {
       -webkit-appearance: none;
+      appearance: none;
       width: 11px;
       height: 11px;
       border-radius: 50%;
@@ -1119,7 +1122,6 @@
       gap: .55rem;
       cursor: pointer;
       justify-content: flex-end;
-      group: hover
     }
 
     .sn-dot-pip {
@@ -1891,7 +1893,7 @@
       cursor: pointer;
       outline: none;
       -webkit-appearance: none;
-      appearance: none
+      appearance: none;
     }
 
     .three-canvas-row {
@@ -4603,6 +4605,23 @@ self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>
       </script>
   </div>
   <script src="drum_ios_bridge.js"></script>
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'drum',
+  basePath: 'assets/narration/drum/',
+  segments: [
+    { id: 0, section: '#hero',       label: 'Introduction' },
+    { id: 1, section: '#sec-strike',  label: '§1 Voice of the Drum' },
+    { id: 2, section: '#sec-phasor',  label: '§2 Phasor Constellation' },
+    { id: 3, section: '#sec-modes',   label: '§3 Pure Forms' },
+    { id: 4, section: '#sec-beat',    label: '§4 Interference' },
+    { id: 5, section: '#sec-weyl',    label: '§5 Weyl\'s Law' },
+    { id: 6, section: '#sec-iso',     label: '§6 Isospectral Drums' },
+    { id: 7, section: '#sec-nodal',   label: '§7 Nodal Domains' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 </body>
 
 </html>

@@ -24,6 +24,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Space+Mono:ital@0;1&family=Fraunces:ital,opsz,wght@0,9..144,400;1,9..144,400&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="drum_ios.css">
 <link rel="stylesheet" href="mellow_ios.css">
+<link rel="stylesheet" href="narration_player.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -2607,5 +2608,22 @@ self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>
   </script>
 </div>
 <script src="drum_ios_bridge.js"></script>
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'drum',
+  basePath: 'assets/narration/drum/',
+  segments: [
+    { id: 0, section: '#hero',       label: '소개' },
+    { id: 1, section: '#sec-strike',  label: '§1 북의 목소리' },
+    { id: 2, section: '#sec-phasor',  label: '§2 페이저 성좌' },
+    { id: 3, section: '#sec-modes',   label: '§3 순수한 형태' },
+    { id: 4, section: '#sec-beat',    label: '§4 간섭과 맥놀이' },
+    { id: 5, section: '#sec-weyl',    label: '§5 바일 법칙' },
+    { id: 6, section: '#sec-iso',     label: '§6 등스펙트럼 드럼' },
+    { id: 7, section: '#sec-nodal',   label: '§7 마디 영역' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 </body>
 </html>

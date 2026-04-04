@@ -1,0 +1,98 @@
+{
+  "chapter": "sound",
+  "segments": [
+    {
+      "id": 1,
+      "text_en": "Welcome to The Mathematics of Sound. A violin and a flute both play the same note — A four-forty — yet they sound completely different. Why? The answer lies in mathematics. Let's explore.",
+      "text_ko": "소리의 수학에 오신 것을 환영합니다. 바이올린과 플루트가 같은 음, 라 사백사십 헤르츠를 연주하는데, 왜 전혀 다른 소리가 날까요? 답은 수학에 있습니다. 함께 알아볼까요.",
+      "scroll_to": "#hero",
+      "pause_after": true
+    },
+    {
+      "id": 2,
+      "text_en": "Sound is nothing more than air in motion. The simplest possible sound is a sine wave — a single, pure frequency. Try dragging the sliders below to shape one yourself. Change the frequency to hear the pitch rise and fall.",
+      "text_ko": "소리는 공기의 움직임에 불과합니다. 가장 단순한 소리인 사인파는 하나의 순수한 주파수입니다. 아래 슬라이더를 움직여 직접 만들어 보세요. 주파수를 바꾸면 음높이가 어떻게 변하는지 들어 보세요.",
+      "scroll_to": "#sec-wave",
+      "pause_after": true,
+      "resume_on": "sineInteraction"
+    },
+    {
+      "id": 3,
+      "text_en": "Twenty-five hundred years ago, Pythagoras walked past a blacksmith and noticed something strange. Some pairs of hammers rang beautifully together, while others clashed. He discovered that harmony comes from simple ratios. Tap any interval to hear it.",
+      "text_ko": "이천오백 년 전, 피타고라스가 대장간을 지나다 이상한 점을 발견했습니다. 어떤 망치 쌍은 아름다운 소리를 냈고, 어떤 쌍은 불협화음을 냈습니다. 그는 화음이 단순한 정수비에서 나온다는 것을 알아냈습니다. 아무 음정이나 탭해서 들어 보세요.",
+      "scroll_to": "#sec-pythagoras",
+      "pause_after": true,
+      "resume_on": "intervalInteraction"
+    },
+    {
+      "id": 4,
+      "text_en": "Just intonation sounds gorgeous, but it has a fatal flaw. You can't change key without retuning the entire instrument. The fix is equal temperament: divide the octave into twelve identical steps. Press play to hear the difference.",
+      "text_ko": "순정률은 아름답지만 치명적 결함이 있습니다. 악기 전체를 다시 조율하지 않으면 조를 바꿀 수 없습니다. 해결책이 평균율입니다. 옥타브를 열두 개의 동일한 음 간격으로 나누는 것이죠. 재생 버튼을 눌러 차이를 들어 보세요.",
+      "scroll_to": "#sec-temperament",
+      "pause_after": true,
+      "resume_on": "temperamentInteraction"
+    },
+    {
+      "id": 5,
+      "text_en": "Let's compare the two tuning systems side by side, instrument by instrument. Choose an instrument and a chord — then tap Just and Equal to hear the subtle difference. With headphones, you'll hear a slow pulsing called beating in the equal-tempered version.",
+      "text_ko": "두 조율 체계를 악기별로 비교해 봅시다. 악기와 화음을 선택한 다음, 순정률과 평균율 버튼을 탭해 보세요. 이어폰을 쓰면 평균율 버전에서 '맥놀이'라고 부르는 느린 진동이 들릴 거예요.",
+      "scroll_to": "#sec-instruments",
+      "pause_after": true,
+      "resume_on": "instrumentInteraction"
+    },
+    {
+      "id": 6,
+      "text_en": "Pythagoras's beloved three-to-two ratio has a dark secret. Stack twelve perfect fifths and you should land back where you started — but you don't. The leftover error is the Pythagorean comma. Tap the circle to hear how the last fifth howls like a wolf.",
+      "text_ko": "피타고라스가 사랑한 삼 대 이의 비율에는 비밀이 있습니다. 완전5도를 열두 번 쌓으면 원래 자리로 돌아와야 하는데, 그렇지 않습니다. 이 오차가 피타고라스 콤마입니다. 원 위를 탭해서 마지막 5도가 어떻게 울부짖는지 들어 보세요.",
+      "scroll_to": "#sec-wolf",
+      "pause_after": true,
+      "resume_on": "wolfInteraction"
+    },
+    {
+      "id": 7,
+      "text_en": "Bach found a third way. His Well-Tempered Clavier uses a system where every key works, but each sounds different. C major is warm. F-sharp major crackles with tension. Tap a key below to hear its personality.",
+      "text_ko": "바흐는 제삼의 길을 찾았습니다. 그의 평균율 클라비어에서는 모든 조가 작동하지만, 각각 다른 개성을 갖습니다. 다 장조는 따뜻하고, 올림바 장조는 긴장감이 있습니다. 아래에서 조를 탭해 그 성격을 들어 보세요.",
+      "scroll_to": "#sec-bach",
+      "pause_after": true,
+      "resume_on": "bachInteraction"
+    },
+    {
+      "id": 8,
+      "text_en": "Now for Fourier's radical idea. In eighteen twenty-two, he claimed that any waveform, no matter how complex, is just sine waves added together. Use the sliders below to build a complex sound from harmonics. Try the instrument presets.",
+      "text_ko": "이제 푸리에의 혁명적 아이디어입니다. 1822년, 그는 아무리 복잡한 파형도 사인파의 합이라고 주장했습니다. 아래 슬라이더로 하모닉을 조합해 복잡한 소리를 만들어 보세요. 악기 프리셋도 시도해 보세요.",
+      "scroll_to": "#sec-fourier",
+      "pause_after": true,
+      "resume_on": "fourierInteraction"
+    },
+    {
+      "id": 9,
+      "text_en": "And so the mystery is solved. A violin and a flute playing the same note differ because they have different harmonic content — different proportions of sine waves stacked together. That unique mix is what we call timbre.",
+      "text_ko": "이제 미스터리가 풀렸습니다. 바이올린과 플루트가 같은 음을 내도 다르게 들리는 이유는 하모닉 구성이 다르기 때문입니다. 사인파들이 다른 비율로 합쳐진 것이죠. 이 고유한 조합을 우리는 음색이라 부릅니다.",
+      "scroll_to": "#sec-timbre",
+      "pause_after": true
+    },
+    {
+      "id": 10,
+      "text_en": "Remarkably, your ear already knows Fourier's theorem. The cochlea — a tiny spiral in your inner ear — physically decomposes sound into its frequency components. Try playing different frequencies to see how it responds.",
+      "text_ko": "놀랍게도, 여러분의 귀는 이미 푸리에의 정리를 알고 있습니다. 달팽이관이라는 내이의 작은 나선은 소리를 물리적으로 주파수 성분으로 분해합니다. 다른 주파수를 재생해서 반응을 관찰해 보세요.",
+      "scroll_to": "#sec-brain",
+      "pause_after": true,
+      "resume_on": "cochleaInteraction"
+    },
+    {
+      "id": 11,
+      "text_en": "Every song you stream, every voice call you make — all of it depends on Fourier's idea, translated into the digital world. Adjust the sampling rate and bit depth to hear how digital audio approximates continuous sound.",
+      "text_ko": "여러분이 스트리밍하는 모든 노래, 모든 음성 통화는 푸리에의 아이디어가 디지털 세계로 번역된 것입니다. 샘플링 레이트와 비트 깊이를 조절해서 디지털 오디오가 어떻게 연속적인 소리를 근사하는지 들어 보세요.",
+      "scroll_to": "#sec-digital",
+      "pause_after": true,
+      "resume_on": "digitalInteraction"
+    },
+    {
+      "id": 12,
+      "text_en": "From a string on a lyre to a Fourier transform on a chip. From Pythagoras hearing harmony in a blacksmith's shop, to your earbuds decomposing a symphony into numbers. Mathematics doesn't just describe sound — it is the secret language of sound.",
+      "text_ko": "리라의 줄 하나에서 칩 위의 푸리에 변환까지. 대장간에서 화음을 들은 피타고라스에서, 여러분의 이어폰이 교향곡을 숫자로 분해하는 것까지. 수학은 소리를 설명하는 것이 아닙니다. 수학은 소리의 비밀 언어 그 자체입니다.",
+      "scroll_to": "#sec-closing",
+      "pause_after": true
+    }
+  ]
+}

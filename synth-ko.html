@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="narration_player.css">
 <style>
 /* ═══════════════════════════════════════════════════
    DESIGN SYSTEM — edu.kimsh.kr Mellow Math
@@ -3599,5 +3600,24 @@ window.addEventListener('resize',()=>{
   drawImperfWave();
 });
 </script>
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'synth',
+  basePath: 'assets/narration/synth/',
+  segments: [
+    { id: 0, section: '#hero', label: '소개' },
+    { id: 1, section: '#sec-01', label: '§1 오르간 제작자' },
+    { id: 2, section: '#sec-02', label: '§2 전기의 노래' },
+    { id: 3, section: '#sec-03', label: '§3 전압이 곧 음악' },
+    { id: 4, section: '#sec-04', label: '§4 FM 합성' },
+    { id: 5, section: '#sec-05', label: '§5 현실을 훔치다' },
+    { id: 6, section: '#sec-06', label: '§6 불쾌한 골짜기' },
+    { id: 7, section: '#sec-07', label: '§7 살아있는 악기' },
+    { id: 8, section: '#sec-closing', label: '마무리' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 </body>
 </html>

@@ -6,6 +6,7 @@
 <title>수학의 소리</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Noto+Sans+KR:wght@300;400;500;600&family=Noto+Serif+KR:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="narration_player.css">
 <style>
 :root {
   --bg: #0a0b10;
@@ -2353,5 +2354,23 @@ window.addEventListener('resize', () => {
 });
 </script>
 
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'ghost',
+  basePath: 'assets/narration/ghost/',
+  segments: [
+    { id: 0, section: '#hero', label: '소개' },
+    { id: 1, section: '#s0', label: '§0 도전' },
+    { id: 2, section: '#s0b', label: '§0.5 나란히 비교' },
+    { id: 3, section: '#s1', label: '§1 짧은 역사' },
+    { id: 4, section: '#s2', label: '§2 음색의 해부학' },
+    { id: 5, section: '#s3', label: '§3 푸리에의 한계' },
+    { id: 6, section: '#s4', label: '§4 도구 상자' },
+    { id: 7, section: '#s5', label: '§5 지금까지의 답' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 </body>
 </html>

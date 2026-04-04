@@ -20,6 +20,7 @@
     rel="stylesheet">
   <link rel="stylesheet" href="mellow_ios.css">
 <link rel="stylesheet" href="sound_ios.css">
+<link rel="stylesheet" href="narration_player.css">
 <style>
     *,
     *::before,
@@ -2361,14 +2362,36 @@
     //  AUDIO ENGINE
     // ═══════════════════════════════════════════════
     let actx = null;
+    let _audioSuspendTimer = null;
+
     function initAudio() {
       if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
       if (actx.state === 'suspended') actx.resume();
+      _scheduleAutoSuspend();
     }
 
     function ensureAudio() {
       initAudio();
     }
+
+    // Auto-suspend AudioContext after inactivity to eliminate idle noise floor
+    function _scheduleAutoSuspend() {
+      if (_audioSuspendTimer) clearTimeout(_audioSuspendTimer);
+      _audioSuspendTimer = setTimeout(() => {
+        if (!actx || actx.state !== 'running') return;
+        const isPlaying = sineActive || cochActive || aliasActive || fourierActive || crushedActive;
+        if (!isPlaying && actx) {
+          actx.suspend();
+        }
+      }, 4000);
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (!actx) return;
+      if (document.hidden) {
+        actx.suspend();
+      }
+    });
 
     // ─── Single sine oscillator ───
     let sineOsc = null, sineGain = null, sineActive = false;
@@ -4237,6 +4260,27 @@
       </script>
   </div>
 <script src="sound_ios_bridge.js"></script>
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'sound',
+  basePath: 'assets/narration/sound/',
+  segments: [
+    { id: 1,  section: '#hero',           label: '소개' },
+    { id: 2,  section: '#sec-wave',       label: '§1 소리의 물리학' },
+    { id: 3,  section: '#sec-pythagoras', label: '§2 피타고라스 음정' },
+    { id: 4,  section: '#sec-temperament',label: '§3 평균율' },
+    { id: 5,  section: '#sec-instruments',label: '§4 악기 비교' },
+    { id: 6,  section: '#sec-wolf',       label: '§5 울프 5도' },
+    { id: 7,  section: '#sec-bach',       label: '§6 바흐의 조율' },
+    { id: 8,  section: '#sec-fourier',    label: '§7 푸리에 합성' },
+    { id: 9,  section: '#sec-timbre',     label: '§8 음색' },
+    { id: 10, section: '#sec-brain',      label: '§9 달팽이관' },
+    { id: 11, section: '#sec-digital',    label: '§10 디지털 오디오' },
+    { id: 12, section: '#sec-closing',    label: '§11 마무리' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 </body>
 </html>
 

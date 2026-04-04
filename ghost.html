@@ -6,6 +6,7 @@
 <title>The Sound of Mathematics</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="narration_player.css">
 <style>
 :root {
   --bg: #0a0b10;
@@ -2379,5 +2380,23 @@ window.addEventListener('resize', () => {
 });
 </script>
 
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'ghost',
+  basePath: 'assets/narration/ghost/',
+  segments: [
+    { id: 0, section: '#hero', label: 'Introduction' },
+    { id: 1, section: '#s0', label: '§0 The Challenge' },
+    { id: 2, section: '#s0b', label: '§0.5 Side by Side' },
+    { id: 3, section: '#s1', label: '§1 Short History' },
+    { id: 4, section: '#s2', label: '§2 Anatomy of a Tone' },
+    { id: 5, section: '#s3', label: '§3 Fourier's Limit' },
+    { id: 6, section: '#s4', label: '§4 The Toolkit' },
+    { id: 7, section: '#s5', label: '§5 The Answer' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 </body>
 </html>

@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&family=JetBrains+Mono:wght@300;400;500&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<link rel="stylesheet" href="narration_player.css">
 <style>
 /* ═══════════════════════════════════════════════════
    DESIGN SYSTEM — edu.kimsh.kr Mellow Math
@@ -3599,5 +3600,24 @@ window.addEventListener('resize',()=>{
   drawImperfWave();
 });
 </script>
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'synth',
+  basePath: 'assets/narration/synth/',
+  segments: [
+    { id: 0, section: '#hero', label: 'Introduction' },
+    { id: 1, section: '#sec-01', label: '§1 Organ Builder' },
+    { id: 2, section: '#sec-02', label: '§2 Electricity Sings' },
+    { id: 3, section: '#sec-03', label: '§3 Voltage as Music' },
+    { id: 4, section: '#sec-04', label: '§4 FM Synthesis' },
+    { id: 5, section: '#sec-05', label: '§5 Stealing Reality' },
+    { id: 6, section: '#sec-06', label: '§6 Uncanny Valley' },
+    { id: 7, section: '#sec-07', label: '§7 Living Instrument' },
+    { id: 8, section: '#sec-closing', label: 'Closing' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 </body>
 </html>

@@ -17,6 +17,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="sound_ios.css">
 <link rel="stylesheet" href="mellow_ios.css">
+<link rel="stylesheet" href="narration_player.css">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -453,10 +454,50 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
 /* ─── Footer ─── */
 footer {
+  padding: 2rem 2rem 3rem;
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.footer-rule {
+  width: 100%;
+  height: 1px;
+  background: rgba(255,255,255,0.06);
+  margin-bottom: 1.5rem;
+}
+
+.footer-attr {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  align-items: center;
   text-align: center;
-  padding: 3rem 2rem;
-  color: var(--muted);
-  font-size: 0.8rem;
+}
+
+.footer-name {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #edeef2;
+}
+
+.footer-inst {
+  font-size: 0.88rem;
+  color: var(--muted, #5c6178);
+}
+
+.footer-url {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #d4a853;
+  text-decoration: none;
+  margin-top: 0.25rem;
+  display: inline-block;
+}
+
+.footer-url:hover {
+  text-decoration: underline;
 }
 
 /* ─── Responsive ─── */
@@ -1817,15 +1858,7 @@ footer {
   </div>
 </section>
 
-<footer>
-  <p>The Mathematics of Sound — An Interactive Exploration</p>
-  <p style="margin-top: 0.3rem; font-size: 0.7rem;">Every sound on this page is generated in real time via the Web Audio API. No recordings — just math.</p>
-  <div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:.2rem">
-    <div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;font-weight:400;color:#edeef2;letter-spacing:-.01em">Sang-hyun Kim</div>
-    <div style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:300;color:#5c6178;letter-spacing:.01em">Korea Institute for Advanced Study</div>
-    <a href="https://kimsh.kr" style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;display:inline-block;margin-top:.25rem">kimsh.kr</a>
-  </div>
-</footer>
+
 
 <script>
 // ═══════════════════════════════════════════════
@@ -1851,14 +1884,40 @@ function dismissNotice() {
 //  AUDIO ENGINE
 // ═══════════════════════════════════════════════
 let actx = null;
+let _audioSuspendTimer = null;
+
 function initAudio() {
   if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
   if (actx.state === 'suspended') actx.resume();
+  // Reset auto-suspend timer whenever audio is requested
+  _scheduleAutoSuspend();
 }
 
 function ensureAudio() {
   initAudio();
 }
+
+// Auto-suspend AudioContext after inactivity to eliminate idle noise floor
+function _scheduleAutoSuspend() {
+  if (_audioSuspendTimer) clearTimeout(_audioSuspendTimer);
+  _audioSuspendTimer = setTimeout(() => {
+    if (!actx || actx.state !== 'running') return;
+    // Check if anything is still actively playing
+    const isPlaying = sineActive || cochActive || aliasActive || fourierActive || crushedActive;
+    if (!isPlaying && actx) {
+      actx.suspend();
+    }
+  }, 4000); // suspend after 4s of no new audio requests
+}
+
+// Suspend audio when tab hidden, resume when visible
+document.addEventListener('visibilitychange', () => {
+  if (!actx) return;
+  if (document.hidden) {
+    actx.suspend();
+  }
+  // Note: we do NOT auto-resume on visibility — user interaction will resume via ensureAudio()
+});
 
 // ─── Single sine oscillator ───
 let sineOsc = null, sineGain = null, sineActive = false;
@@ -3741,7 +3800,6 @@ function bachPlayAll() {
 }
 
 </script>
-<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"
@@ -3760,6 +3818,39 @@ function bachPlayAll() {
     async>
   </script>
 </div>
+
+<footer>
+  <div class="footer-rule"></div>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+    <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
 <script src="sound_ios_bridge.js"></script>
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'sound',
+  basePath: 'assets/narration/sound/',
+  segments: [
+    { id: 1,  section: '#hero',           label: 'Introduction' },
+    { id: 2,  section: '#sec-wave',       label: '§1 Physics of Sound' },
+    { id: 3,  section: '#sec-pythagoras', label: '§2 Pythagorean Intervals' },
+    { id: 4,  section: '#sec-temperament',label: '§3 Equal Temperament' },
+    { id: 5,  section: '#sec-instruments',label: '§4 Instrument Comparison' },
+    { id: 6,  section: '#sec-wolf',       label: '§5 The Wolf Fifth' },
+    { id: 7,  section: '#sec-bach',       label: '§6 Well-Temperament' },
+    { id: 8,  section: '#sec-fourier',    label: '§7 Fourier Synthesis' },
+    { id: 9,  section: '#sec-timbre',     label: '§8 Timbre' },
+    { id: 10, section: '#sec-brain',      label: '§9 Cochlea & Hearing' },
+    { id: 11, section: '#sec-digital',    label: '§10 Digital Audio' },
+    { id: 12, section: '#sec-closing',    label: '§11 Closing' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 </body>
 </html>
