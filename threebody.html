@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RQVK6SF2E6');
+  </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Three Stars, No Answer — The Three-Body Problem</title>
@@ -146,6 +156,7 @@ section.wrap{padding-bottom:3rem}
   h2{margin-bottom:1rem}
 }
 </style>
+  <link rel="stylesheet" href="brand.css">
 </head>
 <body>
 
@@ -354,17 +365,6 @@ section.wrap{padding-bottom:3rem}
 <!-- ════════════════════════════════════════════ -->
 <!--               FOOTER                        -->
 <!-- ════════════════════════════════════════════ -->
-<footer>
-  <p>Three Stars, No Answer — Chapter II</p>
-  <p style="font-size:.7rem;">Every orbit is computed in real time via numerical integration. No pre-rendered paths — just Newton's law.</p>
-  <div class="footer-attr">
-    <div class="footer-name">Sang-hyun Kim</div>
-    <div class="footer-inst">Korea Institute for Advanced Study</div>
-    <a class="footer-link" href="https://kimsh.kr">kimsh.kr</a>
-  </div>
-</footer>
-
-<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
 
 <!-- ════════════════════════════════════════════ -->
 <!--              JAVASCRIPT                     -->
@@ -1751,5 +1751,35 @@ function makeZoomPan(canvas){
   requestAnimationFrame(draw);
 })();
 </script>
+
+<div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
+  <script src="https://giscus.app/client.js"
+    data-repo="kimshmath/edu"
+    data-repo-id="R_kgDORrE8sw"
+    data-category="Comments"
+    data-category-id="DIC_kwDORrE8s84C45oL"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="dark"
+    data-lang="en"
+    crossorigin="anonymous"
+    async>
+  </script>
+</div>
+
+<footer>
+  <div class="footer-rule"></div>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+    <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
 </body>
 </html>

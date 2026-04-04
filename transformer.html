@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RQVK6SF2E6');
+  </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Does a Machine Understand? — From Linear Algebra to Language</title>
@@ -111,6 +121,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 .use-case-card .uc-desc{font-size:0.82rem;color:var(--muted);line-height:1.7}
 @media(max-width:640px){section{padding:4rem 1.2rem}#nav-dots{display:none}.demo-card{padding:1.2rem}.stat-row{flex-direction:column}.use-case-grid{grid-template-columns:1fr}.head-strip{gap:0.3rem}.ml-milestone-strip{flex-direction:column}.ml-ms{border-right:none;border-bottom:1px solid rgba(255,255,255,0.03)}}
 </style>
+  <link rel="stylesheet" href="brand.css">
 </head>
 <body>
 
@@ -674,17 +685,6 @@ that works just as well.
 </p>
 <p style="color:var(--muted);font-size:0.9rem;max-width:520px;margin:1rem auto 0;">Every simulation on this page is computed in real time — just linear algebra. The same linear algebra that powers every conversation you have with AI.</p>
 </div></div></section>
-
-<footer>
-<p>Does a Machine Understand? — The Mathematics of Transformers</p>
-<p style="margin-top:0.3rem;font-size:0.7rem;">Every visualization is computed in real time — just math.</p>
-<div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:.2rem">
-<div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;color:#edeef2;">Sang-hyun Kim</div>
-<div style="font-family:'DM Sans',sans-serif;font-size:.72rem;color:#5c6178;">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
-<a href="https://kimsh.kr" style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;margin-top:.25rem">kimsh.kr</a>
-</div>
-</footer>
-<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
 
 <script>
 // ═══════════════════════════════════════════
@@ -2205,6 +2205,7 @@ const sO=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){const i
 secs.forEach(id=>{const el=document.getElementById(id);if(el)sO.observe(el);});
 </script>
 
+
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"
     data-repo="kimshmath/edu"
@@ -2222,5 +2223,17 @@ secs.forEach(id=>{const el=document.getElementById(id);if(el)sO.observe(el);});
     async>
   </script>
 </div>
+
+<footer>
+  <div class="footer-rule"></div>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+    <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
 </body>
 </html>

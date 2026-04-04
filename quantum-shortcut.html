@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RQVK6SF2E6');
+  </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>The Quantum Shortcut — Mellow Math</title>
@@ -57,8 +67,6 @@ body { background: var(--bg-deep); color: var(--text-primary); font-family: var(
 .hero-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
 .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 50% 40%, transparent 0%, var(--bg-deep) 100%), radial-gradient(ellipse 40% 30% at 30% 60%, rgba(111,168,220,0.03) 0%, transparent 70%), radial-gradient(ellipse 35% 25% at 70% 35%, rgba(192,132,252,0.03) 0%, transparent 70%); z-index: 1; pointer-events: none; }
 .hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 30vh; background: linear-gradient(to top, var(--bg-deep) 0%, transparent 100%); z-index: 1; pointer-events: none; }
-
-
 
 .hero-content { position: relative; z-index: 5; text-align: center; max-width: 860px; padding: 0 2rem; display: flex; flex-direction: column; align-items: center; }
 .hero-overline { font-family: var(--sans); font-size: 0.7rem; font-weight: 400; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent-quantum); opacity: 0; animation: fadeSlideUp 1.2s ease 1.0s forwards; margin-bottom: 1.6rem; }
@@ -420,6 +428,7 @@ body { background: var(--bg-deep); color: var(--text-primary); font-family: var(
   .histo-bar-wrapper { width: 40px; }
 }
 </style>
+  <link rel="stylesheet" href="brand.css">
 </head>
 <body>
 
@@ -575,7 +584,6 @@ body { background: var(--bg-deep); color: var(--text-primary); font-family: var(
   <p class="prose next-prompt reveal">The secret weapon of quantum algorithms awaits. <span class="arrow">↓</span></p>
 </section>
 
-
 <!-- ════════ SECTION 2: INTERFERENCE ════════ -->
 <div class="section-transition"></div>
 <section class="section" id="section2">
@@ -637,7 +645,6 @@ body { background: var(--bg-deep); color: var(--text-primary); font-family: var(
 
   <p class="prose next-prompt reveal">The first real quantum algorithm awaits. <span class="arrow">↓</span></p>
 </section>
-
 
 <!-- ════════ SECTION 3: GROVER'S ALGORITHM ════════ -->
 <div class="section-transition"></div>
@@ -725,7 +732,6 @@ body { background: var(--bg-deep); color: var(--text-primary); font-family: var(
   <p class="prose next-prompt reveal">Now for the algorithm that shook the world. <span class="arrow">↓</span></p>
 </section>
 
-
 <!-- ════════ SECTION 4: SHOR'S ALGORITHM ════════ -->
 <div class="section-transition"></div>
 <section class="section" id="section4">
@@ -811,7 +817,6 @@ body { background: var(--bg-deep); color: var(--text-primary); font-family: var(
 
   <p class="prose next-prompt reveal">What comes after Shor and Grover? <span class="arrow">↓</span></p>
 </section>
-
 
 <!-- ════════ SECTION 5: THE QUANTUM FRONTIER ════════ -->
 <div class="section-transition"></div>
@@ -970,7 +975,6 @@ body { background: var(--bg-deep); color: var(--text-primary); font-family: var(
   <p class="prose reveal">And that, perhaps, is the most remarkable thing about quantum algorithms: they are theorems about the physical universe, proved with mathematics, waiting to be realized in silicon and light.</p>
 </section>
 
-
 <!-- ════════ SECTION 7: REFERENCES ════════ -->
 <div class="section-transition"></div>
 <section class="section" id="section7" style="padding-bottom: 4rem;">
@@ -1006,29 +1010,8 @@ body { background: var(--bg-deep); color: var(--text-primary); font-family: var(
   </div>
 </section>
 
-
 <!-- ════════ FOOTER ════════ -->
 <div class="section-transition"></div>
-<footer class="site-footer reveal">
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <div class="footer-name">Sang-hyun Kim</div>
-      <div class="footer-affil">Korea Institute for Advanced Study</div>
-    </div>
-    <div class="footer-links">
-      <a href="https://kimsh.kr">kimsh.kr</a>
-      <a href="https://edu.kimsh.kr">edu.kimsh.kr</a>
-    </div>
-    <div class="footer-right">
-      <a href="#hero" class="back-to-top">Return to top ↑</a>
-      <div class="footer-copy">
-        Mellow Math · Interactive Mathematics<br>
-        <span style="opacity:0.5;">The Quantum Shortcut — How Nature Computes the Impossible</span>
-      </div>
-    </div>
-  </div>
-</footer>
-
 
 <!-- ═══════════════════════════════════
      SCRIPTS
@@ -2167,5 +2150,35 @@ document.querySelectorAll('.btn,.measure-btn,.bit-switch,.factor-level-btn,.peri
 });
 })();
 </script>
+
+<div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
+  <script src="https://giscus.app/client.js"
+    data-repo="kimshmath/edu"
+    data-repo-id="R_kgDORrE8sw"
+    data-category="Comments"
+    data-category-id="DIC_kwDORrE8s84C45oL"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="dark"
+    data-lang="en"
+    crossorigin="anonymous"
+    async>
+  </script>
+</div>
+
+<footer>
+  <div class="footer-rule"></div>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+    <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
 </body>
 </html>

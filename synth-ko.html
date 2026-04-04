@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <!-- Google tag (gtag.js) -->
+  
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RQVK6SF2E6');
+  </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>완벽한 음색의 꿈 — Mellow Math</title>
@@ -455,6 +465,7 @@ footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid var(--borde
   .adsr-display{height:110px}
 }
 </style>
+  <link rel="stylesheet" href="brand.css">
 </head>
 <body>
 
@@ -478,7 +489,6 @@ footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid var(--borde
 </div>
 
 <!-- ═══════════ FLOATING BADGE ═══════════ -->
-<a class="floating-badge" href="https://edu.kimsh.kr" target="_blank" rel="noopener">edu.kimsh.kr</a>
 
 <!-- ═══════════ NAV DOTS ═══════════ -->
 <nav id="nav-dots"></nav>
@@ -1228,9 +1238,7 @@ footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid var(--borde
         <p style="font-family:var(--font-display);font-size:1.15rem;font-style:italic;color:var(--heading);line-height:1.85;letter-spacing:-.005em;">
           "A synthesiser is a constantly unfinished instrument.<br>You finish it when you tweak it, and play around with it,<br>and decide how to use it."
         </p>
-        <footer style="margin-top:1.2rem;font-family:var(--font-mono);font-size:.65rem;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;">
-          — Brian Eno, BBC Arena, 2010
-        </footer>
+        
       </blockquote>
     </div>
 
@@ -1252,20 +1260,6 @@ footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid var(--borde
     </div>
   </div>
 </section>
-
-<footer>
-  <p style="font-family:var(--font-display);font-size:.9rem;color:var(--muted);font-style:italic;">
-    완벽한 음색의 꿈 — 인터랙티브 탐험
-  </p>
-  <p style="font-family:var(--font-mono);font-size:.6rem;color:var(--muted);margin-top:.3rem;">
-    이 페이지의 모든 소리는 Web Audio API를 통해 실시간으로 생성됩니다. 녹음 없이 — 오직 수학만으로.
-  </p>
-  <div class="footer-attr">
-    <span class="footer-name">Sang-hyun Kim</span>
-    <span class="footer-inst">Korea Institute for Advanced Study · AI4Math, KAIST</span>
-    <a class="footer-link" href="https://kimsh.kr" target="_blank" rel="noopener">kimsh.kr</a>
-  </div>
-</footer>
 
 <script>
 "use strict";
@@ -3619,5 +3613,35 @@ window.NARRATION_CONFIG = {
 };
 </script>
 <script src="narration_player.js"></script>
+
+<div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
+  <script src="https://giscus.app/client.js"
+    data-repo="kimshmath/edu"
+    data-repo-id="R_kgDORrE8sw"
+    data-category="Comments"
+    data-category-id="DIC_kwDORrE8s84C45oL"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="dark"
+    data-lang="ko"
+    crossorigin="anonymous"
+    async>
+  </script>
+</div>
+
+<footer>
+  <div class="footer-rule"></div>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+    <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
 </body>
 </html>

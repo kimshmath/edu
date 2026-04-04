@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+    
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -187,6 +189,7 @@ input[type=range]::-moz-range-thumb{
 .floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:lowercase;color:#8db830;background:transparent;padding:.35rem .7rem;text-decoration:none;transition:color .25s,text-shadow .25s,transform .25s;text-shadow:0 0 6px rgba(141,184,48,.4),0 0 16px rgba(141,184,48,.15)}
 .floating-badge:hover{color:#a8d43a;text-shadow:0 0 8px rgba(141,184,48,.65),0 0 22px rgba(141,184,48,.28);transform:translateY(-1px)}
 </style>
+  <link rel="stylesheet" href="brand.css">
 </head>
 <body>
 
@@ -567,7 +570,6 @@ input[type=range]::-moz-range-thumb{
         font-family="Cormorant Garamond,serif" font-style="italic" font-size="14"
         fill="rgba(232,204,128,0.95)">C</text>
 
-
   <!-- Limb + border -->
   <circle cx="150" cy="110" r="93" fill="url(#hlimb)"/>
   <circle cx="150" cy="110" r="92.5"
@@ -763,7 +765,6 @@ input[type=range]::-moz-range-thumb{
     </div>
   </div>
 </section>
-
 
 <hr class="sep">
 
@@ -1306,7 +1307,6 @@ input[type=range]::-moz-range-thumb{
   </div>
 </section>
 
-
 <hr class="sep">
 
 <!-- ══════════════════════════════ §9 VIEW FROM WITHIN -->
@@ -1652,19 +1652,6 @@ input[type=range]::-moz-range-thumb{
   </div>
 </section>
 
-<footer>
-  <p>푸앵카레 원판 모델 · 삼각형 군 (2, p, q) 테셀레이션 · 가우스-보네 정리 · 타이히뮐러 공간 · 미르자하니와 위튼의 추측</p>
-  <p style="margin-top:.5rem;font-size:.8rem">
-    영감의 원천: M.C. Escher의 <em>원형 극한(Circle Limit)</em> 연작 ·
-    Roice Nelson &amp; Henry Segerman, <em>쌍곡 벌집의 시각화(Visualizing Hyperbolic Honeycombs)</em> ·
-    W.P. Thurston, <em>3차원 기하학과 위상수학(Three-Dimensional Geometry and Topology)</em>
-  </p>
-  <div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:.2rem;text-align:left">
-    <div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;font-weight:400;color:#edeef2;letter-spacing:-.01em">김상현 (Sang-hyun Kim)</div>
-    <div style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:300;color:#5c6178;letter-spacing:.01em">고등과학원 (KIAS)<br>KAIST AI4Math</div>
-    <a href="https://kimsh.kr" style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;display:inline-block;margin-top:.25rem">kimsh.kr</a>
-  </div>
-</footer>
 <script>
 "use strict";
 const TAU=2*Math.PI;
@@ -2030,8 +2017,6 @@ pCanvas.addEventListener('click',function(e){
 // §2 THREE GEOMETRIES CARDS
 // ════════════════════════════════════════════════
 
-
-
 // ════════════════════════════════════════════════
 // §3 GAUSS–BONNET CANVAS
 // ════════════════════════════════════════════════
@@ -2189,7 +2174,6 @@ rebuildTiling();
 
 // ════════════════════════════════════════════════
 // §5 GROWTH CANVAS
-
 
 // ════════════════════════════════════════════════
 // §6 GENUS-3 SURFACE — FENCHEL-NIELSEN
@@ -2654,7 +2638,6 @@ drawGenus3();
 // §8 MIRZAKHANI RECURSION SCHEMATIC
 // ════════════════════════════════════════════════
 
-
 // ════════════════════════════════════════════════
 // §9 — WALK ANIMATION  (figure-8 path through {7,3})
 // ════════════════════════════════════════════════
@@ -2936,7 +2919,6 @@ drawGenus3();
     return {screenX, tipY, baseY, dFloor, elevTip};
   }
 
-
   // ── Tree positions ─────────────────────────────────────────────
   const TREES=[];
   for(let n=-18;n<=18;n++) for(let m=0;m<=6;m++){
@@ -3098,7 +3080,6 @@ drawGenus3();
     ctx.fillStyle=tl; ctx.fillRect(0,HORIZ-1,W,2);
     ctx.restore();
 
-
     // ── TOWER (drawn before trees so trees can overlap at close range) ────
     {
       const tp = projectTower(TOWER.diskPos, TOWER.hypHeight);
@@ -3220,7 +3201,6 @@ drawGenus3();
       }
     }
 
-
     // ── Trees ─────────────────────────────────────────────────────
     const visT=[];
     TREES.forEach(tree=>{const p=projectEntity(tree.pos); if(p) visT.push({...p,...tree});});
@@ -3286,7 +3266,6 @@ drawGenus3();
     ctx.fillStyle=vig; ctx.fillRect(0,0,W,H);
     ctx.restore();
 
-
     // ══════════════════════════════════════════════════════════════
     // ── TOWER INFO HUD (compact) ──────────────────────────────────
     {
@@ -3302,7 +3281,6 @@ drawGenus3();
         ctx.restore();
       }
     }
-
 
     // ── Mini compass ──────────────────────────────────────────────
     ctx.save(); ctx.translate(W-44,44);
@@ -3359,11 +3337,6 @@ drawGenus3();
   requestAnimationFrame(loop);
 })();
 
-
-
-
-
-
 // ════════════════════════════════════════════════
 
 // ════════════════════════════════════════════════
@@ -3376,7 +3349,7 @@ document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 // ════════════════════════════════════════════════
 
 </script>
-<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"
@@ -3395,5 +3368,17 @@ document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
     async>
   </script>
 </div>
+
+<footer>
+  <div class="footer-rule"></div>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+    <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
 </body>
 </html>

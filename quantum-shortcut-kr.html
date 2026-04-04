@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <!-- Google tag (gtag.js) -->
+  
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RQVK6SF2E6');
+  </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>양자 지름길 — Mellow Math</title>
@@ -418,6 +428,7 @@ body { background: var(--bg-deep); color: var(--text-primary); font-family: var(
   .histo-bar-wrapper { width: 40px; }
 }
 </style>
+  <link rel="stylesheet" href="brand.css">
 </head>
 <body>
 
@@ -573,7 +584,6 @@ body { background: var(--bg-deep); color: var(--text-primary); font-family: var(
   <p class="prose next-prompt reveal">양자 알고리즘의 비밀 무기가 기다리고 있습니다. <span class="arrow">↓</span></p>
 </section>
 
-
 <!-- ════════ SECTION 2: INTERFERENCE ════════ -->
 <div class="section-transition"></div>
 <section class="section" id="section2">
@@ -635,7 +645,6 @@ body { background: var(--bg-deep); color: var(--text-primary); font-family: var(
 
   <p class="prose next-prompt reveal">첫 번째 진짜 양자 알고리즘이 기다리고 있습니다. <span class="arrow">↓</span></p>
 </section>
-
 
 <!-- ════════ SECTION 3: GROVER'S ALGORITHM ════════ -->
 <div class="section-transition"></div>
@@ -723,7 +732,6 @@ body { background: var(--bg-deep); color: var(--text-primary); font-family: var(
   <p class="prose next-prompt reveal">이제 세계를 뒤흔든 알고리즘입니다. <span class="arrow">↓</span></p>
 </section>
 
-
 <!-- ════════ SECTION 4: SHOR'S ALGORITHM ════════ -->
 <div class="section-transition"></div>
 <section class="section" id="section4">
@@ -809,7 +817,6 @@ body { background: var(--bg-deep); color: var(--text-primary); font-family: var(
 
   <p class="prose next-prompt reveal">쇼어와 그로버 이후에는 무엇이? <span class="arrow">↓</span></p>
 </section>
-
 
 <!-- ════════ SECTION 5: THE QUANTUM FRONTIER ════════ -->
 <div class="section-transition"></div>
@@ -968,7 +975,6 @@ body { background: var(--bg-deep); color: var(--text-primary); font-family: var(
   <p class="prose reveal">그리고 그것이 아마 양자 알고리즘에 대해 가장 놀라운 점일 것입니다: 그것들은 수학으로 증명된, 실리콘과 빛으로 실현되기를 기다리는, 물리적 우주에 대한 정리입니다.</p>
 </section>
 
-
 <!-- ════════ SECTION 7: REFERENCES ════════ -->
 <div class="section-transition"></div>
 <section class="section" id="section7" style="padding-bottom: 4rem;">
@@ -1004,26 +1010,8 @@ body { background: var(--bg-deep); color: var(--text-primary); font-family: var(
   </div>
 </section>
 
-
 <!-- ════════ FOOTER ════════ -->
 <div class="section-transition"></div>
-<footer class="site-footer reveal">
-  <div class="footer-inner">
-    <div class="footer-note">
-      양자 지름길 — Chapter X<br>
-      <span style="opacity:0.4;">Mellow Math · 인터랙티브 수학</span>
-    </div>
-    <div class="footer-author">
-      <div class="footer-name">Sang-hyun Kim</div>
-      <div class="footer-affil">Korea Institute for Advanced Study</div>
-      <div class="footer-links">
-        <a href="https://kimsh.kr">kimsh.kr</a>
-        <a href="https://edu.kimsh.kr">edu.kimsh.kr</a>
-      </div>
-    </div>
-  </div>
-</footer>
-
 
 <!-- ═══════════════════════════════════
      SCRIPTS
@@ -2162,5 +2150,35 @@ document.querySelectorAll('.btn,.measure-btn,.bit-switch,.factor-level-btn,.peri
 });
 })();
 </script>
+
+<div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
+  <script src="https://giscus.app/client.js"
+    data-repo="kimshmath/edu"
+    data-repo-id="R_kgDORrE8sw"
+    data-category="Comments"
+    data-category-id="DIC_kwDORrE8s84C45oL"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="dark"
+    data-lang="en"
+    crossorigin="anonymous"
+    async>
+  </script>
+</div>
+
+<footer>
+  <div class="footer-rule"></div>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+    <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
 </body>
 </html>

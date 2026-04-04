@@ -3,7 +3,9 @@
 
 <head>
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+  
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
@@ -875,7 +877,6 @@
       color: var(--muted);
       font-size: .9rem
     }
-
 
     /* ===== PWA INSTALL BANNER ===== */
     #pwa-banner {
@@ -2204,6 +2205,7 @@
       margin-top: .6rem
     }
   </style>
+  <link rel="stylesheet" href="brand.css">
 </head>
 
 <body>
@@ -2244,7 +2246,6 @@
       style="touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none">
       Tap to begin
     </button>
-
 
     <div style="margin-top:.8rem;font-family:Space Mono,monospace;font-size:.52rem;color:#3a3f55;text-align:center">
       Also check: Settings → Chrome → allow audio
@@ -2882,40 +2883,7 @@
   </div>
 
   <hr class="divider">
-  <footer>
-    <div class="s-num">References</div>
-    <h2 class="s-title" style="font-size:1.9rem;margin-bottom:1.5rem">Further Reading</h2>
-    <div class="refs-grid">
-      <div class="ref-item"><strong>M. Kac</strong> — "Can One Hear the Shape of a Drum?" <em>Amer. Math. Monthly</em>
-        73 (1966), 1–23.</div>
-      <div class="ref-item"><strong>H. Weyl</strong> — "Über die Abhängigkeit der Eigenschwingungen einer Membran."
-        <em>J. reine angew. Math.</em> 141 (1912).</div>
-      <div class="ref-item"><strong>C. Gordon, D. Webb, S. Wolpert</strong> — "One Cannot Hear the Shape of a Drum."
-        <em>Bull. AMS</em> 27 (1992), 134–138.</div>
-      <div class="ref-item"><strong>S. Zelditch</strong> — "Spectral Determination of Analytic Bi-axisymmetric Plane
-        Domains." <em>GAFA</em> 10 (2000), 628–677.</div>
-      <div class="ref-item"><strong>R. Courant</strong> — "Ein allgemeiner Satz zur Theorie der Eigenfunktionen."
-        <em>Nachr. Ges. Wiss. Göttingen</em> (1923), 81–84.</div>
-      <div class="ref-item"><strong>Å. Pleijel</strong> — "Remarks on Courant's Nodal Line Theorem." <em>Comm. Pure
-          Appl. Math.</em> 9 (1956), 543–550.</div>
-      <div class="ref-item"><strong>J. Jung &amp; S. Zelditch</strong> — "Number of Nodal Domains of Eigenfunctions on
-        Non-positively Curved Surfaces with Concave Boundary." <em>Math. Ann.</em> 375 (2019).</div>
-      <div class="ref-item"><strong>J. Jung &amp; S. Zelditch</strong> — "Boundedness of the Number of Nodal Domains for
-        Eigenfunctions of Generic Kaluza-Klein 3-folds." <em>Ann. Inst. Fourier</em> (2020).</div>
-    </div>
-    <p class="epilogue">Bessel functions to 10⁻¹⁵. Eigenvalues exact: j²ₘₙ/R². Audio: Web Audio API modal synthesis with
-      exponential decay and pitch glide.</p>
-    <div class="footer-attr" style="margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border)">
-      <div
-        style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;font-weight:400;color:#edeef2;letter-spacing:-.01em">
-        Sang-hyun Kim</div>
-      <div
-        style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:300;color:#5c6178;letter-spacing:.01em;margin-top:.2rem">
-        Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
-      <a href="https://kimsh.kr"
-        style="font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;display:inline-block;margin-top:.25rem">kimsh.kr</a>
-    </div>
-  </footer>
+  
 
   <script>
     "use strict";
@@ -4591,15 +4559,9 @@ self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>
       <span class="pwa-close" id="pwa-close-btn">✕</span>
     </div>
   </div>
-  <a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+  
 
-  <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
-    <script src="https://giscus.app/client.js" data-repo="kimshmath/edu" data-repo-id="R_kgDORrE8sw"
-      data-category="Comments" data-category-id="DIC_kwDORrE8s84C45oL" data-mapping="pathname" data-strict="0"
-      data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="dark" data-lang="en"
-      crossorigin="anonymous" async>
-      </script>
-  </div>
+  
 <script>
 window.NARRATION_CONFIG = {
   chapter: 'drum',
@@ -4617,6 +4579,36 @@ window.NARRATION_CONFIG = {
 };
 </script>
 <script src="narration_player.js"></script>
+
+<div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
+  <script src="https://giscus.app/client.js"
+    data-repo="kimshmath/edu"
+    data-repo-id="R_kgDORrE8sw"
+    data-category="Comments"
+    data-category-id="DIC_kwDORrE8s84C45oL"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="dark"
+    data-lang="en"
+    crossorigin="anonymous"
+    async>
+  </script>
+</div>
+
+<footer>
+  <div class="footer-rule"></div>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+    <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
 </body>
 
 </html>

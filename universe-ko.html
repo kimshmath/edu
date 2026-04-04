@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <!-- Google tag (gtag.js) -->
+  
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RQVK6SF2E6');
+  </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>우주는 둥근가?</title>
@@ -169,6 +179,7 @@ footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid rgba(255,25
   .hero-shape-label{bottom:18%}
 }
 </style>
+  <link rel="stylesheet" href="brand.css">
 </head>
 <body>
 
@@ -609,16 +620,6 @@ footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid rgba(255,25
 
 <hr class="section-rule">
 
-<footer>
-  <div class="footer-attr">
-    <span class="footer-name">Sang-hyun Kim</span>
-    <span class="footer-inst">고등과학원</span>
-    <a href="https://kimsh.kr" class="footer-link">kimsh.kr</a>
-  </div>
-</footer>
-
-<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
-
 <script>
 "use strict";
 
@@ -835,7 +836,6 @@ function chime(f=440,d=.35,v=.12){const c=ac(),o=c.createOscillator(),g=c.create
   });
   window.addEventListener('resize',resize); resize();
 })();
-
 
 /* ══════════════════════════════════════════════════════════════════
    § 2 — ZOOM SURFACE (rotate, pan, zoom — all surfaces become ℝ²)
@@ -2205,7 +2205,6 @@ function chime(f=440,d=.35,v=.12){const c=ac(),o=c.createOscillator(),g=c.create
   drawDiagram();
 })();
 
-
 /* ══════════════════════════════════════════════════════════════════
    § 6b — TWIST STRIP IN SOLID TORUS
    ══════════════════════════════════════════════════════════════════ */
@@ -2624,5 +2623,35 @@ function chime(f=440,d=.35,v=.12){const c=ac(),o=c.createOscillator(),g=c.create
 })();
 
 </script>
+
+<div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
+  <script src="https://giscus.app/client.js"
+    data-repo="kimshmath/edu"
+    data-repo-id="R_kgDORrE8sw"
+    data-category="Comments"
+    data-category-id="DIC_kwDORrE8s84C45oL"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="dark"
+    data-lang="ko"
+    crossorigin="anonymous"
+    async>
+  </script>
+</div>
+
+<footer>
+  <div class="footer-rule"></div>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+    <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
 </body>
 </html>

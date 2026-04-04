@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <!-- Google tag (gtag.js) -->
+  
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RQVK6SF2E6');
+  </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>움직이는 모든 것에 대하여 — Mellow Math</title>
@@ -247,6 +257,7 @@ footer{text-align:center;padding:4rem 2rem 3rem;border-top:1px solid var(--borde
   .narrator-toggle{bottom:1rem;right:1rem;width:38px;height:38px}
 }
 </style>
+  <link rel="stylesheet" href="brand.css">
 </head>
 <body>
 
@@ -682,22 +693,6 @@ footer{text-align:center;padding:4rem 2rem 3rem;border-top:1px solid var(--borde
 <!-- ═══════════════════════════════════════════ -->
 <!-- FOOTER                                      -->
 <!-- ═══════════════════════════════════════════ -->
-<footer>
-  <div style="text-align:center;margin-bottom:2rem;opacity:.35">
-    <p style="font-family:var(--font-mono);font-size:.55rem;letter-spacing:.1em;color:var(--muted);line-height:1.8">
-      모든 시각화는 실시간으로 계산됩니다.<br>
-      녹화도, 사전 렌더링도 없이 — 오직 수학.
-    </p>
-  </div>
-  <div class="footer-attr">
-    <div class="footer-name">Sang-hyun Kim</div>
-    <div class="footer-inst">Korea Institute for Advanced Study</div>
-    <div class="footer-inst">AI4MATH, KAIST</div>
-    <a class="footer-url" href="https://kimsh.kr">kimsh.kr</a>
-  </div>
-</footer>
-
-<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
 
 <!-- ═══════════════════════════════════════════ -->
 <!-- NARRATOR                                    -->
@@ -3050,6 +3045,36 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
   });
 })();
 </script>
+
+
+<div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
+  <script src="https://giscus.app/client.js"
+    data-repo="kimshmath/edu"
+    data-repo-id="R_kgDORrE8sw"
+    data-category="Comments"
+    data-category-id="DIC_kwDORrE8s84C45oL"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="dark"
+    data-lang="ko"
+    crossorigin="anonymous"
+    async>
+  </script>
+</div>
+
+<footer>
+  <div class="footer-rule"></div>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+    <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
 
 </body>
 </html>

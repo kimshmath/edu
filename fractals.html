@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RQVK6SF2E6');
+  </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>How Nature Learned to Repeat Itself — Mellow Math</title>
@@ -193,18 +203,15 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 .pz-row{display:flex;gap:3px}
 
 </style>
+  <link rel="stylesheet" href="brand.css">
 </head>
 <body>
 
-<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
 <div class="particles" id="particles"></div>
-
 
 <!-- ══════════════════════════════════════════════════
      SECTION 1
      ══════════════════════════════════════════════════ -->
-
-
 
 <section class="hero-section" id="s1_hero">
   <canvas class="hero-canvas" id="s1_heroCanvas"></canvas>
@@ -280,13 +287,9 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
   <p class="prose">The word for these shapes — <span class="ac">fractal</span> — was coined by Mandelbrot in 1975, from the Latin <em>fractus</em>: broken, shattered, fragmented. Euclid's geometry described the world we <em>build</em>: walls, wheels, bridges. Fractal geometry describes the world that <span class="hi">grows</span>: the veins of a leaf, the tributaries of a river, the foam of a breaking wave, the crackle of lightning across a summer sky.</p>
 </section>
 
-
-
 <!-- ══════════════════════════════════════════════════
      SECTION 2
      ══════════════════════════════════════════════════ -->
-
-
 
 <section class="hero-section" id="s2_hero">
   <canvas class="hero-canvas" id="s2_heroCanvas"></canvas>
@@ -453,13 +456,9 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
   <p class="prose">Georg Cantor introduced this set in 1883 — not as a geometric object, but as a logical one, a weapon in the war to understand infinity. It has the same cardinality as the entire real line, yet occupies zero space. Its fractal dimension of about 0.631 places it precisely where intuition says it should be: <span class="hi">more than isolated points</span>, <span class="hi">less than a line</span>. A ghost of a continuum. Dust with structure. The skeleton of something that was once whole.</p>
 </section>
 
-
-
 <!-- ══════════════════════════════════════════════════
      SECTION 3
      ══════════════════════════════════════════════════ -->
-
-
 
 <section class="hero-section" id="s3_hero">
   <canvas class="hero-canvas" id="s3_heroCanvas"></canvas>
@@ -655,12 +654,9 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
   <p class="prose">The mathematical lesson is profound: the Mandelbrot set's beauty depends not just on iteration, but on the <span class="hi">analyticity</span> of the map z → z² + c — the fact that it treats the complex number as a single, indivisible entity. The absolute value operation breaks this analyticity, folding the plane along the real and imaginary axes. The result is a fractal that trades smooth spirals for <span class="ac">sharp angles, towers, and ghost ships</span> — proof that in the world of iteration, the smallest change to the rules can remake the entire universe.</p>
 </section>
 
-
 <!-- ══════════════════════════════════════════════════
      SECTION 4
      ══════════════════════════════════════════════════ -->
-
-
 
 <section class="hero-section" id="s4_hero">
   <canvas class="hero-canvas" id="s4_heroCanvas"></canvas>
@@ -764,13 +760,9 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
   <p class="prose">The shapes Julia imagined in a military hospital in 1918, armed with nothing but pencil and genius, turned out to be gateways into some of the deepest mathematics of the twentieth century. He never saw them rendered. He died in 1978, just as computers were beginning to draw them for the first time.</p>
 </section>
 
-
-
 <!-- ══════════════════════════════════════════════════
      SECTION 5
      ══════════════════════════════════════════════════ -->
-
-
 
 <section class="hero-section" id="s5_hero">
   <canvas class="hero-canvas" id="s5_heroCanvas"></canvas>
@@ -887,10 +879,6 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
   </ul>
 </div>
 
-
-
-<footer><div class="footer-attr"><div class="footer-name">Sang-hyun Kim</div><div class="footer-inst">Korea Institute for Advanced Study</div><div class="footer-inst">AI4MATH, KAIST</div><a class="footer-url" href="https://kimsh.kr">kimsh.kr</a></div></footer>
-
 <script>
 
 /* ═══ GLOBAL IDLE SYSTEM — 10s for heavy anims, 300s for hero ═══ */
@@ -908,7 +896,6 @@ _resetIdle();
 
 /* ═══ PARTICLES (global, single init) ═══ */
 (function(){const c=document.getElementById('particles');for(let i=0;i<24;i++){const p=document.createElement('div');p.className='particle';const s=2+Math.random()*4;p.style.width=p.style.height=s+'px';p.style.left=Math.random()*100+'%';p.style.animationDuration=(22+Math.random()*35)+'s';p.style.animationDelay=(-Math.random()*40)+'s';c.appendChild(p)}})();
-
 
 /* ══════════════════════════════════════════════════
    SECTION 1
@@ -1014,12 +1001,10 @@ document.querySelectorAll('#s1_kochBtns .btn').forEach(b=>{b.addEventListener('c
 
 /* ═══ SCROLL REVEAL ═══ */
 
-
 /* ══════════════════════════════════════════════════
    SECTION 2
    ══════════════════════════════════════════════════ */
 /* ═══ PARTICLES ═══ */
-
 
 /* ═══ HERO BG — Sierpiński chaos game ═══ */
 (function(){const c=document.getElementById('s2_heroCanvas'),ctx=c.getContext('2d');let w,h;
@@ -1149,14 +1134,11 @@ document.querySelectorAll('#s2_cantorBtns .btn').forEach(b=>{b.addEventListener(
 
 /* ═══ SCROLL REVEAL ═══ */
 
-
-
 window.addEventListener('resize',()=>{const ar=document.querySelector('#s2_remBtns .btn.active');if(ar)remMod.draw(parseInt(ar.dataset.rn));pascalMod.draw(parseInt(document.getElementById('s2_pascalSlider').value));const ac=document.querySelector('#s2_cantorBtns .btn.active');if(ac)cantorMod.draw(parseInt(ac.dataset.cn));chaosMod.reset()});
 /* ══════════════════════════════════════════════════
    SECTION 3
    ══════════════════════════════════════════════════ */
 /* ═══ PARTICLES ═══ */
-
 
 /* ═══ PALETTES ═══ */
 const palettes={
@@ -1327,12 +1309,10 @@ window.addEventListener('resize',renderAndSave);return{render:renderAndSave}})()
 
 /* ═══ SCROLL REVEAL ═══ */
 
-
 /* ══════════════════════════════════════════════════
    SECTION 4
    ══════════════════════════════════════════════════ */
 /* ═══ PARTICLES ═══ */
-
 
 /* ═══ PALETTES ═══ */
 const palTwilight=t=>{const r=Math.floor(9*(1-t)*t*t*t*255),g=Math.floor(15*(1-t)*(1-t)*t*t*255),b=Math.floor(8.5*(1-t)*(1-t)*(1-t)*t*255);return[Math.min(255,r+30),Math.min(255,g+10),Math.min(255,b+60)]};
@@ -1447,13 +1427,10 @@ mb4cX=-.55;mb4cY=0;mb4span=2.8;jCX=0;jCY=0;jSpan=3;renderMB();renderJulia(-.7454
 document.querySelectorAll('[data-c]').forEach(b=>b.classList.remove('active'));
 document.querySelector('[data-c="-0.7454,0.1130"]').classList.add('active')});
 
-
-
 /* ══════════════════════════════════════════════════
    SECTION 5
    ══════════════════════════════════════════════════ */
 /* ═══ PARTICLES ═══ */
-
 
 /* ═══ HERO BG — twin fractal trees ═══ */
 (function(){const c=document.getElementById('s5_heroCanvas'),ctx=c.getContext('2d');let w,h;
@@ -1599,9 +1576,6 @@ window.addEventListener('resize',draw)})();
 
 /* ═══ SCROLL REVEAL ═══ */
 
-
-
-
 /* ═══ MLC CONJECTURE INTERACTIVE — deep zoom into satellite ═══ */
 (function(){const canvas=document.getElementById('s3_mlcCanvas'),ctx=canvas.getContext('2d');
 let FW,FH,cX=-.1528,cY=1.0397,spanX=.15;
@@ -1654,7 +1628,6 @@ document.getElementById('s3_mlcFilament').addEventListener('click',()=>goTo(pres
 document.getElementById('s3_mlcSatellite').addEventListener('click',()=>goTo(presets.satellite));
 window.addEventListener('resize',render)})();
 
-
 /* ═══ DRAG-TO-PAN UTILITY ═══ */
 function addDragPan(canvas,getState,setState,onDone){
 let dragging=false,lastX=0,lastY=0;
@@ -1667,7 +1640,6 @@ const spanY=st.spanX*(rect.height/rect.width);
 st.cX-=dx/rect.width*st.spanX;st.cY-=dy/rect.height*spanY;
 setState(st);if(onDone)onDone()});
 window.addEventListener('mouseup',()=>{if(dragging){dragging=false;canvas.style.cursor='crosshair'}})}
-
 
 /* ═══ NEWTON FRACTAL — z³ = 1, infinite zoom ═══ */
 (function(){const canvas=document.getElementById('s3_newtonCanvas'),ctx=canvas.getContext('2d');
@@ -1813,7 +1785,6 @@ window.addEventListener('resize',render)})();
 const globalObs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});},{threshold:.08});
 document.querySelectorAll('.chapter-section, .ref-section, .coda-section').forEach(s=>globalObs.observe(s));
 
-
 /* ═══ PAN / ZOOM SYSTEM ═══ */
 (function(){
   document.querySelectorAll('.ibox .canvas-wrap').forEach(wrap=>{
@@ -1884,5 +1855,35 @@ document.querySelectorAll('.chapter-section, .ref-section, .coda-section').forEa
 })();
 
 </script>
+
+<div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
+  <script src="https://giscus.app/client.js"
+    data-repo="kimshmath/edu"
+    data-repo-id="R_kgDORrE8sw"
+    data-category="Comments"
+    data-category-id="DIC_kwDORrE8s84C45oL"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="dark"
+    data-lang="en"
+    crossorigin="anonymous"
+    async>
+  </script>
+</div>
+
+<footer>
+  <div class="footer-rule"></div>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+    <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
 </body>
 </html>

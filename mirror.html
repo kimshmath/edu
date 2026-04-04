@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+    
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -169,6 +171,7 @@ footer .name{font-family:'Cormorant Garamond',serif;font-size:1.2rem;
 
 @media(max-width:760px){.two-col,.three-col,.mirror-split{grid-template-columns:1fr}.mirror-divider{height:2px;width:100%}.tribute-banner{padding:1.8rem 1.5rem}}
 </style>
+  <link rel="stylesheet" href="brand.css">
 </head>
 <body>
 
@@ -637,20 +640,6 @@ footer .name{font-family:'Cormorant Garamond',serif;font-size:1.2rem;
 <hr class="sep">
 
 <!-- ══════════════════════════════ FOOTER ══════════════════════════════ -->
-<footer>
-  <p>Symplectic manifolds · Lagrangian submanifolds · Floer homology · Fukaya categories · Kontsevich HMS · SYZ conjecture</p>
-  <p style="margin-top:.5rem;font-size:.8rem">
-    Inspired by:
-    M. Kontsevich, <em>Homological Algebra of Mirror Symmetry</em> (ICM 1994) ·
-    A. Polishchuk &amp; E. Zaslow, <em>Categorical Mirror Symmetry: The Elliptic Curve</em> ·
-    P. Seidel, <em>Fukaya Categories and Picard–Lefschetz Theory</em>
-  </p>
-  <div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:.2rem;text-align:left">
-    <div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;font-weight:400;color:#edeef2;letter-spacing:-.01em">Sang-hyun Kim</div>
-    <div style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:300;color:#5c6178;letter-spacing:.01em">Korea Institute for Advanced Study</div>
-    <a href="https://kimsh.kr" style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;display:inline-block;margin-top:.25rem">kimsh.kr</a>
-  </div>
-</footer>
 
 <!-- ══════════════════════════════ SCRIPTS ══════════════════════════════ -->
 <script>
@@ -1051,7 +1040,6 @@ const TAU=2*Math.PI;
   drawLag();
 })();
 
-
 // ════════════════════════════════════════════════
 // §3 FLOER HOMOLOGY — Strips between intersection points
 // ════════════════════════════════════════════════
@@ -1371,7 +1359,6 @@ const TAU=2*Math.PI;
   draw();
 })();
 
-
 // ════════════════════════════════════════════════
 // §6 MIRROR CORRESPONDENCE — Split-screen torus
 // ════════════════════════════════════════════════
@@ -1601,7 +1588,6 @@ const TAU=2*Math.PI;
   drawMirror();
 })();
 
-
 // ════════════════════════════════════════════════
 // §7 SYZ FIBRATION
 // ════════════════════════════════════════════════
@@ -1747,7 +1733,6 @@ const TAU=2*Math.PI;
   drawSYZ();
 })();
 
-
 // ════════════════════════════════════════════════
 // §8 GW INVARIANTS BAR CHART
 // ════════════════════════════════════════════════
@@ -1839,7 +1824,6 @@ const TAU=2*Math.PI;
   ctx.textAlign='left';
 })();
 
-
 // ════════════════════════════════════════════════
 // §8 PERIOD INTEGRAL VISUALIZATION
 // ════════════════════════════════════════════════
@@ -1925,7 +1909,6 @@ const TAU=2*Math.PI;
   draw();
 })();
 
-
 // ════════════════════════════════════════════════
 // SCROLL REVEAL
 // ════════════════════════════════════════════════
@@ -1964,7 +1947,7 @@ document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 })();
 
 </script>
-<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"
@@ -1983,5 +1966,17 @@ document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
     async>
   </script>
 </div>
+
+<footer>
+  <div class="footer-rule"></div>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+    <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
 </body>
 </html>

@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+  
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RQVK6SF2E6');
+  </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Weighing the Infinite - Mellow Math</title>
@@ -168,11 +178,11 @@ footer { padding: 4rem 2rem; text-align: center; border-top: 1px solid var(--bor
   .btn-group { flex-direction: column; gap: 0.5rem; }
 }
 </style>
+  <link rel="stylesheet" href="brand.css">
 </head>
 <body>
 
 <div id="particles-container"></div>
-<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
 
 <section class="hero" id="hero">
   <canvas id="heroCanvas" class="hero-canvas"></canvas>
@@ -489,15 +499,6 @@ footer { padding: 4rem 2rem; text-align: center; border-top: 1px solid var(--bor
   </div>
 
 </main>
-
-<footer>
-  <div class="footer-attr">
-    <div class="footer-name">Sang-hyun Kim</div>
-    <div class="footer-inst">Korea Institute for Advanced Study</div>
-    <div class="footer-inst">AI4MATH, KAIST</div>
-    <a class="footer-url" href="https://kimsh.kr">kimsh.kr</a>
-  </div>
-</footer>
 
 <script>
 // Global State & Observers
@@ -1143,5 +1144,35 @@ setTimeout(() => {
 }, 50);
 
 </script>
+
+<div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
+  <script src="https://giscus.app/client.js"
+    data-repo="kimshmath/edu"
+    data-repo-id="R_kgDORrE8sw"
+    data-category="Comments"
+    data-category-id="DIC_kwDORrE8s84C45oL"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="dark"
+    data-lang="en"
+    crossorigin="anonymous"
+    async>
+  </script>
+</div>
+
+<footer>
+  <div class="footer-rule"></div>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+    <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
 </body>
 </html>

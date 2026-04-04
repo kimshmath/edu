@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <!-- Google tag (gtag.js) -->
+  
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-RQVK6SF2E6');
+  </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>선택을 거부한 비트 — Mellow Math</title>
@@ -1721,6 +1731,7 @@ footer{
   footer{padding:3rem 1.2rem 4rem}
 }
 </style>
+  <link rel="stylesheet" href="brand.css">
 </head>
 <body>
 
@@ -2511,15 +2522,6 @@ footer{
 <!-- ═══════════════════════════════════════════
      BRANDING
      ═══════════════════════════════════════════ -->
-<a class="floating-badge" href="https://edu.kimsh.kr" target="_blank">edu.kimsh.kr</a>
-
-<footer>
-  <div class="footer-attr">
-    <span class="footer-name">Sang-hyun Kim</span>
-    <span class="footer-inst">Korea Institute for Advanced Study · AI4Math, KAIST</span>
-    <a class="footer-url" href="https://kimsh.kr" target="_blank">kimsh.kr</a>
-  </div>
-</footer>
 
 <!-- ═══════════════════════════════════════════
      SCRIPTS
@@ -2657,7 +2659,6 @@ function playTeleportSound(){
   }, {threshold: 0.05});
   obs.observe(heroEl);
 })();
-
 
 /* ─────────────────────────────────────────────
    BLOCH SPHERE: Interactive 3D qubit visualization
@@ -3011,7 +3012,6 @@ function playTeleportSound(){
   obs.observe(heroEl);
 })();
 
-
 /* ─────────────────────────────────────────────
    §1: CLASSICAL BIT TOGGLE
    ───────────────────────────────────────────── */
@@ -3129,7 +3129,6 @@ function resetCoin(){
   document.getElementById('entropyVal').textContent = '0.000';
   document.getElementById('entropyFill').style.width = '0%';
 }
-
 
 /* ─────────────────────────────────────────────
    §2: INTERACTIVE BLOCH SPHERE LAB
@@ -3395,7 +3394,6 @@ function resetCoin(){
   obs.observe(wrap);
 })();
 
-
 /* ─────────────────────────────────────────────
    §2: COMPARISON CARD VISUALS
    ───────────────────────────────────────────── */
@@ -3456,7 +3454,6 @@ function resetCoin(){
   ctx2.fillStyle = 'rgba(196,122,212,.6)';
   ctx2.fillText('|1⟩', qcx, qcy+qR+14);
 })();
-
 
 /* ─────────────────────────────────────────────
    §3: MEASUREMENT SIMULATOR
@@ -3706,7 +3703,6 @@ function updateHistogram(){
   document.getElementById('measureTotal').textContent = total + ' 회 측정' + (total!==1?'s':'');
 }
 
-
 /* ─────────────────────────────────────────────
    §3: PREDICTION GAME — "큐비트를 이길 수 있을까?"
    ───────────────────────────────────────────── */
@@ -3760,7 +3756,6 @@ function makePrediction(guess){
     btns.forEach(b => b.disabled = false);
   }, 300);
 }
-
 
 /* ─────────────────────────────────────────────
    §4: ENTANGLEMENT CANVAS — Spooky Particles
@@ -3897,7 +3892,6 @@ function makePrediction(guess){
   };
 })();
 
-
 /* ─────────────────────────────────────────────
    §4: ENTANGLEMENT MEASUREMENT LOGIC
    ───────────────────────────────────────────── */
@@ -3976,7 +3970,6 @@ function updateCorrDisplay(){
   }
 }
 
-
 /* ─────────────────────────────────────────────
    §4: BELL TEST SIMULATOR
    ───────────────────────────────────────────── */
@@ -4035,7 +4028,6 @@ function runBellTest(n){
     }
   }
 }
-
 
 /* ─────────────────────────────────────────────
    §5: TELEPORTATION CANVAS — Three-particle scene
@@ -4243,7 +4235,6 @@ function runBellTest(n){
   };
 })();
 
-
 /* ─────────────────────────────────────────────
    §5: TELEPORTATION PROTOCOL LOGIC
    ───────────────────────────────────────────── */
@@ -4325,7 +4316,6 @@ function runBellTest(n){
     el.classList.add(cls);
   }
 })();
-
 
 /* ─────────────────────────────────────────────
    §6: GROVER'S SEARCH RACE
@@ -4415,7 +4405,6 @@ function resetRace(){
   document.getElementById('raceBtn').disabled = false;
 }
 
-
 /* ─────────────────────────────────────────────
    SCROLL REVEAL + SECTION NAV TRACKING
    ───────────────────────────────────────────── */
@@ -4456,6 +4445,36 @@ navSections.forEach(s => {
   if(el) navObs.observe(el);
 });
 </script>
+
+
+<div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
+  <script src="https://giscus.app/client.js"
+    data-repo="kimshmath/edu"
+    data-repo-id="R_kgDORrE8sw"
+    data-category="Comments"
+    data-category-id="DIC_kwDORrE8s84C45oL"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="dark"
+    data-lang="ko"
+    crossorigin="anonymous"
+    async>
+  </script>
+</div>
+
+<footer>
+  <div class="footer-rule"></div>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+    <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
 
 </body>
 </html>

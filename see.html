@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+    
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -65,6 +67,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 .floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.14em;text-transform:lowercase;color:#8db830;background:transparent;padding:.35rem .7rem;text-decoration:none;text-shadow:0 0 6px rgba(141,184,48,.4)}
 @media(max-width:640px){section{padding:4rem 1.2rem}#nav-dots{display:none}.demo-card{padding:1.2rem}.stat-row{flex-direction:column}}
 </style>
+  <link rel="stylesheet" href="brand.css">
 </head>
 <body>
 <div id="audio-notice"><div class="notice-card"><span class="notice-icon">👁️</span><h2>Does a Machine See?</h2><p>An interactive exploration of images and filters in real time.</p><button class="notice-start" onclick="dismissNotice()">👁️ Begin</button></div></div>
@@ -204,13 +207,6 @@ But machines find tumors, classify stars, and recognize your face —<br>
 <div style="margin-top:2rem;"><a href="speak.html" class="start-btn" style="border-color:var(--muted);color:var(--muted);">← Part V: Speak</a></div>
 </div></div></section>
 
-<footer><p>Does a Machine See? — The Mathematics of Convolution and Computer Vision</p>
-<div style="margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:.2rem">
-<div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;color:#edeef2;">Sang-hyun Kim</div>
-<div style="font-family:'DM Sans',sans-serif;font-size:.72rem;color:#5c6178;">Korea Institute for Advanced Study</div>
-<a href="https://kimsh.kr" style="font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;margin-top:.25rem">kimsh.kr</a></div></footer>
-<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
-
 <script>
 let actx=null;
 function initAudio(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();}
@@ -327,5 +323,35 @@ const nd=document.getElementById('nav-dots');secs.forEach(id=>{const d=document.
 const sO=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){const i=secs.indexOf(e.target.id);document.querySelectorAll('.nav-dot').forEach((d,j)=>d.classList.toggle('active',j===i));}});},{threshold:0.3});
 secs.forEach(id=>{const el=document.getElementById(id);if(el)sO.observe(el);});
 </script>
+
+<div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
+  <script src="https://giscus.app/client.js"
+    data-repo="kimshmath/edu"
+    data-repo-id="R_kgDORrE8sw"
+    data-category="Comments"
+    data-category-id="DIC_kwDORrE8s84C45oL"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="dark"
+    data-lang="en"
+    crossorigin="anonymous"
+    async>
+  </script>
+</div>
+
+<footer>
+  <div class="footer-rule"></div>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+    <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
 </body>
 </html>

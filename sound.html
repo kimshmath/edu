@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+    
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -1244,6 +1246,7 @@ footer {
 .floating-badge:hover{color:#a8d43a;text-shadow:0 0 8px rgba(141,184,48,.65),0 0 22px rgba(141,184,48,.28);transform:translateY(-1px)}
 
 </style>
+  <link rel="stylesheet" href="brand.css">
 </head>
 <body>
 
@@ -1443,7 +1446,6 @@ footer {
     </div>
   </div>
 </section>
-
 
 <!-- ═══════════════════ EXTREME LAB ═══════════════════ -->
 <section id="sec-extreme">
@@ -1855,8 +1857,6 @@ footer {
     </div>
   </div>
 </section>
-
-
 
 <script>
 // ═══════════════════════════════════════════════
@@ -3252,7 +3252,6 @@ function drawOverlay() {
 }
 drawOverlay();
 
-
 // ═══════════════════════════════════════════════
 //  EXTREME LAB — Organ-like timbre, most dramatic comparisons
 // ═══════════════════════════════════════════════
@@ -3799,6 +3798,28 @@ function bachPlayAll() {
 
 </script>
 
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'sound',
+  basePath: 'assets/narration/sound/',
+  segments: [
+    { id: 1,  section: '#hero',           label: 'Introduction' },
+    { id: 2,  section: '#sec-wave',       label: '§1 Physics of Sound' },
+    { id: 3,  section: '#sec-pythagoras', label: '§2 Pythagorean Intervals' },
+    { id: 4,  section: '#sec-temperament',label: '§3 Equal Temperament' },
+    { id: 5,  section: '#sec-instruments',label: '§4 Instrument Comparison' },
+    { id: 6,  section: '#sec-wolf',       label: '§5 The Wolf Fifth' },
+    { id: 7,  section: '#sec-bach',       label: '§6 Well-Temperament' },
+    { id: 8,  section: '#sec-fourier',    label: '§7 Fourier Synthesis' },
+    { id: 9,  section: '#sec-timbre',     label: '§8 Timbre' },
+    { id: 10, section: '#sec-brain',      label: '§9 Cochlea & Hearing' },
+    { id: 11, section: '#sec-digital',    label: '§10 Digital Audio' },
+    { id: 12, section: '#sec-closing',    label: '§11 Closing' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
+
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"
     data-repo="kimshmath/edu"
@@ -3828,26 +3849,5 @@ function bachPlayAll() {
 
 <a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
 
-<script>
-window.NARRATION_CONFIG = {
-  chapter: 'sound',
-  basePath: 'assets/narration/sound/',
-  segments: [
-    { id: 1,  section: '#hero',           label: 'Introduction' },
-    { id: 2,  section: '#sec-wave',       label: '§1 Physics of Sound' },
-    { id: 3,  section: '#sec-pythagoras', label: '§2 Pythagorean Intervals' },
-    { id: 4,  section: '#sec-temperament',label: '§3 Equal Temperament' },
-    { id: 5,  section: '#sec-instruments',label: '§4 Instrument Comparison' },
-    { id: 6,  section: '#sec-wolf',       label: '§5 The Wolf Fifth' },
-    { id: 7,  section: '#sec-bach',       label: '§6 Well-Temperament' },
-    { id: 8,  section: '#sec-fourier',    label: '§7 Fourier Synthesis' },
-    { id: 9,  section: '#sec-timbre',     label: '§8 Timbre' },
-    { id: 10, section: '#sec-brain',      label: '§9 Cochlea & Hearing' },
-    { id: 11, section: '#sec-digital',    label: '§10 Digital Audio' },
-    { id: 12, section: '#sec-closing',    label: '§11 Closing' }
-  ]
-};
-</script>
-<script src="narration_player.js"></script>
 </body>
 </html>

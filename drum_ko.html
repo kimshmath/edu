@@ -2,7 +2,9 @@
 <html lang="ko">
 <head>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+    
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -153,7 +155,6 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 .ref-item{font-size:.88rem;color:var(--muted);font-style:italic;padding:.75rem 1rem;border-left:2px solid var(--border);line-height:1.6}
 .ref-item strong{font-style:normal;color:var(--text)}
 .epilogue{margin-top:3rem;text-align:center;font-style:italic;color:var(--muted);font-size:.9rem}
-
 
 /* ===== PWA INSTALL BANNER ===== */
 #pwa-banner{position:fixed;bottom:5rem;left:50%;transform:translateX(-50%) translateY(20px);z-index:888;opacity:0;pointer-events:none;transition:all .4s ease;white-space:nowrap}
@@ -338,6 +339,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 .sunada-box p{font-size:.98rem;color:var(--text);line-height:1.7}
 .sunada-box p+p{margin-top:.6rem}
 </style>
+  <link rel="stylesheet" href="brand.css">
 </head>
 <body>
 
@@ -371,7 +373,6 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
     style="touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none">
     탭하여 시작
   </button>
-
 
   <div style="margin-top:.8rem;font-family:Space Mono,monospace;font-size:.52rem;color:#3a3f55;text-align:center">
     설정 → Chrome → 오디오 허용도 확인하세요
@@ -891,26 +892,6 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 </div>
 
 <hr class="divider">
-<footer>
-  <div class="s-num">참고문헌</div>
-  <h2 class="s-title" style="font-size:1.9rem;margin-bottom:1.5rem">더 읽어보기</h2>
-  <div class="refs-grid">
-    <div class="ref-item"><strong>M. Kac</strong> — "Can One Hear the Shape of a Drum?" <em>Amer. Math. Monthly</em> 73 (1966), 1–23.</div>
-    <div class="ref-item"><strong>H. Weyl</strong> — "Über die Abhängigkeit der Eigenschwingungen einer Membran." <em>J. reine angew. Math.</em> 141 (1912).</div>
-    <div class="ref-item"><strong>C. Gordon, D. Webb, S. Wolpert</strong> — "One Cannot Hear the Shape of a Drum." <em>Bull. AMS</em> 27 (1992), 134–138.</div>
-    <div class="ref-item"><strong>S. Zelditch</strong> — "Spectral Determination of Analytic Bi-axisymmetric Plane Domains." <em>GAFA</em> 10 (2000), 628–677.</div>
-    <div class="ref-item"><strong>R. Courant</strong> — "Ein allgemeiner Satz zur Theorie der Eigenfunktionen." <em>Nachr. Ges. Wiss. Göttingen</em> (1923), 81–84.</div>
-    <div class="ref-item"><strong>Å. Pleijel</strong> — "Remarks on Courant's Nodal Line Theorem." <em>Comm. Pure Appl. Math.</em> 9 (1956), 543–550.</div>
-    <div class="ref-item"><strong>J. Jung &amp; S. Zelditch</strong> — "Number of Nodal Domains of Eigenfunctions on Non-positively Curved Surfaces with Concave Boundary." <em>Math. Ann.</em> 375 (2019).</div>
-    <div class="ref-item"><strong>J. Jung &amp; S. Zelditch</strong> — "Boundedness of the Number of Nodal Domains for Eigenfunctions of Generic Kaluza-Klein 3-folds." <em>Ann. Inst. Fourier</em> (2020).</div>
-  </div>
-  <p class="epilogue">베셀 함수: 10⁻¹⁵ 정밀도. 고유값 정확: j²ₘₙ/R². 오디오: Web Audio API 모달 합성, 지수 감쇠 및 음높이 활강.</p>
-  <div class="footer-attr" style="margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border)">
-    <div style="font-family:'Fraunces',Georgia,serif;font-size:.85rem;font-weight:400;color:#edeef2;letter-spacing:-.01em">Sang-hyun Kim</div>
-    <div style="font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:300;color:#5c6178;letter-spacing:.01em;margin-top:.2rem">고등과학원</div>
-    <a href="https://kimsh.kr" style="font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:#d4a853;text-decoration:none;display:inline-block;margin-top:.25rem">kimsh.kr</a>
-  </div>
-</footer>
 
 <script>
 "use strict";
@@ -2586,7 +2567,24 @@ self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>
     <span class="pwa-close" id="pwa-close-btn">✕</span>
   </div>
 </div>
-<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'drum',
+  basePath: 'assets/narration/drum/',
+  segments: [
+    { id: 0, section: '#hero',       label: '소개' },
+    { id: 1, section: '#sec-strike',  label: '§1 북의 목소리' },
+    { id: 2, section: '#sec-phasor',  label: '§2 페이저 성좌' },
+    { id: 3, section: '#sec-modes',   label: '§3 순수한 형태' },
+    { id: 4, section: '#sec-beat',    label: '§4 간섭과 맥놀이' },
+    { id: 5, section: '#sec-weyl',    label: '§5 바일 법칙' },
+    { id: 6, section: '#sec-iso',     label: '§6 등스펙트럼 드럼' },
+    { id: 7, section: '#sec-nodal',   label: '§7 마디 영역' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"
@@ -2605,22 +2603,17 @@ self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>
     async>
   </script>
 </div>
-<script>
-window.NARRATION_CONFIG = {
-  chapter: 'drum',
-  basePath: 'assets/narration/drum/',
-  segments: [
-    { id: 0, section: '#hero',       label: '소개' },
-    { id: 1, section: '#sec-strike',  label: '§1 북의 목소리' },
-    { id: 2, section: '#sec-phasor',  label: '§2 페이저 성좌' },
-    { id: 3, section: '#sec-modes',   label: '§3 순수한 형태' },
-    { id: 4, section: '#sec-beat',    label: '§4 간섭과 맥놀이' },
-    { id: 5, section: '#sec-weyl',    label: '§5 바일 법칙' },
-    { id: 6, section: '#sec-iso',     label: '§6 등스펙트럼 드럼' },
-    { id: 7, section: '#sec-nodal',   label: '§7 마디 영역' }
-  ]
-};
-</script>
-<script src="narration_player.js"></script>
+
+<footer>
+  <div class="footer-rule"></div>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+    <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
 </body>
 </html>
