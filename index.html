@@ -151,8 +151,8 @@
     /* ═══ HEXAGONAL LAYOUT ═══ */
     .hexagon-wrapper {
       position: relative;
-      width: min(520px, 90vw);
-      height: min(520px, 90vw);
+      width: min(460px, 85vw);
+      height: min(460px, 85vw);
       margin-bottom: 2.5rem;
     }
 
@@ -220,27 +220,27 @@
 
     /* Hexagon vertex positions — pulled inward for tighter clustering */
     .category-card[data-cat="space"] {
-      left: 50%; top: 5%;
+      left: 50%; top: 8%;
       animation-delay: 0.1s;
     }
     .category-card[data-cat="quantum"] {
-      left: 90%; top: 28%;
+      left: 85%; top: 30%;
       animation-delay: 0.18s;
     }
     .category-card[data-cat="machine"] {
-      left: 90%; top: 72%;
+      left: 85%; top: 70%;
       animation-delay: 0.26s;
     }
     .category-card[data-cat="mechanics"] {
-      left: 50%; top: 95%;
+      left: 50%; top: 92%;
       animation-delay: 0.34s;
     }
     .category-card[data-cat="sense"] {
-      left: 10%; top: 72%;
+      left: 15%; top: 70%;
       animation-delay: 0.42s;
     }
     .category-card[data-cat="flow"] {
-      left: 10%; top: 28%;
+      left: 15%; top: 30%;
       animation-delay: 0.50s;
     }
 
@@ -255,7 +255,7 @@
     /* ─── Center Hub ─── */
     .suggest-center {
       position: absolute;
-      left: 50%; top: 56%;
+      left: 50%; top: 50%;
       transform: translate(-50%, -50%);
       z-index: 10;
       width: clamp(100px, 22vw, 120px);
@@ -672,15 +672,31 @@
       }
 
       .hexagon-wrapper {
-        width: 100vw;
-        height: 105vw;
-        margin-bottom: 1rem;
+        width: 92vw;
+        height: auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.6rem;
+        justify-items: center;
+        padding: 0.5rem;
+        margin: 0 auto 1rem;
       }
 
       .category-card {
-        width: clamp(90px, 25vw, 120px);
-        padding: 0.7rem 0.45rem 0.6rem;
+        position: static;
+        transform: none;
+        width: 100%;
+        max-width: 140px;
+        padding: 0.8rem 0.5rem 0.7rem;
         border-radius: 14px;
+      }
+
+      .category-card:hover {
+        transform: translateY(-3px) scale(1.04);
+      }
+
+      .category-card:active {
+        transform: scale(0.97);
       }
 
       .cat-icon {
@@ -707,62 +723,27 @@
       }
 
       .suggest-center {
-        width: clamp(72px, 19vw, 95px);
-        height: clamp(72px, 19vw, 95px);
+        display: none;
       }
 
-      .suggest-center .cat-icon {
-        width: 24px;
-        height: 24px;
-        margin-bottom: 0.25rem;
-      }
-
-      .suggest-center .cat-label {
-        font-size: 0.68rem;
-      }
-
-      .suggest-center .cat-label-ko {
-        font-size: 0.8rem;
-      }
-
-      /* Tighter pentagon on mobile */
-      .category-card[data-cat="space"] {
-        left: 50%; top: 5%;
-      }
-      .category-card[data-cat="flow"] {
-        left: 14%; top: 34%;
-      }
-      .category-card[data-cat="quantum"] {
-        left: 86%; top: 34%;
-      }
-      .category-card[data-cat="sense"] {
-        left: 22%; top: 76%;
-      }
-      .category-card[data-cat="machine"] {
-        left: 78%; top: 76%;
-      }
-      .suggest-center {
-        top: 54%;
+      .hexagon-lines {
+        display: none;
       }
     }
 
     @media (max-width: 380px) {
-      .cat-desc {
-        display: none;
+      .hexagon-wrapper {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
       }
 
       .category-card {
-        width: clamp(80px, 24vw, 105px);
+        max-width: 160px;
         padding: 0.6rem 0.35rem 0.5rem;
       }
 
       .cat-label {
         font-size: 0.85rem;
-      }
-
-      .suggest-center {
-        width: 68px;
-        height: 68px;
       }
     }
 
@@ -1106,26 +1087,6 @@
             title: 'When Machines Dream', titleKo: '기계가 꿈꾸는 밤', tagline: 'The geometry of synthetic cognition', taglineKo: '인공 인지의 기하학', difficulty: 2, en: 'dream.html', ko: 'dream-ko.html',
             icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="8" cy="16" r="2.5" fill="#FF79C625" stroke="#FF79C6" stroke-width="0.7"/><circle cx="8" cy="28" r="2.5" fill="#FF79C625" stroke="#FF79C6" stroke-width="0.7"/><circle cx="8" cy="40" r="2.5" fill="#FF79C625" stroke="#FF79C6" stroke-width="0.7"/><line x1="10.5" y1="16" x2="22" y2="22" stroke="#FF79C6" stroke-width="0.6" opacity="0.4"/><line x1="10.5" y1="28" x2="22" y2="22" stroke="#FF79C6" stroke-width="0.8" opacity="0.5"/><line x1="10.5" y1="40" x2="22" y2="22" stroke="#FF79C6" stroke-width="0.6" opacity="0.4"/><circle cx="24" cy="22" r="3.5" stroke="#FF79C6" stroke-width="1" fill="#FF79C615"/><line x1="10.5" y1="16" x2="22" y2="34" stroke="#FF79C6" stroke-width="0.6" opacity="0.3"/><line x1="10.5" y1="28" x2="22" y2="34" stroke="#FF79C6" stroke-width="0.8" opacity="0.4"/><line x1="10.5" y1="40" x2="22" y2="34" stroke="#FF79C6" stroke-width="0.6" opacity="0.5"/><circle cx="24" cy="34" r="3.5" stroke="#FF79C6" stroke-width="1" fill="#FF79C615"/><line x1="27.5" y1="22" x2="40" y2="28" stroke="#FF79C6" stroke-width="0.8" opacity="0.5"/><line x1="27.5" y1="34" x2="40" y2="28" stroke="#FF79C6" stroke-width="0.8" opacity="0.5"/><circle cx="42" cy="28" r="4" stroke="#FF79C6" stroke-width="1.2" fill="#FF79C630"/><path d="M14 48 Q22 42 28 48 Q34 54 42 48" stroke="#FF79C6" stroke-width="0.9" fill="none" opacity="0.3" stroke-linecap="round"/></svg>'
           },
-      mechanics: {
-        label: 'Mechanics', labelKo: '역학', color: '#FF453A',
-        desc: 'Energy, motion, and the physical laws of the universe',
-        descKo: '에너지, 운동, 그리고 우주의 물리 법칙들',
-        icon: document.querySelector('[data-cat="mechanics"] .cat-icon').outerHTML,
-        chapters: [
-          {
-            title: 'Conservation of Energy', titleKo: '에너지 보존', tagline: 'Dennis the Menace and the blocks', taglineKo: '데니스의 장난감 블록', difficulty: 1, en: 'energy.html', ko: 'energy_ko.html',
-            icon: '<svg viewBox="0 0 56 56" fill="none"><rect x="14" y="24" width="28" height="8" rx="1" stroke="#FF453A" stroke-width="1.2" fill="none"/><line x1="28" y1="24" x2="28" y2="32" stroke="#FF453A" stroke-width="1.2"/><rect x="14" y="24" width="14" height="8" fill="#FF453A" opacity="0.4"/></svg>'
-          },
-          {
-            title: 'Vectors and Motion', titleKo: '벡터와 운동', tagline: 'The arrows that guide the stars', taglineKo: '별을 이끄는 화살표', difficulty: 2, en: 'vectors.html', ko: 'vectors_ko.html',
-            icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M16 40 Q28 20 40 16" stroke="#FF453A" stroke-width="1.4" fill="none"/><path d="M34 16 L40 16 L38 22" stroke="#FF453A" stroke-width="1.4" fill="none"/><line x1="16" y1="40" x2="28" y2="28" stroke="#FF453A" stroke-width="1.2" stroke-dasharray="2 2" /><path d="M22 28 L28 28 L26 34" stroke="#FF453A" stroke-width="1.2" fill="none"/></svg>'
-          },
-          {
-            title: 'Harmonic Oscillators', titleKo: '조화 진동자', tagline: 'The universal rhythm', taglineKo: '우주적 리듬', difficulty: 3, en: 'oscillator.html', ko: 'oscillator_ko.html',
-            icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M10 28 Q16 12 28 28 T46 28" stroke="#FF453A" stroke-width="1.4" fill="none"/><line x1="10" y1="28" x2="46" y2="28" stroke="#FF453A" stroke-width="0.8" opacity="0.3"/></svg>'
-          }
-        ]
-      },
           {
             title: 'Diffusion II', titleKo: '기계는 꿈을 꾸는가?', tagline: 'Images from pure noise', taglineKo: '순수한 노이즈에서 이미지로', difficulty: 2, en: 'diffusion-2.html', ko: 'diffusion-2-ko.html', linkFrom: '← from Flow', linkFromKo: '← Flow에서 이어짐',
             icon: '<svg viewBox="0 0 56 56" fill="none"><circle cx="46" cy="20" r="6.5" stroke="#FF79C6" stroke-width="1.3" fill="#FF79C612" opacity="0.8"/><path d="M40 42 L46 31 L52 42 Z" stroke="#FF79C6" stroke-width="1.1" fill="#FF79C608" opacity="0.6"/><path d="M18 28 L38 28" stroke="#FF79C6" stroke-width="0.9" opacity="0.3" stroke-dasharray="2 2"/><path d="M36 26 L39 28 L36 30" stroke="#FF79C6" stroke-width="0.8" fill="none" opacity="0.3" stroke-linecap="round"/></svg>'
@@ -1162,6 +1123,26 @@
             title: 'Does a Machine Suffer?', titleKo: '기계는 고통받는가?', tagline: 'Beyond computation', taglineKo: '계산 너머', difficulty: 1, en: 'suffer.html', ko: 'suffer_ko.html',
             icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M28 8 C28 8 16 26 16 34 C16 40.6 21.4 46 28 46 C34.6 46 40 40.6 40 34 C40 26 28 8 28 8 Z" stroke="#FF79C6" stroke-width="1.4" fill="#FF79C615"/><path d="M24 32 C24 28 28 18 28 18 C28 18 22 30 22 34 C22 37 24.5 39.5 28 39.5" stroke="#FF79C6" stroke-width="0.6" fill="none" opacity="0.2"/></svg>'
           },
+        ]
+      },
+      mechanics: {
+        label: 'Mechanics', labelKo: '역학', color: '#FF453A',
+        desc: 'Energy, motion, and the physical laws of the universe',
+        descKo: '에너지, 운동, 그리고 우주의 물리 법칙들',
+        icon: document.querySelector('[data-cat="mechanics"] .cat-icon').outerHTML,
+        chapters: [
+          {
+            title: 'Conservation of Energy', titleKo: '에너지 보존', tagline: 'Dennis the Menace and the blocks', taglineKo: '데니스의 장난감 블록', difficulty: 1, en: 'energy.html', ko: 'energy_ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><rect x="14" y="24" width="28" height="8" rx="1" stroke="#FF453A" stroke-width="1.2" fill="none"/><line x1="28" y1="24" x2="28" y2="32" stroke="#FF453A" stroke-width="1.2"/><rect x="14" y="24" width="14" height="8" fill="#FF453A" opacity="0.4"/></svg>'
+          },
+          {
+            title: 'Vectors and Motion', titleKo: '벡터와 운동', tagline: 'The arrows that guide the stars', taglineKo: '별을 이끄는 화살표', difficulty: 2, en: 'vectors.html', ko: 'vectors_ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M16 40 Q28 20 40 16" stroke="#FF453A" stroke-width="1.4" fill="none"/><path d="M34 16 L40 16 L38 22" stroke="#FF453A" stroke-width="1.4" fill="none"/><line x1="16" y1="40" x2="28" y2="28" stroke="#FF453A" stroke-width="1.2" stroke-dasharray="2 2" /><path d="M22 28 L28 28 L26 34" stroke="#FF453A" stroke-width="1.2" fill="none"/></svg>'
+          },
+          {
+            title: 'Harmonic Oscillators', titleKo: '조화 진동자', tagline: 'The universal rhythm', taglineKo: '우주적 리듬', difficulty: 3, en: 'oscillator.html', ko: 'oscillator_ko.html',
+            icon: '<svg viewBox="0 0 56 56" fill="none"><path d="M10 28 Q16 12 28 28 T46 28" stroke="#FF453A" stroke-width="1.4" fill="none"/><line x1="10" y1="28" x2="46" y2="28" stroke="#FF453A" stroke-width="0.8" opacity="0.3"/></svg>'
+          }
         ]
       }
     };
