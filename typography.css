@@ -1,0 +1,114 @@
+/* ═══════════════════════════════════════════════
+   typography.css — Unified Typography for Mellow Math
+   Enforces sound.html styles across all chapters
+   ═══════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --font-display: 'Fraunces', Georgia, serif !important;
+  --font-body: 'DM Sans', sans-serif !important;
+  --font-mono: 'JetBrains Mono', monospace !important;
+}
+
+body {
+  font-family: var(--font-body) !important;
+  font-weight: 300 !important;
+  line-height: 1.7 !important;
+  font-size: 16px !important;
+}
+
+/* Headings */
+h1, .hero-title, .s-title, .sec-title {
+  font-family: var(--font-display) !important;
+  font-size: clamp(2.8rem, 6vw, 5rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.02em !important;
+}
+
+h2, .s-title {
+  font-family: var(--font-display) !important;
+  font-size: clamp(1.8rem, 4vw, 3rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.2 !important;
+  margin-bottom: 1.5rem !important;
+}
+
+h3, .s-num, .hero-label, .hero-chapter, .hero-num, .top-chapter, .sec-label {
+  font-family: var(--font-body) !important;
+  font-size: 1.1rem !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.15em !important;
+  margin-bottom: 0.5rem !important;
+  font-style: normal !important;
+}
+
+/* Special Hero Texts */
+.subtitle, .hero-sub {
+  font-family: var(--font-display) !important;
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem) !important;
+  font-style: italic !important;
+  margin-bottom: 2.5rem !important;
+  color: var(--gold) !important;
+  font-weight: 400 !important;
+}
+
+.tagline, .hero-tagline {
+  font-family: var(--font-body) !important;
+  font-size: 0.95rem !important;
+  font-weight: 300 !important;
+  margin-bottom: 2.5rem !important;
+  font-style: normal !important;
+}
+
+/* Paragraphs & Text */
+p, .prose p, .prose {
+  font-family: var(--font-body) !important;
+  font-weight: 300 !important;
+  line-height: 1.7 !important;
+  font-size: 1rem !important;
+}
+
+p, .prose p {
+  margin-bottom: 1rem !important;
+  margin-top: 0 !important;
+}
+
+/* Remove +p margins since we set margin-bottom on all p */
+.prose p + p {
+  margin-top: 0 !important;
+}
+
+/* Formulas / Math */
+.formula, .math, .eq, .s-math, .s1-btn, .start-btn, .btn, .hud-btn, .ao-btn, .action-btn {
+  font-family: var(--font-mono) !important;
+}
+
+.formula {
+  font-size: 1.3rem !important;
+  padding: 1rem 1.5rem !important;
+  border-radius: 8px !important;
+  display: inline-block !important;
+  margin: 1rem 0 !important;
+}
+
+/* Callouts / Quotes */
+.callout, .block-quote, blockquote {
+  font-family: var(--font-body) !important;
+  font-weight: 300 !important;
+  font-size: 1.03rem !important;
+  line-height: 1.7 !important;
+  font-style: italic !important;
+}
+
+.callout cite, .quote-attr {
+  font-style: normal !important;
+  font-family: var(--font-mono) !important;
+  font-size: 0.75rem !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  margin-top: 0.6rem !important;
+  display: block !important;
+}
