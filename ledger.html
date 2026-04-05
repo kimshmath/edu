@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-RQVK6SF2E6');
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Indestructible Ledger — Mellow Math</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,400&family=JetBrains+Mono:wght@300;400&family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #04050c;
+  --bg2: #090b18;
+  --bg3: #0e1128;
+  --text: #b8b4ac;
+  --cream: #ece8e0;
+  --muted: #52566a;
+  --gold: #c9a84c;
+  --gold2: #d4a853;
+  --gold-dim: rgba(201,168,76,.08);
+  --violet: #8a6abf;
+  --fern: #5a9a72;
+  --fern-glow: #7cc89a;
+  --border: rgba(255,255,255,.04);
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-kr: 'Noto Serif KR', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+html { 
+  scroll-behavior: smooth; 
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+  position: relative;
+  width: 100%;
+}
+
+/* ─── Film Grain Overlay ─── */
+body::after {
+  content: ''; position: fixed; inset: 0; z-index: 9999;
+  pointer-events: none; opacity: .035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 200px;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+
+/* ─── Typography & Prose ─── */
+h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6vw, 4.6rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+  margin-bottom: 0.5rem;
+}
+h1 em { font-style: italic; color: var(--gold); }
+h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--cream);
+  margin-bottom: 1.5rem;
+}
+
+.prose {
+  font-size: 1.08rem;
+  margin-bottom: 1.2rem;
+  line-height: 1.8;
+}
+.prose-drop::first-letter {
+  float: left;
+  font-family: var(--font-display);
+  font-size: 4rem;
+  line-height: 0.8;
+  padding-top: 0.1rem;
+  padding-right: 0.6rem;
+  color: var(--gold);
+}
+
+.hi { color: var(--cream); font-weight: 400; }
+.ac { color: var(--gold); }
+
+.pull-quote {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.5rem;
+  color: var(--cream);
+  text-align: center;
+  margin: 4rem auto;
+  max-width: 700px;
+  line-height: 1.5;
+  position: relative;
+  padding-bottom: 1.5rem;
+}
+.pull-quote::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 25%; right: 25%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.block-quote {
+  background: var(--gold-dim);
+  border-left: 2px solid var(--gold);
+  padding: 1.5rem 2rem;
+  margin: 3rem 0;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--cream);
+  line-height: 1.6;
+}
+.block-quote-attr {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 1rem;
+  font-style: normal;
+}
+
+.coda {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.2rem;
+  color: var(--muted);
+  text-align: center;
+  margin: 5rem auto 2rem;
+  line-height: 1.8;
+}
+
+/* ─── Ambient Particles ─── */
+#particles {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+}
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+  opacity: 0;
+  animation: floatUp linear infinite;
+}
+@keyframes floatUp {
+  0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+  20% { opacity: 0.15; }
+  80% { opacity: 0.15; }
+  100% { transform: translateY(-10vh) scale(1.5); opacity: 0; }
+}
+
+/* ─── Layout ─── */
+.chapter-section {
+  min-height: 100vh;
+  padding: 6rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  z-index: 1;
+}
+.section-inner {
+  max-width: 760px;
+  width: 100%;
+}
+.section-num {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--gold);
+  letter-spacing: 0.15em;
+  margin-bottom: 0.8rem;
+  display: block;
+}
+
+/* ─── Hero ─── */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+#hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.7;
+}
+.hero-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 15%, var(--bg) 95%);
+  z-index: 1;
+  pointer-events: none;
+}
+#hero .content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  padding: 0 2rem;
+}
+.hero-label {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--gold);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  display: block;
+}
+.hero-subtitle {
+  font-family: var(--font-kr);
+  font-size: 1.1rem;
+  color: var(--muted);
+  margin-top: 1.5rem;
+  letter-spacing: 0.05em;
+}
+.hero-tagline {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-style: italic;
+  color: var(--muted);
+  margin: 2rem auto;
+  max-width: 600px;
+  line-height: 1.6;
+}
+.begin-indicator {
+  display: inline-block;
+  margin-top: 4rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--gold);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  animation: breathe 3s ease-in-out infinite;
+  cursor: pointer;
+  padding: 1rem;
+}
+@keyframes breathe {
+  0%, 100% { opacity: 0.4; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(5px); }
+}
+
+/* ─── Interactive Boxes (ibox) ─── */
+.ibox {
+  background: var(--bg3);
+  border-radius: 16px;
+  padding: 2.5rem;
+  margin: 3rem 0;
+  position: relative;
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+.ibox::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0.7;
+}
+.ibox-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.pulse-dot {
+  width: 6px; height: 6px;
+  background: var(--gold);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--gold);
+  animation: pulse 2s infinite alternate;
+}
+@keyframes pulse {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0.4; transform: scale(1.2); }
+}
+.ibox-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--cream);
+  margin-bottom: 0.5rem;
+}
+.ibox-desc {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+.canvas-wrap {
+  width: 100%;
+  background: var(--bg);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.02);
+  margin-bottom: 1.5rem;
+}
+.canvas-wrap canvas {
+  display: block;
+  width: 100%;
+}
+.canvas-split {
+  display: flex;
+  gap: 1px;
+  background: rgba(255,255,255,0.05);
+}
+.canvas-split > div {
+  flex: 1;
+  background: var(--bg);
+  position: relative;
+}
+.canvas-overlay-label {
+  position: absolute;
+  top: 1rem; left: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--muted);
+  pointer-events: none;
+}
+
+/* ─── Controls & Stats ─── */
+.controls-row {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+.btn {
+  padding: 0.6rem 1.2rem;
+  background: transparent;
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+.btn:hover {
+  background: rgba(201,168,76,0.1);
+  border-color: var(--gold);
+}
+.btn.active {
+  background: var(--gold);
+  color: var(--bg);
+}
+
+.slider-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  min-width: 200px;
+}
+.slider-group label {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--gold);
+  min-width: 4rem;
+}
+input[type="range"] {
+  -webkit-appearance: none;
+  flex: 1;
+  height: 2px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 1px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, var(--gold2), var(--gold));
+  cursor: pointer;
+  transition: transform 0.2s;
+  box-shadow: 0 0 10px rgba(201,168,76,0.4);
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 1rem;
+}
+.stat-card {
+  background: rgba(0,0,0,0.2);
+  border-radius: 8px;
+  padding: 1rem;
+  border: 1px solid rgba(255,255,255,0.03);
+  text-align: center;
+}
+.stat-lbl {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.4rem;
+}
+.stat-val {
+  font-family: var(--font-mono);
+  font-size: 1.3rem;
+  color: var(--gold);
+}
+
+/* ─── Scroll Reveal ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.9s cubic-bezier(.23,1,.32,1), transform 0.9s cubic-bezier(.23,1,.32,1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── References & Footer ─── */
+.ref-section {
+  max-width: 760px;
+  width: 100%;
+  margin: 4rem auto;
+  padding: 2rem 0;
+  border-top: 1px solid var(--border);
+  position: relative;
+  z-index: 2;
+}
+.ref-heading {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+.ref-list { list-style: none; }
+.ref-list li { font-size: 0.9rem; color: var(--muted); margin-bottom: 0.8rem; line-height: 1.5; }
+.ref-author { color: var(--text); font-weight: 500; }
+.ref-title { font-style: italic; color: var(--cream); }
+.ref-detail { color: var(--muted); }
+
+footer {
+  padding: 2rem 2rem 3rem;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+.footer-attr { display: flex; flex-direction: column; gap: 0.2rem; }
+.footer-name { font-family: 'Fraunces', Georgia, serif; font-size: 0.85rem; color: var(--cream); }
+.footer-inst { font-family: 'DM Sans', sans-serif; font-size: 0.7rem; color: var(--muted); }
+.footer-url { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; color: var(--gold); text-decoration: none; margin-top: 0.25rem; }
+.footer-url:hover { text-decoration: underline; }
+
+.floating-badge {
+  position: fixed; bottom: 1.5rem; left: 1.5rem; z-index: 100;
+  font-family: var(--font-mono); font-size: 0.58rem;
+  letter-spacing: 0.14em; text-transform: lowercase;
+  color: #8db830; text-decoration: none;
+  text-shadow: 0 0 6px rgba(141,184,48,0.4);
+  transition: all 0.3s;
+}
+.floating-badge:hover {
+  color: #a8d43a;
+  text-shadow: 0 0 12px rgba(141,184,48,0.8);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .canvas-split { flex-direction: column; }
+  .canvas-split > div { min-height: 240px; }
+  .controls-row { flex-direction: column; align-items: stretch; }
+  .ibox { padding: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="particles"></div>
+
+<section id="hero">
+  <canvas id="hero-canvas" data-nopz></canvas>
+  <div class="hero-vignette"></div>
+  <div class="content reveal">
+    <span class="hero-label">Mellow Math • Chapter 01</span>
+    <h1>The Indestructible<br><em>Ledger</em></h1>
+    <div class="hero-subtitle">고전역학 — 에너지 보존 법칙</div>
+    <div class="hero-tagline">
+      Energy is not a physical substance, but an abstract, mathematical quantity that nature meticulously audits.
+    </div>
+    <div class="begin-indicator" onclick="document.getElementById('sec-1').scrollIntoView({behavior:'smooth'})">Begin</div>
+  </div>
+</section>
+
+<section id="sec-1" class="chapter-section">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="section-num">01 — CONSERVATION</span>
+      <h2>The Boy with the Blocks</h2>
+      
+      <p class="prose prose-drop">Imagine a child, let us call him Dennis, who is entirely fascinated by his set of <span class="hi">28 perfectly identical, indestructible wooden blocks</span>. Every morning, his mother leaves him in his room with exactly 28 blocks. Every evening, she returns to tidy up, and she discovers a strange, absolute truth: there are always exactly 28 blocks.</p>
+
+      <p class="prose">Sometimes she finds only 25 blocks on the floor. But then she looks under the rug and finds two, and opens the toy box to find the last one. The blocks are never created, and they are never destroyed. They simply move.</p>
+
+      <div class="block-quote">
+        "There is a certain quantity, which we call energy, that does not change in the manifold changes which nature undergoes. That is a most abstract idea, because it is a mathematical principle; it says that there is a numerical quantity which does not change when something happens."
+        <span class="block-quote-attr">— Richard P. Feynman</span>
+      </div>
+
+      <p class="prose">The mother’s daily search is not merely a metaphor; it is the exact process of modern physics. We do not know what energy <em>is</em>. It is not a glowing blue fluid. It is not an invisible mist. It is merely a number, calculated according to specific mathematical rules, that nature <span class="ac">meticulously audits</span>.</p>
+
+      <p class="prose">Observe the chaotic swinging of the double pendulum below. The motion is impossibly erratic, governed by non-linear equations that ensure it never repeats the exact same path. Yet, alongside this physical chaos, watch the mathematical ledger. The kinetic energy of motion and the potential energy of altitude wildly trade places, but the total sum remains flawlessly, eternally level.</p>
+    </div>
+
+    <div class="ibox reveal">
+      <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
+      <h3 class="ibox-title">The Flawless Audit</h3>
+      <p class="ibox-desc">The physical path of the pendulum is deeply chaotic, but as energy violently trades between height (potential) and speed (kinetic), the mathematical ledger remains flat.</p>
+      
+      <div class="canvas-wrap canvas-split" style="height: 380px;">
+        <div style="flex: 1.3;">
+          <span class="canvas-overlay-label">Physical System</span>
+          <canvas id="dp-canvas" data-nopz></canvas>
+        </div>
+        <div style="flex: 1;">
+          <span class="canvas-overlay-label">Energy Ledger</span>
+          <canvas id="dp-ledger-canvas" data-nopz></canvas>
+        </div>
+      </div>
+      
+      <div class="controls-row">
+        <button class="btn" onclick="resetDP()">Reset System</button>
+        <button class="btn" onclick="nudgeDP()">Nudge</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-lbl" style="color:var(--gold);">Kinetic Energy</div>
+          <div class="stat-val" id="dp-ke">0.0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-lbl" style="color:var(--violet);">Potential Energy</div>
+          <div class="stat-val" id="dp-pe">0.0</div>
+        </div>
+        <div class="stat-card" style="border-color: rgba(201,168,76,0.3);">
+          <div class="stat-lbl" style="color:var(--cream);">Total Ledger</div>
+          <div class="stat-val" id="dp-te" style="color:var(--cream);">0.0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-2" class="chapter-section">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="section-num">02 — THE BARTER</span>
+      <h2>The Pendulum's Trade</h2>
+      
+      <p class="prose prose-drop">When you watch a clock’s pendulum swing, you are witnessing a continuous barter. As the heavy weight falls, it loses the energy of position (altitude) but gains the energy of motion (velocity). At the very bottom of the arc, it is entirely motion. At the peak of its swing, it freezes for a microscopic instant—entirely altitude.</p>
+
+      <p class="prose">In the physical world, this looks like a line drawn endlessly back and forth through space. But mathematicians prefer to view motion in <strong>Phase Space</strong>—an abstract realm where one axis represents where you are, and the other represents how fast you are going.</p>
+
+      <p class="prose">When plotted in this abstract space, the back-and-forth drudgery of the pendulum reveals its true geometry: it is drawing <span class="ac">perfect, eternal ellipses</span>. The law of energy conservation is not just an accounting trick; it is a strict geometric boundary that locks the object into a closed orbit from which it cannot escape.</p>
+    </div>
+
+    <div class="ibox reveal">
+      <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
+      <h3 class="ibox-title">Painting in Phase Space</h3>
+      <p class="ibox-desc">Drag the pendulum bob on the left to inject energy. The physical swing translates into an immortal orbit on the right. If you inject enough energy to break the ellipse, it will loop eternally in an open trajectory.</p>
+      
+      <div class="canvas-wrap canvas-split" style="height: 340px;">
+        <div>
+          <span class="canvas-overlay-label">Physical Space</span>
+          <canvas id="ps-phys-canvas" data-nopz></canvas>
+        </div>
+        <div>
+          <span class="canvas-overlay-label" style="color: var(--violet);">Phase Space (Velocity vs Position)</span>
+          <canvas id="ps-phase-canvas" data-nopz></canvas>
+        </div>
+      </div>
+
+      <div class="controls-row">
+        <button class="btn" onclick="setPhaseSpace(Math.PI/4, 0)">Low Energy</button>
+        <button class="btn" onclick="setPhaseSpace(Math.PI*0.8, 0)">High Energy</button>
+        <button class="btn" onclick="setPhaseSpace(0, 15)">Escape Orbit</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-lbl">Position (θ)</div>
+          <div class="stat-val" id="ps-th" style="color:var(--text);">0.00</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-lbl">Velocity (ω)</div>
+          <div class="stat-val" id="ps-w" style="color:var(--violet);">0.00</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sec-3" class="chapter-section">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="section-num">03 — THE ILLUSION OF LOSS</span>
+      <h2>The Microscopic Disguise</h2>
+      
+      <p class="prose prose-drop">There is a glaring hole in the mother's audit. If energy is truly indestructible, why does a sliding wooden block eventually grind to a halt on the floor? Where did the energy of motion go?</p>
+
+      <p class="prose">For centuries, scientists assumed that energy simply bled away, destroyed by the friction of rough surfaces. But energy cannot be destroyed. When a block slows down, its macroscopic, visible motion is merely shattering into billions of invisible fragments.</p>
+
+      <div class="pull-quote">
+        Friction is an illusion of scale.<br>Heat is merely kinetic energy in disguise.
+      </div>
+
+      <p class="prose">If we could zoom in with an impossible microscope, we would see that the block is not a solid object, but a frenetic lattice of atoms. As the block rubs against the floor, the uniform forward motion is scattered. The atoms begin to vibrate, jiggle, and bounce against their neighbors in absolute chaos. The total energy remains exactly the same—it has merely slipped into a disguise we call <span class="hi">temperature</span>.</p>
+    </div>
+
+    <div class="ibox reveal">
+      <div class="ibox-label"><div class="pulse-dot"></div> Infinite-Zoom</div>
+      <h3 class="ibox-title">The Illusion of Stillness</h3>
+      <p class="ibox-desc">Push the block to start it sliding. As friction slows it down, slide the magnification to zoom in 1,000,000×. You will see that the block never truly stopped moving.</p>
+      
+      <div class="canvas-wrap" style="height: 350px;">
+        <span class="canvas-overlay-label" id="zoom-label">1x — Macroscopic View</span>
+        <canvas id="zoom-canvas"></canvas>
+      </div>
+
+      <div class="controls-row">
+        <button class="btn btn-gold" onclick="pushBlock()" style="min-width: 130px;">▶ Push Block</button>
+        <div class="slider-group">
+          <label>Magnify</label>
+          <input type="range" id="zoom-slider" min="0" max="100" value="0">
+          <span class="val" id="zoom-val">1x</span>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-lbl" style="color:var(--text);">Macro Velocity</div>
+          <div class="stat-val" id="stat-macro" style="color:var(--text);">0.00</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-lbl" style="color:var(--coral);">Thermal Jiggling (Heat)</div>
+          <div class="stat-val" id="stat-heat" style="color:var(--coral);">0.00</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="coda reveal">
+  The universe keeps its books balanced.<br>
+  Not a single drop is lost,<br>
+  only hidden in the trembling of the void.
+</div>
+
+<div class="ref-section reveal">
+  <h3 class="ref-heading">References</h3>
+  <ul class="ref-list">
+    <li><span class="ref-author">Feynman, R. P., Leighton, R. B., & Sands, M.</span> <span class="ref-title">The Feynman Lectures on Physics, Volume 1.</span> <span class="ref-detail">Addison-Wesley, 1963. (Chapter 4: Conservation of Energy)</span></li>
+    <li><span class="ref-author">Landau, L. D., & Lifshitz, E. M.</span> <span class="ref-title">Mechanics (Course of Theoretical Physics, Vol. 1).</span> <span class="ref-detail">Butterworth-Heinemann, 1976.</span></li>
+    <li><span class="ref-author">Susskind, L., & Hrabovsky, G.</span> <span class="ref-title">The Theoretical Minimum: What You Need to Know to Start Doing Physics.</span> <span class="ref-detail">Basic Books, 2013.</span></li>
+    <li><span class="ref-author">Arnol'd, V. I.</span> <span class="ref-title">Mathematical Methods of Classical Mechanics.</span> <span class="ref-detail">Springer, 1989.</span></li>
+  </ul>
+</div>
+
+<div class="giscus-wrap" style="max-width:760px;margin:0 auto 4rem;padding:0 2rem;position:relative;z-index:2;">
+  <script src="https://giscus.app/client.js"
+    data-repo="kimshmath/edu"
+    data-repo-id="R_kgDORrE8sw"
+    data-category="Comments"
+    data-category-id="DIC_kwDORrE8s84C45oL"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="dark"
+    data-lang="en"
+    crossorigin="anonymous"
+    async>
+  </script>
+</div>
+
+<footer>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study</div>
+    <div class="footer-inst">AI4MATH, KAIST</div>
+    <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
+<script>
+// ═══════════════════════════════════════════════
+// GLOBAL UTILS
+// ═══════════════════════════════════════════════
+const dpr = window.devicePixelRatio || 1;
+let _paused = false;
+let _heroVisible = true;
+let _lastInteraction = performance.now();
+
+function resetIdle() {
+  _paused = false;
+  _lastInteraction = performance.now();
+}
+// Using passive listeners so they never block scrolling natively
+window.addEventListener('mousemove', resetIdle, {passive: true});
+window.addEventListener('touchstart', resetIdle, {passive: true});
+window.addEventListener('scroll', resetIdle, {passive: true});
+
+setInterval(() => {
+  if (performance.now() - _lastInteraction > 300000) _paused = true;
+}, 5000);
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.target.classList.contains('reveal')) {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    }
+    if (e.target.id === 'hero') {
+      _heroVisible = e.isIntersecting;
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal, #hero').forEach(el => observer.observe(el));
+
+function resizeCanvas(canvas) {
+  const rect = canvas.getBoundingClientRect();
+  if (canvas.width !== Math.floor(rect.width * dpr) || canvas.height !== Math.floor(rect.height * dpr)) {
+    canvas.width = Math.floor(rect.width * dpr);
+    canvas.height = Math.floor(rect.height * dpr);
+    return true;
+  }
+  return false;
+}
+
+// ─── BUGFIX: Safely add drag controls without locking the entire page's scroll ───
+function addDragPan(canvas, onDown, onDrag, onUp) {
+  let isDown = false;
+  
+  // Safely tell the browser we handle gestures natively on this specific element
+  canvas.style.touchAction = 'none'; 
+
+  // Mouse events
+  canvas.addEventListener('mousedown', e => { 
+    isDown = true; 
+    if(onDown) onDown(e); 
+  });
+  
+  window.addEventListener('mouseup', e => { 
+    if(isDown && onUp) onUp(e); 
+    isDown = false; 
+  });
+  
+  window.addEventListener('mousemove', e => { 
+    if (isDown && onDrag) onDrag(e); 
+  });
+  
+  // Touch events attached safely directly to the canvas
+  canvas.addEventListener('touchstart', e => { 
+    isDown = true; 
+    if(onDown) onDown(e.touches[0]); 
+  }, {passive: true});
+  
+  window.addEventListener('touchend', e => { 
+    if(isDown && onUp) onUp(e.changedTouches ? e.changedTouches[0] : e); 
+    isDown = false; 
+  }, {passive: true});
+  
+  canvas.addEventListener('touchmove', e => { 
+    if (isDown) { 
+      if (onDrag) onDrag(e.touches[0]); 
+      // Prevent browser from doing default actions *only* when actively dragging the canvas
+      if (e.cancelable) e.preventDefault(); 
+    } 
+  }, {passive: false});
+}
+
+// Ambient Particles (fixed 100vw bug causing horizontal scroll)
+const ptcContainer = document.getElementById('particles');
+for(let i=0; i<20; i++) {
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.style.left = Math.random() * 100 + '%'; 
+  const size = Math.random() * 6 + 3;
+  p.style.width = size + 'px';
+  p.style.height = size + 'px';
+  p.style.animationDuration = (Math.random() * 20 + 15) + 's';
+  p.style.animationDelay = (Math.random() * -20) + 's';
+  ptcContainer.appendChild(p);
+}
+
+// ═══════════════════════════════════════════════
+// HERO CANVAS: Morphing Volume-Conserving Blocks
+// ═══════════════════════════════════════════════
+const heroCanvas = document.getElementById('hero-canvas');
+const heroCtx = heroCanvas.getContext('2d');
+let heroT = 0;
+const hGridSize = 16;
+const hPhases = new Float32Array(hGridSize * hGridSize);
+for(let i=0; i<hPhases.length; i++) hPhases[i] = Math.random() * Math.PI * 2;
+
+function drawHero() {
+  if (!_heroVisible || _paused) { requestAnimationFrame(drawHero); return; }
+  
+  resizeCanvas(heroCanvas);
+  const w = heroCanvas.width, h = heroCanvas.height;
+  heroCtx.clearRect(0, 0, w, h);
+  
+  heroT += 0.008;
+  let totalVol = 0;
+  const heights = new Float32Array(hGridSize * hGridSize);
+  
+  for(let r=0; r<hGridSize; r++) {
+    for(let c=0; c<hGridSize; c++) {
+      const idx = r * hGridSize + c;
+      let val = Math.sin(r*0.4 + heroT) + Math.cos(c*0.4 - heroT*0.8) + Math.sin(hPhases[idx] + heroT*0.3);
+      val = Math.max(0, val + 2.5);
+      heights[idx] = val;
+      totalVol += val;
+    }
+  }
+  
+  const targetVol = hGridSize * hGridSize * 3;
+  const scale = targetVol / totalVol;
+  
+  const cx = w/2, cy = h/2 + h*0.1;
+  const size = Math.min(w/(hGridSize*3.5), 45 * dpr);
+  
+  for(let r=0; r<hGridSize; r++) {
+    for(let c=0; c<hGridSize; c++) {
+      const idx = r * hGridSize + c;
+      const z = heights[idx] * scale * size * 0.8;
+      
+      const px = cx + (c - r) * size * 0.866;
+      const py = cy + (c + r) * size * 0.5 - (hGridSize * size * 0.5);
+      
+      heroCtx.fillStyle = `rgba(201, 168, 76, ${0.05 + z/(size*8)})`;
+      heroCtx.beginPath();
+      heroCtx.moveTo(px, py - z);
+      heroCtx.lineTo(px + size*0.866, py + size*0.5 - z);
+      heroCtx.lineTo(px, py + size - z);
+      heroCtx.lineTo(px - size*0.866, py + size*0.5 - z);
+      heroCtx.closePath();
+      heroCtx.fill();
+      
+      heroCtx.fillStyle = `rgba(201, 168, 76, ${0.02 + z/(size*15)})`;
+      heroCtx.beginPath();
+      heroCtx.moveTo(px - size*0.866, py + size*0.5 - z);
+      heroCtx.lineTo(px, py + size - z);
+      heroCtx.lineTo(px, py + size);
+      heroCtx.lineTo(px - size*0.866, py + size*0.5);
+      heroCtx.closePath();
+      heroCtx.fill();
+      
+      heroCtx.fillStyle = `rgba(14, 17, 40, 0.8)`;
+      heroCtx.beginPath();
+      heroCtx.moveTo(px, py + size - z);
+      heroCtx.lineTo(px + size*0.866, py + size*0.5 - z);
+      heroCtx.lineTo(px + size*0.866, py + size*0.5);
+      heroCtx.lineTo(px, py + size);
+      heroCtx.closePath();
+      heroCtx.fill();
+      
+      heroCtx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+      heroCtx.lineWidth = 1 * dpr;
+      heroCtx.stroke();
+    }
+  }
+  
+  requestAnimationFrame(drawHero);
+}
+drawHero();
+
+// ═══════════════════════════════════════════════
+// INTERACTIVE 1: Double Pendulum Ledger
+// ═══════════════════════════════════════════════
+const dpCanvas = document.getElementById('dp-canvas');
+const dpCtx = dpCanvas.getContext('2d');
+const dpLedger = document.getElementById('dp-ledger-canvas');
+const dpLedgerCtx = dpLedger.getContext('2d');
+
+let DP = { th1: Math.PI/2, th2: Math.PI/2, w1: 0, w2: 0, m1: 15, m2: 15, l1: 85, l2: 85, g: 9.81 };
+let dpHistory = [];
+let dpTrail = [];
+let initialTE = null;
+
+function getDPEnergy() {
+  const y1 = -DP.l1 * Math.cos(DP.th1);
+  const y2 = y1 - DP.l2 * Math.cos(DP.th2);
+  const base = -(DP.l1 + DP.l2);
+  const pe = DP.m1 * DP.g * (y1 - base) + DP.m2 * DP.g * (y2 - base);
+  
+  const v1sq = DP.l1*DP.l1 * DP.w1*DP.w1;
+  const v2sq = v1sq + DP.l2*DP.l2 * DP.w2*DP.w2 + 2*DP.l1*DP.l2*DP.w1*DP.w2*Math.cos(DP.th1 - DP.th2);
+  const ke = 0.5 * DP.m1 * v1sq + 0.5 * DP.m2 * v2sq;
+  return { pe, ke, te: pe + ke };
+}
+
+function resetDP() {
+  DP.th1 = Math.PI - (Math.random() * Math.PI / 2); 
+  DP.th2 = Math.random() * Math.PI * 2;
+  DP.w1 = 0; DP.w2 = 0;
+  dpHistory = [];
+  dpTrail = [];
+  initialTE = getDPEnergy().te;
+  resetIdle();
+}
+
+function nudgeDP() {
+  DP.w1 += (Math.random() - 0.5) * 6;
+  DP.w2 += (Math.random() - 0.5) * 6;
+  initialTE = getDPEnergy().te;
+  resetIdle();
+}
+
+function rk4DP(dt) {
+  const getDerivs = (t1, t2, v1, v2) => {
+    const dTh = t1 - t2;
+    const den1 = (DP.m1 + DP.m2) * DP.l1 - DP.m2 * DP.l1 * Math.cos(dTh) * Math.cos(dTh);
+    const a1 = (DP.m2 * DP.l1 * v1 * v1 * Math.sin(dTh) * Math.cos(dTh) +
+                DP.m2 * DP.g * Math.sin(t2) * Math.cos(dTh) +
+                DP.m2 * DP.l2 * v2 * v2 * Math.sin(dTh) -
+                (DP.m1 + DP.m2) * DP.g * Math.sin(t1)) / den1;
+                
+    const den2 = (DP.l2 / DP.l1) * den1;
+    const a2 = (-DP.m2 * DP.l2 * v2 * v2 * Math.sin(dTh) * Math.cos(dTh) +
+                (DP.m1 + DP.m2) * DP.g * Math.sin(t1) * Math.cos(dTh) -
+                (DP.m1 + DP.m2) * DP.l1 * v1 * v1 * Math.sin(dTh) -
+                (DP.m1 + DP.m2) * DP.g * Math.sin(t2)) / den2;
+    return [v1, v2, a1, a2];
+  };
+  
+  let [k1_t1, k1_t2, k1_v1, k1_v2] = getDerivs(DP.th1, DP.th2, DP.w1, DP.w2);
+  let [k2_t1, k2_t2, k2_v1, k2_v2] = getDerivs(DP.th1+0.5*dt*k1_t1, DP.th2+0.5*dt*k1_t2, DP.w1+0.5*dt*k1_v1, DP.w2+0.5*dt*k1_v2);
+  let [k3_t1, k3_t2, k3_v1, k3_v2] = getDerivs(DP.th1+0.5*dt*k2_t1, DP.th2+0.5*dt*k2_t2, DP.w1+0.5*dt*k2_v1, DP.w2+0.5*dt*k2_v2);
+  let [k4_t1, k4_t2, k4_v1, k4_v2] = getDerivs(DP.th1+dt*k3_t1, DP.th2+dt*k3_t2, DP.w1+dt*k3_v1, DP.w2+dt*k3_v2);
+  
+  DP.th1 += (dt/6) * (k1_t1 + 2*k2_t1 + 2*k3_t1 + k4_t1);
+  DP.th2 += (dt/6) * (k1_t2 + 2*k2_t2 + 2*k3_t2 + k4_t2);
+  DP.w1 += (dt/6) * (k1_v1 + 2*k2_v1 + 2*k3_v1 + k4_v1);
+  DP.w2 += (dt/6) * (k1_v2 + 2*k2_v2 + 2*k3_v2 + k4_v2);
+  
+  // Strict energy conservation enforcement
+  const currE = getDPEnergy();
+  if (currE.ke > 0.01) {
+    const targetKe = initialTE - currE.pe;
+    if (targetKe >= 0) {
+      const scale = Math.sqrt(targetKe / currE.ke);
+      DP.w1 *= scale; DP.w2 *= scale;
+    } else {
+      DP.w1 = 0; DP.w2 = 0;
+    }
+  }
+}
+
+resetDP();
+
+function animateDP() {
+  if (_paused) { requestAnimationFrame(animateDP); return; }
+  
+  resizeCanvas(dpCanvas); resizeCanvas(dpLedger);
+  const w = dpCanvas.width, h = dpCanvas.height;
+  dpCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  dpCtx.clearRect(0, 0, w/dpr, h/dpr);
+  
+  for(let i=0; i<4; i++) rk4DP(0.015);
+  
+  const cx = w/dpr/2, cy = h/dpr/2.2;
+  const x1 = cx + DP.l1 * Math.sin(DP.th1);
+  const y1 = cy + DP.l1 * Math.cos(DP.th1);
+  const x2 = x1 + DP.l2 * Math.sin(DP.th2);
+  const y2 = y1 + DP.l2 * Math.cos(DP.th2);
+  
+  dpTrail.push({x: x2, y: y2});
+  if(dpTrail.length > 70) dpTrail.shift();
+  
+  dpCtx.strokeStyle = 'rgba(255,255,255,0.15)';
+  dpCtx.lineWidth = 2.5;
+  dpCtx.beginPath();
+  dpTrail.forEach((p,i) => i===0 ? dpCtx.moveTo(p.x, p.y) : dpCtx.lineTo(p.x, p.y));
+  dpCtx.stroke();
+  
+  dpCtx.strokeStyle = '#fff';
+  dpCtx.lineWidth = 3;
+  dpCtx.beginPath();
+  dpCtx.moveTo(cx, cy); dpCtx.lineTo(x1, y1); dpCtx.lineTo(x2, y2);
+  dpCtx.stroke();
+  
+  dpCtx.fillStyle = '#52566a';
+  dpCtx.beginPath(); dpCtx.arc(cx, cy, 4, 0, Math.PI*2); dpCtx.fill();
+  
+  dpCtx.fillStyle = '#ece8e0';
+  dpCtx.beginPath(); dpCtx.arc(x1, y1, 10, 0, Math.PI*2); dpCtx.fill();
+  dpCtx.fillStyle = '#c9a84c';
+  dpCtx.beginPath(); dpCtx.arc(x2, y2, 10, 0, Math.PI*2); dpCtx.fill();
+  
+  const eng = getDPEnergy();
+  dpHistory.push({pe: eng.pe, ke: eng.ke, te: initialTE});
+  if(dpHistory.length > 200) dpHistory.shift();
+  
+  document.getElementById('dp-ke').textContent = (eng.ke/1000).toFixed(1);
+  document.getElementById('dp-pe').textContent = (eng.pe/1000).toFixed(1);
+  document.getElementById('dp-te').textContent = (initialTE/1000).toFixed(1);
+  
+  // Ledger Draw
+  const lw = dpLedger.width/dpr, lh = dpLedger.height/dpr;
+  dpLedgerCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  dpLedgerCtx.clearRect(0, 0, lw, lh);
+  
+  const maxE = Math.max(initialTE * 1.2, (DP.m1 + DP.m2) * DP.g * (DP.l1 + DP.l2) * 2); 
+  const scaleY = (lh - 40) / maxE;
+  
+  // PE Area
+  dpLedgerCtx.beginPath();
+  dpLedgerCtx.moveTo(0, lh);
+  for(let i=0; i<dpHistory.length; i++) {
+    const x = (i / 200) * lw;
+    const y = lh - dpHistory[i].pe * scaleY;
+    dpLedgerCtx.lineTo(x, y);
+  }
+  dpLedgerCtx.lineTo((dpHistory.length-1)/200 * lw, lh);
+  dpLedgerCtx.fillStyle = 'rgba(138, 106, 191, 0.4)'; // violet
+  dpLedgerCtx.fill();
+  
+  // KE Area
+  dpLedgerCtx.beginPath();
+  dpLedgerCtx.moveTo(0, lh);
+  for(let i=0; i<dpHistory.length; i++) {
+    const x = (i / 200) * lw;
+    const y = lh - (dpHistory[i].pe + dpHistory[i].ke) * scaleY;
+    dpLedgerCtx.lineTo(x, y);
+  }
+  for(let i=dpHistory.length-1; i>=0; i--) {
+    const x = (i / 200) * lw;
+    const y = lh - dpHistory[i].pe * scaleY;
+    dpLedgerCtx.lineTo(x, y);
+  }
+  dpLedgerCtx.fillStyle = 'rgba(201, 168, 76, 0.6)'; // gold
+  dpLedgerCtx.fill();
+  
+  // Total Line
+  dpLedgerCtx.beginPath();
+  for(let i=0; i<dpHistory.length; i++) {
+    const x = (i / 200) * lw;
+    const y = lh - dpHistory[i].te * scaleY;
+    if(i===0) dpLedgerCtx.moveTo(x, y);
+    else dpLedgerCtx.lineTo(x, y);
+  }
+  dpLedgerCtx.strokeStyle = '#ece8e0';
+  dpLedgerCtx.lineWidth = 2;
+  dpLedgerCtx.stroke();
+  
+  requestAnimationFrame(animateDP);
+}
+animateDP();
+
+// ═══════════════════════════════════════════════
+// INTERACTIVE 2: Phase Space
+// ═══════════════════════════════════════════════
+const psCanvas = document.getElementById('ps-phys-canvas');
+const psCtx = psCanvas.getContext('2d');
+const phaseCanvas = document.getElementById('ps-phase-canvas');
+const phaseCtx = phaseCanvas.getContext('2d');
+
+let PS = { th: Math.PI / 4, w: 0, drag: false };
+let phaseHistory = [];
+
+function setPhaseSpace(th, vel) {
+  PS.th = th; PS.w = vel;
+  phaseHistory = [];
+  resetIdle();
+}
+
+addDragPan(psCanvas, 
+  (e) => {
+    const rect = psCanvas.getBoundingClientRect();
+    const mx = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left; 
+    const my = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+    const cx = psCanvas.clientWidth/2, cy = psCanvas.clientHeight/2.5;
+    if(Math.hypot(mx-cx, my-cy) > 20) {
+      PS.drag = true; PS.th = Math.atan2(mx-cx, my-cy); PS.w = 0; phaseHistory = [];
+      resetIdle();
+    }
+  },
+  (e) => {
+    const rect = psCanvas.getBoundingClientRect();
+    const mx = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left; 
+    const my = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+    const cx = psCanvas.clientWidth/2, cy = psCanvas.clientHeight/2.5;
+    PS.th = Math.atan2(mx - cx, my - cy); PS.w = 0; phaseHistory = [];
+    resetIdle();
+  },
+  () => { PS.drag = false; }
+);
+
+function animatePS() {
+  if (_paused) { requestAnimationFrame(animatePS); return; }
+  
+  resizeCanvas(psCanvas); resizeCanvas(phaseCanvas);
+  const w1 = psCanvas.width / dpr, h1 = psCanvas.height / dpr;
+  const w2 = phaseCanvas.width / dpr, h2 = phaseCanvas.height / dpr;
+  psCtx.setTransform(dpr, 0, 0, dpr, 0, 0); phaseCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  psCtx.clearRect(0, 0, w1, h1); phaseCtx.clearRect(0, 0, w2, h2);
+  
+  if(!PS.drag) {
+    const dt = 0.035;
+    for(let i=0; i<4; i++) {
+      PS.w += -(9.81 / 1.0) * Math.sin(PS.th) * dt;
+      PS.th += PS.w * dt;
+    }
+    // Continuous plotting without giant lines across
+    let drawTh = PS.th;
+    while(drawTh > Math.PI*3) { drawTh -= Math.PI*2; PS.th -= Math.PI*2; phaseHistory = []; }
+    while(drawTh < -Math.PI*3) { drawTh += Math.PI*2; PS.th += Math.PI*2; phaseHistory = []; }
+  }
+  
+  // Physical
+  const cx = w1/2, cy = h1/2.5;
+  const L = 100;
+  const px = cx + L * Math.sin(PS.th);
+  const py = cy + L * Math.cos(PS.th);
+  
+  psCtx.strokeStyle = 'rgba(255,255,255,0.2)';
+  psCtx.lineWidth = 3;
+  psCtx.beginPath(); psCtx.moveTo(cx, cy); psCtx.lineTo(px, py); psCtx.stroke();
+  psCtx.fillStyle = '#ece8e0';
+  psCtx.beginPath(); psCtx.arc(cx, cy, 4, 0, Math.PI*2); psCtx.fill();
+  psCtx.fillStyle = PS.drag ? '#ece8e0' : '#c9a84c';
+  psCtx.beginPath(); psCtx.arc(px, py, 12, 0, Math.PI*2); psCtx.fill();
+  
+  // Phase plot
+  if(!PS.drag && Math.abs(PS.w) < 40) {
+    phaseHistory.push({th: PS.th, w: PS.w});
+    if(phaseHistory.length > 500) phaseHistory.shift();
+  }
+  
+  const cx2 = w2/2, cy2 = h2/2;
+  const scaleTh = (w2/2.5) / Math.PI;
+  const scaleW = (h2/2.5) / 10;
+  
+  phaseCtx.beginPath();
+  phaseCtx.moveTo(0, cy2); phaseCtx.lineTo(w2, cy2);
+  phaseCtx.moveTo(cx2, 0); phaseCtx.lineTo(cx2, h2);
+  phaseCtx.strokeStyle = 'rgba(255,255,255,0.1)';
+  phaseCtx.lineWidth = 1;
+  phaseCtx.stroke();
+  
+  phaseCtx.beginPath();
+  for(let i=0; i<phaseHistory.length; i++) {
+    const x = cx2 + phaseHistory[i].th * scaleTh;
+    const y = cy2 - phaseHistory[i].w * scaleW;
+    if(i===0 || Math.abs(phaseHistory[i].th - phaseHistory[i-1].th) > 1.0) phaseCtx.moveTo(x, y);
+    else phaseCtx.lineTo(x, y);
+  }
+  phaseCtx.strokeStyle = '#8a6abf';
+  phaseCtx.lineWidth = 2;
+  phaseCtx.stroke();
+  
+  const curX = cx2 + PS.th * scaleTh;
+  const curY = cy2 - PS.w * scaleW;
+  phaseCtx.fillStyle = '#fff';
+  phaseCtx.beginPath(); phaseCtx.arc(curX, curY, 5, 0, Math.PI*2); phaseCtx.fill();
+  
+  document.getElementById('ps-th').textContent = PS.th.toFixed(2);
+  document.getElementById('ps-w').textContent = PS.w.toFixed(2);
+  
+  requestAnimationFrame(animatePS);
+}
+animatePS();
+
+// ═══════════════════════════════════════════════
+// INTERACTIVE 3: Infinite Zoom Friction
+// ═══════════════════════════════════════════════
+const zoomCanvas = document.getElementById('zoom-canvas');
+const zoomCtx = zoomCanvas.getContext('2d');
+
+let macroV = 0;
+let macroX = -100;
+let heat = 0;
+let atoms = [];
+for(let i=0; i<300; i++) {
+  atoms.push({
+    baseX: (i % 30) * 10 - 150,
+    baseY: Math.floor(i / 30) * 10 - 50,
+    phase: Math.random() * Math.PI * 2,
+    freq: 0.8 + Math.random() * 0.4
+  });
+}
+
+function pushBlock() {
+  macroV = 10;
+  macroX = -180;
+  heat = 0;
+  resetIdle();
+}
+pushBlock();
+
+document.getElementById('zoom-slider').addEventListener('input', e => {
+  const z = e.target.value / 100;
+  const mag = Math.floor(1 + Math.pow(10, z * 6));
+  document.getElementById('zoom-val').textContent = mag.toLocaleString() + 'x';
+  document.getElementById('zoom-label').textContent = z < 0.1 ? '1x — Macroscopic View' : mag.toLocaleString() + 'x — Atomic Lattice';
+  resetIdle();
+});
+
+function animateZoom() {
+  if (_paused) { requestAnimationFrame(animateZoom); return; }
+  
+  resizeCanvas(zoomCanvas);
+  const w = zoomCanvas.width / dpr, h = zoomCanvas.height / dpr;
+  zoomCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  zoomCtx.clearRect(0, 0, w, h);
+  
+  if (macroV > 0) {
+    macroX += macroV;
+    const friction = 0.05;
+    macroV -= friction;
+    heat += friction * 1.8;
+    if (macroV < 0) macroV = 0;
+  }
+  
+  document.getElementById('stat-macro').textContent = (macroV * macroV).toFixed(1);
+  document.getElementById('stat-heat').textContent = (heat * 10).toFixed(1);
+  
+  const zoomLevel = document.getElementById('zoom-slider').value / 100; 
+  const scale = 1 + Math.pow(10, zoomLevel * 3.5); 
+  
+  zoomCtx.save();
+  const trackX = w/2 - (macroX + 50) * Math.min(zoomLevel*2, 1);
+  zoomCtx.translate(trackX, h/2);
+  
+  // Floor
+  if(zoomLevel < 0.8) {
+    zoomCtx.strokeStyle = 'rgba(255,255,255,0.1)';
+    zoomCtx.lineWidth = 1;
+    zoomCtx.beginPath(); zoomCtx.moveTo(-10000, 5 * scale); zoomCtx.lineTo(10000, 5 * scale); zoomCtx.stroke();
+  }
+  
+  // Macro block
+  if (zoomLevel < 0.5) {
+    zoomCtx.globalAlpha = 1 - zoomLevel * 2;
+    zoomCtx.fillStyle = '#c9a84c';
+    zoomCtx.fillRect(macroX * scale, -95 * scale, 300 * scale, 100 * scale);
+  }
+  
+  // Micro atoms
+  if (zoomLevel > 0.1) {
+    zoomCtx.globalAlpha = Math.min(1, (zoomLevel - 0.1) * 2);
+    const time = performance.now() * 0.01;
+    
+    // Block atoms
+    zoomCtx.fillStyle = '#ece8e0';
+    for (const a of atoms) {
+      const jiggle = heat * (0.1 + zoomLevel * 2);
+      const ax = (macroX + a.baseX + Math.sin(time * a.freq + a.phase) * jiggle) * scale;
+      const ay = (a.baseY + Math.cos(time * a.freq + a.phase) * jiggle) * scale;
+      
+      const screenX = trackX + ax;
+      if (screenX > -100 && screenX < w+100) {
+        zoomCtx.beginPath();
+        zoomCtx.arc(ax, ay, Math.max(1, 1.5 * Math.sqrt(scale)), 0, Math.PI*2);
+        zoomCtx.fill();
+      }
+    }
+    
+    // Floor atoms
+    zoomCtx.fillStyle = '#fb7185';
+    for(let i=0; i<300; i++) {
+      const bx = (i % 50) * 10 - 250;
+      const by = 15 + Math.floor(i / 50) * 10;
+      const freq = 0.8 + (i%3)*0.2;
+      const phase = i*0.1;
+      
+      const dist = Math.abs(macroX - bx);
+      const floorHeat = Math.max(0, heat - dist*0.05);
+      const jiggle = floorHeat * (0.1 + zoomLevel * 2);
+      
+      const ax = (bx + Math.sin(time * freq + phase) * jiggle) * scale;
+      const ay = (by + Math.cos(time * freq + phase) * jiggle) * scale;
+      
+      const screenX = trackX + ax;
+      if (screenX > -100 && screenX < w+100) {
+        zoomCtx.beginPath();
+        zoomCtx.arc(ax, ay, Math.max(1, 1.5 * Math.sqrt(scale)), 0, Math.PI*2);
+        zoomCtx.fill();
+      }
+    }
+  }
+  zoomCtx.restore();
+  
+  requestAnimationFrame(animateZoom);
+}
+animateZoom();
+
+</script>
+</body>
+</html>
