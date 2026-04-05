@@ -429,6 +429,7 @@ body { background: var(--bg-deep); color: var(--text-primary); font-family: var(
 }
 </style>
   <link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="narration_player.css">
 </head>
 <body>
 
@@ -2150,6 +2151,26 @@ document.querySelectorAll('.btn,.measure-btn,.bit-switch,.factor-level-btn,.peri
 });
 })();
 </script>
+
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'quantum-shortcut',
+  basePath: 'assets/narration/quantum-shortcut/',
+  segments: [
+    { id: 0,  section: '#hero', label: 'Hero' },
+    { id: 1,  section: '#teaser', label: 'Teaser' },
+    { id: 2,  section: '#section1', label: 'Section1' },
+    { id: 3,  section: '#section2', label: 'Section2' },
+    { id: 4,  section: '#section3', label: 'Section3' },
+    { id: 5,  section: '#section4', label: 'Section4' },
+    { id: 6,  section: '#section5', label: 'Section5' },
+    { id: 7,  section: '#section6', label: 'Section6' },
+    { id: 8,  section: '#section7', label: 'Section7' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"

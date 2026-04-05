@@ -1,0 +1,68 @@
+{
+  "chapter": "homology",
+  "segments": [
+    {
+      "id": 0,
+      "text_en": "Welcome to Shapes Have Memories. Two shapes can look completely different, yet share the same fundamental structure. Topology studies properties that survive stretching and bending, and Homology is the algebra that counts their holes.",
+      "text_ko": "도형은 기억을 갖고 있다 챕터에 오신 것을 환영합니다. 두 개의 도형은 겉보기엔 완전히 다를 수 있지만, 같은 근본적인 구조를 공유할 수 있습니다.",
+      "scroll_to": "#hero",
+      "pause_after": true
+    },
+    {
+      "id": 1,
+      "text_en": "Let's start by counting holes. The Betti numbers tell us how many components, tunnels, and trapped cavities a space has.",
+      "text_ko": "먼저 구멍을 세는 것부터 시작합시다. 베티 수는 공간이 몇 개의 조각, 터널, 갇힌 텅 빈 공간을 가졌는지 알려줍니다.",
+      "scroll_to": "#sec-holes",
+      "pause_after": true
+    },
+    {
+      "id": 2,
+      "text_en": "To compute these numbers, topologists chop spaces into simple building blocks called simplices. By keeping track of how they lock together, we translate geometry into linear algebra.",
+      "text_ko": "이 숫자들을 계산하기 위해 수학자들은 공간을 단체들로 잘게 쪼갰습니다. 이들이 맞물리는 방식을 추적함으로써 기하학은 선형대수학으로 번역됩니다.",
+      "scroll_to": "#sec-simplicial",
+      "pause_after": true
+    },
+    {
+      "id": 3,
+      "text_en": "Not every closed loop encloses a surface. On a torus, there are cycles that cannot be filled.",
+      "text_ko": "모든 닫힌 고리들이 내부 공간을 감싸고 있는 것은 아닙니다. 토러스 위에는 결코 채워질 수 없는 사이클들이 존재합니다.",
+      "scroll_to": "#sec-cycles",
+      "pause_after": true
+    },
+    {
+      "id": 4,
+      "text_en": "Euler discovered that for any convex polyhedron, vertices minus edges plus faces always equals exactly two. This is the Euler characteristic.",
+      "text_ko": "오일러는 모든 볼록 다면체의 경우 점 빼기 선 더하기 면의 개수가 언제나 2라는 것을 발견했습니다. 이것이 오일러 표수입니다.",
+      "scroll_to": "#sec-euler",
+      "pause_after": true
+    },
+    {
+      "id": 5,
+      "text_en": "Every regular solid has a dual pair. The cube becomes an octahedron, and the dodecahedron becomes an icosahedron. This proves Poincare duality.",
+      "text_ko": "모든 정다면체는 쌍대 짝꿍을 가집니다. 정육면체는 정팔면체가 되고, 정십이면체는 정이십면체가 됩니다.",
+      "scroll_to": "#sec-dual",
+      "pause_after": true
+    },
+    {
+      "id": 6,
+      "text_en": "Henri Poincare revealed the deepest symmetry of shapes: every k-dimensional hole is paired with a matching hole of complementary dimension.",
+      "text_ko": "앙리 푸앵카레는 도형이 지닌 가장 깊은 대칭성을 밝혀냈습니다.",
+      "scroll_to": "#sec-poincare",
+      "pause_after": true
+    },
+    {
+      "id": 7,
+      "text_en": "Homology alone is not enough to identify a sphere. Poincare created a faux sphere with hidden non-abelian twist.",
+      "text_ko": "하지만 호몰로지만으로는 도형이 구인지 판별할 수 없습니다.",
+      "scroll_to": "#sec-sphere",
+      "pause_after": true
+    },
+    {
+      "id": 8,
+      "text_en": "The duality discovered by Poincare spawned a century of mathematics. The shape of a space dictates what can exist upon it.",
+      "text_ko": "푸앵카레가 발견한 쌍대성은 수학의 새로운 1세기를 낳았습니다.",
+      "scroll_to": "#sec-closing",
+      "pause_after": false
+    }
+  ]
+}

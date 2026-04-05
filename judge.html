@@ -70,6 +70,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 @media(max-width:640px){section{padding:4rem 1.2rem}#nav-dots{display:none}.dc{padding:1.2rem}.g2{grid-template-columns:1fr}.sr{flex-direction:column}}
 </style>
   <link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="narration_player.css">
 </head>
 <body>
 <div id="audio-notice"><div class="nc"><span style="font-size:2.5rem;">⚖️</span><p style="font-family:var(--font-display);font-size:1.1rem;color:#fff;margin:0.5rem 0;">Does a Machine Judge?</p><p style="font-size:0.85rem;color:var(--muted);">An exploration of algorithmic fairness grounded in academic research</p><button class="ns" onclick="dismissNotice()">Begin</button></div></div>
@@ -541,6 +542,27 @@ SEC.forEach(id=>{const d=document.createElement('button');d.className='nav-dot';
 const sO=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){const i=SEC.indexOf(e.target.id);document.querySelectorAll('.nav-dot').forEach((d,j)=>d.classList.toggle('active',j===i));}});},{threshold:.25});
 SEC.forEach(id=>{const el=document.getElementById(id);if(el)sO.observe(el);});
 </script>
+
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'judge',
+  basePath: 'assets/narration/judge/',
+  segments: [
+    { id: 0,  section: '#hero', label: 'Hero' },
+    { id: 1,  section: '#s0', label: 'S0' },
+    { id: 2,  section: '#s1', label: 'S1' },
+    { id: 3,  section: '#s1b', label: 'S1B' },
+    { id: 4,  section: '#s2', label: 'S2' },
+    { id: 5,  section: '#s3', label: 'S3' },
+    { id: 6,  section: '#s4', label: 'S4' },
+    { id: 7,  section: '#s4b', label: 'S4B' },
+    { id: 8,  section: '#s5', label: 'S5' },
+    { id: 9,  section: '#s-end', label: 'S End' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"

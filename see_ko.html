@@ -68,6 +68,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 @media(max-width:640px){section{padding:4rem 1.2rem}#nav-dots{display:none}.demo-card{padding:1.2rem}.stat-row{flex-direction:column}}
 </style>
   <link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="narration_player.css">
 </head>
 <body>
 <div id="audio-notice"><div class="notice-card"><span class="notice-icon">👁️</span><h2>기계는 보는가?</h2><p>이미지와 필터를 실시간으로 조작하는 인터랙티브 탐험입니다.</p><button class="notice-start" onclick="dismissNotice()">👁️ 탐험 시작</button></div></div>
@@ -323,6 +324,26 @@ const nd=document.getElementById('nav-dots');secs.forEach(id=>{const d=document.
 const sO=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){const i=secs.indexOf(e.target.id);document.querySelectorAll('.nav-dot').forEach((d,j)=>d.classList.toggle('active',j===i));}});},{threshold:0.3});
 secs.forEach(id=>{const el=document.getElementById(id);if(el)sO.observe(el);});
 </script>
+
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'see',
+  basePath: 'assets/narration/see/',
+  segments: [
+    { id: 0,  section: '#hero', label: 'Hero' },
+    { id: 1,  section: '#sec-pixel', label: '§Pixel' },
+    { id: 2,  section: '#sec-conv', label: '§Conv' },
+    { id: 3,  section: '#sec-feature', label: '§Feature' },
+    { id: 4,  section: '#sec-pool', label: '§Pool' },
+    { id: 5,  section: '#sec-draw', label: '§Draw' },
+    { id: 6,  section: '#sec-imagenet', label: '§Imagenet' },
+    { id: 7,  section: '#sec-rosetta', label: '§Rosetta' },
+    { id: 8,  section: '#sec-closing', label: '§Closing' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"

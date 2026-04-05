@@ -115,6 +115,7 @@ footer{padding:3rem 0 4rem;max-width:720px;margin:0 auto;padding-left:2rem;paddi
 @media(max-width:400px){#sieveGrid .cell{font-size:.45rem!important}}
 </style>
   <link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="narration_player.css">
 </head>
 <body lang="ko">
 <div class="lang-toggle"><a id="langEn" onclick="setLang('en')">EN</a><span>|</span><a id="langKo" class="active" onclick="setLang('ko')">한국어</a></div>
@@ -558,6 +559,26 @@ function langlandsInit(){
   draw();
 }
 </script>
+
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'primes',
+  basePath: 'assets/narration/primes/',
+  segments: [
+    { id: 0,  section: '#hero', label: 'Hero' },
+    { id: 1,  section: '#sec1', label: 'Sec1' },
+    { id: 2,  section: '#sec2', label: 'Sec2' },
+    { id: 3,  section: '#sec3', label: 'Sec3' },
+    { id: 4,  section: '#sec4', label: 'Sec4' },
+    { id: 5,  section: '#sec5', label: 'Sec5' },
+    { id: 6,  section: '#sec6', label: 'Sec6' },
+    { id: 7,  section: '#sec7', label: 'Sec7' },
+    { id: 8,  section: '#sec8', label: 'Sec8' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"

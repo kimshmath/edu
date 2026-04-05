@@ -89,6 +89,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 @media(max-width:640px){section{padding:4rem 1.2rem}#nav-dots{display:none}.demo-card{padding:1.2rem}.stat-row{flex-direction:column}.piano-key.white{width:30px;height:90px}.piano-key.black{width:20px;height:55px;margin:0 -10px}}
 </style>
   <link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="narration_player.css">
 </head>
 <body>
 
@@ -565,6 +566,27 @@ const nd=document.getElementById('nav-dots');secs.forEach(id=>{const d=document.
 const sO=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){const i=secs.indexOf(e.target.id);document.querySelectorAll('.nav-dot').forEach((d,j)=>d.classList.toggle('active',j===i));}});},{threshold:0.3});
 secs.forEach(id=>{const el=document.getElementById(id);if(el)sO.observe(el);});
 </script>
+
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'speak',
+  basePath: 'assets/narration/speak/',
+  segments: [
+    { id: 0,  section: '#hero', label: 'Hero' },
+    { id: 1,  section: '#sec-wave', label: '§Wave' },
+    { id: 2,  section: '#sec-fourier', label: '§Fourier' },
+    { id: 3,  section: '#sec-spec', label: '§Spec' },
+    { id: 4,  section: '#sec-voice', label: '§Voice' },
+    { id: 5,  section: '#sec-tts', label: '§Tts' },
+    { id: 6,  section: '#sec-clone', label: '§Clone' },
+    { id: 7,  section: '#sec-music', label: '§Music' },
+    { id: 8,  section: '#sec-rosetta', label: '§Rosetta' },
+    { id: 9,  section: '#sec-closing', label: '§Closing' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"

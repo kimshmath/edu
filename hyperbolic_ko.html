@@ -190,6 +190,7 @@ input[type=range]::-moz-range-thumb{
 .floating-badge:hover{color:#a8d43a;text-shadow:0 0 8px rgba(141,184,48,.65),0 0 22px rgba(141,184,48,.28);transform:translateY(-1px)}
 </style>
   <link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="narration_player.css">
 </head>
 <body>
 
@@ -3350,6 +3351,26 @@ document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
 </script>
 
+
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'hyperbolic',
+  basePath: 'assets/narration/hyperbolic/',
+  segments: [
+    { id: 0,  section: '#hero', label: 'Hero' },
+    { id: 1,  section: '#sec-1-curvature', label: '§1 Curvature' },
+    { id: 2,  section: '#sec-3-gauss-bonnet', label: '§3 Gauss Bonnet' },
+    { id: 3,  section: '#sec-4-tessellations', label: '§4 Tessellations' },
+    { id: 4,  section: '#sec-5-expansion', label: '§5 Expansion' },
+    { id: 5,  section: '#sec-6-teichmuller', label: '§6 Teichmuller' },
+    { id: 6,  section: '#sec-7-moduli', label: '§7 Moduli' },
+    { id: 7,  section: '#sec-8-mirzakhani', label: '§8 Mirzakhani' },
+    { id: 8,  section: '#sec-9-h3', label: '§9 H3' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"

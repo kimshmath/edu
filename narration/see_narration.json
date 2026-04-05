@@ -1,0 +1,68 @@
+{
+  "chapter": "see",
+  "segments": [
+    {
+      "id": 0,
+      "text_en": "A Mathematical Inquiry into AI · Part VI Does a Machine See ? Or does it merely compute patterns in a grid of numbers? You open your eyes and see the world — instantly, effortlessly, without conscious thought. To a machine, an image is a grid of numbers. Each pixel is a value from 0 to 255. Finding a \"cat\" in that array of numbers — that is the mathematics of Convolutional Neural Networks. 👁️ Start Exploring",
+      "text_ko": "AI에 대한 수학적 탐구 · Part VI 기계는 보는가 ? 아니면 숫자의 격자에서 패턴을 계산할 뿐인가? 당신은 눈을 뜨면 세상을 봅니다 — 즉각적이고, 자연스럽고, 의식적 노력 없이. 기계에게 이미지는 숫자의 격자입니다. 각 픽셀은 0에서 255 사이의 숫자. 이 숫자 배열에서 \"고양이\"를 찾아내는 것이 합성곱 신경망(CNN)의 수학입니다. 👁️ 탐험 시작",
+      "scroll_to": "#hero",
+      "pause_after": true
+    },
+    {
+      "id": 1,
+      "text_en": "00 — WHAT A MACHINE SEES An Image Is Numbers When you see a photo, your brain interprets patterns of light. When a machine sees the same photo, all it sees is a matrix of numbers — each cell a brightness value from 0 (black) to 255 (white). Hover over the image to see pixel values What you see What the machine sees Pixel pos. (—, —) Brightness — Resolution 16 × 16 The meaning of \"seeing\" is entirely different. — Human vision grasps meaning intuitively.",
+      "text_ko": "00 — 기계가 보는 것 이미지는 숫자 입니다 당신이 사진을 볼 때, 뇌는 빛의 패턴을 해석합니다. 기계가 사진을 볼 때, 보이는 것은 숫자 행렬입니다. 각 칸은 0(검정)에서 255(흰색)의 밝기값. 그림 위에 마우스를 올리면 픽셀값을 볼 수 있습니다 당신이 보는 것 기계가 보는 것 픽셀 위치 (—, —) 밝기값 — 해상도 16 × 16 \"보다\"의 의미가 완전히 다릅니다. — 인간의 시각은 의미를 직관적으로 파악합니다. 기계에게는 전부 2차원 숫자 배열입니다.",
+      "scroll_to": "#sec-pixel",
+      "pause_after": true
+    },
+    {
+      "id": 2,
+      "text_en": "01 — THE CORE OPERATION Convolution : How a Machine's Eye Moves A small filter (kernel) slides over the image. At each position, it computes the sum of element-wise products between the filter and the image patch. The tone changes with activation intensity as the kernel moves 3×3 kernel sliding — input → kernel → output → Horizontal edges ↓ Vertical edges 🔲 Sharpen 〰️ Blur ▶ Run Convolution Reset Kernel Horiz.",
+      "text_ko": "01 — 핵심 연산 합성곱 : 기계의 눈이 움직이는 방법 작은 필터(커널)가 이미지 위를 슬라이딩하며, 각 위치에서 필터와 이미지 패치의 원소별 곱의 합 을 계산합니다. 커널이 이동할 때 활성화 강도에 따라 음이 변합니다 3×3 커널 슬라이딩 — 입력 → 커널 → 출력 → 수평 에지 ↓ 수직 에지 🔲 샤프닝 〰️ 블러 ▶ 합성곱 실행 초기화 커널 수평 에지 위치 (0,0) 출력값 — (f * g)[i,j] = ΣΣ f[m,n] · g[i-m, j-n] — 내적의 2D 확장! 합성곱은 내적의 2D 확장입니다. — Part II에서 내적이 \"두 벡터의 유사도\"를 측정했듯, 합성곱은 \"이미지 패치와 필터의 유사도\"를 측정합니다.",
+      "scroll_to": "#sec-conv",
+      "pause_after": true
+    },
+    {
+      "id": 3,
+      "text_en": "02 — THE MACHINE'S VISUAL CORTEX Feature Maps : Deeper and Deeper First layers find edges, next layers textures, deeper layers object parts, final layers whole concepts. This hierarchy is strikingly similar to the human visual cortex (V1→V2→V4→IT). CNN visual hierarchy — edges → textures → parts → objects ▶ Layer Activations Reset Current layer — Detects — Filters —",
+      "text_ko": "02 — 기계의 시각 피질 특성 맵 : 층이 깊어질수록 첫 층은 에지, 다음 층은 질감, 더 깊은 층은 부분 물체, 마지막은 전체 개념. 이 계층 구조는 인간의 시각 피질(V1→V2→V4→IT)과 놀랍도록 같습니다. CNN의 시각 계층 — 에지 → 질감 → 부분 → 전체 ▶ 층별 활성화 초기화 현재 층 — 발견하는 것 — 필터 수 —",
+      "scroll_to": "#sec-feature",
+      "pause_after": true
+    },
+    {
+      "id": 4,
+      "text_en": "03 — THE ART OF COMPRESSION Pooling : Keeping Only What Matters Take only the maximum from each 2×2 region, halving the size. This is the secret to recognizing a cat wherever it is — translation invariance. Max Pooling: 2×2 → maximum Max Pooling Average Pooling ▶ Run Pooling Reset Input 8×8 Output 8×8 Compression 1×",
+      "text_ko": "03 — 압축의 기술 풀링 : 중요한 것만 남기다 2×2 영역에서 최대값만 취하여 크기를 절반으로. 이것이 \"고양이가 어디에 있든\" 인식하는 비결 — 위치 불변성. Max Pooling: 2×2 → 최대값 Max Pooling Average Pooling ▶ 풀링 실행 초기화 입력 8×8 출력 8×8 압축률 1×",
+      "scroll_to": "#sec-pool",
+      "pause_after": true
+    },
+    {
+      "id": 5,
+      "text_en": "04 — DRAW IT YOURSELF What Does a CNN See in Your Drawing? Draw freely below. On the right, a CNN edge detection filter runs in real time. Draw here Edges the CNN sees 🗑️ Clear",
+      "text_ko": "04 — 직접 그려보세요 당신의 그림을 CNN이 본다면? 아래에 자유롭게 그려보세요. 오른쪽에서 CNN의 에지 검출 필터가 실시간으로 작동합니다. 여기에 그려보세요 CNN이 보는 에지 🗑️ 지우기",
+      "scroll_to": "#sec-draw",
+      "pause_after": true
+    },
+    {
+      "id": 6,
+      "text_en": "05 — THE REVOLUTION The ImageNet Moment In 2012, AlexNet won ImageNet by a crushing margin. Then VGGNet, GoogLeNet, and ResNet followed — eventually surpassing even human error rates (5%). CNN → Vision Transformer LeNet-5 → AlexNet → ResNet 1998–2015. The convolution era. Deeper, wider. Residual connections broke through 152 layers. ViT (2020) → Present Attention only, no convolutions. The Transformer from Part II applied to vision. Challenging CNN's throne.",
+      "text_ko": "05 — 혁명 ImageNet 의 순간 2012년, AlexNet이 ImageNet에서 압도적 승리. 이후 VGGNet, GoogLeNet, ResNet으로 이어지며 인간 오류율(5%)마저 넘어섰습니다. CNN → Vision Transformer LeNet-5 → AlexNet → ResNet 1998–2015. 합성곱의 시대. 더 깊게, 더 넓게. 잔차 연결로 152층 돌파. ViT (2020) → 현재 합성곱 없이 어텐션만으로. Part II의 트랜스포머가 시각에도 적용. CNN의 왕좌를 위협.",
+      "scroll_to": "#sec-imagenet",
+      "pause_after": true
+    },
+    {
+      "id": 7,
+      "text_en": "06 — THE CONNECTION Human Vision vs. Machine Vision Human CNN 👁️ Sensor — 130 million photoreceptors Sensor — Pixels (RGB values) 🧠 Processing — V1→V2→V4→IT Processing — Conv→Pool→Conv→... 🔍 Attention — Fovea + peripheral Attention — Kernel sliding 💫 Illusions — Optical illusions, pareidolia Illusions — Adversarial patches, DeepDream 👶 Learning — Generalizes from few exposures Learning — Needs millions of images",
+      "text_ko": "06 — 연결 인간의 시각 vs 기계의 시각 인간 CNN 👁️ 센서 — 1억 3천만 광수용체 센서 — 픽셀 (RGB 값) 🧠 처리 — V1→V2→V4→IT 처리 — Conv→Pool→Conv→... 🔍 주의 — 중심와 + 주변시 주의 — 커널 슬라이딩 💫 환상 — 착시, 파레이돌리아 환상 — 적대적 패치, DeepDream 👶 학습 — 몇 번의 노출로 일반화 학습 — 수백만 이미지 필요",
+      "scroll_to": "#sec-rosetta",
+      "pause_after": true
+    },
+    {
+      "id": 8,
+      "text_en": "So — Does a Machine See? A machine's eye holds no sense of beauty. No awe at a sunset, no warmth in recognizing a loved one's face. Only grids of numbers, sliding kernels, and stacked feature maps. Perhaps that is not seeing. But machines find tumors, classify stars, and recognize your face — sometimes more accurately than we can. ← Part V: Speak",
+      "text_ko": "그래서 — 기계는 보는가? 기계의 눈에는 아름다움이 없습니다. 석양의 감동도, 사랑하는 사람의 얼굴을 알아보는 따뜻함도 없습니다. 오직 숫자의 격자, 커널의 슬라이딩, 층층이 쌓이는 특성 맵. 그것은 보는 것이 아닐지도 모릅니다. 하지만 기계는 종양을 발견하고, 별을 분류하고, 당신의 얼굴을 인식합니다 — 때로는 인간보다 정확하게. ← Part V: 말하기",
+      "scroll_to": "#sec-closing",
+      "pause_after": true
+    }
+  ]
+}

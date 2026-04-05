@@ -260,6 +260,7 @@
     }
   </style>
   <link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="narration_player.css">
 </head>
 <body>
 
@@ -1068,6 +1069,21 @@
       initGlobal(); initHero(); initSec1(); initSec2(); initSec4();
     });
   </script>
+
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'dream',
+  basePath: 'assets/narration/dream/',
+  segments: [
+    { id: 0,  section: '#section-1', label: 'Section 1' },
+    { id: 1,  section: '#section-2', label: 'Section 2' },
+    { id: 2,  section: '#section-3', label: 'Section 3' },
+    { id: 3,  section: '#section-4', label: 'Section 4' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"

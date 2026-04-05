@@ -814,6 +814,7 @@ footer {
 </style>
 
   <link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="narration_player.css">
 </head>
 <body>
 
@@ -2146,6 +2147,25 @@ sections.forEach(id => { const el = document.getElementById(id); if (el) secObse
 
 </script>
 
+
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'diffusion-1',
+  basePath: 'assets/narration/diffusion-1/',
+  segments: [
+    { id: 0,  section: '#hero', label: 'Hero' },
+    { id: 1,  section: '#sec-pond', label: '§Pond' },
+    { id: 2,  section: '#sec-heat', label: '§Heat' },
+    { id: 3,  section: '#sec-gaussian', label: '§Gaussian' },
+    { id: 4,  section: '#sec-random', label: '§Random' },
+    { id: 5,  section: '#sec-compare', label: '§Compare' },
+    { id: 6,  section: '#sec-2d', label: '§2D' },
+    { id: 7,  section: '#sec-closing', label: '§Closing' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"

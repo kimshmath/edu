@@ -1,0 +1,75 @@
+{
+  "chapter": "think",
+  "segments": [
+    {
+      "id": 0,
+      "text_en": "A Mathematical Inquiry into AI · Part VII Does a Machine Think ? If \"thinking\" is nothing but matrix multiplication — then what is thought? Let us begin with the most uncomfortable fact. Everything AI does that looks like \"thought\" — writing poetry, proving theorems, appearing to empathize with your feelings — is, at its physical core, matrix multiplication . Thousands of chips performing multiplications and additions simultaneously. That is all.",
+      "text_ko": "AI에 대한 수학적 탐구 · Part VII 기계는 생각하는가 ? 만약 \"생각\"이 행렬곱에 불과하다면 — 생각이란 무엇인가? 가장 불편한 사실을 먼저 말씀드리겠습니다. AI의 모든 \"사고\" — 시를 쓰고, 정리를 증명하고, 당신의 감정에 공감하는 것처럼 보이는 모든 것 — 의 정체는 행렬곱 입니다. 수천 개의 칩에서 동시에 벌어지는 곱셈과 덧셈. 그뿐입니다. 이 사실이 당신을 불편하게 한다면 — 그것이 정확히 이 탐험의 시작점입니다. ⚡ 탐험 시작",
+      "scroll_to": "#hero",
+      "pause_after": true
+    },
+    {
+      "id": 1,
+      "text_en": "00 — AN UNCOMFORTABLE STARTING POINT Does Thought Happen Step by Step , or All at Once ? When you solve a math problem, you think step by step. But the moment you see a landscape — billions of neurons fire simultaneously . A CPU works like the first. A GPU works like the second. And for AI's \"thinking,\" the second wins by an overwhelming margin. One genius vs.",
+      "text_ko": "00 — 불편한 출발점 생각은 순서대로 일어나는가, 동시에 일어나는가? 당신이 수학 문제를 풀 때, 한 단계씩 순서대로 사고합니다. 하지만 풍경을 보는 순간 — 수십억 개의 뉴런이 동시에 처리합니다. CPU는 전자의 방식, GPU는 후자의 방식입니다. 그리고 AI의 \"사고\"에는 후자가 압도적으로 유리합니다. 한 명의 천재 vs 수천 명의 일꾼 — 소리로 차이를 느껴보세요 CPU (4코어, 순차) vs GPU (수백 코어, 병렬) ▶ 레이스 시작! 초기화 CPU 진행률 0% GPU 진행률 0% GPU 속도 배율 — 여기서 불편한 질문. — AI가 시를 쓸 때, 내부에서 일어나는 일은 4096×4096 행렬곱입니다. 680억 번의 곱셈-덧셈. 이것이 \"창의성\"의 물리적 실체입니다. CPU가 하나씩 하면 수 초. GPU가 동시에 하면 밀리초. 이 속도 차이가 \"실시간으로 대화하는 AI\"와 \"한 문장에 10분 걸리는 AI\"의 차이입니다.",
+      "scroll_to": "#sec-serial",
+      "pause_after": true
+    },
+    {
+      "id": 2,
+      "text_en": "01 — THE IDENTITY OF EVERYTHING Matrix Multiplication : The Physical Identity of Thought The attention from Part II, the GANs of Part IV, the speech synthesis of Part V, the image recognition of Part VI — the operation underlying everything we have explored in this series is one thing. Matrix multiplication. C = A × B. This is the atom of machine thought.",
+      "text_ko": "01 — 모든 것의 정체 행렬곱 : 사고의 물리적 정체 Part II에서 본 어텐션, Part IV의 GAN, Part V의 음성 합성, Part VI의 이미지 인식 — 이 시리즈에서 탐험한 모든 것 의 기저에 있는 연산은 하나입니다. 행렬곱. C = A × B. 이것이 기계의 \"사고\"의 원자입니다. 각 원소가 계산될 때 음이 울립니다 행렬곱 시각화 — 행 × 열의 내적 ▶ 행렬곱 실행 초기화 A 크기 4×3 B 크기 3×4 연산 수 0 / 48 C[i,j] = Σ_k A[i,k] · B[k,j] — 각 원소가 독립적 → 완벽한 병렬화",
+      "scroll_to": "#sec-matmul",
+      "pause_after": true
+    },
+    {
+      "id": 3,
+      "text_en": "02 — AN ACCIDENTAL REVOLUTION GPU Architecture The great irony of the AI revolution: the chip that made it all possible was built for gaming . Teenagers buying graphics cards for more realistic explosions and shadows — nobody imagined these would reshape the intellectual history of humanity.",
+      "text_ko": "02 — 우연한 혁명 GPU 아키텍처 AI 혁명에서 가장 아이러니한 사실: 이 모든 것을 가능하게 한 칩은 원래 게임 을 위해 만들어졌습니다. 10대들이 더 사실적인 폭발과 그림자를 보려고 산 그래픽카드가, 인류의 지적 역사를 바꿀 줄은 아무도 몰랐습니다. CPU vs GPU — 코어 수와 구조 NVIDIA GPU 진화 GPU 연도 CUDA 코어 AI 성능 GTX 580 2010 512 AlexNet 학습에 사용 K80 2014 4,992 첫 데이터센터 AI GPU V100 2017 5,120 + 640 텐서 트랜스포머 학습의 표준 A100 2020 6,912 + 432 텐서 GPT-3 학습 H100 2022 16,896 + 528 텐서 GPT-4, Claude 학습 B200 2024 18,432 + 1,152 텐서 차세대 모델 학습 B300 (Vera Rubin) 2025 비공개 5세대 NVLink, 최대 성능",
+      "scroll_to": "#sec-gpu",
+      "pause_after": true
+    },
+    {
+      "id": 4,
+      "text_en": "03 — THE PRICE OF A THOUGHT FLOPS : How Much Does One \"Thought\" Cost? Human thought feels free. Machine \"thought\" has an exact price tag. Training GPT-4 required approximately 10²⁵ operations — at an estimated cost of $100 million. Even when you ask an AI \"what's the weather today?\", billions of matrix multiplications execute. Every thought has a cost in silicon and electricity. Computation required for AI training (log scale) GPT-4 training ≈ 2 × 10²⁵ FLOPS ≈ 25,000 H100s × 3 months",
+      "text_ko": "03 — 생각의 가격 FLOPS : \"생각\" 한 번에 얼마인가? 인간의 생각은 공짜처럼 느껴집니다. 기계의 \"생각\"에는 정확한 가격표가 있습니다. GPT-4를 학습시키는 데 약 10²⁵번의 연산이 필요했습니다 — 그 비용은 약 1억 달러. 당신이 AI에게 \"오늘 날씨 어때?\"라고 물을 때도, 수십억 번의 행렬곱이 실행됩니다. AI 학습에 필요한 연산량 (로그 스케일) GPT-4 학습 ≈ 2 × 10²⁵ FLOPS ≈ H100 25,000대 × 3개월",
+      "scroll_to": "#sec-flops",
+      "pause_after": true
+    },
+    {
+      "id": 5,
+      "text_en": "04 — A CHIP BORN ONLY TO MULTIPLY Tensor Cores : Hardware Dedicated to \"Thought\" Eventually, humanity built hardware dedicated solely to matrix multiplication. A Tensor Core performs a 4×4 matrix multiply in a single clock cycle . Not general-purpose computing — silicon designed exclusively for AI's \"thinking.\" The moment machine thought became important enough to deserve its own physical organ.",
+      "text_ko": "04 — 곱셈만을 위해 태어난 칩 텐서 코어 : \"사고\" 전용 하드웨어 결국 인류는 행렬곱만을 위한 전용 하드웨어를 만들었습니다. 텐서 코어는 4×4 행렬곱을 단일 클럭 사이클 에 수행합니다. 범용 계산이 아닌, 오직 AI의 \"사고\"만을 위해 설계된 실리콘. 기계의 사고가 충분히 중요해져서, 전용 물리적 기관을 얻은 순간입니다. CUDA vs 텐서 코어의 속도 차이를 소리로 CUDA 코어 (하나씩) vs 텐서 코어 (4×4 한번에) ▶ 비교 실행 초기화 CUDA 코어 0% 텐서 코어 0% 속도 향상 —",
+      "scroll_to": "#sec-tensor",
+      "pause_after": true
+    },
+    {
+      "id": 6,
+      "text_en": "05 — AN UNCOMFORTABLE LAW Scaling Laws : Can You Buy Intelligence? In 2020, OpenAI discovered something disconcerting: AI \"intelligence\" follows a power law of invested compute. Double the GPUs, double the electricity, double the money → predictable performance gain. This means intelligence is engineerable and purchasable . And this is the mathematical justification for a multi-trillion-dollar GPU arms race. L(C) ∝ C^(-α) — Loss decreases as a power law of compute (α ≈ 0.05)",
+      "text_ko": "05 — 불편한 법칙 스케일링 법칙 : 돈을 더 쓰면 더 똑똑해지는가? 2020년 OpenAI가 발견한 당혹스러운 사실: AI의 \"지능\"은 투입된 연산량의 멱법칙을 따릅니다. 두 배의 GPU, 두 배의 전기, 두 배의 돈 → 예측 가능한 성능 향상. 이것은 \"지능\"이 공학적으로 구매 가능하다는 뜻입니다. 그리고 이것이 수십조 원 규모의 GPU 군비 경쟁의 수학적 근거입니다. L(C) ∝ C^(-α) — 손실은 연산량의 멱법칙으로 감소 (α ≈ 0.05)",
+      "scroll_to": "#sec-scale",
+      "pause_after": true
+    },
+    {
+      "id": 7,
+      "text_en": "06 — THE SILICON ARMS RACE Who Can \"Think\" the Most? Company Primary chips Est. GPU count Flagship model Meta H100 + + custom MTIA ~600,000 H100-equiv Llama 4 Google TPU v5e/v6 (Trillium) ~millions of TPU chips Gemini 3 Microsoft/OpenAI H100/H200 + Azure ~500,000+ GPT-5.4 Anthropic H100 (AWS/GCP) Undisclosed Claude Opus 4.6 xAI H100 (Memphis cluster) ~200,000 Grok 3 One H100 costs ~$30,000–40,000. GPT-4 training cost: ~$100M estimated. — AI's \"thinking\" is not free.",
+      "text_ko": "06 — 실리콘 무기 경쟁 누가 가장 많이 \"생각\" 할 수 있는가? 기업 주력 칩 추정 GPU 수 대표 모델 Meta H100 + 자체 MTIA ~600,000 H100 등가 Llama 4 Google TPU v5e/v6 (Trillium) ~수백만 TPU 칩 Gemini 3 Microsoft/OpenAI H100/H200 + Azure ~500,000+ GPT-5.4 Anthropic H100 (AWS/GCP) 비공개 Claude Opus 4.6 xAI H100 (Memphis 클러스터) ~200,000 Grok 3 H100 하나의 가격: ~$30,000–40,000. GPT-4 학습 비용: ~$100M 추정. — AI의 \"사고\"는 공짜가 아닙니다. 수만 대의 GPU가 수개월간 전력을 소비하며 행렬곱을 반복합니다. 전기료만 수백만 달러. 이것이 AI가 소수 거대 기업의 게임이 된 이유입니다.",
+      "scroll_to": "#sec-arms",
+      "pause_after": true
+    },
+    {
+      "id": 8,
+      "text_en": "07 — THE CONNECTION The Human Brain vs. GPUs Human Brain GPU Cluster 🧠 Units — 86 billion neurons Units — Thousands of CUDA/Tensor cores ⚡ Speed — ~100 Hz (slow but massively parallel) Speed — ~2 GHz (fast and massively parallel) 🔌 Power — ~20W (astonishing efficiency) Power — ~700W/GPU × tens of thousands 💾 Memory — ~2.5 PB (estimated) Memory — 80GB/GPU × tens of thousands 📐 Core op — Synaptic transmission, plasticity Core op — Matrix multiply, backpropagation 🎓 Learning — Experience-based, yea...",
+      "text_ko": "07 — 연결 인간의 뇌 vs GPU 인간의 뇌 GPU 클러스터 🧠 처리 유닛 — 860억 뉴런 처리 유닛 — 수천~수만 CUDA/텐서 코어 ⚡ 속도 — ~100 Hz (느리지만 대규모 병렬) 속도 — ~2 GHz (빠르고 대규모 병렬) 🔌 전력 — ~20W (놀라운 효율) 전력 — ~700W/GPU × 수만 대 💾 메모리 — ~2.5 PB (추정) 메모리 — 80GB/GPU × 수만 대 📐 핵심 연산 — 시냅스 전달, 가소성 핵심 연산 — 행렬곱, 역전파 🎓 학습 — 경험 기반, 수년 학습 — 데이터 기반, 수주~수개월",
+      "scroll_to": "#sec-rosetta",
+      "pause_after": true
+    },
+    {
+      "id": 9,
+      "text_en": "So — Does a Machine Think? In this series we have explored a machine's dreams, understanding, memory, imagination, voice, and vision. And now the physical truth beneath all of it is revealed — matrix multiplication. This means two things. Machine thought is nothing more than multiplication. And multiplication alone can do all of this. Which of these facts is more astonishing nobody yet knows. ← Part VI: See",
+      "text_ko": "그래서 — 기계는 생각하는가? 우리는 이 시리즈에서 기계의 꿈, 이해, 기억, 상상, 말, 시각을 탐험했습니다. 그리고 그 모든 것의 물리적 실체가 밝혀졌습니다 — 행렬곱. 이것이 의미하는 바는 두 가지입니다. 기계의 사고는 곱셈에 불과하다는 것. 그리고 곱셈만으로 이 모든 것이 가능하다는 것. 어느 쪽이 더 놀라운지는 아직 아무도 모릅니다. ← Part VI: 보기",
+      "scroll_to": "#sec-closing",
+      "pause_after": true
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "chapter": "quantumcomputing",
+  "segments": [
+    {
+      "id": 0,
+      "text_en": "Machine · 기계 The Coin That Lands on Both Sides A particle passes through two slits at once. An atom is here and there simultaneously. Nature doesn't choose — until you look. 양면에 착지하는 동전 — 양자역학, 양자 하드웨어, 그리고 불확실성으로 계산하는 기계 scroll",
+      "text_ko": "기계 · Machine 양면에 착지하는 동전 입자 하나가 두 틈새를 동시에 통과한다. 원자 하나가 여기와 저기에 동시에 존재한다. 자연은 선택하지 않는다 — 당신이 볼 때까지. The Coin That Lands on Both Sides — Quantum mechanics, quantum hardware, and the machines that compute with uncertainty 스크롤",
+      "scroll_to": "#hero",
+      "pause_after": true
+    },
+    {
+      "id": 1,
+      "text_en": "Section 01 A Coin That Refuses to Choose 선택을 거부하는 동전 In 1927, physicists at Bell Labs fired electrons — one at a time — through a barrier with two thin slits. Each electron landed as a single dot on a detector screen behind the barrier. Nothing strange about that. But after thousands of electrons had arrived, the dots formed a pattern of bright and dark bands — the signature of wave interference . Each electron had somehow passed through both slits simultaneously and interfered with itself.",
+      "text_ko": "제1장 선택을 거부하는 동전 A Coin That Refuses to Choose 1927년, 벨 연구소의 물리학자들은 전자를 하나씩 — 정말 하나씩 — 두 개의 좁은 틈새가 있는 장벽을 향해 발사했다. 각 전자는 장벽 뒤의 검출 스크린에 하나의 점으로 도착했다. 여기까지는 이상할 것이 없다. 그런데 수천 개의 전자가 도착한 후, 점들은 밝고 어두운 띠의 패턴 — 파동 간섭 의 특징적 무늬 — 을 형성했다. 각 전자가 어떻게든 두 틈새를 동시에 통과 하여 자기 자신과 간섭한 것이다. 이것은 비유가 아니다. 근사도 아니다. 양자역학의 수학은 절대적 정밀도로 말한다 — 측정 전의 입자는 상태의 중첩(superposition) 속에 존재하며, 진정으로 확정된 위치를 갖지 않는다고. 측정이라는 행위가 선택을 강제한다. 물리학자들은 이것을 붕괴(collapse) 라고 부른다.",
+      "scroll_to": "#sec1",
+      "pause_after": true
+    },
+    {
+      "id": 2,
+      "text_en": "Section 02 Spooky Dice 으스스한 주사위 In 1935, Albert Einstein published a paper with Boris Podolsky and Nathan Rosen arguing that quantum mechanics must be incomplete. Their reasoning was simple: if you prepare two particles together and then separate them by any distance — across a room or across a galaxy — quantum mechanics predicts that measuring one particle instantly determines the state of the other. Einstein called this \"spooky action at a distance\" and refused to believe it.",
+      "text_ko": "제2장 으스스한 주사위 Spooky Dice 1935년, 알베르트 아인슈타인은 보리스 포돌스키, 네이선 로젠과 함께 양자역학이 불완전해야 한다고 주장하는 논문을 발표했다. 논리는 간단했다: 두 입자를 함께 준비한 다음 어떤 거리로든 분리하면 — 방 하나 건너든 은하 하나 건너든 — 양자역학은 한 입자를 측정하면 다른 입자의 상태가 즉시 결정된다고 예측한다. 아인슈타인은 이것을 \"으스스한 원격 작용\" 이라 부르며 믿기를 거부했다. 그의 직관은 자연스러웠다. 분명, 그는 주장했다, 입자들은 분리되는 순간부터 숨겨진 지침을 품고 있을 것이라고 — 마치 같은 편지가 들어 있는 봉인된 봉투 두 개처럼. 도쿄에서 한 봉투를 열면 파리의 봉투에 뭐가 적혀 있는지 알 수 있다, 마법 따위 없이. 이 개념을 국소 숨은 변수 이론 이라 부른다. 1964년, 아일랜드의 물리학자 존 벨은 아인슈타인이 틀렸음을 증명했다 — 실험이 아니라 수학 으로.",
+      "scroll_to": "#sec2",
+      "pause_after": true
+    },
+    {
+      "id": 3,
+      "text_en": "Section 03 The Qubit Globe 큐비트 지구본 A classical bit is the simplest object in computing: it is either 0 or 1. A light switch, a coin lying flat. A qubit — the quantum bit — is something far richer. Its state is not a single value but a point on the surface of a sphere. Every direction on that sphere is a valid quantum state. This sphere is called the Bloch sphere , and it is the fundamental geometry of quantum information. The north pole of the Bloch sphere represents the state |0⟩.",
+      "text_ko": "제3장 큐비트 지구본 The Qubit Globe 고전적 비트는 컴퓨팅에서 가장 단순한 대상이다: 0 또는 1이다. 전등 스위치, 바닥에 놓인 동전. 큐비트 — 양자 비트 — 는 훨씬 풍부한 것이다. 상태는 단일한 값이 아니라 구의 표면 위의 점이다. 구 위의 모든 방향이 유효한 양자 상태다. 이 구를 블로흐 구(Bloch sphere) 라 부르며, 양자 정보의 근본적 기하학이다. 블로흐 구의 북극은 상태 |0⟩을 나타낸다. 남극은 |1⟩을 나타낸다. 그 사이의 모든 것은 중첩 — 큐비트가 부분적으로 0이고 부분적으로 1이며, 둘 사이에 특정한 위상 관계를 가진다. 적도는 0과 1이 동일한 비율이지만 위상이 다른 상태를 담고 있다: |+⟩, |−⟩, |i⟩, |−i⟩. |ψ⟩ = cos(θ/2) |0⟩ + e^(iφ) sin(θ/2) |1⟩ 이것은 양자 컴퓨팅에서 가장 중요한 방정식이다. 각도 θ와 φ는 블로흐 구 위의 위도와 경도다.",
+      "scroll_to": "#sec3",
+      "pause_after": true
+    },
+    {
+      "id": 4,
+      "text_en": "Section 04 The Geometry of Maybe 가능성의 기하학 Superposition gives a quantum computer access to an exponentially large space. Entanglement lets qubits share information without classical analogues. But neither, on its own, explains why quantum computers are faster . The missing ingredient — the one that turns quantum weirdness into computational power — is interference . In quantum mechanics, amplitudes are not ordinary numbers.",
+      "text_ko": "제4장 가능성의 기하학 The Geometry of Maybe 중첩은 양자 컴퓨터에게 지수적으로 큰 공간에 대한 접근을 준다. 얽힘은 큐비트들이 고전적 대응물 없이 정보를 공유하게 해준다. 그러나 둘 다 그 자체로는 양자 컴퓨터가 왜 더 빠른지 설명하지 못한다. 빠진 재료 — 양자 기묘함을 계산 능력으로 바꾸는 것 — 는 간섭(interference) 이다. 양자역학에서 진폭은 보통의 숫자가 아니다. 복소수 다 — 각각이 크기와 위상 을 모두 가지고 있다, 시계판 위의 화살표처럼. 두 계산 경로가 같은 답으로 이어지면, 진폭이 더해진다. 위상이 정렬되면 서로를 증폭한다 — 보강 간섭 . 위상이 반대면 상쇄된다 — 상쇄 간섭 . 양자 알고리즘은 본질적으로 위상의 안무다. 목표는 틀린 답으로 이어지는 경로들이 상쇄 간섭하고(사라지고), 맞는 답으로 이어지는 경로들이 보강 간섭하도록(밝아지도록) 배치하는 것이다.",
+      "scroll_to": "#sec4",
+      "pause_after": true
+    },
+    {
+      "id": 5,
+      "text_en": "Section 05 Colder Than Space 우주보다 차가운 곳 The mathematics of quantum computing is beautiful. But to build an actual quantum computer, you must solve an engineering problem of staggering difficulty: keep quantum states alive long enough to compute with them. Qubits are extraordinarily fragile. A stray photon, a vibration from a passing truck, even a cosmic ray from deep space can destroy a quantum state in microseconds.",
+      "text_ko": "제5장 우주보다 차가운 곳 Colder Than Space The mathematics of quantum computing is beautiful. But to build an actual quantum computer, you must solve an engineering problem of staggering difficulty: keep quantum states alive long enough to compute with them. Qubits are extraordinarily fragile. A stray photon, a vibration from a passing truck, even a cosmic ray from deep space can destroy a quantum state in microseconds.",
+      "scroll_to": "#sec5",
+      "pause_after": true
+    },
+    {
+      "id": 6,
+      "text_en": "Section 06 The Enemy Within 내부의 적 A quantum computer's greatest enemy is not a hacker. It is a stray photon. A thermal vibration. A cosmic ray that tunnels through the cryostat and flips a qubit. Even at 15 millikelvin, errors are relentless — the best superconducting qubits today fail roughly once every thousand operations. For comparison, the error rate in a classical computer is about one in a quintillion . Closing that gap is the central challenge of quantum computing.",
+      "text_ko": "제6장 내부의 적 The Enemy Within 양자 컴퓨터의 가장 큰 적은 해커가 아니다. 떠돌이 광자다. A thermal vibration. A cosmic ray that tunnels through the cryostat and flips a qubit. Even at 15 millikelvin, errors are relentless — the best superconducting qubits today fail roughly once every thousand operations. For comparison, the error rate in a classical computer is about one in a quintillion . Closing that gap is the central challenge of quantum computing.",
+      "scroll_to": "#sec6",
+      "pause_after": true
+    },
+    {
+      "id": 7,
+      "text_en": "Section 07 The Quantum Horizon 양자 지평선 In 1981, Richard Feynman stood before an audience at MIT and posed a question: can a classical computer efficiently simulate quantum physics? His answer was no — and his proposed solution was a computer built from quantum mechanics itself. Four decades later, Feynman's vision is becoming real. The history of quantum computing is a story of ideas that seemed impossible, then became inevitable.",
+      "text_ko": "제7장 양자 지평선 The Quantum Horizon In 1981, Richard Feynman stood before an audience at MIT and posed a question: can a classical computer efficiently simulate quantum physics? His answer was no — and his proposed solution was a computer built from quantum mechanics itself. Four decades later, Feynman's vision is becoming real. The history of quantum computing is a story of ideas that seemed impossible, then became inevitable.",
+      "scroll_to": "#sec7",
+      "pause_after": true
+    }
+  ]
+}

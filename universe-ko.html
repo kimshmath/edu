@@ -180,6 +180,7 @@ footer{text-align:center;padding:3rem 2rem 4rem;border-top:1px solid rgba(255,25
 }
 </style>
   <link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="narration_player.css">
 </head>
 <body>
 
@@ -2623,6 +2624,18 @@ function chime(f=440,d=.35,v=.12){const c=ac(),o=c.createOscillator(),g=c.create
 })();
 
 </script>
+
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'universe',
+  basePath: 'assets/narration/universe/',
+  segments: [
+    { id: 0,  section: '#hero', label: 'Hero' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"

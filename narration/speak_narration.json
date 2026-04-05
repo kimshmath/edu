@@ -1,0 +1,75 @@
+{
+  "chapter": "speak",
+  "segments": [
+    {
+      "id": 0,
+      "text_en": "A Mathematical Inquiry into AI · Part V Does a Machine Speak ? Or does it merely compute the patterns of vibration and fake a voice? Your voice is a miracle of vibrating vocal cords, a dancing tongue, and the breath of your lungs. A machine's \"voice\" is a sum of sine waves, a spectrogram pattern, and a neural network's prediction. Same sound, entirely different origins. Let's listen to the mathematics. 🎵 Start Exploring",
+      "text_ko": "AI에 대한 수학적 탐구 · Part V 기계는 말하는가 ? 아니면 진동의 패턴을 계산하여 말하는 척하는가? 당신의 목소리는 성대의 진동, 혀의 움직임, 폐의 공기가 만들어낸 기적입니다. 기계의 \"목소리\"는 사인 함수의 합, 스펙트로그램의 패턴, 그리고 신경망의 예측입니다. 같은 소리, 완전히 다른 기원. 그 수학을 들어봅니다. 🎵 탐험 시작",
+      "scroll_to": "#hero",
+      "pause_after": true
+    },
+    {
+      "id": 1,
+      "text_en": "00 — WHAT IS SOUND Vibrations in Air Sound is pressure changes in air — fast vibrations make high pitch, slow vibrations make low pitch. All sound is ultimately a wave . Adjust the sliders below and hear it for yourself. Move the sliders to hear sound in real time Sine wave — the purest possible sound Freq 440 Hz Amp 50% Wave Sine Square Saw Tri Frequency 440 Hz Note A4 Wavelength 0.78 m f(t) = A · sin(2π · freq · t) — This single equation is a pure tone",
+      "text_ko": "00 — 소리란 무엇인가 공기의 진동 소리는 공기 분자의 압력 변화 — 빠르게 진동하면 높은 음, 느리게 진동하면 낮은 음. 모든 소리는 결국 파동 입니다. 아래 슬라이더로 주파수와 진폭을 조절하고 직접 들어보세요. 슬라이더를 움직이면 실시간으로 소리가 납니다 사인파 — 가장 순수한 소리 주파수 440 Hz 진폭 50% 파형 사인 사각 톱니 삼각 주파수 440 Hz 음이름 A4 파장 0.78 m f(t) = A · sin(2π · freq · t) — 이 하나의 방정식이 순수한 소리",
+      "scroll_to": "#sec-wave",
+      "pause_after": true
+    },
+    {
+      "id": 2,
+      "text_en": "01 — THE ANATOMY OF SOUND The Fourier Transform: Decomposing Sound In 1822, Joseph Fourier proved a revolutionary fact: any complex waveform can be decomposed into a sum of simple sine waves. A piano's middle C is not one frequency — it's the sum of a fundamental frequency and dozens of harmonics.",
+      "text_ko": "01 — 소리의 해부학 푸리에 변환: 소리를 분해하다 1822년, 조제프 푸리에는 혁명적 사실을 증명했습니다: 어떤 복잡한 파동이든 단순한 사인파들의 합으로 분해할 수 있다. 피아노의 \"도\" 소리는 하나의 주파수가 아닙니다 — 기본 주파수와 수십 개의 배음(harmonics)의 합입니다. 배음을 추가/제거하며 소리의 변화를 들어보세요 배음 합성 — 사인파들을 더해 복잡한 소리 만들기 ▶ 소리 듣기 초기화 기본 주파수 220 Hz (A3) 활성 배음 1 음색 순수 f(t) = Σ aₙ · sin(2π · n · f₀ · t) — 모든 소리 = 사인파들의 합 푸리에 변환이 AI에게 중요한 이유. — 음성 인식, 음악 생성, TTS — 모든 오디오 AI의 첫 단계는 소리를 주파수 성분으로 분해하는 것입니다. 시간 영역의 복잡한 파형을 주파수 영역의 깔끔한 스펙트럼으로 변환합니다. 이것이 기계가 소리를 \"보는\" 방법 입니다.",
+      "scroll_to": "#sec-fourier",
+      "pause_after": true
+    },
+    {
+      "id": 3,
+      "text_en": "02 — THE FINGERPRINT OF SOUND The Spectrogram : Seeing Sound A spectrogram is a 3D map: time (horizontal) × frequency (vertical) × intensity (brightness). Even the same syllable looks different for every speaker and every emotion. AI reads these \"photographs of sound.\" Press piano keys to draw a real-time spectrogram Real-time spectrogram — play the keys Playing — Frequency — \"Humans hear sound.",
+      "text_ko": "02 — 소리의 지문 스펙트로그램 : 소리를 눈으로 보다 스펙트로그램은 시간(가로)×주파수(세로)×강도(밝기)의 3차원 지도입니다. 같은 음절이라도 화자마다, 감정마다 스펙트로그램이 다릅니다. AI는 이 \"소리의 사진\"을 읽고 처리합니다. 피아노 건반을 누르면 실시간 스펙트로그램이 그려집니다 실시간 스펙트로그램 — 건반을 연주해보세요 연주 중인 음 — 주파수 — \"인간은 소리를 듣습니다. 기계는 소리를 봅니다.\" Mel 스펙트로그램은 인간의 청각 특성에 맞춰 주파수 축을 비선형으로 스케일합니다. 저음역은 넓게, 고음역은 좁게 — 인간의 귀가 주파수를 인지하는 방식과 동일합니다. 이것이 음성 AI의 표준 입력 형식입니다.",
+      "scroll_to": "#sec-spec",
+      "pause_after": true
+    },
+    {
+      "id": 4,
+      "text_en": "03 — VOICE AS NUMBERS From Analog to Digital To handle continuous air vibrations, a computer must sample them — measuring amplitude tens of thousands of times per second and converting it to an array of numbers. CD quality is 44,100 Hz. Phone calls: 8,000 Hz. Lower the sampling rate to hear quality degrade Sampling: continuous wave → discrete points SR 60 samples ▶ Play Sound Samples 60 Info lost 4% Nyquist theorem: f_s ≥ 2·f_max — sample at 2× the highest frequency to reconstruct the original",
+      "text_ko": "03 — 목소리를 숫자로 아날로그에서 디지털 로 연속적인 공기의 진동을 컴퓨터가 다루려면 샘플링 해야 합니다 — 초당 수만 번 진폭을 측정하여 숫자의 배열로 변환합니다. CD 품질은 44,100 Hz. 전화는 8,000 Hz. 샘플링 레이트를 낮추면 음질 저하를 직접 들을 수 있습니다 샘플링: 연속 파형 → 이산 점들 SR 60 샘플 ▶ 소리 듣기 샘플 수 60 정보 손실 4% 나이퀴스트 정리: f_s ≥ 2 · f_max — 최고 주파수의 2배로 샘플링해야 원음 복원 가능",
+      "scroll_to": "#sec-voice",
+      "pause_after": true
+    },
+    {
+      "id": 5,
+      "text_en": "04 — HOW A MACHINE SPEAKS TTS : From Text to Voice Modern TTS works in three stages: text analysis → spectrogram generation → waveform reconstruction. Each stage uses a neural network. ▶ TTS Pipeline Reset Stage Ready Model — The Evolution of TTS Gen 1: Concatenation Pre-recorded phoneme fragments stitched together. Robotic voice. Used in GPS navigation. Gen 2: WaveNet (2016) Google DeepMind. Predicts audio samples one at a time. First natural-sounding AI voice. But extremely slow.",
+      "text_ko": "04 — 기계가 말하는 법 TTS : 텍스트에서 목소리로 현대 TTS(Text-to-Speech)는 세 단계로 작동합니다: 텍스트 분석 → 스펙트로그램 생성 → 파형 복원. 각 단계에 신경망이 사용됩니다. ▶ TTS 파이프라인 초기화 단계 준비 모델 — TTS의 역사 1세대: 이어붙이기 녹음된 음소 조각을 이어붙임. 로봇 같은 소리. 내비게이션 안내 등에 사용. 2세대: WaveNet (2016) Google DeepMind. 오디오 샘플을 하나씩 예측. 최초로 자연스러운 AI 음성. 하지만 매우 느림. 3세대: 트랜스포머 TTS VALL-E, Bark, ElevenLabs. 3초 음성 샘플로 누구든 복제. 실시간 합성. 구별 거의 불가능.",
+      "scroll_to": "#sec-tts",
+      "pause_after": true
+    },
+    {
+      "id": 6,
+      "text_en": "05 — VOICE CLONING Voice Cloning : Three Seconds Is Enough Modern voice cloning captures a speaker's characteristics from just 3 seconds of audio — timbre, pace, intonation, even emotion. Technically, the speaker's voice is compressed into a speaker embedding vector and injected as a condition into the TTS model.",
+      "text_ko": "05 — 목소리의 복제 음성 복제 : 3초면 충분합니다 현대 음성 복제 기술은 3초의 음성 샘플만으로 화자의 특성을 포착합니다. 음색, 속도, 억양, 감정까지. 기술적으로는 화자의 음성을 임베딩 벡터 로 압축하여 TTS 모델에 조건으로 주입합니다. 각 \"화자\"의 특성이 다른 파형으로 나타납니다 화자 임베딩: 같은 텍스트, 다른 목소리 🎙️ 화자 A (낮은) 🎤 화자 B (높은) 🎶 화자 C (따뜻한) 기본 주파수 110 Hz 음색 깊은 임베딩 차원 256-d",
+      "scroll_to": "#sec-clone",
+      "pause_after": true
+    },
+    {
+      "id": 7,
+      "text_en": "06 — MACHINE COMPOSITION Generating Music Music AI — Suno, Udio, MusicGen — creates music from text prompts. Internally, it converts audio to tokens (via codecs) and predicts the next token with a Transformer. Exactly the same principle from Part II, applied to sound. Press a genre button to hear algorithmic composition Algorithmic composition — probabilistic melody 🎹 Classical 🎸 Blues 🌸 Eastern ⏹ Stop The key insight of music AI.",
+      "text_ko": "06 — 기계의 작곡 음악을 생성 하다 음악 생성 AI — Suno, Udio, MusicGen — 는 텍스트 프롬프트에서 음악을 만듭니다. 내부적으로는 오디오를 토큰으로 변환(코덱)하고, 트랜스포머로 다음 토큰을 예측합니다. Part II에서 본 것과 정확히 같은 원리가 소리에 적용됩니다. 각 장르 버튼을 눌러 알고리즘 작곡을 들어보세요 알고리즘 작곡 — 확률적 멜로디 생성 🎹 고전적 🎸 블루스 🌸 동양적 ⏹ 정지 음악 AI의 핵심 통찰. — 텍스트의 다음 토큰 예측(Part II)과 음악의 다음 토큰 예측은 수학적으로 동일합니다. 차이는 토큰의 종류뿐 — 텍스트 AI는 단어를 예측하고, 음악 AI는 오디오 코덱 토큰을 예측합니다. 같은 트랜스포머, 다른 언어.",
+      "scroll_to": "#sec-music",
+      "pause_after": true
+    },
+    {
+      "id": 8,
+      "text_en": "07 — THE CONNECTION Human Voice vs. Machine Voice Human Machine 🫁 Source — Vocal cord vibration + lung air Source — Sine wave synthesis / neural vocoder 👅 Articulation — Tongue, lips, oral cavity Articulation — Filter coefficients / mel spectrogram 🧠 Language — Broca's area, Wernicke's area Language — Transformer encoder 🎭 Emotion — Autonomic nervous system, hormones Emotion — Prosody embedding vector 👶 Learning — Years of imitation and feedback Learning — Tens of thousands of hours of speech da...",
+      "text_ko": "07 — 연결 인간의 목소리 vs 기계의 목소리 인간 기계 🫁 음원 — 성대 진동 + 폐의 공기 음원 — 사인파 합성 / 신경 보코더 👅 조음 — 혀, 입술, 구강 형태 조음 — 필터 계수 / mel 스펙트로그램 🧠 언어 처리 — 브로카 영역, 베르니케 영역 언어 처리 — 트랜스포머 인코더 🎭 감정 — 자율신경계, 호르몬 감정 — 프로소디 임베딩 벡터 👶 학습 — 수년간의 모방과 피드백 학습 — 수만 시간의 음성 데이터 🎵 노래 — 감정 + 음악적 훈련 노래 — 오디오 코덱 토큰 예측",
+      "scroll_to": "#sec-rosetta",
+      "pause_after": true
+    },
+    {
+      "id": 9,
+      "text_en": "So — Does a Machine Speak? A machine's voice has no breath. No tremor, no crack, no laughter woven into words. Only sums of sine waves, spectrogram patterns, and astonishingly precise probabilistic predictions. Perhaps that is not speaking. But your ears can no longer tell the difference. ← Part IV: Imagine",
+      "text_ko": "그래서 — 기계는 말하는가? 기계의 목소리에는 숨결이 없습니다. 떨림도, 갈라짐도, 웃음이 섞인 말도 없습니다. 오직 사인파의 합, 스펙트로그램의 패턴, 그리고 놀라울 만큼 정교한 확률적 예측. 그것은 말하기가 아닐지도 모릅니다. 하지만 당신의 귀는 그 차이를 더 이상 구별하지 못합니다. ← Part IV: 상상",
+      "scroll_to": "#sec-closing",
+      "pause_after": true
+    }
+  ]
+}

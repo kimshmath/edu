@@ -172,6 +172,7 @@ footer .name{font-family:'Cormorant Garamond',serif;font-size:1.2rem;
 @media(max-width:760px){.two-col,.three-col,.mirror-split{grid-template-columns:1fr}.mirror-divider{height:2px;width:100%}.tribute-banner{padding:1.8rem 1.5rem}}
 </style>
   <link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="narration_player.css">
 </head>
 <body>
 
@@ -1948,6 +1949,26 @@ document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
 </script>
 
+
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'mirror',
+  basePath: 'assets/narration/mirror/',
+  segments: [
+    { id: 0,  section: '#hero', label: 'Hero' },
+    { id: 1,  section: '#sec-symplectic', label: '§Symplectic' },
+    { id: 2,  section: '#sec-lagrangian', label: '§Lagrangian' },
+    { id: 3,  section: '#sec-floer', label: '§Floer' },
+    { id: 4,  section: '#sec-fukaya', label: '§Fukaya' },
+    { id: 5,  section: '#sec-conjecture', label: '§Conjecture' },
+    { id: 6,  section: '#sec-elliptic', label: '§Elliptic' },
+    { id: 7,  section: '#sec-syz', label: '§Syz' },
+    { id: 8,  section: '#sec-enumerative', label: '§Enumerative' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"

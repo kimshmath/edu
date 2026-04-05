@@ -370,6 +370,7 @@ footer{
 .narr-toggle:hover{border-color:var(--gold);color:var(--gold)}
 </style>
   <link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="narration_player.css">
 </head>
 <body>
 
@@ -2952,6 +2953,23 @@ heroObs.observe(document.getElementById('hero'));
 })();
 
 </script>
+
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'sand',
+  basePath: 'assets/narration/sand/',
+  segments: [
+    { id: 0,  section: '#hero', label: 'Hero' },
+    { id: 1,  section: '#s1', label: 'S1' },
+    { id: 2,  section: '#s2', label: 'S2' },
+    { id: 3,  section: '#s3', label: 'S3' },
+    { id: 4,  section: '#s4', label: 'S4' },
+    { id: 5,  section: '#s5', label: 'S5' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"

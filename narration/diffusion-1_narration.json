@@ -1,0 +1,61 @@
+{
+  "chapter": "diffusion-1",
+  "segments": [
+    {
+      "id": 0,
+      "text_en": "The Mathematics of Diffusion How Does Information Spread ? From a drop of ink to the shape of the universe Drop a stone in still water — ripples expand, weaken, and vanish. A drop of ink in a glass disperses until it's everywhere. This is diffusion: one of the most fundamental processes in nature, governed by a single, elegant equation. 💧 Start Exploring",
+      "text_ko": "확산의 수학 정보는 어떻게 퍼지는가 ? 한 방울의 잉크에서 우주의 형태까지 잔잔한 수면에 돌을 던지면 — 파문이 퍼지고, 약해지고, 사라집니다. 유리잔에 떨어진 잉크 한 방울은 물 전체로 퍼져 나갑니다. 이것이 확산입니다: 자연에서 가장 근본적인 과정 중 하나이며, 단 하나의 우아한 방정식이 지배합니다. 💧 탐험 시작",
+      "scroll_to": "#hero",
+      "pause_after": true
+    },
+    {
+      "id": 1,
+      "text_en": "01 — TOUCH THE SURFACE Drop a Stone in Still Water Click anywhere on the surface below. Watch how a concentrated point of energy spreads outward, growing weaker as it travels. This is diffusion in action — information radiates from where it begins, but it never stays concentrated . Each click creates a ripple — in light and in sound Click or tap the surface Drops 0 Max Amplitude 0.00 Total Energy 0.00 Clear Surface 🌧 Rain Mode",
+      "text_ko": "01 — 수면을 터치하세요 잔잔한 수면 에 돌을 던져 보세요 아래 수면 아무 곳이나 클릭하세요. 에너지가 한 점에서 바깥으로 퍼지면서 점점 약해지는 모습을 관찰하세요. 이것이 바로 확산입니다 — 정보는 시작점에서 방사되지만, 절대 한 곳에 머물지 않습니다 . 클릭할 때마다 파문이 생깁니다 — 빛과 소리로 수면을 클릭 또는 터치하세요 물방울 0 최대 진폭 0.00 총 에너지 0.00 수면 초기화 🌧 🌧 비 모드",
+      "scroll_to": "#sec-pond",
+      "pause_after": true
+    },
+    {
+      "id": 2,
+      "text_en": "02 — THE EQUATION One Equation Rules Them All Joseph Fourier discovered this in 1822 while studying heat flow through metal. What he found was shockingly general — the same equation governs the spread of heat, the diffusion of molecules, the flow of information through networks, even the pricing of financial options. ∂u/∂t = α ∇²u In words: the rate of change at any point is proportional to how different that point is from its neighbors . Hot spots cool. Concentrations dilute. Peaks flatten.",
+      "text_ko": "02 — 방정식 하나의 방정식이 모든 것을 지배한다 조제프 푸리에는 1822년 금속의 열전도를 연구하던 중 이것을 발견했습니다. 그가 발견한 것은 놀라울 정도로 일반적이었습니다 — 같은 방정식이 열의 확산, 분자의 확산, 네트워크를 통한 정보의 흐름, 심지어 금융 옵션의 가격 결정까지 지배합니다. ∂u/∂t = α ∇²u 말로 하면: 어떤 점에서의 변화율은 그 점이 이웃과 얼마나 다른지에 비례합니다 . 뜨거운 곳은 식고, 농축된 곳은 희석되고, 봉우리는 평탄해집니다. 상수 α 가 속도를 조절합니다. 1차원 열 방정식 시뮬레이터 막대를 클릭하여 열을 추가하세요. 실시간으로 퍼지는 것을 관찰하세요. α = 0.50 · 클릭하여 열 추가 α 0.50 ▶ Play 델타 스파이크 계단 함수 사인파 두 봉우리 초기화 What you're seeing — The simulation solves the heat equation numerically using finite differences.",
+      "scroll_to": "#sec-heat",
+      "pause_after": true
+    },
+    {
+      "id": 3,
+      "text_en": "03 — THE FUNDAMENTAL SOLUTION The Gaussian Emerges If you start with all the heat concentrated at a single point, the solution to the heat equation is beautiful and exact: Φ(x, t) = 1 / √(4παt) · exp(−x² / 4αt ) This is the Gaussian — the bell curve — born not from statistics, but from physics. The width grows as √t , and the peak height drops as 1/√t . Energy is conserved: the area under the curve is always exactly 1.",
+      "text_ko": "03 — 기본해 가우시안 이 나타나다 모든 열이 한 점에 집중된 상태에서 시작하면, 열 방정식의 해는 아름답고 정확합니다: Φ(x, t) = 1 / √(4παt) · exp(−x² / 4αt ) 이것이 가우시안 — 종 모양 곡선 — 통계학이 아니라 물리학에서 태어났습니다. 폭은 √t 로 성장하고, 봉우리 높이는 1/√t 로 감소합니다. 에너지는 보존됩니다: 곡선 아래 면적은 항상 정확히 1입니다. 가우시안이 숨 쉬는 것을 보세요 시간 슬라이더를 드래그하여 기본해가 진화하는 것을 관찰하세요. 곡선은 평탄해지지만 총 면적은 일정하게 유지됩니다. t = 0.10 · σ = 0.45 t 0.10 α 1.00 봉우리 높이 — 표준편차 σ — 총 면적 1.000",
+      "scroll_to": "#sec-gaussian",
+      "pause_after": true
+    },
+    {
+      "id": 4,
+      "text_en": "04 — THE MICROSCOPIC VIEW Random Walks and Brownian Motion Zoom into the ink drop. Each molecule bounces randomly off its neighbors — a random walk . In 1905, Einstein showed that this microscopic chaos produces macroscopic diffusion. The key insight: ⟨x²⟩ = 2Dt The average squared displacement grows linearly with time. After N steps, a particle is typically √N steps from where it started — not N. This is why diffusion is slow: doubling the distance takes four times as long.",
+      "text_ko": "04 — 미시적 관점 무작위 걸음과 브라운 운동 잉크 방울 속을 들여다 보세요. 각 분자는 이웃 분자에 무작위로 부딪히며 — 무작위 걸음 을 합니다. 1905년 아인슈타인은 이 미시적 혼돈이 거시적 확산을 만들어낸다는 것을 보였습니다. 핵심 통찰: ⟨x²⟩ = 2Dt 평균 제곱 변위 는 시간에 비례하여 증가합니다. N걸음 후, 입자는 보통 시작점에서 √N걸음 떨어져 있습니다 — N이 아닙니다. 이것이 확산이 느린 이유입니다: 거리를 두 배로 하려면 네 배 의 시간이 걸립니다. 무작위 걸음 시뮬레이터 500개의 입자가 독립적인 무작위 걸음을 하는 것을 관찰하세요. 히스토그램이 가우시안을 만들어 갑니다 — 실시간 중심극한정리.",
+      "scroll_to": "#sec-random",
+      "pause_after": true
+    },
+    {
+      "id": 5,
+      "text_en": "05 — TWO EQUATIONS, TWO WORLDS Waves vs Diffusion These two equations look almost identical — but they describe fundamentally different universes: ∂²u/∂t² = c² ∇²u Wave equation ∂u/∂t = α ∇²u Heat equation A wave preserves shape — it propagates without losing information. Diffusion destroys information — it smears, smooths, and forgets. One is reversible; the other is not. Side by Side Same initial pulse, same spatial setup — watch how differently they evolve.",
+      "text_ko": "05 — 두 방정식, 두 세계 파동 vs 확산 이 두 방정식은 거의 똑같아 보이지만 — 근본적으로 다른 세계를 묘사합니다: ∂²u/∂t² = c² ∇²u 파동 방정식 ∂u/∂t = α ∇²u 열 방정식 파동은 형태를 보존 합니다 — 정보를 잃지 않고 전파됩니다. 확산은 정보를 파괴 합니다 — 번지고, 매끄러워지고, 잊힙니다. 하나는 가역적이고, 다른 하나는 그렇지 않습니다. 나란히 비교 같은 초기 펄스, 같은 공간 설정 — 얼마나 다르게 진화하는지 관찰하세요. WAVE — ∂²u/∂t² = c²∇²u DIFFUSION — ∂u/∂t = α∇²u ▶ 동시 시작 초기화 파동 방정식 시간에 대해 2차. 정보는 속도 c로 왜곡 없이 전파됩니다. 가역적 — 시계를 되돌리면 원래 펄스를 복원할 수 있습니다. 소리, 빛, 지진파를 지배합니다. 열/확산 방정식 시간에 대해 1차. 정보는 바깥으로 퍼지며 형태를 잃습니다. 비가역적 — 녹아든 잉크 방울을 \"되돌릴\" 수 없습니다.",
+      "scroll_to": "#sec-compare",
+      "pause_after": true
+    },
+    {
+      "id": 6,
+      "text_en": "06 — THE FULL PICTURE Diffusion in Two Dimensions In 2D, the fundamental solution is a circular Gaussian that spreads radially. Click on the canvas to add heat sources and watch them merge, interact, and slowly equilibrate. This is what happens inside a pan of boiling water, a cell membrane, or the atmosphere of a star. Click to place heat sources — sounds accompany each drop Click to add heat α 1.20 ▶ Play Clear Center Spike Four Corners Ring",
+      "text_ko": "06 — 전체 그림 2차원 확산 2차원에서 기본해는 방사형으로 퍼지는 원형 가우시안입니다. 캔버스를 클릭하여 열원을 추가하고 그것들이 합쳐지고, 상호작용하고, 서서히 평형에 이르는 것을 관찰하세요. 이것은 끓는 물 냄비, 세포막, 또는 별의 대기 안에서 일어나는 일입니다. 클릭하여 열원을 배치하세요 — 각 방울에 소리가 함께합니다 클릭하여 열 추가 α 1.20 ▶ Play 초기화 중앙 스파이크 네 꼭짓점 고리",
+      "scroll_to": "#sec-2d",
+      "pause_after": true
+    },
+    {
+      "id": 7,
+      "text_en": "Diffusion Is Irreversible A drop of ink dissolves and never returns. A hot spot cools and the heat is gone. Information spreads, weakens, and vanishes . The second law of thermodynamics says you cannot un-dissolve the ink. But what if a machine could learn to reverse it ? In 2020, researchers discovered that the exact same equation you've been exploring can teach a machine to generate images, videos, and music — from pure noise. Part II: Does a Machine Dream? →",
+      "text_ko": "확산은 비가역적 이다 잉크 한 방울은 녹으면 돌아오지 않습니다. 뜨거운 곳은 식으면 열은 사라집니다. 정보는 퍼지고, 약해지고, 사라집니다 . 열역학 제2법칙은 말합니다 녹은 잉크를 되돌릴 수 없다고. 하지만 만약 기계가 되돌리는 법 을 배울 수 있다면? 2020년, 연구자들은 여러분이 지금까지 탐험한 바로 그 방정식이 순수한 노이즈로부터 이미지, 영상, 음악을 만들어낼 수 있다는 것을 발견했습니다. Part II: 기계는 꿈을 꾸는가? →",
+      "scroll_to": "#sec-closing",
+      "pause_after": true
+    }
+  ]
+}

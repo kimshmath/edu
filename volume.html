@@ -179,6 +179,7 @@ footer { padding: 4rem 2rem; text-align: center; border-top: 1px solid var(--bor
 }
 </style>
   <link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="narration_player.css">
 </head>
 <body>
 
@@ -1144,6 +1145,23 @@ setTimeout(() => {
 }, 50);
 
 </script>
+
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'volume',
+  basePath: 'assets/narration/volume/',
+  segments: [
+    { id: 0,  section: '#hero', label: 'Hero' },
+    { id: 1,  section: '#sec1', label: 'Sec1' },
+    { id: 2,  section: '#sec2', label: 'Sec2' },
+    { id: 3,  section: '#sec3', label: 'Sec3' },
+    { id: 4,  section: '#sec4', label: 'Sec4' },
+    { id: 5,  section: '#sec5', label: 'Sec5' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"

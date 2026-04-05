@@ -111,6 +111,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 @media(max-width:640px){section{padding:4rem 1.2rem}#nav-dots{display:none}.demo-card{padding:1.2rem}.stat-row{flex-direction:column}.use-case-grid{grid-template-columns:1fr}.ml-analogy{grid-template-columns:1fr;gap:0.5rem}.ml-analogy-arrow{transform:rotate(90deg)}.ml-milestone-strip{flex-direction:column}.ml-ms{border-right:none;border-bottom:1px solid rgba(255,255,255,0.03)}}
 </style>
   <link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="narration_player.css">
 </head>
 <body>
 
@@ -996,6 +997,30 @@ const nd=document.getElementById('nav-dots');secs.forEach(id=>{const d=document.
 const sO=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){const i=secs.indexOf(e.target.id);document.querySelectorAll('.nav-dot').forEach((d,j)=>d.classList.toggle('active',j===i));}});},{threshold:0.3});
 secs.forEach(id=>{const el=document.getElementById(id);if(el)sO.observe(el);});
 </script>
+
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'diffusion-2',
+  basePath: 'assets/narration/diffusion-2/',
+  segments: [
+    { id: 0,  section: '#hero', label: 'Hero' },
+    { id: 1,  section: '#sec-cat', label: '§Cat' },
+    { id: 2,  section: '#sec-image', label: '§Image' },
+    { id: 3,  section: '#sec-audio', label: '§Audio' },
+    { id: 4,  section: '#sec-text', label: '§Text' },
+    { id: 5,  section: '#sec-super', label: '§Super' },
+    { id: 6,  section: '#sec-how', label: '§How' },
+    { id: 7,  section: '#sec-ddpm', label: '§Ddpm' },
+    { id: 8,  section: '#sec-sd-demo', label: '§Sd Demo' },
+    { id: 9,  section: '#sec-process', label: '§Process' },
+    { id: 10,  section: '#sec-uses', label: '§Uses' },
+    { id: 11,  section: '#sec-conn', label: '§Conn' },
+    { id: 12,  section: '#sec-closing', label: '§Closing' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"

@@ -204,6 +204,7 @@ footer{text-align:center;padding:4rem 2rem 5rem;border-top:1px solid var(--borde
 
 </style>
   <link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="narration_player.css">
 </head>
 <body>
 
@@ -1855,6 +1856,37 @@ document.querySelectorAll('.chapter-section, .ref-section, .coda-section').forEa
 })();
 
 </script>
+
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'fractals',
+  basePath: 'assets/narration/fractals/',
+  segments: [
+    { id: 0,  section: '#s1_hero', label: 'S1_Hero' },
+    { id: 1,  section: '#s1_ch01', label: 'S1_Ch01' },
+    { id: 2,  section: '#s2_hero', label: 'S2_Hero' },
+    { id: 3,  section: '#s2_ch02a', label: 'S2_Ch02A' },
+    { id: 4,  section: '#s2_ch02b', label: 'S2_Ch02B' },
+    { id: 5,  section: '#s2_ch02c', label: 'S2_Ch02C' },
+    { id: 6,  section: '#s3_hero', label: 'S3_Hero' },
+    { id: 7,  section: '#s3_ch03a', label: 'S3_Ch03A' },
+    { id: 8,  section: '#s3_ch03b', label: 'S3_Ch03B' },
+    { id: 9,  section: '#s3_ch03c', label: 'S3_Ch03C' },
+    { id: 10,  section: '#s3_ch03d', label: 'S3_Ch03D' },
+    { id: 11,  section: '#s3_ch03e', label: 'S3_Ch03E' },
+    { id: 12,  section: '#s4_hero', label: 'S4_Hero' },
+    { id: 13,  section: '#s4_ch04a', label: 'S4_Ch04A' },
+    { id: 14,  section: '#s4_ch04b', label: 'S4_Ch04B' },
+    { id: 15,  section: '#s4_ch04c', label: 'S4_Ch04C' },
+    { id: 16,  section: '#s5_hero', label: 'S5_Hero' },
+    { id: 17,  section: '#s5_ch05a', label: 'S5_Ch05A' },
+    { id: 18,  section: '#s5_ch05b', label: 'S5_Ch05B' },
+    { id: 19,  section: '#s5_ch05c', label: 'S5_Ch05C' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"

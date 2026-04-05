@@ -1008,6 +1008,7 @@ footer {
 }
 </style>
   <link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="narration_player.css">
 </head>
 <body>
 
@@ -6202,6 +6203,26 @@ try {
 
 } catch(e) { console.error('Quantum viz error:', e); }
 </script>
+
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'quantummechanics',
+  basePath: 'assets/narration/quantummechanics/',
+  segments: [
+    { id: 0,  section: '#hero', label: 'Hero' },
+    { id: 1,  section: '#experiment', label: 'Experiment' },
+    { id: 2,  section: '#clockwork', label: 'Clockwork' },
+    { id: 3,  section: '#catastrophe', label: 'Catastrophe' },
+    { id: 4,  section: '#uncertainty', label: 'Uncertainty' },
+    { id: 5,  section: '#superposition', label: 'Superposition' },
+    { id: 6,  section: '#entanglement', label: 'Entanglement' },
+    { id: 7,  section: '#debate', label: 'Debate' },
+    { id: 8,  section: '#references', label: 'References' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"

@@ -1732,6 +1732,7 @@ footer{
 }
 </style>
   <link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="narration_player.css">
 </head>
 <body>
 
@@ -4477,6 +4478,24 @@ navSections.forEach(s => {
 });
 </script>
 
+
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'quantuminformation',
+  basePath: 'assets/narration/quantuminformation/',
+  segments: [
+    { id: 0,  section: '#sec-bit', label: '§Bit' },
+    { id: 1,  section: '#sec-qubit', label: '§Qubit' },
+    { id: 2,  section: '#sec-measure', label: '§Measure' },
+    { id: 3,  section: '#sec-entangle', label: '§Entangle' },
+    { id: 4,  section: '#sec-teleport', label: '§Teleport' },
+    { id: 5,  section: '#sec-future', label: '§Future' },
+    { id: 6,  section: '#sec-refs', label: '§Refs' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"

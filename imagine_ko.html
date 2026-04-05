@@ -86,6 +86,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 @media(max-width:640px){section{padding:4rem 1.2rem}#nav-dots{display:none}.demo-card{padding:1.2rem}.stat-row{flex-direction:column}}
 </style>
   <link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="narration_player.css">
 </head>
 <body>
 
@@ -720,6 +721,28 @@ const nd=document.getElementById('nav-dots');secs.forEach(id=>{const d=document.
 const sO=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){const i=secs.indexOf(e.target.id);document.querySelectorAll('.nav-dot').forEach((d,j)=>d.classList.toggle('active',j===i));}});},{threshold:0.3});
 secs.forEach(id=>{const el=document.getElementById(id);if(el)sO.observe(el);});
 </script>
+
+
+<script>
+window.NARRATION_CONFIG = {
+  chapter: 'imagine',
+  basePath: 'assets/narration/imagine/',
+  segments: [
+    { id: 0,  section: '#hero', label: 'Hero' },
+    { id: 1,  section: '#sec-forger', label: '§Forger' },
+    { id: 2,  section: '#sec-gen', label: '§Gen' },
+    { id: 3,  section: '#sec-disc', label: '§Disc' },
+    { id: 4,  section: '#sec-minimax', label: '§Minimax' },
+    { id: 5,  section: '#sec-train', label: '§Train' },
+    { id: 6,  section: '#sec-latent', label: '§Latent' },
+    { id: 7,  section: '#sec-collapse', label: '§Collapse' },
+    { id: 8,  section: '#sec-zoo', label: '§Zoo' },
+    { id: 9,  section: '#sec-rosetta', label: '§Rosetta' },
+    { id: 10,  section: '#sec-closing', label: '§Closing' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
   <script src="https://giscus.app/client.js"
