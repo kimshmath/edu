@@ -1,0 +1,73 @@
+{
+  "chapter": "sound",
+  "language": "en",
+  "voice_id": "iCrDUkL56s3C8sCRl7wb",
+  "model": "eleven_multilingual_v2",
+  "sections": [
+    {
+      "id": "hero",
+      "filename": "00_hero.mp3",
+      "text": "The Secret Life of Sound. From Pythagoras to your smartphone. A violin and a flute both play A four — the exact same note. So why do they sound completely different? The answer is mathematics. And on this page, you can hear it for yourself."
+    },
+    {
+      "id": "sec-wave",
+      "filename": "01_sine_wave.mp3",
+      "text": "Music is the pleasure the human mind experiences from counting without being aware that it is counting. Leibniz said that over three hundred years ago — and he was onto something profound. At its core, sound is nothing more than pressure rippling through air. The simplest possible sound — a sine wave — is a single, pure frequency. Listen to this. Four hundred forty hertz. The note A above middle C. Now watch what happens as we change the frequency. Higher pitch means the wave gets tighter — more oscillations packed into the same space. Lower pitch means the wave stretches out, long and slow. And if we change the amplitude? The wave gets taller or shorter — that's volume. Simple. Beautiful. And this is just the beginning."
+    },
+    {
+      "id": "sec-pythagoras",
+      "filename": "02_pythagoras.mp3",
+      "text": "Twenty-five hundred years ago, the story goes that Pythagoras walked past a blacksmith and noticed something strange: some pairs of hammers rang beautifully together, while others clashed. He investigated — and stumbled onto one of the deepest ideas in all of science. Harmony is born from simple ratios of whole numbers. Listen: an octave. The ratio two to one. Perfect consonance. Now a perfect fifth — three to two. Bright and stable. A major third — five to four. Warm resonance. But as the ratios grow more complex — nine to eight, a major second — we start to feel tension. And the tritone, forty-five to thirty-two? The medieval church called it the devil's interval. The simpler the ratio, the more consonant the sound. Pythagoras was right."
+    },
+    {
+      "id": "sec-temperament",
+      "filename": "03_temperament.mp3",
+      "text": "Just intonation sounds gorgeous — but it has a fatal flaw. You can't change key without retuning the entire instrument. The fix? Equal temperament: divide the octave into twelve identical steps, each a factor of two to the power one-twelfth apart. That number — one point zero five nine four six — is the ratio between any two adjacent piano keys. Bach's Well-Tempered Clavier was, in part, a declaration that this compromise could produce great art. Below, you can hear what the compromise actually sounds like."
+    },
+    {
+      "id": "sec-instruments",
+      "filename": "04_instruments.mp3",
+      "text": "Now let's hear this compromise on real instruments. Fretless instruments — violin, cello, trombone — give the player total control over pitch. They can play in just intonation, equal temperament, or anything in between. A violin playing a major triad in just intonation: the frequencies lock in as exact integer ratios. The harmonics align. No beating. Pure, ringing clarity. Now the same chord in equal temperament. Listen closely — can you hear a slow pulsing? That's called beating. The slightly misaligned harmonics create interference. Professional string quartets and brass ensembles instinctively nudge toward just intonation when they want a chord to ring. The difference is subtle on violin — but on trombone, with its rich, sustained harmonics, the contrast becomes unmistakable."
+    },
+    {
+      "id": "sec-extreme",
+      "filename": "05_extreme.mp3",
+      "text": "When is the gap between just and equal temperament largest? Three ingredients: sustained tone, rich harmonics, and a major third. That interval is three hundred eighty-six point three cents in just intonation versus four hundred cents in equal temperament — a thirteen point seven cent gap. With a brass ensemble, this gap produces unmistakable beating in the upper partials. First, listen to the just version. Calm. Locked in. Now equal temperament. Hear the beating? Those pulsations are the mathematical fingerprint of the compromise that makes modern music possible."
+    },
+    {
+      "id": "sec-wolf",
+      "filename": "06_wolf.mp3",
+      "text": "Pythagoras's beloved three-to-two ratio has a dark secret. If you stack twelve perfect fifths — C to G to D to A and so on around the circle — you should land back where you started, seven octaves up. But you don't. Three halves, raised to the twelfth power, gives you roughly one twenty-nine point seven five. But two to the seventh is exactly one twenty-eight. The overshoot — about twenty-three and a half cents — is called the Pythagorean comma. It means the circle of fifths doesn't actually close. Somewhere, a single interval must absorb the entire error. That cursed interval is called the wolf fifth — a fifth so out of tune that medieval musicians said it howled like a wolf. Listen as we go around the circle. Each fifth rings pure and consonant — until we reach the last one. There it is. The wolf."
+    },
+    {
+      "id": "sec-bach",
+      "filename": "07_bach.mp3",
+      "text": "Bach's masterwork is called the Well-Tempered Clavier — not the Equal-Tempered Clavier. The distinction matters. Werckmeister the Third, the tuning Bach likely used, is a third path entirely. It's neither pure just intonation nor modern equal temperament. Four fifths are narrowed by one quarter of the Pythagorean comma; the remaining eight stay pure at three to two. The result? Every key is playable, but each has its own personality. C major's third is three hundred ninety cents — warm, nearly pure. F-sharp major's third is four hundred eight cents — bright, tense, almost Pythagorean. Bach's twenty-four preludes and fugues weren't proving that all keys are equal — they were celebrating that each one is different."
+    },
+    {
+      "id": "sec-fourier",
+      "filename": "08_fourier.mp3",
+      "text": "Joseph Fourier wasn't thinking about music at all — he was trying to understand how heat flows through metal. But along the way, he made a staggering claim: any waveform, no matter how complex, is just sine waves added together. The mathematical establishment pushed back. He was right. Watch as we build a complex sound from scratch. Start with a single sine wave — pure, featureless. Now add the second harmonic. The shape changes. A third harmonic. A fourth. Keep going, and something magical happens: we can recreate the voice of a violin, a clarinet, a trumpet — all from nothing but sine waves at different amplitudes. This is Fourier's insight, and it changed everything — from music to medicine to the phone in your pocket."
+    },
+    {
+      "id": "sec-timbre",
+      "filename": "09_timbre.mp3",
+      "text": "So here's the mystery we started with, finally solved. A violin and a flute can both play A four at exactly four hundred forty hertz — yet they sound nothing alike. The secret is their overtone fingerprints. A violin produces strong harmonics across the board — the first, second, third, fourth, all present and rich. A flute? Almost all fundamental, with the higher harmonics barely there. The Fourier coefficients are timbre. They're the reason you can tell a violin from a flute with your eyes closed."
+    },
+    {
+      "id": "sec-brain",
+      "filename": "10_cochlea.mp3",
+      "text": "Inside your ear, the cochlea — a spiral tube just three and a half centimeters long — performs something remarkably close to a Fourier transform. Different positions along the basilar membrane vibrate in response to different frequencies. High frequencies resonate near the base; low frequencies at the apex. Watch as we sweep from low to high: the resonance point travels along the spiral, like a finger sliding up a piano keyboard. Your ear physically decomposes sound into frequency bands — a biological spectrum analyzer. But it's not a perfect Fourier transform. It uses finite time windows and log-spaced frequency resolution. Fourier cracked half the puzzle in eighteen twenty-two. Neuroscience is still working on the rest."
+    },
+    {
+      "id": "sec-digital",
+      "filename": "11_digital.mp3",
+      "text": "Why does a CD sample audio forty-four thousand one hundred times per second? Because of the Nyquist-Shannon theorem: the sampling rate must be at least twice the highest frequency you want to capture. Human hearing tops out near twenty thousand hertz — so forty-four thousand one hundred gives us just enough headroom. But what happens when you lower the sampling rate? Listen: CD quality. Clean and pure. Now reduce to lo-fi. You can hear the grit creeping in. And at the extreme — barely recognizable. And here's something even stranger: aliasing. When the signal frequency exceeds half the sampling rate, the digitized signal doesn't just lose quality — it turns into a completely wrong frequency. A ghost tone. Watch: as we push the frequency above the Nyquist limit, the reproduced signal suddenly becomes something else entirely. Ever seen helicopter blades appear to spin backward in a video? That's temporal aliasing — the exact same mathematics."
+    },
+    {
+      "id": "sec-closing",
+      "filename": "12_closing.mp3",
+      "text": "So — what is music? Pythagoras called it integer ratios. Fourier called it sums of sine waves. Your cochlea decomposes it in three and a half centimeters. Your brain reassembles it all into beauty. A question born in a blacksmith's forge twenty-five hundred years ago now lives inside the phone in your pocket."
+    }
+  ]
+}
