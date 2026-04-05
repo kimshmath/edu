@@ -176,7 +176,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 <div class="btn-group" style="margin:0 0 0.8rem;">
 <button class="btn active" onclick="setTokenText('The cat sat on the mat because it was tired.',this)">Pronoun resolution</button>
 <button class="btn" onclick="setTokenText('Attention is all you need.',this)">Famous paper</button>
-<button class="btn" onclick="setTokenText('수학은 과학의 여왕이다.',this)">Korean</button>
+<button class="btn" onclick="setTokenText('  .',this)">Korean</button>
 <button class="btn" onclick="setTokenText('The Banach–Tarski paradox decomposes a sphere into five pieces.',this)">Mathematics</button>
 </div>
 <input type="text" id="token-input" value="The cat sat on the mat because it was tired." style="width:100%;padding:0.7rem 1rem;background:var(--bg3);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:var(--text);font-family:var(--font-body);font-size:0.95rem;outline:none;" oninput="tokenize()">
@@ -851,7 +851,7 @@ function simpleTokenize(text){
     }
     if(found)continue;
     // Try splitting at suffix boundaries
-    let wordEnd=i;while(wordEnd<text.length&&/[a-zA-Z가-힣\u0400-\u04FF]/.test(text[wordEnd]))wordEnd++;
+    let wordEnd=i;while(wordEnd<text.length&&/[a-zA-Z-\u0400-\u04FF]/.test(text[wordEnd]))wordEnd++;
     if(wordEnd>i){
       const word=text.substring(i,wordEnd);
       if(word.length>4){

@@ -263,7 +263,7 @@ Cost ∝ n² — n = 1,000 → 1,000,000 ops &nbsp;|&nbsp; n = 100,000 → 10,00
 </div>
 <div class="stat-row">
 <div class="stat-box"><div class="sl">Query</div><div class="sv" id="vec-query" style="font-size:0.8rem;">About cats</div></div>
-<div class="stat-box"><div class="sl">Retrieved</div><div class="sv" id="vec-found" style="color:var(--mint);">3개</div></div>
+<div class="stat-box"><div class="sl">Retrieved</div><div class="sv" id="vec-found" style="color:var(--mint);">3</div></div>
 <div class="stat-box"><div class="sl">Top similarity</div><div class="sv" id="vec-sim">0.92</div></div>
 </div>
 </div>
@@ -738,7 +738,7 @@ function drawVec(){
   vecX.beginPath();vecX.arc(w/2,h-60,12,0,6.28);vecX.fillStyle='#f0b429';vecX.fill();
   vecX.font='700 22px "DM Sans",sans-serif';vecX.fillStyle='#f0b429';vecX.textAlign='center';
   vecX.fillText('Query: "'+q.text+'"',w/2,h-25);
-  document.getElementById('vec-found').textContent=found+'개';
+  document.getElementById('vec-found').textContent=found+'';
   document.getElementById('vec-sim').textContent=maxSim.toFixed(2);
   requestAnimationFrame(drawVec);
 }

@@ -80,7 +80,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 <h3 class="aa">A Mathematical Inquiry into AI · Bonus</h3>
 <h1>Does a Machine<br><span class="aa">Judge?</span></h1>
 <p class="sub">Can fairness be defined mathematically — and can those definitions coexist?</p>
-<p class="tag">Algorithms are already judging your life.<br>Loan approvals, insurance, hiring, recidivism prediction.<br><br>Here is the problem: machine "fairness" has<br><em>mathematically proven limits</em>가 exists.</p>
+<p class="tag">Algorithms are already judging your life.<br>Loan approvals, insurance, hiring, recidivism prediction.<br><br>Here is the problem: machine "fairness" has<br><em>mathematically proven limits</em> exists.</p>
 <a class="sbtn" href="#s0">Scroll down ↓</a>
 </div></section>
 
@@ -128,7 +128,7 @@ footer{text-align:center;padding:3rem 2rem;color:var(--muted);font-size:0.8rem}
 <div class="sb"><div class="sl">Overall Accuracy</div><div class="sv" id="cm-acc" style="color:var(--muted)">~61%</div></div></div>
 </div>
 <div class="aside rv" style="border-left-color:var(--coral);">
-<p><strong style="color:#fff;">Key finding.</strong> Overall Accuracy는 both Black and white ~ 61%로 <em>identical</em>. Northpointe claimed "no bias." But ProPublica found <strong>error directions</strong> differed: Black non-reoffenders were nearly twice as likely falsely flagged high-risk (44.9% vs 23.5%). White defendants had the reverse pattern.<span class="cite">Angwin et al. 2016; Flores et al. 2016</span></p>
+<p><strong style="color:#fff;">Key finding.</strong> Overall Accuracy both Black and white ~ 61% <em>identical</em>. Northpointe claimed "no bias." But ProPublica found <strong>error directions</strong> differed: Black non-reoffenders were nearly twice as likely falsely flagged high-risk (44.9% vs 23.5%). White defendants had the reverse pattern.<span class="cite">Angwin et al. 2016; Flores et al. 2016</span></p>
 </div>
 </div></section>
 
@@ -424,7 +424,7 @@ function showProfile(){
   const p=PROFILES[jIdx];
   document.getElementById('jg-profile').innerHTML=`
     <div style="display:flex;gap:1rem;align-items:center;">
-    <div style="width:50px;height:50px;border-radius:50%;background:var(--bg);border:2px solid var(--amber);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;">${p.gender==='남'?'👤':'👤'}</div>
+    <div style="width:50px;height:50px;border-radius:50%;background:var(--bg);border:2px solid var(--amber);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;">${p.gender===''?'👤':'👤'}</div>
     <div><p style="color:#fff;font-size:0.95rem;margin:0 0 0.3rem;"><strong>${p.desc}</strong></p>
     <div style="display:flex;gap:1rem;font-size:0.78rem;color:var(--muted);">
     <span>Age: <strong style="color:var(--text)">${p.age}</strong></span>
