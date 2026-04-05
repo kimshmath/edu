@@ -1,0 +1,3295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-RQVK6SF2E6');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The One Equation — An Interactive Exploration</title>
+  <link rel="stylesheet" href="narration_player.css">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #080d1a;
+      --bg2: #0c1326;
+      --bg3: #111b38;
+      --card: #131f42;
+      --gold: #f0b429;
+      --gold-dim: #c4912080;
+      --sky: #38bdf8;
+      --purple: #a78bfa;
+      --coral: #fb7185;
+      --mint: #34d399;
+      --text: #e0e6f0;
+      --muted: #7b8db5;
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ─── Scrollbar ─── */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--gold-dim);
+      border-radius: 3px;
+    }
+
+    /* ─── Grain overlay ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ─── Section layout ─── */
+    section {
+      min-height: 100vh;
+      padding: 6rem 2rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .section-inner {
+      max-width: 900px;
+      width: 100%;
+    }
+
+    /* ─── Typography ─── */
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: #fff;
+      margin-bottom: 1.5rem;
+    }
+
+    h3 {
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      margin-bottom: 1rem;
+    }
+
+    .accent-gold {
+      color: var(--gold);
+    }
+
+    .accent-sky {
+      color: var(--sky);
+    }
+
+    .accent-purple {
+      color: var(--purple);
+    }
+
+    .accent-coral {
+      color: var(--coral);
+    }
+
+    .accent-mint {
+      color: var(--mint);
+    }
+
+    .formula {
+      font-family: var(--font-mono);
+      font-size: 1.3rem;
+      color: var(--gold);
+      background: var(--bg3);
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      border-left: 3px solid var(--gold);
+      display: inline-block;
+      margin: 1rem 0;
+    }
+
+    /* ─── Hero ─── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.6;
+    }
+
+    #hero .content {
+      position: relative;
+      z-index: 2;
+    }
+
+    #hero h1 {
+      margin-bottom: 1rem;
+    }
+
+    #hero .subtitle {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      color: var(--gold);
+      font-style: italic;
+      margin-bottom: 2.5rem;
+    }
+
+    #hero .tagline {
+      color: var(--muted);
+      font-size: 0.95rem;
+      max-width: 560px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .start-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.9rem 2.2rem;
+      background: transparent;
+      border: 1.5px solid var(--gold);
+      color: var(--gold);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: 60px;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 0.05em;
+    }
+
+    .start-btn:hover {
+      background: var(--gold);
+      color: var(--bg);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(240, 180, 41, 0.25);
+    }
+
+    /* ─── Navigation dots ─── */
+    #nav-dots {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .nav-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--muted);
+      opacity: 0.3;
+      cursor: pointer;
+      transition: all 0.3s;
+      border: none;
+    }
+
+    .nav-dot.active {
+      opacity: 1;
+      background: var(--gold);
+      transform: scale(1.4);
+    }
+
+    /* ─── Cards ─── */
+    .demo-card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 1.5rem 0;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .demo-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), var(--sky), var(--purple));
+      opacity: 0.6;
+    }
+
+    /* ─── Buttons ─── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.55rem 1.3rem;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.25s;
+      font-weight: 400;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-1px);
+    }
+
+    .btn.active,
+    .btn.playing {
+      border-color: var(--gold);
+      background: rgba(240, 180, 41, 0.12);
+      color: var(--gold);
+    }
+
+    .btn-gold {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .btn-gold:hover {
+      background: var(--gold);
+      color: var(--bg);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
+
+    /* ─── Sliders ─── */
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 0.6rem 0;
+    }
+
+    .slider-row label {
+      min-width: 3rem;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--gold);
+    }
+
+    .slider-row .val {
+      min-width: 4rem;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      flex: 1;
+      height: 4px;
+      background: var(--bg3);
+      border-radius: 2px;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--gold);
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.3);
+    }
+
+    /* ─── Canvas containers ─── */
+    .canvas-wrap {
+      position: relative;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+
+    .canvas-wrap canvas {
+      display: block;
+      width: 100%;
+    }
+
+    /* ─── Waveform label ─── */
+    .wave-label {
+      position: absolute;
+      top: 8px;
+      left: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      z-index: 2;
+    }
+
+    .wave-label-right {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--gold);
+      z-index: 2;
+    }
+
+    /* ─── Reveal animation ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── Section divider ─── */
+    .section-num {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--gold);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      opacity: 0.7;
+    }
+
+    /* ─── Anagram ─── */
+    .anagram-box {
+      font-family: var(--font-mono);
+      font-size: clamp(1.4rem, 4vw, 2.2rem);
+      color: var(--gold);
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--bg3);
+      border: 1px dashed rgba(240, 180, 41, 0.3);
+      border-radius: 12px;
+      margin: 1.5rem 0;
+      letter-spacing: 0.1em;
+    }
+
+    .anagram-box .reveal-text {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-style: italic;
+      color: var(--text);
+      letter-spacing: 0.02em;
+      margin-top: 0.8rem;
+      opacity: 0.8;
+    }
+
+    /* ─── Stat chips ─── */
+    .stat-chips {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
+
+    .stat-chip {
+      flex: 1;
+      min-width: 140px;
+      background: var(--bg3);
+      border-radius: 10px;
+      padding: 0.8rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .stat-chip .lbl {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .stat-chip .val {
+      font-family: var(--font-mono);
+      font-size: 1.05rem;
+      color: var(--gold);
+      font-weight: 500;
+    }
+
+    .stat-chip .val.ok {
+      color: var(--mint);
+    }
+
+    .stat-chip .val.warn {
+      color: var(--coral);
+    }
+
+    /* ─── Seven oscillators gallery ─── */
+    .osc-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+
+    .osc-card {
+      background: var(--bg3);
+      border-radius: 12px;
+      padding: 1.2rem;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .osc-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .osc-card.active {
+      border-color: var(--gold);
+      box-shadow: 0 0 20px rgba(240, 180, 41, 0.15);
+    }
+
+    .osc-card canvas {
+      width: 100%;
+      display: block;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.3);
+      margin-bottom: 0.6rem;
+    }
+
+    .osc-card .osc-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.15rem;
+    }
+
+    .osc-card .osc-desc {
+      font-size: 0.72rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .osc-card .osc-var {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--gold);
+      margin-top: 0.4rem;
+    }
+
+    /* ─── Potential sculptor ─── */
+    .potential-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+      margin: 0.8rem 0;
+    }
+
+    .pot-preset-btn {
+      padding: 0.6rem;
+      background: var(--bg3);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .pot-preset-btn:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .pot-preset-btn.active {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(240, 180, 41, 0.08);
+    }
+
+    .zoom-badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--gold);
+      background: rgba(240, 180, 41, 0.08);
+      padding: 0.25rem 0.7rem;
+      border-radius: 4px;
+      border: 1px solid rgba(240, 180, 41, 0.2);
+      margin-left: 0.5rem;
+    }
+
+    /* ─── Phase space ─── */
+    .phase-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+      margin: 1rem auto;
+      aspect-ratio: 1;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .phase-wrap canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .phase-wrap .instruction {
+      position: absolute;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      background: rgba(0, 0, 0, 0.5);
+      padding: 0.3rem 0.7rem;
+      border-radius: 4px;
+      pointer-events: none;
+    }
+
+    /* ─── Pendulum amplitude breakdown ─── */
+    .pend-display {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .pend-card {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 12px;
+      padding: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      position: relative;
+    }
+
+    .pend-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+    }
+
+    .pend-card.small::before {
+      background: linear-gradient(90deg, transparent, var(--mint), transparent);
+    }
+
+    .pend-card.large::before {
+      background: linear-gradient(90deg, transparent, var(--coral), transparent);
+    }
+
+    .pend-card canvas {
+      display: block;
+      width: 100%;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    .pend-card .pend-label {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+
+    .pend-card.small .pend-label {
+      color: var(--mint);
+    }
+
+    .pend-card.large .pend-label {
+      color: var(--coral);
+    }
+
+    .pend-card .pend-period {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.4rem;
+    }
+
+    /* ─── Tautochrone race ─── */
+    .race-controls {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 0.8rem 0;
+      align-items: center;
+    }
+
+    .race-tab {
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
+      background: var(--bg3);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .race-tab:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .race-tab.active {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(240, 180, 41, 0.08);
+    }
+
+    /* ─── Driven oscillator ─── */
+    .driven-panel {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 12px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+
+    .driven-panel canvas {
+      display: block;
+      width: 100%;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.4);
+    }
+
+    /* ─── Footer ─── */
+    footer {
+      padding: 2rem 2rem 3rem;
+      width: 100%;
+      max-width: 620px;
+      margin: 0 auto;
+    }
+
+    .footer-rule {
+      width: 100%;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.06);
+      margin-bottom: 1.5rem;
+    }
+
+    .footer-attr {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      align-items: center;
+      text-align: center;
+    }
+
+    .footer-name {
+      font-family: 'Fraunces', Georgia, serif;
+      font-size: 1rem;
+      font-weight: 400;
+      color: #edeef2;
+    }
+
+    .footer-inst {
+      font-size: 0.88rem;
+      color: var(--muted, #5c6178);
+    }
+
+    .footer-url {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: #d4a853;
+      text-decoration: none;
+      margin-top: 0.25rem;
+      display: inline-block;
+    }
+
+    .footer-url:hover {
+      text-decoration: underline;
+    }
+
+    /* ─── Badge ─── */
+    .floating-badge {
+      position: fixed;
+      bottom: 1.75rem;
+      left: 1.75rem;
+      z-index: 10000;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      color: #8db830;
+      text-decoration: none;
+      text-shadow: 0 0 6px rgba(141, 184, 48, 0.4);
+      transition: color 0.25s, transform 0.25s;
+    }
+
+    .floating-badge:hover {
+      color: #a8d43a;
+      transform: translateY(-1px);
+    }
+
+    /* ─── Callout ─── */
+    .callout {
+      background: var(--bg2);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 12px;
+      padding: 1.4rem 1.6rem;
+      border-left: 3px solid var(--gold);
+      margin: 1.5rem 0;
+    }
+
+    .callout p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.8;
+      margin-bottom: 0.5rem;
+    }
+
+    .callout p:last-child {
+      margin-bottom: 0;
+    }
+
+    .callout strong {
+      color: var(--text);
+    }
+
+    .quote-block {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--gold);
+      padding: 1.2rem 1.5rem;
+      border-left: 2px solid var(--gold);
+      margin: 1.5rem 0;
+      line-height: 1.6;
+    }
+
+    .quote-block .attribution {
+      display: block;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      font-style: normal;
+      color: var(--muted);
+      margin-top: 0.6rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* ─── Longitude timeline ─── */
+    .timeline {
+      position: relative;
+      padding: 1rem 0 1rem 2rem;
+      margin: 1rem 0;
+      border-left: 2px solid rgba(240, 180, 41, 0.2);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 1.2rem;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2.42rem;
+      top: 0.4rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 4px var(--bg);
+    }
+
+    .timeline-year {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.2rem;
+    }
+
+    .timeline-text {
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 640px) {
+      section {
+        padding: 4rem 1.2rem;
+      }
+
+      #nav-dots {
+        display: none;
+      }
+
+      .demo-card {
+        padding: 1.2rem;
+      }
+
+      .pend-display {
+        grid-template-columns: 1fr;
+      }
+
+      .potential-controls {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .stat-chips {
+        flex-direction: column;
+      }
+
+      .stat-chip {
+        min-width: 0;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="brand.css">
+  <link rel="stylesheet" href="typography.css">
+</head>
+
+<body>
+
+  <!-- Navigation dots -->
+  <nav id="nav-dots"></nav>
+
+  <!-- ═══════════════════ HERO ═══════════════════ -->
+  <section id="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="content">
+      <h3 class="accent-gold">The One Equation</h3>
+      <h1>The Universe's<br>Favorite Dance</h1>
+      <p class="subtitle">On Hooke, Galileo, and the shape of every small motion</p>
+      <p class="tagline">Springs, pendulums, molecules, electrons, quantum fields — they all obey the same equation.
+        Look closely enough at any stable equilibrium in the universe, and you'll find a parabola waiting.</p>
+      <button class="start-btn" onclick="document.getElementById('sec-anagram').scrollIntoView({behavior:'smooth'})">
+        ▶ Start Exploring
+      </button>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ 1. ANAGRAM ═══════════════════ -->
+  <section id="sec-anagram">
+    <div class="section-inner">
+      <div class="reveal">
+        <p class="section-num">01 — LONDON, 1676</p>
+        <h2>A Scrambled Message <span class="accent-gold">From Robert Hooke</span></h2>
+        <p>In 1676, Robert Hooke published a discovery he wanted credit for — but wasn't quite ready to reveal. So he
+          printed it as a Latin anagram, a jumble of letters nobody could crack. For two years the scientific world
+          stared at this puzzle:</p>
+      </div>
+
+      <div class="demo-card reveal">
+        <div class="anagram-box" id="anagram-box">
+          <span id="anagram-text">ceiiinosssttuu</span>
+          <span class="reveal-text" id="anagram-solution" style="opacity:0;">ut tensio, sic vis — "as the extension, so
+            the force"</span>
+        </div>
+        <div class="btn-group" style="justify-content:center;">
+          <button class="btn btn-gold" id="scramble-btn" onclick="scrambleAnagram()">▶ Shuffle the Letters</button>
+          <button class="btn" onclick="solveAnagram()">Reveal the Solution</button>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <p>Hooke finally unscrambled it in 1678. The fourteen letters rearrange into <em>ut tensio, sic vis</em> —
+          <strong>as the extension, so the force.</strong> In modern dress:</p>
+        <div class="formula">F = −k x</div>
+        <p>Pull a spring twice as far, and it pulls back twice as hard. It sounds almost too simple to matter. And yet
+          from this one line — this single seed — descends every oscillation in the universe. Every vibrating atom,
+          every swinging pendulum, every beating string, every photon in a laser cavity. We are about to see why.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ 2. GALILEO'S CHANDELIER ═══════════════════ -->
+  <section id="sec-galileo">
+    <div class="section-inner">
+      <div class="reveal">
+        <p class="section-num">02 — PISA CATHEDRAL, 1583</p>
+        <h2>Galileo, the Chandelier, <span class="accent-sky">and a Pulse</span></h2>
+        <p>Ninety-three years before Hooke's anagram, a nineteen-year-old medical student was supposed to be paying
+          attention to a sermon. He wasn't. His name was Galileo Galilei, and he was watching the great bronze
+          chandelier of Pisa Cathedral swing overhead. Some altar boy had given it a shove while lighting candles.</p>
+        <p>Galileo had no clock — no one did, not one that could measure seconds. So he used the only reliable timepiece
+          in the building: <strong class="accent-coral">his own pulse</strong>. And he counted.</p>
+        <p>The amplitude was decaying — each swing smaller than the last. But the <em>period</em>, the time for one
+          complete swing, was not changing. Large swing, small swing: <strong>same time</strong>. This is the property
+          Galileo called <em>isochronism</em>, and it is only <em>approximately</em> true — but close enough, as we will
+          see, to build clocks that rewrote the world.</p>
+      </div>
+
+      <div class="demo-card reveal">
+        <h3 class="accent-gold" style="margin-bottom:0.5rem;">The Chandelier of Pisa</h3>
+        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.5rem;">Tap or click on the chandelier to start a
+          swing. Adjust the length. Notice that for <em>small</em> swings, the period depends <strong>only on L and
+            g</strong> — not on how hard you pushed.</p>
+        <div class="canvas-wrap">
+          <span class="wave-label" id="galileo-period-label">T = 2π√(L/g) = 2.01 s</span>
+          <span class="wave-label-right" id="galileo-pulse-label">pulse: 0</span>
+          <canvas id="galileo-canvas" height="340"></canvas>
+        </div>
+        <div class="slider-row">
+          <label>L</label>
+          <input type="range" id="galileo-L" min="0.3" max="3.0" value="1.0" step="0.05">
+          <span class="val" id="galileo-L-val">1.00 m</span>
+        </div>
+        <div class="slider-row">
+          <label>θ₀</label>
+          <input type="range" id="galileo-theta" min="5" max="85" value="15" step="1">
+          <span class="val" id="galileo-theta-val">15°</span>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-gold" onclick="kickGalileo()">Push Chandelier</button>
+          <button class="btn" onclick="setGalileoPreset(0.25,10)">Short (0.25 m)</button>
+          <button class="btn" onclick="setGalileoPreset(1.0,15)">Pisa-size (≈1 m)</button>
+          <button class="btn" onclick="setGalileoPreset(2.5,10)">Grandfather (2.5 m)</button>
+        </div>
+        <div class="stat-chips" id="galileo-stats"></div>
+      </div>
+
+      <div class="quote-block reveal">
+        "Nature uses only the longest threads to weave her patterns, so each small piece of her fabric reveals the
+        organization of the entire tapestry."
+        <span class="attribution">— Richard P. Feynman, <em>The Character of Physical Law</em></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ 3. HUYGENS & CLOCKS ═══════════════════ -->
+  <section id="sec-huygens">
+    <div class="section-inner">
+      <div class="reveal">
+        <p class="section-num">03 — THE HAGUE, 1656</p>
+        <h2>Huygens Gives Time <span class="accent-gold">a Heartbeat</span></h2>
+        <p>It took seventy-three years for Galileo's observation to become a machine. Christiaan Huygens — Dutch
+          polymath, wave theorist, Saturn-ring discoverer — finally did it in 1656: the pendulum clock. Before him, the
+          best mechanical clocks drifted by about <strong class="accent-coral">15 minutes per day</strong>. After him:
+          <strong class="accent-mint">15 seconds per day</strong>. A 60-fold improvement, overnight, out of almost
+          nothing — just a weight on a string, and the one equation.</p>
+      </div>
+
+      <div class="demo-card reveal">
+        <h3 class="accent-gold" style="margin-bottom:0.5rem;">Before and After Huygens</h3>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-year">1583</div>
+            <div class="timeline-text">Galileo, aged 19, observes the Pisa chandelier and discovers isochronism.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1602</div>
+            <div class="timeline-text">Galileo experiments systematically with pendulums, proves period independent of
+              mass.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1637</div>
+            <div class="timeline-text">Galileo (now blind, 73) dictates a pendulum-clock design to his son. Never built
+              in his lifetime.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1656</div>
+            <div class="timeline-text">Huygens constructs the first working pendulum clock. Accuracy: ~15 s/day.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1659</div>
+            <div class="timeline-text">Huygens proves the <strong>cycloid</strong> is the tautochrone — perfectly
+              isochronous, any amplitude.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">1673</div>
+            <div class="timeline-text">Huygens publishes <em>Horologium Oscillatorium</em> — a masterpiece combining
+              geometry, mechanics, and engineering.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <p>But there was a wrinkle Huygens couldn't ignore: Galileo's isochronism is an <em>approximation</em>. A real
+          pendulum swinging through a large arc takes <strong>slightly longer</strong> than one swinging through a small
+          arc. The true period depends on amplitude. For clocks, this was intolerable. Huygens found the cure — and it
+          was one of the most beautiful discoveries in all of mechanics.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ 4. AMPLITUDE BREAKDOWN ═══════════════════ -->
+  <section id="sec-amplitude">
+    <div class="section-inner">
+      <div class="reveal">
+        <p class="section-num">04 — WHERE ISOCHRONISM FAILS</p>
+        <h2>The Lie of the <span class="accent-coral">Pendulum</span></h2>
+        <p>For a pendulum of length L swinging through angle θ, the restoring force is not Hooke's law. It is:</p>
+        <div class="formula">F = −mg · sin(θ)</div>
+        <p>For small angles, sin(θ) ≈ θ, and the equation becomes harmonic. But for <em>large</em> angles, that
+          "approximately" starts to matter. Below, watch two pendulums of equal length — one swinging gently, one flung
+          far — race side by side. They fall out of sync almost immediately.</p>
+      </div>
+
+      <div class="demo-card reveal">
+        <h3 class="accent-gold" style="margin-bottom:0.5rem;">The Same Pendulum, Different Amplitudes</h3>
+        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.6rem;">Both have <strong>identical
+            length</strong> (L = 1 m, g = 9.81 m/s²). Galileo said they should keep the same time. For small swings,
+          he's nearly right. For large swings, he's wrong.</p>
+        <div class="pend-display">
+          <div class="pend-card small">
+            <div class="pend-label">Small swing — θ₀ = 10°</div>
+            <canvas id="pend-small" height="280"></canvas>
+            <div class="pend-period" id="pend-small-t">T ≈ 2.007 s</div>
+          </div>
+          <div class="pend-card large">
+            <div class="pend-label">Large swing — θ₀ = 80°</div>
+            <canvas id="pend-large" height="280"></canvas>
+            <div class="pend-period" id="pend-large-t">T ≈ 2.269 s</div>
+          </div>
+        </div>
+        <div class="slider-row">
+          <label>θ₀</label>
+          <input type="range" id="amp-slider" min="5" max="170" value="80" step="1">
+          <span class="val" id="amp-slider-val">80°</span>
+        </div>
+        <div class="stat-chips" id="amp-stats"></div>
+        <p style="font-size:0.82rem;color:var(--muted);margin-top:0.6rem;"><em>The exact period involves an elliptic
+            integral K(sin(θ₀/2)). For θ₀ = 10°, the deviation from T₀ = 2π√(L/g) is 0.19%. For θ₀ = 80°, it's 13%. For
+            θ₀ = 170°, nearly 120%.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ 5. TAUTOCHRONE ═══════════════════ -->
+  <section id="sec-tautochrone">
+    <div class="section-inner">
+      <div class="reveal">
+        <p class="section-num">05 — HUYGENS' MIRACLE</p>
+        <h2>The Curve That <span class="accent-purple">Fixes Time</span></h2>
+        <p>Here is the question Huygens asked: is there a curve such that a bead sliding down it reaches the bottom in
+          <strong>exactly the same time</strong> — no matter where you release it? Drop a bead from the top. Drop one
+          from halfway down. Drop one from a hair above the bottom. All three arrive together.</p>
+        <p>The answer is yes. And the curve has a name: the <strong class="accent-gold">cycloid</strong> — the path
+          traced by a point on the rim of a rolling wheel. Huygens proved this in 1659 and called it the
+          <em>tautochrone</em> (Greek: "same time"). He built cycloidal pendulum clocks to exploit it.</p>
+      </div>
+
+      <div class="demo-card reveal">
+        <h3 class="accent-purple" style="margin-bottom:0.5rem;">Three Beads, Released Together</h3>
+        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.6rem;">Click <strong>Release</strong>. Three
+          beads start from different heights — which reaches the bottom first? Try it on both curves.</p>
+        <div class="race-controls">
+          <button class="race-tab active" id="race-cycloid" onclick="setRaceCurve('cycloid')">Cycloid
+            (Tautochrone)</button>
+          <button class="race-tab" id="race-parabola" onclick="setRaceCurve('parabola')">Parabola (for
+            comparison)</button>
+          <button class="race-tab" id="race-circle" onclick="setRaceCurve('circle')">Circular arc</button>
+        </div>
+        <div class="canvas-wrap">
+          <span class="wave-label" id="race-curve-label">Cycloid — all arrive together</span>
+          <canvas id="tauto-canvas" height="320"></canvas>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-gold" onclick="releaseBeads()">▶ Release Beads</button>
+          <button class="btn" onclick="resetBeads()">Reset</button>
+        </div>
+        <div class="stat-chips" id="tauto-stats"></div>
+      </div>
+
+      <div class="callout reveal">
+        <p><strong>Why a cycloid?</strong> On a cycloid, the restoring force along the arc is <em>exactly</em>
+          proportional to arc length from the bottom — this is a <strong>true Hooke's-law system</strong>, not just an
+          approximation. The equation of motion becomes perfectly harmonic at every amplitude. No small-angle lie. That
+          is the secret.</p>
+        <p><strong>Why didn't it take over the world?</strong> Friction. The extra metal cheeks Huygens built to force
+          the pendulum into a cycloid path introduced more friction than the tiny amplitude-drift they corrected.
+          Engineering is full of beautiful math that loses to mundane reality.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ 6. LONGITUDE ═══════════════════ -->
+  <section id="sec-longitude">
+    <div class="section-inner">
+      <div class="reveal">
+        <p class="section-num">06 — THE OCEAN PROBLEM</p>
+        <h2>Why Sailors <span class="accent-coral">Got Lost</span> for 200 Years</h2>
+        <p>Latitude is easy. Measure the sun at noon, or Polaris at night: done. Longitude is not. Longitude requires
+          knowing <em>what time it is somewhere else</em>. Carry a clock set to London; measure local noon with the sun;
+          the difference in hours gives you the east-west distance.</p>
+        <p>Which means: <strong>no accurate clock, no longitude</strong>. And every pendulum clock ever built — Huygens'
+          miracle included — failed at sea. Why? <strong class="accent-coral">Pendulums need gravity to work, and ships
+            rock.</strong> A pendulum in a pitching cabin is useless.</p>
+      </div>
+
+      <div class="demo-card reveal">
+        <h3 class="accent-gold" style="margin-bottom:0.5rem;">John Harrison's Escape Hatch</h3>
+        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.8rem;">A Yorkshire carpenter with no formal
+          training, John Harrison solved it. Between 1730 and 1773, he built clocks that used a <strong>spring-balance
+            oscillator</strong> — an actual Hooke's-law spring, not a pendulum. Springs don't care about gravity.
+          Springs don't care about rocking. Springs just… spring.</p>
+        <div class="canvas-wrap">
+          <span class="wave-label" id="harrison-label">Ship rocking: OFF</span>
+          <canvas id="harrison-canvas" height="260"></canvas>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-gold" id="harrison-rock-btn" onclick="toggleShipRock()">🌊 Rock the Ship</button>
+          <button class="btn" id="harrison-type-pend" onclick="setHarrisonType('pendulum')">Pendulum Clock</button>
+          <button class="btn active" id="harrison-type-spring" onclick="setHarrisonType('spring')">Spring
+            Balance</button>
+        </div>
+        <p style="font-size:0.82rem;color:var(--muted);margin-top:0.5rem;"><em>On a rocking ship, watch the pendulum
+            lose its rhythm. The spring keeps perfect time regardless.</em></p>
+      </div>
+
+      <div class="reveal">
+        <p>Harrison's H4 chronometer, tested on a 1761 voyage to Jamaica, was off by <strong class="accent-mint">five
+            seconds</strong> after 81 days at sea. Longitude, solved. The British Navy could now navigate without
+          running into coastlines. Trade routes opened. Empires expanded. Ships stopped sinking. All because a spring,
+          obeying <em>F = −kx</em>, doesn't care which way is up.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ 7. PHASE SPACE ═══════════════════ -->
+  <section id="sec-phase">
+    <div class="section-inner">
+      <div class="reveal">
+        <p class="section-num">07 — A SECRET GEOMETRY</p>
+        <h2>Every Oscillator Draws <span class="accent-sky">an Ellipse</span></h2>
+        <p>Forget position versus time. Plot something stranger: <strong>position versus velocity</strong>. This plane
+          is called <em>phase space</em>, and something magical happens here. The state of the system is a single point.
+          Time evolution moves that point. And for any simple harmonic oscillator — any system obeying F = −kx — the
+          point traces a perfect ellipse, forever.</p>
+        <p>Drag the point below to set initial conditions. Watch it orbit. Change the spring stiffness and the mass;
+          watch the ellipse stretch and compress. But it always closes. It always comes back. <strong>The geometry of
+            energy conservation is an ellipse.</strong></p>
+      </div>
+
+      <div class="demo-card reveal">
+        <h3 class="accent-sky" style="margin-bottom:0.5rem;">Drag to Set Initial State</h3>
+        <div class="phase-wrap">
+          <canvas id="phase-canvas"></canvas>
+          <div class="instruction">drag the gold dot</div>
+        </div>
+        <div class="slider-row">
+          <label>k/m</label>
+          <input type="range" id="phase-omega" min="0.3" max="3" value="1" step="0.05">
+          <span class="val" id="phase-omega-val">ω = 1.00</span>
+        </div>
+        <div class="slider-row">
+          <label>γ</label>
+          <input type="range" id="phase-damp" min="0" max="0.4" value="0" step="0.005">
+          <span class="val" id="phase-damp-val">0.000</span>
+        </div>
+        <div class="stat-chips" id="phase-stats"></div>
+        <p style="font-size:0.82rem;color:var(--muted);margin-top:0.5rem;"><em>With no damping: a closed ellipse —
+            energy is conserved forever. Add damping: a spiral inward — energy leaks out, the orbit dies. The shape of
+            the ellipse itself encodes the stiffness: a stiff spring makes a tall, narrow ellipse; a loose spring makes
+            a wide, flat one.</em></p>
+      </div>
+
+      <div class="quote-block reveal">
+        "The same equations have the same solutions."
+        <span class="attribution">— Richard P. Feynman, <em>Lectures on Physics</em>, Vol. II</span>
+      </div>
+
+      <p class="reveal">Feynman put an entire philosophy into that one-line aphorism. He meant: look past the costumes.
+        Two systems described by the same differential equation will do the same thing, whether they are springs or
+        circuits or atoms or stars.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ 8. TAYLOR ZOOM ═══════════════════ -->
+  <section id="sec-taylor">
+    <div class="section-inner">
+      <div class="reveal">
+        <p class="section-num">08 — THE UNIVERSALITY</p>
+        <h2>Every Valley Is a <span class="accent-gold">Parabola</span></h2>
+        <p>Here is the deepest idea in the chapter — the reason the harmonic oscillator is everywhere. Take <em>any</em>
+          smooth potential V(x) — a Lennard-Jones molecular curve, a double-well quartic, a lumpy asymmetric bowl. Find
+          a stable minimum. Now zoom in.</p>
+        <p>At the minimum, V'(x₀) = 0 by definition. Taylor's theorem tells you what the potential looks like nearby:
+        </p>
+        <div class="formula">V(x) ≈ V(x₀) + ½ V''(x₀) · (x − x₀)² + O((x−x₀)³)</div>
+        <p>The constant doesn't matter. The linear term vanishes. What's left, to leading order, is <strong>a
+            parabola</strong>. And a parabola means F = −kx with k = V''(x₀). <em>Small motion at any stable equilibrium
+            is simple harmonic.</em> It is not a coincidence. It is a theorem.</p>
+      </div>
+
+      <div class="demo-card reveal">
+        <h3 class="accent-gold" style="margin-bottom:0.5rem;">Sculpt a Potential, Then Zoom <span class="zoom-badge"
+            id="zoom-level">1×</span></h3>
+        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.6rem;">Pick a potential shape. Use the zoom
+          slider to burrow into a minimum. Watch the gold parabola (Taylor approximation) and the white curve converge.
+          Below, a ball bouncing in the real potential and its parabolic approximation drift apart — or lock into step.
+        </p>
+        <div class="potential-controls">
+          <button class="pot-preset-btn active" id="pot-dw" onclick="setPotential('doublewell')">Double Well
+            (quartic)</button>
+          <button class="pot-preset-btn" id="pot-lj" onclick="setPotential('lj')">Lennard-Jones (molecule)</button>
+          <button class="pot-preset-btn" id="pot-asym" onclick="setPotential('asym')">Asymmetric Bowl</button>
+          <button class="pot-preset-btn" id="pot-morse" onclick="setPotential('morse')">Morse (bond)</button>
+        </div>
+        <div class="canvas-wrap">
+          <span class="wave-label" id="taylor-label">V(x) and its Taylor parabola</span>
+          <canvas id="taylor-canvas" height="340"></canvas>
+        </div>
+        <div class="slider-row">
+          <label>zoom</label>
+          <input type="range" id="taylor-zoom" min="0" max="100" value="0" step="1">
+          <span class="val" id="taylor-zoom-val">1×</span>
+        </div>
+        <div class="slider-row">
+          <label>E</label>
+          <input type="range" id="taylor-energy" min="5" max="95" value="40" step="1">
+          <span class="val" id="taylor-energy-val">40%</span>
+        </div>
+        <div class="canvas-wrap" style="margin-top:0.8rem;">
+          <span class="wave-label">Motion: <span style="color:#fff;">real</span> vs <span
+              style="color:var(--gold);">parabolic approx</span></span>
+          <canvas id="taylor-motion" height="120"></canvas>
+        </div>
+        <div class="stat-chips" id="taylor-stats"></div>
+      </div>
+
+      <div class="callout reveal">
+        <p><strong>Why does this matter?</strong> Because it means simple harmonic motion is not <em>one</em> physical
+          system — it is the universal limit of <em>all</em> stable systems when you look closely enough. Molecules
+          vibrating in a solid, electrons rattling in an ionic trap, stars in binary orbits, rubber balls in bowls,
+          pendulums at small angles, LC circuits, a nucleus bobbing in a quantum well. <strong>They're all the same
+            equation.</strong> They differ only in the size of k and m.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ 9. SEVEN COSTUMES ═══════════════════ -->
+  <section id="sec-seven">
+    <div class="section-inner">
+      <div class="reveal">
+        <p class="section-num">09 — SEVEN COSTUMES</p>
+        <h2>The Same Equation, <span class="accent-purple">Seven Faces</span></h2>
+        <p>Below are seven oscillators from wildly different corners of physics. A spring. A pendulum. An LC circuit. A
+          torsion wire. A CO₂ molecule. A neutron star crust. A quantum ground state. They have nothing in common —
+          except the single equation that governs them, and the single ellipse they trace in phase space.</p>
+        <p>Hover or tap each card. Same equation. Same ellipse. Seven languages speaking one sentence.</p>
+      </div>
+
+      <div class="osc-gallery reveal" id="osc-gallery"></div>
+
+      <div class="quote-block reveal">
+        "The harmonic oscillator, which we are about to study, has close analogs in many other fields; although we start
+        with a mechanical example of a weight on a spring, or a pendulum with a small swing, or certain other mechanical
+        devices, we are really studying a certain differential equation. This equation appears again and again in
+        physics and in other sciences, and in fact is a part of so many phenomena that its close study is well worth our
+        while."
+        <span class="attribution">— Richard P. Feynman, <em>Lectures on Physics</em>, Vol. I, Ch. 21</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ 10. RESONANCE ═══════════════════ -->
+  <section id="sec-resonance">
+    <div class="section-inner">
+      <div class="reveal">
+        <p class="section-num">10 — RESONANCE</p>
+        <h2>What Happens When You <span class="accent-coral">Push in Time</span></h2>
+        <p>Push a child on a swing. Push at random — nothing. Push at <em>exactly</em> the swing's natural period — the
+          amplitude grows enormous. That is resonance, and it is the harmonic oscillator's signature party trick. Every
+          oscillator has one frequency it loves — its natural ω₀ = √(k/m). Drive it there, and small pushes become giant
+          responses.</p>
+      </div>
+
+      <div class="demo-card reveal">
+        <h3 class="accent-coral" style="margin-bottom:0.5rem;">The Driven, Damped Oscillator</h3>
+        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.6rem;">Drive the oscillator at different
+          frequencies. Watch amplitude soar when the drive matches ω₀. The curve on the right is the classic Lorentzian
+          resonance peak.</p>
+        <div class="driven-panel">
+          <canvas id="driven-canvas" height="280"></canvas>
+        </div>
+        <div class="slider-row">
+          <label>ω</label>
+          <input type="range" id="drive-omega" min="0.3" max="2.0" value="1.0" step="0.01">
+          <span class="val" id="drive-omega-val">1.00</span>
+        </div>
+        <div class="slider-row">
+          <label>γ</label>
+          <input type="range" id="drive-damp" min="0.02" max="0.5" value="0.1" step="0.01">
+          <span class="val" id="drive-damp-val">0.10</span>
+        </div>
+        <div class="btn-group">
+          <button class="btn" onclick="setDriveFreq(0.5)">Far below ω₀</button>
+          <button class="btn" onclick="setDriveFreq(1.0)">At resonance</button>
+          <button class="btn" onclick="setDriveFreq(1.6)">Above ω₀</button>
+        </div>
+        <div class="stat-chips" id="drive-stats"></div>
+      </div>
+
+      <div class="callout reveal">
+        <p><strong>Resonance is how we see.</strong> The photoreceptors in your eye are tuned oscillators.
+          <strong>Resonance is how we hear.</strong> The basilar membrane in your cochlea is a whole bank of them.
+          <strong>Resonance is how we broadcast.</strong> Every radio, every antenna. <strong>Resonance is how we date
+            the universe.</strong> Atomic clocks are resonance with cesium's ω₀. <strong>Resonance is how bridges fall
+            down.</strong> The Tacoma Narrows learned that lesson on film in 1940. All the same equation.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ THE IMPERIAL REACH ═══════════════════ -->
+  <section id="sec-reach">
+    <div class="section-inner">
+      <div class="reveal">
+        <p class="section-num">IMPLICATIONS — THE EMPIRE</p>
+        <h2>The <span class="accent-gold">Imperial Reach</span></h2>
+        <p>We have been acting as though the harmonic oscillator were one physical thing — a spring, a swing, a
+          pendulum. It is not. It is the <em>grammar of stability itself</em>. Taylor's theorem guarantees that near any
+          minimum every potential looks like a parabola, which means: anywhere in the universe something sits at rest
+          and is nudged gently, the answer to "what happens next?" is written in the language of F = −kx. Once you
+          believe this, the oscillator stops being a topic in mechanics and starts being the vocabulary of physics
+          itself.</p>
+        <p>Watch what happens when oscillators multiply.</p>
+      </div>
+
+      <div class="demo-card reveal">
+        <h3 class="accent-sky" style="margin-bottom:0.5rem;">Normal Modes — Many Oscillators, One Song</h3>
+        <p style="font-size:0.85rem;color:var(--muted);margin-bottom:0.8rem;">A string fixed at both ends. The <strong
+            style="color:#fff;">white curve</strong> is the actual string shape; the faint colored curves are individual
+          modes being summed. Dial each mode's amplitude — you'll see that even the messiest-looking motion is just
+          sinusoids stacked on top of sinusoids, each obeying the one equation.</p>
+        <div class="canvas-wrap">
+          <span class="wave-label" id="modes-label">superposition of 5 modes</span>
+          <canvas id="modes-canvas" height="280"></canvas>
+        </div>
+        <div id="mode-sliders"></div>
+        <div class="btn-group">
+          <button class="btn btn-gold" onclick="setModePreset('pluck-center')">Pluck at Center</button>
+          <button class="btn" onclick="setModePreset('pluck-offset')">Pluck Off-Center</button>
+          <button class="btn" onclick="setModePreset('bow')">Bowed</button>
+          <button class="btn" onclick="setModePreset('single-1')">Mode 1 only</button>
+          <button class="btn" onclick="setModePreset('single-3')">Mode 3 only</button>
+          <button class="btn" onclick="setModePreset('clear')">Clear</button>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <p>Take a chain of masses connected by springs — not one oscillator, but many coupled together. You might expect
+          a mess. What actually happens is a kind of mathematical grace: the coupled system <em>diagonalizes</em>. Its
+          arbitrary motion decomposes, exactly and forever, into independent sinusoids called <strong
+            class="accent-gold">normal modes</strong> — each one a harmonic oscillator in its own right, each with its
+          own frequency, all completely oblivious to each other. A plucked guitar string is a countable infinity of
+          these modes, and its overtone series is literally its mode spectrum. A drumhead's modes are Bessel functions
+          whose nodal patterns you can see as Chladni figures in sand. A solid crystal has roughly 10²³ atoms coupled to
+          their neighbors, and those couplings diagonalize into 3N <strong>phonon</strong> modes — each, yes, a harmonic
+          oscillator — and from them fall out heat capacity, thermal conductivity, sound itself, and (when phonons
+          couple to electrons) superconductivity.</p>
+        <p>This is the secret engine of wave physics. Once you have linearity, you have normal modes; once you have
+          normal modes, you have harmonic oscillators; once you have harmonic oscillators, you have a complete
+          vocabulary.</p>
+      </div>
+
+      <div class="quote-block reveal">
+        "The harmonic oscillator… appears again and again in physics and in other sciences, and in fact is a part of so
+        many phenomena that its close study is well worth our while."
+        <span class="attribution">— Richard P. Feynman, <em>Lectures on Physics</em>, Vol. I, Ch. 21</span>
+      </div>
+
+      <div class="reveal">
+        <h3 class="accent-purple"
+          style="margin-top:2rem;font-family:var(--font-display);font-size:1.5rem;text-transform:none;letter-spacing:0;">
+          From modes to particles</h3>
+        <p>The deepest extension is quantum field theory. In QFT every fundamental field — the electromagnetic field,
+          the electron field, the Higgs field — is described as an infinite collection of harmonic oscillators, one per
+          momentum mode. And the quanta of these oscillators <em>are</em> particles. A photon is a single excitation of
+          one mode of the electromagnetic field's oscillator spectrum. When a laser drives one such mode to enormous
+          amplitude, coherent light is what emerges. When an atom drops down an energy level, a quantum of excitation
+          transfers from atomic oscillator to field oscillator. Feynman's aphorism — <em>the same equations have the
+            same solutions</em> — reaches its furthest frontier here, at the level where matter itself is made of
+          oscillators.</p>
+      </div>
+
+      <div class="reveal">
+        <h3 class="accent-coral"
+          style="margin-top:2rem;font-family:var(--font-display);font-size:1.5rem;text-transform:none;letter-spacing:0;">
+          The oscillator that will not rest</h3>
+        <p>Classical oscillators can be stopped cold. Quantum ones cannot. A quantum harmonic oscillator's energy levels
+          are <strong>Eₙ = ℏω(n + ½)</strong>, and that extra half — the <strong>zero-point energy</strong> — is a
+          ground state that persists even at absolute zero. It is enforced by the uncertainty principle: if position and
+          momentum could both be exactly zero, Δx·Δp would vanish, violating Heisenberg's bound. So the oscillator
+          perpetually shivers.</p>
+        <p>This is not an abstraction. Between two parallel metal plates in vacuum, the zero-point fluctuations of the
+          electromagnetic field produce a measurable <strong class="accent-gold">attractive force</strong> — the
+          <strong>Casimir force</strong>, predicted by Hendrik Casimir in 1948 and confirmed experimentally to
+          percent-level precision in the late 1990s. The vacuum itself pushes. Nothing, in quantum mechanics, is ever
+          nothing.</p>
+      </div>
+
+      <div class="reveal">
+        <h3 class="accent-mint"
+          style="margin-top:2rem;font-family:var(--font-display);font-size:1.5rem;text-transform:none;letter-spacing:0;">
+          The oscillators we listen to</h3>
+        <p>The modern frontier is almost poetic. <strong>LIGO</strong> detects gravitational waves by measuring the
+          displacement of 40-kilogram mirrors treated as harmonic oscillators — to a precision better than one
+          ten-thousandth of a proton's diameter. <strong>Cavity optomechanics</strong> has cooled vibrating cantilevers
+          to their quantum ground state, placing objects you could in principle see into superpositions of oscillatory
+          states. And out at the largest scale, the <strong>acoustic peaks in the cosmic microwave background</strong>
+          are standing harmonic-oscillator modes of the primordial plasma, frozen at the moment the universe became
+          transparent, 380,000 years after the Big Bang. The pattern of those peaks is how we measured the geometry of
+          the universe and the composition of matter. Hooke's sentence reached across fourteen billion years and told us
+          what the cosmos is made of.</p>
+      </div>
+
+      <div class="callout reveal" style="border-left-color:var(--gold);">
+        <p><strong style="color:var(--text);">So what is a harmonic oscillator, really?</strong> It is not a kind of
+          physical thing. It is the shape of <em>everything stable</em> — a grammar nature speaks at every scale, from
+          vacuum fluctuations to cosmic plasmas, from Galileo's chandelier to LIGO's mirrors. From Hooke's scrambled
+          fourteen letters to the breath of the universe itself. One equation. The same solutions. Again and again and
+          again.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ EPILOGUE ═══════════════════ -->
+  <section id="sec-epilogue">
+    <div class="section-inner">
+      <div class="reveal">
+        <p class="section-num">EPILOGUE</p>
+        <h2>On the <span class="accent-gold">Shape of Small Things</span></h2>
+        <p style="font-size:1.05rem;line-height:1.85;">
+          Here is a quiet thought to carry home. The universe is wild. It contains galaxies that swallow light, fields
+          that fluctuate in the vacuum, nuclei that refuse to hold still. But whenever anything in the universe sits at
+          rest — truly at rest, at a stable equilibrium — and you nudge it, just a little, it responds in the <em>same
+            way</em>. It traces an ellipse in phase space. It sings with one frequency. It obeys F = −kx.
+        </p>
+        <p style="font-size:1.05rem;line-height:1.85;margin-top:1rem;">
+          This is not because nature is simple. It is because stability itself has a shape. A potential well, seen
+          through a strong enough microscope, is always a parabola — not by coincidence, but by the logic of Taylor's
+          theorem. Every stable thing is, at its smallest scale, a spring. The world is full of springs we don't yet
+          see.
+        </p>
+        <p style="font-size:1.05rem;line-height:1.85;margin-top:1rem;">
+          There is something almost consoling about this. For all its strangeness, the universe has a common vocabulary
+          for the small and the quiet. Hooke wrote one sentence in 1676 — fourteen scrambled letters — and it turned out
+          to describe the breathing of molecules, the ringing of bells, the heartbeats of atoms, the swaying of
+          chandeliers in cathedrals, and the light leaving this screen. <em>Ut tensio, sic vis.</em> As the extension,
+          so the force. It is the same equation. It has the same solutions.
+        </p>
+        <p style="font-size:1.05rem;line-height:1.85;margin-top:1rem;">
+          And if you should find yourself, one evening, watching something sway — a lamp, a branch, a friend on a swing
+          — consider it a quiet demonstration. The universe is whispering its oldest sentence. A nineteen-year-old boy
+          heard it in Pisa once, and we have been listening ever since.
+        </p>
+      </div>
+
+      <div class="reveal" style="margin-top:2.5rem;text-align:center;">
+        <p
+          style="font-family:var(--font-display);font-style:italic;color:var(--gold);font-size:1.25rem;line-height:1.7;max-width:700px;margin:0 auto;">
+          "Eppur si muove."<br>
+          <span
+            style="font-family:var(--font-body);font-style:normal;font-size:0.85rem;color:var(--muted);letter-spacing:0.05em;display:block;margin-top:0.8rem;">—
+            Galileo Galilei (attributed, 1633)<br><em>"And yet it moves."</em></span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // ═══════════════════════════════════════════════
+    //  ANAGRAM
+    // ═══════════════════════════════════════════════
+    const ANAGRAM_LETTERS = 'ceiiinosssttuu'.split('');
+    let anagramInterval = null;
+
+    function scrambleAnagram() {
+      const el = document.getElementById('anagram-text');
+      const sol = document.getElementById('anagram-solution');
+      sol.style.opacity = '0';
+      if (anagramInterval) { clearInterval(anagramInterval); anagramInterval = null; el.textContent = 'ceiiinosssttuu'; return; }
+      let count = 0;
+      anagramInterval = setInterval(() => {
+        const shuffled = [...ANAGRAM_LETTERS].sort(() => Math.random() - 0.5).join('');
+        el.textContent = shuffled;
+        count++;
+        if (count > 25) { clearInterval(anagramInterval); anagramInterval = null; el.textContent = 'ceiiinosssttuu'; }
+      }, 80);
+    }
+    function solveAnagram() {
+      if (anagramInterval) { clearInterval(anagramInterval); anagramInterval = null; }
+      document.getElementById('anagram-text').textContent = 'ut tensio sic vis';
+      document.getElementById('anagram-solution').style.opacity = '1';
+    }
+
+    // ═══════════════════════════════════════════════
+    //  HERO CANVAS — Quantum Harmonic Oscillator
+    //  A parabola. Breathing wavefunctions. A classical ball.
+    //  The whole chapter, in one image.
+    // ═══════════════════════════════════════════════
+    function hermite(n, x) {
+      if (n === 0) return 1;
+      if (n === 1) return 2 * x;
+      let h0 = 1, h1 = 2 * x;
+      for (let i = 2; i <= n; i++) {
+        const h2 = 2 * x * h1 - 2 * (i - 1) * h0;
+        h0 = h1; h1 = h2;
+      }
+      return h1;
+    }
+    function factorial(n) { let r = 1; for (let i = 2; i <= n; i++) r *= i; return r; }
+
+    const N_LEVELS = 7;
+    const psiNorms = [], psiMaxes = [];
+    for (let n = 0; n < N_LEVELS; n++) {
+      psiNorms.push(1 / Math.sqrt(Math.pow(2, n) * factorial(n) * Math.sqrt(Math.PI)));
+      let mx = 0;
+      for (let x = -5; x <= 5; x += 0.02) {
+        const v = Math.abs(psiNorms[n] * hermite(n, x) * Math.exp(-x * x / 2));
+        if (v > mx) mx = v;
+      }
+      psiMaxes.push(mx);
+    }
+    const waveColors = ['#f0b429', '#f97316', '#fb7185', '#e879f9', '#a78bfa', '#38bdf8', '#34d399'];
+
+    const heroCanvas = document.getElementById('hero-canvas');
+    const heroCtx = heroCanvas.getContext('2d');
+
+    // Ambient shimmer particles
+    const shimmerParticles = [];
+    for (let i = 0; i < 40; i++) {
+      shimmerParticles.push({
+        x: Math.random(),
+        y: Math.random(),
+        speed: 0.04 + Math.random() * 0.08,
+        phase: Math.random() * Math.PI * 2,
+        size: 0.5 + Math.random() * 1.2,
+        hue: Math.random()
+      });
+    }
+
+    function drawHero() {
+      const w = heroCanvas.width = heroCanvas.clientWidth * 2;
+      const h = heroCanvas.height = heroCanvas.clientHeight * 2;
+      heroCtx.clearRect(0, 0, w, h);
+      const t = performance.now() / 1000;
+
+      const xMin = -5, xMax = 5;
+      const EMax = N_LEVELS + 0.5;
+      const padX = w * 0.04;
+      const padTop = h * 0.06, padBottom = h * 0.08;
+      const plotW = w - 2 * padX, plotH = h - padTop - padBottom;
+      const xToPx = x => padX + (x - xMin) / (xMax - xMin) * plotW;
+      const EToPy = E => padTop + plotH - (E / EMax) * plotH;
+
+      // Soft radial glow at potential minimum
+      const glow = heroCtx.createRadialGradient(xToPx(0), EToPy(0), 0, xToPx(0), EToPy(0), plotH * 0.7);
+      glow.addColorStop(0, 'rgba(240,180,41,0.10)');
+      glow.addColorStop(0.4, 'rgba(167,139,250,0.04)');
+      glow.addColorStop(1, 'rgba(240,180,41,0)');
+      heroCtx.fillStyle = glow;
+      heroCtx.fillRect(0, 0, w, h);
+
+      // Shimmer particles drifting through the well
+      shimmerParticles.forEach(p => {
+        p.phase += p.speed * 0.016;
+        const dx = Math.sin(p.phase) * 0.3;
+        const dy = Math.cos(p.phase * 0.7) * 0.15;
+        const sx = (p.x + dx + 1) % 1;
+        const sy = (p.y + dy + 1) % 1;
+        const px = padX + sx * plotW;
+        const py = padTop + sy * plotH;
+        const alpha = 0.15 + 0.15 * Math.sin(p.phase * 2);
+        heroCtx.beginPath();
+        heroCtx.arc(px, py, p.size, 0, Math.PI * 2);
+        heroCtx.fillStyle = p.hue < 0.5 ? `rgba(240,180,41,${alpha})` : `rgba(167,139,250,${alpha})`;
+        heroCtx.fill();
+      });
+
+      // Parabola outline
+      heroCtx.beginPath();
+      let started = false;
+      for (let i = 0; i <= 400; i++) {
+        const x = xMin + (xMax - xMin) * i / 400;
+        const V = 0.5 * x * x;
+        if (V > EMax) continue;
+        const px = xToPx(x), py = EToPy(V);
+        if (!started) { heroCtx.moveTo(px, py); started = true; }
+        else heroCtx.lineTo(px, py);
+      }
+      heroCtx.strokeStyle = 'rgba(240,180,41,0.35)';
+      heroCtx.lineWidth = 2.5;
+      heroCtx.shadowColor = 'rgba(240,180,41,0.4)';
+      heroCtx.shadowBlur = 10;
+      heroCtx.stroke();
+      heroCtx.shadowBlur = 0;
+
+      // Wavefunctions — each ribbon breathes with its own quantum phase
+      const omegaScale = 1.1;
+      const dispAmp = plotH / (N_LEVELS + 1) * 0.85;
+
+      for (let n = 0; n < N_LEVELS; n++) {
+        const E_n = n + 0.5;
+        const y_n = EToPy(E_n);
+        const xTurn = Math.sqrt(2 * E_n);
+
+        // Energy level line within classical turning points
+        heroCtx.beginPath();
+        heroCtx.moveTo(xToPx(-xTurn), y_n);
+        heroCtx.lineTo(xToPx(xTurn), y_n);
+        heroCtx.strokeStyle = waveColors[n] + '20';
+        heroCtx.lineWidth = 1;
+        heroCtx.stroke();
+
+        // Re[ψ_n(x) · e^{-iE_n·t}] = ψ_n(x) · cos(E_n · t · ω)
+        const phase = E_n * t * omegaScale;
+        const cosP = Math.cos(phase);
+
+        // Ribbon shape
+        heroCtx.beginPath();
+        const NS = 180;
+        for (let i = 0; i <= NS; i++) {
+          const x = xMin + (xMax - xMin) * i / NS;
+          const psi = psiNorms[n] * hermite(n, x) * Math.exp(-x * x / 2);
+          const scaled = (psi / psiMaxes[n]) * cosP * dispAmp;
+          const px = xToPx(x), py = y_n - scaled;
+          i === 0 ? heroCtx.moveTo(px, py) : heroCtx.lineTo(px, py);
+        }
+        heroCtx.strokeStyle = waveColors[n];
+        heroCtx.lineWidth = 2;
+        heroCtx.shadowColor = waveColors[n];
+        heroCtx.shadowBlur = 10;
+        heroCtx.stroke();
+        heroCtx.shadowBlur = 0;
+      }
+
+      // Classical particle: oscillates at energy E_c, slow amplitude breathing
+      const A = 2.2 + 0.6 * Math.sin(t * 0.17);
+      const phaseC = t * omegaScale;
+      const xBall = A * Math.cos(phaseC);
+      const ballPx = xToPx(xBall);
+      const ballPy = EToPy(0.5 * xBall * xBall);
+
+      // Short phase-space trail behind the ball
+      heroCtx.beginPath();
+      for (let i = 0; i < 25; i++) {
+        const tt = phaseC - i * 0.05;
+        const xt = A * Math.cos(tt);
+        const tx = xToPx(xt), ty = EToPy(0.5 * xt * xt);
+        i === 0 ? heroCtx.moveTo(tx, ty) : heroCtx.lineTo(tx, ty);
+      }
+      heroCtx.strokeStyle = 'rgba(255,255,255,0.25)';
+      heroCtx.lineWidth = 2;
+      heroCtx.stroke();
+
+      // Ball itself
+      heroCtx.beginPath();
+      heroCtx.arc(ballPx, ballPy, 9, 0, Math.PI * 2);
+      const bg = heroCtx.createRadialGradient(ballPx - 3, ballPy - 3, 1, ballPx, ballPy, 9);
+      bg.addColorStop(0, '#ffffff');
+      bg.addColorStop(1, 'rgba(240,180,41,0.8)');
+      heroCtx.fillStyle = bg;
+      heroCtx.shadowColor = '#ffffff';
+      heroCtx.shadowBlur = 18;
+      heroCtx.fill();
+      heroCtx.shadowBlur = 0;
+
+      requestAnimationFrame(drawHero);
+    }
+    drawHero();
+
+    // ═══════════════════════════════════════════════
+    //  GALILEO'S CHANDELIER
+    // ═══════════════════════════════════════════════
+    const galileoCanvas = document.getElementById('galileo-canvas');
+    const galileoCtx = galileoCanvas.getContext('2d');
+    let galileoState = { L: 1.0, theta0: 15 * Math.PI / 180, theta: 15 * Math.PI / 180, omega: 0, t0: performance.now() / 1000, pulseCount: 0, lastSign: 1, amp: 15 * Math.PI / 180 };
+
+    function kickGalileo() {
+      galileoState.theta = galileoState.theta0;
+      galileoState.amp = galileoState.theta0;
+      galileoState.omega = 0;
+      galileoState.t0 = performance.now() / 1000;
+      galileoState.pulseCount = 0;
+    }
+
+    function setGalileoPreset(L, theta_deg) {
+      document.getElementById('galileo-L').value = L;
+      document.getElementById('galileo-theta').value = theta_deg;
+      updateGalileoParams();
+      kickGalileo();
+    }
+
+    function updateGalileoParams() {
+      galileoState.L = +document.getElementById('galileo-L').value;
+      galileoState.theta0 = +document.getElementById('galileo-theta').value * Math.PI / 180;
+      document.getElementById('galileo-L-val').textContent = galileoState.L.toFixed(2) + ' m';
+      document.getElementById('galileo-theta-val').textContent = (+document.getElementById('galileo-theta').value) + '°';
+      const T = 2 * Math.PI * Math.sqrt(galileoState.L / 9.81);
+      document.getElementById('galileo-period-label').textContent = 'T = 2π√(L/g) = ' + T.toFixed(2) + ' s';
+      // Stats
+      const th0 = galileoState.theta0;
+      // Exact period expansion: T_exact ≈ T₀(1 + θ₀²/16 + 11θ₀⁴/3072 + ...)
+      const T_exact = T * (1 + th0 * th0 / 16 + 11 * Math.pow(th0, 4) / 3072);
+      const deviation = (T_exact - T) / T * 100;
+      const f = 1 / T;
+      document.getElementById('galileo-stats').innerHTML =
+        '<div class="stat-chip"><div class="lbl">Small-angle T</div><div class="val">' + T.toFixed(3) + ' s</div></div>' +
+        '<div class="stat-chip"><div class="lbl">True T</div><div class="val">' + T_exact.toFixed(3) + ' s</div></div>' +
+        '<div class="stat-chip"><div class="lbl">Frequency</div><div class="val">' + f.toFixed(3) + ' Hz</div></div>' +
+        '<div class="stat-chip"><div class="lbl">Error</div><div class="val ' + (deviation > 2 ? 'warn' : 'ok') + '">' + deviation.toFixed(2) + '%</div></div>';
+    }
+    document.getElementById('galileo-L').addEventListener('input', () => { updateGalileoParams(); kickGalileo(); });
+    document.getElementById('galileo-theta').addEventListener('input', () => { updateGalileoParams(); kickGalileo(); });
+
+    function drawGalileo() {
+      const w = galileoCanvas.width = galileoCanvas.clientWidth * 2;
+      const h = galileoCanvas.height = 680;
+      galileoCtx.clearRect(0, 0, w, h);
+
+      const g = 9.81;
+      const L = galileoState.L;
+      const omega0 = Math.sqrt(g / L);
+      const t = performance.now() / 1000;
+      const dt = t - galileoState.t0;
+      // Simple harmonic (small-angle)
+      const theta = galileoState.amp * Math.cos(omega0 * dt);
+      galileoState.theta = theta;
+
+      // Count pulse: sign changes of theta
+      const curSign = Math.sign(theta);
+      if (curSign !== galileoState.lastSign && curSign !== 0) {
+        galileoState.pulseCount++;
+        galileoState.lastSign = curSign;
+      }
+      const T = 2 * Math.PI / omega0;
+      const numSwings = Math.floor(dt / T * 2);
+      // Human pulse ~70 bpm => 0.857 s per beat
+      const pulsePerSec = 70 / 60;
+      const pulses = Math.floor(dt * pulsePerSec);
+      document.getElementById('galileo-pulse-label').textContent = 'pulses: ' + pulses + '  |  swings: ' + numSwings;
+
+      // Pivot
+      const px = w / 2, py = 60;
+      const pixPerM = Math.min(h - 160, w * 0.5) / 3.2;
+      const Lpx = L * pixPerM;
+
+      // Bob position
+      const bx = px + Lpx * Math.sin(theta);
+      const by = py + Lpx * Math.cos(theta);
+
+      // Arc trace
+      galileoCtx.beginPath();
+      galileoCtx.arc(px, py, Lpx, Math.PI / 2 - galileoState.amp, Math.PI / 2 + galileoState.amp);
+      galileoCtx.strokeStyle = 'rgba(240,180,41,0.15)';
+      galileoCtx.lineWidth = 2;
+      galileoCtx.setLineDash([4, 6]);
+      galileoCtx.stroke();
+      galileoCtx.setLineDash([]);
+
+      // Pivot mount
+      galileoCtx.fillStyle = 'rgba(255,255,255,0.2)';
+      galileoCtx.fillRect(px - 40, py - 12, 80, 12);
+      galileoCtx.fillStyle = 'rgba(255,255,255,0.5)';
+      galileoCtx.beginPath();
+      galileoCtx.arc(px, py, 5, 0, Math.PI * 2);
+      galileoCtx.fill();
+
+      // Chain
+      galileoCtx.beginPath();
+      galileoCtx.moveTo(px, py);
+      galileoCtx.lineTo(bx, by);
+      galileoCtx.strokeStyle = 'rgba(224,230,240,0.4)';
+      galileoCtx.lineWidth = 2;
+      galileoCtx.stroke();
+
+      // Chandelier (ornate bob)
+      galileoCtx.save();
+      galileoCtx.translate(bx, by);
+      galileoCtx.rotate(theta);
+      galileoCtx.beginPath();
+      galileoCtx.arc(0, 0, 30, 0, Math.PI * 2);
+      const grad = galileoCtx.createRadialGradient(-8, -8, 2, 0, 0, 30);
+      grad.addColorStop(0, '#f0b429');
+      grad.addColorStop(1, '#8a5a0f');
+      galileoCtx.fillStyle = grad;
+      galileoCtx.fill();
+      galileoCtx.strokeStyle = 'rgba(0,0,0,0.5)';
+      galileoCtx.lineWidth = 2;
+      galileoCtx.stroke();
+      // Glow
+      galileoCtx.shadowColor = '#f0b429';
+      galileoCtx.shadowBlur = 18;
+      galileoCtx.beginPath();
+      galileoCtx.arc(0, 0, 10, 0, Math.PI * 2);
+      galileoCtx.fillStyle = 'rgba(255,220,140,0.9)';
+      galileoCtx.fill();
+      galileoCtx.shadowBlur = 0;
+      // Candle points
+      for (let i = 0; i < 6; i++) {
+        const ang = i / 6 * Math.PI * 2;
+        const cx = Math.cos(ang) * 28, cy = Math.sin(ang) * 28;
+        galileoCtx.beginPath();
+        galileoCtx.arc(cx, cy, 3, 0, Math.PI * 2);
+        galileoCtx.fillStyle = 'rgba(255,240,180,0.8)';
+        galileoCtx.fill();
+      }
+      galileoCtx.restore();
+
+      // Pulse indicator
+      const pulsePhase = (dt * pulsePerSec) % 1;
+      const pulseR = 8 + (1 - pulsePhase) * 4;
+      galileoCtx.beginPath();
+      galileoCtx.arc(50, h - 40, pulseR, 0, Math.PI * 2);
+      galileoCtx.fillStyle = 'rgba(251,113,133,' + (0.3 + 0.5 * (1 - pulsePhase)) + ')';
+      galileoCtx.fill();
+      galileoCtx.font = '18px "JetBrains Mono",monospace';
+      galileoCtx.fillStyle = 'rgba(251,113,133,0.7)';
+      galileoCtx.fillText('♥ pulse', 70, h - 35);
+
+      requestAnimationFrame(drawGalileo);
+    }
+    updateGalileoParams();
+    kickGalileo();
+    drawGalileo();
+
+    // ═══════════════════════════════════════════════
+    //  AMPLITUDE BREAKDOWN (two pendulums)
+    // ═══════════════════════════════════════════════
+    const pendSmall = document.getElementById('pend-small');
+    const pendLarge = document.getElementById('pend-large');
+    const psCtx = pendSmall.getContext('2d');
+    const plCtx = pendLarge.getContext('2d');
+    const L_PEND = 1.0, G = 9.81;
+    const OMEGA0_PEND = Math.sqrt(G / L_PEND);
+    const T0_PEND = 2 * Math.PI / OMEGA0_PEND;
+
+    let pendAmp = 80 * Math.PI / 180;
+    let pendStartT = performance.now() / 1000;
+
+    // Numerical integration of exact pendulum
+    const smallState = { theta: 10 * Math.PI / 180, omega: 0 };
+    const largeState = { theta: pendAmp, omega: 0 };
+
+    function rk4Step(state, dt) {
+      // d²θ/dt² = -(g/L) sin(θ)
+      function deriv(s) { return { theta: s.omega, omega: -(G / L_PEND) * Math.sin(s.theta) }; }
+      const k1 = deriv(state);
+      const k2 = deriv({ theta: state.theta + dt / 2 * k1.theta, omega: state.omega + dt / 2 * k1.omega });
+      const k3 = deriv({ theta: state.theta + dt / 2 * k2.theta, omega: state.omega + dt / 2 * k2.omega });
+      const k4 = deriv({ theta: state.theta + dt * k3.theta, omega: state.omega + dt * k3.omega });
+      state.theta += dt / 6 * (k1.theta + 2 * k2.theta + 2 * k3.theta + k4.theta);
+      state.omega += dt / 6 * (k1.omega + 2 * k2.omega + 2 * k3.omega + k4.omega);
+    }
+
+    function resetPendulums() {
+      smallState.theta = 10 * Math.PI / 180; smallState.omega = 0;
+      largeState.theta = pendAmp; largeState.omega = 0;
+      pendStartT = performance.now() / 1000;
+    }
+
+    // Exact period via elliptic integral K (Arithmetic-Geometric Mean)
+    function ellipticK(k) {
+      let a = 1, b = Math.sqrt(1 - k * k);
+      for (let i = 0; i < 20; i++) {
+        const an = (a + b) / 2;
+        const bn = Math.sqrt(a * b);
+        a = an; b = bn;
+        if (Math.abs(a - b) < 1e-12) break;
+      }
+      return Math.PI / (2 * a);
+    }
+    function exactPeriod(theta0) {
+      const k = Math.sin(theta0 / 2);
+      return 4 * Math.sqrt(L_PEND / G) * ellipticK(k);
+    }
+
+    function drawPendulum(ctx, canvas, state, color) {
+      const w = canvas.width = canvas.clientWidth * 2;
+      const h = canvas.height = 560;
+      ctx.clearRect(0, 0, w, h);
+      const px = w / 2, py = 50;
+      const Lpx = Math.min(h - 100, w * 0.45);
+      const bx = px + Lpx * Math.sin(state.theta);
+      const by = py + Lpx * Math.cos(state.theta);
+
+      // Reference line (straight down)
+      ctx.beginPath();
+      ctx.moveTo(px, py);
+      ctx.lineTo(px, py + Lpx);
+      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.setLineDash([6, 6]);
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Arc trace
+      const amp = Math.abs(pendAmp);
+      const smallAmp = 10 * Math.PI / 180;
+      const drawAmp = color === '#34d399' ? smallAmp : amp;
+      ctx.beginPath();
+      ctx.arc(px, py, Lpx, Math.PI / 2 - drawAmp, Math.PI / 2 + drawAmp);
+      ctx.strokeStyle = color + '30';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Pivot
+      ctx.beginPath();
+      ctx.arc(px, py, 6, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.4)';
+      ctx.fill();
+
+      // String
+      ctx.beginPath();
+      ctx.moveTo(px, py);
+      ctx.lineTo(bx, by);
+      ctx.strokeStyle = 'rgba(224,230,240,0.5)';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Bob
+      ctx.beginPath();
+      ctx.arc(bx, by, 16, 0, Math.PI * 2);
+      const rg = ctx.createRadialGradient(bx - 4, by - 4, 2, bx, by, 16);
+      rg.addColorStop(0, color);
+      rg.addColorStop(1, color + '60');
+      ctx.fillStyle = rg;
+      ctx.fill();
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 12;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+
+    function animatePendulums() {
+      const dt = 1 / 120;
+      for (let i = 0; i < 2; i++) {
+        rk4Step(smallState, dt);
+        rk4Step(largeState, dt);
+      }
+      drawPendulum(psCtx, pendSmall, smallState, '#34d399');
+      drawPendulum(plCtx, pendLarge, largeState, '#fb7185');
+      requestAnimationFrame(animatePendulums);
+    }
+    animatePendulums();
+
+    function updateAmpSlider() {
+      const deg = +document.getElementById('amp-slider').value;
+      pendAmp = deg * Math.PI / 180;
+      document.getElementById('amp-slider-val').textContent = deg + '°';
+      resetPendulums();
+      const T_small = exactPeriod(10 * Math.PI / 180);
+      const T_large = exactPeriod(pendAmp);
+      const T_theory = T0_PEND;
+      const err_small = (T_small - T_theory) / T_theory * 100;
+      const err_large = (T_large - T_theory) / T_theory * 100;
+      document.getElementById('pend-small-t').textContent = 'T ≈ ' + T_small.toFixed(4) + ' s (error ' + err_small.toFixed(2) + '%)';
+      document.getElementById('pend-large-t').textContent = 'T ≈ ' + T_large.toFixed(4) + ' s (error ' + err_large.toFixed(2) + '%)';
+      document.getElementById('amp-stats').innerHTML =
+        '<div class="stat-chip"><div class="lbl">Naïve formula</div><div class="val">' + T_theory.toFixed(4) + ' s</div></div>' +
+        '<div class="stat-chip"><div class="lbl">10° exact</div><div class="val ok">' + T_small.toFixed(4) + ' s</div></div>' +
+        '<div class="stat-chip"><div class="lbl">' + deg + '° exact</div><div class="val warn">' + T_large.toFixed(4) + ' s</div></div>' +
+        '<div class="stat-chip"><div class="lbl">Ratio</div><div class="val">' + (T_large / T_small).toFixed(3) + '×</div></div>';
+    }
+    document.getElementById('amp-slider').addEventListener('input', updateAmpSlider);
+    updateAmpSlider();
+
+    // ═══════════════════════════════════════════════
+    //  TAUTOCHRONE RACE
+    // ═══════════════════════════════════════════════
+    const tautoCanvas = document.getElementById('tauto-canvas');
+    const tautoCtx = tautoCanvas.getContext('2d');
+    let raceCurve = 'cycloid';
+    let raceRunning = false;
+    let raceStartT = 0;
+    let raceBeads = []; // each: {s0, s, v, done, doneT, color}
+    let raceDoneCount = 0;
+
+    function setRaceCurve(c) {
+      raceCurve = c;
+      document.querySelectorAll('.race-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById('race-' + c).classList.add('active');
+      const labels = { cycloid: 'Cycloid — all arrive together', parabola: 'Parabola — different arrival times', circle: 'Circular arc — different arrival times' };
+      document.getElementById('race-curve-label').textContent = labels[c];
+      resetBeads();
+    }
+
+    // Curve parameterization in a unit box
+    // We'll define y(x) for each curve with min at x=0.5 (roughly), and range x in [0,1]
+    function curveY(x, curve) {
+      // Returns height in [0, ~1], 0 = bottom
+      if (curve === 'parabola') {
+        // y = 4*(x-0.5)^2
+        return 4 * (x - 0.5) * (x - 0.5);
+      } else if (curve === 'circle') {
+        // Arc of circle radius 0.5, center (0.5, 0.5)
+        const dx = x - 0.5;
+        if (Math.abs(dx) > 0.5) return 1;
+        return 0.5 - Math.sqrt(0.25 - dx * dx);
+      } else { // cycloid — TRUE cycloid of radius r=1/(2π), width=1, height=1/π
+        // Parameterization: x(φ) = 0.5 + r(φ+sin φ),  y(φ) = r(1−cos φ),  r = 1/(2π)
+        // Invert: find φ such that x(φ) = x
+        let phi_lo = -Math.PI, phi_hi = Math.PI;
+        for (let i = 0; i < 40; i++) {
+          const phi_m = (phi_lo + phi_hi) / 2;
+          const x_m = 0.5 + (phi_m + Math.sin(phi_m)) / (2 * Math.PI);
+          if (x_m < x) phi_lo = phi_m; else phi_hi = phi_m;
+        }
+        const phi = (phi_lo + phi_hi) / 2;
+        return (1 - Math.cos(phi)) / (2 * Math.PI);
+      }
+    }
+
+    function resetBeads() {
+      raceRunning = false;
+      raceDoneCount = 0;
+      // Three starting positions — all on the left side
+      const startX = [0.08, 0.22, 0.38];
+      const colors = ['#f0b429', '#38bdf8', '#fb7185'];
+      raceBeads = startX.map((x, i) => ({
+        x0: x,
+        x: x,
+        vx: 0,         // dx/dt
+        done: false,
+        doneT: 0,
+        color: colors[i]
+      }));
+      document.getElementById('tauto-stats').innerHTML = '';
+    }
+
+    function releaseBeads() {
+      resetBeads();
+      raceRunning = true;
+      raceStartT = performance.now() / 1000;
+    }
+
+    // For non-cycloid: simulate gravity rolling along curve using energy conservation, parameterized numerically
+    function drawTauto() {
+      const W = tautoCanvas.width = tautoCanvas.clientWidth * 2;
+      const H = tautoCanvas.height = 640;
+      tautoCtx.clearRect(0, 0, W, H);
+
+      const padX = 60, padY = 40;
+      const plotW = W - 2 * padX;
+      const plotH = H - 2 * padY - 40;
+
+      // Axes
+      tautoCtx.strokeStyle = 'rgba(255,255,255,0.06)';
+      tautoCtx.lineWidth = 1;
+      tautoCtx.beginPath();
+      tautoCtx.moveTo(padX, padY); tautoCtx.lineTo(padX, padY + plotH);
+      tautoCtx.lineTo(padX + plotW, padY + plotH);
+      tautoCtx.stroke();
+
+      // Draw curve
+      const yMax = (raceCurve === 'cycloid') ? (1 / Math.PI) : 1.0;
+      // Flip y for display: math y=0 (valley bottom) → screen bottom; high y → screen top
+      const yDispPx = y => padY + plotH - (y / yMax) * plotH;
+
+      tautoCtx.beginPath();
+      const N = 200;
+      for (let i = 0; i <= N; i++) {
+        const x = i / N;
+        const y = curveY(x, raceCurve);
+        const px = padX + x * plotW;
+        const py = yDispPx(y);
+        i === 0 ? tautoCtx.moveTo(px, py) : tautoCtx.lineTo(px, py);
+      }
+      tautoCtx.strokeStyle = raceCurve === 'cycloid' ? 'rgba(167,139,250,0.55)' : 'rgba(167,139,250,0.3)';
+      tautoCtx.lineWidth = 3;
+      tautoCtx.stroke();
+
+      // Integrate beads
+      if (raceRunning) {
+        const dt = 1 / 240;
+        const gAcc = 3.0; // gravity in normalized units
+        const eps = 0.0008;
+        for (let step = 0; step < 4; step++) {
+          raceBeads.forEach(b => {
+            if (b.done) return;
+            // Equation of motion on curve: ẍ = (−g·y' − y'·y''·ẋ²) / (1 + y'²)
+            // from Lagrangian L = ½ẋ²(1+y'²) − gy
+            const yp = (curveY(b.x + eps, raceCurve) - curveY(b.x - eps, raceCurve)) / (2 * eps);
+            const ypp = (curveY(b.x + eps, raceCurve) - 2 * curveY(b.x, raceCurve) + curveY(b.x - eps, raceCurve)) / (eps * eps);
+            const ax = (-gAcc * yp - yp * ypp * b.vx * b.vx) / (1 + yp * yp);
+            b.vx += ax * dt;
+            b.x += b.vx * dt;
+            // Finish when crossing x = 0.5
+            if (b.x >= 0.5) {
+              b.done = true;
+              b.x = 0.5;
+              b.doneT = (performance.now() / 1000) - raceStartT;
+              raceDoneCount++;
+            }
+          });
+        }
+        // Update stats when all finished
+        if (raceDoneCount === 3) {
+          raceRunning = false;
+          const times = raceBeads.map(b => b.doneT.toFixed(3));
+          const maxDiff = Math.max(...raceBeads.map(b => b.doneT)) - Math.min(...raceBeads.map(b => b.doneT));
+          document.getElementById('tauto-stats').innerHTML =
+            '<div class="stat-chip" style="border-left:3px solid #f0b429;"><div class="lbl">Bead 1 (high)</div><div class="val">' + times[0] + ' s</div></div>' +
+            '<div class="stat-chip" style="border-left:3px solid #38bdf8;"><div class="lbl">Bead 2 (mid)</div><div class="val">' + times[1] + ' s</div></div>' +
+            '<div class="stat-chip" style="border-left:3px solid #fb7185;"><div class="lbl">Bead 3 (low)</div><div class="val">' + times[2] + ' s</div></div>' +
+            '<div class="stat-chip"><div class="lbl">Spread</div><div class="val ' + (maxDiff < 0.03 ? 'ok' : 'warn') + '">' + maxDiff.toFixed(3) + ' s</div></div>';
+        }
+      }
+
+      // Draw beads
+      raceBeads.forEach(b => {
+        const y = curveY(b.x, raceCurve);
+        const px = padX + b.x * plotW;
+        const py = yDispPx(y);
+        tautoCtx.beginPath();
+        tautoCtx.arc(px, py, 10, 0, Math.PI * 2);
+        const rg = tautoCtx.createRadialGradient(px - 3, py - 3, 1, px, py, 10);
+        rg.addColorStop(0, b.color);
+        rg.addColorStop(1, b.color + '60');
+        tautoCtx.fillStyle = rg;
+        tautoCtx.fill();
+        tautoCtx.shadowColor = b.color;
+        tautoCtx.shadowBlur = 10;
+        tautoCtx.fill();
+        tautoCtx.shadowBlur = 0;
+      });
+
+      // Labels
+      tautoCtx.font = '18px "JetBrains Mono",monospace';
+      tautoCtx.fillStyle = 'rgba(123,141,181,0.7)';
+      tautoCtx.textAlign = 'center';
+      tautoCtx.fillText('bottom', padX + plotW / 2, padY + plotH + 25);
+
+      requestAnimationFrame(drawTauto);
+    }
+    resetBeads();
+    drawTauto();
+
+    // ═══════════════════════════════════════════════
+    //  HARRISON'S CHRONOMETER (rocking ship)
+    // ═══════════════════════════════════════════════
+    const harrisonCanvas = document.getElementById('harrison-canvas');
+    const harrisonCtx = harrisonCanvas.getContext('2d');
+    let harrisonRocking = false;
+    let harrisonType = 'spring';
+    let harrisonStart = performance.now() / 1000;
+    let harrisonState = { theta: 20 * Math.PI / 180, omega: 0, phi: 0, phi_omega: 2.5 }; // pendulum angle, spring angle
+
+    function toggleShipRock() {
+      harrisonRocking = !harrisonRocking;
+      const btn = document.getElementById('harrison-rock-btn');
+      btn.textContent = harrisonRocking ? '🌊 Stop Rocking' : '🌊 Rock the Ship';
+      btn.classList.toggle('active', harrisonRocking);
+      document.getElementById('harrison-label').textContent = 'Ship rocking: ' + (harrisonRocking ? 'ON' : 'OFF');
+    }
+    function setHarrisonType(t) {
+      harrisonType = t;
+      document.getElementById('harrison-type-pend').classList.toggle('active', t === 'pendulum');
+      document.getElementById('harrison-type-spring').classList.toggle('active', t === 'spring');
+      harrisonState.theta = 20 * Math.PI / 180; harrisonState.omega = 0;
+      harrisonState.phi = 0; harrisonState.phi_omega = 2.5;
+    }
+
+    function drawHarrison() {
+      const W = harrisonCanvas.width = harrisonCanvas.clientWidth * 2;
+      const H = harrisonCanvas.height = 520;
+      harrisonCtx.clearRect(0, 0, W, H);
+
+      const t = performance.now() / 1000;
+      const shipAngle = harrisonRocking ? 0.25 * Math.sin(t * 1.2) : 0;
+      // Effective gravity: component perpendicular to deck still g, but pendulum sees tilted 'down'
+      // For pendulum on tilted ship, equilibrium angle shifts to shipAngle
+      // For spring (horizontal), only rocking induces mild drive — but spring doesn't depend on g
+
+      const dt = 1 / 120;
+      for (let s = 0; s < 2; s++) {
+        if (harrisonType === 'pendulum') {
+          // Pendulum on rocking ship: restoring torque toward vertical (= -shipAngle in deck frame)
+          const g = 9.81, L = 1.0;
+          // Also shake acceleration
+          const shipA = 0.25 * -1.44 * Math.sin(t * 1.2) * (harrisonRocking ? 1 : 0);
+          const alpha = -(g / L) * Math.sin(harrisonState.theta - shipAngle) - shipA;
+          harrisonState.omega += alpha * dt;
+          harrisonState.omega *= 0.999;
+          harrisonState.theta += harrisonState.omega * dt;
+        } else {
+          // Spring balance wheel: rotational oscillator with torsion spring
+          // Immune to gravity. Ship rocking introduces mild translational acceleration that doesn't torque it much.
+          const k = 6.0;
+          const alpha = -k * harrisonState.phi;
+          harrisonState.phi_omega += alpha * dt;
+          harrisonState.phi_omega *= 0.9998;
+          harrisonState.phi += harrisonState.phi_omega * dt;
+        }
+      }
+
+      // Draw ship
+      harrisonCtx.save();
+      harrisonCtx.translate(W / 2, H / 2 + 40);
+      harrisonCtx.rotate(shipAngle);
+      // Hull
+      harrisonCtx.beginPath();
+      harrisonCtx.moveTo(-W * 0.35, 0);
+      harrisonCtx.lineTo(W * 0.35, 0);
+      harrisonCtx.lineTo(W * 0.28, 70);
+      harrisonCtx.lineTo(-W * 0.28, 70);
+      harrisonCtx.closePath();
+      harrisonCtx.fillStyle = 'rgba(139,94,60,0.6)';
+      harrisonCtx.fill();
+      harrisonCtx.strokeStyle = 'rgba(255,255,255,0.2)';
+      harrisonCtx.stroke();
+      // Deck
+      harrisonCtx.beginPath();
+      harrisonCtx.moveTo(-W * 0.35, 0);
+      harrisonCtx.lineTo(W * 0.35, 0);
+      harrisonCtx.strokeStyle = 'rgba(255,255,255,0.4)';
+      harrisonCtx.lineWidth = 3;
+      harrisonCtx.stroke();
+
+      // Clock device on deck
+      if (harrisonType === 'pendulum') {
+        // Pendulum hanging from a mount
+        const px = 0, py = -20;
+        harrisonCtx.fillStyle = 'rgba(200,200,200,0.3)';
+        harrisonCtx.fillRect(-25, py - 12, 50, 12);
+        // The pendulum's theta is absolute angle from vertical in world frame;
+        // in ship frame (after rotate), we need to undo shipAngle
+        harrisonCtx.save();
+        harrisonCtx.rotate(-shipAngle); // rotate back so pendulum is drawn in world orientation
+        harrisonCtx.translate(Math.sin(shipAngle) * 20, Math.cos(shipAngle) * (-20));
+        const Lpx = 140;
+        const bx = Lpx * Math.sin(harrisonState.theta);
+        const by = Lpx * Math.cos(harrisonState.theta);
+        harrisonCtx.beginPath();
+        harrisonCtx.moveTo(0, 0);
+        harrisonCtx.lineTo(bx, by);
+        harrisonCtx.strokeStyle = 'rgba(224,230,240,0.5)';
+        harrisonCtx.lineWidth = 2;
+        harrisonCtx.stroke();
+        harrisonCtx.beginPath();
+        harrisonCtx.arc(bx, by, 14, 0, Math.PI * 2);
+        harrisonCtx.fillStyle = '#fb7185';
+        harrisonCtx.shadowColor = '#fb7185';
+        harrisonCtx.shadowBlur = 12;
+        harrisonCtx.fill();
+        harrisonCtx.shadowBlur = 0;
+        harrisonCtx.restore();
+      } else {
+        // Spring balance wheel
+        const px = 0, py = 20;
+        harrisonCtx.save();
+        harrisonCtx.translate(px, py);
+        // Outer frame
+        harrisonCtx.beginPath();
+        harrisonCtx.arc(0, 0, 60, 0, Math.PI * 2);
+        harrisonCtx.strokeStyle = 'rgba(200,180,140,0.5)';
+        harrisonCtx.lineWidth = 3;
+        harrisonCtx.stroke();
+        // Hairspring (spiral)
+        harrisonCtx.save();
+        harrisonCtx.rotate(harrisonState.phi);
+        harrisonCtx.beginPath();
+        for (let i = 0; i < 200; i++) {
+          const frac = i / 200;
+          const ang = frac * Math.PI * 6;
+          const r = 8 + frac * 45;
+          const sx = r * Math.cos(ang), sy = r * Math.sin(ang);
+          i === 0 ? harrisonCtx.moveTo(sx, sy) : harrisonCtx.lineTo(sx, sy);
+        }
+        harrisonCtx.strokeStyle = '#f0b429';
+        harrisonCtx.lineWidth = 1.5;
+        harrisonCtx.stroke();
+        // Balance wheel
+        harrisonCtx.beginPath();
+        harrisonCtx.arc(0, 0, 55, 0, Math.PI * 2);
+        harrisonCtx.strokeStyle = 'rgba(240,180,41,0.6)';
+        harrisonCtx.lineWidth = 4;
+        harrisonCtx.stroke();
+        // Spokes
+        for (let i = 0; i < 4; i++) {
+          const a = i * Math.PI / 2;
+          harrisonCtx.beginPath();
+          harrisonCtx.moveTo(0, 0);
+          harrisonCtx.lineTo(55 * Math.cos(a), 55 * Math.sin(a));
+          harrisonCtx.strokeStyle = 'rgba(240,180,41,0.4)';
+          harrisonCtx.lineWidth = 2;
+          harrisonCtx.stroke();
+        }
+        harrisonCtx.restore();
+        // Center pivot
+        harrisonCtx.beginPath();
+        harrisonCtx.arc(0, 0, 5, 0, Math.PI * 2);
+        harrisonCtx.fillStyle = '#34d399';
+        harrisonCtx.shadowColor = '#34d399';
+        harrisonCtx.shadowBlur = 10;
+        harrisonCtx.fill();
+        harrisonCtx.shadowBlur = 0;
+        harrisonCtx.restore();
+      }
+      harrisonCtx.restore();
+
+      // Water waves
+      harrisonCtx.beginPath();
+      for (let i = 0; i <= W; i += 4) {
+        const x = i;
+        const y = H - 60 + 8 * Math.sin((i / W) * 12 + t * 2) + 4 * Math.sin((i / W) * 7 - t * 1.3);
+        i === 0 ? harrisonCtx.moveTo(x, y) : harrisonCtx.lineTo(x, y);
+      }
+      harrisonCtx.lineTo(W, H);
+      harrisonCtx.lineTo(0, H);
+      harrisonCtx.closePath();
+      harrisonCtx.fillStyle = 'rgba(56,189,248,0.15)';
+      harrisonCtx.fill();
+      harrisonCtx.strokeStyle = 'rgba(56,189,248,0.4)';
+      harrisonCtx.lineWidth = 2;
+      harrisonCtx.stroke();
+
+      requestAnimationFrame(drawHarrison);
+    }
+    drawHarrison();
+
+    // ═══════════════════════════════════════════════
+    //  PHASE SPACE
+    // ═══════════════════════════════════════════════
+    const phaseCanvas = document.getElementById('phase-canvas');
+    const phaseCtx = phaseCanvas.getContext('2d');
+    let phaseState = { x: 1.0, v: 0, dragging: false };
+    let phaseTrail = [];
+    let phaseOmega = 1.0, phaseDamp = 0;
+
+    function resizePhase() {
+      const dpr = window.devicePixelRatio || 1;
+      const size = Math.min(phaseCanvas.clientWidth, phaseCanvas.clientHeight);
+      phaseCanvas.width = size * dpr;
+      phaseCanvas.height = size * dpr;
+      phaseCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function phaseToScreen(x, v) {
+      const s = Math.min(phaseCanvas.clientWidth, phaseCanvas.clientHeight);
+      const cx = phaseCanvas.clientWidth / 2;
+      const cy = phaseCanvas.clientHeight / 2;
+      const scale = s * 0.4;
+      return [cx + x * scale, cy - v * scale / phaseOmega];
+    }
+    function screenToPhase(sx, sy) {
+      const s = Math.min(phaseCanvas.clientWidth, phaseCanvas.clientHeight);
+      const cx = phaseCanvas.clientWidth / 2;
+      const cy = phaseCanvas.clientHeight / 2;
+      const scale = s * 0.4;
+      return [(sx - cx) / scale, -(sy - cy) * phaseOmega / scale];
+    }
+
+    function updatePhaseParams() {
+      phaseOmega = +document.getElementById('phase-omega').value;
+      phaseDamp = +document.getElementById('phase-damp').value;
+      document.getElementById('phase-omega-val').textContent = 'ω = ' + phaseOmega.toFixed(2);
+      document.getElementById('phase-damp-val').textContent = phaseDamp.toFixed(3);
+      const T = 2 * Math.PI / phaseOmega;
+      const E = 0.5 * (phaseState.v * phaseState.v + phaseOmega * phaseOmega * phaseState.x * phaseState.x);
+      document.getElementById('phase-stats').innerHTML =
+        '<div class="stat-chip"><div class="lbl">Period T</div><div class="val">' + T.toFixed(2) + '</div></div>' +
+        '<div class="stat-chip"><div class="lbl">Energy</div><div class="val">' + E.toFixed(3) + '</div></div>' +
+        '<div class="stat-chip"><div class="lbl">Damping</div><div class="val ' + (phaseDamp > 0.15 ? 'warn' : 'ok') + '">' + phaseDamp.toFixed(3) + '</div></div>' +
+        '<div class="stat-chip"><div class="lbl">State</div><div class="val">' + (phaseDamp > 0 ? 'spiral' : 'ellipse') + '</div></div>';
+    }
+    document.getElementById('phase-omega').addEventListener('input', updatePhaseParams);
+    document.getElementById('phase-damp').addEventListener('input', updatePhaseParams);
+
+    function drawPhase() {
+      resizePhase();
+      const w = phaseCanvas.clientWidth, h = phaseCanvas.clientHeight;
+      phaseCtx.clearRect(0, 0, w, h);
+      const cx = w / 2, cy = h / 2;
+
+      // Grid
+      phaseCtx.strokeStyle = 'rgba(255,255,255,0.04)';
+      phaseCtx.lineWidth = 1;
+      for (let i = -2; i <= 2; i++) {
+        if (i === 0) continue;
+        const [gx] = phaseToScreen(i, 0);
+        const [, gy] = phaseToScreen(0, i * phaseOmega);
+        phaseCtx.beginPath(); phaseCtx.moveTo(gx, 0); phaseCtx.lineTo(gx, h); phaseCtx.stroke();
+        phaseCtx.beginPath(); phaseCtx.moveTo(0, gy); phaseCtx.lineTo(w, gy); phaseCtx.stroke();
+      }
+      // Axes
+      phaseCtx.strokeStyle = 'rgba(255,255,255,0.2)';
+      phaseCtx.lineWidth = 1.5;
+      phaseCtx.beginPath(); phaseCtx.moveTo(0, cy); phaseCtx.lineTo(w, cy); phaseCtx.stroke();
+      phaseCtx.beginPath(); phaseCtx.moveTo(cx, 0); phaseCtx.lineTo(cx, h); phaseCtx.stroke();
+      // Labels
+      phaseCtx.font = '11px "JetBrains Mono",monospace';
+      phaseCtx.fillStyle = 'rgba(123,141,181,0.7)';
+      phaseCtx.fillText('x', w - 14, cy - 6);
+      phaseCtx.fillText('v/ω', cx + 6, 14);
+
+      // Integrate
+      if (!phaseState.dragging) {
+        const dt = 1 / 120;
+        for (let s = 0; s < 2; s++) {
+          const a = -phaseOmega * phaseOmega * phaseState.x - 2 * phaseDamp * phaseOmega * phaseState.v;
+          phaseState.v += a * dt;
+          phaseState.x += phaseState.v * dt;
+        }
+        phaseTrail.push([phaseState.x, phaseState.v]);
+        if (phaseTrail.length > 400) phaseTrail.shift();
+      }
+
+      // Draw trail
+      phaseCtx.lineWidth = 2;
+      phaseCtx.beginPath();
+      phaseTrail.forEach((pt, i) => {
+        const [sx, sy] = phaseToScreen(pt[0], pt[1]);
+        i === 0 ? phaseCtx.moveTo(sx, sy) : phaseCtx.lineTo(sx, sy);
+      });
+      const grad = phaseCtx.createLinearGradient(0, 0, w, h);
+      grad.addColorStop(0, 'rgba(56,189,248,0.2)');
+      grad.addColorStop(1, 'rgba(240,180,41,0.7)');
+      phaseCtx.strokeStyle = grad;
+      phaseCtx.stroke();
+
+      // Current point
+      const [px, py] = phaseToScreen(phaseState.x, phaseState.v);
+      phaseCtx.beginPath();
+      phaseCtx.arc(px, py, 8, 0, Math.PI * 2);
+      phaseCtx.fillStyle = '#f0b429';
+      phaseCtx.shadowColor = '#f0b429';
+      phaseCtx.shadowBlur = 14;
+      phaseCtx.fill();
+      phaseCtx.shadowBlur = 0;
+
+      requestAnimationFrame(drawPhase);
+    }
+
+    function phaseDown(e) {
+      const rect = phaseCanvas.getBoundingClientRect();
+      const ev = e.touches ? e.touches[0] : e;
+      const sx = ev.clientX - rect.left;
+      const sy = ev.clientY - rect.top;
+      const [px, py] = phaseToScreen(phaseState.x, phaseState.v);
+      if (Math.hypot(sx - px, sy - py) < 25) {
+        phaseState.dragging = true;
+        phaseTrail = [];
+      }
+    }
+    function phaseMove(e) {
+      if (!phaseState.dragging) return;
+      e.preventDefault();
+      const rect = phaseCanvas.getBoundingClientRect();
+      const ev = e.touches ? e.touches[0] : e;
+      const sx = ev.clientX - rect.left;
+      const sy = ev.clientY - rect.top;
+      const [px, py] = screenToPhase(sx, sy);
+      phaseState.x = Math.max(-2, Math.min(2, px));
+      phaseState.v = Math.max(-2 * phaseOmega, Math.min(2 * phaseOmega, py));
+      updatePhaseParams();
+    }
+    function phaseUp() { phaseState.dragging = false; }
+    phaseCanvas.addEventListener('mousedown', phaseDown);
+    phaseCanvas.addEventListener('mousemove', phaseMove);
+    window.addEventListener('mouseup', phaseUp);
+    phaseCanvas.addEventListener('touchstart', phaseDown, { passive: false });
+    phaseCanvas.addEventListener('touchmove', phaseMove, { passive: false });
+    window.addEventListener('touchend', phaseUp);
+    updatePhaseParams();
+    drawPhase();
+
+    // ═══════════════════════════════════════════════
+    //  TAYLOR ZOOM
+    // ═══════════════════════════════════════════════
+    const taylorCanvas = document.getElementById('taylor-canvas');
+    const taylorCtx = taylorCanvas.getContext('2d');
+    const taylorMotion = document.getElementById('taylor-motion');
+    const taylorMotionCtx = taylorMotion.getContext('2d');
+    let taylorPot = 'doublewell';
+
+    const potentials = {
+      doublewell: {
+        V: x => 0.25 * x * x * x * x - 0.5 * x * x + 0.25,
+        Vp: x => x * x * x - x,
+        Vpp: x => 3 * x * x - 1,
+        minX: 1, // stable minimum at x=1
+        range: 2.5
+      },
+      lj: {
+        V: x => {
+          const r = x; const s = 1;
+          if (r <= 0.1) return 10;
+          return 4 * (Math.pow(s / r, 12) - Math.pow(s / r, 6)) + 1;
+        },
+        Vp: x => { const r = x, s = 1; if (r <= 0.1) return -100; return 4 * (-12 * Math.pow(s / r, 12) / r + 6 * Math.pow(s / r, 6) / r); },
+        Vpp: x => { const r = x, s = 1; if (r <= 0.1) return 1000; return 4 * (156 * Math.pow(s / r, 12) / (r * r) - 42 * Math.pow(s / r, 6) / (r * r)); },
+        minX: Math.pow(2, 1 / 6),
+        range: 2.5,
+        xMin: 0.8
+      },
+      asym: {
+        V: x => 0.1 * x * x * x + 0.3 * x * x + 0.2,
+        Vp: x => 0.3 * x * x + 0.6 * x,
+        Vpp: x => 0.6 * x + 0.6,
+        minX: 0,
+        range: 3
+      },
+      morse: {
+        V: x => { const a = 1, De = 1, re = 1; const e = 1 - Math.exp(-a * (x - re)); return De * e * e; },
+        Vp: x => { const a = 1, De = 1, re = 1; const e = Math.exp(-a * (x - re)); return 2 * De * (1 - e) * a * e; },
+        Vpp: x => { const a = 1, De = 1, re = 1; const e = Math.exp(-a * (x - re)); return 2 * De * a * a * (2 * e * e - e); },
+        minX: 1,
+        range: 3,
+        xMin: 0.3
+      }
+    };
+
+    function setPotential(name) {
+      taylorPot = name;
+      document.querySelectorAll('.pot-preset-btn').forEach(b => b.classList.remove('active'));
+      const ids = { doublewell: 'pot-dw', lj: 'pot-lj', asym: 'pot-asym', morse: 'pot-morse' };
+      document.getElementById(ids[name]).classList.add('active');
+      taylorBall.x = potentials[name].minX + 0.2;
+      taylorBall.v = 0;
+      taylorApprox.x = potentials[name].minX + 0.2;
+      taylorApprox.v = 0;
+    }
+
+    let taylorBall = { x: 1.2, v: 0 };
+    let taylorApprox = { x: 1.2, v: 0 };
+
+    function drawTaylor() {
+      const W = taylorCanvas.width = taylorCanvas.clientWidth * 2;
+      const H = taylorCanvas.height = 680;
+      taylorCtx.clearRect(0, 0, W, H);
+
+      const zoom = +document.getElementById('taylor-zoom').value;
+      const zoomFactor = Math.pow(10, zoom / 25); // 1x to 10000x
+      document.getElementById('taylor-zoom-val').textContent = zoomFactor < 10 ? zoomFactor.toFixed(1) + '×' : Math.round(zoomFactor) + '×';
+      document.getElementById('zoom-level').textContent = zoomFactor < 10 ? zoomFactor.toFixed(1) + '×' : Math.round(zoomFactor) + '×';
+
+      const pot = potentials[taylorPot];
+      const x0 = pot.minX;
+      const V0 = pot.V(x0);
+      const k = pot.Vpp(x0);
+
+      // View window
+      const halfWidth = pot.range / zoomFactor;
+      const xLo = x0 - halfWidth, xHi = x0 + halfWidth;
+      // Y range: auto-scale
+      const yHalf = 0.5 * k * halfWidth * halfWidth * 1.4;
+      const yLo = V0 - yHalf * 0.1, yHi = V0 + yHalf;
+
+      const padX = 50, padY = 40;
+      const plotW = W - 2 * padX, plotH = H - 2 * padY - 60;
+
+      const xToPx = x => padX + (x - xLo) / (xHi - xLo) * plotW;
+      const yToPx = y => padY + plotH - (y - yLo) / (yHi - yLo) * plotH;
+
+      // Axes
+      taylorCtx.strokeStyle = 'rgba(255,255,255,0.06)';
+      taylorCtx.lineWidth = 1;
+      taylorCtx.beginPath();
+      taylorCtx.moveTo(padX, padY); taylorCtx.lineTo(padX, padY + plotH);
+      taylorCtx.lineTo(padX + plotW, padY + plotH);
+      taylorCtx.stroke();
+
+      // Vertical line at x0
+      taylorCtx.beginPath();
+      taylorCtx.moveTo(xToPx(x0), padY); taylorCtx.lineTo(xToPx(x0), padY + plotH);
+      taylorCtx.strokeStyle = 'rgba(255,255,255,0.1)';
+      taylorCtx.setLineDash([4, 6]);
+      taylorCtx.stroke();
+      taylorCtx.setLineDash([]);
+
+      // True potential
+      taylorCtx.beginPath();
+      const N = 200;
+      for (let i = 0; i <= N; i++) {
+        const x = xLo + (xHi - xLo) * i / N;
+        if (pot.xMin !== undefined && x < pot.xMin) continue;
+        const y = pot.V(x);
+        const px = xToPx(x), py = yToPx(y);
+        if (py >= padY && py <= padY + plotH + 5) {
+          if (i === 0 || py < padY || py > padY + plotH + 5) taylorCtx.moveTo(px, py);
+          else taylorCtx.lineTo(px, py);
+        }
+      }
+      taylorCtx.strokeStyle = '#ffffff';
+      taylorCtx.lineWidth = 3;
+      taylorCtx.stroke();
+
+      // Taylor parabola: V(x) ≈ V0 + 0.5*k*(x-x0)^2
+      taylorCtx.beginPath();
+      for (let i = 0; i <= N; i++) {
+        const x = xLo + (xHi - xLo) * i / N;
+        const y = V0 + 0.5 * k * (x - x0) * (x - x0);
+        const px = xToPx(x), py = yToPx(y);
+        if (py >= padY && py <= padY + plotH + 5) {
+          if (i === 0) taylorCtx.moveTo(px, py);
+          else taylorCtx.lineTo(px, py);
+        }
+      }
+      taylorCtx.strokeStyle = '#f0b429';
+      taylorCtx.lineWidth = 2.5;
+      taylorCtx.setLineDash([8, 5]);
+      taylorCtx.stroke();
+      taylorCtx.setLineDash([]);
+
+      // Minimum marker
+      taylorCtx.beginPath();
+      taylorCtx.arc(xToPx(x0), yToPx(V0), 5, 0, Math.PI * 2);
+      taylorCtx.fillStyle = 'rgba(240,180,41,0.9)';
+      taylorCtx.fill();
+
+      // Energy level from slider
+      const eFrac = +document.getElementById('taylor-energy').value / 100;
+      document.getElementById('taylor-energy-val').textContent = (+document.getElementById('taylor-energy').value) + '%';
+      const E_amp = 0.2 / zoomFactor * eFrac * 2;
+
+      // Update ball motion
+      const dt = 1 / 120;
+      for (let s = 0; s < 2; s++) {
+        // True
+        const Fx = -pot.Vp(taylorBall.x);
+        taylorBall.v += Fx * dt;
+        taylorBall.v *= 0.9995;
+        taylorBall.x += taylorBall.v * dt;
+        // Clamp into view if too far
+        if (taylorPot === 'lj' && taylorBall.x < 0.85) { taylorBall.x = 0.85; taylorBall.v = Math.abs(taylorBall.v); }
+        // Approx
+        const Fxa = -k * (taylorApprox.x - x0);
+        taylorApprox.v += Fxa * dt;
+        taylorApprox.v *= 0.9995;
+        taylorApprox.x += taylorApprox.v * dt;
+      }
+
+      // Draw balls on potential curve
+      const bx = xToPx(taylorBall.x), by = yToPx(pot.V(taylorBall.x));
+      const ax = xToPx(taylorApprox.x), ay = yToPx(V0 + 0.5 * k * (taylorApprox.x - x0) * (taylorApprox.x - x0));
+      if (bx >= padX && bx <= padX + plotW) {
+        taylorCtx.beginPath();
+        taylorCtx.arc(bx, by, 9, 0, Math.PI * 2);
+        taylorCtx.fillStyle = '#ffffff';
+        taylorCtx.shadowColor = '#ffffff';
+        taylorCtx.shadowBlur = 12;
+        taylorCtx.fill();
+        taylorCtx.shadowBlur = 0;
+      }
+      if (ax >= padX && ax <= padX + plotW) {
+        taylorCtx.beginPath();
+        taylorCtx.arc(ax, ay, 9, 0, Math.PI * 2);
+        taylorCtx.fillStyle = '#f0b429';
+        taylorCtx.shadowColor = '#f0b429';
+        taylorCtx.shadowBlur = 12;
+        taylorCtx.fill();
+        taylorCtx.shadowBlur = 0;
+      }
+
+      // Label
+      taylorCtx.font = '20px "JetBrains Mono",monospace';
+      taylorCtx.fillStyle = 'rgba(255,255,255,0.5)';
+      taylorCtx.textAlign = 'center';
+      taylorCtx.fillText('V(x)', xToPx(x0 + halfWidth * 0.7), padY + 24);
+      taylorCtx.fillStyle = 'rgba(240,180,41,0.8)';
+      taylorCtx.fillText('parabola', xToPx(x0 + halfWidth * 0.7), padY + 50);
+
+      // Stats
+      document.getElementById('taylor-stats').innerHTML =
+        '<div class="stat-chip"><div class="lbl">V″(x₀) = k</div><div class="val">' + k.toFixed(3) + '</div></div>' +
+        '<div class="stat-chip"><div class="lbl">ω = √k</div><div class="val">' + Math.sqrt(Math.abs(k)).toFixed(3) + '</div></div>' +
+        '<div class="stat-chip"><div class="lbl">Zoom</div><div class="val">' + (zoomFactor < 10 ? zoomFactor.toFixed(1) : Math.round(zoomFactor)) + '×</div></div>' +
+        '<div class="stat-chip"><div class="lbl">Residual</div><div class="val ' + (zoomFactor > 5 ? 'ok' : 'warn') + '">O(Δx³)</div></div>';
+
+      // Motion canvas (strip chart)
+      const mW = taylorMotion.width = taylorMotion.clientWidth * 2;
+      const mH = taylorMotion.height = 240;
+      taylorMotionCtx.clearRect(0, 0, mW, mH);
+      // Zero line
+      taylorMotionCtx.beginPath();
+      taylorMotionCtx.moveTo(0, mH / 2); taylorMotionCtx.lineTo(mW, mH / 2);
+      taylorMotionCtx.strokeStyle = 'rgba(255,255,255,0.05)';
+      taylorMotionCtx.lineWidth = 1;
+      taylorMotionCtx.stroke();
+      // We'll just draw current x over time via a fake history — use phase
+      const now = performance.now() / 1000;
+      taylorMotionCtx.beginPath();
+      for (let i = 0; i <= mW; i++) {
+        const t = now - (mW - i) / mW * 4;
+        const rel = taylorBall.x - x0;
+        // Draw current as single point repeatedly — not ideal, use actual tracked history
+        const y = mH / 2 - rel * 180 / halfWidth * 0.4;
+        i === 0 ? taylorMotionCtx.moveTo(i, y) : taylorMotionCtx.lineTo(i, y);
+      }
+      // Draw history
+    }
+    drawTaylor();
+
+    // Track motion history for strip chart
+    const motionHist = { t: [], real: [], approx: [] };
+    function tickMotionHist() {
+      const t = performance.now() / 1000;
+      motionHist.t.push(t);
+      const pot = potentials[taylorPot];
+      motionHist.real.push(taylorBall.x - pot.minX);
+      motionHist.approx.push(taylorApprox.x - pot.minX);
+      while (motionHist.t.length > 0 && motionHist.t[0] < t - 6) {
+        motionHist.t.shift(); motionHist.real.shift(); motionHist.approx.shift();
+      }
+      // Redraw strip chart
+      const mW = taylorMotion.width = taylorMotion.clientWidth * 2;
+      const mH = taylorMotion.height = 240;
+      taylorMotionCtx.clearRect(0, 0, mW, mH);
+      taylorMotionCtx.beginPath();
+      taylorMotionCtx.moveTo(0, mH / 2); taylorMotionCtx.lineTo(mW, mH / 2);
+      taylorMotionCtx.strokeStyle = 'rgba(255,255,255,0.05)';
+      taylorMotionCtx.lineWidth = 1;
+      taylorMotionCtx.stroke();
+      if (motionHist.t.length < 2) return;
+      const t0 = motionHist.t[0], t1 = motionHist.t[motionHist.t.length - 1];
+      const span = t1 - t0;
+      const zoom = +document.getElementById('taylor-zoom').value;
+      const zoomFactor = Math.pow(10, zoom / 25);
+      const halfW = pot.range / zoomFactor;
+      const scale = mH * 0.35 / halfW;
+
+      // Approx (gold)
+      taylorMotionCtx.beginPath();
+      motionHist.t.forEach((tt, i) => {
+        const x = (tt - t0) / span * mW;
+        const y = mH / 2 - motionHist.approx[i] * scale;
+        i === 0 ? taylorMotionCtx.moveTo(x, y) : taylorMotionCtx.lineTo(x, y);
+      });
+      taylorMotionCtx.strokeStyle = '#f0b429';
+      taylorMotionCtx.lineWidth = 2;
+      taylorMotionCtx.stroke();
+      // Real (white)
+      taylorMotionCtx.beginPath();
+      motionHist.t.forEach((tt, i) => {
+        const x = (tt - t0) / span * mW;
+        const y = mH / 2 - motionHist.real[i] * scale;
+        i === 0 ? taylorMotionCtx.moveTo(x, y) : taylorMotionCtx.lineTo(x, y);
+      });
+      taylorMotionCtx.strokeStyle = '#ffffff';
+      taylorMotionCtx.lineWidth = 2;
+      taylorMotionCtx.stroke();
+
+      requestAnimationFrame(tickMotionHist);
+    }
+    requestAnimationFrame(tickMotionHist);
+    function taylorLoop() { drawTaylor(); requestAnimationFrame(taylorLoop); }
+    // drawTaylor is not in a requestAnimationFrame loop — add it
+    function taylorAnimLoop() { drawTaylor(); requestAnimationFrame(taylorAnimLoop); }
+    requestAnimationFrame(taylorAnimLoop);
+    document.getElementById('taylor-zoom').addEventListener('input', () => { });
+    document.getElementById('taylor-energy').addEventListener('input', () => { });
+    setPotential('doublewell');
+
+    // ═══════════════════════════════════════════════
+    //  SEVEN OSCILLATORS GALLERY
+    // ═══════════════════════════════════════════════
+    const OSCILLATORS = [
+      { title: 'Spring + Mass', desc: 'A block on a spring. The archetype.', eq: 'm ẍ = −k x', omega: 1.2 },
+      { title: 'Small-angle Pendulum', desc: 'Galileo\'s chandelier, Huygens\' clock.', eq: 'θ̈ = −(g/L) θ', omega: 1.0 },
+      { title: 'LC Circuit', desc: 'Charge sloshing between capacitor and inductor.', eq: 'L Q̈ = −Q/C', omega: 1.5 },
+      { title: 'Torsion Wire', desc: 'Cavendish\'s balance; quartz crystals.', eq: 'I θ̈ = −κ θ', omega: 0.8 },
+      { title: 'CO₂ Bending Mode', desc: 'Infrared vibration. ~15 THz.', eq: 'μ q̈ = −k q', omega: 1.8 },
+      { title: 'Neutron Star Crust', desc: 'Nuclear oscillations after a quake.', eq: 'ρ ẍ = −μ x', omega: 2.2 },
+      { title: 'Quantum Ground State', desc: 'Harmonic-oscillator wavefunction. E = ½ℏω.', eq: 'iℏ ψ̇ = Ĥ ψ', omega: 1.4 },
+    ];
+
+    const oscGallery = document.getElementById('osc-gallery');
+    const oscStates = [];
+    OSCILLATORS.forEach((o, i) => {
+      const card = document.createElement('div');
+      card.className = 'osc-card';
+      card.innerHTML = `
+    <canvas id="osc-canvas-${i}" width="300" height="130"></canvas>
+    <div class="osc-title">${o.title}</div>
+    <div class="osc-desc">${o.desc}</div>
+    <div class="osc-var">${o.eq} &nbsp; ω = ${o.omega.toFixed(1)}</div>
+  `;
+      card.addEventListener('mouseenter', () => { card.classList.add('active'); });
+      card.addEventListener('mouseleave', () => { card.classList.remove('active'); });
+      oscGallery.appendChild(card);
+      oscStates.push({ phase: i * 0.5, omega: o.omega });
+    });
+
+    function drawOscCards() {
+      OSCILLATORS.forEach((o, i) => {
+        const cv = document.getElementById('osc-canvas-' + i);
+        if (!cv) return;
+        const ctx = cv.getContext('2d');
+        const w = cv.width = cv.clientWidth * 2;
+        const h = cv.height = 260;
+        ctx.clearRect(0, 0, w, h);
+        const t = performance.now() / 1000;
+        const phase = oscStates[i].phase + t * oscStates[i].omega;
+        const cx = w / 2, cy = h / 2;
+        const rx = w * 0.35, ry = h * 0.32;
+
+        // Ellipse trace
+        ctx.beginPath();
+        for (let j = 0; j <= 100; j++) {
+          const a = j / 100 * Math.PI * 2;
+          const ex = cx + rx * Math.cos(a);
+          const ey = cy + ry * Math.sin(a);
+          j === 0 ? ctx.moveTo(ex, ey) : ctx.lineTo(ex, ey);
+        }
+        const colors = ['#f0b429', '#38bdf8', '#a78bfa', '#fb7185', '#34d399', '#f97316', '#e879f9'];
+        const col = colors[i % colors.length];
+        ctx.strokeStyle = col + '40';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Orbit point
+        const px = cx + rx * Math.cos(phase);
+        const py = cy + ry * Math.sin(phase);
+        ctx.beginPath();
+        ctx.arc(px, py, 6, 0, Math.PI * 2);
+        ctx.fillStyle = col;
+        ctx.shadowColor = col;
+        ctx.shadowBlur = 10;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // Axes faintly
+        ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(0, cy); ctx.lineTo(w, cy); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(cx, 0); ctx.lineTo(cx, h); ctx.stroke();
+      });
+      requestAnimationFrame(drawOscCards);
+    }
+    drawOscCards();
+
+    // ═══════════════════════════════════════════════
+    //  DRIVEN OSCILLATOR
+    // ═══════════════════════════════════════════════
+    const drivenCanvas = document.getElementById('driven-canvas');
+    const drivenCtx = drivenCanvas.getContext('2d');
+    let drivenState = { x: 0, v: 0 };
+
+    function setDriveFreq(w) {
+      document.getElementById('drive-omega').value = w;
+      updateDriveParams();
+    }
+    function updateDriveParams() {
+      const w = +document.getElementById('drive-omega').value;
+      const g = +document.getElementById('drive-damp').value;
+      document.getElementById('drive-omega-val').textContent = w.toFixed(2);
+      document.getElementById('drive-damp-val').textContent = g.toFixed(2);
+      // Steady-state amplitude: A = F0 / sqrt((ω₀²-ω²)² + (2γω)²)
+      // with ω₀ = 1, F0 = 1
+      const A = 1 / Math.sqrt((1 - w * w) * (1 - w * w) + 4 * g * g * w * w);
+      // Phase lag
+      const phi = Math.atan2(2 * g * w, 1 - w * w);
+      const Q = 1 / (2 * g);
+      document.getElementById('drive-stats').innerHTML =
+        '<div class="stat-chip"><div class="lbl">ω / ω₀</div><div class="val">' + w.toFixed(2) + '</div></div>' +
+        '<div class="stat-chip"><div class="lbl">Amplitude</div><div class="val ' + (A > 3 ? 'warn' : '') + '">' + A.toFixed(2) + '</div></div>' +
+        '<div class="stat-chip"><div class="lbl">Phase lag</div><div class="val">' + (phi * 180 / Math.PI).toFixed(0) + '°</div></div>' +
+        '<div class="stat-chip"><div class="lbl">Quality Q</div><div class="val">' + Q.toFixed(1) + '</div></div>';
+    }
+    document.getElementById('drive-omega').addEventListener('input', updateDriveParams);
+    document.getElementById('drive-damp').addEventListener('input', updateDriveParams);
+    updateDriveParams();
+
+    function drawDriven() {
+      const W = drivenCanvas.width = drivenCanvas.clientWidth * 2;
+      const H = drivenCanvas.height = 560;
+      drivenCtx.clearRect(0, 0, W, H);
+
+      const omega0 = 1;
+      const w = +document.getElementById('drive-omega').value;
+      const g = +document.getElementById('drive-damp').value;
+
+      // Draw resonance curve on right half
+      const rightW = W * 0.4, leftW = W * 0.55, gap = W * 0.05;
+      const padY = 40, plotH = H - 2 * padY;
+
+      // Left: oscillator motion
+      // Integrate
+      const dt = 1 / 120;
+      const t = performance.now() / 1000;
+      for (let s = 0; s < 2; s++) {
+        const force = Math.cos(w * (t - 2)); // time shift
+        const a = -omega0 * omega0 * drivenState.x - 2 * g * omega0 * drivenState.v + force;
+        drivenState.v += a * dt;
+        drivenState.x += drivenState.v * dt;
+      }
+
+      // Spring display on left
+      const lcx = leftW / 2;
+      const lcy = H / 2;
+      const maxDisp = 4;
+      // Wall
+      drivenCtx.fillStyle = 'rgba(255,255,255,0.2)';
+      drivenCtx.fillRect(30, lcy - 60, 6, 120);
+      // Spring (zigzag)
+      const springEndX = lcx + drivenState.x * 40;
+      const springLen = springEndX - 36;
+      const coils = 12;
+      drivenCtx.beginPath();
+      drivenCtx.moveTo(36, lcy);
+      for (let i = 0; i <= coils; i++) {
+        const fx = 36 + (i + 0.5) / coils * springLen;
+        const fy = lcy + (i % 2 === 0 ? -15 : 15);
+        drivenCtx.lineTo(fx, fy);
+      }
+      drivenCtx.lineTo(springEndX, lcy);
+      drivenCtx.strokeStyle = 'rgba(240,180,41,0.7)';
+      drivenCtx.lineWidth = 2.5;
+      drivenCtx.stroke();
+      // Mass
+      drivenCtx.beginPath();
+      drivenCtx.arc(springEndX, lcy, 24, 0, Math.PI * 2);
+      const rg = drivenCtx.createRadialGradient(springEndX - 6, lcy - 6, 2, springEndX, lcy, 24);
+      rg.addColorStop(0, '#fb7185');
+      rg.addColorStop(1, '#7a1d2a');
+      drivenCtx.fillStyle = rg;
+      drivenCtx.fill();
+      drivenCtx.shadowColor = '#fb7185';
+      drivenCtx.shadowBlur = 14;
+      drivenCtx.fill();
+      drivenCtx.shadowBlur = 0;
+      // Equilibrium marker
+      drivenCtx.beginPath();
+      drivenCtx.moveTo(lcx, lcy - 80); drivenCtx.lineTo(lcx, lcy + 80);
+      drivenCtx.strokeStyle = 'rgba(255,255,255,0.1)';
+      drivenCtx.setLineDash([4, 6]);
+      drivenCtx.lineWidth = 1;
+      drivenCtx.stroke();
+      drivenCtx.setLineDash([]);
+
+      // Right: resonance curve
+      drivenCtx.beginPath();
+      const rx0 = leftW + gap, ry0 = padY;
+      const rW = rightW, rH = plotH;
+      // Axes
+      drivenCtx.strokeStyle = 'rgba(255,255,255,0.1)';
+      drivenCtx.lineWidth = 1;
+      drivenCtx.beginPath();
+      drivenCtx.moveTo(rx0, ry0 + rH); drivenCtx.lineTo(rx0 + rW, ry0 + rH);
+      drivenCtx.moveTo(rx0, ry0); drivenCtx.lineTo(rx0, ry0 + rH);
+      drivenCtx.stroke();
+
+      // Resonance curve
+      const Amax = 1 / Math.sqrt(4 * g * g * (1 - g * g));
+      const Ascale = rH / Math.min(Amax * 1.2, 15);
+      drivenCtx.beginPath();
+      const NR = 200;
+      for (let i = 0; i <= NR; i++) {
+        const wi = 0.1 + (2.2 - 0.1) * i / NR;
+        const A = 1 / Math.sqrt((1 - wi * wi) * (1 - wi * wi) + 4 * g * g * wi * wi);
+        const px = rx0 + (wi - 0.1) / (2.2 - 0.1) * rW;
+        const py = ry0 + rH - Math.min(A * Ascale, rH);
+        i === 0 ? drivenCtx.moveTo(px, py) : drivenCtx.lineTo(px, py);
+      }
+      drivenCtx.strokeStyle = 'rgba(251,113,133,0.5)';
+      drivenCtx.lineWidth = 2.5;
+      drivenCtx.stroke();
+
+      // Current point on curve
+      const A_curr = 1 / Math.sqrt((1 - w * w) * (1 - w * w) + 4 * g * g * w * w);
+      const cpx = rx0 + (w - 0.1) / (2.2 - 0.1) * rW;
+      const cpy = ry0 + rH - Math.min(A_curr * Ascale, rH);
+      drivenCtx.beginPath();
+      drivenCtx.arc(cpx, cpy, 8, 0, Math.PI * 2);
+      drivenCtx.fillStyle = '#f0b429';
+      drivenCtx.shadowColor = '#f0b429';
+      drivenCtx.shadowBlur = 14;
+      drivenCtx.fill();
+      drivenCtx.shadowBlur = 0;
+
+      // Labels
+      drivenCtx.font = '18px "JetBrains Mono",monospace';
+      drivenCtx.fillStyle = 'rgba(123,141,181,0.7)';
+      drivenCtx.textAlign = 'center';
+      drivenCtx.fillText('ω/ω₀', rx0 + rW / 2, ry0 + rH + 24);
+      drivenCtx.save();
+      drivenCtx.translate(rx0 - 14, ry0 + rH / 2);
+      drivenCtx.rotate(-Math.PI / 2);
+      drivenCtx.fillText('Amplitude', 0, 0);
+      drivenCtx.restore();
+
+      // ω₀ marker
+      const w0x = rx0 + (1 - 0.1) / (2.2 - 0.1) * rW;
+      drivenCtx.beginPath();
+      drivenCtx.moveTo(w0x, ry0); drivenCtx.lineTo(w0x, ry0 + rH);
+      drivenCtx.strokeStyle = 'rgba(52,211,153,0.3)';
+      drivenCtx.setLineDash([5, 5]);
+      drivenCtx.stroke();
+      drivenCtx.setLineDash([]);
+      drivenCtx.fillStyle = 'rgba(52,211,153,0.7)';
+      drivenCtx.fillText('ω₀', w0x, ry0 - 6);
+
+      drivenCtx.textAlign = 'left';
+      requestAnimationFrame(drawDriven);
+    }
+    drawDriven();
+
+    // ═══════════════════════════════════════════════
+    //  NORMAL MODES DEMO
+    // ═══════════════════════════════════════════════
+    const NUM_MODES = 5;
+    const modeAmps = [0.7, 0, 0.3, 0, 0.15];
+    const modeColors_nm = ['#f0b429', '#38bdf8', '#a78bfa', '#fb7185', '#34d399'];
+
+    const modesCanvas = document.getElementById('modes-canvas');
+    const modesCtx = modesCanvas.getContext('2d');
+
+    // Build sliders
+    (function buildModeSliders() {
+      const host = document.getElementById('mode-sliders');
+      for (let n = 0; n < NUM_MODES; n++) {
+        const row = document.createElement('div');
+        row.className = 'slider-row';
+        row.innerHTML =
+          '<label style="color:' + modeColors_nm[n] + ';">n=' + (n + 1) + '</label>' +
+          '<input type="range" id="mode-amp-' + n + '" min="0" max="100" value="' + Math.round(modeAmps[n] * 100) + '" step="1" style="accent-color:' + modeColors_nm[n] + ';">' +
+          '<span class="val" id="mode-amp-val-' + n + '">' + (n + 1).toFixed(1) + '·ω₀</span>';
+        host.appendChild(row);
+        document.getElementById('mode-amp-' + n).addEventListener('input', function (e) {
+          modeAmps[n] = e.target.value / 100;
+        });
+      }
+    })();
+
+    function setModePreset(name) {
+      let amps;
+      if (name === 'pluck-center') amps = [1.00, 0, 0.33, 0, 0.20];
+      else if (name === 'pluck-offset') amps = [0.80, 0.45, 0.20, 0.12, 0.08];
+      else if (name === 'bow') amps = [1.00, 0.50, 0.33, 0.25, 0.20];
+      else if (name === 'single-1') amps = [1, 0, 0, 0, 0];
+      else if (name === 'single-3') amps = [0, 0, 1, 0, 0];
+      else amps = [0, 0, 0, 0, 0];
+      for (let i = 0; i < NUM_MODES; i++) {
+        modeAmps[i] = amps[i];
+        const s = document.getElementById('mode-amp-' + i);
+        if (s) s.value = amps[i] * 100;
+      }
+    }
+
+    function drawModes() {
+      const w = modesCanvas.width = modesCanvas.clientWidth * 2;
+      const h = modesCanvas.height = 560;
+      modesCtx.clearRect(0, 0, w, h);
+      const t = performance.now() / 1000;
+      const padX = 40, padY = 50;
+      const plotW = w - 2 * padX, plotH = h - 2 * padY;
+      const cy = padY + plotH / 2;
+      const omega0 = 1.1;
+
+      // Zero line
+      modesCtx.beginPath();
+      modesCtx.moveTo(padX, cy); modesCtx.lineTo(padX + plotW, cy);
+      modesCtx.strokeStyle = 'rgba(255,255,255,0.05)';
+      modesCtx.lineWidth = 1;
+      modesCtx.stroke();
+
+      // Fixed-end markers (walls)
+      modesCtx.fillStyle = 'rgba(255,255,255,0.15)';
+      modesCtx.fillRect(padX - 16, cy - 40, 8, 80);
+      modesCtx.fillRect(padX + plotW + 8, cy - 40, 8, 80);
+
+      const N = 200;
+      const maxAmp = plotH * 0.42;
+
+      // Draw individual modes (faint ghosts)
+      for (let n = 0; n < NUM_MODES; n++) {
+        if (modeAmps[n] < 0.01) continue;
+        const omega_n = (n + 1) * omega0;
+        const amp_n = modeAmps[n] * Math.cos(omega_n * t);
+        modesCtx.beginPath();
+        for (let i = 0; i <= N; i++) {
+          const xFrac = i / N;
+          const x = padX + xFrac * plotW;
+          const shape = Math.sin((n + 1) * Math.PI * xFrac);
+          const y = cy - amp_n * maxAmp * shape * 0.9;
+          i === 0 ? modesCtx.moveTo(x, y) : modesCtx.lineTo(x, y);
+        }
+        modesCtx.strokeStyle = modeColors_nm[n] + '55';
+        modesCtx.lineWidth = 1.5;
+        modesCtx.stroke();
+      }
+
+      // Draw superposition (main white line)
+      modesCtx.beginPath();
+      let anyActive = false;
+      for (let i = 0; i <= N; i++) {
+        const xFrac = i / N;
+        const x = padX + xFrac * plotW;
+        let y = 0;
+        for (let n = 0; n < NUM_MODES; n++) {
+          if (modeAmps[n] < 0.001) continue;
+          anyActive = true;
+          const omega_n = (n + 1) * omega0;
+          const amp_n = modeAmps[n] * Math.cos(omega_n * t);
+          const shape = Math.sin((n + 1) * Math.PI * xFrac);
+          y += amp_n * shape * 0.9;
+        }
+        const py = cy - y * maxAmp;
+        i === 0 ? modesCtx.moveTo(x, py) : modesCtx.lineTo(x, py);
+      }
+      if (anyActive) {
+        modesCtx.strokeStyle = '#ffffff';
+        modesCtx.lineWidth = 2.5;
+        modesCtx.shadowColor = '#ffffff';
+        modesCtx.shadowBlur = 8;
+        modesCtx.stroke();
+        modesCtx.shadowBlur = 0;
+      }
+
+      // Update label
+      const activeCount = modeAmps.filter(a => a > 0.01).length;
+      const label = document.getElementById('modes-label');
+      if (label) label.textContent = activeCount === 0 ? 'string at rest' :
+        activeCount === 1 ? 'single mode — pure sinusoid' :
+          'superposition of ' + activeCount + ' modes';
+
+      requestAnimationFrame(drawModes);
+    }
+    drawModes();
+
+    // ═══════════════════════════════════════════════
+    //  REVEAL ON SCROLL
+    // ═══════════════════════════════════════════════
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ─── Nav dots ───
+    const sections = ['hero', 'sec-anagram', 'sec-galileo', 'sec-huygens', 'sec-amplitude', 'sec-tautochrone', 'sec-longitude', 'sec-phase', 'sec-taylor', 'sec-seven', 'sec-resonance', 'sec-reach', 'sec-epilogue'];
+    const navDots = document.getElementById('nav-dots');
+    sections.forEach((id) => {
+      const dot = document.createElement('button');
+      dot.className = 'nav-dot';
+      dot.onclick = () => document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+      navDots.appendChild(dot);
+    });
+    const secObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const idx = sections.indexOf(e.target.id);
+          document.querySelectorAll('.nav-dot').forEach((d, i) => {
+            d.classList.toggle('active', i === idx);
+          });
+        }
+      });
+    }, { threshold: 0.3 });
+    sections.forEach(id => { const el = document.getElementById(id); if (el) secObserver.observe(el); });
+  </script>
+
+  <script>
+    window.NARRATION_CONFIG = {
+      chapter: 'harmonic',
+      basePath: 'assets/narration/harmonic/',
+      segments: [
+        { id: 1, section: '#hero', label: 'Introduction' },
+        { id: 2, section: '#sec-anagram', label: '§1 Hooke\'s Anagram' },
+        { id: 3, section: '#sec-galileo', label: '§2 Galileo in Pisa' },
+        { id: 4, section: '#sec-huygens', label: '§3 Huygens\' Clock' },
+        { id: 5, section: '#sec-amplitude', label: '§4 Where Isochronism Fails' },
+        { id: 6, section: '#sec-tautochrone', label: '§5 The Tautochrone' },
+        { id: 7, section: '#sec-longitude', label: '§6 The Longitude Problem' },
+        { id: 8, section: '#sec-phase', label: '§7 Phase Space' },
+        { id: 9, section: '#sec-taylor', label: '§8 Taylor Universality' },
+        { id: 10, section: '#sec-seven', label: '§9 Seven Costumes' },
+        { id: 11, section: '#sec-resonance', label: '§10 Resonance' },
+        { id: 12, section: '#sec-reach', label: '§11 The Imperial Reach' },
+        { id: 13, section: '#sec-epilogue', label: '§12 Epilogue' }
+      ]
+    };
+  </script>
+  <script src="narration_player.js"></script>
+
+  <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
+    <script src="https://giscus.app/client.js" data-repo="kimshmath/edu" data-repo-id="R_kgDORrE8sw"
+      data-category="Comments" data-category-id="DIC_kwDORrE8s84C45oL" data-mapping="pathname" data-strict="0"
+      data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="dark" data-lang="en"
+      crossorigin="anonymous" async>
+      </script>
+  </div>
+
+  <footer>
+    <div class="footer-rule"></div>
+    <div class="footer-attr">
+      <div class="footer-name">Sang-hyun Kim</div>
+      <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+      <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+    </div>
+  </footer>
+
+  <a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
+</body>
+
+</html>

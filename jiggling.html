@@ -1,0 +1,1870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-RQVK6SF2E6');
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The World Is Made of Jiggling — Mellow Mechanics · Chapter 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="narration_player.css">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #080d1a;
+  --bg2: #0c1326;
+  --bg3: #111b38;
+  --card: #131f42;
+  --gold: #f0b429;
+  --gold-dim: #c4912080;
+  --sky: #38bdf8;
+  --purple: #a78bfa;
+  --coral: #fb7185;
+  --mint: #34d399;
+  --text: #e0e6f0;
+  --muted: #7b8db5;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+
+/* ─── Grain overlay ─── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999;
+}
+
+/* ─── Section layout ─── */
+section {
+  min-height: 100vh;
+  padding: 6rem 2rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.section-inner {
+  max-width: 900px;
+  width: 100%;
+}
+
+/* ─── Typography ─── */
+h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+  margin-bottom: 1.5rem;
+}
+h3 {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.5rem;
+}
+p { margin-bottom: 1rem; }
+.accent-gold { color: var(--gold); }
+.accent-sky { color: var(--sky); }
+.accent-purple { color: var(--purple); }
+.accent-coral { color: var(--coral); }
+.accent-mint { color: var(--mint); }
+
+.prose-drop::first-letter {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 3.6rem;
+  line-height: 0.9;
+  float: left;
+  margin: 0.35rem 0.7rem 0 0;
+  color: var(--gold);
+}
+
+.pullquote {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.25rem, 2.6vw, 1.75rem);
+  line-height: 1.4;
+  color: #edeef2;
+  text-align: center;
+  margin: 2.5rem auto;
+  max-width: 720px;
+  padding-bottom: 1.2rem;
+  position: relative;
+}
+.pullquote::after {
+  content: '';
+  position: absolute;
+  left: 50%; bottom: 0;
+  transform: translateX(-50%);
+  width: 120px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+blockquote.source {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.02rem;
+  line-height: 1.55;
+  color: var(--text);
+  background: rgba(240, 180, 41, 0.04);
+  border-left: 2px solid var(--gold);
+  padding: 1.1rem 1.4rem;
+  margin: 1.8rem 0;
+  border-radius: 0 8px 8px 0;
+}
+blockquote.source cite {
+  display: block;
+  margin-top: 0.6rem;
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ─── Hero ─── */
+#hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+#hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.55;
+}
+#hero .content {
+  position: relative;
+  z-index: 2;
+}
+#hero h1 { margin-bottom: 1rem; }
+#hero .subtitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  color: var(--gold);
+  font-style: italic;
+  margin-bottom: 2.5rem;
+}
+#hero .tagline {
+  color: var(--muted);
+  font-size: 0.95rem;
+  max-width: 500px;
+  margin: 0 auto 2.5rem;
+}
+#hero .chapter-mark {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.2rem;
+  opacity: 0.8;
+}
+
+.start-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 2.2rem;
+  background: transparent;
+  border: 1.5px solid var(--gold);
+  color: var(--gold);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 60px;
+  cursor: pointer;
+  transition: all 0.3s;
+  letter-spacing: 0.05em;
+}
+.start-btn:hover {
+  background: var(--gold);
+  color: var(--bg);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(240, 180, 41, 0.25);
+}
+
+/* ─── Navigation dots ─── */
+#nav-dots {
+  position: fixed;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.nav-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--muted);
+  opacity: 0.3;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+}
+.nav-dot.active {
+  opacity: 1;
+  background: var(--gold);
+  transform: scale(1.4);
+}
+
+/* ─── Cards ─── */
+.demo-card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 1.5rem 0;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+.demo-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--sky), var(--purple));
+  opacity: 0.6;
+}
+.demo-card .card-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.demo-card .card-label::before {
+  content: '';
+  display: inline-block;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 8px rgba(240,180,41,0.6);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.demo-card h4 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.35rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  line-height: 1.3;
+}
+.demo-card .card-desc {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 1.2rem;
+  line-height: 1.6;
+}
+
+/* ─── Buttons ─── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.3rem;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s;
+  font-weight: 400;
+}
+.btn:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.25);
+  transform: translateY(-1px);
+}
+.btn.active, .btn.playing {
+  border-color: var(--gold);
+  background: rgba(240, 180, 41, 0.12);
+  color: var(--gold);
+}
+.btn-gold {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.btn-gold:hover {
+  background: var(--gold);
+  color: var(--bg);
+}
+.btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; }
+
+/* ─── Sliders ─── */
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0.6rem 0;
+}
+.slider-row label {
+  min-width: 3.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+}
+.slider-row .val {
+  min-width: 4.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+  text-align: right;
+}
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 4px;
+  background: var(--bg3);
+  border-radius: 2px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--gold);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 16px; height: 16px;
+  border: none;
+  border-radius: 50%;
+  background: var(--gold);
+  cursor: pointer;
+}
+
+/* ─── Canvas containers ─── */
+.canvas-wrap {
+  position: relative;
+  width: 100%;
+  background: rgba(0,0,0,0.25);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+.canvas-wrap canvas {
+  display: block;
+  width: 100%;
+}
+.canvas-label {
+  position: absolute;
+  top: 0.7rem; left: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ─── Stats grid ─── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.stat-box {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius: 10px;
+  padding: 0.7rem 0.9rem;
+  text-align: left;
+}
+.stat-box .stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+.stat-box .stat-val {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  color: var(--gold);
+  font-weight: 400;
+}
+.stat-box .stat-unit {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--muted);
+  margin-left: 0.2rem;
+}
+
+/* ─── Reveal animation ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Section divider ─── */
+.section-num {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--gold);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  opacity: 0.7;
+}
+
+/* ─── Coda ─── */
+.coda {
+  text-align: center;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.1rem, 2.3vw, 1.45rem);
+  line-height: 1.9;
+  color: #d8d4cc;
+  margin: 3rem auto 1rem;
+  max-width: 640px;
+}
+.coda .coda-rule {
+  width: 40px; height: 1px;
+  background: var(--gold);
+  margin: 0 auto 2rem;
+  opacity: 0.5;
+}
+
+/* ─── References ─── */
+.ref-section {
+  max-width: 820px;
+  margin: 3rem auto 0;
+  padding: 2rem 0 1rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.ref-heading {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.2rem;
+  text-transform: none;
+}
+.ref-heading::before {
+  content: 'References';
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.ref-heading > * { display: none; }
+.ref-list {
+  list-style: none;
+  display: grid;
+  gap: 0.65rem;
+}
+.ref-list li {
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--text);
+  padding-left: 1.1rem;
+  position: relative;
+}
+.ref-list li::before {
+  content: '§';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+.ref-author { color: var(--muted); }
+.ref-title { font-style: italic; color: #d8d4cc; }
+.ref-detail { color: var(--muted); font-size: 0.76rem; }
+
+/* ─── Scale strip (section 3) ─── */
+.scale-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 1rem 0;
+}
+.scale-item {
+  display: grid;
+  grid-template-columns: 140px 1fr 90px;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.55rem 0.8rem;
+  background: rgba(255,255,255,0.02);
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+.scale-item:hover { background: rgba(240,180,41,0.05); }
+.scale-item .scale-name {
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  color: var(--text);
+}
+.scale-item .scale-bar {
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--sky));
+  border-radius: 2px;
+  opacity: 0.55;
+}
+.scale-item .scale-size {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--gold);
+  text-align: right;
+}
+
+/* ─── Timeline (section 2) ─── */
+.timeline {
+  position: relative;
+  padding: 1.5rem 0 1rem;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 140px; right: 20px; top: 2.6rem;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(240,180,41,0.1), var(--gold-dim), rgba(240,180,41,0.1));
+}
+.tl-row {
+  display: grid;
+  grid-template-columns: 120px 22px 1fr;
+  gap: 1rem;
+  align-items: start;
+  padding: 0.75rem 0;
+  position: relative;
+}
+.tl-year {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--gold);
+  text-align: right;
+  padding-top: 0.05rem;
+}
+.tl-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--gold);
+  margin: 0.4rem auto 0;
+  position: relative;
+  z-index: 2;
+}
+.tl-dot.hollow { background: var(--bg); border-color: var(--muted); }
+.tl-event {
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+.tl-event strong {
+  font-weight: 500;
+  color: #edeef2;
+}
+.tl-event .tl-note {
+  display: block;
+  font-size: 0.76rem;
+  color: var(--muted);
+  margin-top: 0.15rem;
+}
+
+/* ─── Floating badge ─── */
+.floating-badge{position:fixed;bottom:1.75rem;left:1.75rem;z-index:10000;font-family:'JetBrains Mono',monospace;font-size:0.75rem;letter-spacing:.14em;text-transform:lowercase;color:#8db830;background:transparent;padding:.35rem .7rem;text-decoration:none;transition:color .25s,text-shadow .25s,transform .25s;text-shadow:0 0 6px rgba(141,184,48,.4),0 0 16px rgba(141,184,48,.15)}
+.floating-badge:hover{color:#a8d43a;text-shadow:0 0 8px rgba(141,184,48,.65),0 0 22px rgba(141,184,48,.28);transform:translateY(-1px)}
+
+/* ─── Footer ─── */
+footer {
+  padding: 2rem 2rem 3rem;
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+}
+.footer-rule {
+  width: 100%;
+  height: 1px;
+  background: rgba(255,255,255,0.06);
+  margin-bottom: 1.5rem;
+}
+.footer-attr {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  align-items: center;
+  text-align: center;
+}
+.footer-name {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #edeef2;
+}
+.footer-inst {
+  font-size: 0.88rem;
+  color: var(--muted, #5c6178);
+}
+.footer-url {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #d4a853;
+  text-decoration: none;
+  margin-top: 0.25rem;
+  display: inline-block;
+}
+.footer-url:hover { text-decoration: underline; }
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+  section { padding: 4rem 1.2rem; }
+  #nav-dots { display: none; }
+  .demo-card { padding: 1.3rem; }
+  .tl-row { grid-template-columns: 72px 18px 1fr; gap: 0.6rem; }
+  .timeline::before { left: 88px; }
+  .tl-year { font-size: 0.74rem; }
+  .tl-event { font-size: 0.82rem; }
+  .scale-item { grid-template-columns: 100px 1fr 80px; gap: 0.6rem; padding: 0.5rem 0.6rem; }
+  .scale-item .scale-name { font-size: 0.78rem; }
+  .scale-item .scale-size { font-size: 0.68rem; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .btn { font-size: 0.78rem; padding: 0.5rem 0.9rem; }
+  .stat-box .stat-val { font-size: 0.95rem; }
+}
+</style>
+<link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="typography.css">
+</head>
+<body>
+
+<style>
+/* ─── Additions for Chapter 1 interactives ─── */
+.dual-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  margin: 1rem 0;
+}
+.dual-wrap .canvas-wrap { margin: 0; }
+.dual-wrap .canvas-label { top: 0.55rem; left: 0.7rem; font-size: 0.6rem; }
+@media (max-width: 600px) {
+  .dual-wrap { grid-template-columns: 1fr; }
+}
+.mini-caption {
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.4rem;
+}
+.mini-caption .t-val { color: var(--gold); }
+.msd-wrap {
+  position: relative;
+  width: 100%;
+  background: rgba(0,0,0,0.25);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 0.6rem 0 0;
+}
+.msd-wrap canvas { display: block; width: 100%; }
+</style>
+
+<!-- Navigation dots -->
+<nav id="nav-dots"></nav>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<!-- NARRATION (EN): Welcome to Mellow Mechanics, Chapter One. Sit quietly for a moment. Hold the edge of your desk, or your phone, or the chair you are in. Feel how solid it is. Now know that it is trembling, and always has been. Every warm thing, every pressure on your skin, every smell crossing a room, is one idea seen from a different angle. Six exhibits follow. Each is that idea, made visible. -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="content">
+    <p class="chapter-mark">Mellow Mechanics · Chapter I</p>
+    <h3 class="accent-gold">Atoms in Motion</h3>
+    <h1>The World Is Made<br>of <em style="font-style:italic;color:var(--gold);">Jiggling</em></h1>
+    <p class="subtitle">on the restless floor of everything</p>
+    <p class="tagline">Sit quietly. Hold the edge of your desk. Feel how solid it is.<br>Now know that it is trembling — and always has been.</p>
+    <button class="start-btn" onclick="document.getElementById('sec-sentence').scrollIntoView({behavior:'smooth'})">
+      ↓ Begin
+    </button>
+  </div>
+</section>
+
+<!-- ═══════════════════ 1. THE SENTENCE ═══════════════════ -->
+<!-- NARRATION (EN): In the autumn of nineteen sixty-one, Richard Feynman walked into a lecture hall at Caltech and asked his freshman class a strange question. If all scientific knowledge were destroyed in some cataclysm, and only one sentence could be passed down to the next generation, which sentence would carry the most information in the fewest words? He answered himself immediately. It would be the atomic hypothesis — that all things are made of atoms, little particles that move in perpetual motion. In that single sentence, he claimed, an enormous amount of information about the world is contained, if just a little imagination and thinking are applied. This chapter is six attempts to apply that imagination. Each exhibit you are about to see is Feynman's sentence, made visible. -->
+<section id="sec-sentence">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">01 — The Sentence</p>
+      <h2>One Line, <span class="accent-gold">All of Physics</span></h2>
+      <p>In the autumn of 1961, Richard Feynman stood in front of a freshman class at Caltech and asked a strange question. If all scientific knowledge were destroyed in some cataclysm, and only a single sentence could be passed down — which sentence would carry the most information in the fewest words?</p>
+      <p>He answered himself immediately.</p>
+      <blockquote class="source">
+        All things are made of atoms — little particles that move around in perpetual motion, attracting each other when they are a little distance apart, but repelling upon being squeezed into one another.
+        <cite>— R. P. Feynman, The Feynman Lectures on Physics, Vol. I, Ch. 1</cite>
+      </blockquote>
+      <p>In that single sentence, he said, an enormous amount of information about the world is contained — if just a little imagination and thinking are applied. What follows are six attempts to spend those two things carefully. Six exhibits. Each is Feynman's sentence, made visible.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 2. TEMPERATURE = SPEED ═══════════════════ -->
+<!-- NARRATION (EN): When you touch a warm cup of tea, your fingers are not sensing some fluid called heat seeping into your skin. They are sensing the collective drumming of fast-moving water molecules, striking the inside of the ceramic, which strikes your cells. Temperature is not a substance. It is a speed. A cold atom and a hot atom are the same atom, moving at different rates. Drag the slider below and watch two boxes: one at the chosen temperature, one at four times that temperature. Same atoms. Same count. Only the tempo has changed. -->
+<section id="sec-hotcold">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">Exhibit I — Temperature</p>
+      <h2>Heat Is <span class="accent-coral">Speed</span></h2>
+      <p>When you wrap your hands around a warm cup of tea, your fingers are not sensing some invisible fluid seeping into your skin. They are sensing a drumbeat. Billions of fast water molecules strike the inside of the ceramic; the ceramic's own atoms jiggle harder in reply; that jiggling passes, collision by collision, into the nerves beneath your palms. What you call <span class="accent-gold">warmth</span> is a statistic — the average speed of a crowd you cannot see.</p>
+      <p>A cold atom and a hot atom are the same atom. Only the tempo differs. Drag the slider below.</p>
+    </div>
+    <div class="demo-card reveal">
+      <div class="card-label">Interactive · Hot vs Cold</div>
+      <h4>What "Warm" Means, Underneath</h4>
+      <div class="card-desc">Drag the slider to change temperature. The two boxes always sit at the chosen temperature and four times that temperature.</div>
+      <div class="dual-wrap">
+        <div>
+          <div class="canvas-wrap">
+            <span class="canvas-label" id="hc-label-cold">cold · 80 K</span>
+            <canvas id="hc-canvas-cold" height="240"></canvas>
+          </div>
+          <div class="mini-caption">mean speed <span class="t-val" id="hc-v-cold">—</span></div>
+        </div>
+        <div>
+          <div class="canvas-wrap">
+            <span class="canvas-label" id="hc-label-hot">hot · 320 K</span>
+            <canvas id="hc-canvas-hot" height="240"></canvas>
+          </div>
+          <div class="mini-caption">mean speed <span class="t-val" id="hc-v-hot">—</span></div>
+        </div>
+      </div>
+      <div class="slider-row">
+        <label>T</label>
+        <input type="range" id="hc-slider" min="20" max="200" value="80">
+        <span class="val" id="hc-val">80 K</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 3. THE BOX ═══════════════════ -->
+<!-- NARRATION (EN): In eighteen sixty, a twenty-nine-year-old Scottish physicist named James Clerk Maxwell sat down to calculate something that had no business being calculable. He asked: if you fill a box with atoms and let them collide endlessly, what will the distribution of their speeds look like? Not the speed of any one atom — those are chaotic, unknowable — but the shape of the crowd. Maxwell's answer was a curve, bell-shaped but tilted, with a long tail toward high speeds. It was the first successful prediction made purely from statistics, without tracking any individual particle. Below, that curve assembles itself, live, from two hundred bouncing disks. The amber one is a tracer — its path is the Brownian motion Robert Brown could not explain, and which Einstein would explain seventy-seven years later with a pencil. -->
+<section id="sec-box">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">Exhibit II — The Box</p>
+      <h2>Two Hundred <span class="accent-gold">Impacts</span></h2>
+      <p>In 1860, a young Scottish physicist named James Clerk Maxwell asked a question that sounds impossible to answer. If you fill a box with atoms and let them collide endlessly, what does the distribution of their speeds look like? The speed of any single atom is chaotic — but the shape of the <em>crowd</em>, Maxwell suggested, can be computed from pure statistics.</p>
+      <p>The curve he derived is slightly asymmetric, with a long tail toward high speeds. It was the first great victory of statistical thinking in physics. Below, that curve assembles itself in real time from two hundred bouncing disks. The amber disk carries a trail — its wandering path is Brownian motion, the same jittering Robert Brown watched under his microscope in 1827 without being able to explain.</p>
+    </div>
+    <div class="demo-card reveal">
+      <div class="card-label">Interactive · Kinetic Theory</div>
+      <h4>The Maxwell–Boltzmann Distribution, Live</h4>
+      <div class="card-desc">Drag the temperature. Watch the histogram shift and widen. Watch the pressure on the walls rise.</div>
+      <div class="canvas-wrap">
+        <span class="canvas-label">200 atoms · elastic collisions · 2D hard-disk gas</span>
+        <canvas id="gas-canvas" height="420"></canvas>
+      </div>
+      <div class="slider-row">
+        <label>T</label>
+        <input type="range" id="temp-slider" min="5" max="300" value="100">
+        <span class="val" id="temp-val">100 K</span>
+      </div>
+      <div class="slider-row">
+        <label>N</label>
+        <input type="range" id="n-slider" min="40" max="320" value="200" step="10">
+        <span class="val" id="n-val">200 atoms</span>
+      </div>
+      <div class="btn-group">
+        <button class="btn" id="trail-btn" onclick="toggleTrail()">Brownian trail: on</button>
+        <button class="btn" id="hist-btn" onclick="toggleHist()">Histogram: on</button>
+        <button class="btn" onclick="resetGas()">↻ Reset</button>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-box"><div class="stat-label">Mean Speed</div><div class="stat-val" id="stat-vmean">—</div></div>
+        <div class="stat-box"><div class="stat-label">Pressure</div><div class="stat-val" id="stat-pressure">—</div></div>
+        <div class="stat-box"><div class="stat-label">Wall Hits / s</div><div class="stat-val" id="stat-hits">—</div></div>
+        <div class="stat-box"><div class="stat-label">Tracer Path</div><div class="stat-val" id="stat-path">—</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 4. BROWNIAN MOTION ═══════════════════ -->
+<!-- NARRATION (EN): On a June afternoon in eighteen twenty-seven, the Scottish botanist Robert Brown placed a drop of water containing pollen grains under his microscope and watched the tiny particles inside refuse to sit still. They jerked. They drifted. They traced irregular paths with no apparent cause. Brown was sixty-three years old, a veteran of expeditions to Australia, a man of careful observation — and he had no idea what he was seeing. He tested dead wood, ground glass, even dust from a stone fragment of the Great Sphinx, over four thousand years old. Every specimen jittered the same way. Seventy-eight years later, at age twenty-six, working on his lunch breaks at the Swiss patent office, Einstein derived the exact quantitative signature of Brown's motion. The mean squared distance that a pollen grain wanders, he predicted, grows linearly with time — not with time squared, as a falling object's would, but simply with time. Below, that prediction proves itself. -->
+<section id="sec-brown">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">Exhibit III — Brownian Motion</p>
+      <h2>What Robert Brown <span class="accent-sky">Saw</span></h2>
+      <p>On a June afternoon in 1827, the Scottish botanist Robert Brown placed a drop of water containing pollen under his microscope and watched the tiny particles inside refuse to sit still. They jerked. They drifted. They traced irregular paths with no apparent cause. Brown tested dead wood, ground glass, even dust from a fragment of the Great Sphinx — everything jittered. He published his observations and moved on. <span class="accent-gold">Nobody could explain them for seventy-eight years.</span></p>
+      <p>In 1905, a twenty-six-year-old patent clerk in Bern worked it out with a pencil. If atoms exist, Einstein argued, a grain of pollen suspended in water must be kicked by billions of invisible impacts per second. Statistically, a slight net push will survive. He derived the signature: the mean squared distance the grain wanders grows <em>linearly</em> with time — not as time squared, the way a falling object's does, but simply as time. Below, that prediction proves itself.</p>
+    </div>
+    <div class="demo-card reveal">
+      <div class="card-label">Interactive · Einstein's 1905 Prediction</div>
+      <h4>The Signature of Invisible Kicks</h4>
+      <div class="card-desc">Left: one amber particle pushed by hundreds of smaller atoms. Right: the mean squared displacement growing linearly in time — the signature Einstein derived.</div>
+      <div class="canvas-wrap">
+        <span class="canvas-label">tracer + bath · 2D Brownian motion</span>
+        <canvas id="br-canvas" height="340"></canvas>
+      </div>
+      <div class="msd-wrap">
+        <canvas id="br-msd" height="140"></canvas>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-gold" onclick="resetBrownian()">↻ New Path</button>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-box"><div class="stat-label">Time Elapsed</div><div class="stat-val" id="br-time">—</div></div>
+        <div class="stat-box"><div class="stat-label">Net Drift</div><div class="stat-val" id="br-drift">—</div></div>
+        <div class="stat-box"><div class="stat-label">MSD ⟨r²⟩</div><div class="stat-val" id="br-msd-val">—</div></div>
+        <div class="stat-box"><div class="stat-label">Slope</div><div class="stat-val" id="br-slope">—</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 5. DIFFUSION ═══════════════════ -->
+<!-- NARRATION (EN): Open a bottle of perfume at one end of a quiet room, sit down, and wait. Within minutes, the scent arrives at your nose without any wind carrying it. Each fragrance molecule, on its own, performs a drunken walk — collides with an air molecule, tumbles, collides again, tumbles again. The path of any single molecule is unpredictable. But the crowd of them spreads outward, reliably, in a cloud whose width grows as the square root of time. The same statistical law Einstein derived for a single Brownian tracer governs the diffusion of millions. Click in the box below to release drops of different colors, and watch each cloud grow. -->
+<section id="sec-diffusion">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">Exhibit IV — Diffusion</p>
+      <h2>Why Smells <span class="accent-purple">Cross Rooms</span></h2>
+      <p>Open a bottle of perfume at one end of a quiet room and wait. No wind, no draft — and yet, within minutes, the scent arrives at your nose. Each fragrance molecule, alone, performs a drunken walk: collide, tumble, collide again. The path of any single one is unpredictable. But the crowd of them spreads outward, reliably, in a cloud whose width grows as the square root of time.</p>
+      <p>The same Brownian law from the previous exhibit now runs in <em>parallel</em>, millions of molecules at once. Click anywhere in the box to release a drop. Watch the cloud widen. Click again to release another.</p>
+    </div>
+    <div class="demo-card reveal">
+      <div class="card-label">Interactive · Ink in Water</div>
+      <h4>How a Cloud Grows</h4>
+      <div class="card-desc">Click anywhere in the box to release a drop. Watch it expand. The width of the cloud grows as √t, just like the Brownian path.</div>
+      <div class="canvas-wrap">
+        <span class="canvas-label">random walk · many walkers · click to add a drop</span>
+        <canvas id="diff-canvas" height="360"></canvas>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-gold" onclick="releaseDrop()">+ Release Drop</button>
+        <button class="btn" onclick="clearDiffusion()">↻ Clear</button>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-box"><div class="stat-label">Walkers</div><div class="stat-val" id="diff-n">0</div></div>
+        <div class="stat-box"><div class="stat-label">Cloud Width σ</div><div class="stat-val" id="diff-sigma">—</div></div>
+        <div class="stat-box"><div class="stat-label">Time</div><div class="stat-val" id="diff-time">—</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 6. PRESSURE = IMPACTS ═══════════════════ -->
+<!-- NARRATION (EN): A tire holds up a car through nothing but percussion. Inside each inflated tube, trillions of air molecules strike the rubber walls every second, each rebound transferring a tiny push. The collective push is what we call pressure. Robert Boyle measured it in sixteen sixty-two: at constant temperature, the product of pressure and volume stays constant. Squeeze the gas into half the space, the pressure doubles. Boyle saw this from the outside, as an engineer would, and called it a law. What he could not see was why it was true. From the atoms' point of view, the answer is obvious: halve the volume, and each molecule hits the walls twice as often. Drag the piston below and watch the drumbeat quicken. -->
+<section id="sec-pressure">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">Exhibit V — Pressure</p>
+      <h2>What Pushes on the <span class="accent-mint">Walls</span></h2>
+      <p>A tire holds up a car through nothing but percussion. Billions of air molecules strike the rubber every second, each rebound delivering a tiny push. Together they lift a ton of steel. In 1662 Robert Boyle observed that halving a gas's volume exactly doubles its pressure — and for 250 years, the law bore his name without anyone knowing <em>why</em> it was true.</p>
+      <p>From the atoms' side, the answer is trivial. Squeeze the box; each molecule has to hit the walls twice as often. The drumbeat quickens, and pressure rises in lockstep. Drag the green piston below.</p>
+    </div>
+    <div class="demo-card reveal">
+      <div class="card-label">Interactive · Boyle's Law</div>
+      <h4>Compress the Gas</h4>
+      <div class="card-desc">Drag the piston. The gauge on the right shows pressure. Watch the product P × V stay nearly constant.</div>
+      <div class="canvas-wrap">
+        <span class="canvas-label">moveable piston · drag the slider to compress</span>
+        <canvas id="press-canvas" height="300"></canvas>
+      </div>
+      <div class="slider-row">
+        <label>V</label>
+        <input type="range" id="press-slider" min="30" max="100" value="85">
+        <span class="val" id="press-val">85%</span>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-box"><div class="stat-label">Volume</div><div class="stat-val" id="stat-V">—</div></div>
+        <div class="stat-box"><div class="stat-label">Pressure</div><div class="stat-val" id="stat-P">—</div></div>
+        <div class="stat-box"><div class="stat-label">P × V</div><div class="stat-val" id="stat-PV">—</div></div>
+        <div class="stat-box"><div class="stat-label">Hits / s</div><div class="stat-val" id="stat-pressHits">—</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 7. ICE FLOATS ═══════════════════ -->
+<!-- NARRATION (EN): Nearly every substance on Earth gets denser when it freezes. Molten lead, paraffin wax, frozen mercury — all sink in their own liquids. Water refuses. Because water molecules are polar, with a slight negative charge on the oxygen and a slight positive on each hydrogen, they pull on each other not only by ordinary attraction but by directional hydrogen bonds. When water freezes, it arranges itself to maximize those bonds, and the arrangement is hexagonal — open, roomy, about nine percent less dense than the liquid tumble it came from. The consequence is not small. A lake in winter freezes at the surface first, and the ice, being lighter, floats. It forms a lid that insulates the water beneath. Fish survive. Frogs hibernate in the mud. Complex ecosystems in temperate latitudes owe their winter survival to this single geometric quirk of the water molecule. -->
+<section id="sec-ice">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">Exhibit VI — The Anomaly</p>
+      <h2>Why Ice <span class="accent-sky">Floats</span></h2>
+      <p>Nearly every substance gets denser when it freezes. Molten lead, paraffin wax, frozen mercury — all sink in their own liquids. Water refuses. Because its molecules are polar — a slightly negative oxygen, two slightly positive hydrogens — they pull on each other not only by ordinary attraction but by directional <em>hydrogen bonds</em>. When water freezes, it arranges itself to maximize those bonds, and the arrangement is hexagonal: open, roomy, <span class="accent-gold">about nine percent less dense</span> than the liquid crowd it came from.</p>
+      <p>The consequence is not small. A lake in winter freezes at the surface first, and the ice floats. It forms an insulating lid. Fish survive. Frogs hibernate in the mud beneath. Complex ecosystems at temperate latitudes owe their winters to this single geometric quirk of a three-atom molecule.</p>
+    </div>
+    <div class="demo-card reveal">
+      <div class="card-label">Interactive · The Density Anomaly</div>
+      <h4>Hexagonal Ice vs. Random Liquid</h4>
+      <div class="card-desc">Left: the open lattice of ice. Right: the denser, disordered liquid. Toggle temperature to watch one become the other.</div>
+      <div class="canvas-wrap">
+        <span class="canvas-label">Ice (left) · Liquid water (right) · 2D analogue</span>
+        <canvas id="ice-canvas" height="320"></canvas>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-gold active" id="ice-btn-ice" onclick="setIceState('ice')">Solid ice · 270 K</button>
+        <button class="btn" id="ice-btn-liq" onclick="setIceState('liquid')">Liquid water · 280 K</button>
+        <button class="btn" id="ice-btn-warm" onclick="setIceState('warm')">Warm water · 320 K</button>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-box"><div class="stat-label">Left (Ice)</div><div class="stat-val" id="ice-rho-left">0.917<span class="stat-unit">g/cm³</span></div></div>
+        <div class="stat-box"><div class="stat-label">Right (Liquid)</div><div class="stat-val" id="ice-rho-right">1.000<span class="stat-unit">g/cm³</span></div></div>
+        <div class="stat-box"><div class="stat-label">Density Gap</div><div class="stat-val">9.1<span class="stat-unit">%</span></div></div>
+        <div class="stat-box"><div class="stat-label">Neighbors</div><div class="stat-val" id="ice-neighbors">4 / 5</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 8. EPILOGUE ═══════════════════ -->
+<!-- NARRATION (EN): The sentence Feynman chose, if one had to choose only one, is in the end a sentence about restlessness. There is no still thing. The walls around you are a lattice trembling in place; the air above them is a crowd in perpetual wander; the warmth of your own body is a measured speed. Feynman returned to this thought often. Everything that living things do, he wrote elsewhere in the same chapter, can be understood in terms of the jigglings and wigglings of atoms. What makes this picture beautiful is not its utility, though it is useful. What makes it beautiful is its generosity. The same statistical grammar that governs the drift of pollen grains in water governs the diffusion of perfume across a room, the pressure that holds up a tire, the hexagonal lattice that lets fish survive beneath a frozen lake. One picture — atoms, motion, collision — and an entire world lights up from inside. You will put your phone down and walk into a kitchen. You will touch a counter, feel its coolness, smell something on the stove, fill a glass. None of these sensations will be different from what they were before. But now, for the rest of your life, you will know that every one of them is this. -->
+<section id="sec-closing">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">Epilogue</p>
+      <h2>Nothing Is <span class="accent-gold">Still</span></h2>
+      <p>The sentence Feynman chose, if one had to choose only one, is in the end a sentence about restlessness. There is no still thing. The walls around you are a lattice trembling in place; the air above them is a crowd in perpetual wander; the warmth of your own body is a measured speed.</p>
+      <p>Feynman returned to this thought often. A few pages later in the same chapter, reaching for the broadest possible statement, he wrote —</p>
+      <blockquote class="source">
+        Everything that living things do can be understood in terms of the jigglings and wigglings of atoms.
+        <cite>— R. P. Feynman, The Feynman Lectures on Physics, Vol. I, Ch. 1</cite>
+      </blockquote>
+      <p>What makes this picture beautiful is not its utility, though it is useful. What makes it beautiful is its generosity. The same statistical grammar that governs the drift of pollen grains in water governs the diffusion of perfume across a room, the pressure that holds up a tire, the hexagonal lattice that lets fish survive beneath a frozen lake. One picture — atoms, motion, collision — and an entire world lights up from inside.</p>
+      <p>You will put this page down and walk into a kitchen. You will touch a counter, feel its coolness, smell something on the stove, fill a glass from the tap. None of these sensations will be different from what they were before. But for the rest of your life, you will know that every one of them <span class="accent-gold">is this</span>.</p>
+
+      <div class="coda">
+        <div class="coda-rule"></div>
+        To see a World in a Grain of Sand<br>
+        And a Heaven in a Wild Flower,<br>
+        Hold Infinity in the palm of your hand<br>
+        And Eternity in an hour.
+        <div style="margin-top:1.2rem; font-family:var(--font-mono); font-size:0.7rem; letter-spacing:0.16em; text-transform:uppercase; color:var(--muted); font-style:normal;">— William Blake, Auguries of Innocence, c. 1803</div>
+      </div>
+
+      <div class="ref-section reveal">
+        <h3 class="ref-heading"><span>References</span></h3>
+        <ul class="ref-list">
+          <li><span class="ref-author">Feynman, R. P., Leighton, R. B., Sands, M.</span> <span class="ref-title">The Feynman Lectures on Physics, Volume I, Chapter 1: Atoms in Motion.</span> <span class="ref-detail">Addison-Wesley, 1963.</span></li>
+          <li><span class="ref-author">Einstein, A.</span> <span class="ref-title">Über die von der molekularkinetischen Theorie der Wärme geforderte Bewegung von in ruhenden Flüssigkeiten suspendierten Teilchen.</span> <span class="ref-detail">Annalen der Physik 17, 549–560, 1905.</span></li>
+          <li><span class="ref-author">Perrin, J.</span> <span class="ref-title">Mouvement brownien et réalité moléculaire.</span> <span class="ref-detail">Annales de Chimie et de Physique 18, 1–114, 1909.</span></li>
+          <li><span class="ref-author">Brown, R.</span> <span class="ref-title">A Brief Account of Microscopical Observations on the Particles Contained in the Pollen of Plants.</span> <span class="ref-detail">Philosophical Magazine 4, 161–173, 1828.</span></li>
+          <li><span class="ref-author">Maxwell, J. C.</span> <span class="ref-title">Illustrations of the Dynamical Theory of Gases.</span> <span class="ref-detail">Philosophical Magazine 19 and 20, 1860.</span></li>
+          <li><span class="ref-author">Boltzmann, L.</span> <span class="ref-title">Vorlesungen über Gastheorie.</span> <span class="ref-detail">Barth, Leipzig, 1896–1898.</span></li>
+          <li><span class="ref-author">Lucretius, T.</span> <span class="ref-title">De Rerum Natura.</span> <span class="ref-detail">c. 55 BC.</span></li>
+          <li><span class="ref-author">Pais, A.</span> <span class="ref-title">Subtle Is the Lord: The Science and Life of Albert Einstein.</span> <span class="ref-detail">Oxford University Press, 1982.</span></li>
+          <li><span class="ref-author">Cercignani, C.</span> <span class="ref-title">Ludwig Boltzmann: The Man Who Trusted Atoms.</span> <span class="ref-detail">Oxford University Press, 1998.</span></li>
+          <li><span class="ref-author">Chandler, D.</span> <span class="ref-title">Introduction to Modern Statistical Mechanics.</span> <span class="ref-detail">Oxford University Press, 1987.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+window.NARRATION_CONFIG = {
+  basePath: 'assets/narration/jiggling/',
+  segments: [
+    { id: 1, section: '#hero',          label: '§0 Opening' },
+    { id: 2, section: '#sec-sentence',  label: '§1 The Sentence' },
+    { id: 3, section: '#sec-hotcold',   label: '§2 Temperature' },
+    { id: 4, section: '#sec-box',       label: '§3 The Box' },
+    { id: 5, section: '#sec-brown',     label: '§4 Brownian Motion' },
+    { id: 6, section: '#sec-diffusion', label: '§5 Diffusion' },
+    { id: 7, section: '#sec-pressure',  label: '§6 Pressure' },
+    { id: 8, section: '#sec-ice',       label: '§7 Ice Floats' },
+    { id: 9, section: '#sec-closing',   label: '§8 Epilogue' }
+  ]
+};
+</script>
+<script src="narration_player.js"></script>
+
+<div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
+  <script src="https://giscus.app/client.js"
+    data-repo="kimshmath/edu"
+    data-repo-id="R_kgDORrE8sw"
+    data-category="Comments"
+    data-category-id="DIC_kwDORrE8s84C45oL"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="dark"
+    data-lang="en"
+    crossorigin="anonymous"
+    async>
+  </script>
+</div>
+
+<footer>
+  <div class="footer-rule"></div>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+    <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+  </div>
+</footer>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
+<script>
+// ═══════════════════════════════════════════════
+//  REVEAL + NAV DOTS
+// ═══════════════════════════════════════════════
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+const sections = ['hero','sec-sentence','sec-hotcold','sec-box','sec-brown','sec-diffusion','sec-pressure','sec-ice','sec-closing'];
+const navDots = document.getElementById('nav-dots');
+sections.forEach((id) => {
+  const dot = document.createElement('button');
+  dot.className = 'nav-dot';
+  dot.onclick = () => document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  navDots.appendChild(dot);
+});
+const secObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const idx = sections.indexOf(e.target.id);
+      document.querySelectorAll('.nav-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(id => { const el = document.getElementById(id); if (el) secObserver.observe(el); });
+
+// ═══════════════════════════════════════════════
+//  IDLE / VISIBILITY CONTROL
+// ═══════════════════════════════════════════════
+let _paused = false, _heroVisible = true, _idleTimer = null;
+function _resetIdle() {
+  _paused = false;
+  if (_idleTimer) clearTimeout(_idleTimer);
+  _idleTimer = setTimeout(() => { _paused = true; }, 10000);
+}
+['mousemove','keydown','scroll','touchstart','pointerdown'].forEach(ev =>
+  window.addEventListener(ev, _resetIdle, { passive: true }));
+_resetIdle();
+const heroObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { _heroVisible = e.isIntersecting; });
+}, { threshold: 0.05 });
+heroObs.observe(document.getElementById('hero'));
+
+// ═══════════════════════════════════════════════
+//  HERO — ambient atoms with Brownian tracer
+// ═══════════════════════════════════════════════
+const heroCanvas = document.getElementById('hero-canvas');
+const heroCtx = heroCanvas.getContext('2d');
+let heroAtoms = [], heroTrail = [], _heroInit = false;
+function heroInit() {
+  const w = heroCanvas.width = heroCanvas.clientWidth * 2;
+  const h = heroCanvas.height = heroCanvas.clientHeight * 2;
+  heroAtoms = [];
+  for (let i = 0; i < 60; i++) {
+    heroAtoms.push({
+      x: Math.random()*w, y: Math.random()*h,
+      vx: (Math.random()-0.5)*1.8, vy: (Math.random()-0.5)*1.8,
+      r: 4+Math.random()*3, hue: 40+Math.random()*20
+    });
+  }
+  heroAtoms[0] = { x:w/2, y:h/2, vx:0, vy:0, r:10, tracer:true };
+  heroTrail = []; _heroInit = true;
+}
+function heroStep() {
+  const w = heroCanvas.width, h = heroCanvas.height;
+  for (const a of heroAtoms) {
+    a.x += a.vx; a.y += a.vy;
+    if (a.x < a.r) { a.x = a.r; a.vx *= -1; }
+    if (a.x > w-a.r) { a.x = w-a.r; a.vx *= -1; }
+    if (a.y < a.r) { a.y = a.r; a.vy *= -1; }
+    if (a.y > h-a.r) { a.y = h-a.r; a.vy *= -1; }
+  }
+  const tr = heroAtoms[0]; let kx=0, ky=0;
+  for (let i=1; i<heroAtoms.length; i++) {
+    const a = heroAtoms[i]; const dx=a.x-tr.x, dy=a.y-tr.y, d2=dx*dx+dy*dy;
+    if (d2 < 3600) { const d=Math.sqrt(d2)+0.01; kx-=dx/d*0.08; ky-=dy/d*0.08; }
+  }
+  tr.vx = tr.vx*0.88 + kx + (Math.random()-0.5)*0.4;
+  tr.vy = tr.vy*0.88 + ky + (Math.random()-0.5)*0.4;
+  heroTrail.push({x:tr.x, y:tr.y});
+  if (heroTrail.length > 220) heroTrail.shift();
+}
+function heroDraw() {
+  const w = heroCanvas.width, h = heroCanvas.height;
+  heroCtx.clearRect(0,0,w,h);
+  heroCtx.lineWidth = 2; heroCtx.lineCap = 'round';
+  for (let i=1; i<heroTrail.length; i++) {
+    const alpha = i/heroTrail.length;
+    heroCtx.strokeStyle = `rgba(240,180,41,${alpha*0.45})`;
+    heroCtx.beginPath(); heroCtx.moveTo(heroTrail[i-1].x, heroTrail[i-1].y);
+    heroCtx.lineTo(heroTrail[i].x, heroTrail[i].y); heroCtx.stroke();
+  }
+  for (const a of heroAtoms) {
+    const g = heroCtx.createRadialGradient(a.x,a.y,0,a.x,a.y,a.r*3);
+    if (a.tracer) { g.addColorStop(0,'rgba(240,180,41,0.95)'); g.addColorStop(0.4,'rgba(240,180,41,0.35)'); g.addColorStop(1,'rgba(240,180,41,0)'); }
+    else { g.addColorStop(0,`hsla(${a.hue},70%,70%,0.55)`); g.addColorStop(0.5,`hsla(${a.hue},70%,60%,0.14)`); g.addColorStop(1,'rgba(0,0,0,0)'); }
+    heroCtx.fillStyle = g; heroCtx.beginPath(); heroCtx.arc(a.x,a.y,a.r*3,0,Math.PI*2); heroCtx.fill();
+  }
+}
+function heroLoop() {
+  if (!_heroInit || heroCanvas.clientWidth*2 !== heroCanvas.width) heroInit();
+  if (_heroVisible && !_paused) { heroStep(); heroDraw(); }
+  requestAnimationFrame(heroLoop);
+}
+heroInit(); heroLoop();
+window.addEventListener('resize', () => { _heroInit = false; });
+
+// ═══════════════════════════════════════════════
+//  EXHIBIT I — HOT vs COLD
+// ═══════════════════════════════════════════════
+const hcCold = document.getElementById('hc-canvas-cold');
+const hcHot  = document.getElementById('hc-canvas-hot');
+const hcCtxC = hcCold.getContext('2d');
+const hcCtxH = hcHot.getContext('2d');
+let hcAtomsC = [], hcAtomsH = [], hcTemp = 80, hcVisible = false;
+
+function hcInit() {
+  [hcCold, hcHot].forEach(c => { c.width = c.clientWidth*2; c.height = 240*2; });
+  const w = hcCold.width, h = hcCold.height;
+  hcAtomsC = []; hcAtomsH = [];
+  const N = 55, R = 8;
+  for (let i=0; i<N; i++) {
+    const th = Math.random()*Math.PI*2;
+    const sC = Math.sqrt(hcTemp)*0.15 * (0.6+Math.random()*0.8);
+    const sH = Math.sqrt(hcTemp*4)*0.15 * (0.6+Math.random()*0.8);
+    hcAtomsC.push({ x:R+Math.random()*(w-2*R), y:R+Math.random()*(h-2*R), vx:sC*Math.cos(th), vy:sC*Math.sin(th), r:R });
+    hcAtomsH.push({ x:R+Math.random()*(w-2*R), y:R+Math.random()*(h-2*R), vx:sH*Math.cos(th), vy:sH*Math.sin(th), r:R });
+  }
+}
+function hcStep(atoms, targetSpeed) {
+  const w = hcCold.width, h = hcCold.height;
+  // Rescale to target mean speed
+  let sum = 0;
+  for (const a of atoms) sum += Math.sqrt(a.vx*a.vx+a.vy*a.vy);
+  const mean = sum/atoms.length;
+  if (mean > 1e-6) { const f = targetSpeed/mean; for (const a of atoms){ a.vx*=f; a.vy*=f; } }
+  // Move + wall bounce
+  for (const a of atoms) {
+    a.x += a.vx; a.y += a.vy;
+    if (a.x < a.r) { a.x = a.r; a.vx = Math.abs(a.vx); }
+    if (a.x > w-a.r) { a.x = w-a.r; a.vx = -Math.abs(a.vx); }
+    if (a.y < a.r) { a.y = a.r; a.vy = Math.abs(a.vy); }
+    if (a.y > h-a.r) { a.y = h-a.r; a.vy = -Math.abs(a.vy); }
+  }
+  // Pairwise elastic (cheap, skip distant)
+  for (let i=0; i<atoms.length; i++) {
+    const a = atoms[i];
+    for (let j=i+1; j<atoms.length; j++) {
+      const b = atoms[j]; const dx=b.x-a.x, dy=b.y-a.y, d2=dx*dx+dy*dy, rr=a.r+b.r;
+      if (d2 < rr*rr && d2 > 1e-6) {
+        const d=Math.sqrt(d2), nx=dx/d, ny=dy/d;
+        const dvn=(b.vx-a.vx)*nx + (b.vy-a.vy)*ny;
+        if (dvn < 0) { a.vx += dvn*nx; a.vy += dvn*ny; b.vx -= dvn*nx; b.vy -= dvn*ny;
+          const ov = rr-d; a.x -= nx*ov*0.5; a.y -= ny*ov*0.5; b.x += nx*ov*0.5; b.y += ny*ov*0.5; }
+      }
+    }
+  }
+}
+function hcDraw(ctx, atoms, hueBase) {
+  const w = ctx.canvas.width, h = ctx.canvas.height;
+  ctx.clearRect(0,0,w,h);
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 2; ctx.strokeRect(1,1,w-2,h-2);
+  for (const a of atoms) {
+    const s = Math.sqrt(a.vx*a.vx+a.vy*a.vy);
+    const hue = hueBase - Math.min(40, s*8);
+    ctx.fillStyle = `hsla(${hue},70%,65%,0.9)`;
+    ctx.beginPath(); ctx.arc(a.x,a.y,a.r,0,Math.PI*2); ctx.fill();
+  }
+}
+function hcMeanSpeed(atoms) {
+  let s = 0; for (const a of atoms) s += Math.sqrt(a.vx*a.vx+a.vy*a.vy);
+  return s/atoms.length;
+}
+let _hcTick = 0;
+function hcLoop() {
+  if (hcVisible && !_paused) {
+    hcStep(hcAtomsC, Math.sqrt(hcTemp)*0.25);
+    hcStep(hcAtomsH, Math.sqrt(hcTemp*4)*0.25);
+    hcDraw(hcCtxC, hcAtomsC, 210);
+    hcDraw(hcCtxH, hcAtomsH, 20);
+    _hcTick++;
+    if (_hcTick % 12 === 0) {
+      document.getElementById('hc-v-cold').textContent = hcMeanSpeed(hcAtomsC).toFixed(2);
+      document.getElementById('hc-v-hot').textContent = hcMeanSpeed(hcAtomsH).toFixed(2);
+    }
+  }
+  requestAnimationFrame(hcLoop);
+}
+const hcObs = new IntersectionObserver((es) => { es.forEach(e => hcVisible = e.isIntersecting); }, { threshold: 0.05 });
+hcObs.observe(hcCold);
+document.getElementById('hc-slider').addEventListener('input', e => {
+  hcTemp = +e.target.value;
+  document.getElementById('hc-val').textContent = hcTemp + ' K';
+  document.getElementById('hc-label-cold').textContent = `cold · ${hcTemp} K`;
+  document.getElementById('hc-label-hot').textContent  = `hot · ${hcTemp*4} K`;
+});
+hcInit(); hcLoop();
+window.addEventListener('resize', hcInit);
+
+// ═══════════════════════════════════════════════
+//  EXHIBIT II — THE BOX (main gas)
+// ═══════════════════════════════════════════════
+const gasCanvas = document.getElementById('gas-canvas');
+const gasCtx = gasCanvas.getContext('2d');
+let gasAtoms = [], gasTrail = [], gasHits = 0, gasHitSmoothed = 0, gasLastHitTime = performance.now();
+let showTrail = true, showHist = true, gasTemp = 100, gasN = 200, gasVisible = false, pathLen = 0;
+const GAS_R = 5, HIST_W = 150, BOX_PAD = 12;
+
+function gasInit() {
+  gasCanvas.width = gasCanvas.clientWidth*2;
+  gasCanvas.height = 420*2;
+  const w = gasCanvas.width, h = gasCanvas.height;
+  const boxW = w - HIST_W*2 - BOX_PAD*3, boxH = h - BOX_PAD*2;
+  gasAtoms = [];
+  for (let i=0; i<gasN; i++) {
+    let x, y, ok, tries = 0;
+    do {
+      x = BOX_PAD+GAS_R + Math.random()*(boxW-2*GAS_R);
+      y = BOX_PAD+GAS_R + Math.random()*(boxH-2*GAS_R);
+      ok = true;
+      for (const a of gasAtoms) if ((x-a.x)**2+(y-a.y)**2 < (2*GAS_R+1)**2) { ok=false; break; }
+      tries++;
+    } while (!ok && tries < 200);
+    const th = Math.random()*Math.PI*2;
+    const sp = Math.sqrt(-2*Math.log(Math.random()+1e-9))*Math.sqrt(gasTemp)*0.18;
+    gasAtoms.push({ x, y, vx:sp*Math.cos(th), vy:sp*Math.sin(th), r:GAS_R });
+  }
+  gasAtoms[0].r = GAS_R*1.8; gasAtoms[0].tracer = true;
+  gasTrail = []; gasHits = 0; pathLen = 0;
+}
+function gasRescale() {
+  let ke = 0; for (const a of gasAtoms) ke += 0.5*(a.vx*a.vx+a.vy*a.vy);
+  const mean = ke/gasAtoms.length, target = gasTemp*0.04;
+  if (mean > 1e-6) { const f = Math.sqrt(target/mean); for (const a of gasAtoms){ a.vx*=f; a.vy*=f; } }
+}
+function gasStep(dt) {
+  const w = gasCanvas.width, h = gasCanvas.height;
+  const boxL = BOX_PAD, boxR = w-HIST_W*2-BOX_PAD*2, boxT = BOX_PAD, boxB = h-BOX_PAD;
+  const tr = gasAtoms[0], pTX = tr.x, pTY = tr.y;
+  for (const a of gasAtoms) {
+    a.x += a.vx*dt; a.y += a.vy*dt;
+    if (a.x < boxL+a.r) { a.x = boxL+a.r; a.vx = Math.abs(a.vx); gasHits += Math.abs(a.vx); }
+    if (a.x > boxR-a.r) { a.x = boxR-a.r; a.vx = -Math.abs(a.vx); gasHits += Math.abs(a.vx); }
+    if (a.y < boxT+a.r) { a.y = boxT+a.r; a.vy = Math.abs(a.vy); gasHits += Math.abs(a.vy); }
+    if (a.y > boxB-a.r) { a.y = boxB-a.r; a.vy = -Math.abs(a.vy); gasHits += Math.abs(a.vy); }
+  }
+  for (let i=0; i<gasAtoms.length; i++) {
+    const a = gasAtoms[i];
+    for (let j=i+1; j<gasAtoms.length; j++) {
+      const b = gasAtoms[j]; const dx=b.x-a.x, dy=b.y-a.y, d2=dx*dx+dy*dy, rr=a.r+b.r;
+      if (d2 < rr*rr && d2 > 1e-6) {
+        const d=Math.sqrt(d2), nx=dx/d, ny=dy/d, dvn=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;
+        if (dvn < 0) {
+          const ma=a.r*a.r, mb=b.r*b.r, J=(2*dvn)/(ma+mb);
+          a.vx += J*mb*nx; a.vy += J*mb*ny; b.vx -= J*ma*nx; b.vy -= J*ma*ny;
+          const ov = rr-d; a.x -= nx*ov*0.5; a.y -= ny*ov*0.5; b.x += nx*ov*0.5; b.y += ny*ov*0.5;
+        }
+      }
+    }
+  }
+  gasTrail.push({x:tr.x, y:tr.y});
+  if (gasTrail.length > 500) gasTrail.shift();
+  pathLen += Math.sqrt((tr.x-pTX)**2 + (tr.y-pTY)**2);
+}
+function gasDraw() {
+  const w = gasCanvas.width, h = gasCanvas.height;
+  const boxL = BOX_PAD, boxR = w-HIST_W*2-BOX_PAD*2, boxT = BOX_PAD, boxB = h-BOX_PAD;
+  gasCtx.clearRect(0,0,w,h);
+  gasCtx.strokeStyle = 'rgba(255,255,255,0.08)'; gasCtx.lineWidth = 2;
+  gasCtx.strokeRect(boxL, boxT, boxR-boxL, boxB-boxT);
+  if (showTrail && gasTrail.length > 1) {
+    gasCtx.lineWidth = 1.5;
+    for (let i=1; i<gasTrail.length; i++) {
+      gasCtx.strokeStyle = `rgba(240,180,41,${i/gasTrail.length*0.6})`;
+      gasCtx.beginPath(); gasCtx.moveTo(gasTrail[i-1].x, gasTrail[i-1].y);
+      gasCtx.lineTo(gasTrail[i].x, gasTrail[i].y); gasCtx.stroke();
+    }
+  }
+  for (const a of gasAtoms) {
+    if (a.tracer) { gasCtx.fillStyle='rgba(240,180,41,0.95)'; gasCtx.shadowColor='rgba(240,180,41,0.5)'; gasCtx.shadowBlur=8; }
+    else { const s = Math.sqrt(a.vx*a.vx+a.vy*a.vy); gasCtx.fillStyle=`hsla(${200-Math.min(180,s*8)},60%,65%,0.85)`; gasCtx.shadowBlur=0; }
+    gasCtx.beginPath(); gasCtx.arc(a.x,a.y,a.r,0,Math.PI*2); gasCtx.fill();
+  }
+  gasCtx.shadowBlur = 0;
+  if (showHist) {
+    const histL = boxR+BOX_PAD, histR = w-BOX_PAD, histT = boxT, histB = boxB;
+    gasCtx.strokeStyle = 'rgba(255,255,255,0.08)'; gasCtx.strokeRect(histL, histT, histR-histL, histB-histT);
+    const nBins = 24, bins = new Array(nBins).fill(0);
+    let maxS = 0; for (const a of gasAtoms){ const s=Math.sqrt(a.vx*a.vx+a.vy*a.vy); if (s>maxS) maxS=s; }
+    const bMax = Math.max(maxS*1.2, 1);
+    for (const a of gasAtoms){ const s=Math.sqrt(a.vx*a.vx+a.vy*a.vy); bins[Math.min(nBins-1, Math.floor(s/bMax*nBins))]++; }
+    const bc = Math.max(...bins, 1), bw = (histR-histL)/nBins;
+    for (let i=0; i<nBins; i++) {
+      const bh = (bins[i]/bc)*(histB-histT-30);
+      gasCtx.fillStyle = `hsla(${200-(i/nBins)*180},60%,55%,0.75)`;
+      gasCtx.fillRect(histL+i*bw+1, histB-bh-6, bw-2, bh);
+    }
+    gasCtx.fillStyle = 'rgba(123,141,181,0.8)'; gasCtx.font = '16px "JetBrains Mono", monospace';
+    gasCtx.fillText('speed →', histL+6, histB-6); gasCtx.fillText('count', histL+6, histT+18);
+    gasCtx.fillStyle = 'rgba(240,180,41,0.85)'; gasCtx.fillText('Maxwell–Boltzmann', histL+6, histT+38);
+  }
+}
+function gasStats(nowMs) {
+  let tv = 0; for (const a of gasAtoms) tv += Math.sqrt(a.vx*a.vx+a.vy*a.vy);
+  document.getElementById('stat-vmean').textContent = (tv/gasAtoms.length).toFixed(2);
+  const ke = gasAtoms.reduce((s,a) => s+0.5*(a.vx*a.vx+a.vy*a.vy), 0)/gasAtoms.length;
+  document.getElementById('stat-pressure').textContent = (ke*gasN*0.06).toFixed(1);
+  const dt = Math.max(nowMs-gasLastHitTime, 1);
+  gasHitSmoothed = gasHitSmoothed*0.9 + (gasHits/dt*1000)*0.1;
+  gasHits = 0; gasLastHitTime = nowMs;
+  document.getElementById('stat-hits').textContent = Math.round(gasHitSmoothed);
+  document.getElementById('stat-path').textContent = (pathLen/100).toFixed(1);
+}
+let _lastG = performance.now(), _gTick = 0;
+function gasLoop() {
+  const now = performance.now();
+  if (gasVisible && !_paused) {
+    const dt = Math.min((now-_lastG)/16.67, 2.5);
+    gasStep(dt); gasDraw(); _gTick++;
+    if (_gTick%6===0) gasStats(now);
+  }
+  _lastG = now; requestAnimationFrame(gasLoop);
+}
+new IntersectionObserver((es) => es.forEach(e => gasVisible = e.isIntersecting), { threshold: 0.05 }).observe(gasCanvas);
+document.getElementById('temp-slider').addEventListener('input', e => { gasTemp = +e.target.value; document.getElementById('temp-val').textContent = gasTemp+' K'; gasRescale(); });
+document.getElementById('n-slider').addEventListener('input', e => { gasN = +e.target.value; document.getElementById('n-val').textContent = gasN+' atoms'; gasInit(); });
+function toggleTrail(){ showTrail = !showTrail; const b = document.getElementById('trail-btn'); b.textContent = 'Brownian trail: '+(showTrail?'on':'off'); b.classList.toggle('active', showTrail); if (!showTrail) gasTrail = []; }
+function toggleHist(){ showHist = !showHist; const b = document.getElementById('hist-btn'); b.textContent = 'Histogram: '+(showHist?'on':'off'); b.classList.toggle('active', showHist); }
+function resetGas(){ gasInit(); pathLen = 0; }
+window.toggleTrail = toggleTrail; window.toggleHist = toggleHist; window.resetGas = resetGas;
+document.getElementById('trail-btn').classList.add('active'); document.getElementById('hist-btn').classList.add('active');
+gasInit(); gasLoop();
+window.addEventListener('resize', gasInit);
+
+// ═══════════════════════════════════════════════
+//  EXHIBIT III — BROWNIAN MOTION + MSD PLOT
+// ═══════════════════════════════════════════════
+const brCanvas = document.getElementById('br-canvas');
+const brCtx = brCanvas.getContext('2d');
+const brMsdC = document.getElementById('br-msd');
+const brMsdCtx = brMsdC.getContext('2d');
+let brBath = [], brTracer = null, brTrail = [], brMsd = [], brT0, brVisible = false;
+
+function brInit() {
+  brCanvas.width = brCanvas.clientWidth*2; brCanvas.height = 340*2;
+  brMsdC.width = brMsdC.clientWidth*2; brMsdC.height = 140*2;
+  const w = brCanvas.width, h = brCanvas.height;
+  brBath = [];
+  for (let i=0; i<280; i++) {
+    const th = Math.random()*Math.PI*2, sp = 2+Math.random()*2;
+    brBath.push({ x:8+Math.random()*(w-16), y:8+Math.random()*(h-16), vx:sp*Math.cos(th), vy:sp*Math.sin(th), r:3 });
+  }
+  brTracer = { x:w/2, y:h/2, x0:w/2, y0:h/2, vx:0, vy:0, r:12 };
+  brTrail = [{x:brTracer.x, y:brTracer.y}];
+  brMsd = [];
+  brT0 = performance.now();
+}
+function brStep() {
+  const w = brCanvas.width, h = brCanvas.height;
+  // Bath: wall bounce only
+  for (const a of brBath) {
+    a.x += a.vx; a.y += a.vy;
+    if (a.x < a.r) { a.x = a.r; a.vx = Math.abs(a.vx); }
+    if (a.x > w-a.r) { a.x = w-a.r; a.vx = -Math.abs(a.vx); }
+    if (a.y < a.r) { a.y = a.r; a.vy = Math.abs(a.vy); }
+    if (a.y > h-a.r) { a.y = h-a.r; a.vy = -Math.abs(a.vy); }
+  }
+  // Tracer: collide with bath atoms
+  let kx = 0, ky = 0;
+  for (const a of brBath) {
+    const dx = a.x-brTracer.x, dy = a.y-brTracer.y, d2 = dx*dx+dy*dy;
+    const rr = a.r + brTracer.r;
+    if (d2 < rr*rr && d2 > 1e-4) {
+      const d = Math.sqrt(d2), nx = dx/d, ny = dy/d;
+      const dvn = (a.vx-brTracer.vx)*nx + (a.vy-brTracer.vy)*ny;
+      if (dvn < 0) {
+        const mb = a.r*a.r, mt = brTracer.r*brTracer.r;
+        const J = (2*dvn)/(mb+mt);
+        brTracer.vx += J*mb*nx; brTracer.vy += J*mb*ny;
+        a.vx -= J*mt*nx; a.vy -= J*mt*ny;
+        const ov = rr-d; brTracer.x -= nx*ov*0.5; brTracer.y -= ny*ov*0.5; a.x += nx*ov*0.5; a.y += ny*ov*0.5;
+        kx += nx; ky += ny;
+      }
+    }
+  }
+  brTracer.vx *= 0.95; brTracer.vy *= 0.95;
+  brTracer.x += brTracer.vx; brTracer.y += brTracer.vy;
+  // Keep tracer in box
+  if (brTracer.x < brTracer.r) { brTracer.x = brTracer.r; brTracer.vx = Math.abs(brTracer.vx); }
+  if (brTracer.x > w-brTracer.r) { brTracer.x = w-brTracer.r; brTracer.vx = -Math.abs(brTracer.vx); }
+  if (brTracer.y < brTracer.r) { brTracer.y = brTracer.r; brTracer.vy = Math.abs(brTracer.vy); }
+  if (brTracer.y > h-brTracer.r) { brTracer.y = h-brTracer.r; brTracer.vy = -Math.abs(brTracer.vy); }
+  brTrail.push({ x:brTracer.x, y:brTracer.y });
+  if (brTrail.length > 3000) brTrail.shift();
+  // MSD sample (every frame)
+  const dx = (brTracer.x-brTracer.x0)/2, dy = (brTracer.y-brTracer.y0)/2; // convert from device to CSS px
+  brMsd.push({ t:(performance.now()-brT0)/1000, r2:dx*dx+dy*dy });
+  if (brMsd.length > 600) brMsd.shift();
+}
+function brDraw() {
+  const w = brCanvas.width, h = brCanvas.height;
+  brCtx.clearRect(0,0,w,h);
+  brCtx.strokeStyle = 'rgba(255,255,255,0.08)'; brCtx.lineWidth = 2; brCtx.strokeRect(1,1,w-2,h-2);
+  // Bath
+  for (const a of brBath) { brCtx.fillStyle = 'rgba(120,150,200,0.45)'; brCtx.beginPath(); brCtx.arc(a.x,a.y,a.r,0,Math.PI*2); brCtx.fill(); }
+  // Trail
+  brCtx.lineWidth = 2; brCtx.lineCap = 'round';
+  for (let i=1; i<brTrail.length; i++) {
+    const alpha = i/brTrail.length * 0.7;
+    brCtx.strokeStyle = `rgba(240,180,41,${alpha})`;
+    brCtx.beginPath(); brCtx.moveTo(brTrail[i-1].x, brTrail[i-1].y); brCtx.lineTo(brTrail[i].x, brTrail[i].y); brCtx.stroke();
+  }
+  // Tracer
+  brCtx.shadowColor = 'rgba(240,180,41,0.5)'; brCtx.shadowBlur = 12;
+  brCtx.fillStyle = 'rgba(240,180,41,0.95)';
+  brCtx.beginPath(); brCtx.arc(brTracer.x, brTracer.y, brTracer.r, 0, Math.PI*2); brCtx.fill();
+  brCtx.shadowBlur = 0;
+  // Start marker
+  brCtx.strokeStyle = 'rgba(240,180,41,0.4)'; brCtx.setLineDash([4,4]); brCtx.lineWidth = 1.5;
+  brCtx.beginPath(); brCtx.arc(brTracer.x0, brTracer.y0, 5, 0, Math.PI*2); brCtx.stroke();
+  brCtx.setLineDash([]);
+}
+function brDrawMsd() {
+  const w = brMsdC.width, h = brMsdC.height;
+  brMsdCtx.clearRect(0,0,w,h);
+  brMsdCtx.strokeStyle = 'rgba(255,255,255,0.08)'; brMsdCtx.lineWidth = 1;
+  brMsdCtx.strokeRect(30, 8, w-40, h-30);
+  if (brMsd.length < 2) return;
+  const tMax = Math.max(brMsd[brMsd.length-1].t, 1);
+  const rMax = Math.max(...brMsd.map(p=>p.r2), 100);
+  // Theory line (slope through current max)
+  brMsdCtx.strokeStyle = 'rgba(56,189,248,0.4)'; brMsdCtx.setLineDash([6,4]); brMsdCtx.lineWidth = 2;
+  brMsdCtx.beginPath();
+  const slope = brMsd[brMsd.length-1].r2 / brMsd[brMsd.length-1].t || 0;
+  brMsdCtx.moveTo(30, h-22);
+  brMsdCtx.lineTo(w-10, h-22 - (slope*tMax)/rMax*(h-40));
+  brMsdCtx.stroke(); brMsdCtx.setLineDash([]);
+  // Data
+  brMsdCtx.strokeStyle = 'rgba(240,180,41,0.95)'; brMsdCtx.lineWidth = 2; brMsdCtx.beginPath();
+  for (let i=0; i<brMsd.length; i++) {
+    const x = 30 + brMsd[i].t/tMax * (w-40);
+    const y = (h-22) - brMsd[i].r2/rMax * (h-40);
+    i===0 ? brMsdCtx.moveTo(x,y) : brMsdCtx.lineTo(x,y);
+  }
+  brMsdCtx.stroke();
+  // Labels
+  brMsdCtx.fillStyle = 'rgba(123,141,181,0.9)'; brMsdCtx.font = '18px "JetBrains Mono", monospace';
+  brMsdCtx.fillText('time →', w-78, h-6);
+  brMsdCtx.save(); brMsdCtx.translate(14, h/2); brMsdCtx.rotate(-Math.PI/2);
+  brMsdCtx.fillText('⟨r²⟩', -20, 0); brMsdCtx.restore();
+  brMsdCtx.fillStyle = 'rgba(56,189,248,0.7)'; brMsdCtx.font = '16px "JetBrains Mono", monospace';
+  brMsdCtx.fillText('linear fit ~ Dt', 36, 28);
+}
+function brStats() {
+  if (!brTracer || brMsd.length < 2) return;
+  const elapsed = brMsd[brMsd.length-1].t;
+  const dx = (brTracer.x-brTracer.x0)/2, dy = (brTracer.y-brTracer.y0)/2;
+  const drift = Math.sqrt(dx*dx+dy*dy);
+  const r2 = brMsd[brMsd.length-1].r2;
+  const slope = r2/elapsed || 0;
+  document.getElementById('br-time').textContent = elapsed.toFixed(1)+'s';
+  document.getElementById('br-drift').textContent = drift.toFixed(0)+'px';
+  document.getElementById('br-msd-val').textContent = r2.toFixed(0);
+  document.getElementById('br-slope').textContent = slope.toFixed(1);
+}
+let _brTick = 0;
+function brLoop() {
+  if (brVisible && !_paused) {
+    brStep(); brDraw(); brDrawMsd(); _brTick++;
+    if (_brTick%6===0) brStats();
+  }
+  requestAnimationFrame(brLoop);
+}
+new IntersectionObserver((es) => es.forEach(e => brVisible = e.isIntersecting), { threshold: 0.05 }).observe(brCanvas);
+function resetBrownian(){ brInit(); }
+window.resetBrownian = resetBrownian;
+brInit(); brLoop();
+window.addEventListener('resize', brInit);
+
+// ═══════════════════════════════════════════════
+//  EXHIBIT IV — DIFFUSION (random walkers)
+// ═══════════════════════════════════════════════
+const diffCanvas = document.getElementById('diff-canvas');
+const diffCtx = diffCanvas.getContext('2d');
+let walkers = [], diffVisible = false, diffT0 = performance.now();
+
+function diffInit() {
+  diffCanvas.width = diffCanvas.clientWidth*2;
+  diffCanvas.height = 360*2;
+  walkers = [];
+  diffT0 = performance.now();
+  // Start with one drop
+  const w = diffCanvas.width, h = diffCanvas.height;
+  _addDrop(w/2, h/2, 0);
+}
+function _addDrop(cx, cy, hue) {
+  for (let i=0; i<220; i++) {
+    const r = Math.random()*12, th = Math.random()*Math.PI*2;
+    walkers.push({
+      x: cx + r*Math.cos(th), y: cy + r*Math.sin(th),
+      x0: cx, y0: cy, hue: hue
+    });
+  }
+}
+function releaseDrop() {
+  const w = diffCanvas.width, h = diffCanvas.height;
+  const hue = Math.floor(Math.random()*4)*90 + 20;
+  _addDrop(w/2 + (Math.random()-0.5)*w*0.3, h/2 + (Math.random()-0.5)*h*0.3, hue);
+}
+function clearDiffusion() {
+  walkers = []; diffT0 = performance.now();
+}
+window.releaseDrop = releaseDrop; window.clearDiffusion = clearDiffusion;
+diffCanvas.addEventListener('click', (e) => {
+  const rect = diffCanvas.getBoundingClientRect();
+  const x = (e.clientX-rect.left)/rect.width * diffCanvas.width;
+  const y = (e.clientY-rect.top)/rect.height * diffCanvas.height;
+  const hue = Math.floor(Math.random()*4)*90 + 20;
+  _addDrop(x, y, hue);
+});
+function diffStep() {
+  const w = diffCanvas.width, h = diffCanvas.height;
+  for (const p of walkers) {
+    p.x += (Math.random()-0.5)*6;
+    p.y += (Math.random()-0.5)*6;
+    if (p.x < 2) p.x = 2; if (p.x > w-2) p.x = w-2;
+    if (p.y < 2) p.y = 2; if (p.y > h-2) p.y = h-2;
+  }
+}
+function diffDraw() {
+  const w = diffCanvas.width, h = diffCanvas.height;
+  diffCtx.clearRect(0,0,w,h);
+  diffCtx.strokeStyle = 'rgba(255,255,255,0.08)'; diffCtx.lineWidth = 2; diffCtx.strokeRect(1,1,w-2,h-2);
+  for (const p of walkers) {
+    diffCtx.fillStyle = `hsla(${p.hue+200},70%,60%,0.55)`;
+    diffCtx.beginPath(); diffCtx.arc(p.x, p.y, 2.5, 0, Math.PI*2); diffCtx.fill();
+  }
+}
+function diffStats() {
+  document.getElementById('diff-n').textContent = walkers.length;
+  if (walkers.length > 0) {
+    let s2 = 0;
+    for (const p of walkers) {
+      const dx = (p.x-p.x0)/2, dy = (p.y-p.y0)/2;
+      s2 += dx*dx + dy*dy;
+    }
+    const sigma = Math.sqrt(s2/walkers.length);
+    document.getElementById('diff-sigma').textContent = sigma.toFixed(0)+'px';
+  }
+  document.getElementById('diff-time').textContent = ((performance.now()-diffT0)/1000).toFixed(1)+'s';
+}
+let _dTick = 0;
+function diffLoop() {
+  if (diffVisible && !_paused) { diffStep(); diffDraw(); _dTick++; if (_dTick%6===0) diffStats(); }
+  requestAnimationFrame(diffLoop);
+}
+new IntersectionObserver((es) => es.forEach(e => diffVisible = e.isIntersecting), { threshold: 0.05 }).observe(diffCanvas);
+diffInit(); diffLoop();
+window.addEventListener('resize', diffInit);
+
+// ═══════════════════════════════════════════════
+//  EXHIBIT V — PRESSURE / BOYLE'S LAW
+// ═══════════════════════════════════════════════
+const pressCanvas = document.getElementById('press-canvas');
+const pressCtx = pressCanvas.getContext('2d');
+let pressAtoms = [], pressV = 85, pressHits = 0, pressHitSmoothed = 0, pressLastT = performance.now();
+let pressVisible = false;
+
+function pressInit() {
+  pressCanvas.width = pressCanvas.clientWidth*2;
+  pressCanvas.height = 300*2;
+  const w = pressCanvas.width, h = pressCanvas.height;
+  pressAtoms = [];
+  for (let i=0; i<100; i++) {
+    const th = Math.random()*Math.PI*2, sp = 3+Math.random()*2;
+    pressAtoms.push({
+      x: 20 + Math.random()*(w*pressV/100 - 40),
+      y: 20 + Math.random()*(h - 40),
+      vx: sp*Math.cos(th), vy: sp*Math.sin(th), r: 6
+    });
+  }
+  pressHits = 0;
+}
+function pressStep() {
+  const w = pressCanvas.width, h = pressCanvas.height;
+  const pistonX = w * pressV / 100;
+  for (const a of pressAtoms) {
+    a.x += a.vx; a.y += a.vy;
+    if (a.x < a.r) { a.x = a.r; a.vx = Math.abs(a.vx); pressHits += Math.abs(a.vx); }
+    if (a.x > pistonX-a.r) { a.x = pistonX-a.r; a.vx = -Math.abs(a.vx); pressHits += Math.abs(a.vx)*1.5; }
+    if (a.y < a.r) { a.y = a.r; a.vy = Math.abs(a.vy); }
+    if (a.y > h-a.r) { a.y = h-a.r; a.vy = -Math.abs(a.vy); }
+  }
+  // Pairwise elastic
+  for (let i=0; i<pressAtoms.length; i++) {
+    const a = pressAtoms[i];
+    for (let j=i+1; j<pressAtoms.length; j++) {
+      const b = pressAtoms[j]; const dx=b.x-a.x, dy=b.y-a.y, d2=dx*dx+dy*dy, rr=a.r+b.r;
+      if (d2 < rr*rr && d2 > 1e-6) {
+        const d=Math.sqrt(d2), nx=dx/d, ny=dy/d, dvn=(b.vx-a.vx)*nx+(b.vy-a.vy)*ny;
+        if (dvn < 0) { a.vx+=dvn*nx; a.vy+=dvn*ny; b.vx-=dvn*nx; b.vy-=dvn*ny;
+          const ov=rr-d; a.x-=nx*ov*0.5; a.y-=ny*ov*0.5; b.x+=nx*ov*0.5; b.y+=ny*ov*0.5; }
+      }
+    }
+  }
+}
+function pressDraw() {
+  const w = pressCanvas.width, h = pressCanvas.height;
+  const pistonX = w * pressV / 100;
+  pressCtx.clearRect(0,0,w,h);
+  // Dead zone (right of piston)
+  pressCtx.fillStyle = 'rgba(255,255,255,0.02)';
+  pressCtx.fillRect(pistonX, 0, w-pistonX, h);
+  // Box outline
+  pressCtx.strokeStyle = 'rgba(255,255,255,0.08)'; pressCtx.lineWidth = 2;
+  pressCtx.strokeRect(1, 1, pistonX-1, h-2);
+  // Piston
+  pressCtx.fillStyle = 'rgba(52,211,153,0.5)';
+  pressCtx.fillRect(pistonX-8, 0, 16, h);
+  pressCtx.strokeStyle = 'rgba(52,211,153,0.9)';
+  pressCtx.lineWidth = 3;
+  pressCtx.beginPath(); pressCtx.moveTo(pistonX, 0); pressCtx.lineTo(pistonX, h); pressCtx.stroke();
+  // Arrows indicating piston
+  pressCtx.fillStyle = 'rgba(52,211,153,0.9)';
+  pressCtx.font = 'bold 32px "JetBrains Mono", monospace';
+  pressCtx.fillText('‖', pistonX-10, h/2+10);
+  // Atoms
+  for (const a of pressAtoms) {
+    pressCtx.fillStyle = 'hsla(30,70%,65%,0.9)';
+    pressCtx.beginPath(); pressCtx.arc(a.x, a.y, a.r, 0, Math.PI*2); pressCtx.fill();
+  }
+}
+function pressStats(nowMs) {
+  const dt = Math.max(nowMs-pressLastT, 1);
+  pressHitSmoothed = pressHitSmoothed*0.9 + (pressHits/dt*1000)*0.1;
+  pressHits = 0; pressLastT = nowMs;
+  const V_norm = pressV / 100;
+  // Pressure ~ hits/s per unit area
+  const P = pressHitSmoothed / 20;
+  document.getElementById('stat-V').textContent = (V_norm*100).toFixed(0)+'%';
+  document.getElementById('stat-P').textContent = P.toFixed(1);
+  document.getElementById('stat-PV').textContent = (P*V_norm*100).toFixed(0);
+  document.getElementById('stat-pressHits').textContent = Math.round(pressHitSmoothed);
+}
+let _pTick = 0;
+function pressLoop() {
+  const now = performance.now();
+  if (pressVisible && !_paused) { pressStep(); pressDraw(); _pTick++; if (_pTick%8===0) pressStats(now); }
+  requestAnimationFrame(pressLoop);
+}
+new IntersectionObserver((es) => es.forEach(e => pressVisible = e.isIntersecting), { threshold: 0.05 }).observe(pressCanvas);
+document.getElementById('press-slider').addEventListener('input', e => {
+  pressV = +e.target.value;
+  document.getElementById('press-val').textContent = pressV+'%';
+  // Clamp atoms to new volume
+  const w = pressCanvas.width, pistonX = w * pressV / 100;
+  for (const a of pressAtoms) if (a.x > pistonX-a.r) a.x = pistonX-a.r;
+});
+pressInit(); pressLoop();
+window.addEventListener('resize', pressInit);
+
+// ═══════════════════════════════════════════════
+//  EXHIBIT VI — ICE vs LIQUID
+// ═══════════════════════════════════════════════
+const iceCanvas = document.getElementById('ice-canvas');
+const iceCtx = iceCanvas.getContext('2d');
+let iceState = 'ice', iceAtomsL = [], iceAtomsR = [], iceVisible = false;
+
+function iceInit() {
+  const w = iceCanvas.width = iceCanvas.clientWidth*2;
+  const h = iceCanvas.height = 320*2;
+  iceAtomsL = []; iceAtomsR = [];
+  const boxL = 12, boxR = w/2-12, boxT = 12, boxB = h-12;
+  const spacing = 42, rowH = spacing*Math.sqrt(3)/2;
+  for (let row = 0; ; row++) {
+    const y = boxT+24+row*rowH; if (y > boxB-24) break;
+    const xOff = (row%2)*spacing/2;
+    for (let col = 0; ; col++) {
+      const x = boxL+24+xOff+col*spacing; if (x > boxR-24) break;
+      iceAtomsL.push({ x0:x, y0:y, x, y, r:11, phase:Math.random()*Math.PI*2 });
+    }
+  }
+  const rboxL = w/2+12, rboxR = w-12;
+  const targetN = Math.round(iceAtomsL.length*1.085);
+  let att = 0;
+  while (iceAtomsR.length < targetN && att < 5000) {
+    const x = rboxL+18+Math.random()*(rboxR-rboxL-36);
+    const y = boxT+18+Math.random()*(boxB-boxT-36);
+    let ok = true;
+    for (const a of iceAtomsR) if ((x-a.x)**2+(y-a.y)**2 < 28*28) { ok=false; break; }
+    if (ok) iceAtomsR.push({ x0:x, y0:y, x, y, r:11, vx:0, vy:0, phase:Math.random()*Math.PI*2 });
+    att++;
+  }
+}
+function iceDraw() {
+  const w = iceCanvas.width, h = iceCanvas.height;
+  iceCtx.clearRect(0,0,w,h);
+  const t = performance.now()/1000;
+  let leftJiggle = 1.8, rightJiggle = 5, rightDrift = 0.3;
+  if (iceState === 'liquid') { leftJiggle = 0; rightJiggle = 8; rightDrift = 0.8; }
+  if (iceState === 'warm')   { leftJiggle = 0; rightJiggle = 14; rightDrift = 1.6; }
+  iceCtx.strokeStyle = 'rgba(255,255,255,0.06)'; iceCtx.lineWidth = 1;
+  iceCtx.beginPath(); iceCtx.moveTo(w/2, 8); iceCtx.lineTo(w/2, h-8); iceCtx.stroke();
+  if (iceState === 'ice') {
+    iceCtx.strokeStyle = 'rgba(56,189,248,0.22)'; iceCtx.lineWidth = 1.5;
+    for (let i=0; i<iceAtomsL.length; i++) {
+      const a = iceAtomsL[i];
+      a.x = a.x0 + Math.sin(t*3+a.phase)*leftJiggle;
+      a.y = a.y0 + Math.cos(t*2.6+a.phase*1.3)*leftJiggle;
+      for (let j=i+1; j<iceAtomsL.length; j++) {
+        const b = iceAtomsL[j]; const dx=b.x0-a.x0, dy=b.y0-a.y0, d=Math.sqrt(dx*dx+dy*dy);
+        if (d < 46) { iceCtx.beginPath(); iceCtx.moveTo(a.x,a.y); iceCtx.lineTo(b.x,b.y); iceCtx.stroke(); }
+      }
+    }
+    for (const a of iceAtomsL) {
+      const g = iceCtx.createRadialGradient(a.x,a.y,0,a.x,a.y,a.r*2);
+      g.addColorStop(0,'rgba(56,189,248,0.95)'); g.addColorStop(0.4,'rgba(56,189,248,0.5)'); g.addColorStop(1,'rgba(56,189,248,0)');
+      iceCtx.fillStyle = g; iceCtx.beginPath(); iceCtx.arc(a.x,a.y,a.r*2,0,Math.PI*2); iceCtx.fill();
+    }
+    iceCtx.fillStyle = 'rgba(56,189,248,0.8)'; iceCtx.font = 'italic 600 22px "Fraunces", Georgia, serif';
+    iceCtx.fillText('Ice · hexagonal lattice', 24, h-28);
+    iceCtx.font = '14px "JetBrains Mono", monospace'; iceCtx.fillStyle = 'rgba(123,141,181,0.9)';
+    iceCtx.fillText('4 neighbors · open structure', 24, h-10);
+  } else {
+    for (let i=0; i<iceAtomsL.length; i++) {
+      const a = iceAtomsL[i]; const amp = iceState==='liquid'?6:10;
+      a.x = a.x0 + Math.sin(t*3+a.phase)*amp + Math.sin(t*1.3+a.phase*2.1)*4;
+      a.y = a.y0 + Math.cos(t*2.6+a.phase*1.3)*amp + Math.cos(t*0.9+a.phase*1.7)*4;
+    }
+    for (const a of iceAtomsL) {
+      const g = iceCtx.createRadialGradient(a.x,a.y,0,a.x,a.y,a.r*2);
+      g.addColorStop(0,'rgba(120,180,220,0.75)'); g.addColorStop(0.5,'rgba(120,180,220,0.3)'); g.addColorStop(1,'rgba(120,180,220,0)');
+      iceCtx.fillStyle = g; iceCtx.beginPath(); iceCtx.arc(a.x,a.y,a.r*2,0,Math.PI*2); iceCtx.fill();
+    }
+    iceCtx.fillStyle = 'rgba(120,180,220,0.7)'; iceCtx.font = 'italic 600 22px "Fraunces", Georgia, serif';
+    iceCtx.fillText('Loosened lattice', 24, h-28);
+  }
+  for (const a of iceAtomsR) {
+    a.vx = (a.vx||0)*0.92 + (Math.random()-0.5)*rightDrift;
+    a.vy = (a.vy||0)*0.92 + (Math.random()-0.5)*rightDrift;
+    a.x += a.vx + Math.sin(t*4+a.phase)*rightJiggle*0.15;
+    a.y += a.vy + Math.cos(t*3.5+a.phase)*rightJiggle*0.15;
+    const rboxL = w/2+12, rboxR = w-12, boxT = 12, boxB = h-12;
+    if (a.x < rboxL+a.r) { a.x = rboxL+a.r; a.vx = Math.abs(a.vx); }
+    if (a.x > rboxR-a.r) { a.x = rboxR-a.r; a.vx = -Math.abs(a.vx); }
+    if (a.y < boxT+a.r)  { a.y = boxT+a.r; a.vy = Math.abs(a.vy); }
+    if (a.y > boxB-a.r)  { a.y = boxB-a.r; a.vy = -Math.abs(a.vy); }
+  }
+  iceCtx.strokeStyle = 'rgba(167,139,250,0.16)'; iceCtx.lineWidth = 1;
+  for (let i=0; i<iceAtomsR.length; i++) {
+    const a = iceAtomsR[i];
+    for (let j=i+1; j<iceAtomsR.length; j++) {
+      const b = iceAtomsR[j]; const dx=b.x-a.x, dy=b.y-a.y, d2=dx*dx+dy*dy;
+      if (d2 < 1200) { iceCtx.beginPath(); iceCtx.moveTo(a.x,a.y); iceCtx.lineTo(b.x,b.y); iceCtx.stroke(); }
+    }
+  }
+  for (const a of iceAtomsR) {
+    const g = iceCtx.createRadialGradient(a.x,a.y,0,a.x,a.y,a.r*2);
+    g.addColorStop(0,'rgba(167,139,250,0.9)'); g.addColorStop(0.5,'rgba(167,139,250,0.4)'); g.addColorStop(1,'rgba(167,139,250,0)');
+    iceCtx.fillStyle = g; iceCtx.beginPath(); iceCtx.arc(a.x,a.y,a.r*2,0,Math.PI*2); iceCtx.fill();
+  }
+  iceCtx.fillStyle = 'rgba(167,139,250,0.8)'; iceCtx.font = 'italic 600 22px "Fraunces", Georgia, serif';
+  iceCtx.fillText('Liquid · dense tumble', w/2+24, h-28);
+  iceCtx.font = '14px "JetBrains Mono", monospace'; iceCtx.fillStyle = 'rgba(123,141,181,0.9)';
+  iceCtx.fillText('~5 neighbors · denser', w/2+24, h-10);
+}
+function iceLoop() { if (iceVisible && !_paused) iceDraw(); requestAnimationFrame(iceLoop); }
+function setIceState(s) {
+  iceState = s;
+  document.getElementById('ice-btn-ice').classList.toggle('active', s==='ice');
+  document.getElementById('ice-btn-liq').classList.toggle('active', s==='liquid');
+  document.getElementById('ice-btn-warm').classList.toggle('active', s==='warm');
+  const rhoL = { ice:'0.917', liquid:'0.998', warm:'0.992' }[s];
+  const rhoR = { ice:'0.999', liquid:'1.000', warm:'0.990' }[s];
+  const nbrs = { ice:'4 / 5', liquid:'4.5 / 5', warm:'4.3 / 5' }[s];
+  document.getElementById('ice-rho-left').innerHTML = rhoL+'<span class="stat-unit">g/cm³</span>';
+  document.getElementById('ice-rho-right').innerHTML = rhoR+'<span class="stat-unit">g/cm³</span>';
+  document.getElementById('ice-neighbors').textContent = nbrs;
+}
+window.setIceState = setIceState;
+new IntersectionObserver((es) => es.forEach(e => iceVisible = e.isIntersecting), { threshold: 0.05 }).observe(iceCanvas);
+iceInit(); iceLoop();
+window.addEventListener('resize', iceInit);
+</script>
+
+</body>
+</html>

@@ -1,2043 +1,1626 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-
-    gtag('config', 'G-RQVK6SF2E6');
-  </script>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Shape of Falling · Mellow Math</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&family=Noto+Serif+KR:wght@300;400;500&display=swap"
-    rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0a0a0f;
-      --bg-elev: #12121a;
-      --ink: #e8e4d9;
-      --ink-dim: #9a948a;
-      --ink-mute: #625d54;
-      --gold: #d4a847;
-      --gold-dim: #8a7030;
-      --cyan: #7dd3fc;
-      --violet: #a78bfa;
-      --rose: #f4a4a4;
-      --rule: #2a2620;
-      --serif: 'Fraunces', Georgia, serif;
-      --sans: 'DM Sans', -apple-system, sans-serif;
-      --mono: 'JetBrains Mono', monospace;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html,
-    body {
-      background: var(--bg);
-      color: var(--ink);
-      font-family: var(--sans);
-      font-weight: 300;
-      line-height: 1.65;
-      font-size: 17px;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    body {
-      overflow-x: hidden;
-    }
-
-    /* --- layout --- */
-    .page {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 0 28px;
-    }
-
-    .wide {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0 28px;
-    }
-
-    section {
-      padding: 60px 0;
-    }
-
-    @media (max-width: 640px) {
-      body {
-        font-size: 16px;
-      }
-
-      .page,
-      .wide {
-        padding: 0 20px;
-      }
-
-      section {
-        padding: 44px 0;
-      }
-    }
-
-    /* --- hero --- */
-    .hero {
-      min-height: 92vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      padding: 80px 28px;
-      text-align: center;
-    }
-
-    .hero-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      opacity: 0.85;
-    }
-
-    .hero-inner {
-      position: relative;
-      z-index: 1;
-      max-width: 720px;
-    }
-
-    .eyebrow {
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 32px;
-      font-weight: 400;
-    }
-
-    .eyebrow::before {
-      content: '—— ';
-      color: var(--ink-mute);
-    }
-
-    h1 {
-      font-family: var(--serif);
-      font-weight: 300;
-      font-size: clamp(38px, 7vw, 68px);
-      line-height: 1.08;
-      letter-spacing: -0.015em;
-      margin-bottom: 18px;
-    }
-
-    h1 em {
-      font-style: italic;
-      color: var(--gold);
-      font-weight: 300;
-    }
-
-    .subtitle-kr {
-      font-family: 'Noto Serif KR', serif;
-      font-weight: 300;
-      color: var(--ink-dim);
-      font-size: clamp(17px, 2.6vw, 22px);
-      letter-spacing: 0.02em;
-      margin-bottom: 36px;
-    }
-
-    .hero-meta {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--ink-mute);
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-    }
-
-    /* --- headings --- */
-    h2 {
-      font-family: var(--serif);
-      font-weight: 400;
-      font-size: clamp(26px, 4vw, 36px);
-      line-height: 1.2;
-      margin-bottom: 8px;
-      color: var(--ink);
-      letter-spacing: -0.01em;
-    }
-
-    h2 em {
-      font-style: italic;
-      color: var(--gold);
-    }
-
-    .h2-kr {
-      font-family: 'Noto Serif KR', serif;
-      font-weight: 300;
-      color: var(--ink-dim);
-      font-size: 15px;
-      margin-bottom: 36px;
-    }
-
-    h3 {
-      font-family: var(--serif);
-      font-weight: 400;
-      font-size: 22px;
-      margin-bottom: 14px;
-      color: var(--ink);
-    }
-
-    /* --- body text --- */
-    p {
-      margin-bottom: 22px;
-      color: var(--ink);
-    }
-
-    p.lead {
-      font-size: 20px;
-      line-height: 1.6;
-      color: var(--ink);
-      font-family: var(--serif);
-      font-weight: 300;
-    }
-
-    .drop::first-letter {
-      font-family: var(--serif);
-      font-size: 64px;
-      float: left;
-      line-height: 0.85;
-      padding: 8px 10px 0 0;
-      color: var(--gold);
-      font-weight: 400;
-    }
-
-    em {
-      font-style: italic;
-      color: var(--gold);
-    }
-
-    strong {
-      color: var(--ink);
-      font-weight: 500;
-    }
-
-    .quiet {
-      color: var(--ink-dim);
-    }
-
-    blockquote {
-      border-left: 2px solid var(--gold);
-      padding: 4px 0 4px 22px;
-      margin: 28px 0;
-      font-family: var(--serif);
-      font-style: italic;
-      color: var(--ink-dim);
-      font-size: 19px;
-      line-height: 1.55;
-    }
-
-    blockquote .attr {
-      display: block;
-      font-family: var(--sans);
-      font-style: normal;
-      font-size: 13px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--ink-mute);
-      margin-top: 12px;
-    }
-
-    /* --- section divider --- */
-    .divider {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 30px 0;
-      color: var(--ink-mute);
-    }
-
-    .divider::before,
-    .divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--rule);
-      max-width: 120px;
-    }
-
-    .divider span {
-      padding: 0 20px;
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-    }
-
-    /* --- module card --- */
-    .module {
-      background: var(--bg-elev);
-      border: 1px solid var(--rule);
-      border-radius: 4px;
-      padding: 28px;
-      margin: 36px 0;
-    }
-
-    .module-label {
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 12px;
-    }
-
-    .module h3 {
-      margin-bottom: 6px;
-    }
-
-    .module .h3-kr {
-      font-family: 'Noto Serif KR', serif;
-      font-size: 13px;
-      color: var(--ink-dim);
-      margin-bottom: 22px;
-    }
-
-    canvas {
-      display: block;
-      width: 100%;
-      height: auto;
-      background: #07070c;
-      border-radius: 3px;
-    }
-
-    #fretsCanvas {
-      aspect-ratio: 720 / 380;
-    }
-
-    #clockCanvas {
-      aspect-ratio: 720 / 320;
-    }
-
-    #pvaCanvas {
-      aspect-ratio: 720 / 440;
-    }
-
-    #projCanvas {
-      aspect-ratio: 720 / 420;
-    }
-
-    #towerCanvas {
-      aspect-ratio: 720 / 420;
-    }
-
-    #shipCanvas {
-      aspect-ratio: 720 / 400;
-    }
-
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px 22px;
-      margin-top: 20px;
-      align-items: center;
-    }
-
-    .control {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      min-width: 0;
-      flex: 1;
-      min-width: 140px;
-    }
-
-    .control label {
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--ink-dim);
-    }
-
-    .control input[type=range] {
-      width: 100%;
-      -webkit-appearance: none;
-      appearance: none;
-      height: 2px;
-      background: var(--rule);
-      outline: none;
-      border-radius: 1px;
-    }
-
-    .control input[type=range]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: var(--gold);
-      cursor: pointer;
-      border: none;
-    }
-
-    .control input[type=range]::-moz-range-thumb {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: var(--gold);
-      cursor: pointer;
-      border: none;
-    }
-
-    .control .value {
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--gold);
-    }
-
-    button {
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      background: transparent;
-      color: var(--gold);
-      border: 1px solid var(--gold-dim);
-      padding: 10px 18px;
-      border-radius: 2px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    button:hover {
-      background: var(--gold);
-      color: var(--bg);
-      border-color: var(--gold);
-    }
-
-    button.active {
-      background: var(--gold);
-      color: var(--bg);
-      border-color: var(--gold);
-    }
-
-    button.secondary {
-      color: var(--ink-dim);
-      border-color: var(--ink-mute);
-    }
-
-    button.secondary:hover {
-      color: var(--cyan);
-      border-color: var(--cyan);
-      background: transparent;
-    }
-
-    .btn-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    .readout {
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--ink-dim);
-      margin-top: 14px;
-      padding: 12px 14px;
-      background: #07070c;
-      border-left: 2px solid var(--cyan);
-      border-radius: 2px;
-    }
-
-    .readout .r-val {
-      color: var(--cyan);
-    }
-
-    .readout .r-gold {
-      color: var(--gold);
-    }
-
-    .caption {
-      font-family: var(--serif);
-      font-style: italic;
-      color: var(--ink-dim);
-      font-size: 14px;
-      margin-top: 14px;
-      line-height: 1.55;
-    }
-
-    /* --- badge --- */
-    .badge {
-      position: fixed;
-      bottom: 18px;
-      right: 18px;
-      z-index: 100;
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 0.15em;
-      color: var(--ink-mute);
-      background: rgba(10, 10, 15, 0.85);
-      backdrop-filter: blur(8px);
-      padding: 8px 12px;
-      border: 1px solid var(--rule);
-      border-radius: 2px;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-
-    .badge:hover {
-      color: var(--gold);
-      border-color: var(--gold-dim);
-    }
-
-    /* --- closing --- */
-    .closing {
-      text-align: center;
-      padding: 80px 28px;
-      border-top: 1px solid var(--rule);
-      margin-top: 60px;
-    }
-
-    .closing .mark {
-      font-family: var(--serif);
-      font-size: 28px;
-      color: var(--gold);
-      margin-bottom: 24px;
-    }
-
-    .closing p {
-      color: var(--ink-dim);
-      font-family: var(--serif);
-      font-style: italic;
-    }
-
-    .nav-chapter {
-      display: flex;
-      justify-content: space-between;
-      padding: 40px 0;
-      border-top: 1px solid var(--rule);
-      margin-top: 40px;
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-    }
-
-    .nav-chapter a {
-      color: var(--ink-dim);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .nav-chapter a:hover {
-      color: var(--gold);
-    }
-
-    /* reveal */
-    .reveal {
-      opacity: 1;
-      transform: translateY(0);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .reveal.pending {
-      opacity: 0;
-      transform: translateY(16px);
-    }
-
-    @media (max-width: 640px) {
-      .module {
-        padding: 20px 16px;
-      }
-
-      .controls {
-        gap: 12px 16px;
-      }
-
-      .control {
-        min-width: 120px;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Shape of Falling — An Interactive Exploration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #080d1a;
+  --bg2: #0c1326;
+  --bg3: #111b38;
+  --card: #131f42;
+  --gold: #f0b429;
+  --gold-dim: #c4912080;
+  --sky: #38bdf8;
+  --purple: #a78bfa;
+  --coral: #fb7185;
+  --mint: #34d399;
+  --text: #e0e6f0;
+  --muted: #7b8db5;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999;
+}
+
+section {
+  min-height: 100vh;
+  padding: 6rem 2rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.section-inner { max-width: 900px; width: 100%; }
+
+h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.2;
+  color: #fff;
+  margin-bottom: 1.5rem;
+}
+h3 {
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 0.5rem;
+}
+p { margin-bottom: 1rem; }
+.accent-gold { color: var(--gold); }
+.accent-sky { color: var(--sky); }
+.accent-purple { color: var(--purple); }
+.accent-coral { color: var(--coral); }
+.accent-mint { color: var(--mint); }
+
+.formula {
+  font-family: var(--font-mono);
+  font-size: 1.3rem;
+  color: var(--gold);
+  background: var(--bg3);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  border-left: 3px solid var(--gold);
+  display: inline-block;
+  margin: 1rem 0;
+}
+
+blockquote {
+  border-left: 3px solid var(--gold);
+  padding: 0.6rem 0 0.6rem 1.4rem;
+  margin: 2rem 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--text);
+  font-size: 1.25rem;
+  line-height: 1.55;
+}
+blockquote .attr {
+  display: block;
+  font-family: var(--font-body);
+  font-style: normal;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.8rem;
+}
+
+#hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+#hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.4;
+}
+#hero .content { position: relative; z-index: 2; }
+#hero h1 { margin-bottom: 1rem; }
+#hero .subtitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  color: var(--gold);
+  font-style: italic;
+  margin-bottom: 2.5rem;
+}
+#hero .tagline {
+  color: var(--muted);
+  font-size: 0.95rem;
+  max-width: 540px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.7;
+}
+.start-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9rem 2.2rem;
+  background: transparent;
+  border: 1.5px solid var(--gold);
+  color: var(--gold);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 60px;
+  cursor: pointer;
+  transition: all 0.3s;
+  letter-spacing: 0.05em;
+}
+.start-btn:hover {
+  background: var(--gold);
+  color: var(--bg);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(240, 180, 41, 0.25);
+}
+
+#nav-dots {
+  position: fixed;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.nav-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--muted);
+  opacity: 0.3;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+}
+.nav-dot.active {
+  opacity: 1;
+  background: var(--gold);
+  transform: scale(1.4);
+}
+.nav-dot:hover { opacity: 0.7; }
+
+.demo-card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 1.5rem 0;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+.demo-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--sky), var(--purple));
+  opacity: 0.6;
+}
+.demo-card h3 {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+.demo-card .caption {
+  font-family: var(--font-display);
+  font-style: italic;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  line-height: 1.6;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.3rem;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.04);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s;
+  font-weight: 400;
+}
+.btn:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.25);
+  transform: translateY(-1px);
+}
+.btn.active, .btn.playing {
+  border-color: var(--gold);
+  background: rgba(240, 180, 41, 0.12);
+  color: var(--gold);
+}
+.btn-gold { border-color: var(--gold); color: var(--gold); }
+.btn-gold:hover { background: var(--gold); color: var(--bg); }
+.btn-group { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0 0.5rem; }
+
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0.8rem 0;
+}
+.slider-row label {
+  min-width: 10rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+}
+.slider-row .val {
+  min-width: 4.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+  text-align: right;
+}
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 4px;
+  background: var(--bg3);
+  border-radius: 2px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--gold);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--gold);
+  cursor: pointer;
+  border: none;
+}
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.3); }
+
+.canvas-wrap {
+  position: relative;
+  width: 100%;
+  background: rgba(0,0,0,0.25);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+.canvas-wrap canvas { display: block; width: 100%; height: auto; }
+#fretsCanvas { aspect-ratio: 720 / 380; }
+#clockCanvas { aspect-ratio: 720 / 320; }
+#pvaCanvas { aspect-ratio: 720 / 440; }
+#projCanvas { aspect-ratio: 720 / 420; }
+#towerCanvas { aspect-ratio: 720 / 420; }
+#shipCanvas { aspect-ratio: 720 / 400; }
+
+.section-num {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--gold);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  opacity: 0.7;
+}
+
+.readout {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: 1rem;
+  padding: 0.9rem 1.1rem;
+  background: rgba(0,0,0,0.3);
+  border-left: 2px solid var(--sky);
+  border-radius: 4px;
+}
+.readout .r-val { color: var(--sky); }
+.readout .r-gold { color: var(--gold); }
+
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+.epitaph {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  color: var(--gold);
+  line-height: 1.25;
+  margin: 3rem 0 1rem;
+  letter-spacing: -0.01em;
+}
+.epitaph-en {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  color: var(--text);
+  opacity: 0.85;
+  margin-bottom: 1.5rem;
+}
+.epitaph-attr {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+footer {
+  padding: 2rem 2rem 3rem;
+  width: 100%;
+  max-width: 620px;
+  margin: 0 auto;
+}
+.footer-rule {
+  width: 100%;
+  height: 1px;
+  background: rgba(255,255,255,0.06);
+  margin-bottom: 1.5rem;
+}
+.footer-attr {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  align-items: center;
+  text-align: center;
+}
+.footer-name {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #edeef2;
+}
+.footer-inst { font-size: 0.88rem; color: var(--muted); }
+.footer-url {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: #d4a853;
+  text-decoration: none;
+  margin-top: 0.25rem;
+  display: inline-block;
+}
+.footer-url:hover { text-decoration: underline; }
+
+.floating-badge {
+  position: fixed;
+  bottom: 1.2rem;
+  left: 1.2rem;
+  z-index: 100;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  background: rgba(8,13,26,0.85);
+  backdrop-filter: blur(8px);
+  padding: 0.5rem 0.9rem;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 20px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.floating-badge:hover { color: var(--gold); border-color: var(--gold-dim); }
+
+@media (max-width: 640px) {
+  section { padding: 4rem 1.2rem; }
+  #nav-dots { display: none; }
+  .demo-card { padding: 1.2rem; }
+  .slider-row { flex-wrap: wrap; }
+  .slider-row label { min-width: 100%; }
+}
+</style>
+<link rel="stylesheet" href="brand.css">
+<link rel="stylesheet" href="typography.css">
 </head>
-
 <body>
 
-  <!-- ============================================ HERO ============================================ -->
-  <header class="hero">
-    <canvas class="hero-canvas" id="heroCanvas"></canvas>
-    <div class="hero-inner">
-      <div class="eyebrow">Mellow Math · Classical Mechanics · Ch. 2</div>
-      <h1>The Shape of <em>Falling</em></h1>
-      <div class="subtitle-kr">떨어짐의 모양</div>
-      <div class="hero-meta">After Feynman, Lectures on Physics I.8 — "Motion"</div>
+<nav id="nav-dots"></nav>
+
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="content">
+    <h3 class="accent-gold">The Birth of Physics</h3>
+    <h1>The Shape<br>of Falling</h1>
+    <p class="subtitle">A rhythm reveals a law</p>
+    <p class="tagline">In 1604, a man in Padua could not measure a second. So he used music. He rolled a ball down a plank, tied catgut frets along its edge, and adjusted them by ear until the clicks became a metronome. Then he measured where the frets had ended up. He had just heard the shape of gravity.</p>
+    <button class="start-btn" onclick="initAudio(); document.getElementById('sec-plank').scrollIntoView({behavior:'smooth'})">
+      ▶ Start Exploring
+    </button>
+  </div>
+</section>
+
+<section id="sec-plank">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">Galileo's Plank</p>
+      <h2>He Used <span class="accent-gold">Music</span> to Measure Time</h2>
+      <p>Clocks in 1604 were too coarse. Minutes, if you were lucky. A second was a philosophical idea, not a measurement. And yet Galileo wanted to describe how things fall — which happens in less than a second, and during that second the thing changes quickly, in ways the eye cannot catch.</p>
+
+      <p>So he used music.</p>
+
+      <blockquote>
+        Experiment is the sole judge of scientific truth.
+        <span class="attr">— Richard Feynman, Lectures on Physics, Vol. I, Ch. 1</span>
+      </blockquote>
+
+      <p>In his workshop in Padua he built an inclined plank of seasoned wood, twelve cubits long, and carved along its length a straight channel, polished with parchment. Down this channel he rolled a bronze ball. Along the edge he tied small movable frets — thin strings of catgut, raised just enough that the rolling ball would strike them and click. Then he slid the frets up and down until, by his trained musical ear — and Galileo was raised by a father who was a composer — the clicks arrived at the beat of a simple song. Evenly spaced in time. A metronome of his own making.</p>
+
+      <p>Then he put down the ball and went to measure where the frets had ended up.</p>
+
+      <p>They were not evenly spaced. They were spaced in the ratio <span class="accent-gold">1, 3, 5, 7, 9</span> — the odd numbers. That is the signature of <em>t²</em>. Galileo did not know calculus. No one did. But his ear had just heard the shape of gravity.</p>
     </div>
-  </header>
 
-  <!-- ============================================ OPENING ============================================ -->
-  <section class="page">
-    <p class="lead drop">Galileo could not measure short time intervals. Clocks in 1604 were too coarse: minutes, if you
-      were lucky. A second was a philosophical idea, not a measurement. And yet he wanted to describe how things fall —
-      which happens in less than a second, and during that second the thing changes, quickly, in ways the eye cannot
-      catch.</p>
+    <div class="reveal">
+      <div class="demo-card">
+        <h3>Drag the frets. Listen for the beat.</h3>
+        <p style="color: var(--muted); font-size: 0.9rem;">Grab each fret and slide it along the plank. Press <span class="accent-gold">roll</span>. Listen. When the clicks arrive evenly — like a metronome — the spacings light up with the odd numbers.</p>
 
-    <p>So he used music.</p>
+        <div class="canvas-wrap">
+          <canvas id="fretsCanvas" width="720" height="380"></canvas>
+        </div>
 
-    <p>In his workshop in Padua he built an inclined plank of seasoned wood, twelve cubits long, and carved along its
-      length a straight channel, smooth as he could make it, polished with parchment. Down this channel he rolled a
-      bronze ball. Along the edge of the plank he tied small movable frets — thin strings of catgut, raised just enough
-      that the rolling ball would strike them and make a small audible click. Then he slid the frets up and down until,
-      by his trained musical ear — and Galileo had been raised by a father who was a composer — the clicks arrived at
-      the beat of a simple song. Evenly spaced in time. A metronome of his own making.</p>
-
-    <p>Then he put down the ball and went to measure where the frets had ended up.</p>
-
-    <p>They were not evenly spaced. They were spaced in the ratio <strong>1, 3, 5, 7, 9</strong> — the odd numbers.</p>
-
-    <p>That is the signature of <em>t²</em>. The cumulative distance a ball rolls in equal time intervals is 1, 4, 9,
-      16, 25. The differences between those are the odd numbers. Galileo did not know calculus; no one did. But his ear
-      had just discovered the shape of gravity.</p>
-
-    <blockquote>
-      "I took a piece of wooden moulding, about 12 cubits long, half a cubit wide, and three finger-breadths thick; on
-      its edge was cut a channel a little more than one finger in breadth; having made this groove very straight,
-      smooth, and polished, and having lined it with parchment, also as smooth and polished as possible, we rolled along
-      it a hard, smooth, and very round bronze ball."
-      <span class="attr">— Galileo Galilei, Two New Sciences, 1638</span>
-    </blockquote>
-
-    <p>This chapter is about what Galileo heard, and what it means. We'll use six interactive toys to hear it too, to
-      measure time with water as he did, to watch parabolas emerge from sliders, to drop things from leaning towers, and
-      to stand on a moving ship and understand, for the first time, why the Earth's rotation is undetectable from inside
-      a room — which is the germ of relativity, three hundred years before Einstein.</p>
-  </section>
-
-  <div class="divider"><span>I · The Musical Plank</span></div>
-
-  <!-- ============================================ MODULE 1: MUSICAL FRETS ============================================ -->
-  <section class="page">
-    <p>Here is Galileo's apparatus. The inclined plank runs from upper left to lower right. Five catgut frets cross the
-      channel, and you can drag each one up or down the slope. Press <em>roll</em>, and a bronze ball descends the
-      channel and clicks as it crosses each fret. Your job: drag the frets until the clicks arrive <em>evenly</em>, as a
-      steady rhythm. A metronome.</p>
-
-    <p>When the clicks are even, the fret positions will light up. Look at what they say.</p>
-
-    <div class="module">
-      <div class="module-label">Module 1 · Galileo's Frets</div>
-      <h3>A rhythm reveals a law</h3>
-      <div class="h3-kr">리듬이 법칙을 드러낸다</div>
-      <canvas id="fretsCanvas" width="720" height="380"></canvas>
-      <div class="controls">
-        <div class="control">
-          <label>Incline angle <span class="value" id="fretsAngleVal">14°</span></label>
+        <div class="slider-row">
+          <label>Incline angle</label>
           <input type="range" id="fretsAngle" min="5" max="30" value="14" step="1">
+          <span class="val" id="fretsAngleVal">14°</span>
         </div>
-        <div class="control">
-          <label>Tempo (s between clicks) <span class="value" id="fretsTempoVal">0.40</span></label>
+        <div class="slider-row">
+          <label>Tempo</label>
           <input type="range" id="fretsTempo" min="20" max="80" value="40" step="1">
+          <span class="val" id="fretsTempoVal">0.40 s</span>
         </div>
+
+        <div class="btn-group">
+          <button class="btn btn-gold" id="fretsRoll">▶ Roll the ball</button>
+          <button class="btn" id="fretsAuto">Place by ear (auto-tune)</button>
+          <button class="btn" id="fretsReset">Reset frets</button>
+        </div>
+
+        <p class="caption">The ball accelerates as a rolling solid sphere: a = (5/7) · g · sin θ. Each fret-strike plays a soft click at the moment the ball arrives. When the fret positions are in ratio 1 : 4 : 9 : 16 : 25, the <em>gaps</em> between them are 1 : 3 : 5 : 7 : 9 — and the clicks land on a steady beat.</p>
       </div>
-      <div class="btn-row">
-        <button id="fretsRoll">Roll the ball</button>
-        <button id="fretsAuto" class="secondary">Place frets by ear (auto-tune)</button>
-        <button id="fretsReset" class="secondary">Reset frets</button>
-      </div>
-      <div class="readout" id="fretsReadout">Drag each fret. Press <span class="r-gold">roll</span>. Listen for an even
-        rhythm — like a metronome. When even, the spacings become <span class="r-val">1 : 3 : 5 : 7 : 9</span>.</div>
-      <div class="caption">The catgut frets are draggable. Each strike plays a soft wood-block click via the Web Audio
-        API, at the actual time the ball reaches that position — computed from x = ½·a·t² with a = (5/7)·g·sin θ for a
-        rolling sphere.</div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <div class="divider"><span>II · How to Measure a Second</span></div>
+<section id="sec-clock">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">The Water Clock</p>
+      <h2>Weighing <span class="accent-sky">Time</span></h2>
+      <p>But how did Galileo know the clicks were even? His ear told him — but how did he <em>measure</em> it, to write down numbers?</p>
 
-  <!-- ============================================ MODULE 2: WATER CLOCK ============================================ -->
-  <section class="page">
-    <p>But how did Galileo know the clicks were even? His ear told him — but how did he <em>measure</em> it, to write
-      down numbers? He used a water clock. Essentially a bucket with a small hole in the bottom, positioned above a
-      collecting vessel on a scale. To time an event, open the hole at the start; close it at the end; weigh the water
-      that came out.</p>
+      <p>He used a water clock. A bucket with a small hole in the bottom, positioned above a collecting vessel on a scale. Open the hole at the start; close it at the end; weigh the water that came out. The mass of the outflow is proportional to the elapsed time.</p>
 
-    <p>The mass of the outflow is proportional to the elapsed time. Galileo could weigh to a grain. He wrote that his
-      measurements agreed "to one-tenth of a pulse beat." His pulse, he assumed, was also a reliable clock.</p>
+      <p>He wrote that his measurements agreed "to one-tenth of a pulse beat." His pulse, he assumed, was also a reliable clock. In Galileo's hands, two ancient and imperfect instruments — a bucket and a wrist — became the first true chronometer of physics.</p>
+    </div>
 
-    <div class="module">
-      <div class="module-label">Module 2 · Water Clock</div>
-      <h3>Weighing time</h3>
-      <div class="h3-kr">시간을 저울질하다</div>
-      <canvas id="clockCanvas" width="720" height="320"></canvas>
-      <div class="controls">
-        <div class="control">
-          <label>Incline angle <span class="value" id="clockAngleVal">18°</span></label>
+    <div class="reveal">
+      <div class="demo-card">
+        <h3>Open the tap. Release the ball. Weigh the water.</h3>
+
+        <div class="canvas-wrap">
+          <canvas id="clockCanvas" width="720" height="320"></canvas>
+        </div>
+
+        <div class="slider-row">
+          <label>Incline angle</label>
           <input type="range" id="clockAngle" min="8" max="30" value="18" step="1">
+          <span class="val" id="clockAngleVal">18°</span>
         </div>
-        <div class="control">
-          <label>Plank length (cubits) <span class="value" id="clockLengthVal">12</span></label>
+        <div class="slider-row">
+          <label>Plank length (cubits)</label>
           <input type="range" id="clockLength" min="6" max="20" value="12" step="1">
+          <span class="val" id="clockLengthVal">12</span>
         </div>
+
+        <div class="btn-group">
+          <button class="btn btn-gold" id="clockStart">▶ Release & open the tap</button>
+          <button class="btn" id="clockReset">Reset</button>
+        </div>
+
+        <div class="readout" id="clockReadout">Elapsed time: <span class="r-val">0.00 s</span> &nbsp;·&nbsp; Water collected: <span class="r-gold">0.0 g</span></div>
+
+        <p class="caption">The tap opens when the ball is released and closes when the ball reaches the end of the plank. Galileo's instrument weighed to one-tenth of a pulse beat — about 0.1 seconds. For the next thirty years, the most precise chronometer in Europe.</p>
       </div>
-      <div class="btn-row">
-        <button id="clockStart">Release the ball & open the tap</button>
-        <button id="clockReset" class="secondary">Reset</button>
-      </div>
-      <div class="readout" id="clockReadout">Elapsed time: <span class="r-val">0.00 s</span> &nbsp;·&nbsp; Water
-        collected: <span class="r-gold">0.0 g</span></div>
-      <div class="caption">The tap opens when the ball is released and closes when the ball reaches the end of the
-        plank. The mass that fell is proportional to the time that passed. Galileo's real instrument weighed to
-        one-tenth of a "pulse beat" — about 0.1 seconds.</div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <div class="divider"><span>III · The Parabola in Three Views</span></div>
+<section id="sec-pva">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">Three Curves, One Motion</p>
+      <h2>A Parabola and Its <span class="accent-purple">Hidden Slopes</span></h2>
+      <p>Here is what Galileo's odd-number law becomes, written in modern symbols:</p>
 
-  <!-- ============================================ MODULE 3: PARABOLA REVEALER ============================================ -->
-  <section class="page">
-    <p>Here is what Galileo's odd-number law becomes, written in modern symbols:</p>
+      <div class="formula">x(t) = ½ · a · t²</div>
 
-    <p style="text-align: center; font-family: var(--serif); font-size: 24px; color: var(--gold); margin: 32px 0;">x(t)
-      = ½ · a · t²</p>
+      <p>A parabola. But there are two more curves hiding inside this one, and they are the ones Newton would isolate a generation later. The <em>slope</em> of x(t) at any instant is the velocity v(t) — a straight line rising from zero. The slope of v(t) is the acceleration a — a flat horizontal line.</p>
 
-    <p>A parabola. But there are two more curves hiding inside this one, and they are the ones Newton would isolate a
-      generation later. The <em>slope</em> of x(t) at any instant is the velocity v(t), a straight line rising from
-      zero. The slope of v(t) is the acceleration a, a flat horizontal line. Three curves, each the derivative of the
-      one above. Watch them draw themselves as the ball rolls.</p>
+      <p>Three curves, each the derivative of the one above. Galileo did not have this language. But you can watch the derivative happen, in real time, by eye.</p>
+    </div>
 
-    <div class="module">
-      <div class="module-label">Module 3 · Position, Velocity, Acceleration</div>
-      <h3>Three curves, one motion</h3>
-      <div class="h3-kr">세 곡선, 하나의 운동</div>
-      <canvas id="pvaCanvas" width="720" height="440"></canvas>
-      <div class="controls">
-        <div class="control">
-          <label>Acceleration <span class="value" id="pvaAccVal">2.00 m/s²</span></label>
+    <div class="reveal">
+      <div class="demo-card">
+        <h3>Play the motion. Watch the slope become the next curve.</h3>
+
+        <div class="canvas-wrap">
+          <canvas id="pvaCanvas" width="720" height="440"></canvas>
+        </div>
+
+        <div class="slider-row">
+          <label>Acceleration</label>
           <input type="range" id="pvaAcc" min="50" max="400" value="200" step="5">
+          <span class="val" id="pvaAccVal">2.00 m/s²</span>
         </div>
-        <div class="control">
-          <label>Animation speed <span class="value" id="pvaSpeedVal">1.0×</span></label>
+        <div class="slider-row">
+          <label>Animation speed</label>
           <input type="range" id="pvaSpeed" min="3" max="20" value="10" step="1">
+          <span class="val" id="pvaSpeedVal">1.0×</span>
         </div>
+
+        <div class="btn-group">
+          <button class="btn btn-gold" id="pvaPlay">▶ Play</button>
+          <button class="btn" id="pvaReset">Reset</button>
+          <button class="btn" id="pvaTangent">Show tangent line</button>
+        </div>
+
+        <p class="caption">The tangent line on the position curve has slope equal to the current velocity. The slope of the velocity line is the acceleration — constant, because the plank's incline is fixed. This is the derivative, discovered by eye.</p>
       </div>
-      <div class="btn-row">
-        <button id="pvaPlay">Play</button>
-        <button id="pvaReset" class="secondary">Reset</button>
-        <button id="pvaTangent" class="secondary">Show tangent line</button>
-      </div>
-      <div class="caption">The tangent line on the position curve has slope equal to the current velocity. The slope of
-        the velocity line is the acceleration — constant, because the plank's incline is fixed. This is the derivative,
-        discovered by eye.</div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <div class="divider"><span>IV · Every Thrown Stone</span></div>
+<section id="sec-proj">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">Every Thrown Stone</p>
+      <h2>The Arc Is a <span class="accent-gold">Parabola</span></h2>
+      <p>In 1638, Galileo — old and blind and under house arrest for the crime of describing the solar system — dictated his last book to his son. In it he proved, for the first time, that every thrown stone traces a <em>parabola</em>. This connected cannonballs to the mathematics of the ancient Greeks — and it was a hint Newton would eventually complete: the parabola of a stone and the ellipse of a planet are the same conic section, cut at different angles through the same cone.</p>
 
-  <!-- ============================================ MODULE 4: PROJECTILE DECOMPOSITION ============================================ -->
-  <section class="page">
-    <p>In 1638 Galileo, old and blind and under house arrest for the crime of describing the solar system, dictated his
-      last book to his son. In it he proved, for the first time, that every thrown stone traces a <em>parabola</em>.
-      This connected cannonballs to the mathematics of Apollonius — and it was a hint Newton would eventually complete:
-      the parabola of a stone and the ellipse of a planet are the same conic section, cut at different angles through
-      the same cone.</p>
+      <p>Galileo's argument was deceptively simple. A thrown stone has two motions happening at the same time, and they do not interfere with each other. <span class="accent-gold">Horizontally</span>, it sails at constant velocity — nothing pushes it sideways. <span class="accent-sky">Vertically</span>, it falls with constant acceleration — the rolling ball again, now invisible.</p>
 
-    <p>Galileo's argument was simple. A thrown stone has two motions happening at the same time, and they do not
-      interfere with each other. Horizontally, it sails at constant velocity — nothing is pushing it sideways.
-      Vertically, it falls with constant acceleration — exactly as in Module 3. Add the two, and you get a parabola.
-      Let's decompose it.</p>
+      <p>Add the two, and you get a parabola.</p>
+    </div>
 
-    <div class="module">
-      <div class="module-label">Module 4 · The Decomposed Arc</div>
-      <h3>Two motions at once</h3>
-      <div class="h3-kr">동시에 일어나는 두 운동</div>
-      <canvas id="projCanvas" width="720" height="420"></canvas>
-      <div class="controls">
-        <div class="control">
-          <label>Launch angle <span class="value" id="projAngVal">45°</span></label>
+    <div class="reveal">
+      <div class="demo-card">
+        <h3>Fire the stone. Watch it split into two shadows.</h3>
+
+        <div class="canvas-wrap">
+          <canvas id="projCanvas" width="720" height="420"></canvas>
+        </div>
+
+        <div class="slider-row">
+          <label>Launch angle</label>
           <input type="range" id="projAng" min="15" max="80" value="45" step="1">
+          <span class="val" id="projAngVal">45°</span>
         </div>
-        <div class="control">
-          <label>Launch speed <span class="value" id="projSpdVal">20 m/s</span></label>
+        <div class="slider-row">
+          <label>Launch speed</label>
           <input type="range" id="projSpd" min="10" max="30" value="20" step="1">
+          <span class="val" id="projSpdVal">20 m/s</span>
         </div>
+
+        <div class="btn-group">
+          <button class="btn btn-gold" id="projFire">▶ Fire</button>
+          <button class="btn" id="projReset">Clear trails</button>
+        </div>
+
+        <p class="caption">The bright stone is real. The <span class="accent-gold">gold ghost</span> on the floor has only the horizontal motion — sailing at constant speed, ignorant of gravity. The <span class="accent-sky">sky ghost</span> on the left wall has only the vertical — falling from the peak as if released at rest. The real stone is always at the intersection of its two shadows.</p>
       </div>
-      <div class="btn-row">
-        <button id="projFire">Fire</button>
-        <button id="projReset" class="secondary">Clear trails</button>
-      </div>
-      <div class="caption">The bright ball is the real stone. The gold ghost on the floor has only the horizontal motion
-        — moving at constant speed, ignorant of gravity. The cyan ghost on the left wall has only the vertical motion —
-        falling straight down as if released from rest at the peak. The real stone is always at the intersection of its
-        two shadows.</div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <div class="divider"><span>V · The Tower at Pisa</span></div>
+<section id="sec-tower">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">The Tower at Pisa</p>
+      <h2>Aristotle Was <span class="accent-coral">Wrong</span></h2>
+      <p>The legend is that young Galileo climbed the Leaning Tower, dropped a cannonball and a musket ball from the top, and they struck the ground together — refuting Aristotle, who had taught for 1,900 years that heavier things fall faster. The legend is almost certainly apocryphal. Galileo never wrote of it. His student Viviani added the story to a biography sixty years later, after everyone who could contradict him was dead.</p>
 
-  <!-- ============================================ MODULE 5: TWO BALLS ============================================ -->
-  <section class="page">
-    <p>The legend is that young Galileo climbed the Leaning Tower of Pisa, dropped a cannonball and a musket ball
-      simultaneously from the top, and they struck the ground at the same instant — refuting Aristotle, who had taught
-      for 1,900 years that heavier objects fall faster. The legend is almost certainly apocryphal. Galileo never wrote
-      of it. His student Vincenzo Viviani added the story to a biography sixty years later, after everyone who could
-      contradict him was dead.</p>
+      <p>But the experiment is real, and you can try it in your hand. In vacuum, heavy and light fall together because gravity is exactly proportional to mass, so the mass cancels out. The Earth accelerates everything it touches at the same rate. The only thing that breaks this is air.</p>
 
-    <p>But the experiment is real, and you can try it in your hand. The reason heavy and light objects fall
-      <em>almost</em> together is that the only force acting on them (in vacuum) is gravity, and gravity happens to be
-      proportional to mass — so the mass cancels out. The acceleration is the same for all objects: the Earth
-      accelerates everything it pulls on at exactly <em>g</em>.
-    </p>
+      <p>In 1971, Apollo 15 astronaut David Scott dropped a hammer and a falcon feather on the Moon, where there is no air, to settle it in front of a television camera. They landed together.</p>
+    </div>
 
-    <p>The only thing that breaks this is air. In 1971, Apollo 15 astronaut David Scott dropped a hammer and a falcon
-      feather on the Moon, where there is no air, to settle it finally in front of a television camera. They landed
-      together.</p>
+    <div class="reveal">
+      <div class="demo-card">
+        <h3>Drop both. Add air. Watch Aristotle return.</h3>
 
-    <div class="module">
-      <div class="module-label">Module 5 · Leaning Tower</div>
-      <h3>Heavy, light, and the air between</h3>
-      <div class="h3-kr">무거움, 가벼움, 그 사이의 공기</div>
-      <canvas id="towerCanvas" width="720" height="420"></canvas>
-      <div class="controls">
-        <div class="control">
-          <label>Air resistance <span class="value" id="towerAirVal">0%</span></label>
+        <div class="canvas-wrap">
+          <canvas id="towerCanvas" width="720" height="420"></canvas>
+        </div>
+
+        <div class="slider-row">
+          <label>Air resistance</label>
           <input type="range" id="towerAir" min="0" max="100" value="0" step="1">
+          <span class="val" id="towerAirVal">0%</span>
         </div>
-        <div class="control">
-          <label>Feather mass (cannonball = 10) <span class="value" id="towerMassVal">1</span></label>
+        <div class="slider-row">
+          <label>Musket ball mass</label>
           <input type="range" id="towerMass" min="1" max="10" value="1" step="1">
+          <span class="val" id="towerMassVal">1 kg</span>
         </div>
-      </div>
-      <div class="btn-row">
-        <button id="towerDrop">Drop both</button>
-        <button id="towerReset" class="secondary">Reset</button>
-      </div>
-      <div class="readout" id="towerReadout">With <span class="r-val">zero air</span>: both land together —
-        <em>regardless of mass</em>. Crank up the air, and watch what Aristotle saw.
+
+        <div class="btn-group">
+          <button class="btn btn-gold" id="towerDrop">▶ Drop both</button>
+          <button class="btn" id="towerReset">Reset</button>
+        </div>
+
+        <div class="readout" id="towerReadout">With <span class="r-val">zero air</span>: both land together — regardless of mass. Turn up the air, and watch what Aristotle saw.</div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <div class="divider"><span>VI · The Plumb Bob on the Ship</span></div>
+<section id="sec-ship">
+  <div class="section-inner">
+    <div class="reveal">
+      <p class="section-num">The Plumb Bob on the Ship</p>
+      <h2>The Germ of <span class="accent-purple">Relativity</span></h2>
+      <p>Finally: Galileo's most radical experiment, which he never actually performed, but which changed what it means to <em>be at rest</em>.</p>
 
-  <!-- ============================================ MODULE 6: SHIP ============================================ -->
-  <section class="page">
-    <p>Finally: Galileo's most radical experiment, which he never actually performed, but which changed what it means to
-      "be at rest."</p>
+      <p>A ship sails at constant speed over calm water. You climb to the top of the mast and drop a plumb bob. Where does it land?</p>
 
-    <p>A ship sails westward at constant speed over calm water. You climb to the top of the mast and drop a plumb bob.
-      Where does it land?</p>
+      <p>Aristotle would say: behind the mast. The ship moves while the bob falls; the bob has no sideways push, so the mast leaves it behind.</p>
 
-    <p>Aristotle would say: behind the mast. The ship moves while the bob falls; the bob has no sideways push, so the
-      mast leaves it behind.</p>
+      <p>Galileo answered: at the base of the mast. Exactly at the base, every time, no matter how fast the ship is moving — as long as it is not accelerating. Because the bob already had the ship's horizontal velocity before you let go. Releasing it doesn't remove that velocity. So the bob and the mast drift sideways together, and the bob falls straight down relative to the ship.</p>
 
-    <p>Galileo answered: at the base of the mast. Exactly at the base, every time, no matter how fast the ship is moving
-      — <em>as long as it is not accelerating</em>. Because the bob already had the ship's horizontal velocity before
-      you let go. Releasing it doesn't remove that velocity. So the bob and the mast drift sideways together, and the
-      bob falls straight down relative to the ship.</p>
+      <p>The consequence is shattering. If you are inside a sealed cabin in that ship, you cannot tell whether the ship is moving or at rest, by any mechanical experiment. Drop things, throw things, watch water drip — everything behaves identically. This is <span class="accent-purple">Galilean relativity</span>. Uniform motion is undetectable from inside. The Earth hurtles through space at 30 kilometers per second and we cannot feel it — because we are in the cabin, and the windows are fogged.</p>
 
-    <p>The consequence is shattering. If you are inside a sealed cabin in that ship, you cannot tell whether the ship is
-      moving or at rest, by any mechanical experiment. Drop things, throw things, watch water drip — everything behaves
-      identically. This is <em>Galilean relativity</em>. Uniform motion is undetectable from inside. The Earth hurtles
-      through space at 30 kilometers per second and we cannot feel it — because we are in the cabin, and the windows are
-      fogged.</p>
+      <p style="color: var(--muted); font-size: 0.92rem;">Three hundred years later, Einstein would push this principle one step further — asking what happens if even light obeys it — and out of that small extension fell all of modern physics.</p>
+    </div>
 
-    <div class="module">
-      <div class="module-label">Module 6 · Galilean Relativity</div>
-      <h3>Dropped from the mast</h3>
-      <div class="h3-kr">돛대에서 떨어뜨리다</div>
-      <canvas id="shipCanvas" width="720" height="400"></canvas>
-      <div class="controls">
-        <div class="control">
-          <label>Ship speed <span class="value" id="shipSpdVal">6 m/s</span></label>
+    <div class="reveal">
+      <div class="demo-card">
+        <h3>Drop from the mast. Then switch frames.</h3>
+
+        <div class="canvas-wrap">
+          <canvas id="shipCanvas" width="720" height="400"></canvas>
+        </div>
+
+        <div class="slider-row">
+          <label>Ship speed</label>
           <input type="range" id="shipSpd" min="0" max="12" value="6" step="1">
+          <span class="val" id="shipSpdVal">6 m/s</span>
         </div>
+
+        <div class="btn-group">
+          <button class="btn btn-gold" id="shipDrop">▶ Drop from mast</button>
+          <button class="btn active" id="shipFrame">Frame: shore</button>
+          <button class="btn" id="shipReset">Reset</button>
+        </div>
+
+        <p class="caption">Toggle the frame. From the <em>shore</em>, the bob traces a parabola — it inherited the ship's horizontal velocity. From the <em>deck</em>, it falls straight down along the mast. Both observers are right. This is the germ of relativity, 1632.</p>
       </div>
-      <div class="btn-row">
-        <button id="shipDrop">Drop from mast</button>
-        <button id="shipFrame" class="active">Frame: shore</button>
-        <button id="shipReset" class="secondary">Reset</button>
+    </div>
+  </div>
+</section>
+
+<section id="sec-closing">
+  <div class="section-inner" style="text-align: center;">
+    <div class="reveal">
+      <h2>So —<br><span class="accent-gold">What Did He Hear?</span></h2>
+      <div style="margin: 2rem 0; line-height: 2.2; font-size: 1.1rem;">
+        <p><span class="accent-gold">A bronze ball</span> rolling past catgut strings</p>
+        <p><span class="accent-sky">A rhythm</span> that should have been unremarkable</p>
+        <p><span class="accent-purple">An odd-number spacing</span> where even might have been</p>
+        <p><span class="accent-coral">The first law</span> of the first science</p>
       </div>
-      <div class="caption">Toggle the frame. From the <em>shore</em>, the bob traces a parabola — it has horizontal
-        velocity inherited from the ship. From the <em>deck</em>, it falls straight down along the mast. Both observers
-        are right. This is the germ of relativity, 1632.</div>
+
+      <p style="color: var(--muted); font-family: var(--font-display); font-style: italic; font-size: 1.05rem; max-width: 620px; margin: 2rem auto 3rem;">
+        He was sentenced to house arrest for what he heard. Blind, dictating to his son from the villa at Arcetri, he published the law of falling bodies in a book smuggled to Holland. The Inquisition forbade him to teach. His plank stayed in the workshop, the frets still tied at positions 1, 3, 5, 7, 9.
+      </p>
+
+      <div class="epitaph">E pur si muove.</div>
+      <div class="epitaph-en">And yet it moves.</div>
+      <div class="epitaph-attr">— attributed to Galileo Galilei, 1633</div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ============================================ CLOSING ============================================ -->
-  <section class="page">
-    <p>Galileo published these ideas in his <em>Dialogue Concerning the Two Chief World Systems</em> in 1632, at the age
-      of 68. The Inquisition summoned him to Rome, tried him for heresy, and sentenced him to house arrest for the
-      remainder of his life. He was forbidden to publish or teach.</p>
+<footer>
+  <div class="footer-rule"></div>
+  <div class="footer-attr">
+    <div class="footer-name">Sang-hyun Kim</div>
+    <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
+    <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
+  </div>
+</footer>
 
-    <p>He went back to his villa at Arcetri, outside Florence. There, in the silence imposed on him, he dictated his
-      final book — <em>Two New Sciences</em> — to his son Vincenzio and a devoted student, Evangelista Torricelli, the
-      young man who would soon invent the barometer and work out the flow of the water clocks that had timed the falling
-      balls. The book was smuggled to Holland and printed in Leiden in 1638. By then Galileo was blind. He did not live
-      to see a printed copy.</p>
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
 
-    <p>But his plank was still in the workshop. The frets were still tied along its edge, at positions spaced 1, 3, 5,
-      7, 9. A rhythm, silent now, waiting to be heard again.</p>
+<script>
+let actx = null;
+function initAudio() {
+  if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+  if (actx.state === 'suspended') actx.resume();
+}
+function playClick(freq, decay, gain) {
+  if (!actx) return;
+  freq = freq || 800; decay = decay || 0.05; gain = gain || 0.15;
+  const osc = actx.createOscillator();
+  const env = actx.createGain();
+  osc.type = 'triangle';
+  osc.frequency.value = freq;
+  env.gain.value = 0;
+  env.gain.setValueAtTime(gain, actx.currentTime);
+  env.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + decay);
+  osc.connect(env).connect(actx.destination);
+  osc.start();
+  osc.stop(actx.currentTime + decay + 0.02);
+}
+function playDrip() {
+  if (!actx) return;
+  const osc = actx.createOscillator();
+  const env = actx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(900, actx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(300, actx.currentTime + 0.08);
+  env.gain.value = 0;
+  env.gain.setValueAtTime(0.06, actx.currentTime);
+  env.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + 0.1);
+  osc.connect(env).connect(actx.destination);
+  osc.start();
+  osc.stop(actx.currentTime + 0.12);
+}
 
-    <div class="closing">
-      <div class="mark">✦</div>
-      <p>Next: Three Laws, One World — Newton integrating an orbit by hand, 1666.</p>
-    </div>
+const DPR = Math.min(window.devicePixelRatio || 1, 2);
+function fitCanvas(canvas) {
+  const rect = canvas.getBoundingClientRect();
+  const W = Math.max(1, rect.width), H = Math.max(1, rect.height);
+  canvas.width = W * DPR; canvas.height = H * DPR;
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  return { ctx, w: W, h: H };
+}
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
 
-    <div class="nav-chapter">
-      <a href="atoms.html">← Ch. 1 · The World Is Made of Jiggling</a>
-      <a href="dynamics.html">Ch. 3 · Three Laws, One World →</a>
-    </div>
-  </section>
-
-  <a class="badge" href="https://edu.kimsh.kr" target="_blank">edu.kimsh.kr</a>
-
-  <script>
-    /* =============================================================
-       UTILITIES
-       ============================================================= */
-    const DPR = Math.min(window.devicePixelRatio || 1, 2);
-    function fitCanvas(canvas) {
-      const rect = canvas.getBoundingClientRect();
-      const W = Math.max(1, rect.width);
-      const H = Math.max(1, rect.height);
-      canvas.width = W * DPR;
-      canvas.height = H * DPR;
-      const ctx = canvas.getContext('2d');
-      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-      return { ctx, w: W, h: H };
+(function heroAnim() {
+  const canvas = document.getElementById('hero-canvas');
+  let { ctx, w, h } = fitCanvas(canvas);
+  window.addEventListener('resize', () => { const f = fitCanvas(canvas); ctx = f.ctx; w = f.w; h = f.h; });
+  const balls = [];
+  function spawn() {
+    balls.push({
+      x0: Math.random() * w, y0: -20,
+      vx: (Math.random() - 0.5) * 80, vy: 0,
+      life: 0, max: 4 + Math.random() * 2.5,
+      trail: [],
+      hue: ['#f0b429', '#38bdf8', '#a78bfa', '#fb7185'][Math.floor(Math.random() * 4)]
+    });
+  }
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    ctx.fillStyle = 'rgba(8,13,26,0.12)'; ctx.fillRect(0, 0, w, h);
+    if (Math.random() < 0.04 && balls.length < 12) spawn();
+    for (let i = balls.length - 1; i >= 0; i--) {
+      const b = balls[i];
+      b.life += dt;
+      const x = b.x0 + b.vx * b.life;
+      const y = b.y0 + 0.5 * 220 * b.life * b.life;
+      b.trail.push({ x, y });
+      if (b.trail.length > 80) b.trail.shift();
+      ctx.strokeStyle = b.hue + '40'; ctx.lineWidth = 1;
+      ctx.beginPath();
+      b.trail.forEach((p, j) => { if (j === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y); });
+      ctx.stroke();
+      ctx.fillStyle = b.hue;
+      ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI * 2); ctx.fill();
+      if (b.life > b.max || y > h + 40) balls.splice(i, 1);
     }
-    function lerp(a, b, t) { return a + (b - a) * t; }
-    function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
 
-    // Web Audio context (created on first user interaction)
-    let audioCtx = null;
-    function getAudio() {
-      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      if (audioCtx.state === 'suspended') audioCtx.resume();
-      return audioCtx;
-    }
-    function playClick(freq = 800, decay = 0.05, gain = 0.15) {
-      const ctx = getAudio();
-      const osc = ctx.createOscillator();
-      const env = ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.value = freq;
-      env.gain.value = 0;
-      env.gain.setValueAtTime(gain, ctx.currentTime);
-      env.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + decay);
-      osc.connect(env).connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + decay + 0.02);
-    }
-    function playDrip() {
-      const ctx = getAudio();
-      const osc = ctx.createOscillator();
-      const env = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(900, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.08);
-      env.gain.value = 0;
-      env.gain.setValueAtTime(0.08, ctx.currentTime);
-      env.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
-      osc.connect(env).connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.12);
-    }
+(function frets() {
+  const canvas = document.getElementById('fretsCanvas');
+  let { ctx, w, h } = fitCanvas(canvas);
+  window.addEventListener('resize', () => { const f = fitCanvas(canvas); ctx = f.ctx; w = f.w; h = f.h; layout(); draw(); });
 
-    /* =============================================================
-       HERO CANVAS — animated falling parabolas
-       ============================================================= */
-    (function heroAnim() {
-      const canvas = document.getElementById('heroCanvas');
-      let { ctx, w, h } = fitCanvas(canvas);
-      window.addEventListener('resize', () => { const f = fitCanvas(canvas); ctx = f.ctx; w = f.w; h = f.h; });
+  const g = 9.81;
+  let angleDeg = 14, tempo = 0.40;
+  const accel = () => (5/7) * g * Math.sin(angleDeg * Math.PI / 180);
+  let fretsArr = [0.08, 0.22, 0.40, 0.62, 0.88];
+  const idealFrets = () => [1, 4, 9, 16, 25].map(c => c / 25 * 0.92);
+  let P1 = { x: 0, y: 0 }, P2 = { x: 0, y: 0 }, plankLen = 0;
+  let rolling = false, rollStart = 0;
+  let fretClickTimes = [], flashed = [];
+  let ballFrac = 0;
+  let dragIdx = -1, autoTuned = false;
 
-      const balls = [];
-      function spawn() {
-        balls.push({
-          x0: Math.random() * w,
-          y0: -20,
-          vx: (Math.random() - 0.5) * 60,
-          vy: 0,
-          life: 0,
-          max: 4 + Math.random() * 2,
-          trail: [],
-          hue: Math.random() < 0.5 ? '#d4a847' : (Math.random() < 0.5 ? '#7dd3fc' : '#a78bfa')
-        });
-      }
-      let last = performance.now();
-      function frame(now) {
-        const dt = Math.min(0.05, (now - last) / 1000); last = now;
-        ctx.fillStyle = 'rgba(10,10,15,0.15)';
-        ctx.fillRect(0, 0, w, h);
-        if (Math.random() < 0.03 && balls.length < 8) spawn();
-        for (let i = balls.length - 1; i >= 0; i--) {
-          const b = balls[i];
-          b.life += dt;
-          const x = b.x0 + b.vx * b.life;
-          const y = b.y0 + 0.5 * 180 * b.life * b.life;
-          b.trail.push({ x, y });
-          if (b.trail.length > 60) b.trail.shift();
-          // draw trail
-          ctx.strokeStyle = b.hue + '55';
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          b.trail.forEach((p, j) => { if (j === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y); });
-          ctx.stroke();
-          // draw ball
-          ctx.fillStyle = b.hue;
-          ctx.beginPath();
-          ctx.arc(x, y, 2.5, 0, Math.PI * 2);
-          ctx.fill();
-          if (b.life > b.max || y > h + 40) balls.splice(i, 1);
-        }
-        requestAnimationFrame(frame);
-      }
-      requestAnimationFrame(frame);
-    })();
+  function layout() {
+    const margin = 40;
+    const topLeft = { x: margin, y: h * 0.22 };
+    const thetaR = angleDeg * Math.PI / 180;
+    plankLen = Math.min(w - 2 * margin, (h - margin - topLeft.y) / Math.sin(thetaR));
+    P1 = topLeft;
+    P2 = { x: P1.x + plankLen * Math.cos(thetaR), y: P1.y + plankLen * Math.sin(thetaR) };
+  }
+  function pointAtFrac(f) { return { x: P1.x + (P2.x - P1.x) * f, y: P1.y + (P2.y - P1.y) * f }; }
+  function totalDistance() { const T = tempo * 5.2; return 0.5 * accel() * T * T; }
+  function timeToFrac(f) { const d = totalDistance() * f; return Math.sqrt(2 * d / accel()); }
+  function roll() {
+    initAudio();
+    if (rolling) return;
+    rolling = true;
+    rollStart = performance.now() / 1000;
+    fretClickTimes = fretsArr.map(f => timeToFrac(f));
+    flashed = fretsArr.map(() => 0);
+    ballFrac = 0;
+  }
 
-    /* =============================================================
-       MODULE 1 — GALILEO'S FRETS
-       ============================================================= */
-    (function frets() {
-      const canvas = document.getElementById('fretsCanvas');
-      let { ctx, w, h } = fitCanvas(canvas);
-      window.addEventListener('resize', () => { const f = fitCanvas(canvas); ctx = f.ctx; w = f.w; h = f.h; layout(); draw(); });
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    const bg = ctx.createLinearGradient(0, 0, 0, h);
+    bg.addColorStop(0, '#0c1326'); bg.addColorStop(1, '#080d1a');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+    ctx.strokeStyle = 'rgba(123,141,181,0.15)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, P2.y + 6); ctx.lineTo(w, P2.y + 6); ctx.stroke();
+    ctx.strokeStyle = 'rgba(240,180,41,0.08)'; ctx.lineWidth = 14; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(P1.x, P1.y); ctx.lineTo(P2.x, P2.y); ctx.stroke();
+    ctx.strokeStyle = '#f0b429'; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(P1.x, P1.y); ctx.lineTo(P2.x, P2.y); ctx.stroke();
+    ctx.strokeStyle = 'rgba(107,78,24,0.8)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(P1.x, P1.y); ctx.lineTo(P2.x, P2.y); ctx.stroke();
 
-      const g = 9.81;
-      let angleDeg = 14;
-      let tempo = 0.40; // s between target clicks
-      // ball acceleration for rolling solid sphere: a = (5/7) g sin(theta)
-      const accel = () => (5 / 7) * g * Math.sin(angleDeg * Math.PI / 180);
+    const thetaR = angleDeg * Math.PI / 180;
+    const perp = { x: -Math.sin(thetaR), y: Math.cos(thetaR) };
+    fretsArr.forEach((f, i) => {
+      const p = pointAtFrac(f);
+      const flash = flashed[i];
+      const len = 18 + flash * 8;
+      ctx.strokeStyle = flash > 0 ? `rgba(255,220,120,${0.5 + flash * 0.5})` : 'rgba(224,230,240,0.55)';
+      ctx.lineWidth = 2 + flash * 2;
+      ctx.beginPath();
+      ctx.moveTo(p.x - perp.x * len, p.y - perp.y * len);
+      ctx.lineTo(p.x + perp.x * len, p.y + perp.y * len);
+      ctx.stroke();
+    });
 
-      // 5 frets, fractional position along plank (0 = top, 1 = bottom)
-      const NUM_FRETS = 5;
-      let frets = [0.08, 0.22, 0.40, 0.62, 0.88];
-      const idealFrets = () => {
-        // cumulative positions 1, 4, 9, 16, 25 -> scale so last is at 0.92
-        const cum = [1, 4, 9, 16, 25];
-        return cum.map(c => c / 25 * 0.92);
-      };
-
-      // plank geometry
-      let P1 = { x: 0, y: 0 }, P2 = { x: 0, y: 0 }, plankLen = 0;
-      function layout() {
-        const margin = 40;
-        const topLeft = { x: margin, y: h * 0.25 };
-        const thetaR = angleDeg * Math.PI / 180;
-        const maxLen = Math.min(w - 2 * margin, (h - margin - topLeft.y) / Math.sin(thetaR));
-        plankLen = maxLen;
-        P1 = topLeft;
-        P2 = { x: P1.x + plankLen * Math.cos(thetaR), y: P1.y + plankLen * Math.sin(thetaR) };
-      }
-      function pointAtFrac(f) {
-        return { x: P1.x + (P2.x - P1.x) * f, y: P1.y + (P2.y - P1.y) * f };
-      }
-
-      // rolling state
-      let rolling = false;
-      let rollStart = 0;
-      let fretClickTimes = [];
-      let flashed = [];
-      let ballFrac = 0;
-
-      // compute total plank length in "real" meters
-      // We pick real length so the trip takes tempo * 5 seconds at default angle
-      // Distance = 0.5 * a * T^2. Pick T = tempo * 5.2 (a little extra)
-      function totalDistance() {
-        const T = tempo * 5.2;
-        return 0.5 * accel() * T * T;
-      }
-      // time to reach fraction f of the plank
-      function timeToFrac(f) {
-        const d = totalDistance() * f;
-        return Math.sqrt(2 * d / accel());
-      }
-
-      function roll() {
-        if (rolling) return;
-        rolling = true;
-        rollStart = performance.now() / 1000;
-        fretClickTimes = frets.map(f => timeToFrac(f));
-        flashed = frets.map(() => 0);
-      }
-
-      function draw() {
-        ctx.clearRect(0, 0, w, h);
-        // dark background gradient
-        const bg = ctx.createLinearGradient(0, 0, 0, h);
-        bg.addColorStop(0, '#0d0d14');
-        bg.addColorStop(1, '#07070c');
-        ctx.fillStyle = bg;
-        ctx.fillRect(0, 0, w, h);
-
-        // ground line
-        ctx.strokeStyle = '#2a2620';
-        ctx.lineWidth = 1;
+    if (autoTuned) {
+      ctx.strokeStyle = 'rgba(56,189,248,0.3)'; ctx.lineWidth = 1;
+      ctx.setLineDash([3, 3]);
+      fretsArr.forEach((f, i) => {
+        const p = pointAtFrac(f);
+        const prev = i === 0 ? P1 : pointAtFrac(fretsArr[i - 1]);
         ctx.beginPath();
-        ctx.moveTo(0, P2.y + 6);
-        ctx.lineTo(w, P2.y + 6);
+        ctx.moveTo(prev.x + perp.x * 32, prev.y + perp.y * 32);
+        ctx.lineTo(p.x + perp.x * 32, p.y + perp.y * 32);
         ctx.stroke();
-
-        // plank shadow
-        ctx.strokeStyle = 'rgba(212,168,71,0.08)';
-        ctx.lineWidth = 14;
-        ctx.lineCap = 'round';
-        ctx.beginPath(); ctx.moveTo(P1.x, P1.y); ctx.lineTo(P2.x, P2.y); ctx.stroke();
-
-        // plank
-        ctx.strokeStyle = '#d4a847';
-        ctx.lineWidth = 3;
-        ctx.beginPath(); ctx.moveTo(P1.x, P1.y); ctx.lineTo(P2.x, P2.y); ctx.stroke();
-
-        // channel (thin line on plank)
-        ctx.strokeStyle = '#6a5420';
-        ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(P1.x, P1.y); ctx.lineTo(P2.x, P2.y); ctx.stroke();
-
-        // frets
-        const thetaR = angleDeg * Math.PI / 180;
-        const perp = { x: -Math.sin(thetaR), y: Math.cos(thetaR) };
-        frets.forEach((f, i) => {
-          const p = pointAtFrac(f);
-          const flash = flashed[i];
-          const len = 18 + flash * 8;
-          ctx.strokeStyle = flash > 0 ? `rgba(255,220,120,${0.4 + flash * 0.6})` : 'rgba(232,228,217,0.55)';
-          ctx.lineWidth = 2 + flash * 2;
-          ctx.beginPath();
-          ctx.moveTo(p.x - perp.x * len, p.y - perp.y * len);
-          ctx.lineTo(p.x + perp.x * len, p.y + perp.y * len);
-          ctx.stroke();
-          // label number
-          ctx.fillStyle = flash > 0 ? '#d4a847' : '#625d54';
-          ctx.font = '10px JetBrains Mono';
-          ctx.fillText(String(i + 1), p.x - perp.x * (len + 14) - 3, p.y - perp.y * (len + 14) + 3);
-        });
-
-        // if auto-tuned, show the spacing gaps
-        if (autoTuned) {
-          ctx.strokeStyle = 'rgba(125,211,252,0.35)';
-          ctx.lineWidth = 1;
-          ctx.setLineDash([3, 3]);
-          const startP = P1;
-          frets.forEach((f, i) => {
-            const p = pointAtFrac(f);
-            const prev = i === 0 ? startP : pointAtFrac(frets[i - 1]);
-            ctx.beginPath();
-            ctx.moveTo(prev.x + perp.x * 30, prev.y + perp.y * 30);
-            ctx.lineTo(p.x + perp.x * 30, p.y + perp.y * 30);
-            ctx.stroke();
-            // midpoint label with odd number
-            const midX = (prev.x + p.x) / 2 + perp.x * 42;
-            const midY = (prev.y + p.y) / 2 + perp.y * 42;
-            ctx.fillStyle = '#7dd3fc';
-            ctx.font = '11px JetBrains Mono';
-            ctx.textAlign = 'center';
-            ctx.fillText(String(2 * i + 1), midX, midY);
-            ctx.textAlign = 'start';
-          });
-          ctx.setLineDash([]);
-        }
-
-        // ball
-        const ballPos = pointAtFrac(ballFrac);
-        // offset perpendicular to plank (ball sits ON the plank)
-        const bx = ballPos.x - perp.x * 8;
-        const by = ballPos.y - perp.y * 8;
-        const grad = ctx.createRadialGradient(bx - 2, by - 2, 0, bx, by, 9);
-        grad.addColorStop(0, '#f4d4a4');
-        grad.addColorStop(0.6, '#b47820');
-        grad.addColorStop(1, '#4a3010');
-        ctx.fillStyle = grad;
-        ctx.beginPath();
-        ctx.arc(bx, by, 8, 0, Math.PI * 2);
-        ctx.fill();
-
-        // angle label
-        ctx.fillStyle = '#625d54';
-        ctx.font = '10px JetBrains Mono';
-        ctx.fillText(`θ = ${angleDeg}°`, P2.x - 50, P2.y - 10);
-      }
-
-      // dragging
-      let dragIdx = -1;
-      let autoTuned = false;
-      function pointerPos(e) {
-        const rect = canvas.getBoundingClientRect();
-        const clientX = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
-        const clientY = e.clientY ?? e.touches?.[0]?.clientY ?? 0;
-        return { x: clientX - rect.left, y: clientY - rect.top };
-      }
-      function projectToPlank(pt) {
-        const dx = P2.x - P1.x, dy = P2.y - P1.y;
-        const t = ((pt.x - P1.x) * dx + (pt.y - P1.y) * dy) / (dx * dx + dy * dy);
-        return clamp(t, 0.02, 0.96);
-      }
-      canvas.addEventListener('pointerdown', e => {
-        const pt = pointerPos(e);
-        let best = -1, bestD = 30;
-        frets.forEach((f, i) => {
-          const p = pointAtFrac(f);
-          const d = Math.hypot(pt.x - p.x, pt.y - p.y);
-          if (d < bestD) { bestD = d; best = i; }
-        });
-        if (best >= 0) { dragIdx = best; autoTuned = false; }
-      });
-      canvas.addEventListener('pointermove', e => {
-        if (dragIdx < 0) return;
-        const pt = pointerPos(e);
-        const f = projectToPlank(pt);
-        frets[dragIdx] = f;
-        // keep them sorted so labels stay in order
-        frets.sort((a, b) => a - b);
-        draw();
-      });
-      window.addEventListener('pointerup', () => { dragIdx = -1; });
-
-      function anim() {
-        if (rolling) {
-          const t = performance.now() / 1000 - rollStart;
-          const d = 0.5 * accel() * t * t;
-          const f = d / totalDistance();
-          ballFrac = clamp(f, 0, 1);
-          // check for clicks
-          fretClickTimes.forEach((ct, i) => {
-            if (t >= ct && flashed[i] === 0) {
-              flashed[i] = 1;
-              // tonal variation for musicality
-              playClick(600 + i * 80, 0.06, 0.18);
-            }
-          });
-          // fade flashes
-          flashed = flashed.map(v => Math.max(0, v - 0.02));
-          if (f >= 1) { rolling = false; }
-        } else {
-          flashed = flashed.map(v => Math.max(0, v - 0.015));
-        }
-        draw();
-        requestAnimationFrame(anim);
-      }
-
-      // --- controls ---
-      const angleSlider = document.getElementById('fretsAngle');
-      const angleVal = document.getElementById('fretsAngleVal');
-      const tempoSlider = document.getElementById('fretsTempo');
-      const tempoVal = document.getElementById('fretsTempoVal');
-      angleSlider.addEventListener('input', () => {
-        angleDeg = +angleSlider.value;
-        angleVal.textContent = angleDeg + '°';
-        layout();
-      });
-      tempoSlider.addEventListener('input', () => {
-        tempo = +tempoSlider.value / 100;
-        tempoVal.textContent = tempo.toFixed(2);
-      });
-      document.getElementById('fretsRoll').addEventListener('click', () => { ballFrac = 0; roll(); });
-      document.getElementById('fretsAuto').addEventListener('click', () => {
-        frets = idealFrets();
-        autoTuned = true;
-        ballFrac = 0;
-        roll();
-      });
-      document.getElementById('fretsReset').addEventListener('click', () => {
-        frets = [0.08, 0.22, 0.40, 0.62, 0.88];
-        autoTuned = false;
-        ballFrac = 0;
-        rolling = false;
-      });
-
-      layout(); anim();
-    })();
-
-    /* =============================================================
-       MODULE 2 — WATER CLOCK
-       ============================================================= */
-    (function waterClock() {
-      const canvas = document.getElementById('clockCanvas');
-      let { ctx, w, h } = fitCanvas(canvas);
-      window.addEventListener('resize', () => { const f = fitCanvas(canvas); ctx = f.ctx; w = f.w; h = f.h; });
-
-      const g = 9.81;
-      let angleDeg = 18;
-      let lengthCubits = 12;
-      const cubitMeters = 0.5; // approx
-      const realLen = () => lengthCubits * cubitMeters;
-      const accel = () => (5 / 7) * g * Math.sin(angleDeg * Math.PI / 180);
-      const totalTime = () => Math.sqrt(2 * realLen() / accel());
-
-      let running = false;
-      let startT = 0;
-      let elapsed = 0;
-      let waterGrams = 0;
-      const flowRate = 8.0; // grams per second
-      let drips = [];
-      let lastDripSpawn = 0;
-
-      function draw() {
-        ctx.clearRect(0, 0, w, h);
-        ctx.fillStyle = '#07070c'; ctx.fillRect(0, 0, w, h);
-
-        // layout: plank on left, water clock on right
-        const plankW = w * 0.55;
-        const clockX = plankW + 20;
-
-        // plank
-        const margin = 30;
-        const P1 = { x: margin, y: h * 0.3 };
-        const thetaR = angleDeg * Math.PI / 180;
-        const maxLen = Math.min(plankW - 2 * margin, (h - margin - P1.y) / Math.sin(thetaR));
-        const P2 = { x: P1.x + maxLen * Math.cos(thetaR), y: P1.y + maxLen * Math.sin(thetaR) };
-
-        // ground
-        ctx.strokeStyle = '#2a2620'; ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(0, P2.y + 6); ctx.lineTo(plankW, P2.y + 6); ctx.stroke();
-
-        // plank
-        ctx.strokeStyle = 'rgba(212,168,71,0.08)'; ctx.lineWidth = 14; ctx.lineCap = 'round';
-        ctx.beginPath(); ctx.moveTo(P1.x, P1.y); ctx.lineTo(P2.x, P2.y); ctx.stroke();
-        ctx.strokeStyle = '#d4a847'; ctx.lineWidth = 3;
-        ctx.beginPath(); ctx.moveTo(P1.x, P1.y); ctx.lineTo(P2.x, P2.y); ctx.stroke();
-
-        // ball
-        let frac = 0;
-        if (running) frac = clamp(0.5 * accel() * elapsed * elapsed / realLen(), 0, 1);
-        const perp = { x: -Math.sin(thetaR), y: Math.cos(thetaR) };
-        const bp = { x: P1.x + (P2.x - P1.x) * frac - perp.x * 8, y: P1.y + (P2.y - P1.y) * frac - perp.y * 8 };
-        const grad = ctx.createRadialGradient(bp.x - 2, bp.y - 2, 0, bp.x, bp.y, 9);
-        grad.addColorStop(0, '#f4d4a4'); grad.addColorStop(0.6, '#b47820'); grad.addColorStop(1, '#4a3010');
-        ctx.fillStyle = grad;
-        ctx.beginPath(); ctx.arc(bp.x, bp.y, 8, 0, Math.PI * 2); ctx.fill();
-
-        // water clock: bucket on top, scale on bottom
-        const bucketTop = h * 0.15, bucketH = h * 0.35, bucketW = 70;
-        const bucketL = clockX + 20, bucketR = bucketL + bucketW;
-        // bucket walls
-        ctx.strokeStyle = '#625d54'; ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(bucketL, bucketTop); ctx.lineTo(bucketL, bucketTop + bucketH);
-        ctx.moveTo(bucketR, bucketTop); ctx.lineTo(bucketR, bucketTop + bucketH);
-        ctx.moveTo(bucketL - 6, bucketTop); ctx.lineTo(bucketR + 6, bucketTop);
-        ctx.stroke();
-        // water level inside bucket
-        const maxGrams = 20;
-        const fillFrac = clamp(1 - waterGrams / maxGrams, 0.1, 1);
-        const waterTop = bucketTop + bucketH * (1 - fillFrac);
-        ctx.fillStyle = 'rgba(125,211,252,0.3)';
-        ctx.fillRect(bucketL + 1, waterTop, bucketW - 2, bucketH - (waterTop - bucketTop));
-        ctx.strokeStyle = 'rgba(125,211,252,0.6)';
-        ctx.beginPath(); ctx.moveTo(bucketL, waterTop); ctx.lineTo(bucketR, waterTop); ctx.stroke();
-        // spout hole
-        const spoutX = (bucketL + bucketR) / 2;
-        const spoutY = bucketTop + bucketH + 2;
-        ctx.fillStyle = '#1a1620';
-        ctx.fillRect(spoutX - 3, bucketTop + bucketH, 6, 4);
-
-        // drips
-        for (let i = drips.length - 1; i >= 0; i--) {
-          const d = drips[i];
-          d.y += 280 * d.dt;
-          d.dt = 1 / 60;
-          if (d.y > h - 80) { drips.splice(i, 1); continue; }
-          ctx.fillStyle = 'rgba(125,211,252,0.7)';
-          ctx.beginPath(); ctx.arc(spoutX, d.y, 2, 0, Math.PI * 2); ctx.fill();
-        }
-
-        // scale / collecting vessel
-        const scaleY = h - 70;
-        const scaleW = 140;
-        const scaleX = clockX + 5;
-        ctx.strokeStyle = '#625d54'; ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(scaleX, scaleY); ctx.lineTo(scaleX + scaleW, scaleY);
-        ctx.moveTo(scaleX + scaleW / 2, scaleY); ctx.lineTo(scaleX + scaleW / 2, scaleY + 30);
-        ctx.moveTo(scaleX + scaleW / 2 - 15, scaleY + 30); ctx.lineTo(scaleX + scaleW / 2 + 15, scaleY + 30);
-        ctx.stroke();
-        // collected water level in the pan
-        const panFillH = clamp(waterGrams / maxGrams * 16, 0, 16);
-        ctx.fillStyle = 'rgba(125,211,252,0.5)';
-        ctx.fillRect(scaleX + 10, scaleY - panFillH, scaleW - 20, panFillH);
-
-        // needle
-        ctx.strokeStyle = '#d4a847'; ctx.lineWidth = 1;
-        const needleAngle = -Math.PI / 2 + (waterGrams / maxGrams) * Math.PI * 0.8;
-        const cx = scaleX + scaleW / 2, cy = scaleY + 30;
-        ctx.beginPath(); ctx.arc(cx, cy, 30, -Math.PI, 0); ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.lineTo(cx + Math.cos(needleAngle) * 26, cy + Math.sin(needleAngle) * 26);
-        ctx.stroke();
-
-        // labels
-        ctx.fillStyle = '#625d54'; ctx.font = '10px JetBrains Mono';
-        ctx.fillText('water clock', bucketL - 8, bucketTop - 10);
-        ctx.fillText('scale', scaleX, scaleY + 55);
-      }
-
-      function start() {
-        if (running) return;
-        running = true;
-        startT = performance.now() / 1000;
-        elapsed = 0;
-        waterGrams = 0;
-        drips = [];
-      }
-      function reset() {
-        running = false;
-        elapsed = 0;
-        waterGrams = 0;
-        drips = [];
-        document.getElementById('clockReadout').innerHTML = 'Elapsed time: <span class="r-val">0.00 s</span> &nbsp;·&nbsp; Water collected: <span class="r-gold">0.0 g</span>';
-      }
-
-      let lastT = performance.now() / 1000;
-      function anim() {
-        const now = performance.now() / 1000;
-        const dt = Math.min(0.05, now - lastT);
-        lastT = now;
-        if (running) {
-          elapsed = now - startT;
-          if (elapsed >= totalTime()) {
-            elapsed = totalTime();
-            running = false;
-          }
-          waterGrams = elapsed * flowRate;
-          // spawn drips
-          if (now - lastDripSpawn > 0.12) {
-            drips.push({ y: 0, dt: 1 / 60 });
-            lastDripSpawn = now;
-            if (Math.random() < 0.3) playDrip();
-          }
-          document.getElementById('clockReadout').innerHTML =
-            `Elapsed time: <span class="r-val">${elapsed.toFixed(2)} s</span> &nbsp;·&nbsp; Water collected: <span class="r-gold">${waterGrams.toFixed(1)} g</span>`;
-        }
-        draw();
-        requestAnimationFrame(anim);
-      }
-
-      document.getElementById('clockStart').addEventListener('click', start);
-      document.getElementById('clockReset').addEventListener('click', reset);
-      const angleSlider = document.getElementById('clockAngle');
-      const angleVal = document.getElementById('clockAngleVal');
-      angleSlider.addEventListener('input', () => { angleDeg = +angleSlider.value; angleVal.textContent = angleDeg + '°'; });
-      const lengthSlider = document.getElementById('clockLength');
-      const lengthVal = document.getElementById('clockLengthVal');
-      lengthSlider.addEventListener('input', () => { lengthCubits = +lengthSlider.value; lengthVal.textContent = lengthCubits; });
-
-      anim();
-    })();
-
-    /* =============================================================
-       MODULE 3 — POSITION / VELOCITY / ACCELERATION
-       ============================================================= */
-    (function pva() {
-      const canvas = document.getElementById('pvaCanvas');
-      let { ctx, w, h } = fitCanvas(canvas);
-      window.addEventListener('resize', () => { const f = fitCanvas(canvas); ctx = f.ctx; w = f.w; h = f.h; });
-
-      let accelVal = 2.0;
-      let speed = 1.0;
-      let playing = false;
-      let t = 0;
-      const tMax = 4.0;
-      let showTangent = false;
-
-      function draw() {
-        ctx.clearRect(0, 0, w, h);
-        ctx.fillStyle = '#07070c'; ctx.fillRect(0, 0, w, h);
-
-        // three stacked graph boxes
-        const margin = 50;
-        const boxH = (h - 80) / 3;
-        const boxes = [
-          { y: 20, color: '#d4a847', label: 'x(t) = ½·a·t²  (m)', yMax: 0.5 * accelVal * tMax * tMax * 1.1, fn: τ => 0.5 * accelVal * τ * τ },
-          { y: 20 + boxH + 10, color: '#7dd3fc', label: 'v(t) = a·t  (m/s)', yMax: accelVal * tMax * 1.1, fn: τ => accelVal * τ },
-          { y: 20 + 2 * (boxH + 10), color: '#a78bfa', label: 'a(t) = a  (m/s²)', yMax: accelVal * 1.8, fn: τ => accelVal }
-        ];
-
-        boxes.forEach(b => {
-          // axes
-          ctx.strokeStyle = '#2a2620'; ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(margin, b.y); ctx.lineTo(margin, b.y + boxH);
-          ctx.lineTo(w - 20, b.y + boxH);
-          ctx.stroke();
-          // label
-          ctx.fillStyle = b.color; ctx.font = '11px JetBrains Mono';
-          ctx.fillText(b.label, margin + 6, b.y + 14);
-          // axis labels
-          ctx.fillStyle = '#625d54'; ctx.font = '10px JetBrains Mono';
-          ctx.fillText('0', margin - 10, b.y + boxH + 12);
-          ctx.fillText(tMax.toFixed(1) + 's', w - 40, b.y + boxH + 12);
-
-          // draw curve up to t
-          ctx.strokeStyle = b.color; ctx.lineWidth = 1.5;
-          ctx.beginPath();
-          const N = 80;
-          for (let i = 0; i <= N; i++) {
-            const τ = (i / N) * t;
-            const val = b.fn(τ);
-            const x = margin + (τ / tMax) * (w - 20 - margin);
-            const y = b.y + boxH - (val / b.yMax) * boxH;
-            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-          }
-          ctx.stroke();
-          // ghost full curve
-          ctx.strokeStyle = b.color + '22'; ctx.lineWidth = 1;
-          ctx.beginPath();
-          for (let i = 0; i <= N; i++) {
-            const τ = (i / N) * tMax;
-            const val = b.fn(τ);
-            const x = margin + (τ / tMax) * (w - 20 - margin);
-            const y = b.y + boxH - (val / b.yMax) * boxH;
-            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-          }
-          ctx.stroke();
-          // dot at current
-          const xc = margin + (t / tMax) * (w - 20 - margin);
-          const yc = b.y + boxH - (b.fn(t) / b.yMax) * boxH;
-          ctx.fillStyle = b.color;
-          ctx.beginPath(); ctx.arc(xc, yc, 4, 0, Math.PI * 2); ctx.fill();
-        });
-
-        // tangent line on x(t) graph
-        if (showTangent && t > 0.05) {
-          const b = boxes[0];
-          const xc = margin + (t / tMax) * (w - 20 - margin);
-          const yc = b.y + boxH - (b.fn(t) / b.yMax) * boxH;
-          // slope = v(t)
-          const slope = accelVal * t;
-          // convert slope to pixel-space
-          const dxPix = (w - 20 - margin) / tMax;
-          const dyPix = boxH / b.yMax;
-          const pxSlope = -slope * dyPix / dxPix;
-          const lineLen = 120;
-          const dx = lineLen / Math.sqrt(1 + pxSlope * pxSlope);
-          const dy = pxSlope * dx;
-          ctx.strokeStyle = '#f4a4a4'; ctx.lineWidth = 1.5;
-          ctx.setLineDash([4, 4]);
-          ctx.beginPath();
-          ctx.moveTo(xc - dx, yc - dy);
-          ctx.lineTo(xc + dx, yc + dy);
-          ctx.stroke();
-          ctx.setLineDash([]);
-          ctx.fillStyle = '#f4a4a4'; ctx.font = '10px JetBrains Mono';
-          ctx.fillText(`slope = ${slope.toFixed(2)} = v(t)`, xc + dx + 4, yc + dy);
-        }
-      }
-
-      let lastT = performance.now() / 1000;
-      function anim() {
-        const now = performance.now() / 1000;
-        const dt = Math.min(0.05, now - lastT);
-        lastT = now;
-        if (playing) {
-          t += dt * speed;
-          if (t >= tMax) { t = tMax; playing = false; }
-        }
-        draw();
-        requestAnimationFrame(anim);
-      }
-
-      document.getElementById('pvaPlay').addEventListener('click', () => {
-        if (t >= tMax) t = 0;
-        playing = !playing;
-      });
-      document.getElementById('pvaReset').addEventListener('click', () => { t = 0; playing = false; });
-      document.getElementById('pvaTangent').addEventListener('click', (e) => { showTangent = !showTangent; e.target.classList.toggle('active'); });
-      const accSlider = document.getElementById('pvaAcc');
-      const accVal = document.getElementById('pvaAccVal');
-      accSlider.addEventListener('input', () => { accelVal = +accSlider.value / 100; accVal.textContent = accelVal.toFixed(2) + ' m/s²'; });
-      const spdSlider = document.getElementById('pvaSpeed');
-      const spdVal = document.getElementById('pvaSpeedVal');
-      spdSlider.addEventListener('input', () => { speed = +spdSlider.value / 10; spdVal.textContent = speed.toFixed(1) + '×'; });
-
-      anim();
-    })();
-
-    /* =============================================================
-       MODULE 4 — PROJECTILE DECOMPOSITION
-       ============================================================= */
-    (function proj() {
-      const canvas = document.getElementById('projCanvas');
-      let { ctx, w, h } = fitCanvas(canvas);
-      window.addEventListener('resize', () => { const f = fitCanvas(canvas); ctx = f.ctx; w = f.w; h = f.h; });
-
-      const g = 9.81;
-      let angle = 45;
-      let speed = 20;
-      let t = 0;
-      let flying = false;
-      let trails = []; // persistent traces
-
-      // layout
-      const margin = 30;
-      const originX = () => margin + 20;
-      const originY = () => h - margin;
-      const scale = () => {
-        const maxRange = speed * speed / g * 1.2;
-        const maxHeight = (speed * Math.sin(80 * Math.PI / 180)) ** 2 / (2 * g) * 1.2;
-        const sx = (w - 60) / maxRange;
-        const sy = (h - 60) / maxHeight;
-        return Math.min(sx, sy);
-      };
-
-      function fire() {
-        flying = true;
-        t = 0;
-        trails.push({ angle, speed, pts: [], vs: [], hs: [] });
-        if (trails.length > 4) trails.shift();
-      }
-
-      function draw() {
-        ctx.clearRect(0, 0, w, h);
-        ctx.fillStyle = '#07070c'; ctx.fillRect(0, 0, w, h);
-
-        const s = scale();
-        const ox = originX(), oy = originY();
-
-        // ground
-        ctx.strokeStyle = '#2a2620'; ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(w, oy); ctx.stroke();
-        // vertical axis
-        ctx.beginPath(); ctx.moveTo(ox, 0); ctx.lineTo(ox, oy); ctx.stroke();
-        // axis labels
-        ctx.fillStyle = '#625d54'; ctx.font = '10px JetBrains Mono';
-        ctx.fillText('x (horizontal, constant velocity →)', ox + 10, oy - 6);
-        ctx.save(); ctx.translate(ox - 12, 30); ctx.rotate(-Math.PI / 2);
-        ctx.fillText('y (vertical, falls under gravity)', 0, 0); ctx.restore();
-
-        // draw previous trails as faint
-        trails.forEach((tr, i) => {
-          const isLast = i === trails.length - 1;
-          ctx.strokeStyle = isLast ? 'rgba(232,228,217,0.7)' : 'rgba(232,228,217,0.18)';
-          ctx.lineWidth = isLast ? 2 : 1;
-          ctx.beginPath();
-          tr.pts.forEach((p, j) => { if (j === 0) ctx.moveTo(ox + p.x * s, oy - p.y * s); else ctx.lineTo(ox + p.x * s, oy - p.y * s); });
-          ctx.stroke();
-        });
-
-        // live projectile
-        if (flying) {
-          const last = trails[trails.length - 1];
-          const vx0 = last.speed * Math.cos(last.angle * Math.PI / 180);
-          const vy0 = last.speed * Math.sin(last.angle * Math.PI / 180);
-          const x = vx0 * t;
-          const y = vy0 * t - 0.5 * g * t * t;
-          if (y < 0) { flying = false; }
-          else {
-            last.pts.push({ x, y });
-            last.hs.push(x);
-            last.vs.push(y);
-
-            // horizontal ghost on ground
-            ctx.fillStyle = '#d4a847';
-            ctx.beginPath(); ctx.arc(ox + x * s, oy, 4, 0, Math.PI * 2); ctx.fill();
-            // horizontal ghost trail
-            ctx.strokeStyle = 'rgba(212,168,71,0.4)'; ctx.lineWidth = 1;
-            ctx.beginPath();
-            last.hs.forEach((hx, j) => { if (j === 0) ctx.moveTo(ox + hx * s, oy); else ctx.lineTo(ox + hx * s, oy); });
-            ctx.stroke();
-
-            // vertical ghost on axis
-            ctx.fillStyle = '#7dd3fc';
-            ctx.beginPath(); ctx.arc(ox, oy - y * s, 4, 0, Math.PI * 2); ctx.fill();
-            ctx.strokeStyle = 'rgba(125,211,252,0.4)'; ctx.lineWidth = 1;
-            ctx.beginPath();
-            last.vs.forEach((vy, j) => { if (j === 0) ctx.moveTo(ox, oy - vy * s); else ctx.lineTo(ox, oy - vy * s); });
-            ctx.stroke();
-
-            // connecting dashed lines
-            ctx.strokeStyle = 'rgba(232,228,217,0.15)'; ctx.lineWidth = 1; ctx.setLineDash([2, 4]);
-            ctx.beginPath();
-            ctx.moveTo(ox + x * s, oy - y * s); ctx.lineTo(ox + x * s, oy);
-            ctx.moveTo(ox + x * s, oy - y * s); ctx.lineTo(ox, oy - y * s);
-            ctx.stroke();
-            ctx.setLineDash([]);
-
-            // real projectile
-            ctx.fillStyle = '#f4d4a4';
-            ctx.beginPath(); ctx.arc(ox + x * s, oy - y * s, 6, 0, Math.PI * 2); ctx.fill();
-            ctx.shadowColor = '#f4d4a4'; ctx.shadowBlur = 10;
-            ctx.beginPath(); ctx.arc(ox + x * s, oy - y * s, 6, 0, Math.PI * 2); ctx.fill();
-            ctx.shadowBlur = 0;
-          }
-        } else if (trails.length > 0) {
-          // show end-point ghosts of most recent
-          const last = trails[trails.length - 1];
-          if (last.pts.length > 0) {
-            const endPt = last.pts[last.pts.length - 1];
-            ctx.fillStyle = 'rgba(212,168,71,0.5)';
-            ctx.beginPath(); ctx.arc(ox + endPt.x * s, oy, 3, 0, Math.PI * 2); ctx.fill();
-          }
-        }
-
-        // launcher indicator
-        const ar = angle * Math.PI / 180;
-        ctx.strokeStyle = '#a78bfa'; ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox + Math.cos(ar) * 28, oy - Math.sin(ar) * 28); ctx.stroke();
-      }
-
-      let lastT = performance.now() / 1000;
-      function anim() {
-        const now = performance.now() / 1000;
-        const dt = Math.min(0.05, now - lastT); lastT = now;
-        if (flying) t += dt * 1.0;
-        draw();
-        requestAnimationFrame(anim);
-      }
-
-      document.getElementById('projFire').addEventListener('click', fire);
-      document.getElementById('projReset').addEventListener('click', () => { trails = []; flying = false; });
-      const a = document.getElementById('projAng'), av = document.getElementById('projAngVal');
-      a.addEventListener('input', () => { angle = +a.value; av.textContent = angle + '°'; });
-      const sp = document.getElementById('projSpd'), spv = document.getElementById('projSpdVal');
-      sp.addEventListener('input', () => { speed = +sp.value; spv.textContent = speed + ' m/s'; });
-
-      anim();
-    })();
-
-    /* =============================================================
-       MODULE 5 — LEANING TOWER (two balls, air resistance)
-       ============================================================= */
-    (function tower() {
-      const canvas = document.getElementById('towerCanvas');
-      let { ctx, w, h } = fitCanvas(canvas);
-      window.addEventListener('resize', () => { const f = fitCanvas(canvas); ctx = f.ctx; w = f.w; h = f.h; });
-
-      const g = 9.81;
-      let air = 0;
-      let lightMass = 1; // heavy is always 10
-      let falling = false;
-      let t = 0;
-      const H = 56; // meters (actual tower of Pisa height!)
-
-      // simulation state
-      let yLight = 0, yHeavy = 0, vLight = 0, vHeavy = 0;
-      let tLight = null, tHeavy = null;
-
-      function integrate(dt) {
-        // drag force ~ air * v^2 (sign matters)
-        // a = g - (c_drag * v^2) / m
-        const cDrag = air / 100 * 0.4;
-        const aL = g - cDrag * vLight * vLight / lightMass;
-        const aH = g - cDrag * vHeavy * vHeavy / 10;
-        vLight += aL * dt; yLight += vLight * dt;
-        vHeavy += aH * dt; yHeavy += vHeavy * dt;
-        if (yLight >= H && tLight === null) tLight = t;
-        if (yHeavy >= H && tHeavy === null) tHeavy = t;
-      }
-
-      function reset() {
-        yLight = 0; yHeavy = 0; vLight = 0; vHeavy = 0;
-        t = 0; tLight = null; tHeavy = null; falling = false;
-      }
-
-      function drop() {
-        reset(); falling = true;
-      }
-
-      function draw() {
-        ctx.clearRect(0, 0, w, h);
-        ctx.fillStyle = '#07070c'; ctx.fillRect(0, 0, w, h);
-
-        const margin = 30;
-        const towerX = w * 0.3;
-        const topY = 30, groundY = h - 40;
-        const towerH = groundY - topY;
-
-        // tower (slightly leaning, of course)
-        ctx.save();
-        ctx.translate(towerX, groundY);
-        ctx.rotate(-0.05); // 3 degree lean
-        ctx.strokeStyle = '#d4a847'; ctx.lineWidth = 2;
-        ctx.fillStyle = 'rgba(212,168,71,0.05)';
-        ctx.beginPath();
-        const tw = 60;
-        ctx.rect(-tw / 2, -towerH, tw, towerH);
-        ctx.fill(); ctx.stroke();
-        // floors
-        ctx.strokeStyle = 'rgba(212,168,71,0.3)';
-        for (let i = 1; i < 7; i++) {
-          ctx.beginPath();
-          ctx.moveTo(-tw / 2, -towerH * i / 7);
-          ctx.lineTo(tw / 2, -towerH * i / 7);
-          ctx.stroke();
-        }
-        ctx.restore();
-
-        // ground
-        ctx.strokeStyle = '#2a2620'; ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(0, groundY); ctx.lineTo(w, groundY); ctx.stroke();
-
-        // balls: heavy (cannonball, large, dark) on left; light (musket, small) on right
-        const yScale = towerH / H;
-        const heavyX = towerX + 100;
-        const lightX = towerX + 160;
-        const heavyY = clamp(topY + yHeavy * yScale, topY, groundY);
-        const lightY = clamp(topY + yLight * yScale, topY, groundY);
-
-        // release indicator
-        ctx.strokeStyle = 'rgba(232,228,217,0.15)'; ctx.lineWidth = 1; ctx.setLineDash([2, 4]);
-        ctx.beginPath(); ctx.moveTo(towerX + 50, topY); ctx.lineTo(lightX + 20, topY); ctx.stroke();
-        ctx.setLineDash([]);
-
-        // heavy ball
-        let grad = ctx.createRadialGradient(heavyX - 4, heavyY - 4, 0, heavyX, heavyY, 14);
-        grad.addColorStop(0, '#a0a0a8'); grad.addColorStop(0.6, '#505058'); grad.addColorStop(1, '#1a1a20');
-        ctx.fillStyle = grad;
-        ctx.beginPath(); ctx.arc(heavyX, heavyY, 14, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#625d54'; ctx.font = '10px JetBrains Mono';
-        ctx.fillText('cannonball (10 kg)', heavyX - 40, groundY + 18);
-
-        // light ball, size scaled by mass
-        const lightR = 4 + lightMass * 0.8;
-        grad = ctx.createRadialGradient(lightX - 2, lightY - 2, 0, lightX, lightY, lightR);
-        grad.addColorStop(0, '#f4d4a4'); grad.addColorStop(0.6, '#b47820'); grad.addColorStop(1, '#4a3010');
-        ctx.fillStyle = grad;
-        ctx.beginPath(); ctx.arc(lightX, lightY, lightR, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = '#625d54';
-        ctx.fillText(`musket ball (${lightMass} kg)`, lightX - 38, groundY + 32);
-
-        // timers when landed
-        ctx.fillStyle = '#7dd3fc'; ctx.font = '11px JetBrains Mono'; ctx.textAlign = 'center';
-        if (tHeavy !== null) ctx.fillText(`${tHeavy.toFixed(2)} s`, heavyX, groundY + 50);
-        if (tLight !== null) ctx.fillText(`${tLight.toFixed(2)} s`, lightX, groundY + 50);
+        const midX = (prev.x + p.x) / 2 + perp.x * 46;
+        const midY = (prev.y + p.y) / 2 + perp.y * 46;
+        ctx.fillStyle = '#38bdf8'; ctx.font = '12px JetBrains Mono'; ctx.textAlign = 'center';
+        ctx.fillText(String(2 * i + 1), midX, midY);
         ctx.textAlign = 'start';
-      }
-
-      let lastT = performance.now() / 1000;
-      function anim() {
-        const now = performance.now() / 1000;
-        const dt = Math.min(0.03, now - lastT); lastT = now;
-        if (falling) {
-          t += dt;
-          integrate(dt);
-          if (tLight !== null && tHeavy !== null) { falling = false; }
-        }
-        draw();
-        requestAnimationFrame(anim);
-      }
-
-      document.getElementById('towerDrop').addEventListener('click', drop);
-      document.getElementById('towerReset').addEventListener('click', reset);
-      const aa = document.getElementById('towerAir'), aav = document.getElementById('towerAirVal');
-      aa.addEventListener('input', () => { air = +aa.value; aav.textContent = air + '%'; });
-      const mm = document.getElementById('towerMass'), mmv = document.getElementById('towerMassVal');
-      mm.addEventListener('input', () => { lightMass = +mm.value; mmv.textContent = lightMass; });
-
-      anim();
-    })();
-
-    /* =============================================================
-       MODULE 6 — SHIP (Galilean relativity)
-       ============================================================= */
-    (function ship() {
-      const canvas = document.getElementById('shipCanvas');
-      let { ctx, w, h } = fitCanvas(canvas);
-      window.addEventListener('resize', () => { const f = fitCanvas(canvas); ctx = f.ctx; w = f.w; h = f.h; });
-
-      const g = 9.81;
-      let shipSpeed = 6; // m/s
-      let shipX = 100; // position in world
-      let bobReleased = false;
-      let bobShipX = 0, bobShipY = 0; // ball position relative to ship (x is horizontal offset from mast)
-      let bobVx = 0, bobVy = 0;
-      let tBob = 0;
-      let frame = 'shore'; // 'shore' or 'deck'
-      let trailShore = [], trailDeck = [];
-
-      const H = 18; // mast height (meters)
-      const pxPerM = 8;
-
-      function release() {
-        bobReleased = true;
-        // In shore frame, bob has ship's velocity at release
-        bobShipX = 0; bobShipY = H;
-        bobVx = 0; // relative to ship
-        bobVy = 0;
-        tBob = 0;
-        trailShore = []; trailDeck = [];
-      }
-      function reset() {
-        bobReleased = false; shipX = 100;
-        trailShore = []; trailDeck = [];
-      }
-
-      let lastT = performance.now() / 1000;
-      function step(dt) {
-        // ship moves
-        shipX += shipSpeed * pxPerM * dt;
-        if (shipX > w - 80) shipX = 100;
-        if (bobReleased) {
-          tBob += dt;
-          // bob in ship frame: falls straight down
-          bobShipY = H - 0.5 * g * tBob * tBob;
-          bobShipX = 0;
-          if (bobShipY <= 0) { bobShipY = 0; }
-        }
-      }
-
-      function draw() {
-        ctx.clearRect(0, 0, w, h);
-        // sky
-        const sky = ctx.createLinearGradient(0, 0, 0, h);
-        sky.addColorStop(0, '#0a0a18');
-        sky.addColorStop(1, '#07070c');
-        ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h);
-
-        const waterY = h - 60;
-        // water
-        ctx.fillStyle = 'rgba(125,211,252,0.08)';
-        ctx.fillRect(0, waterY, w, 60);
-        ctx.strokeStyle = 'rgba(125,211,252,0.25)'; ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(0, waterY); ctx.lineTo(w, waterY); ctx.stroke();
-
-        // wave lines
-        for (let i = 0; i < 3; i++) {
-          ctx.strokeStyle = `rgba(125,211,252,${0.05 + i * 0.03})`;
-          ctx.beginPath();
-          for (let x = 0; x < w; x += 4) {
-            const yw = waterY + 10 + i * 15 + Math.sin((x + performance.now() * 0.05) * 0.02 + i) * 2;
-            if (x === 0) ctx.moveTo(x, yw); else ctx.lineTo(x, yw);
-          }
-          ctx.stroke();
-        }
-
-        // ship offset for drawing
-        let drawShipX = shipX;
-        if (frame === 'deck') drawShipX = w / 2; // re-center
-
-        // ship hull
-        ctx.fillStyle = 'rgba(212,168,71,0.15)';
-        ctx.strokeStyle = '#d4a847'; ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(drawShipX - 60, waterY);
-        ctx.lineTo(drawShipX + 60, waterY);
-        ctx.lineTo(drawShipX + 50, waterY + 18);
-        ctx.lineTo(drawShipX - 50, waterY + 18);
-        ctx.closePath();
-        ctx.fill(); ctx.stroke();
-
-        // mast
-        const mastX = drawShipX;
-        const mastTopY = waterY - H * pxPerM;
-        ctx.strokeStyle = '#d4a847'; ctx.lineWidth = 3;
-        ctx.beginPath(); ctx.moveTo(mastX, waterY); ctx.lineTo(mastX, mastTopY); ctx.stroke();
-        // crow's nest
-        ctx.strokeStyle = '#d4a847'; ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(mastX - 8, mastTopY + 4); ctx.lineTo(mastX + 8, mastTopY + 4); ctx.stroke();
-
-        // sail
-        ctx.strokeStyle = 'rgba(232,228,217,0.4)'; ctx.lineWidth = 1;
-        ctx.fillStyle = 'rgba(232,228,217,0.05)';
-        ctx.beginPath();
-        ctx.moveTo(mastX, mastTopY + 12);
-        ctx.lineTo(mastX + 34, mastTopY + 30);
-        ctx.lineTo(mastX, mastTopY + 60);
-        ctx.closePath();
-        ctx.fill(); ctx.stroke();
-
-        // speed arrow on ship
-        if (shipSpeed > 0 && frame === 'shore') {
-          ctx.strokeStyle = '#7dd3fc'; ctx.lineWidth = 1.5;
-          const arrLen = shipSpeed * 4;
-          ctx.beginPath();
-          ctx.moveTo(drawShipX + 60, waterY + 9);
-          ctx.lineTo(drawShipX + 60 + arrLen, waterY + 9);
-          ctx.lineTo(drawShipX + 60 + arrLen - 4, waterY + 6);
-          ctx.moveTo(drawShipX + 60 + arrLen, waterY + 9);
-          ctx.lineTo(drawShipX + 60 + arrLen - 4, waterY + 12);
-          ctx.stroke();
-          ctx.fillStyle = '#7dd3fc'; ctx.font = '10px JetBrains Mono';
-          ctx.fillText(`${shipSpeed} m/s`, drawShipX + 64, waterY + 2);
-        }
-
-        // bob position
-        if (bobReleased) {
-          // compute world position of bob
-          // bob in ship frame: (bobShipX, bobShipY)
-          // ship in world at shipX, bob at (shipX + bobShipX*pxPerM, waterY - bobShipY*pxPerM)
-          const worldBobX = shipX + bobShipX * pxPerM;
-          const worldBobY = waterY - bobShipY * pxPerM;
-          let drawBobX, drawBobY;
-          if (frame === 'shore') {
-            drawBobX = worldBobX; drawBobY = worldBobY;
-            trailShore.push({ x: drawBobX, y: drawBobY });
-            if (trailShore.length > 200) trailShore.shift();
-          } else {
-            // deck frame: bob is at mastX + offset
-            drawBobX = mastX + bobShipX * pxPerM;
-            drawBobY = waterY - bobShipY * pxPerM;
-            trailDeck.push({ x: drawBobX, y: drawBobY });
-            if (trailDeck.length > 200) trailDeck.shift();
-          }
-
-          // draw trail
-          const trail = frame === 'shore' ? trailShore : trailDeck;
-          ctx.strokeStyle = 'rgba(244,164,164,0.6)'; ctx.lineWidth = 1.5;
-          ctx.beginPath();
-          trail.forEach((p, i) => { if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y); });
-          ctx.stroke();
-
-          // draw bob
-          const g2 = ctx.createRadialGradient(drawBobX - 2, drawBobY - 2, 0, drawBobX, drawBobY, 7);
-          g2.addColorStop(0, '#f4a4a4'); g2.addColorStop(0.7, '#a04040'); g2.addColorStop(1, '#301010');
-          ctx.fillStyle = g2;
-          ctx.beginPath(); ctx.arc(drawBobX, drawBobY, 6, 0, Math.PI * 2); ctx.fill();
-
-          // plumb string
-          ctx.strokeStyle = 'rgba(244,164,164,0.3)'; ctx.lineWidth = 1;
-          ctx.beginPath();
-          if (frame === 'shore') {
-            // in shore frame, line goes from release point (old ship position) to current bob
-            // instead, show a short stub
-          } else {
-            ctx.moveTo(mastX, mastTopY); ctx.lineTo(drawBobX, drawBobY);
-          }
-          ctx.stroke();
-        }
-
-        // frame label
-        ctx.fillStyle = frame === 'shore' ? '#7dd3fc' : '#a78bfa';
-        ctx.font = '11px JetBrains Mono';
-        ctx.fillText(`frame: ${frame === 'shore' ? 'SHORE (ship moves)' : 'DECK (ship at rest)'}`, 16, 24);
-      }
-
-      function anim() {
-        const now = performance.now() / 1000;
-        const dt = Math.min(0.03, now - lastT); lastT = now;
-        step(dt);
-        draw();
-        requestAnimationFrame(anim);
-      }
-
-      document.getElementById('shipDrop').addEventListener('click', release);
-      document.getElementById('shipReset').addEventListener('click', reset);
-      document.getElementById('shipFrame').addEventListener('click', (e) => {
-        frame = frame === 'shore' ? 'deck' : 'shore';
-        e.target.textContent = 'Frame: ' + frame;
-        trailShore = []; trailDeck = [];
       });
-      const ss = document.getElementById('shipSpd'), ssv = document.getElementById('shipSpdVal');
-      ss.addEventListener('input', () => { shipSpeed = +ss.value; ssv.textContent = shipSpeed + ' m/s'; });
+      ctx.setLineDash([]);
+    }
 
-      anim();
-    })();
+    const bp = pointAtFrac(ballFrac);
+    const bx = bp.x - perp.x * 8, by = bp.y - perp.y * 8;
+    const grad = ctx.createRadialGradient(bx - 2, by - 2, 0, bx, by, 9);
+    grad.addColorStop(0, '#f4d4a4'); grad.addColorStop(0.6, '#b47820'); grad.addColorStop(1, '#4a3010');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(bx, by, 8, 0, Math.PI * 2); ctx.fill();
 
-    /* =============================================================
-       (reveal disabled — content visible by default)
-       ============================================================= */
+    ctx.fillStyle = 'rgba(123,141,181,0.6)'; ctx.font = '10px JetBrains Mono';
+    ctx.fillText(`θ = ${angleDeg}°`, P2.x - 52, P2.y - 10);
+  }
 
-  </script>
+  function pointerPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const cx = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+    const cy = e.clientY !== undefined ? e.clientY : (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+    return { x: cx - rect.left, y: cy - rect.top };
+  }
+  function projectToPlank(pt) {
+    const dx = P2.x - P1.x, dy = P2.y - P1.y;
+    const t = ((pt.x - P1.x) * dx + (pt.y - P1.y) * dy) / (dx * dx + dy * dy);
+    return clamp(t, 0.02, 0.96);
+  }
+  canvas.addEventListener('pointerdown', e => {
+    const pt = pointerPos(e);
+    let best = -1, bestD = 30;
+    fretsArr.forEach((f, i) => {
+      const p = pointAtFrac(f);
+      const d = Math.hypot(pt.x - p.x, pt.y - p.y);
+      if (d < bestD) { bestD = d; best = i; }
+    });
+    if (best >= 0) { dragIdx = best; autoTuned = false; }
+  });
+  canvas.addEventListener('pointermove', e => {
+    if (dragIdx < 0) return;
+    const pt = pointerPos(e);
+    fretsArr[dragIdx] = projectToPlank(pt);
+    fretsArr.sort((a, b) => a - b);
+    draw();
+  });
+  window.addEventListener('pointerup', () => { dragIdx = -1; });
+
+  function anim() {
+    if (rolling) {
+      const t = performance.now() / 1000 - rollStart;
+      const d = 0.5 * accel() * t * t;
+      ballFrac = clamp(d / totalDistance(), 0, 1);
+      fretClickTimes.forEach((ct, i) => {
+        if (t >= ct && flashed[i] === 0) {
+          flashed[i] = 1;
+          playClick(600 + i * 80, 0.06, 0.18);
+        }
+      });
+      flashed = flashed.map(v => Math.max(0, v - 0.02));
+      if (ballFrac >= 1) rolling = false;
+    } else {
+      flashed = flashed.map(v => Math.max(0, v - 0.015));
+    }
+    draw();
+    requestAnimationFrame(anim);
+  }
+
+  document.getElementById('fretsAngle').addEventListener('input', e => {
+    angleDeg = +e.target.value;
+    document.getElementById('fretsAngleVal').textContent = angleDeg + '°';
+    layout();
+  });
+  document.getElementById('fretsTempo').addEventListener('input', e => {
+    tempo = +e.target.value / 100;
+    document.getElementById('fretsTempoVal').textContent = tempo.toFixed(2) + ' s';
+  });
+  document.getElementById('fretsRoll').addEventListener('click', () => { ballFrac = 0; roll(); });
+  document.getElementById('fretsAuto').addEventListener('click', () => {
+    fretsArr = idealFrets(); autoTuned = true; ballFrac = 0; roll();
+  });
+  document.getElementById('fretsReset').addEventListener('click', () => {
+    fretsArr = [0.08, 0.22, 0.40, 0.62, 0.88];
+    autoTuned = false; ballFrac = 0; rolling = false;
+  });
+
+  layout(); anim();
+})();
+
+(function waterClock() {
+  const canvas = document.getElementById('clockCanvas');
+  let { ctx, w, h } = fitCanvas(canvas);
+  window.addEventListener('resize', () => { const f = fitCanvas(canvas); ctx = f.ctx; w = f.w; h = f.h; });
+
+  const g = 9.81;
+  let angleDeg = 18, lengthCubits = 12;
+  const cubitMeters = 0.5;
+  const realLen = () => lengthCubits * cubitMeters;
+  const accel = () => (5/7) * g * Math.sin(angleDeg * Math.PI / 180);
+  const totalTime = () => Math.sqrt(2 * realLen() / accel());
+
+  let running = false, startT = 0, elapsed = 0, waterGrams = 0;
+  const flowRate = 8.0;
+  let drips = [], lastDripSpawn = 0;
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    const bg = ctx.createLinearGradient(0, 0, 0, h);
+    bg.addColorStop(0, '#0c1326'); bg.addColorStop(1, '#080d1a');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, w, h);
+
+    const plankW = w * 0.55, clockX = plankW + 20;
+    const margin = 30;
+    const P1 = { x: margin, y: h * 0.28 };
+    const thetaR = angleDeg * Math.PI / 180;
+    const maxLen = Math.min(plankW - 2 * margin, (h - margin - P1.y) / Math.sin(thetaR));
+    const P2 = { x: P1.x + maxLen * Math.cos(thetaR), y: P1.y + maxLen * Math.sin(thetaR) };
+
+    ctx.strokeStyle = 'rgba(123,141,181,0.15)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, P2.y + 6); ctx.lineTo(plankW, P2.y + 6); ctx.stroke();
+    ctx.strokeStyle = 'rgba(240,180,41,0.08)'; ctx.lineWidth = 14; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(P1.x, P1.y); ctx.lineTo(P2.x, P2.y); ctx.stroke();
+    ctx.strokeStyle = '#f0b429'; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(P1.x, P1.y); ctx.lineTo(P2.x, P2.y); ctx.stroke();
+
+    let frac = 0;
+    if (running) frac = clamp(0.5 * accel() * elapsed * elapsed / realLen(), 0, 1);
+    const perp = { x: -Math.sin(thetaR), y: Math.cos(thetaR) };
+    const bp = { x: P1.x + (P2.x - P1.x) * frac - perp.x * 8, y: P1.y + (P2.y - P1.y) * frac - perp.y * 8 };
+    const grad = ctx.createRadialGradient(bp.x - 2, bp.y - 2, 0, bp.x, bp.y, 9);
+    grad.addColorStop(0, '#f4d4a4'); grad.addColorStop(0.6, '#b47820'); grad.addColorStop(1, '#4a3010');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(bp.x, bp.y, 8, 0, Math.PI * 2); ctx.fill();
+
+    const bucketTop = h * 0.15, bucketH = h * 0.38, bucketW = 70;
+    const bucketL = clockX + 20, bucketR = bucketL + bucketW;
+    ctx.strokeStyle = 'rgba(123,141,181,0.4)'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(bucketL, bucketTop); ctx.lineTo(bucketL, bucketTop + bucketH);
+    ctx.moveTo(bucketR, bucketTop); ctx.lineTo(bucketR, bucketTop + bucketH);
+    ctx.moveTo(bucketL - 6, bucketTop); ctx.lineTo(bucketR + 6, bucketTop);
+    ctx.stroke();
+    const maxGrams = 20;
+    const fillFrac = clamp(1 - waterGrams / maxGrams, 0.1, 1);
+    const waterTop = bucketTop + bucketH * (1 - fillFrac);
+    ctx.fillStyle = 'rgba(56,189,248,0.28)';
+    ctx.fillRect(bucketL + 1, waterTop, bucketW - 2, bucketH - (waterTop - bucketTop));
+    ctx.strokeStyle = 'rgba(56,189,248,0.6)';
+    ctx.beginPath(); ctx.moveTo(bucketL, waterTop); ctx.lineTo(bucketR, waterTop); ctx.stroke();
+    const spoutX = (bucketL + bucketR) / 2;
+    ctx.fillStyle = '#080d1a'; ctx.fillRect(spoutX - 3, bucketTop + bucketH, 6, 4);
+
+    for (let i = drips.length - 1; i >= 0; i--) {
+      const d = drips[i];
+      d.y += 280 * 0.016;
+      if (d.y > h - 80) { drips.splice(i, 1); continue; }
+      ctx.fillStyle = 'rgba(56,189,248,0.75)';
+      ctx.beginPath(); ctx.arc(spoutX, bucketTop + bucketH + 4 + d.y, 2, 0, Math.PI * 2); ctx.fill();
+    }
+
+    const scaleY = h - 70, scaleW = 140, scaleX = clockX + 5;
+    ctx.strokeStyle = 'rgba(123,141,181,0.4)'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(scaleX, scaleY); ctx.lineTo(scaleX + scaleW, scaleY);
+    ctx.moveTo(scaleX + scaleW / 2, scaleY); ctx.lineTo(scaleX + scaleW / 2, scaleY + 30);
+    ctx.moveTo(scaleX + scaleW / 2 - 15, scaleY + 30); ctx.lineTo(scaleX + scaleW / 2 + 15, scaleY + 30);
+    ctx.stroke();
+    const panFillH = clamp(waterGrams / maxGrams * 16, 0, 16);
+    ctx.fillStyle = 'rgba(56,189,248,0.5)';
+    ctx.fillRect(scaleX + 10, scaleY - panFillH, scaleW - 20, panFillH);
+
+    ctx.strokeStyle = '#f0b429'; ctx.lineWidth = 1;
+    const needleAngle = -Math.PI / 2 + (waterGrams / maxGrams) * Math.PI * 0.8;
+    const cx2 = scaleX + scaleW / 2, cy2 = scaleY + 30;
+    ctx.beginPath(); ctx.arc(cx2, cy2, 30, -Math.PI, 0); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(cx2, cy2);
+    ctx.lineTo(cx2 + Math.cos(needleAngle) * 26, cy2 + Math.sin(needleAngle) * 26);
+    ctx.stroke();
+
+    ctx.fillStyle = 'rgba(123,141,181,0.6)'; ctx.font = '10px JetBrains Mono';
+    ctx.fillText('water clock', bucketL - 8, bucketTop - 10);
+    ctx.fillText('scale', scaleX, scaleY + 55);
+  }
+
+  function start() {
+    initAudio();
+    if (running) return;
+    running = true;
+    startT = performance.now() / 1000;
+    elapsed = 0; waterGrams = 0; drips = [];
+  }
+  function reset() {
+    running = false; elapsed = 0; waterGrams = 0; drips = [];
+    document.getElementById('clockReadout').innerHTML = 'Elapsed time: <span class="r-val">0.00 s</span> &nbsp;·&nbsp; Water collected: <span class="r-gold">0.0 g</span>';
+  }
+
+  function anim() {
+    const now = performance.now() / 1000;
+    if (running) {
+      elapsed = now - startT;
+      if (elapsed >= totalTime()) { elapsed = totalTime(); running = false; }
+      waterGrams = elapsed * flowRate;
+      if (now - lastDripSpawn > 0.12) {
+        drips.push({ y: 0 });
+        lastDripSpawn = now;
+        if (Math.random() < 0.3) playDrip();
+      }
+      document.getElementById('clockReadout').innerHTML =
+        `Elapsed time: <span class="r-val">${elapsed.toFixed(2)} s</span> &nbsp;·&nbsp; Water collected: <span class="r-gold">${waterGrams.toFixed(1)} g</span>`;
+    }
+    draw();
+    requestAnimationFrame(anim);
+  }
+
+  document.getElementById('clockStart').addEventListener('click', start);
+  document.getElementById('clockReset').addEventListener('click', reset);
+  document.getElementById('clockAngle').addEventListener('input', e => {
+    angleDeg = +e.target.value;
+    document.getElementById('clockAngleVal').textContent = angleDeg + '°';
+  });
+  document.getElementById('clockLength').addEventListener('input', e => {
+    lengthCubits = +e.target.value;
+    document.getElementById('clockLengthVal').textContent = lengthCubits;
+  });
+
+  anim();
+})();
+
+(function pva() {
+  const canvas = document.getElementById('pvaCanvas');
+  let { ctx, w, h } = fitCanvas(canvas);
+  window.addEventListener('resize', () => { const f = fitCanvas(canvas); ctx = f.ctx; w = f.w; h = f.h; });
+
+  let accelVal = 2.0, speed = 1.0, playing = false;
+  let t = 0; const tMax = 4.0;
+  let showTangent = false;
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = '#080d1a'; ctx.fillRect(0, 0, w, h);
+    const margin = 60, boxH = (h - 80) / 3;
+    const boxes = [
+      { y: 20, color: '#f0b429', label: 'x(t) = (1/2)a t^2  (m)', yMax: 0.5 * accelVal * tMax * tMax * 1.1, fn: t2 => 0.5 * accelVal * t2 * t2 },
+      { y: 20 + boxH + 10, color: '#38bdf8', label: 'v(t) = a t  (m/s)', yMax: accelVal * tMax * 1.1, fn: t2 => accelVal * t2 },
+      { y: 20 + 2 * (boxH + 10), color: '#a78bfa', label: 'a(t) = a  (m/s^2)', yMax: accelVal * 1.8, fn: t2 => accelVal }
+    ];
+    boxes.forEach(b => {
+      ctx.strokeStyle = 'rgba(123,141,181,0.2)'; ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(margin, b.y); ctx.lineTo(margin, b.y + boxH);
+      ctx.lineTo(w - 20, b.y + boxH); ctx.stroke();
+      ctx.fillStyle = b.color; ctx.font = '11px JetBrains Mono';
+      ctx.fillText(b.label, margin + 6, b.y + 14);
+      ctx.fillStyle = 'rgba(123,141,181,0.6)'; ctx.font = '10px JetBrains Mono';
+      ctx.fillText('0', margin - 10, b.y + boxH + 12);
+      ctx.fillText(tMax.toFixed(1) + 's', w - 40, b.y + boxH + 12);
+
+      ctx.strokeStyle = b.color; ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      const N = 80;
+      for (let i = 0; i <= N; i++) {
+        const t2 = (i / N) * t;
+        const val = b.fn(t2);
+        const x = margin + (t2 / tMax) * (w - 20 - margin);
+        const y = b.y + boxH - (val / b.yMax) * boxH;
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.strokeStyle = b.color + '22'; ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (let i = 0; i <= N; i++) {
+        const t2 = (i / N) * tMax;
+        const val = b.fn(t2);
+        const x = margin + (t2 / tMax) * (w - 20 - margin);
+        const y = b.y + boxH - (val / b.yMax) * boxH;
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      const xc = margin + (t / tMax) * (w - 20 - margin);
+      const yc = b.y + boxH - (b.fn(t) / b.yMax) * boxH;
+      ctx.fillStyle = b.color;
+      ctx.beginPath(); ctx.arc(xc, yc, 4, 0, Math.PI * 2); ctx.fill();
+    });
+
+    if (showTangent && t > 0.05) {
+      const b = boxes[0];
+      const xc = margin + (t / tMax) * (w - 20 - margin);
+      const yc = b.y + boxH - (b.fn(t) / b.yMax) * boxH;
+      const slope = accelVal * t;
+      const dxPix = (w - 20 - margin) / tMax;
+      const dyPix = boxH / b.yMax;
+      const pxSlope = -slope * dyPix / dxPix;
+      const lineLen = 120;
+      const dx = lineLen / Math.sqrt(1 + pxSlope * pxSlope);
+      const dy = pxSlope * dx;
+      ctx.strokeStyle = '#fb7185'; ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(xc - dx, yc - dy); ctx.lineTo(xc + dx, yc + dy);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#fb7185'; ctx.font = '10px JetBrains Mono';
+      ctx.fillText(`slope = ${slope.toFixed(2)} = v(t)`, xc + dx + 4, yc + dy);
+    }
+  }
+
+  let lastT = performance.now() / 1000;
+  function anim() {
+    const now = performance.now() / 1000;
+    const dt = Math.min(0.05, now - lastT); lastT = now;
+    if (playing) { t += dt * speed; if (t >= tMax) { t = tMax; playing = false; } }
+    draw();
+    requestAnimationFrame(anim);
+  }
+
+  document.getElementById('pvaPlay').addEventListener('click', () => {
+    if (t >= tMax) t = 0;
+    playing = !playing;
+  });
+  document.getElementById('pvaReset').addEventListener('click', () => { t = 0; playing = false; });
+  document.getElementById('pvaTangent').addEventListener('click', e => { showTangent = !showTangent; e.target.classList.toggle('active'); });
+  document.getElementById('pvaAcc').addEventListener('input', e => { accelVal = +e.target.value / 100; document.getElementById('pvaAccVal').textContent = accelVal.toFixed(2) + ' m/s²'; });
+  document.getElementById('pvaSpeed').addEventListener('input', e => { speed = +e.target.value / 10; document.getElementById('pvaSpeedVal').textContent = speed.toFixed(1) + '×'; });
+
+  anim();
+})();
+
+(function proj() {
+  const canvas = document.getElementById('projCanvas');
+  let { ctx, w, h } = fitCanvas(canvas);
+  window.addEventListener('resize', () => { const f = fitCanvas(canvas); ctx = f.ctx; w = f.w; h = f.h; });
+
+  const g = 9.81;
+  let angle = 45, speed = 20, t = 0, flying = false;
+  let trails = [];
+  const margin = 30;
+  const originX = () => margin + 20;
+  const originY = () => h - margin;
+  const scale = () => {
+    const maxRange = speed * speed / g * 1.2;
+    const maxHeight = Math.pow(speed * Math.sin(80 * Math.PI / 180), 2) / (2 * g) * 1.2;
+    return Math.min((w - 60) / maxRange, (h - 60) / maxHeight);
+  };
+
+  function fire() {
+    flying = true; t = 0;
+    trails.push({ angle, speed, pts: [], vs: [], hs: [] });
+    if (trails.length > 4) trails.shift();
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = '#080d1a'; ctx.fillRect(0, 0, w, h);
+    const s = scale(), ox = originX(), oy = originY();
+    ctx.strokeStyle = 'rgba(123,141,181,0.2)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, oy); ctx.lineTo(w, oy); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(ox, 0); ctx.lineTo(ox, oy); ctx.stroke();
+    ctx.fillStyle = 'rgba(123,141,181,0.6)'; ctx.font = '10px JetBrains Mono';
+    ctx.fillText('x (constant velocity →)', ox + 10, oy - 6);
+    ctx.save(); ctx.translate(ox - 12, 30); ctx.rotate(-Math.PI / 2);
+    ctx.fillText('y (falls under gravity)', 0, 0); ctx.restore();
+
+    trails.forEach((tr, i) => {
+      const isLast = i === trails.length - 1;
+      ctx.strokeStyle = isLast ? 'rgba(224,230,240,0.65)' : 'rgba(224,230,240,0.15)';
+      ctx.lineWidth = isLast ? 2 : 1;
+      ctx.beginPath();
+      tr.pts.forEach((p, j) => { if (j === 0) ctx.moveTo(ox + p.x * s, oy - p.y * s); else ctx.lineTo(ox + p.x * s, oy - p.y * s); });
+      ctx.stroke();
+    });
+
+    if (flying) {
+      const last = trails[trails.length - 1];
+      const vx0 = last.speed * Math.cos(last.angle * Math.PI / 180);
+      const vy0 = last.speed * Math.sin(last.angle * Math.PI / 180);
+      const x = vx0 * t, y = vy0 * t - 0.5 * g * t * t;
+      if (y < 0) { flying = false; }
+      else {
+        last.pts.push({ x, y }); last.hs.push(x); last.vs.push(y);
+        ctx.fillStyle = '#f0b429';
+        ctx.beginPath(); ctx.arc(ox + x * s, oy, 4, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(240,180,41,0.4)'; ctx.lineWidth = 1;
+        ctx.beginPath();
+        last.hs.forEach((hx, j) => { if (j === 0) ctx.moveTo(ox + hx * s, oy); else ctx.lineTo(ox + hx * s, oy); });
+        ctx.stroke();
+        ctx.fillStyle = '#38bdf8';
+        ctx.beginPath(); ctx.arc(ox, oy - y * s, 4, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = 'rgba(56,189,248,0.4)'; ctx.lineWidth = 1;
+        ctx.beginPath();
+        last.vs.forEach((vy, j) => { if (j === 0) ctx.moveTo(ox, oy - vy * s); else ctx.lineTo(ox, oy - vy * s); });
+        ctx.stroke();
+        ctx.strokeStyle = 'rgba(224,230,240,0.12)'; ctx.setLineDash([2, 4]);
+        ctx.beginPath();
+        ctx.moveTo(ox + x * s, oy - y * s); ctx.lineTo(ox + x * s, oy);
+        ctx.moveTo(ox + x * s, oy - y * s); ctx.lineTo(ox, oy - y * s);
+        ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = '#f4d4a4'; ctx.shadowColor = '#f4d4a4'; ctx.shadowBlur = 12;
+        ctx.beginPath(); ctx.arc(ox + x * s, oy - y * s, 6, 0, Math.PI * 2); ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+    const ar = angle * Math.PI / 180;
+    ctx.strokeStyle = '#a78bfa'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(ox, oy); ctx.lineTo(ox + Math.cos(ar) * 28, oy - Math.sin(ar) * 28); ctx.stroke();
+  }
+
+  let lastT = performance.now() / 1000;
+  function anim() {
+    const now = performance.now() / 1000;
+    const dt = Math.min(0.05, now - lastT); lastT = now;
+    if (flying) t += dt;
+    draw();
+    requestAnimationFrame(anim);
+  }
+
+  document.getElementById('projFire').addEventListener('click', fire);
+  document.getElementById('projReset').addEventListener('click', () => { trails = []; flying = false; });
+  document.getElementById('projAng').addEventListener('input', e => { angle = +e.target.value; document.getElementById('projAngVal').textContent = angle + '°'; });
+  document.getElementById('projSpd').addEventListener('input', e => { speed = +e.target.value; document.getElementById('projSpdVal').textContent = speed + ' m/s'; });
+
+  anim();
+})();
+
+(function tower() {
+  const canvas = document.getElementById('towerCanvas');
+  let { ctx, w, h } = fitCanvas(canvas);
+  window.addEventListener('resize', () => { const f = fitCanvas(canvas); ctx = f.ctx; w = f.w; h = f.h; });
+
+  const g = 9.81;
+  let air = 0, lightMass = 1, falling = false, t = 0;
+  const H = 56;
+  let yLight = 0, yHeavy = 0, vLight = 0, vHeavy = 0;
+  let tLight = null, tHeavy = null;
+
+  function integrate(dt) {
+    const cDrag = air / 100 * 0.4;
+    const aL = g - cDrag * vLight * vLight / lightMass;
+    const aH = g - cDrag * vHeavy * vHeavy / 10;
+    vLight += aL * dt; yLight += vLight * dt;
+    vHeavy += aH * dt; yHeavy += vHeavy * dt;
+    if (yLight >= H && tLight === null) tLight = t;
+    if (yHeavy >= H && tHeavy === null) tHeavy = t;
+  }
+  function reset() { yLight = yHeavy = vLight = vHeavy = 0; t = 0; tLight = tHeavy = null; falling = false; }
+  function drop() { reset(); falling = true; }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = '#080d1a'; ctx.fillRect(0, 0, w, h);
+    const towerX = w * 0.3, topY = 30, groundY = h - 40, towerH = groundY - topY;
+    ctx.save();
+    ctx.translate(towerX, groundY); ctx.rotate(-0.05);
+    ctx.strokeStyle = '#f0b429'; ctx.lineWidth = 2;
+    ctx.fillStyle = 'rgba(240,180,41,0.05)';
+    const tw = 60;
+    ctx.beginPath(); ctx.rect(-tw/2, -towerH, tw, towerH);
+    ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = 'rgba(240,180,41,0.3)';
+    for (let i = 1; i < 7; i++) {
+      ctx.beginPath();
+      ctx.moveTo(-tw/2, -towerH * i / 7);
+      ctx.lineTo(tw/2, -towerH * i / 7);
+      ctx.stroke();
+    }
+    ctx.restore();
+    ctx.strokeStyle = 'rgba(123,141,181,0.2)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, groundY); ctx.lineTo(w, groundY); ctx.stroke();
+
+    const yScale = towerH / H;
+    const heavyX = towerX + 100, lightX = towerX + 160;
+    const heavyY = clamp(topY + yHeavy * yScale, topY, groundY);
+    const lightY = clamp(topY + yLight * yScale, topY, groundY);
+
+    ctx.strokeStyle = 'rgba(224,230,240,0.15)'; ctx.lineWidth = 1; ctx.setLineDash([2, 4]);
+    ctx.beginPath(); ctx.moveTo(towerX + 50, topY); ctx.lineTo(lightX + 20, topY); ctx.stroke();
+    ctx.setLineDash([]);
+
+    let grad = ctx.createRadialGradient(heavyX - 4, heavyY - 4, 0, heavyX, heavyY, 14);
+    grad.addColorStop(0, '#a0a0a8'); grad.addColorStop(0.6, '#505058'); grad.addColorStop(1, '#1a1a20');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(heavyX, heavyY, 14, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = 'rgba(123,141,181,0.7)'; ctx.font = '10px JetBrains Mono';
+    ctx.fillText('cannonball (10 kg)', heavyX - 42, groundY + 18);
+
+    const lightR = 4 + lightMass * 0.8;
+    grad = ctx.createRadialGradient(lightX - 2, lightY - 2, 0, lightX, lightY, lightR);
+    grad.addColorStop(0, '#f4d4a4'); grad.addColorStop(0.6, '#b47820'); grad.addColorStop(1, '#4a3010');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(lightX, lightY, lightR, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = 'rgba(123,141,181,0.7)';
+    ctx.fillText(`musket ball (${lightMass} kg)`, lightX - 40, groundY + 32);
+
+    ctx.fillStyle = '#38bdf8'; ctx.font = '11px JetBrains Mono'; ctx.textAlign = 'center';
+    if (tHeavy !== null) ctx.fillText(`${tHeavy.toFixed(2)} s`, heavyX, groundY + 50);
+    if (tLight !== null) ctx.fillText(`${tLight.toFixed(2)} s`, lightX, groundY + 50);
+    ctx.textAlign = 'start';
+  }
+
+  let lastT = performance.now() / 1000;
+  function anim() {
+    const now = performance.now() / 1000;
+    const dt = Math.min(0.03, now - lastT); lastT = now;
+    if (falling) {
+      t += dt; integrate(dt);
+      if (tLight !== null && tHeavy !== null) falling = false;
+    }
+    draw();
+    requestAnimationFrame(anim);
+  }
+
+  document.getElementById('towerDrop').addEventListener('click', drop);
+  document.getElementById('towerReset').addEventListener('click', reset);
+  document.getElementById('towerAir').addEventListener('input', e => { air = +e.target.value; document.getElementById('towerAirVal').textContent = air + '%'; });
+  document.getElementById('towerMass').addEventListener('input', e => { lightMass = +e.target.value; document.getElementById('towerMassVal').textContent = lightMass + ' kg'; });
+
+  anim();
+})();
+
+(function ship() {
+  const canvas = document.getElementById('shipCanvas');
+  let { ctx, w, h } = fitCanvas(canvas);
+  window.addEventListener('resize', () => { const f = fitCanvas(canvas); ctx = f.ctx; w = f.w; h = f.h; });
+
+  const g = 9.81;
+  let shipSpeed = 6, shipX = 100;
+  let bobReleased = false;
+  let bobShipY = 0;
+  let tBob = 0;
+  let frame = 'shore';
+  let trailShore = [], trailDeck = [];
+  const H = 18, pxPerM = 8;
+
+  function release() { bobReleased = true; bobShipY = H; tBob = 0; trailShore = []; trailDeck = []; }
+  function reset() { bobReleased = false; shipX = 100; trailShore = []; trailDeck = []; }
+
+  let lastT = performance.now() / 1000;
+  function step(dt) {
+    shipX += shipSpeed * pxPerM * dt;
+    if (shipX > w - 80) shipX = 100;
+    if (bobReleased) {
+      tBob += dt;
+      bobShipY = H - 0.5 * g * tBob * tBob;
+      if (bobShipY <= 0) bobShipY = 0;
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    const sky = ctx.createLinearGradient(0, 0, 0, h);
+    sky.addColorStop(0, '#0c1326'); sky.addColorStop(1, '#080d1a');
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h);
+
+    const waterY = h - 60;
+    ctx.fillStyle = 'rgba(56,189,248,0.08)';
+    ctx.fillRect(0, waterY, w, 60);
+    ctx.strokeStyle = 'rgba(56,189,248,0.25)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, waterY); ctx.lineTo(w, waterY); ctx.stroke();
+    for (let i = 0; i < 3; i++) {
+      ctx.strokeStyle = `rgba(56,189,248,${0.05 + i * 0.03})`;
+      ctx.beginPath();
+      for (let x = 0; x < w; x += 4) {
+        const yw = waterY + 10 + i * 15 + Math.sin((x + performance.now() * 0.05) * 0.02 + i) * 2;
+        if (x === 0) ctx.moveTo(x, yw); else ctx.lineTo(x, yw);
+      }
+      ctx.stroke();
+    }
+
+    let drawShipX = shipX;
+    if (frame === 'deck') drawShipX = w / 2;
+
+    ctx.fillStyle = 'rgba(240,180,41,0.15)';
+    ctx.strokeStyle = '#f0b429'; ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(drawShipX - 60, waterY);
+    ctx.lineTo(drawShipX + 60, waterY);
+    ctx.lineTo(drawShipX + 50, waterY + 18);
+    ctx.lineTo(drawShipX - 50, waterY + 18);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+
+    const mastX = drawShipX, mastTopY = waterY - H * pxPerM;
+    ctx.strokeStyle = '#f0b429'; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(mastX, waterY); ctx.lineTo(mastX, mastTopY); ctx.stroke();
+    ctx.strokeStyle = '#f0b429'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(mastX - 8, mastTopY + 4); ctx.lineTo(mastX + 8, mastTopY + 4); ctx.stroke();
+    ctx.strokeStyle = 'rgba(224,230,240,0.4)'; ctx.lineWidth = 1;
+    ctx.fillStyle = 'rgba(224,230,240,0.05)';
+    ctx.beginPath();
+    ctx.moveTo(mastX, mastTopY + 12);
+    ctx.lineTo(mastX + 34, mastTopY + 30);
+    ctx.lineTo(mastX, mastTopY + 60);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+
+    if (shipSpeed > 0 && frame === 'shore') {
+      ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 1.5;
+      const arrLen = shipSpeed * 4;
+      ctx.beginPath();
+      ctx.moveTo(drawShipX + 60, waterY + 9);
+      ctx.lineTo(drawShipX + 60 + arrLen, waterY + 9);
+      ctx.lineTo(drawShipX + 60 + arrLen - 4, waterY + 6);
+      ctx.moveTo(drawShipX + 60 + arrLen, waterY + 9);
+      ctx.lineTo(drawShipX + 60 + arrLen - 4, waterY + 12);
+      ctx.stroke();
+      ctx.fillStyle = '#38bdf8'; ctx.font = '10px JetBrains Mono';
+      ctx.fillText(`${shipSpeed} m/s`, drawShipX + 64, waterY + 2);
+    }
+
+    if (bobReleased) {
+      let drawBobX, drawBobY;
+      if (frame === 'shore') {
+        drawBobX = shipX; drawBobY = waterY - bobShipY * pxPerM;
+        trailShore.push({ x: drawBobX, y: drawBobY });
+        if (trailShore.length > 200) trailShore.shift();
+      } else {
+        drawBobX = mastX; drawBobY = waterY - bobShipY * pxPerM;
+        trailDeck.push({ x: drawBobX, y: drawBobY });
+        if (trailDeck.length > 200) trailDeck.shift();
+      }
+      const trail = frame === 'shore' ? trailShore : trailDeck;
+      ctx.strokeStyle = 'rgba(251,113,133,0.6)'; ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      trail.forEach((p, i) => { if (i === 0) ctx.moveTo(p.x, p.y); else ctx.lineTo(p.x, p.y); });
+      ctx.stroke();
+      const g2 = ctx.createRadialGradient(drawBobX - 2, drawBobY - 2, 0, drawBobX, drawBobY, 7);
+      g2.addColorStop(0, '#fb7185'); g2.addColorStop(0.7, '#a04040'); g2.addColorStop(1, '#301010');
+      ctx.fillStyle = g2;
+      ctx.beginPath(); ctx.arc(drawBobX, drawBobY, 6, 0, Math.PI * 2); ctx.fill();
+      if (frame === 'deck') {
+        ctx.strokeStyle = 'rgba(251,113,133,0.3)'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(mastX, mastTopY); ctx.lineTo(drawBobX, drawBobY); ctx.stroke();
+      }
+    }
+
+    ctx.fillStyle = frame === 'shore' ? '#38bdf8' : '#a78bfa';
+    ctx.font = '11px JetBrains Mono';
+    ctx.fillText(`frame: ${frame === 'shore' ? 'SHORE (ship moves)' : 'DECK (ship at rest)'}`, 16, 24);
+  }
+
+  function anim() {
+    const now = performance.now() / 1000;
+    const dt = Math.min(0.03, now - lastT); lastT = now;
+    step(dt); draw();
+    requestAnimationFrame(anim);
+  }
+
+  document.getElementById('shipDrop').addEventListener('click', release);
+  document.getElementById('shipReset').addEventListener('click', reset);
+  document.getElementById('shipFrame').addEventListener('click', e => {
+    frame = frame === 'shore' ? 'deck' : 'shore';
+    e.target.textContent = 'Frame: ' + frame;
+    trailShore = []; trailDeck = [];
+  });
+  document.getElementById('shipSpd').addEventListener('input', e => { shipSpeed = +e.target.value; document.getElementById('shipSpdVal').textContent = shipSpeed + ' m/s'; });
+
+  anim();
+})();
+
+(function navAndReveal() {
+  const sections = ['hero', 'sec-plank', 'sec-clock', 'sec-pva', 'sec-proj', 'sec-tower', 'sec-ship', 'sec-closing'];
+  const nav = document.getElementById('nav-dots');
+  sections.forEach(id => {
+    const btn = document.createElement('button');
+    btn.className = 'nav-dot';
+    btn.dataset.target = id;
+    btn.title = id;
+    btn.addEventListener('click', () => document.getElementById(id).scrollIntoView({ behavior: 'smooth' }));
+    nav.appendChild(btn);
+  });
+  const dots = Array.from(nav.children);
+  const navObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const idx = sections.indexOf(e.target.id);
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      }
+    });
+  }, { threshold: 0.5 });
+  sections.forEach(id => { const el = document.getElementById(id); if (el) navObserver.observe(el); });
+
+  const revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+})();
+</script>
+
 </body>
-
 </html>
