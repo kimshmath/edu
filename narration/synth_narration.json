@@ -3,64 +3,71 @@
   "segments": [
     {
       "id": 0,
-      "text_en": "The Dream of a Perfect Tone. For centuries, musicians yearned for a sound they could shape at will — free from the constraints of wood, brass, and gut string. Mathematics gave it to them. This is the story of that quest.",
-      "text_ko": "완벽한 음색의 꿈. 수세기 동안, 음악가들은 자유롭게 빚을 수 있는 소리를 갈망했습니다 — 나무, 황동, 거트 현의 제약에서 벗어나서. 수학이 그것을 가능하게 했습니다. 이것은 그 탐구의 이야기입니다.",
+      "text_en": "The Dream of a Perfect Tone. The Mathematics of Music Synthesizers For centuries, musicians yearned for a sound they could shape at will — free from the constraints of wood, brass, and gut string. Mathematics gave it to them. This is the story of that quest.",
+      "text_ko": "완벽한 음색의 꿈. 음악 신시사이저의 수학 수백 년 동안 음악가들은 나무와 금속과 현의 제약에서 벗어나, 자유롭게 빚을 수 있는 소리를 꿈꿨습니다. 수학이 그 꿈을 실현했습니다. 이것은 그 여정의 이야기입니다.",
       "scroll_to": "#hero",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 1,
-      "text_en": "Section 1. The Organ Builder's Constraint. Pluck a string, blow through a reed — the sound you get is dictated by the object's physical shape. Pipe organ builders discovered that by sounding pipes of different lengths together, they could sculpt new timbres. Without knowing it, they were performing Fourier synthesis three centuries before Fourier.",
-      "text_ko": "섹션 1. 오르간 제작자의 제약. 줄을 뜯거나, 리드를 불면 — 나오는 소리는 물체의 물리적 형태에 의해 결정됩니다. 파이프 오르간 제작자들은 서로 다른 길이의 파이프를 함께 울려 새로운 음색을 빚을 수 있다는 것을 발견했습니다. 모르는 사이에, 그들은 푸리에보다 300년 먼저 푸리에 합성을 수행하고 있었습니다.",
+      "text_en": "The Organ Builder's Constraint. Pipe Organ Simulator. 01 — The Locked Voice, c. 1500–1750 Pluck a string, blow through a reed, strike a bar of metal — the sound you get is dictated by the object's physical shape. A musician can choose which note to play, but not what it sounds like . Pipe organ builders in the Renaissance understood this problem intimately. Each pipe produces a fixed recipe of harmonics — a spectral fingerprint frozen in tin and lead. Want a different voice? Build a different pipe. But they discovered something remarkable: by sounding pipes of different lengths together , they could sculpt new timbres from old ones. They called these combinations stops — and without knowing it, they were performing Fourier synthesis three centuries before Fourier.",
+      "text_ko": "오르간 제작자의 제약. 파이프 오르간 시뮬레이터. 잠긴 목소리, 1500–1750년경 현을 뜯고, 리드에 숨을 불고, 금속 막대를 두드리면 — 그 소리는 전적으로 물체의 물리적 형태에 의해 결정됩니다. 음악가는 어떤 음을 연주할지 선택할 수 있지만, 그 음이 어떻게 들리는지 는 선택할 수 없습니다. 르네상스 시대의 파이프 오르간 제작자들은 이 문제를 누구보다 잘 알았습니다. 각 파이프는 주석과 납으로 고정된 배음의 레시피 — 스펙트럼 지문을 만들어냅니다. 다른 음색을 원하면? 다른 파이프를 만들어야 합니다. 그런데 그들은 놀라운 것을 발견했습니다 — 서로 다른 길이의 파이프를 동시에 울리면, 기존 음색들로 새로운 음색을 빚어낼 수 있다는 것입니다. 그들은 이 조합을 스톱(stop) 이라 불렀고 — 자신도 모르는 사이에 푸리에 합성을 300년 먼저 수행하고 있었습니다. 파이프를 클릭하면 소리가 납니다. 아래 스톱을 켜고 꺼서 음색을 조합해 보세요. 합성 스펙트럼 활성 스톱 1 배음 수 8 음색 Principal 수학적으로 왜 중요한가. 1822년 푸리에가 모든 주기적 파형이 사인파로 분해됨을 증명했을 때, 그는 제작자들이 수백 년간 귀로 알고 있던 것을 공식화한 것이었습니다: 음색은 레시피라는 것. 파이프 오르간은 인류 최초의 신시사이저였지만, 그 레시피는 코드가 아니라 금속에 새겨져 있었습니다. 발명을 이끈 제약. 바흐 시대의 하프시코드 연주자는 음량을 조절할 수 없었습니다 — 터치와 관계없이 일정한 볼륨을 냈습니다. 파이프 오르간은 음을 구부리거나 연주 중에 음색을 바꿀 수 없었습니다.",
       "scroll_to": "#sec-01",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 2,
-      "text_en": "Section 2. Electricity Learns to Sing. In 1897, Thaddeus Cahill built the 200-ton Telharmonium — the world's first electronic instrument, generating tones from spinning metal discs. Then came the Theremin, the Hammond organ with its drawbars performing real-time additive synthesis, and finally Robert Moog's revolutionary voltage-controlled synthesizer.",
-      "text_ko": "섹션 2. 전기가 노래를 배우다. 1897년, 태디어스 캐힐은 200톤 텔하모니움을 만들었습니다 — 회전하는 금속 원반으로 음을 생성하는 세계 최초의 전자 악기입니다. 이어서 테레민, 실시간 가산 합성을 위한 드로바를 갖춘 해먼드 오르간, 마침내 로버트 무그의 혁명적 전압 제어 신시사이저가 등장했습니다.",
+      "text_en": "When Current Became Sound. Hammond Drawbar Simulator. Theremin Playground. 02 — Electricity Learns to Sing, 1897–1960s In 1897, a 30-year-old inventor named Thaddeus Cahill filed a patent for a machine that weighed 200 tons, consumed an entire floor of a building, and did something no instrument had ever done before: it generated musical tones from spinning metal discs and electrical current — no vibrating string, no blown air, no resonant body at all. He called it the Telharmonium . It was a commercial failure — it interfered with telephone lines across Manhattan — but mathematically, it was a revolution. For the first time, sound was built from electricity, and electricity obeys equations.",
+      "text_ko": "전류가 소리 가 되었을 때. 해먼드 드로바 시뮬레이터. 테레민 놀이터. 전기가 노래를 배우다, 1897–1960년대 1897년, 30세의 발명가 대디어스 캐힐은 200톤짜리 기계의 특허를 출원했습니다. 건물 한 층을 통째로 차지하는 이 기계는 그 어떤 악기도 해본 적 없는 일을 했습니다: 회전하는 금속 원반 과 전류만으로 음악적 음을 만들어낸 것 — 진동하는 현도, 불어넣는 공기도, 공명체도 없이. 그는 이것을 텔하모니움 이라 불렀습니다. 맨해튼 전역의 전화선에 간섭을 일으켜 상업적으로는 실패했지만, 수학적으로는 혁명이었습니다. 처음으로 소리가 전기로 만들어졌고, 전기는 방정식에 따릅니다. 1897 (Thaddeus Cahill) 회전하는 톤 휠로 순수한 사인파를 전기적으로 생성하는 200톤 기계. 각 휠의 돌기가 코일 옆에서 회전하면 정확한 주파수의 교류가 발생합니다. 기계적 가산 합성. 1920 (Léon Theremin) 만지지 않고 연주하는 악기. 두 안테나가 연주자의 손을 감지 — 하나는 두 오실레이터의 비트 주파수로 음높이를, 다른 하나는 음량을 제어합니다. 순수한 전자기적 교감. 1935 Organ (Laurens Hammond) 캐힐의 아이디어가 소형화된 것. 캐비닛 안 91개의 회전 톤 휠과 배음을 조합하는 드로바가 장착되어 — 연주자가 실시간 가산 합성을 수행할 수 있게 했습니다. 재즈, 가스펠, 록은 다시는 예전처럼 들리지 않았습니다. 1964 Synthesizer (Robert Moog) 패러다임의 전환. 배음을 더하는 대신, 배음이 풍부한 파형에서 빼는 것.",
       "scroll_to": "#sec-02",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 3,
-      "text_en": "Section 3. Voltage as Music. Robert Moog reversed everything. Instead of adding harmonics, start with something already rich and carve away what you don't want. This is subtractive synthesis. Three voltage-controlled modules — oscillator, filter, and amplifier with envelope — gave musicians an entire universe of sound.",
-      "text_ko": "섹션 3. 전압이 곧 음악. 로버트 무그는 모든 것을 뒤집었습니다. 고조파를 더하는 대신, 이미 풍부한 것에서 출발해 원하지 않는 것을 깎아내세요. 이것이 감산 합성입니다. 세 개의 전압 제어 모듈 — 오실레이터, 필터, 그리고 엔벨로프가 있는 앰프 — 이 음악가에게 소리의 온 우주를 열어주었습니다.",
+      "text_en": "Moog and the Art of Subtraction. Build Your Own Synth Patch. 03 — Voltage as Music, 1964–1980s Robert Moog had an insight that reversed everything. Instead of adding harmonics to build complexity, start with something already rich — a sawtooth wave, a square wave — and carve away what you don't want. This is subtractive synthesis — the dual of Fourier's additive theorem. A low-pass filter is a convolution in the time domain, a multiplication in the frequency domain. Three voltage-controlled modules, patched with cables, gave musicians an entire universe of sound: Shape a sound from oscillator → filter → envelope. Each module transforms the signal.",
+      "text_ko": "무그와 뺄셈 의 예술. 나만의 신스 패치 만들기. 전압이 음악이 되다, 1964–1980년대 로버트 무그는 모든 것을 뒤집는 통찰을 가졌습니다. 복잡성을 쌓기 위해 배음을 더하는 대신, 이미 풍부한 것 — 톱니파, 사각파 — 에서 시작해 원하지 않는 것을 깎아내는 것. 이것이 감산 합성 입니다 — 푸리에 가산 정리의 쌍대(dual). 저역통과 필터는 시간 영역에서의 합성곱, 주파수 영역에서의 곱셈입니다. 전압 제어 모듈 세 개를 케이블로 연결하면, 음악가에게 소리의 우주가 열렸습니다: 오실레이터 → 필터 → 엔벨로프로 소리를 빚어보세요. 각 모듈이 신호를 변환합니다. VCO 전압 제어 오실레이터 50% 오실레이터 출력 ↓ VCF 전압 제어 필터 주파수 응답 — 필터가 컷오프 위의 배음을 깎아냅니다 ↓ VCA + ENV 앰프 & 엔벨로프 10 ms 200 ms 60% 300 ms 파형 (필터 후) 스펙트럼 파형 Sawtooth Cutoff 엔벨로프 10/200/60/300 필터링의 수학. 저역통과 필터는 시간 영역에서 합성곱입니다. 주파수 영역에서는 곱셈 — 각 배음이 전달함수에 의해 스케일링됩니다. 공명에서 필터는 컷오프 근처의 주파수를 증폭 시킵니다 — 마치 스스로 노래하듯. 무그의 전설적인 래더 필터는 4단 RC 스테이지로, 총 /옥타브 — 톱니파를 플루트처럼 들리게 할 만큼 가파릅니다. ADSR: 음표의 형태. 어쿠스틱 악기는 자연스러운 역학을 가집니다 — 피아노 음은 강하게 타격되고 사라지며, 바이올린은 무한히 지속될 수 있습니다.",
       "scroll_to": "#sec-03",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 4,
-      "text_en": "Section 4. FM Synthesis — A Beautiful Accident. In 1967, John Chowning pushed vibrato speed faster and faster until entirely new tones emerged — metallic, bell-like, shimmering. One oscillator modulates another's frequency so fast that new sidebands blossom. Yamaha built the DX7 from this single equation, and it defined a decade of music.",
-      "text_ko": "섹션 4. FM 합성 — 아름다운 우연. 1967년, 존 초닝은 비브라토 속도를 점점 빠르게 올렸고, 완전히 새로운 음이 등장했습니다 — 금속성의, 종 같은, 찬란한 소리. 하나의 오실레이터가 다른 것의 주파수를 너무 빠르게 변조해 새로운 측대역이 피어납니다. 야마하는 이 하나의 방정식으로 DX7을 만들었고, 10년의 음악을 정의했습니다.",
+      "text_en": "FM Synthesis: A Beautiful Accident. FM Synthesis Explorer. 04 — When Bells Became Possible, 1973 In 1967, composer John Chowning was experimenting with vibrato at Stanford. He pushed the wobble speed faster and faster — well past what any human hand could achieve. Something strange happened: the wobble vanished, and entirely new tones emerged. Metallic, bell-like, shimmering sounds that no subtractive synthesizer could produce. He had stumbled upon frequency modulation synthesis . One oscillator (the modulator ) vibrates the pitch of another (the carrier ) so fast that new frequencies — sidebands — blossom across the spectrum: y(t) = sin( 2π·f c ·t + I · sin(2π·f m ·t) ) The modulation index I controls how many sidebands bloom.",
+      "text_ko": "FM 합성: 아름다운 우연. FM 합성 탐험기. 종소리가 가능해진 날, 1973 1967년, 작곡가 존 초우닝은 스탠퍼드에서 비브라토 실험을 하고 있었습니다. 떨림의 속도를 점점 더 올려갔습니다 — 어떤 인간의 손도 달성할 수 없는 속도까지. 이상한 일이 벌어졌습니다: 떨림이 사라지고, 완전히 새로운 음이 나타났습니다. 금속적이고, 종소리 같고, 반짝이는 소리 — 감산 합성으로는 절대 만들 수 없는 소리. 그는 주파수 변조(FM) 합성 을 우연히 발견한 것이었습니다. 하나의 오실레이터( 변조기 )가 다른 오실레이터( 캐리어 )의 음높이를 너무 빠르게 흔들어서, 새로운 주파수인 측대역(sideband) 이 스펙트럼 전체에 피어납니다: y(t) = sin( 2π·f c ·t + I · sin(2π·f m ·t) ) 변조 지수 I 가 측대역의 수를 결정합니다. 낮은 값은 부드러운 따뜻함을, 높은 값은 주파수의 폭발 — 종, 징, 금속 충돌음을 만듭니다. 정수비는 하모닉 음을, 무리수비는 타격된 금속의 반짝이는 비조화 음색을 만들어냅니다. 야마하가 초우닝의 특허를 라이선스하여 DX7 (1983)을 만들었습니다 — 역사상 가장 많이 팔린 신시사이저. 일렉트릭 피아노와 종소리는 이 하나의 방정식만으로 10년을 정의했습니다. 캐리어, 변조기 비율, 변조 깊이를 조절하여 스펙트럼을 빚어보세요 변조기 → 캐리어 → 출력 Harmonic 1 : 1 Waveform 스펙트럼 (측대역) f c f m 변조지수 (I) 측대역 ~5 정수비가 조화롭게 들리는 이유.",
       "scroll_to": "#sec-04",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 5,
-      "text_en": "Section 5. Stealing Reality. Sampling and wavetable synthesis took a different approach: instead of simulating from equations, just record the real thing. Slice a recording into tiny grains, stretch and reshape them. Play back real waveforms at different pitches. The mathematics of interpolation and granular processing gave perfect realism — at the cost of creative freedom.",
-      "text_ko": "섹션 5. 현실을 훔치다. 샘플링과 웨이브테이블 합성은 다른 접근법을 취했습니다: 방정식으로 시뮬레이션하는 대신, 실제를 녹음하면 됩니다. 녹음을 작은 그레인으로 잘라 늘리고 재성형합니다. 실제 파형을 다른 높이로 재생합니다. 보간과 그래뉼러 처리의 수학이 완벽한 사실성을 제공했지만 — 창의적 자유를 대가로 치뤘습니다.",
+      "text_en": "Wavetable Synthesis: Frozen Moments. Wavetable Morph. 05 — Stealing Reality, 1980s–2000s Additive builds from sine waves. Subtractive sculpts with filters. FM breeds sidebands from coupled oscillators. But there was always a gap: none of these could truly capture the sound of a real instrument. What if you could record a single cycle of a waveform — one complete oscillation of a violin, a human voice, a breaking wave — and replay it? Wavetable synthesis stores a collection of single-cycle waveforms in a table, then sweeps through them smoothly so the timbre morphs in real time. Each position is a different spectral snapshot; sliding between them creates textures that evolve continuously — sounds no acoustic instrument could ever produce. Drag the slider to morph between waveforms.",
+      "text_ko": "웨이브테이블 합성: 얼어붙은 순간들. 웨이브테이블 모프. 현실을 훔치다, 1980–2000년대 가산 합성은 사인파로 쌓고, 감산 합성은 필터로 깎고, FM 합성은 결합된 오실레이터에서 측대역을 낳습니다. 하지만 늘 빈틈이 있었습니다: 실제 악기의 소리를 진정으로 포착 할 수 없었습니다. 파형의 단일 주기 — 바이올린의 한 진동, 사람 목소리의 한 파동, 부서지는 파도의 한 순간 — 을 녹음하고 재생할 수 있다면? 웨이브테이블 합성 은 단일 주기 파형의 컬렉션을 테이블에 저장한 후 부드럽게 스윕하여 음색이 실시간으로 변형됩니다. 각 위치는 다른 스펙트럼 스냅샷이며, 그 사이를 미끄러지면 끊임없이 진화하는 텍스처가 만들어집니다 — 어떤 어쿠스틱 악기도 만들 수 없는 소리. 슬라이더를 드래그하여 파형 사이를 변형해 보세요. 각 위치는 다른 스펙트럼 스냅샷입니다. 0% 현재 파형 주기 Position 0% Character Sine Harmonics 1 나이퀴스트 경계. 파형을 충실히 포착하려면 최고 주파수의 주기당 최소 두 번 샘플링해야 합니다 — 나이퀴스트–섀넌 샘플링 정리(1949). CD 오디오는 초당 44,100번 샘플링하여 22,050Hz까지 포착합니다. 이보다 느리면 고주파가 앨리어스 로 접혀 돌아와 유령 같은 팬텀 음을 만듭니다. 충분히 빠르게 샘플링하면 아무것도 잃지 않지만, 너무 느리면 현실이 왜곡됩니다. 웨이브테이블에서 신경망으로. 웨이브테이블은 룩업 테이블 — 보간되는 스펙트럼 스냅샷의 이산 집합입니다.",
       "scroll_to": "#sec-05",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 6,
-      "text_en": "Section 6. The Uncanny Valley of Sound. A perfect synthesized tone can sound wrong precisely because it is too perfect. Real instruments have imperfections — slight pitch drift, bow noise, key mechanics, room resonance. These micro-imperfections are what make a sound feel alive. Toggle them on and off to hear the difference between sterile and living sound.",
-      "text_ko": "섹션 6. 소리의 불쾌한 골짜기. 완벽하게 합성된 음은 너무 완벽하기에 오히려 이상하게 들릴 수 있습니다. 실제 악기에는 불완전함이 있습니다 — 미세한 음정 드리프트, 활의 소음, 건반 메커니즘, 공간 잔향. 이런 미세한 불완전함이 소리에 생명을 부여합니다. 이들을 켜고 끄며 무균적 소리와 살아있는 소리의 차이를 들어보세요.",
+      "text_en": "Imperfection Is the Point. The Warmth Machine. 06 — The Uncanny Valley of Sound Here is the paradox. A mathematically perfect sawtooth wave, passed through a perfect filter with a perfect envelope — sounds lifeless . Cold. Plastic. The ear knows something is wrong, even when the brain can't say what. Real instruments are imperfect. A violin bow catches and releases in unpredictable micro-rhythms. Analog oscillators drift — their pitch wanders by fractions of a percent as components warm up. These aren't flaws. They are the mathematics of being alive . Toggle each imperfection on and off. Listen to how the tone becomes warmer and more alive.",
+      "text_ko": "불완전함이 핵심이다. 따뜻함의 기계. 소리의 불쾌한 골짜기 역설이 있습니다. 수학적으로 완벽한 톱니파를 완벽한 필터와 완벽한 엔벨로프에 통과시키면 — 생명 없는 소리가 납니다. 차갑고, 플라스틱 같은. 뇌가 뭐가 잘못된 건지 말 못해도, 귀는 알고 있습니다. 실제 악기는 불완전합니다. 바이올린 활은 예측 불가능한 미세 리듬으로 걸리고 풀립니다. 아날로그 오실레이터는 표류(drift) 합니다 — 부품이 데워지면서 음높이가 미세하게 떠돕니다. 이것은 결함이 아닙니다. 살아있음 의 수학입니다. 각 불완전함을 켜고 꺼 보세요. 음색이 어떻게 더 따뜻하고 살아있게 되는지 들어보세요. 클린 신호 오실레이터 표류 ±% 랜덤 피치 변동 — 아날로그 오실레이터는 결코 완벽히 가만히 있지 않습니다 코러스 (디튜닝) ±3센트 차이의 두 복사본 — 현악 섹션이 풍성하게 들리는 것과 같은 원리 테이프 새추레이션 소프트 클리핑 — 피크를 둥글게 하고 미묘한 짝수 배음을 더합니다 노이즈 플로어 희미한 아날로그 히스 — 회로를 흐르는 전자들의 유령 스테레오 스프레드 약간의 좌/우 타이밍 차이 — 어쿠스틱 악기는 점이 아니라 공간으로 소리를 방사합니다 활성 효과 0 / 5 Character Digital 따뜻함의 수학. 아날로그 따뜻함은 주관적 신비주의가 아닙니다 — 정밀한 스펙트럼 서명이 있습니다. 테이프 새추레이션은 입력의 짝수 배음 을 생성하는 소프트 클리핑 함수(보통 쌍곡 탄젠트)입니다. 사인파가 tanh()를 통과하면 2차, 4차 배음이 점차 감소하는 진폭으로 추가됩니다.",
       "scroll_to": "#sec-06",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 7,
-      "text_en": "Section 7. The Living Instrument. Today, synthesizers are no longer trying to replace acoustic instruments — they have become instruments in their own right. Neural synthesis, physical modeling, and AI-driven sound design create timbres that could never exist in the physical world. The dream of a perfect tone has been answered — not by achieving perfection, but by embracing the infinite.",
-      "text_ko": "섹션 7. 살아있는 악기. 오늘날 신시사이저는 더 이상 어쿠스틱 악기를 대체하려 하지 않습니다 — 그 자체로 고유한 악기가 되었습니다. 신경 합성, 물리적 모델링, 그리고 AI 기반 사운드 디자인은 물리적 세계에서 절대 존재할 수 없는 음색을 창조합니다. 완벽한 음색의 꿈은 답을 얻었습니다 — 완벽을 달성해서가 아니라, 무한을 포용함으로써.",
+      "text_en": "Where the Synthesizer Lives Now. 07 — The Living Instrument, 2010s–Present The synthesizer is no longer a single instrument — it is an ecosystem. Hardware has returned with a vengeance in the Eurorack modular format: thousands of small modules from hundreds of manufacturers, patched together with cables exactly as Moog envisioned, but with digital precision inside. Software synthesizers like Serum have made wavetable morphing accessible to anyone with a laptop. And neural networks have begun to blur the line between synthesis and reality. Hardware · Eurorack Modular Synthesis Renaissance The Eurorack format (3U height, ±12V power) has become the industry standard, reviving modular synthesis with thousands of freely combinable modules.",
+      "text_ko": "오늘날 신시사이저 는 어디에. 살아있는 악기, 2010년대–현재 신시사이저는 더 이상 하나의 악기가 아닙니다 — 하나의 생태계입니다. 유로랙 모듈러 포맷으로 하드웨어가 강력하게 귀환했습니다: 수백 제조사의 수천 개 소형 모듈이 무그가 상상했던 것처럼 케이블로 연결되지만, 내부에는 디지털 정밀함이 있습니다. Serum 같은 소프트웨어 신시사이저는 노트북만 있으면 누구나 웨이브테이블 모핑에 접근할 수 있게 했습니다. 그리고 신경망이 합성과 현실의 경계를 흐리기 시작했습니다. Hardware · Eurorack Modular Synthesis Renaissance 유로랙 포맷(높이 3U, 전원 ±12V)이 업계 표준이 되면서, 수천 개의 자유롭게 조합 가능한 모듈로 모듈러 합성이 부활했습니다. 각 모듈은 하나의 수학적 함수 — 오실레이터, 필터, 시퀀서, 랜덤 소스 — 를 물리적으로 구현합니다. Software · Wavetable Xfer Serum & the Software Revolution Serum(2014)은 웨이브테이블 합성을 대중화했습니다. 사용자가 직접 웨이브테이블을 그리고 수학적 변환을 실시간으로 적용할 수 있습니다. 현대 전자음악 프로덕션의 사실상 표준입니다. Hardware · Flagship Moog One — 아날로그의 정점 Moog One(2018)은 폴리포닉 아날로그 합성의 정점입니다. 16보이스 각각에 3개의 아날로그 오실레이터, 2개의 래더 필터, 독립적인 ADSR 엔벨로프가 있으며, 이 모든 것이 디지털 제어 아래 아날로그 회로로 동작합니다.",
       "scroll_to": "#sec-07",
       "pause_after": true
     },
     {
       "id": 8,
-      "text_en": "Closing. Every sound you heard on this page was generated from mathematics — no recordings, just equations made audible. From organ pipes carved in tin to neural networks trained on millions of sounds, the quest continues. The perfect tone was never a destination. It was always the search itself.",
-      "text_ko": "마무리. 이 페이지에서 들은 모든 소리는 수학에서 생성되었습니다 — 녹음 없이, 방정식이 소리가 된 것입니다. 주석으로 깎은 오르간 파이프에서 수백만 소리로 훈련된 신경망까지, 탐구는 계속됩니다. 완벽한 음색은 결코 목적지가 아니었습니다. 언제나 탐색 그 자체였습니다.",
+      "text_en": "So — Is There a Perfect Tone?. References. Organ builders thought perfection meant the right combination of pipes Hammond let musicians write Fourier series with their fingertips Moog proved that beauty is what remains after you subtract Chowning discovered an infinite palette inside one equation And then we learned the secret: perfection was what we needed to escape A pure sine wave is the simplest possible sound — and the most boring one in the world. Beauty lives in the structured departure from perfection: in the drift, the noise, the warmth, the life. Which one moves you? \"A synthesiser is a constantly unfinished instrument.",
+      "text_ko": "그래서 — 완벽한 음색은 존재하는가?. 참고문헌. 오르간 제작자들 은 완벽함이란 올바른 파이프의 조합이라 생각했습니다 해먼드 는 음악가들이 손끝으로 푸리에 급수를 쓸 수 있게 했습니다 무그 는 빼고 남은 것이 아름다움임을 증명했습니다 초우닝 은 하나의 방정식 안에서 무한한 팔레트를 발견했습니다 그리고 우리는 비밀을 배웠습니다: 완벽함이야말로 벗어나야 할 것이었다는 것을 순수한 사인파는 가능한 가장 단순한 소리이며 — 세상에서 가장 지루한 소리이기도 합니다. 아름다움은 완벽함으로부터의 구조화된 이탈 속에 삽니다: 표류, 노이즈, 따뜻함, 그리고 생명 속에. 어떤 소리가 마음을 움직이나요? You finish it when you tweak it, and play around with it, and decide how to use it.\" John Chowning, \" Audio Spectra by Means of Frequency Modulation,\" Journal of the Audio Engineering Society 21(7), 1973.",
       "scroll_to": "#sec-closing",
       "pause_after": true
     }

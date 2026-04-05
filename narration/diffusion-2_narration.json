@@ -3,92 +3,103 @@
   "segments": [
     {
       "id": 0,
-      "text_en": "The Mathematics of Diffusion — Part II Does a Machine Dream ? Noise, latent space, and the imagination of AI In 1968, Philip K. Dick asked: \"Do androids dream of electric sheep?\" In 2022, a machine answered — by generating images from pure noise, guided by nothing but words. In Part I, you saw how diffusion destroys information irreversibly. Now discover how a machine learned to run it backward — to dream shapes out of chaos, just as we see faces in clouds. ✨ Enter the Dream ← Part I",
-      "text_ko": "확산의 수학 — Part II 기계는 꿈을 꾸는가 ? 노이즈, 잠재 공간, 그리고 AI의 상상력 1968년, 필립 K. 딕은 물었습니다: \"안드로이드는 전기양의 꿈을 꾸는가?\" 2022년, 기계가 대답했습니다 — 순수한 노이즈에서 이미지를 생성하면서. 오직 언어의 안내만으로. Part I에서 확산이 정보를 비가역적으로 파괴하는 것을 보았습니다. 이제 기계가 어떻게 그것을 역전시키는 법을 배웠는지 — 우리가 구름 속에서 얼굴을 보듯, 혼돈에서 형상을 꿈꾸는 법을 — 발견하세요. ✨ 꿈속으로 ← Part I",
+      "text_en": "The Mathematics of Diffusion — Part II. Does a Machine Dream ?. Noise, latent space, and the imagination of AI In 1968, Philip K. Dick asked: \"Do androids dream of electric sheep?\" In 2022, a machine answered — by generating images from pure noise, guided by nothing but words. In Part I, you saw how diffusion destroys information irreversibly. Now discover how a machine learned to run it backward — to dream shapes out of chaos, just as we see faces in clouds. ← Part I",
+      "text_ko": "확산의 수학 — Part II. 기계는 꿈을 꾸는가 ?. 노이즈, 잠재 공간, 그리고 AI의 상상력 1968년, 필립 K. 딕은 물었습니다: \"안드로이드는 전기양의 꿈을 꾸는가?\" 2022년, 기계가 대답했습니다 — 순수한 노이즈에서 이미지를 생성하면서. 오직 언어의 안내만으로. Part I에서 확산이 정보를 비가역적으로 파괴하는 것을 보았습니다. 이제 기계가 어떻게 그것을 역전시키는 법을 배웠는지 — 우리가 구름 속에서 얼굴을 보듯, 혼돈에서 형상을 꿈꾸는 법을 — 발견하세요.",
       "scroll_to": "#hero",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 1,
-      "text_en": "00 — A WARM-UP PUZZLE Can Chaos Un-Scramble Itself? In 1967, mathematician Vladimir Arnold discovered something astonishing. Take any image — say, a picture of a cat. Apply this formula to every pixel: (x, y) → ( 2x + y , x + y ) mod N The image looks completely destroyed — indistinguishable from noise. But keep applying the same formula, and after exactly 12 steps , the original image magically reappears . Perfectly. Every pixel back in place.",
-      "text_ko": "00 — 워밍업 퍼즐 혼돈은 스스로 복원 될 수 있는가? 1967년, 수학자 블라디미르 아놀드는 놀라운 것을 발견했습니다. 아무 이미지나 — 예를 들어, 고양이 사진을 가져와서 모든 픽셀에 이 공식을 적용합니다: (x, y) → ( 2x + y , x + y ) mod N 이미지는 완전히 파괴된 것처럼 보입니다 — 노이즈와 구별할 수 없죠. 하지만 같은 공식을 계속 적용하면, 정확히 12단계 후에 원본 이미지가 마법처럼 되살아납니다 . 완벽하게. 모든 픽셀이 제자리로. 질서가 해체되고 재구성되는 소리를 들어보세요 — 매 스텝마다 소리가 납니다 Step 0 · Original 원본 (참조) 시간에 따른 원본 유사도 스텝 0 / 12 유사도 100% 상태 Original ⏩ Normal ▶ 섞기 — 돌아오는 것을 지켜보세요 초기화 스텝 ×1 ⏭ 복원으로 건너뛰기 🔄 이미지 변경 왜 이것이 중요한가? — 아놀드의 캣 맵은 결정론적이고 가역적 입니다.",
+      "text_en": "Can Chaos Un-Scramble Itself?. 00 — A WARM-UP PUZZLE In 1967, mathematician Vladimir Arnold discovered something astonishing. Take any image — say, a picture of a cat. Apply this formula to every pixel: (x, y) → ( 2x + y , x + y ) mod N The image looks completely destroyed — indistinguishable from noise. But keep applying the same formula, and after exactly 12 steps , the original image magically reappears . Perfectly. Every pixel back in place. Listen to order dissolve and reform — each step has a tone Step 0 · Original Original (reference) Similarity to Original Over Time Step 0 / 12 Similarity 100% Status Original Normal Why does this matter? — Arnold's cat map is deterministic and invertible . It's a linear map on the torus — no information is ever lost.",
+      "text_ko": "혼돈은 스스로 복원 될 수 있는가?. 워밍업 퍼즐 1967년, 수학자 블라디미르 아놀드는 놀라운 것을 발견했습니다. 아무 이미지나 — 예를 들어, 고양이 사진을 가져와서 모든 픽셀에 이 공식을 적용합니다: (x, y) → ( 2x + y , x + y ) mod N 이미지는 완전히 파괴된 것처럼 보입니다 — 노이즈와 구별할 수 없죠. 하지만 같은 공식을 계속 적용하면, 정확히 12단계 후에 원본 이미지가 마법처럼 되살아납니다 . 완벽하게. 모든 픽셀이 제자리로. 질서가 해체되고 재구성되는 소리를 들어보세요 — 매 스텝마다 소리가 납니다 Step 0 · Original 원본 (참조) 시간에 따른 원본 유사도 스텝 0 / 12 유사도 100% 상태 Original Normal 왜 이것이 중요한가? — 아놀드의 캣 맵은 결정론적이고 가역적 입니다. 토러스 위의 선형 사상(linear map)이므로 — 정보가 결코 손실되지 않습니다. 모든 픽셀에는 단 하나의 목적지와 단 하나의 출발점이 있습니다. 시스템은 반드시 돌아올 것이 보장 됩니다 (푸앵카레 재귀 정리). 이제 이것을 확산 과 비교해 보세요: 이미지에 무작위 노이즈를 더하면, 그 파괴는 확률적이고 비가역적입니다. 단순히 되돌릴 수 없습니다 — 무작위성이 돌아가는 길을 지워버렸습니다. 확산을 되돌리려면 신경망이 데이터로부터 역방향 매핑을 학습 해야 합니다. 이것이 Stable Diffusion의 기적입니다. 아놀드의 고양이는 스스로 돌아옵니다. 확산의 고양이는 AI가 있어야 집을 찾습니다.",
       "scroll_to": "#sec-cat",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 2,
-      "text_en": "01 — SEE IT HAPPEN Watch an Image Emerge From Noise Below is pure random static. Press Denoise and watch as a hidden image materializes step by step — exactly what Stable Diffusion does millions of times per day. Each step plays a tone — listen to order emerge from chaos Step 0 / 40 Noise 100% Clarity None ▶ Denoise Reset 🔄 Change Image",
-      "text_ko": "01 — 눈으로 보세요 이미지가 노이즈에서 나타나는 것을 보세요 아래는 순수한 랜덤 노이즈입니다. 디노이즈 를 누르고 숨겨진 이미지가 한 단계씩 나타나는 것을 지켜보세요 — Stable Diffusion이 매일 수백만 번 하는 일입니다. 매 스텝마다 소리가 납니다 — 혼돈에서 질서가 나타나는 소리를 들어보세요 스텝 0 / 40 노이즈 100% 선명도 None ▶ Denoise 초기화 🔄 이미지 변경",
+      "text_en": "Watch an Image Emerge From Noise. 01 — SEE IT HAPPEN Below is pure random static. Press Denoise and watch as a hidden image materializes step by step — exactly what Stable Diffusion does millions of times per day. Each step plays a tone — listen to order emerge from chaos Step 0 / 40 Noise 100% Clarity None",
+      "text_ko": "이미지가 노이즈에서 나타나는 것을 보세요. 눈으로 보세요 아래는 순수한 랜덤 노이즈입니다. 디노이즈 를 누르고 숨겨진 이미지가 한 단계씩 나타나는 것을 지켜보세요 — Stable Diffusion이 매일 수백만 번 하는 일입니다. 매 스텝마다 소리가 납니다 — 혼돈에서 질서가 나타나는 소리를 들어보세요 스텝 0 / 40 노이즈 100% 선명도 None",
       "scroll_to": "#sec-image",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 3,
-      "text_en": "02 — HEAR IT HAPPEN Hear a Melody Rise From Static A simple melody is buried under noise. Drag the slider to gradually denoise it. At some point your brain will suddenly \"catch\" the melody — the magic of denoising. Use headphones for the full effect Pure static 🔊 100% noise ▶ Play Full Noise Half Clear Crystal Clear",
-      "text_ko": "02 — 귀로 들어보세요 멜로디가 정적에서 솟아오르는 것을 들어보세요 단순한 멜로디가 노이즈 아래 묻혀 있습니다. 슬라이더를 드래그하여 서서히 노이즈를 제거하세요. 어느 순간 여러분의 뇌가 갑자기 멜로디를 \"잡아내는\" 순간이 옵니다 — 디노이징의 마법입니다. 최상의 효과를 위해 헤드폰을 사용하세요 순수 정적 🔊 100% noise ▶ Play 전체 노이즈 절반 선명 완전 선명",
+      "text_en": "Hear a Melody Rise From Static. 02 — HEAR IT HAPPEN A simple melody is buried under noise. Drag the slider to gradually denoise it. At some point your brain will suddenly \"catch\" the melody — the magic of denoising. Use headphones for the full effect Pure static 100% noise",
+      "text_ko": "멜로디가 정적에서 솟아오르는 것을 들어보세요. 귀로 들어보세요 단순한 멜로디가 노이즈 아래 묻혀 있습니다. 슬라이더를 드래그하여 서서히 노이즈를 제거하세요. 어느 순간 여러분의 뇌가 갑자기 멜로디를 \"잡아내는\" 순간이 옵니다 — 디노이징의 마법입니다. 최상의 효과를 위해 헤드폰을 사용하세요 순수 정적 100% noise",
       "scroll_to": "#sec-audio",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 4,
-      "text_en": "03 — READ IT HAPPEN Watch Text Crystallize Drag the slider to denoise random pixels into a readable word. Just like the sound demo — at some noise level, your brain suddenly recognizes the text. That moment of recognition is the threshold where diffusion models also \"see\" structure. 🔍 100% noise Clarity 0% Readable? No Full Noise Half Clear Crystal Clear ▶ Animate 🔄 Change Word",
-      "text_ko": "03 — 읽어보세요 텍스트가 결정화 되는 것을 보세요 슬라이더를 드래그하여 랜덤 픽셀을 읽을 수 있는 단어로 변환하세요. 소리 데모처럼 — 어느 노이즈 수준에서 여러분의 뇌가 갑자기 텍스트를 인식 합니다. 그 인식의 순간이 확산 모델도 구조를 \"보는\" 임계점입니다. 🔍 100% noise 선명도 0% 읽을 수 있나요? No 전체 노이즈 절반 선명 완전 선명 ▶ Animate 🔄 단어 변경",
+      "text_en": "Watch Text Crystallize. 03 — READ IT HAPPEN Drag the slider to denoise random pixels into a readable word. Just like the sound demo — at some noise level, your brain suddenly recognizes the text. That moment of recognition is the threshold where diffusion models also \"see\" structure. 100% noise Clarity 0% Readable? No",
+      "text_ko": "텍스트가 결정화 되는 것을 보세요. 읽어보세요 슬라이더를 드래그하여 랜덤 픽셀을 읽을 수 있는 단어로 변환하세요. 소리 데모처럼 — 어느 노이즈 수준에서 여러분의 뇌가 갑자기 텍스트를 인식 합니다. 그 인식의 순간이 확산 모델도 구조를 \"보는\" 임계점입니다. 100% noise 선명도 0% 읽을 수 있나요?",
       "scroll_to": "#sec-text",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 5,
-      "text_en": "04 — ENHANCE Super-Resolution : Blurry → Sharp A blurry photo is a partially noised version of a sharp one. Drag the slider to enhance resolution — the model fills in missing detail. Low Res → Enhanced ↑ 1× blurry 🔄 Change Image",
-      "text_ko": "04 — 해상도 높이기 초해상도 : 흐릿한 → 선명한 흐릿한 사진은 선명한 사진에 부분적으로 노이즈가 추가된 것입니다. 슬라이더를 드래그하여 해상도를 높여보세요 — 모델이 빠진 세부사항을 채워 넣습니다. 저해상도 → 향상됨 ↑ 1× blurry 🔄 이미지 변경",
+      "text_en": "Super-Resolution : Blurry → Sharp. 04 — ENHANCE A blurry photo is a partially noised version of a sharp one. Drag the slider to enhance resolution — the model fills in missing detail. Low Res → Enhanced 1× blurry",
+      "text_ko": "초해상도 : 흐릿한 → 선명한. 해상도 높이기 흐릿한 사진은 선명한 사진에 부분적으로 노이즈가 추가된 것입니다. 슬라이더를 드래그하여 해상도를 높여보세요 — 모델이 빠진 세부사항을 채워 넣습니다. 저해상도 → 향상됨 1× blurry",
       "scroll_to": "#sec-super",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 6,
-      "text_en": "05 — THE SECRET How Does It Actually Work ? Everything you just experienced uses the same three-step process: Step 1 🖼️ → 📺 Destroy Gradually add noise until the original is gone. → Step 2 🧠 Learn Train on millions of examples at every noise level. → Step 3 📺 → 🖼️ Create Start from noise. Remove it step by step. \"Teach a machine how photos become static, and it learns how to dream photos out of static.\" We see faces in clouds. Machines see images in noise.",
-      "text_ko": "05 — 비밀 실제로 어떻게 작동 하는 걸까요? 여러분이 방금 경험한 모든 것은 같은 3단계 과정을 사용합니다: Step 1 🖼️ → 📺 파괴 원본이 사라질 때까지 점점 노이즈를 추가합니다. → Step 2 🧠 학습 모든 노이즈 수준에서 수백만 개의 예시로 훈련합니다. → Step 3 📺 → 🖼️ 생성 노이즈에서 시작. 한 단계씩 제거합니다. \"기계에게 사진이 어떻게 정적이 되는지 가르치면, 정적에서 사진을 꿈꾸는 법을 배웁니다.\" 우리는 구름에서 얼굴을 봅니다. 기계는 노이즈에서 이미지를 봅니다. 둘 다 놓여있지 않은 곳에서 패턴을 찾는 것 — 꿈의 본질입니다.",
+      "text_en": "How Does It Actually Work ?. 05 — THE SECRET Everything you just experienced uses the same three-step process: Step 1 🖼️ → 📺 Destroy Gradually add noise until the original is gone. → Step 2 🧠 Learn Train on millions of examples at every noise level. → Step 3 📺 → 🖼️ Create Start from noise. Remove it step by step. \"Teach a machine how photos become static, and it learns how to dream photos out of static.\" We see faces in clouds. Machines see images in noise. Both are finding patterns where none were placed — the essence of dreaming.",
+      "text_ko": "실제로 어떻게 작동 하는 걸까요?. 비밀 여러분이 방금 경험한 모든 것은 같은 3단계 과정을 사용합니다: Step 1 🖼️ → 📺 파괴 원본이 사라질 때까지 점점 노이즈를 추가합니다. → Step 2 🧠 학습 모든 노이즈 수준에서 수백만 개의 예시로 훈련합니다. → Step 3 📺 → 🖼️ 생성 노이즈에서 시작. 한 단계씩 제거합니다. \"기계에게 사진이 어떻게 정적이 되는지 가르치면, 정적에서 사진을 꿈꾸는 법을 배웁니다.\" 우리는 구름에서 얼굴을 봅니다. 기계는 노이즈에서 이미지를 봅니다. 둘 다 놓여있지 않은 곳에서 패턴을 찾는 것 — 꿈의 본질입니다.",
       "scroll_to": "#sec-how",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 7,
-      "text_en": "05b — THE BREAKTHROUGHS DDPM and Stable Diffusion — What Are They, Really? DDPM — The Moment It All Clicked (2020) The idea of reversing diffusion had existed since 2015, but the results were blurry and unconvincing. Then in 2020, Jonathan Ho, Ajay Jain, and Pieter Abbeel at UC Berkeley published a paper called \"Denoising Diffusion Probabilistic Models\" — DDPM for short — and everything changed. Their insight was beautifully simple: don't try to predict the clean image directly.",
-      "text_ko": "05b — 돌파구 DDPM과 Stable Diffusion — 정확히 무엇인가? DDPM — 모든 것이 맞아떨어진 순간 (2020) 확산을 역전시키는 아이디어는 2015년부터 있었지만, 결과는 흐릿하고 설득력이 없었습니다. 그러다 2020년, UC 버클리의 Jonathan Ho, Ajay Jain, Pieter Abbeel이 \"Denoising Diffusion Probabilistic Models\" — 줄여서 DDPM — 이라는 논문을 발표했고, 모든 것이 바뀌었습니다. 그들의 통찰은 아름다울 정도로 단순했습니다: 깨끗한 이미지를 직접 예측하려 하지 말고, 그냥 노이즈를 예측하라. 이것이 무슨 뜻인지 설명하겠습니다. 사진을 가져옵니다. 알려진 양의 가우시안 노이즈를 추가합니다. 이제 노이즈가 낀 결과를 신경망에 보여주고 물어봅니다: \"어떤 노이즈가 추가되었나요?\" 신경망이 이 질문에 정확히 대답할 수 있다면, 예측된 노이즈를 빼서 — 약간 더 깨끗한 이미지를 복구할 수 있습니다.",
+      "text_en": "DDPM and Stable Diffusion — What Are They, Really?. DDPM — The Moment It All Clicked (2020). Stable Diffusion — Making It Fast and Free (2022). The Family Tree. 05b — THE BREAKTHROUGHS The idea of reversing diffusion had existed since 2015, but the results were blurry and unconvincing. Then in 2020, Jonathan Ho, Ajay Jain, and Pieter Abbeel at UC Berkeley published a paper called \"Denoising Diffusion Probabilistic Models\" — DDPM for short — and everything changed. Their insight was beautifully simple: don't try to predict the clean image directly. Instead, just predict the noise. Here's what that means. Take a photo. Add a known amount of Gaussian noise to it.",
+      "text_ko": "DDPM과 Stable Diffusion — 정확히 무엇인가?. DDPM — 모든 것이 맞아떨어진 순간 (2020). Stable Diffusion — 빠르게, 그리고 무료로 (2022). 계보. 05b — 돌파구 확산을 역전시키는 아이디어는 2015년부터 있었지만, 결과는 흐릿하고 설득력이 없었습니다. 그러다 2020년, UC 버클리의 Jonathan Ho, Ajay Jain, Pieter Abbeel이 \"Denoising Diffusion Probabilistic Models\" — 줄여서 DDPM — 이라는 논문을 발표했고, 모든 것이 바뀌었습니다. 그들의 통찰은 아름다울 정도로 단순했습니다: 깨끗한 이미지를 직접 예측하려 하지 말고, 그냥 노이즈를 예측하라. 이것이 무슨 뜻인지 설명하겠습니다. 사진을 가져옵니다. 알려진 양의 가우시안 노이즈를 추가합니다. 이제 노이즈가 낀 결과를 신경망에 보여주고 물어봅니다: \"어떤 노이즈가 추가되었나요?\" 신경망이 이 질문에 정확히 대답할 수 있다면, 예측된 노이즈를 빼서 — 약간 더 깨끗한 이미지를 복구할 수 있습니다. 순수한 정적에서 시작하여 이것을 1,000번 반복하면, 아무것도 없는 곳에서 완전히 새로운 이미지가 나타납니다. 훈련 목표는 터무니없이 단순했습니다 — 그냥 평균 제곱 오차: Loss = ε − ε θ (x t , t) 쉽게 말하면: 신경망의 노이즈 예측( ε θ )이 실제 추가된 노이즈( ε )와 얼마나 다른지를 측정합니다. 그게 전부입니다.",
       "scroll_to": "#sec-ddpm",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 8,
-      "text_en": "06 — TRY IT YOURSELF The Stable Diffusion Pipeline — Live Pick a prompt and watch every stage of the pipeline: your text guides the denoising, noise fills the tiny latent space, the U-Net removes noise step by step, and the decoder reconstructs the full image.",
-      "text_ko": "06 — 직접 해보세요 Stable Diffusion 파이프라인 — 라이브 프롬프트를 선택하고 파이프라인의 모든 단계를 관찰하세요: 텍스트가 디노이징을 안내하고, 노이즈가 작은 잠재 공간을 채우고, U-Net이 단계별로 노이즈를 제거하고, 디코더가 전체 이미지를 재구성합니다. 매 디노이징 스텝마다 높아지는 음이 울립니다 — 이미지에 초점이 맞춰지는 소리를 들어보세요 프롬프트를 선택하세요 🐱 \"고양이\" ⭐ \"별\" 🏔️ \"산\" 🌀 \"소용돌이\" 🌳 \"나무\" 💬 ① CLIP → ② Latent → 🧠 ③ U-Net × 30 → 📤 ④ Decode 잠재 공간 (8×8) — 48배 압축 디코딩된 출력 (32×32) 단계 Ready 디노이즈 스텝 0 / 30 프롬프트 \"고양이\" ✨ 이미지 생성 초기화",
+      "text_en": "The Stable Diffusion Pipeline — Live. 06 — TRY IT YOURSELF Pick a prompt and watch every stage of the pipeline: your text guides the denoising, noise fills the tiny latent space, the U-Net removes noise step by step, and the decoder reconstructs the full image. Each denoising step plays a rising tone — hear the image come into focus Choose a prompt 💬 ① CLIP → ② Latent → 🧠 ③ U-Net × 30 → 📤 ④ Decode Latent Space (8×8) — 48× compressed Decoded Output (32×32) Stage Ready Denoise Step 0 / 30 Prompt \"a cat\"",
+      "text_ko": "Stable Diffusion 파이프라인 — 라이브. 직접 해보세요 프롬프트를 선택하고 파이프라인의 모든 단계를 관찰하세요: 텍스트가 디노이징을 안내하고, 노이즈가 작은 잠재 공간을 채우고, U-Net이 단계별로 노이즈를 제거하고, 디코더가 전체 이미지를 재구성합니다. 매 디노이징 스텝마다 높아지는 음이 울립니다 — 이미지에 초점이 맞춰지는 소리를 들어보세요 프롬프트를 선택하세요 💬 ① CLIP → ② Latent → 🧠 ③ U-Net × 30 → 📤 ④ Decode 잠재 공간 (8×8) — 48배 압축 디코딩된 출력 (32×32) 단계 Ready 디노이즈 스텝 0 / 30 프롬프트 \"고양이\"",
       "scroll_to": "#sec-sd-demo",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 9,
-      "text_en": "07 — THE MATHEMATICS Forward and Reverse Now see the math behind it. Dissolve a signal into noise, then watch 300 particles converge from chaos into structure. Forward: Signal → Noise Signal intact t 0 ▶ Dissolve Reset Reverse: Noise → Structure A rising tone accompanies the emergence of order Reverse diffusion Step 0 / 200 Noise High Converged 0% ▶ Generate Reset",
-      "text_ko": "07 — 수학 정방향과 역방향 이제 그 뒤의 수학을 보세요. 신호를 노이즈로 녹이고, 300개의 입자가 혼돈에서 구조로 수렴하는 것을 관찰하세요. 정방향: 신호 → 노이즈 Signal intact t 0 ▶ Dissolve 초기화 역방향: 노이즈 → 구조 질서가 나타남에 따라 음이 높아집니다 Reverse diffusion 스텝 0 / 200 노이즈 High 수렴 0% ▶ Generate 초기화",
+      "text_en": "Forward and Reverse. Forward: Signal → Noise. Reverse: Noise → Structure. 07 — THE MATHEMATICS Now see the math behind it. Dissolve a signal into noise, then watch 300 particles converge from chaos into structure. Signal intact 0 A rising tone accompanies the emergence of order Reverse diffusion Step 0 / 200 Noise High Converged 0%",
+      "text_ko": "정방향과 역방향. 정방향: 신호 → 노이즈. 역방향: 노이즈 → 구조. 수학 이제 그 뒤의 수학을 보세요. 신호를 노이즈로 녹이고, 300개의 입자가 혼돈에서 구조로 수렴하는 것을 관찰하세요. Signal intact 0 질서가 나타남에 따라 음이 높아집니다 Reverse diffusion 스텝 0 / 200 노이즈 High 수렴 0%",
       "scroll_to": "#sec-process",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 10,
-      "text_en": "08 — THE REVOLUTION What This Mathematics Creates 🎨 Text-to-Image Type a description, get a photorealistic image. Stable Diffusion · DALL·E · Midjourney 🎬 Video Generation Generate coherent video clips from text. Sora · Runway · Kling ✏️ Image Editing Noise one region, re-denoise with a new prompt. \"Remove this\" · \"Change the sky\" 🔬 Super-Resolution Treat blur as noise, fill in missing detail. Old photos · Medical · Satellites 🧬 Drug Discovery Generate 3D molecular structures from noise.",
-      "text_ko": "08 — 혁명 이 수학 이 만들어내는 것 🎨 텍스트-이미지 설명을 입력하면, 사실적 이미지가 나옵니다. Stable Diffusion · DALL·E · Midjourney 🎬 영상 생성 텍스트로부터 일관된 영상 클립을 생성합니다. Sora · Runway · Kling ✏️ 이미지 편집 한 영역에 노이즈를 추가하고, 새 프롬프트로 다시 디노이즈합니다. \"이것 제거\" · \"하늘 변경\" 🔬 초해상도 흐림을 노이즈로 취급하고, 빠진 디테일을 채웁니다. 오래된 사진 · 의료 · 위성 🧬 신약 발견 노이즈로부터 3D 분자 구조를 생성합니다. 단백질 · 재료과학 🎵 오디오 & 음악 스펙트로그램을 디노이즈하여 소리를 만듭니다. 음악 · 음성 합성",
+      "text_en": "What This Mathematics Creates. 08 — THE REVOLUTION 🎨 Text-to-Image Type a description, get a photorealistic image. Stable Diffusion · DALL·E · Midjourney 🎬 Video Generation Generate coherent video clips from text. Sora · Runway · Kling ✏️ Image Editing Noise one region, re-denoise with a new prompt. \"Remove this\" · \"Change the sky\" 🔬 Super-Resolution Treat blur as noise, fill in missing detail. Old photos · Medical · Satellites 🧬 Drug Discovery Generate 3D molecular structures from noise. Proteins · Materials science 🎵 Audio & Music Denoise spectrograms to create sounds. Music · Voice synthesis",
+      "text_ko": "이 수학 이 만들어내는 것. 혁명 🎨 텍스트-이미지 설명을 입력하면, 사실적 이미지가 나옵니다. Stable Diffusion · DALL·E · Midjourney 🎬 영상 생성 텍스트로부터 일관된 영상 클립을 생성합니다. Sora · Runway · Kling ✏️ 이미지 편집 한 영역에 노이즈를 추가하고, 새 프롬프트로 다시 디노이즈합니다. \"이것 제거\" · \"하늘 변경\" 🔬 초해상도 흐림을 노이즈로 취급하고, 빠진 디테일을 채웁니다. 오래된 사진 · 의료 · 위성 🧬 신약 발견 노이즈로부터 3D 분자 구조를 생성합니다. 단백질 · 재료과학 🎵 오디오 & 음악 스펙트로그램을 디노이즈하여 소리를 만듭니다. 음악 · 음성 합성",
       "scroll_to": "#sec-uses",
       "pause_after": true
     },
     {
       "id": 11,
-      "text_en": "09 — THE CONNECTION This Is Not a Metaphor Physics Stable Diffusion 🌡️ Heat spreads until uniform Noise added until pure static 📐 Gaussian bell curve Noise is exactly Gaussian 🎲 Brownian motion Random noise injection ⏪ Diffusion is irreversible Neural net learns to reverse it ⚖️ Equilibrium = no info Pure noise = no image 200 Years From Heat to Pixels 1822 Fourier Heat equation 1905 Einstein Random walks 1982 Anderson Reverse-time SDE 2020 Ho et al. DDPM 2022 Stable Diffusion Open-source",
-      "text_ko": "09 — 연결 이것은 비유 가 아닙니다 물리학 Stable Diffusion 🌡️ 열이 퍼져 균일해짐 노이즈 추가 하여 순수한 정적이 됨 📐 가우시안 종 모양 곡선 노이즈는 정확히 가우시안 🎲 브라운 운동 무작위 노이즈 주입 ⏪ 확산은 비가역적 신경망이 역전을 학습 ⚖️ 평형 = 정보 없음 순수 노이즈 = 이미지 없음 열에서 픽셀까지 200년 1822 Fourier Heat equation 1905 Einstein Random walks 1982 Anderson 역시간 SDE 2020 Ho et al. DDPM 2022 Stable Diffusion 오픈소스",
+      "text_en": "This Is Not a Metaphor. 200 Years From Heat to Pixels. 09 — THE CONNECTION Physics Stable Diffusion 🌡️ Heat spreads until uniform Noise added until pure static 📐 Gaussian bell curve Noise is exactly Gaussian 🎲 Brownian motion Random noise injection ⏪ Diffusion is irreversible Neural net learns to reverse it ⚖️ Equilibrium = no info Pure noise = no image 1822 Fourier Heat equation 1905 Einstein Random walks 1982 Anderson Reverse-time SDE 2020 Ho et al. DDPM 2022 Stable Diffusion Open-source",
+      "text_ko": "이것은 비유 가 아닙니다. 열에서 픽셀까지 200년. 연결 물리학 Stable Diffusion 🌡️ 열이 퍼져 균일해짐 노이즈 추가 하여 순수한 정적이 됨 📐 가우시안 종 모양 곡선 노이즈는 정확히 가우시안 🎲 브라운 운동 무작위 노이즈 주입 ⏪ 확산은 비가역적 신경망이 역전을 학습 ⚖️ 평형 = 정보 없음 순수 노이즈 = 이미지 없음 1822 푸리에 Heat equation 1905 Einstein Random walks 1982 Anderson 역시간 SDE 2020 Ho et al. DDPM 2022 Stable Diffusion 오픈소스",
       "scroll_to": "#sec-conn",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 12,
-      "text_en": "Does a Machine Dream ? It finds faces in clouds of Gaussian noise. It wanders a vast unconscious of compressed images. It hallucinates form from pure chaos — guided by words. Philip K. Dick asked whether androids dream of electric sheep. Perhaps the answer is simpler than he imagined: A machine dreams of whatever you ask it to — using mathematics that Fourier, Einstein, and Anderson wrote down long before anyone thought to ask. The diffusion equation took 200 years to dream its first image.",
-      "text_ko": "기계는 꿈을 꾸는가 ? 기계는 가우시안 노이즈의 구름에서 얼굴을 찾습니다 . 압축된 이미지들의 거대한 무의식 을 떠돌아다닙니다. 순수한 혼돈 에서 형상을 환각합니다 — 언어의 안내를 받으면서. 필립 K. 딕은 안드로이드가 전기양의 꿈을 꾸는지 물었습니다. 아마 대답은 그가 상상한 것보다 단순할 것입니다: 기계는 여러분이 요청하는 무엇이든 꿈꿉니다 — 푸리에, 아인슈타인, 앤더슨이 아무도 이런 질문을 하기 전에 써놓은 수학을 사용하여. 확산 방정식은 첫 번째 꿈을 꾸기까지 200년이 걸렸습니다. ← Part I: 확산의 물리학",
+      "text_en": "Does a Machine Dream ?. It finds faces in clouds of Gaussian noise. It wanders a vast unconscious of compressed images. It hallucinates form from pure chaos — guided by words. Philip K. Dick asked whether androids dream of electric sheep. Perhaps the answer is simpler than he imagined: A machine dreams of whatever you ask it to — using mathematics that Fourier, Einstein, and Anderson wrote down long before anyone thought to ask. The diffusion equation took 200 years to dream its first image. ← Part I: The Physics",
+      "text_ko": "기계는 꿈을 꾸는가 ?. 기계는 가우시안 노이즈의 구름에서 얼굴을 찾습니다 . 압축된 이미지들의 거대한 무의식 을 떠돌아다닙니다. 순수한 혼돈 에서 형상을 환각합니다 — 언어의 안내를 받으면서. 필립 K. 딕은 안드로이드가 전기양의 꿈을 꾸는지 물었습니다. 아마 대답은 그가 상상한 것보다 단순할 것입니다: 기계는 여러분이 요청하는 무엇이든 꿈꿉니다 — 푸리에, 아인슈타인, 앤더슨이 아무도 이런 질문을 하기 전에 써놓은 수학을 사용하여. 확산 방정식은 첫 번째 꿈을 꾸기까지 200년이 걸렸습니다. ← Part I: 확산의 물리학",
       "scroll_to": "#sec-closing",
       "pause_after": true
     }

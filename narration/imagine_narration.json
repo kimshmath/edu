@@ -3,78 +3,88 @@
   "segments": [
     {
       "id": 0,
-      "text_en": "A Mathematical Inquiry into AI · Part IV Does a Machine Imagine ? Or does the duel of two neural networks produce the illusion of imagination? Human imagination is born from experience. Machine imagination is born from conflict . A forger creates what never existed; a detective tries to see through it. In this adversarial game — unintended by anyone — creation happens. ✨ Start Exploring ← Part III: Memory",
-      "text_ko": "AI에 대한 수학적 탐구 · Part IV 기계는 상상 하는가? 아니면 두 신경망의 대결이 상상의 환상을 만들어내는가? 인간의 상상은 경험에서 태어납니다. 기계의 상상은 대결 에서 태어납니다. 위조범은 존재하지 않는 것을 만들고, 감별사는 그것을 간파하려 합니다. 이 적대적 게임 속에서 — 아무도 의도하지 않았던 — 창조가 일어납니다. ✨ 탐험 시작 ← Part III: 기억",
+      "text_en": "A Mathematical Inquiry into AI · Part IV. Does a Machine Imagine ?. Or does the duel of two neural networks produce the illusion of imagination? Human imagination is born from experience. Machine imagination is born from conflict . A forger creates what never existed; a detective tries to see through it. In this adversarial game — unintended by anyone — creation happens. ← Part III: Memory",
+      "text_ko": "AI에 대한 수학적 탐구 · Part IV. 기계는 상상 하는가?. 아니면 두 신경망의 대결이 상상의 환상을 만들어내는가? 인간의 상상은 경험에서 태어납니다. 기계의 상상은 대결 에서 태어납니다. 위조범은 존재하지 않는 것을 만들고, 감별사는 그것을 간파하려 합니다. 이 적대적 게임 속에서 — 아무도 의도하지 않았던 — 창조가 일어납니다. ← Part III: 기억",
       "scroll_to": "#hero",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 1,
-      "text_en": "00 — THE FORGER'S GAME Real or Fake — Can You Tell? Try to distinguish GAN-generated patterns from real data. What you're doing right now is exactly what a Discriminator does. Different tones for right and wrong One pattern is regular — the other is a GAN's imitation ◀ Left is real Right is real ▶ Round 0 / 6 Correct 0 Your accuracy — This is the core idea behind GANs.",
-      "text_ko": "00 — 위조범의 게임 진짜와 가짜, 구별할 수 있나요? GAN이 만든 것과 진짜 데이터를 구분해보세요. 당신이 지금 하는 일이 정확히 감별사(Discriminator)가 하는 일입니다. 정답과 오답에 다른 소리 아래 두 패턴 중 하나는 규칙적 — 하나는 GAN이 모방한 것 ◀ 왼쪽이 진짜 오른쪽이 진짜 ▶ 라운드 0 / 6 정답 0 당신의 정확도 — 이것이 GAN의 핵심 아이디어입니다. — 2014년, Ian Goodfellow가 술집에서 친구와 논쟁하다가 떠올린 아이디어: 두 신경망을 경쟁시키면 어떨까? 하나는 위조하고(Generator), 하나는 감별합니다(Discriminator). 위조범이 감별사를 완벽히 속이는 순간 — 그것이 진짜와 구별 불가능한 \"상상\"이 됩니다.",
+      "text_en": "Real or Fake — Can You Tell?. 00 — THE FORGER'S GAME Try to distinguish GAN-generated patterns from real data. What you're doing right now is exactly what a Discriminator does. Different tones for right and wrong One pattern is regular — the other is a GAN's imitation Round 0 / 6 Correct 0 Your accuracy — This is the core idea behind GANs. — In 2014, Ian Goodfellow conceived the idea during an argument at a bar: what if you pit two neural networks against each other? One forges (Generator), the other detects (Discriminator). The moment the forger perfectly fools the detective — that's when \"imagination\" becomes indistinguishable from reality.",
+      "text_ko": "진짜와 가짜, 구별할 수 있나요?. 위조범의 게임 GAN이 만든 것과 진짜 데이터를 구분해보세요. 당신이 지금 하는 일이 정확히 감별사(Discriminator)가 하는 일입니다. 정답과 오답에 다른 소리 아래 두 패턴 중 하나는 규칙적 — 하나는 GAN이 모방한 것 라운드 0 / 6 정답 0 당신의 정확도 — 이것이 GAN의 핵심 아이디어입니다. — 2014년, Ian Goodfellow가 술집에서 친구와 논쟁하다가 떠올린 아이디어: 두 신경망을 경쟁시키면 어떨까? 하나는 위조하고(Generator), 하나는 감별합니다(Discriminator). 위조범이 감별사를 완벽히 속이는 순간 — 그것이 진짜와 구별 불가능한 \"상상\"이 됩니다.",
       "scroll_to": "#sec-forger",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 2,
-      "text_en": "01 — FROM NOISE TO FORM The Generator : Creating Something from Nothing The Generator takes a random noise vector and produces data. At first, pure garbage. But guided by the Discriminator's feedback, it grows steadily more refined. A rising tone as noise becomes form z vector → Generator → output shape 🎲 New noise sample train Epoch 0 Input (z) Random vector Output quality 0% G(z) : ℝ^d → ℝ^n — Maps noise z to a point in data space",
-      "text_ko": "01 — 노이즈에서 형태로 생성자 : 무에서 유를 창조하다 생성자는 랜덤 노이즈 벡터 를 입력받아 데이터를 만들어냅니다. 처음에는 순수한 쓰레기를 출력하지만, 감별사의 피드백을 받으며 점점 정교해집니다. 노이즈가 형태로 변할 때 상승하는 톤 z 벡터 → 생성자 → 출력 형태 🎲 새 노이즈 샘플 학습 에포크 0 입력 (z) 랜덤 벡터 출력 품질 0% G(z) : ℝ^d → ℝ^n — 노이즈 z를 데이터 공간의 한 점으로 매핑",
+      "text_en": "The Generator : Creating Something from Nothing. 01 — FROM NOISE TO FORM The Generator takes a random noise vector and produces data. At first, pure garbage. But guided by the Discriminator's feedback, it grows steadily more refined. A rising tone as noise becomes form z vector → Generator → output shape Epoch 0 Input (z) Random vector Output quality 0% G(z) : ℝ^d → ℝ^n — Maps noise z to a point in data space",
+      "text_ko": "생성자 : 무에서 유를 창조하다. 노이즈에서 형태로 생성자는 랜덤 노이즈 벡터 를 입력받아 데이터를 만들어냅니다. 처음에는 순수한 쓰레기를 출력하지만, 감별사의 피드백을 받으며 점점 정교해집니다. 노이즈가 형태로 변할 때 상승하는 톤 z 벡터 → 생성자 → 출력 형태 에포크 0 입력 (z) 랜덤 벡터 출력 품질 0% G(z) : ℝ^d → ℝ^n — 노이즈 z를 데이터 공간의 한 점으로 매핑",
       "scroll_to": "#sec-gen",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 3,
-      "text_en": "02 — THE DETECTIVE'S EYE The Discriminator : Drawing the Line The Discriminator receives data and decides: \"Is this real, or did the Generator make it?\" Its output is a probability from 0 (fake) to 1 (real). Higher pitch as the decision boundary sharpens Discriminator's decision boundary — blue = real, red = fake train Epoch 0 Real detection 50% Fake detection 50% D(x) : ℝ^n → [0, 1] — \"P(this is real)\"",
-      "text_ko": "02 — 감별사의 눈 감별사 : 진짜와 가짜의 경계 감별사는 데이터를 받아 \"이것이 진짜 데이터인가, 생성자가 만든 가짜인가?\"를 판단합니다. 출력은 0(가짜)에서 1(진짜) 사이의 확률입니다. 결정 경계가 선명해질수록 높은 음 감별사의 결정 경계 — 파란 점 = 진짜, 빨간 점 = 가짜 학습 에포크 0 진짜 판별 정확도 50% 가짜 판별 정확도 50% D(x) : ℝ^n → [0, 1] — \"이것이 진짜일 확률\"",
+      "text_en": "The Discriminator : Drawing the Line. 02 — THE DETECTIVE'S EYE The Discriminator receives data and decides: \"Is this real, or did the Generator make it?\" Its output is a probability from 0 (fake) to 1 (real). Higher pitch as the decision boundary sharpens Discriminator's decision boundary — blue = real, red = fake Epoch 0 Real detection 50% Fake detection 50% D(x) : ℝ^n → [0, 1] — \"P(this is real)\"",
+      "text_ko": "감별사 : 진짜와 가짜의 경계. 감별사의 눈 감별사는 데이터를 받아 \"이것이 진짜 데이터인가, 생성자가 만든 가짜인가?\"를 판단합니다. 출력은 0(가짜)에서 1(진짜) 사이의 확률입니다. 결정 경계가 선명해질수록 높은 음 감별사의 결정 경계 — 파란 점 = 진짜, 빨간 점 = 가짜 에포크 0 진짜 판별 정확도 50% 가짜 판별 정확도 50% D(x) : ℝ^n → [0, 1] — \"이것이 진짜일 확률\"",
       "scroll_to": "#sec-disc",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 4,
-      "text_en": "03 — THE CORE MATH The Minimax Game The math of GANs is strikingly concise. Everything fits in one equation. The Generator tries to minimize this value; the Discriminator tries to maximize it. min_G max_D V(D, G) = 𝔼[log D(x)] + 𝔼[log(1 − D(G(z)))] A chord when the two curves cross G loss vs D loss — as training progresses ▶ Start Training Reset Epoch 0 G loss — D loss — Toward Nash equilibrium.",
-      "text_ko": "03 — 핵심 수학 미니맥스 게임 GAN의 수학은 놀랍도록 간결합니다. 하나의 방정식에 모든 것이 담겨 있습니다. 생성자는 이 값을 최소화 하려 하고, 감별사는 최대화 하려 합니다. min_G max_D V(D, G) = 𝔼[log D(x)] + 𝔼[log(1 − D(G(z)))] 두 곡선이 교차할 때 화음 G 손실 vs D 손실 — 학습이 진행될수록 ▶ 학습 시작 초기화 에포크 0 G 손실 — D 손실 — 내쉬 균형을 향하여. — 이상적인 GAN 학습의 종착점은 내쉬 균형 입니다: 생성자의 출력이 진짜 데이터와 완벽히 동일한 분포를 가지고, 감별사는 어떤 데이터가 들어와도 \"50% 확률로 진짜\"라고 답합니다. 감별사가 동전 던지기 이상을 할 수 없는 순간 — 그것이 완벽한 상상입니다.",
+      "text_en": "The Minimax Game. 03 — THE CORE MATH The math of GANs is strikingly concise. Everything fits in one equation. The Generator tries to minimize this value; the Discriminator tries to maximize it. min_G max_D V(D, G) = 𝔼[log D(x)] + 𝔼[log(1 − D(G(z)))] A chord when the two curves cross G loss vs D loss — as training progresses Epoch 0 G loss — D loss — Toward Nash equilibrium. — The ideal endpoint of GAN training is a Nash equilibrium : the Generator's output has exactly the same distribution as real data, and the Discriminator answers \"50% chance it's real\" no matter what it sees. When the detective can do no better than a coin flip — that is perfect imagination.",
+      "text_ko": "미니맥스 게임. 핵심 수학 GAN의 수학은 놀랍도록 간결합니다. 하나의 방정식에 모든 것이 담겨 있습니다. 생성자는 이 값을 최소화 하려 하고, 감별사는 최대화 하려 합니다. min_G max_D V(D, G) = 𝔼[log D(x)] + 𝔼[log(1 − D(G(z)))] 두 곡선이 교차할 때 화음 G 손실 vs D 손실 — 학습이 진행될수록 에포크 0 G 손실 — D 손실 — 내쉬 균형을 향하여. — 이상적인 GAN 학습의 종착점은 내쉬 균형 입니다: 생성자의 출력이 진짜 데이터와 완벽히 동일한 분포를 가지고, 감별사는 어떤 데이터가 들어와도 \"50% 확률로 진짜\"라고 답합니다. 감별사가 동전 던지기 이상을 할 수 없는 순간 — 그것이 완벽한 상상입니다.",
       "scroll_to": "#sec-minimax",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 5,
-      "text_en": "04 — THE TRAINING DANCE The Dance of Two Networks A simplified simulation of GAN training. Watch the Generator's distribution (purple hill) gradually converge toward the real data distribution (blue hill). The Discriminator's confidence (gold line) flattens as it loses the ability to tell them apart. Harmony builds as the distributions converge Blue = real | Purple = generated | Gold = D(x) ▶ Start Training Reset Epoch 0 Distribution gap (JS) 1.00 D confidence 100%",
-      "text_ko": "04 — 훈련의 춤 두 신경망의 춤 실제 GAN 훈련을 단순화하여 시뮬레이션합니다. 진짜 데이터 분포(파란 산)를 생성자의 분포(보라 산)가 점점 닮아가는 과정을 지켜보세요. 감별사의 결정 경계(금색 선)가 점점 평평해집니다. 분포가 가까워질수록 하모니가 형성됩니다 파랑 = 진짜 분포 | 보라 = 생성 분포 | 금색 = D(x) ▶ 훈련 시작 초기화 에포크 0 분포 거리 (JS) 1.00 D 확신도 100%",
+      "text_en": "The Dance of Two Networks. 04 — THE TRAINING DANCE A simplified simulation of GAN training. Watch the Generator's distribution (purple hill) gradually converge toward the real data distribution (blue hill). The Discriminator's confidence (gold line) flattens as it loses the ability to tell them apart. Harmony builds as the distributions converge Blue = real | Purple = generated | Gold = D(x) Epoch 0 Distribution gap (JS) D confidence 100%",
+      "text_ko": "두 신경망의 춤. 훈련의 춤 실제 GAN 훈련을 단순화하여 시뮬레이션합니다. 진짜 데이터 분포(파란 산)를 생성자의 분포(보라 산)가 점점 닮아가는 과정을 지켜보세요. 감별사의 결정 경계(금색 선)가 점점 평평해집니다. 분포가 가까워질수록 하모니가 형성됩니다 파랑 = 진짜 분포 | 보라 = 생성 분포 | 금색 = D(x) 에포크 0 분포 거리 (JS) D 확신도 100%",
       "scroll_to": "#sec-train",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 6,
-      "text_en": "05 — A MAP OF IMAGINATION Walking the Latent Space The Generator's input space — the latent space — has a remarkable structure. Nearby points produce similar outputs; distant points produce different ones. Walking through this space creates smooth, dreamlike transformations.",
-      "text_ko": "05 — 상상의 지도 잠재 공간 산책 생성자의 입력 공간 — 잠재 공간(latent space) — 은 놀라운 구조를 가지고 있습니다. 가까운 점은 비슷한 출력을, 먼 점은 다른 출력을 만듭니다. 이 공간을 걸어다니면 부드러운 변환이 일어납니다. 드래그하면 위치에 따라 음색이 변합니다 잠재 공간 — 드래그하여 탐험 z₁ 0.00 z₂ 0.00 출력 특성 중심 \"잠재 공간의 산책은 기계의 백일몽입니다.\" StyleGAN에서 잠재 공간의 한 축은 \"미소\"를, 다른 축은 \"나이\"를 제어합니다. 아무도 이렇게 되라고 가르치지 않았습니다 — 적대적 훈련이 스스로 의미 있는 차원을 발견한 것입니다.",
+      "text_en": "Walking the Latent Space. 05 — A MAP OF IMAGINATION The Generator's input space — the latent space — has a remarkable structure. Nearby points produce similar outputs; distant points produce different ones. Walking through this space creates smooth, dreamlike transformations. Drag to explore — the tone changes with position Latent space — drag to explore z z Output character center \"Walking the latent space is a machine's daydream.\" In StyleGAN, one axis of the latent space controls \"smile\" and another controls \"age.\" Nobody taught it this. Adversarial training discovered meaningful dimensions on its own.",
+      "text_ko": "잠재 공간 산책. 상상의 지도 생성자의 입력 공간 — 잠재 공간(latent space) — 은 놀라운 구조를 가지고 있습니다. 가까운 점은 비슷한 출력을, 먼 점은 다른 출력을 만듭니다. 이 공간을 걸어다니면 부드러운 변환이 일어납니다. 드래그하면 위치에 따라 음색이 변합니다 잠재 공간 — 드래그하여 탐험 z z 출력 특성 중심 \"잠재 공간의 산책은 기계의 백일몽입니다.\" StyleGAN에서 잠재 공간의 한 축은 \"미소\"를, 다른 축은 \"나이\"를 제어합니다. 아무도 이렇게 되라고 가르치지 않았습니다 — 적대적 훈련이 스스로 의미 있는 차원을 발견한 것입니다.",
       "scroll_to": "#sec-latent",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 7,
-      "text_en": "06 — WHEN IMAGINATION FAILS Mode Collapse : A Painter Who Only Paints One Thing The most common failure in GAN training: the Generator discovers one pattern that fools the Discriminator and never deviates from it. A trap of repetition without diversity — imagination frozen into a single thought. Monotone sounds as collapse progresses Normal training vs. mode collapse Normal Mode Collapse!",
-      "text_ko": "06 — 상상력의 실패 모드 붕괴 : 같은 것만 그리는 화가 GAN 훈련의 가장 흔한 실패 — 생성자가 감별사를 속이는 하나의 패턴을 발견하면, 거기서 벗어나지 않습니다. 다양성 없이 같은 것만 반복하는 상상력의 함정. 붕괴가 진행될수록 단조로운 소리 정상 학습 vs 모드 붕괴 정상 학습 모드 붕괴!",
+      "text_en": "Mode Collapse : A Painter Who Only Paints One Thing. 06 — WHEN IMAGINATION FAILS The most common failure in GAN training: the Generator discovers one pattern that fools the Discriminator and never deviates from it. A trap of repetition without diversity — imagination frozen into a single thought. Monotone sounds as collapse progresses Normal training vs. mode collapse",
+      "text_ko": "모드 붕괴 : 같은 것만 그리는 화가. 상상력의 실패 GAN 훈련의 가장 흔한 실패 — 생성자가 감별사를 속이는 하나의 패턴을 발견하면, 거기서 벗어나지 않습니다. 다양성 없이 같은 것만 반복하는 상상력의 함정. 붕괴가 진행될수록 단조로운 소리 정상 학습 vs 모드 붕괴",
       "scroll_to": "#sec-collapse",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 8,
-      "text_en": "07 — EVOLUTION AND REVOLUTION From the GAN Zoo to the Diffusion Revolution From 2014 to 2022, GANs were the undisputed king of AI image generation. Then diffusion models dethroned them. The very technology explored in Part I. GAN vs. Diffusion Models GAN Diffusion ⚙️ Principle — Adversarial game (G vs D) Principle — Add noise → reverse removal ⚡ Speed — Fast (single forward pass) Speed — Slow (tens to hundreds of steps) 🎨 Diversity — Risk of mode collapse Diversity — Natural variety 📐 Training —...",
-      "text_ko": "07 — 진화와 혁명 GAN 동물원에서 확산 혁명 까지 2014년부터 2022년까지 GAN은 AI 이미지 생성의 왕이었습니다. 그리고 확산 모델이 왕좌를 빼앗았습니다. Part I에서 탐험한 그 기술입니다. GAN vs 확산 모델 GAN 확산 모델 ⚙️ 원리 — 적대적 게임 (G vs D) 원리 — 노이즈 추가 → 역방향 제거 ⚡ 속도 — 빠름 (1회 순전파) 속도 — 느림 (수십~수백 스텝) 🎨 다양성 — 모드 붕괴 위험 다양성 — 자연스러운 다양성 📐 학습 — 불안정 (내쉬 균형 도달 어려움) 학습 — 안정적 (단순한 MSE 손실) 🏆 전성기 — 2014–2022 전성기 — 2022–현재 📱 대표작 — StyleGAN, Pix2Pix, CycleGAN 대표작 — DALL·E, Midjourney, Stable Diffusion",
+      "text_en": "From the GAN Zoo to the Diffusion Revolution. GAN vs. Diffusion Models. 07 — EVOLUTION AND REVOLUTION From 2014 to 2022, GANs were the undisputed king of AI image generation. Then diffusion models dethroned them. The very technology explored in Part I. GAN Diffusion ⚙️ Principle — Adversarial game (G vs D) Principle — Add noise → reverse removal ⚡ Speed — Fast (single forward pass) Speed — Slow (tens to hundreds of steps) 🎨 Diversity — Risk of mode collapse Diversity — Natural variety 📐 Training — Unstable (hard to reach Nash equilibrium) Training — Stable (simple MSE loss) 🏆 Golden era — 2014–2022 Golden era — 2022–present 📱 Landmark — StyleGAN, Pix2Pix, CycleGAN Landmark — DALL·E, Midjourney, Stable Diffusion",
+      "text_ko": "GAN 동물원에서 확산 혁명 까지. GAN vs 확산 모델. 진화와 혁명 2014년부터 2022년까지 GAN은 AI 이미지 생성의 왕이었습니다. 그리고 확산 모델이 왕좌를 빼앗았습니다. Part I에서 탐험한 그 기술입니다. GAN 확산 모델 ⚙️ 원리 — 적대적 게임 (G vs D) 원리 — 노이즈 추가 → 역방향 제거 ⚡ 속도 — 빠름 (1회 순전파) 속도 — 느림 (수십~수백 스텝) 🎨 다양성 — 모드 붕괴 위험 다양성 — 자연스러운 다양성 📐 학습 — 불안정 (내쉬 균형 도달 어려움) 학습 — 안정적 (단순한 MSE 손실) 🏆 전성기 — 2014–2022 전성기 — 2022–현재 📱 대표작 — StyleGAN, Pix2Pix, CycleGAN 대표작 — DALL·E, Midjourney, Stable Diffusion",
       "scroll_to": "#sec-zoo",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 9,
-      "text_en": "08 — THE CONNECTION Human Imagination vs. Machine Imagination Human GAN 💡 Inspiration — Experience, emotion, memory Inspiration — Random noise vector z 🎨 Creation — Conscious choice Creation — G(z) forward pass 👁️ Critique — Aesthetic judgment, social feedback Critique — D(x)'s gradient 🔄 Refinement — Repetition, mastery Refinement — Backpropagation, weight update 💫 Imagination — Envisioning what doesn't exist Imagination — New samples beyond training data 😰 Failure — Stereotypes, repetition Fai...",
-      "text_ko": "08 — 연결 인간의 상상 vs 기계의 상상 인간 GAN 💡 영감 — 경험, 감정, 기억 영감 — 랜덤 노이즈 벡터 z 🎨 창작 — 의식적 선택 창작 — G(z) 순전파 👁️ 비평 — 미적 판단, 사회적 피드백 비평 — D(x)의 경사 🔄 개선 — 반복, 숙련 개선 — 역전파, 가중치 갱신 💫 상상 — 존재하지 않는 것을 떠올림 상상 — 학습 분포에 없던 새 샘플 😰 실패 — 고정관념, 반복 실패 — 모드 붕괴",
+      "text_en": "Human Imagination vs. Machine Imagination. 08 — THE CONNECTION Human GAN 💡 Inspiration — Experience, emotion, memory Inspiration — Random noise vector z 🎨 Creation — Conscious choice Creation — G(z) forward pass 👁️ Critique — Aesthetic judgment, social feedback Critique — D(x)'s gradient 🔄 Refinement — Repetition, mastery Refinement — Backpropagation, weight update 💫 Imagination — Envisioning what doesn't exist Imagination — New samples beyond training data 😰 Failure — Stereotypes, repetition Failure — Mode collapse",
+      "text_ko": "인간의 상상 vs 기계의 상상. 연결 인간 GAN 💡 영감 — 경험, 감정, 기억 영감 — 랜덤 노이즈 벡터 z 🎨 창작 — 의식적 선택 창작 — G(z) 순전파 👁️ 비평 — 미적 판단, 사회적 피드백 비평 — D(x)의 경사 🔄 개선 — 반복, 숙련 개선 — 역전파, 가중치 갱신 💫 상상 — 존재하지 않는 것을 떠올림 상상 — 학습 분포에 없던 새 샘플 😰 실패 — 고정관념, 반복 실패 — 모드 붕괴",
       "scroll_to": "#sec-rosetta",
-      "pause_after": true
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 10,
-      "text_en": "So — Does a Machine Imagine? A machine's imagination has no inspiration. No landscape glimpsed in a dream, no trembling of first love. Only the endless duel of two neural networks — in the mathematical tension of forgery and detection, something that never existed is born. Can we call that imagination? Probably not. But what it produces is beautiful enough to astonish us. Every simulation on this page is computed in real time — gradient descent and probability distributions.",
-      "text_ko": "그래서 — 기계는 상상하는가? 기계의 상상에는 영감이 없습니다. 꿈에서 본 풍경도, 사랑에 빠진 떨림도 없습니다. 오직 두 신경망의 끝없는 대결 — 위조와 감별의 수학적 팽팽함 속에서 존재하지 않았던 것이 탄생합니다. 그것을 상상이라 부를 수 있을까? 아마도 아닐 것입니다. 하지만 그 결과물은 우리를 놀라게 하기에 충분히 아름답습니다. 이 페이지의 모든 시뮬레이션은 실시간으로 계산됩니다 — 경사하강법과 확률분포. 기계가 \"상상\"이라 부르는 것의 전부입니다. ← Part III: 기억 ← Part II: 이해",
+      "text_en": "So — Does a Machine Imagine?. A machine's imagination has no inspiration. No landscape glimpsed in a dream, no trembling of first love. Only the endless duel of two neural networks — in the mathematical tension of forgery and detection, something that never existed is born. Can we call that imagination? Probably not. But what it produces is beautiful enough to astonish us. Every simulation on this page is computed in real time — gradient descent and probability distributions. That's all there is to what machines call \"imagination.\" ← Part III: Memory ← Part II: Understanding",
+      "text_ko": "그래서 — 기계는 상상하는가?. 기계의 상상에는 영감이 없습니다. 꿈에서 본 풍경도, 사랑에 빠진 떨림도 없습니다. 오직 두 신경망의 끝없는 대결 — 위조와 감별의 수학적 팽팽함 속에서 존재하지 않았던 것이 탄생합니다. 그것을 상상이라 부를 수 있을까? 아마도 아닐 것입니다. 하지만 그 결과물은 우리를 놀라게 하기에 충분히 아름답습니다. 이 페이지의 모든 시뮬레이션은 실시간으로 계산됩니다 — 경사하강법과 확률분포. 기계가 \"상상\"이라 부르는 것의 전부입니다. ← Part III: 기억 ← Part II: 이해",
       "scroll_to": "#sec-closing",
       "pause_after": true
     }

@@ -12,6 +12,7 @@ Usage:
   python3 narrate_all.py --phase 3          # Generate TTS audio only
   python3 narrate_all.py --phase all        # Do everything
   python3 narrate_all.py --phase 3 --dry-run  # Preview TTS calls
+  python3 narrate_all.py --phase 1 --force  # Overwrite existing JSONs
 """
 
 import argparse
@@ -22,18 +23,23 @@ import sys
 import subprocess
 from html.parser import HTMLParser
 
+# Import the text cleaner
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from narration_text_cleaner import (
+    clean_narration_text, is_reference_section, has_interactive_content,
+    format_for_tts
+)
+
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 NARRATION_DIR = os.path.join(SCRIPT_DIR, "narration")
 IOS_NARRATION_DIR = os.path.join(SCRIPT_DIR, "..", "BedtimeStories", "BedtimeStories", "Resources", "narration")
 
-# Chapters that ALREADY have working narration (skip them)
-ALREADY_DONE = {"sound", "drum", "ghost", "illusion", "synth"}
+# No chapters are skipped for narration regeneration — all get rebuilt
+ALREADY_DONE = set()  # Empty — regenerate everything
 
 # Chapters to skip entirely (placeholders, index, etc.)
-SKIP_CHAPTERS = {"index", "skimmath", "energy", "vectors", "oscillator"}
-
-# Map chapter base name -> list of section IDs to find in the HTML
-# We'll auto-detect these from the HTML files.
+SKIP_CHAPTERS = {"index", "skimmath", "energy", "vectors", "oscillator",
+                 "falling", "harmonic", "jiggling", "ledger"}
 
 
 def get_all_chapters():
@@ -42,7 +48,6 @@ def get_all_chapters():
     for f in sorted(os.listdir(SCRIPT_DIR)):
         if not f.endswith(".html"):
             continue
-        # Skip Korean/index/skip files
         if any(f.endswith(suf) for suf in ["_ko.html", "_kr.html", "-ko.html", "-kr.html"]):
             continue
         base = f.replace(".html", "")
@@ -53,23 +58,38 @@ def get_all_chapters():
 
 
 class SectionExtractor(HTMLParser):
-    """Extract section IDs and text content from HTML."""
+    """Extract section IDs and text content from HTML.
+    
+    Improved to:
+    - Track headings separately for pause insertion
+    - Detect interactive elements
+    - Skip reference sections
+    - Preserve raw HTML for interactive detection
+    """
     def __init__(self):
         super().__init__()
         self.sections = []
         self.current_section_id = None
         self.current_text = []
+        self.current_html = []  # Raw HTML for interactive detection
+        self.current_headings = []  # Track headings for pause markers
         self.in_section = False
         self.in_script = False
         self.in_style = False
+        self.in_footer = False
+        self.in_nav = False
         self.depth = 0
         self.section_depth = 0
-        # Track headers
         self.in_header = False
         self.header_text = ""
+        self.in_button = False
+        self.in_label = False  # For UI labels like slider labels
+        # Track interactive elements per section
+        self.section_has_interactive = False
 
     def handle_starttag(self, tag, attrs):
         attrs_dict = dict(attrs)
+        cls = attrs_dict.get("class", "")
 
         if tag == "script":
             self.in_script = True
@@ -77,21 +97,48 @@ class SectionExtractor(HTMLParser):
         if tag == "style":
             self.in_style = True
             return
+        if tag == "footer":
+            self.in_footer = True
+            return
+        if tag == "nav":
+            self.in_nav = True
+            return
+        if tag == "button":
+            self.in_button = True
+            return
+        if tag == "label":
+            self.in_label = True
+            return
+
+        # Track raw HTML for interactive detection
+        if self.in_section:
+            self.current_html.append(f"<{tag} class=\"{cls}\">")
+
+        # Detect interactive elements
+        if self.in_section and tag in ("canvas", "input"):
+            self.section_has_interactive = True
+        if self.in_section and any(ic in cls for ic in
+                ["demo-card", "interactive", "playground", "simulator",
+                 "ibox", "experiment", "controls", "slider"]):
+            self.section_has_interactive = True
 
         if tag == "section":
             self.depth += 1
             sec_id = attrs_dict.get("id", "")
-            if sec_id and self.depth == 1:
+            if self.depth == 1:
+                # Auto-generate ID if missing
+                if not sec_id:
+                    self._auto_id_counter = getattr(self, '_auto_id_counter', 0) + 1
+                    sec_id = f"auto-sec-{self._auto_id_counter}"
                 # Save previous section
-                if self.current_section_id and self.current_text:
-                    self.sections.append({
-                        "id": self.current_section_id,
-                        "text": " ".join(self.current_text).strip()
-                    })
+                self._save_current_section()
                 self.current_section_id = sec_id
                 self.current_text = []
+                self.current_html = []
+                self.current_headings = []
                 self.in_section = True
                 self.section_depth = self.depth
+                self.section_has_interactive = False
 
         if tag in ("h1", "h2", "h3"):
             self.in_header = True
@@ -102,28 +149,52 @@ class SectionExtractor(HTMLParser):
             self.in_script = False
         if tag == "style":
             self.in_style = False
+        if tag == "footer":
+            self.in_footer = False
+        if tag == "nav":
+            self.in_nav = False
+        if tag == "button":
+            self.in_button = False
+        if tag == "label":
+            self.in_label = False
         if tag == "section":
             if self.depth == self.section_depth:
-                if self.current_section_id and self.current_text:
-                    self.sections.append({
-                        "id": self.current_section_id,
-                        "text": " ".join(self.current_text).strip()
-                    })
-                    self.current_section_id = None
-                    self.current_text = []
-                    self.in_section = False
+                self._save_current_section()
+                self.in_section = False
             self.depth -= 1
         if tag in ("h1", "h2", "h3"):
+            if self.in_header and self.header_text.strip():
+                self.current_headings.append(self.header_text.strip())
             self.in_header = False
 
     def handle_data(self, data):
-        if self.in_script or self.in_style:
+        if self.in_script or self.in_style or self.in_footer or self.in_nav:
             return
+        if self.in_button or self.in_label:
+            return  # Skip button/label text
         text = data.strip()
         if not text:
             return
+        if self.in_header:
+            self.header_text += " " + text
         if self.in_section and self.current_section_id:
             self.current_text.append(text)
+
+    def _save_current_section(self):
+        if self.current_section_id and self.current_text:
+            full_text = " ".join(self.current_text).strip()
+            self.sections.append({
+                "id": self.current_section_id,
+                "text": full_text,
+                "headings": list(self.current_headings),
+                "has_interactive": self.section_has_interactive,
+                "raw_html": " ".join(self.current_html),
+            })
+        self.current_section_id = None
+        self.current_text = []
+        self.current_html = []
+        self.current_headings = []
+        self.section_has_interactive = False
 
 
 def extract_sections_from_html(filepath):
@@ -137,55 +208,65 @@ def extract_sections_from_html(filepath):
     except Exception:
         pass
 
-    # Also catch the last section
-    if parser.current_section_id and parser.current_text:
-        parser.sections.append({
-            "id": parser.current_section_id,
-            "text": " ".join(parser.current_text).strip()
-        })
+    # Catch the last section
+    parser._save_current_section()
 
     return parser.sections
 
 
-def condense_section_text(text, max_chars=500):
-    """Condense section text to narration-friendly length."""
-    # Remove excess whitespace
+def build_narration_text(section, lang, max_chars=800):
+    """Build narration-ready text from a section.
+    
+    Applies all 8 rules:
+    1. Name pronunciation (KO only)
+    2. Read actual document text
+    3. Skip complex math
+    4. § → Section/섹션
+    5. Pause after titles
+    6. Handle bilingual duplication
+    7. Skip references
+    8. Pause at interactive modules
+    """
+    text = section["text"]
+    headings = section.get("headings", [])
+    has_interactive = section.get("has_interactive", False)
+    sec_id = section.get("id", "")
+
+    # Rule 7: Skip reference sections entirely
+    if is_reference_section(sec_id, text):
+        return ""
+
+    # Clean the text with all rules
+    text = format_for_tts(text, lang)
+
+    # Rule 5: Insert pause after titles
+    # Build text with heading ... pause ... body
+    if headings:
+        heading_text = ". ".join(headings)
+        heading_text = format_for_tts(heading_text, lang)
+        # Remove the heading text from the body to avoid duplication
+        body = text
+        for h in headings:
+            clean_h = format_for_tts(h, lang)
+            body = body.replace(clean_h, "", 1).strip()
+        # Reconstruct with pause
+        if body:
+            text = f"{heading_text}.\n\n{body}"
+        else:
+            text = heading_text
+
+    # Condense to max length (end at sentence boundary)
     text = re.sub(r'\s+', ' ', text).strip()
-    # Take first N characters, ending at a sentence boundary
-    if len(text) <= max_chars:
-        return text
-    # Find last sentence end before max_chars
-    truncated = text[:max_chars]
-    last_period = max(truncated.rfind(". "), truncated.rfind("。"))
-    if last_period > max_chars // 2:
-        return truncated[:last_period + 1]
-    return truncated.rstrip() + "..."
+    if len(text) > max_chars:
+        truncated = text[:max_chars]
+        last_period = max(truncated.rfind(". "), truncated.rfind("。"),
+                         truncated.rfind("다. "), truncated.rfind("요. "))
+        if last_period > max_chars // 2:
+            text = truncated[:last_period + 1]
+        else:
+            text = truncated.rstrip() + "..."
 
-
-def create_narration_json(chapter, en_sections, ko_sections):
-    """Create narration JSON for a chapter."""
-    segments = []
-
-    # Match EN and KO sections by index (they should correspond)
-    for i, en_sec in enumerate(en_sections):
-        seg = {
-            "id": i,
-            "text_en": condense_section_text(en_sec["text"]),
-            "text_ko": "",
-            "scroll_to": f"#{en_sec['id']}",
-            "pause_after": True
-        }
-
-        # Try to find matching KO section
-        if i < len(ko_sections):
-            seg["text_ko"] = condense_section_text(ko_sections[i]["text"])
-
-        segments.append(seg)
-
-    return {
-        "chapter": chapter,
-        "segments": segments
-    }
+    return text.strip()
 
 
 def find_ko_file(chapter):
@@ -201,6 +282,41 @@ def find_ko_file(chapter):
         if os.path.isfile(path):
             return path
     return None
+
+
+def create_narration_json(chapter, en_sections, ko_sections):
+    """Create narration JSON for a chapter with clean text."""
+    segments = []
+
+    for i, en_sec in enumerate(en_sections):
+        # Build English narration text
+        text_en = build_narration_text(en_sec, "en")
+        if not text_en:
+            continue  # Skip empty/reference sections
+
+        seg = {
+            "id": len(segments),
+            "text_en": text_en,
+            "text_ko": "",
+            "scroll_to": f"#{en_sec['id']}",
+            "pause_after": True,
+        }
+
+        # Rule 8: Add interactive pause
+        if en_sec.get("has_interactive", False):
+            seg["interactive_pause"] = 15  # seconds
+
+        # Try to find matching KO section
+        if i < len(ko_sections):
+            text_ko = build_narration_text(ko_sections[i], "ko")
+            seg["text_ko"] = text_ko
+
+        segments.append(seg)
+
+    return {
+        "chapter": chapter,
+        "segments": segments
+    }
 
 
 def get_narration_config_block(chapter, segments):
@@ -232,21 +348,17 @@ def inject_narration_into_html(filepath, chapter, segments):
     with open(filepath, "r", encoding="utf-8") as f:
         content = f.read()
 
-    # Check if already has narration
     if "NARRATION_CONFIG" in content:
         print(f"  ⏭️  {os.path.basename(filepath)} already has NARRATION_CONFIG")
         return False
 
     modified = False
 
-    # 1. Inject CSS link in <head>
     if 'narration_player.css' not in content:
         content = content.replace('</head>', '<link rel="stylesheet" href="narration_player.css">\n</head>')
         modified = True
 
-    # 2. Inject NARRATION_CONFIG before </body>
     config_block = get_narration_config_block(chapter, segments)
-    # Find the giscus block or </body> to inject before
     if '<div class="giscus-wrap"' in content:
         content = content.replace('<div class="giscus-wrap"', config_block + '\n<div class="giscus-wrap"')
     elif '</body>' in content:
@@ -264,28 +376,16 @@ def inject_narration_into_html(filepath, chapter, segments):
 
 # ─── Phase 1: Create narration JSONs ───
 
-def phase1_create_jsons(chapters):
-    """Create narration JSON files for chapters that don't have them."""
+def phase1_create_jsons(chapters, force=False):
+    """Create narration JSON files for all chapters."""
     os.makedirs(NARRATION_DIR, exist_ok=True)
-
-    # First, copy any iOS narration JSONs that have real content
-    if os.path.isdir(IOS_NARRATION_DIR):
-        for f in os.listdir(IOS_NARRATION_DIR):
-            if not f.endswith("_narration.json"):
-                continue
-            src = os.path.join(IOS_NARRATION_DIR, f)
-            dst = os.path.join(NARRATION_DIR, f)
-            if os.path.getsize(src) > 100 and not os.path.isfile(dst):
-                import shutil
-                shutil.copy2(src, dst)
-                print(f"  📋 Copied from iOS: {f}")
 
     created = 0
     for chapter in chapters:
         json_path = os.path.join(NARRATION_DIR, f"{chapter}_narration.json")
 
-        if os.path.isfile(json_path) and os.path.getsize(json_path) > 100:
-            print(f"  ⏭️  {chapter}_narration.json already exists")
+        if not force and os.path.isfile(json_path) and os.path.getsize(json_path) > 100:
+            print(f"  ⏭️  {chapter}_narration.json already exists (use --force to overwrite)")
             continue
 
         en_path = os.path.join(SCRIPT_DIR, f"{chapter}.html")
@@ -304,16 +404,18 @@ def phase1_create_jsons(chapters):
         ko_sections = []
         if ko_path:
             ko_sections = extract_sections_from_html(ko_path)
+            print(f"  📝 Found KO file: {os.path.basename(ko_path)} ({len(ko_sections)} sections)")
 
         narration = create_narration_json(chapter, en_sections, ko_sections)
 
         with open(json_path, "w", encoding="utf-8") as f:
             json.dump(narration, f, ensure_ascii=False, indent=2)
 
-        print(f"  ✅ Created {chapter}_narration.json ({len(narration['segments'])} segments)")
+        seg_count = len(narration['segments'])
+        print(f"  ✅ Created {chapter}_narration.json ({seg_count} segments)")
         created += 1
 
-    print(f"\n📊 Phase 1 complete: {created} new narration JSONs created")
+    print(f"\n📊 Phase 1 complete: {created} narration JSONs created")
 
 
 # ─── Phase 2: Inject player into HTMLs ───
@@ -334,13 +436,11 @@ def phase2_inject_players(chapters):
         if not segments:
             continue
 
-        # Inject into EN file
         en_path = os.path.join(SCRIPT_DIR, f"{chapter}.html")
         if os.path.isfile(en_path):
             if inject_narration_into_html(en_path, chapter, segments):
                 injected += 1
 
-        # Inject into KO file
         ko_path = find_ko_file(chapter)
         if ko_path:
             if inject_narration_into_html(ko_path, chapter, segments):
@@ -370,6 +470,7 @@ def phase3_generate_tts(chapters, api_key, dry_run=False):
             "--chapter", chapter,
             "--lang", "all",
             "--api-key", api_key,
+            "--force",  # Always regenerate
         ]
         if dry_run:
             cmd.append("--dry-run")
@@ -395,19 +496,19 @@ def main():
                         help="Preview without calling API (phase 3)")
     parser.add_argument("--chapter", default=None,
                         help="Process only a specific chapter")
+    parser.add_argument("--force", action="store_true",
+                        help="Force overwrite existing files")
 
     args = parser.parse_args()
 
     chapters = get_all_chapters()
-    # Filter out already-done chapters for phases 1 & 2
-    new_chapters = [c for c in chapters if c not in ALREADY_DONE]
+    # No longer skip "already done" chapters — regenerate all
+    all_chapters = chapters
 
     if args.chapter:
-        new_chapters = [args.chapter]
-        chapters = [args.chapter]
+        all_chapters = [args.chapter]
 
-    print(f"📋 Total chapters to process: {len(new_chapters)}")
-    print(f"   Already done: {', '.join(sorted(ALREADY_DONE))}")
+    print(f"📋 Total chapters to process: {len(all_chapters)}")
 
     api_key = args.api_key or os.environ.get("ELEVENLABS_API_KEY", "")
 
@@ -415,13 +516,13 @@ def main():
         print(f"\n{'='*60}")
         print("🔨 PHASE 1: Creating narration JSON files")
         print(f"{'='*60}")
-        phase1_create_jsons(new_chapters)
+        phase1_create_jsons(all_chapters, force=args.force)
 
     if args.phase in ("2", "all"):
         print(f"\n{'='*60}")
         print("💉 PHASE 2: Injecting narration player into HTMLs")
         print(f"{'='*60}")
-        phase2_inject_players(new_chapters)
+        phase2_inject_players(all_chapters)
 
     if args.phase in ("3", "all"):
         if not api_key and not args.dry_run:
@@ -430,8 +531,7 @@ def main():
         print(f"\n{'='*60}")
         print("🎙️  PHASE 3: Generating TTS audio via ElevenLabs")
         print(f"{'='*60}")
-        # For phase 3, process ALL chapters (including already-done ones that might need regeneration)
-        phase3_generate_tts(new_chapters, api_key, dry_run=args.dry_run)
+        phase3_generate_tts(all_chapters, api_key, dry_run=args.dry_run)
 
 
 if __name__ == "__main__":

@@ -3,66 +3,98 @@
   "segments": [
     {
       "id": 0,
-      "text_en": "Welcome to Shapes Have Memories. Two shapes can look completely different, yet share the same fundamental structure. Topology studies properties that survive stretching and bending, and Homology is the algebra that counts their holes.",
-      "text_ko": "도형은 기억을 갖고 있다 챕터에 오신 것을 환영합니다. 두 개의 도형은 겉보기엔 완전히 다를 수 있지만, 같은 근본적인 구조를 공유할 수 있습니다.",
-      "scroll_to": "#hero",
-      "pause_after": true
+      "text_en": "What a shape remembers. Section 1 — Counting Holes What is the difference between a sphere and a torus? You can stretch, bend, and deform one surface into infinitely many shapes — but you can never smoothly turn a sphere into a torus without tearing or gluing. The torus has a hole that the sphere lacks. Homology is the branch of mathematics that makes this intuition precise. It assigns to every shape a sequence of abelian groups that count its \"holes\" in each dimension: connected components (), loops that don't bound disks (), trapped cavities (), and so on. The ranks of these groups are the Betti numbers — the simplest invariants of a shape's topology. Click any surface below to see what it remembers. Drag the 3D view to rotate.",
+      "text_ko": "도형이 기억 하는 것. 섹션 1 — 구멍 세기 구와 토러스(도넛 모양)의 차이는 무엇일까요? 하나의 곡면을 늘리거나 구부려 무한히 다양한 모양으로 변형시킬 수는 있습니다. 하지만 구를 찢거나 붙이지 않고 매끄럽게 토러스로 만들 수는 결코 없습니다. 토러스는 구에는 없는 구멍 을 가지고 있기 때문입니다. 호몰로지(Homology) 는 이러한 직관을 수학적으로 엄밀하게 만들어 주는 분야입니다. 호몰로지는 모든 도형에 차원별로 구멍의 수를 세어주는 아벨 군의 순서쌍 을 부여합니다. 연결된 조각의 수(), 내부가 채워지지 않은 고리의 수(), 갇혀 있는 빈 공간의 수() 등입니다. 이 군들의 계수(rank)를 베티 수(Betti numbers) 라고 부르며, 도형의 위상(topology)을 나타내는 가장 단순한 불변량입니다. 아래 곡면을 클릭하여 각각 어떤 기억 을 가지고 있는지 확인해보세요. 3D 뷰를 드래그하여 회전할 수도 있습니다. β 1 β 0 β 1 구(Sphere) S — 1개의 덩어리, 터널 없음, 1개의 갇힌 내부 공간.",
+      "scroll_to": "#auto-sec-1",
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 1,
-      "text_en": "Let's start by counting holes. The Betti numbers tell us how many components, tunnels, and trapped cavities a space has.",
-      "text_ko": "먼저 구멍을 세는 것부터 시작합시다. 베티 수는 공간이 몇 개의 조각, 터널, 갇힌 텅 빈 공간을 가졌는지 알려줍니다.",
-      "scroll_to": "#sec-holes",
-      "pause_after": true
+      "text_en": "Building shapes from triangles. Live boundary computation. Section 2 — Simplicial Complexes To compute homology we must first describe a shape combinatorially. A simplicial complex is a shape assembled from simple building blocks: vertices (0-simplices), edges (1-simplices), triangles (2-simplices), and so on. The crucial tool is the boundary operator . It maps each simplex to its oriented boundary: [v, v] = v − v [v, v, v] = [v, v] − [v, v] + [v, v] The deepest property: . The boundary of a boundary is always zero. This is not obvious — it requires exact cancellation of terms. Build a complex or load a sample surface, and watch the algebra unfold. The identity is the algebraic reason homology works. Boundaries are always cycles, but not all cycles are boundaries — the gap is homology.",
+      "text_ko": "삼각형 으로 도형 조립하기. 실시간 경계(Boundary) 계산. 섹션 2 — 단체 복합체 (Simplicial Complexes) 호몰로지를 계산하려면 먼저 도형을 조합론적(combinatorial)으로 설명해야 합니다. 단체 복합체(심플리셜 콤플렉스, simplicial complex) 는 점(0-단체), 선분(1-단체), 삼각형(2-단체) 등 단순한 블록들을 이어 붙여 만든 도형입니다. 가장 중요한 도구는 경계 연산자(boundary operator) 입니다. 이 연산자는 각각의 단체를 방향이 있는 경계로 매핑합니다: [v, v] = v − v [v, v, v] = [v, v] − [v, v] + [v, v] 가장 심오한 특징은 이라는 것입니다. 경계의 경계는 항상 0입니다. 이 사실은 당연하게 보이지 않지만, 서로 방향이 반대인 항들이 정확히 상쇄되면서 발생합니다. 복합체를 캔버스에 직접 그리거나 샘플 곡면을 불러와서, 대수학적 계산이 어떻게 펼쳐지는지 확인해 보세요. 이라는 항등식은 호몰로지가 성립하는 대수적 근간입니다. 모든 경계(boundary)는 반드시 사이클(cycle)이지만, 사이클이라고 해서 항상 경계가 되는 것은 아닙니다. 그 둘 사이의 차이가 바로 호몰로지입니다. 샘플 : 선(edges) → 점(vertices) : 면(faces) → 선(edges) = ∘ : 면(faces) → 점(vertices) — 경계면에 다시 경계를 취해봅니다:",
+      "scroll_to": "#auto-sec-2",
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 2,
-      "text_en": "To compute these numbers, topologists chop spaces into simple building blocks called simplices. By keeping track of how they lock together, we translate geometry into linear algebra.",
-      "text_ko": "이 숫자들을 계산하기 위해 수학자들은 공간을 단체들로 잘게 쪼갰습니다. 이들이 맞물리는 방식을 추적함으로써 기하학은 선형대수학으로 번역됩니다.",
-      "scroll_to": "#sec-simplicial",
-      "pause_after": true
+      "text_en": "Closed loops that don't bound. Section 3 — Cycles & Boundaries A cycle is a chain with zero boundary: . Every boundary is automatically a cycle (), but the converse fails spectacularly on shapes with holes. Consider the torus. It has two famous 1-cycles: the meridian (the short loop around the tube) and the longitude (the long loop around the ring). Both are cycles — closed loops — but neither bounds a disk inside the torus. They represent nontrivial classes in . Click edges on the triangulated torus to build a 1-chain. The status panel tells you whether your chain is a cycle, a boundary, or a nontrivial homology class. Select edges on the torus to build a 1-chain...",
+      "text_ko": "내부를 채우지 못하는 막힌 고리. 섹션 3 — 사이클과 경계 (Cycles & Boundaries) 사이클(cycle) 은 경계가 0인 체인()입니다. 모든 경계(boundary)는 반드시 사이클이 되지만(), 이 역제 명제는 구멍을 가진 도형 위에서는 보기좋게 성립하지 않습니다. 토러스를 생각해 보세요. 토러스에는 두 개의 유명한 1차원 사이클이 있습니다: 동체 둘레를 짧게 한 바퀴 도는 자오선(meridian) 과 튜브를 따라 길게 한 바퀴 도는 경도선(longitude) 입니다. 이 두 선 모두 닫힌 고리 형태의 사이클이지만, 그 어떤 선도 토러스 표면의 원판 영역을 완전히 감싸지 못합니다. 이들은 군 안에서 0이 아닌 호몰로지 류(class)를 뜻합니다. 아래 삼각분할된 토러스에서, 가장자리 선들을 클릭하여 체인을 이어 연결해 보세요. 상태 패널에서 당신이 만든 체인이 사이클 인지, 특정 영역의 경계 인지, 혹은 0이 아닌 호몰로지 류 를 이루는지 알려줍니다. 선들을 클릭하여 토러스 위의 1차원 사이클 체인을 조립해보세요...",
+      "scroll_to": "#auto-sec-3",
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 3,
-      "text_en": "Not every closed loop encloses a surface. On a torus, there are cycles that cannot be filled.",
-      "text_ko": "모든 닫힌 고리들이 내부 공간을 감싸고 있는 것은 아닙니다. 토러스 위에는 결코 채워질 수 없는 사이클들이 존재합니다.",
-      "scroll_to": "#sec-cycles",
+      "text_en": "One number to rule them all. Section 4 — The Euler Characteristic Long before homology was formalized, Euler discovered that for any convex polyhedron, the alternating count always holds. This is the Euler characteristic — it equals the alternating sum of Betti numbers: . For every Platonic solid — whose boundary is a triangulated sphere — the Euler characteristic is always 2 , no matter how the triangulation varies.",
+      "text_ko": "모든 것을 지배하는 단 하나의 숫자. 섹션 4 — 오일러 표수 ( Characteristic) 호몰로지가 수학적으로 정립되기 훨씬 전, 레온하르트 오일러(오일러)는 모든 볼록 다면체에 대해 점(V), 선(E), 면(F)의 개수를 교대로 더하고 뺀 값 가 항상 성립한다는 것을 발견했습니다. 이것이 바로 오일러 표수(오일러 characteristic) 입니다. 놀랍게도 이 값은 베티 수들의 교대합과 완전히 일치합니다: . 그 경계면이 구(sphere) 모양과 위상적으로 동형인 플라톤의 정다면체들은, 그 면을 어떻게 잘게 쪼개든 상관없이 오일러 표수가 항상 2 가 됩니다.",
+      "scroll_to": "#auto-sec-4",
       "pause_after": true
     },
     {
       "id": 4,
-      "text_en": "Euler discovered that for any convex polyhedron, vertices minus edges plus faces always equals exactly two. This is the Euler characteristic.",
-      "text_ko": "오일러는 모든 볼록 다면체의 경우 점 빼기 선 더하기 면의 개수가 언제나 2라는 것을 발견했습니다. 이것이 오일러 표수입니다.",
-      "scroll_to": "#sec-euler",
-      "pause_after": true
+      "text_en": "Why the cube and the octahedron are soulmates. Section 5 — The Five Perfect Solids There are exactly five convex regular polyhedra — the Platonic solids — each determined by its Schläfli symbol : regular -gons, meeting at each vertex. Now perform a simple operation: place a new vertex at the center of every face , and connect two new vertices whenever the original faces share an edge . The result is the dual polyhedron — and its Schläfli symbol is , the reverse. This swaps vertices and faces: if the original has vertices and faces, the dual has vertices and faces. Edges pair with edges. This is exactly the dual cell decomposition that topologists use to prove Poincaré duality. The boundary of any Platonic solid is topologically .",
+      "text_ko": "정육면체와 정팔면체는 왜 영혼의 단짝 인가. 섹션 5 — 다섯 개의 완벽한 입체 ( Perfect Solids) 볼록한 정다면체는 우주에 단 다섯 개뿐입니다. 이 플라톤의 정다면체 들은 슐레플리 기호(Schläfli symbol) 로 결정됩니다: 정각형이 한 꼭짓점에 개씩 모여있는 형태입니다. 이제 간단한 조작을 해볼까요: 다면체의 각 면 중심에 점을 하나씩 찍고, 면이 모서리 를 공유할 때마다 그 두 중심점을 하나로 연결합니다. 그 결과물은 쌍대 다면체(dual polyhedron) 가 되며, 그 슐레플리 기호는 앞의 것을 뒤집은 가 됩니다. 이 조작은 점과 면의 역할을 완전히 뒤바꿉니다: 원래 다면체가 개의 점과 개의 면을 가졌다면, 쌍대 다면체는 개의 점과 개의 면을 가집니다. 선(모서리)은 서로 일대일로 짝을 이룹니다. 이 기하학적 직관이 위상수학자들이 푸앵카레 쌍대성을 증명할 때 사용하는 쌍대 세포 분해(dual cell decomposition) 와 정확히 같습니다. 플라톤의 다면체 경계면의 위상은 2차원 구면인 입니다. 에서의 푸앵카레 쌍대성은 과 , 즉 점(vertex)과 면(face)이 대수적인 쌍대관계임을 말해줍니다. 원본의 점(vertex)은 쌍대 다면체의 면(face)과 짝지어지고, 반대도 성립한다는 기하학적 사실 자체가 바로 이 동형사상을 보여주는 것입니다. 아래에서 입체 도형 하나를 골라보세요. 쌍대(Dualize) 버튼을 눌러 도형이 어떻게 단짝 도형으로 변신하는지 지켜보세요. 정사면체(Tetrahedron)의 경우 완벽한 거울상으로 자기 자신과 쌍대를 이룹니다.",
+      "scroll_to": "#auto-sec-5",
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 5,
-      "text_en": "Every regular solid has a dual pair. The cube becomes an octahedron, and the dodecahedron becomes an icosahedron. This proves Poincare duality.",
-      "text_ko": "모든 정다면체는 쌍대 짝꿍을 가집니다. 정육면체는 정팔면체가 되고, 정십이면체는 정이십면체가 됩니다.",
-      "scroll_to": "#sec-dual",
-      "pause_after": true
+      "text_en": "Every hole has a soulmate. Duality in three dimensions:. Section 6 — Poincaré Duality The deepest symmetry in topology: for any closed oriented -manifold , there is a canonical isomorphism Every -dimensional \"hole\" is paired with an -dimensional \"hole.\" They detect each other through intersection : if a -cycle and an -cycle meet transversely, their intersection number is a topological invariant. On the torus (), duality pairs with itself. The meridian and the longitude intersect exactly once — they are Poincaré duals. Drag them to see the intersection spark. No matter how you deform these cycles (staying in the same homology class), the intersection number is always ±1 . This is the geometric soul of Poincaré duality.",
+      "text_ko": "모든 구멍엔 단짝 이 있다. 3차원 에서의 쌍대성:. 섹션 6 — 푸앵카레 쌍대성 (푸앵카레 Duality) 위상수학에서 발견된 가장 심오한 대칭성: 방향을 가진(orientable) 임의의 차원 닫힌 다양체(closed manifold) 에 대하여 다음의 위상 동형(isomorphism)이 영원히 성립합니다. 모든 차원 \"구멍\"은 차원 \"구멍\"과 한 쌍으로 엮여 있습니다. 두 구멍은 서로 교차(intersection) 를 통해 상대방의 존재를 감지해냅니다: 만약 하나의 차원 사이클과 다른 차원 사이클이 비켜나지 못하고 마주친다면, 이 교차점의 수는 위상적 불변량이 됩니다. 토러스의 경우(), 쌍대성은 을 자기 자신과 짝지어줍니다. 자오선 과 경도선 은 토러스 위에서 정확히 한 점에서 교차하며 푸앵카레 쌍대성을 이룹니다. 선들을 마우스로 잡아당겨 그들의 찌릿거리는 교차점을 직접 느껴보세요. 동일한 호몰로지 류(class)를 유지하는 한 아무리 이 형태를 구부리거나 비틀어도, 두 선의 교차수는 영원히 ±1 로 유지됩니다. 이것이 푸앵카레 쌍대성이 가진 기하학적 본질입니다. 교차수 (Intersection number): +1 3차원 토러스 는 정육면체의 서로 마주보는 면들을 서로 이어 붙여(identify) 얻어진 3차원 다양체입니다. 이 도형의 호몰로지는 다음과 같습니다: 푸앵카레 쌍대성은 거울처럼 완벽히 작동합니다: . 1차원 사이클 세 개 (각 축 방향의 원, 금색 표시)는 각각 2차원 사이클(단면의 토러스, 청록색 표시)들과 한 쌍씩 파트너를 이룹니다. 이 베티 수들의 배열은 이항계수 를 이룹니다.",
+      "scroll_to": "#auto-sec-6",
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 6,
-      "text_en": "Henri Poincare revealed the deepest symmetry of shapes: every k-dimensional hole is paired with a matching hole of complementary dimension.",
-      "text_ko": "앙리 푸앵카레는 도형이 지닌 가장 깊은 대칭성을 밝혀냈습니다.",
-      "scroll_to": "#sec-poincare",
-      "pause_after": true
+      "text_en": "Duality across every surface. Section 7 — The Symplectic Pairing For an oriented surface of genus , the first homology group is . Poincaré duality equips it with a symplectic intersection form : the cycles pair as with Each handle contributes one pair of \"soulmate\" cycles. The intersection matrix is always a block-diagonal of blocks — the standard symplectic form. This is why is always even for closed oriented surfaces. Move the genus slider to see how the surface, its cycle pairs, and the intersection matrix evolve. 1 Torus — β = 2, one dual pair",
+      "text_ko": "모든 곡면 에 존재하는 쌍대성. 섹션 7 — 심플렉틱 쌍 ( Pairing) 종수(genus: 구멍의 수)가 인 유향 곡면의 첫 번째 호몰로지 군은 입니다. 푸앵카레 쌍대성은 이 군에 심플렉틱 교차 형식(symplectic intersection form) 을 부여합니다: 1차원 사이클들을 다음과 같은 규칙을 갖는 쌍들로 묶어줍니다. 곡면의 손잡이 하나당 단짝이 되는 사이클 한 쌍이 추가됩니다. 교차 형식을 행렬로 나타내면 언제나 블록들이 대각선을 따라 이어지는 표준적인 심플렉틱 행렬 형태로 나타납니다. 닫힌 유향 곡면의 1차원 베티 수()가 항상 짝수 인 이유가 바로 이것입니다. 아래 슬라이더를 통해 곡면의 종수를 변경하며 곡면 표면, 짝지어진 사이클의 수, 그리고 교차 행렬의 크기가 어떻게 거대해지는지 확인해 보세요. 1 토러스 — β = 2, 한 쌍의 단짝 사이클",
+      "scroll_to": "#auto-sec-7",
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 7,
-      "text_en": "Homology alone is not enough to identify a sphere. Poincare created a faux sphere with hidden non-abelian twist.",
-      "text_ko": "하지만 호몰로지만으로는 도형이 구인지 판별할 수 없습니다.",
-      "scroll_to": "#sec-sphere",
-      "pause_after": true
+      "text_en": "Henri Poincaré. Analysis Situs (1895). Section 8 — A Mind Beyond Geometry Founder of Algebraic Topology Henri Poincaré 1854 – 1912 In a single stroke of 121 pages, one man invented a new continent of mathematics — and then spent the rest of his life correcting, deepening, and marveling at what he had found. Before Poincaré, topology barely existed. There were scattered results — Euler's polyhedron formula, Riemann's surfaces, Betti's connectivity numbers — but no coherent theory, no language, no algebra. In 1895, Henri Poincaré published Analysis Situs in the Journal de l'École Polytechnique. In 121 extraordinary pages, he did something almost without precedent in mathematics: he created an entire field from nearly nothing.",
+      "text_ko": "앙리 푸앵카레 (Henri 푸앵카레). 위상 분석 (Analysis Situs) (1895). 섹션 8 — 기하학을 넘어선 지성 대수적 위상수학의 창시자 앙리 푸앵카레 1854 – 1912 단 121장 분량의 논문 하나로 한 수학자가 수학의 새로운 대륙을 발견해냈습니다. — 그리고 그는 남은 평생을 자신이 발견한 그 심오함에 감탄하고 오류를 수정하며, 그 세계를 시추(深錐)하는 데 바쳤습니다. 푸앵카레 이전에는 위상수학이라는 분야가 거의 존재하지 않았습니다. 오일러의 다면체 공식, 리만의 곡면, 베티의 연결수 등 흩어진 결과들만이 있었을 뿐, 통합된 이론이나 대수학적 언어는 없었습니다. 1895년, 앙리 푸앵카레는 에콜 폴리테크니크 저널에 위상 분석(Analysis Situs) 을 발표했습니다. 이 경이로운 121쪽 분량의 논문에서 그는 역사상 유례를 찾기 힘든 위업을 달성합니다: 거의 무(無)에서 출발해 하나의 완전한 학문 분야를 창조해 낸 것입니다. 이 논문에서 최초로 다음의 개념들이 소개되었습니다: 체계적 도구로서의 호몰로지(homology) , 기본군(fundamental group) , 오일러-푸앵카레 공식 , 그리고 닫힌 유향 차원 다양체의 베티 수가 를 만족한다는 쌍대성 정리(duality theorem) . 그는 셀 공간(cell decompositions)으로 지어진 다양체를 최초로 엄밀하게 다루었으며, 대수적 불변량들이 연속적인 변형 속에서도 끄떡없이 유지된다는 것을 보여주었습니다. 121 수학을 영원히 바꿔 놓은 페이지 수 .",
+      "scroll_to": "#auto-sec-8",
+      "pause_after": true,
+      "interactive_pause": 15
     },
     {
       "id": 8,
-      "text_en": "The duality discovered by Poincare spawned a century of mathematics. The shape of a space dictates what can exist upon it.",
-      "text_ko": "푸앵카레가 발견한 쌍대성은 수학의 새로운 1세기를 낳았습니다.",
-      "scroll_to": "#sec-closing",
-      "pause_after": false
+      "text_en": "A decade of corrections and wonders. Section 8b — The Six Papers What followed Analysis Situs was remarkable. The Danish mathematician Poul Heegaard , in his 1898 dissertation, found a counterexample to Poincaré's duality theorem as originally stated. Rather than seeing this as defeat, Poincaré responded with five supplementary papers — the Compléments à l'Analysis Situs — published between 1899 and 1904. Each complement corrected, refined, and extended the theory, until the final paper culminated in the most famous question in the history of topology. 1895 Analysis Situs The founding paper. Introduced homology , the fundamental group , the Euler–Poincaré formula , and Poincaré duality . Published in the Journal de l'École Polytechnique, 121 pages.",
+      "text_ko": "의문, 수정, 그리고 기적의 10년. 섹션 8b — 여섯 편의 자매 논문 위상 분석(Analysis Situs) 출간 이후 벌어진 일은 실로 놀랍습니다. 덴마크의 수학자 포울 헤고르(Poul Heegaard) 가 1898년 자신의 박사학위 논문에서 푸앵카레의 쌍대성 정리가 처음 진술된 형태로는 성립하지 않는다는 반례를 찾아낸 것입니다. 푸앵카레는 이 비판을 패배가 아닌 도약으로 삼았고, 1899년부터 1904년 사이 다섯 편의 보충 논문 모음인 위상 분석의 보완(Compléments à l'Analysis Situs) 을 출간합니다. 각각의 보완 논문은 이전의 한계를 지적하고 확장해 나갔으며, 마침내 그의 마지막 논문은 위상수학 역사상 가장 유명한 난제(추측)를 낳았습니다. 1895 위상 분석 (Analysis Situs) 모든 것의 시작. 호몰로지 , 기본군 , 오일러-푸앵카레 공식 , 푸앵카레 쌍대성 을 최초로 도입했습니다. 다양체를 셀룰라 복합체로 정리해 대수적 불변량들이 위상적인 성질이라는 것을 121페이지에 걸쳐 증명했습니다. 1899 첫 번째 보완 (Premier Complément) 헤고르(Heegaard) 의 비판에 응답해 호몰로지 군의 유한 부분인 비틀림 계수(torsion coefficients) 를 도입하며 쌍대성을 재구성했습니다. 쌍대성을 위해서는 베티 수의 목록뿐만 아니라 군의 정밀한 구조 전체가 필요함을 밝혀냈습니다.",
+      "scroll_to": "#auto-sec-9",
+      "pause_after": true,
+      "interactive_pause": 15
+    },
+    {
+      "id": 9,
+      "text_en": "Why shapes have souls. Section 9 — The Big Picture Poincaré duality tells us that every closed oriented manifold carries within it a perfect mirror . Holes of complementary dimension are bound together — not by coincidence, but by the deep geometry of how a manifold closes in on itself. This symmetry radiates through all of mathematics and physics. In electromagnetism , closed and co-closed differential forms are Poincaré duals — electric and magnetic fields intertwine through Hodge duality on spacetime. In data science , persistent homology tracks how holes in data are born and die, and duality underlies the stability of these invariants. In algebraic geometry , Serre duality and Grothendieck duality are descendants of Poincaré's original vision.",
+      "text_ko": "도형이 영혼 을 가진 이유. 섹션 9 — 거대한 그림 ( Picture) 푸앵카레 쌍대성은 닫힌 유향 다양체 내면에는 완벽한 거울 이 존재한다는 사실을 알려줍니다. 상호보완적인 차원을 가진 구멍들은 서로 영원토록 단단히 묶여 있습니다 — 이는 결코 우연의 산물이 아니라, 다양체의 공간이 자기 자신 안으로 말려 들어가는 형태에 새겨진 깊은 기하학으로부터 기인한 것입니다. 이 대칭성은 수학을 넘어 물리학 전체로 퍼져 나갑니다. 전자기학(Electromagnetism) 에서 닫혀 있는, 그리고 공-닫혀 있는(co-closed) 미분 형식(differential forms)들은 사실 서로 푸앵카레 쌍대성을 이룹니다 — 시공간 위에서 호지(Hodge) 쌍대성을 엮으며 춤추는 전기장과 자기장의 실체가 바로 이것입니다. 데이터 사이언스 에서의 지속성 호몰로지(persistent homology)는 데이터의 구멍들이 어떻게 태어나고 소멸하는지 추적하는데, 쌍대성이 이 불변량들의 안정성을 지탱합니다. 대수 기하학 에서의 세르 쌍대성(Serre duality)과 그로텐디크 쌍대성(Grothendieck duality) 역시 푸앵카레의 최초 직관이 남긴 후예들입니다. 끈 이론(string theory) 에서 칼라비-야우(Calabi-Yau) 다양체의 호지 수(Hodge numbers) 와 를 뒤바꾸는 거울 대칭성(mirror symmetry) — 이 모든 거울 상들이 우주를 직조하는 가장 깊은 쌍대성에 해당합니다. 모든 유향 다양체는 구멍과 그 짝꿍, 모서리와 그 메아리들이 수놓인 쌍대 조각들을 간직하고 있습니다.",
+      "scroll_to": "#auto-sec-10",
+      "pause_after": true,
+      "interactive_pause": 15
+    },
+    {
+      "id": 10,
+      "text_en": "When homology lies. Section 10 — The Homology Sphere The Poincaré homology sphere is the most famous cautionary tale in topology. Construct it by taking a regular dodecahedron and identifying each pair of opposite pentagonal faces with a clockwise twist of π/5 (36°). The resulting closed 3-manifold has exactly the same homology groups as : Poincaré duality is satisfied: , . Yet this space is not the 3-sphere. Its fundamental group is the binary icosahedral group of order 120 — a perfect group with no abelianization, which is why homology cannot see it. This is what forced Poincaré to ask about simple connectivity: is enough to ensure ? The binary icosahedral group is the preimage of the icosahedral rotation group under the double cover .",
+      "text_ko": "호몰로지가 거짓말 을 할 때. 섹션 10 — 호몰로지 구면 ( Sphere) 푸앵카레 호몰로지 구면은 위상수학에서 가장 유명한 반면교사입니다. 이 도형은 평범한 기하학적인 정십이면체 로 시작하여, 마주보는 각각의 오각형 면들을 시계방향으로 π/5 (36°) 회전 시켜 서로 이어 붙임으로써(identify) 만들어집니다. 그 결과 생성된 이 닫힌 3차원 다양체는 놀랍게도 3차원 구면 와 완전히 똑같은 호몰로지 군들을 가집니다: 푸앵카레 쌍대성 또한 완벽하게 성립합니다: , . 하지만 이 공간은 3차원 구면이 결코 아닙니다 . 이 공간의 기본군은 위수(order) 120의 이진 20면체 군(binary icosahedral group) 입니다 — 이것은 아벨 파트(abelianization)가 전혀 없는 완벽군(perfect group)이기 때문에, 오직 구멍의 개수만을 세는 호몰로지는 이 거대한 꼬임을 전혀 감지하지 못하는 것입니다. 바로 이 도형이, 푸앵카레로 하여금 단순 연결성(단일 폐곡선이 점으로 줄어들 수 있는 성질)에 대해 묻게 만들었습니다: 이라는 조건은 를 보장하기에 충분한가? 이진 20면체 군은 이중 덮개(double cover) 아래에서의 20면체 회전군 의 역상(preimage)입니다. 위수는 120이며, 완벽군()이고 오직 만을 자명하지 않은 몫군(quotient)으로 가집니다. 호몰로지 군들이 와 동일하기 때문에 푸앵카레 쌍대성이 성립하지만 — 쌍대성 그 자체는 속에 은밀히 숨은 비가환 대수적인 꼬임을 보지 못합니다. 정십이면체를 터치하여 회전시켜 보세요.",
+      "scroll_to": "#auto-sec-11",
+      "pause_after": true,
+      "interactive_pause": 15
+    },
+    {
+      "id": 11,
+      "text_en": "Four theorems that changed everything. ① Gauss–Bonnet (1848). ② Hirzebruch–Riemann–Roch (1954 / 1957). ③ Atiyah–Singer Index Theorem (1963). ④ Chern–Simons Theory (1974 / 1989). Section 11 — The Long Shadow Poincaré duality was not an ending — it was a seed. Over the next century, four great theorems grew from the same soil: the idea that topology constrains analysis , that the shape of a space dictates what can happen on it. Each theorem is, at heart, a statement that a global topological invariant equals a local geometric or analytic quantity. Together, they form the backbone of modern geometry. The oldest and most concrete descendant. For a closed surface with Gaussian curvature , The left side is local : it integrates the curvature, a quantity that varies point-to-point.",
+      "text_ko": "모든 것을 바꿔놓은 네 개의 정리. ① 가우스-보네 정리 (가우스–Bonnet) (1848). ② 히르체브루흐-리만-로흐 정리 (Hirzebruch–리만–Roch) (1954 / 1957). ③ 아티야-싱어 지표 정리 (Atiyah–Singer Index Theorem) (1963). ④ 천-사이먼스 이론 (Chern–Simons Theory) (1974 / 1989). 섹션 11 — 긴 그림자 ( Shadow) 푸앵카레 쌍대성은 종착점이 아니었습니다 — 그것은 거대한 씨앗이었습니다. 그 다음 세기에 걸쳐 이 같은 토양에서 4개의 위대한 정리가 피어났습니다: 바로 위상이 해석학(Analysis)을 지배한다 는 생각, 즉 공간의 생김새(Shape) 자체가 그 위에서 일어나는 함수와 입자의 움직임을 규정한다는 기하학적 통찰입니다. 이 정리들은 본질적으로, 전역적인 위상학적 불변량이 국소적인 기하학적 혹은 해석학적 양의 총합과 정확히 일치한다는 것을 천명합니다. 이들은 함께 현대 기하학의 척추를 형성합니다. 가장 오래되고 가장 구체적인 푸앵카레 쌍대성의 조상입니다. 가우스 곡률 를 가진 닫힌 곡면 에 대하여, 왼쪽 변은 국소적(local) 입니다: 점마다 제각기 다른 곡률들을 모두 적분합니다. 오른쪽 변은 전역적(global) 입니다: 구멍의 개수에만 의존하는 위상적 불변량인 오일러 표수 를 말합니다. 곡면을 늘이고 줄이고 구겨 넣어도 — 전체 곡률의 합은 소름 돋게도 언제나 변하지 않습니다. 이것이 앞으로 이어질 모든 지표 정리(Index theorem)의 원형입니다.",
+      "scroll_to": "#auto-sec-12",
+      "pause_after": true,
+      "interactive_pause": 15
     }
   ]
 }

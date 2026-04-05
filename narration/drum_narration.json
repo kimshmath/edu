@@ -3,65 +3,11 @@
   "segments": [
     {
       "id": 0,
-      "text_en": "Can You Hear the Shape of a Drum? This is Mark Kac's famous 1966 question made audible.",
-      "text_ko": "북의 모양을 들을 수 있을까요? 1966년 제시된 마크 카츠의 유명한 질문을 소리로 직접 들어보는 여정입니다.",
+      "text_en": "Can You Hear the Shape of a Drum?. Spectral Geometry · Fourier Analysis · Mathematical Physics posed by Mark Kac , 1966 — answered by Gordon, Webb & Wolpert , 1992 ↑ click the membrane to strike it scroll",
+      "text_ko": "드럼의 모양을 들을 수 있을까?. 스펙트럼 기하학 · 푸리에 해석 · 수리물리학 Mark Kac 이 1966년에 제기하고 — Gordon, Webb & Wolpert 가 1992년에 답한 문제 ↑ 막을 클릭해서 쳐보세요 scroll",
       "scroll_to": "#hero",
-      "pause_after": true
-    },
-    {
-      "id": 1,
-      "text_en": "Section 1. The Voice of the Drum. Strike the virtual membrane anywhere. The displacement instantly decomposes into a superposition of normal modes. The inharmonic frequencies create that distinct, percussive drum sound.",
-      "text_ko": "섹션 1. 북의 목소리. 드럼의 가운데 막을 터치해서 직접 연주해 보세요. 막의 움직임은 곧바로 여러 정규 모드의 중첩으로 분해되며, 화음과 다른 비화음적 스펙트럼이 드럼 특유의 타악기 소리를 만듭니다.",
-      "scroll_to": "#sec-strike",
       "pause_after": true,
-      "resume_on": "#strike-canvas"
-    },
-    {
-      "id": 2,
-      "text_en": "Section 2. Phasor Constellation. Each natural frequency is a rotating phasor vector. You can toggle individual modes on or off below to hear how they build up the complex timbre in real-time.",
-      "text_ko": "섹션 2. 페이저 성좌. 모든 고유진동수는 하나의 회전하는 페이저 벡터입니다. 아래에서 각 모드를 켜거나 끄면서 소리의 윤곽이 실시간으로 어떻게 변하는지 들어보세요.",
-      "scroll_to": "#sec-phasor",
-      "pause_after": true,
-      "resume_on": ".phasor-toggle"
-    },
-    {
-      "id": 3,
-      "text_en": "Section 3. Pure Forms of Sound. Here is a gallery of standing waves vibrating at pure frequencies. Click any card to isolate and listen to its unique pitch. Notice how higher order modes decay much faster.",
-      "text_ko": "섹션 3. 순수한 소리의 형태. 순수한 진동수로 진동하는 고유모드 갤러리입니다. 카드를 눌러 그 음만의 맑은 소리를 감상해 보세요. 차수가 높을수록 진동이 빨리 사그라드는 것도 확인할 수 있습니다.",
-      "scroll_to": "#sec-modes",
-      "pause_after": true,
-      "resume_on": ".mode-card"
-    },
-    {
-      "id": 4,
-      "text_en": "Section 4. Interference and Beating. When two modes have very close eigenvalues, their superposition creates a slow, rhythmic beating effect. Select two tones to hear them collide.",
-      "text_ko": "섹션 4. 간섭과 맥놀이. 서로 아주 비슷한 고유값을 가진 두 모드가 겹치면, 파동이 서로 간섭하며 소리가 커졌다 작아지는 맥놀이 리듬을 만듭니다. 두 음을 합쳐서 파도처럼 밀려오는 소리를 들어보세요.",
-      "scroll_to": "#sec-beat",
-      "pause_after": true,
-      "resume_on": ".beat-play-btn"
-    },
-    {
-      "id": 5,
-      "text_en": "Section 5. Weyl's Law. You can literally hear the area. Hermann Weyl proved that the asymptotic density of eigenvalues reveals the surface area of the domain. Listen to the staircase function count the frequencies.",
-      "text_ko": "섹션 5. 바일의 법칙. 무한한 스펙트럼의 밀도를 세어보면 그 물체의 넓이를 정확하게 구할 수 있습니다. 수열 속에서 기하학을 끌어내는 스펙트럼 계단 함수의 소리를 들어보세요.",
-      "scroll_to": "#sec-weyl",
-      "pause_after": true,
-      "resume_on": "#weyl-replay"
-    },
-    {
-      "id": 6,
-      "text_en": "Section 6. Gordon, Webb, and Wolpert. So, can you always hear the shape? No. In 1992, mathematicians constructed two flat drums that look completely different but share the exact same spectrum. Tap the drums to hear that they are acoustically identical.",
-      "text_ko": "섹션 6. 모양을 항상 들을 수는 없습니다! 1992년, 고든, 웹, 월퍼트는 완전히 다르게 생겼지만 똑같은 소리를 내는 두 평면 드럼 모형을 찾아내면서 카츠의 질문에 마침내 마침표를 찍었습니다. 소리가 정말로 일치하는지 두 드럼을 비교해 보세요.",
-      "scroll_to": "#sec-iso",
-      "pause_after": true,
-      "resume_on": "#sec-iso canvas"
-    },
-    {
-      "id": 7,
-      "text_en": "Section 7. Nodal Domains. Can we count the silence? The regions where the drum membrane does not move are called nodal domains. Explore the silent nodal lines and listen to the Courant bounds.",
-      "text_ko": "섹션 7. 마디 영역. 드럼이 전혀 진동하지 않는 침묵의 선들을 살펴봅시다. 모드에 따라 양극단으로 나뉘는 마디 영역들의 개수를 탐색하고, 쿠랑의 한계 정리를 소리로 세어보면서 북소리 탐험을 마치겠습니다.",
-      "scroll_to": "#sec-nodal",
-      "pause_after": true
+      "interactive_pause": 15
     }
   ]
 }
