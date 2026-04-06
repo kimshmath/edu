@@ -1,0 +1,294 @@
+/* ═══════════════════════════════════════════════════════════════
+   drum_record.css — Recording-mode overlay for cinematic capture
+   
+   Activated by appending ?record=1 to the URL.
+   Transforms the chapter into a fullscreen slide deck:
+   - Each section becomes a full-viewport slide
+   - UI chrome (nav, HUD, hints, footer) is hidden
+   - Canvases scale to fill the viewport
+   - Slide transitions via arrow keys
+   ═══════════════════════════════════════════════════════════════ */
+
+body.record-mode {
+  overflow: hidden;
+  background: #05060c;
+}
+
+/* Hide all chrome */
+body.record-mode #sec-nav,
+body.record-mode #hud,
+body.record-mode .hero-hint,
+body.record-mode .hero-click-hint,
+body.record-mode .floating-badge,
+body.record-mode hr.divider,
+body.record-mode footer,
+body.record-mode .giscus-wrap,
+body.record-mode #audio-overlay,
+body.record-mode #pwa-banner,
+body.record-mode .narration-trigger-wrap {
+  display: none !important;
+}
+
+/* Each section becomes a full-viewport slide */
+body.record-mode .rec-slide {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #05060c;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+  z-index: 100;
+  padding: 4rem;
+  overflow: hidden;
+}
+
+body.record-mode .rec-slide.active {
+  opacity: 1;
+  pointer-events: all;
+  z-index: 200;
+}
+
+/* Slide counter in top-right */
+body.record-mode .rec-counter {
+  position: fixed;
+  top: 1.5rem;
+  right: 2rem;
+  font-family: 'JetBrains Mono', 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: rgba(201, 167, 72, 0.4);
+  letter-spacing: 0.1em;
+  z-index: 9999;
+}
+
+/* Hero slide */
+body.record-mode .rec-slide-hero {
+  text-align: center;
+}
+
+body.record-mode .rec-slide-hero .hero-kicker {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  color: rgba(201, 167, 72, 0.6);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+body.record-mode .rec-slide-hero .hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3rem, 6vw, 5rem);
+  color: #f0e8d8;
+  font-weight: 300;
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+}
+
+body.record-mode .rec-slide-hero .hero-italic {
+  font-style: italic;
+  color: #c9a748;
+}
+
+body.record-mode .rec-slide-hero .hero-sub {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.15rem;
+  color: rgba(221, 215, 204, 0.5);
+  font-style: italic;
+}
+
+/* Section label */
+body.record-mode .rec-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  color: rgba(201, 167, 72, 0.5);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+/* Section title (on canvas slides) */
+body.record-mode .rec-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  color: #f0e8d8;
+  font-weight: 300;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* Canvas fills viewport in recording mode */
+body.record-mode .rec-slide canvas {
+  max-width: 80vw;
+  max-height: 70vh;
+  border-radius: 8px;
+}
+
+/* Interactive canvases — larger */
+body.record-mode .rec-canvas-main {
+  width: min(80vw, 80vh) !important;
+  height: min(80vw, 80vh) !important;
+}
+
+/* Side-by-side layout for GWW drums */
+body.record-mode .rec-iso-pair {
+  display: flex;
+  gap: 4rem;
+  align-items: center;
+  justify-content: center;
+}
+
+body.record-mode .rec-iso-pair canvas {
+  width: 300px;
+  height: 300px;
+}
+
+body.record-mode .rec-iso-pair h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  color: #f0e8d8;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: 300;
+}
+
+/* Equation display */
+body.record-mode .rec-eq {
+  font-family: 'JetBrains Mono', 'Space Mono', monospace;
+  font-size: 1.1rem;
+  color: #22b5aa;
+  text-align: center;
+  padding: 1rem 2rem;
+  background: rgba(34, 181, 170, 0.06);
+  border: 1px solid rgba(34, 181, 170, 0.15);
+  border-radius: 8px;
+  margin-top: 1.5rem;
+  white-space: pre-line;
+}
+
+/* Quote card */
+body.record-mode .rec-quote {
+  max-width: 700px;
+  font-family: 'EB Garamond', serif;
+  font-size: 1.4rem;
+  font-style: italic;
+  color: #f0e8d8;
+  text-align: center;
+  line-height: 1.7;
+  padding: 3rem;
+  border-left: 2px solid rgba(201, 167, 72, 0.3);
+  margin-top: 2rem;
+}
+
+body.record-mode .rec-quote cite {
+  display: block;
+  font-size: 0.8rem;
+  color: rgba(201, 167, 72, 0.5);
+  font-style: normal;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.1em;
+  margin-top: 1rem;
+}
+
+/* Timeline items */
+body.record-mode .rec-timeline {
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+body.record-mode .rec-tl-item {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+body.record-mode .rec-tl-item.visible {
+  opacity: 1;
+  transform: none;
+}
+
+body.record-mode .rec-tl-year {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: #c9a748;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  min-width: 100px;
+  text-align: right;
+  padding-top: 0.2rem;
+}
+
+body.record-mode .rec-tl-body {
+  font-family: 'EB Garamond', serif;
+  font-size: 1rem;
+  color: rgba(221, 215, 204, 0.7);
+  line-height: 1.6;
+  border-left: 1px solid rgba(201, 167, 72, 0.2);
+  padding-left: 1.5rem;
+}
+
+/* Mode grid in recording mode */
+body.record-mode .rec-mode-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  max-width: 600px;
+}
+
+/* Beat canvases side by side */
+body.record-mode .rec-beat-pair {
+  display: flex;
+  gap: 3rem;
+  align-items: flex-start;
+}
+
+body.record-mode .rec-beat-pair .rec-beat-item {
+  text-align: center;
+}
+
+body.record-mode .rec-beat-pair h3 {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  color: rgba(221, 215, 204, 0.5);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+
+/* Nodal viewer layout */
+body.record-mode .rec-nodal-layout {
+  display: flex;
+  gap: 3rem;
+  align-items: center;
+}
+
+/* Keypress hint (bottom-center, very subtle) */
+body.record-mode .rec-keys-hint {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  color: rgba(88, 93, 122, 0.3);
+  letter-spacing: 0.15em;
+  z-index: 9999;
+}
+
+/* Progress bar at very bottom */
+body.record-mode .rec-progress {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #c9a748, #22b5aa);
+  transition: width 0.5s ease;
+  z-index: 9999;
+}
