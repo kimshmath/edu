@@ -417,7 +417,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
       <div class="eq">u(x,y,t)  =  Σₙ  aₙ · φₙ(x,y) · cos(ωₙ t)
 ωₙ  =  jₘₙ · c / R   (inharmonic spectrum)</div>
       <div class="prose">
-        <p>Strike near the center to excite only radial modes <span class="math">m=0</span>. Strike off-center to wake asymmetric modes <span class="math">m≥1</span>. You can hear the difference — the timbre shifts as the excited eigenfunctions change.</p>
+        <p>중심 근처를 치면 방사 모드 <span class="math">m=0</span>만 흥분됩니다. 중심에서 벗어나면 비대칭 모드 <span class="math">m≥1</span>이 깨어납니다. 차이를 들을 수 있습니다 — 흥분된 고유함수가 바뀌면서 음색이 달라집니다.</p>
         <p>오른쪽 위 <em>드럼 크기 슬라이더</em>는 R을 조정하여 <span class="math">ω ∝ 1/R</span>에 따라 모든 진동수를 동시에 이동시킵니다.</p>
       </div>
     </div>
@@ -503,10 +503,10 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
 <!-- §04b THREE MODES -->
 <div class="wrap fi" id="sec-three">
   <div class="s-num">§ 04b — 세 모드 간섭</div>
-  <h2 class="s-title">When Three Modes<br>Meet</h2>
+  <h2 class="s-title">세 모드가<br>만날 때</h2>
   <div class="prose" style="margin-bottom:1.5rem">
-    <p>With three modes the superposition <span class="math">φ_A cos(ω_A t) + φ_B cos(ω_B t) + φ_C cos(ω_C t)</span> generates richer interference. When no two frequency differences are commensurate, the pattern is <em>quasi-periodic</em> — never repeating exactly, yet bounded. The beating structure becomes a tangle of three rhythms at once.</p>
-    <p>Choose any three modes and hear the combination. Watch how the spatial pattern morphs as the three standing waves drift in and out of phase.</p>
+    <p>세 모드의 중첩 <span class="math">φ_A cos(ω_A t) + φ_B cos(ω_B t) + φ_C cos(ω_C t)</span>은 더 풍부한 간섭을 만듭니다. 두 진동수 차이가 통약 불가능하면 패턴은 <em>준주기적</em> — 정확히 반복하지 않지만 유계입니다. 맥놀이 구조가 세 리듬의 얽힘이 됩니다.</p>
+    <p>아무 세 모드나 선택하고 조합을 들어보세요. 세 정상파가 위상을 드나들며 공간 패턴이 어떻게 변하는지 보세요.</p>
   </div>
 
   <div class="three-selectors">
@@ -543,7 +543,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
     </div>
   </div>
 
-  <button class="three-play-btn" id="three-play-btn">▶ Play all three tones</button>
+  <button class="three-play-btn" id="three-play-btn">▶ 세 음 모두 재생</button>
   <div class="three-info" id="three-info"></div>
 </div>
 
@@ -564,7 +564,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
       </div>
       <div class="callout">
         "수열의 점근적 성장으로부터 바일은 연속적인 기하학적 양을 추출해냈습니다. 유한이 무한을 담고 있습니다."
-        <cite>— Spectral geometry tradition</cite>
+        <cite>— 스펙트럼 기하학의 전통</cite>
       </div>
       <button class="action-btn" id="weyl-replay">↺ 소리와 함께 다시 재생</button>
     </div>
@@ -659,7 +659,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
       <div class="gww-step">
         <div class="gww-step-num">3단계 — 기저 곡면 M</div>
         <h4>평면 영역으로 펼치기</h4>
-        <p>Construct a base surface <span class="math">M</span>: 삼각형 <span class="math">T</span>를 각 변에 대해 반복적으로 반사하고 각 단계에서 적용된 군 원소를 추적하여, 168개의 복사본이 더 큰 다각형을 덮을 때까지 진행합니다.</p>
+        <p>기저 곡면 <span class="math">M</span>을 구성합니다: 삼각형 <span class="math">T</span>를 각 변에 대해 반복적으로 반사하고 각 단계에서 적용된 군 원소를 추적하여, 168개의 복사본이 더 큰 다각형을 덮을 때까지 진행합니다.</p>
         <p><span class="math">G</span> 아래 각 복사본의 궤도는 <span class="math">G</span>의 원소로 표시됩니다. 몫 <span class="math">H_i\M</span>은 정확히 <span class="math">|G|/|H_i| = 168/24 = 7</span>개의 삼각형의 합집합이 됩니다 — 두 영역이 정확히 7개의 <span class="math">T</span>로 구성되는 이유가 여기에 있습니다.</p>
       </div>
       <div class="gww-step">
@@ -674,7 +674,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
   <div class="transplant-diagram" id="sec-iso-transplant">
     <h4>이식 동형사상</h4>
     <p style="font-size:.98rem;color:var(--text);line-height:1.7;margin-bottom:1.2rem">
-      The core of the proof is an explicit linear map <span class="math">T: L²(Ω₁) → L²(Ω₂)</span> that intertwines the Laplacians. Label the 7 triangles in <span class="math">Ω₁</span> as <span class="math">A₁…A₇</span> and in <span class="math">Ω₂</span> as <span class="math">B₁…B₇</span>. Given an eigenfunction <span class="math">φ</span> of <span class="math">−Δ</span> on <span class="math">Ω₁</span> with eigenvalue <span class="math">λ</span>, the transplant is:
+      증명의 핵심은 명시적 선형 사상 <span class="math">T: L²(Ω₁) → L²(Ω₂)</span>으로, 라플라시안을 서로 얽습니다(intertwine). <span class="math">Ω₁</span>의 7개 삼각형을 <span class="math">A₁…A₇</span>, <span class="math">Ω₂</span>의 7개 삼각형을 <span class="math">B₁…B₇</span>이라 표시합니다. <span class="math">Ω₁</span> 위의 <span class="math">−Δ</span>의 고유값 <span class="math">λ</span>에 대한 고유함수 <span class="math">φ</span>가 주어지면, 이식은 다음과 같습니다:
     </p>
     <div class="eq" style="margin:0 0 1rem">     Tφ|_{Bⱼ}  =  Σᵢ  cᵢⱼ · (φ|_{Aᵢ} reflected to Bⱼ)</div>
     <p style="font-size:.98rem;color:var(--text);line-height:1.7;margin-bottom:1.2rem">
@@ -2572,21 +2572,22 @@ window.NARRATION_CONFIG = {
   chapter: 'drum',
   basePath: 'assets/narration/drum/',
   segments: [
-    { id: 0, section: '#hero',       label: '소개' },
-    { id: 1, section: '#sec-strike',  label: '§1 북의 목소리' },
-    { id: 2, section: '#sec-phasor',  label: '§2 페이저 성좌' },
-    { id: 3, section: '#sec-modes',   label: '§3 순수한 형태' },
-    { id: 4, section: '#sec-beat',    label: '§4 간섭과 맥놀이' },
-    { id: 5, section: '#sec-weyl',    label: '§5 바일 법칙' },
-    { id: 6, section: '#sec-iso',     label: '§6 등스펙트럼 드럼' },
-    { id: 8, section: '#sec-iso-timeline', label: '답을 향한 역사적 여정' },
-    { id: 9, section: '#sec-iso-sunada',   label: '수나다 정리' },
-    { id: 10, section: '#sec-iso-gww',      label: 'GWW 구성법' },
+    { id: 0,  section: '#hero',              label: '소개' },
+    { id: 1,  section: '#sec-strike',         label: '§1 북의 목소리' },
+    { id: 2,  section: '#sec-phasor',         label: '§2 페이저 성좌' },
+    { id: 3,  section: '#sec-modes',          label: '§3 순수한 형태' },
+    { id: 4,  section: '#sec-beat',           label: '§4 간섭과 맥놀이' },
+    { id: 5,  section: '#sec-three',          label: '§4b 세 모드 간섭' },
+    { id: 6,  section: '#sec-weyl',           label: '§5 바일 법칙' },
+    { id: 7,  section: '#sec-iso',            label: '§6 등스펙트럼 드럼' },
+    { id: 8,  section: '#sec-iso-timeline',   label: '역사적 여정' },
+    { id: 9,  section: '#sec-iso-sunada',     label: '수나다 정리' },
+    { id: 10, section: '#sec-iso-gww',        label: 'GWW 구성법' },
     { id: 11, section: '#sec-iso-transplant', label: '이식 동형사상' },
-    { id: 12, section: '#sec-iso-open',    label: '등스펙트럼: 미해결 문제' },
-    { id: 7, section: '#sec-nodal',       label: '§7 마디 영역' },
-    { id: 13, section: '#sec-nodal-theorems', label: '마디 영역 정리들' },
-    { id: 14, section: '#sec-nodal-future',   label: '연구 최전선' }
+    { id: 12, section: '#sec-iso-open',       label: '미해결 문제' },
+    { id: 13, section: '#sec-nodal',          label: '§7 마디 영역' },
+    { id: 14, section: '#sec-nodal-theorems', label: '마디 영역 정리' },
+    { id: 15, section: '#sec-nodal-future',   label: '연구 최전선' }
   ]
 };
 </script>
