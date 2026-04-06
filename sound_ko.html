@@ -1742,7 +1742,7 @@
           <span class="val" id="amp-val">0.60</span>
         </div>
         <div class="btn-group">
-          <button class="btn btn-gold" id="play-sine-btn" onclick="toggleSine()">▶ Play</button>
+          <button class="btn btn-gold" id="play-sine-btn" onclick="toggleSine()">▶ 재생</button>
           <button class="btn" onclick="setFreq(261.63)">C4</button>
           <button class="btn" onclick="setFreq(329.63)">E4</button>
           <button class="btn" onclick="setFreq(392)">G4</button>
@@ -1830,9 +1830,9 @@
           <canvas id="overlay-canvas" height="150"></canvas>
         </div>
         <div class="overlay-legend">
-          <span><span class="ldot j"></span> Just</span>
-          <span><span class="ldot e"></span> Equal</span>
-          <span><span class="ldot d"></span> Difference</span>
+          <span><span class="ldot j"></span> 순정률</span>
+          <span><span class="ldot e"></span> 평균율</span>
+          <span><span class="ldot d"></span> 차이</span>
         </div>
 
         <!-- Play cards -->
@@ -1841,22 +1841,20 @@
             <div class="tuning-type just-type">순정률</div>
             <div class="tuning-title" style="color:#5db8a3;">순정률</div>
             <div class="tuning-freqs" id="just-freq-info"></div>
-            <button class="play-tuning-btn just-play" id="inst-just-btn" onclick="instPlay('just')">▶ &nbsp;Just
-              Intonation</button>
+            <button class="play-tuning-btn just-play" id="inst-just-btn" onclick="instPlay('just')">▶ &nbsp;순정률</button>
           </div>
           <div class="tuning-card equal-card">
             <div class="tuning-type equal-type">평균율</div>
             <div class="tuning-title" style="color:var(--coral);">평균율</div>
             <div class="tuning-freqs" id="equal-freq-info"></div>
-            <button class="play-tuning-btn equal-play" id="inst-equal-btn" onclick="instPlay('equal')">▶ &nbsp;Equal
-              Temperament</button>
+            <button class="play-tuning-btn equal-play" id="inst-equal-btn" onclick="instPlay('equal')">▶ &nbsp;평균율</button>
           </div>
         </div>
 
         <!-- Compare button -->
         <div class="compare-row">
           <button class="compare-btn" onclick="instPlayBoth()">⟷ 순정률 → 평균율 연속 비교</button>
-          <span class="compare-note">Plays 2 seconds of each in sequence</span>
+          <span class="compare-note">각 2초씩 순차 재생합니다</span>
         </div>
       </div>
 
@@ -1895,12 +1893,12 @@
           <div class="tuning-card just-card">
             <div class="tuning-type just-type">순정률 — 맥놀이 없음</div>
             <div class="tuning-freqs" id="ext-just-info" style="min-height:2rem;"></div>
-            <button class="play-tuning-btn just-play" id="ext-just-btn" onclick="extPlay('just')">▶ Just</button>
+            <button class="play-tuning-btn just-play" id="ext-just-btn" onclick="extPlay('just')">▶ 순정률</button>
           </div>
           <div class="tuning-card equal-card">
             <div class="tuning-type equal-type">평균율 — 맥놀이 발생</div>
             <div class="tuning-freqs" id="ext-equal-info" style="min-height:2rem;"></div>
-            <button class="play-tuning-btn equal-play" id="ext-equal-btn" onclick="extPlay('equal')">▶ Equal</button>
+            <button class="play-tuning-btn equal-play" id="ext-equal-btn" onclick="extPlay('equal')">▶ 평균율</button>
           </div>
         </div>
 
@@ -2017,19 +2015,19 @@
             <div class="tw-label" style="color:#5db8a3;">순정률</div>
             <div class="tw-title" style="color:#5db8a3;">순정률</div>
             <div class="tw-info" id="tw-just-info">정수비</div>
-            <button class="tw-play just-p" id="tw-just-btn" onclick="bachPlay('just')">▶ Just</button>
+            <button class="tw-play just-p" id="tw-just-btn" onclick="bachPlay('just')">▶ 순정률</button>
           </div>
           <div class="tw-card well-c">
             <div class="tw-label" style="color:var(--gold);">Well-Temperament</div>
             <div class="tw-title" style="color:var(--gold);">Werckmeister III</div>
             <div class="tw-info" id="tw-well-info">바흐의 조율</div>
-            <button class="tw-play well-p" id="tw-well-btn" onclick="bachPlay('well')">▶ Werckmeister</button>
+            <button class="tw-play well-p" id="tw-well-btn" onclick="bachPlay('well')">▶ 베르크마이스터</button>
           </div>
           <div class="tw-card equal-c">
             <div class="tw-label" style="color:var(--coral);">평균율</div>
             <div class="tw-title" style="color:var(--coral);">평균율</div>
             <div class="tw-info" id="tw-equal-info">12-TET</div>
-            <button class="tw-play equal-p" id="tw-equal-btn" onclick="bachPlay('equal')">▶ Equal</button>
+            <button class="tw-play equal-p" id="tw-equal-btn" onclick="bachPlay('equal')">▶ 평균율</button>
           </div>
         </div>
 
@@ -2065,7 +2063,7 @@
       </div>
 
       <div class="demo-card reveal">
-        <h3 class="accent-gold" style="margin-bottom: 1rem;">배음 합성기 — Harmonic Synthesizer</h3>
+        <h3 class="accent-gold" style="margin-bottom: 1rem;">배음 합성기</h3>
         <div class="audio-note">슬라이더로 각 배음의 세기를 조절합니다</div>
         <div id="harmonic-sliders"></div>
         <div class="canvas-wrap" style="margin-top: 1rem;">
@@ -2073,7 +2071,7 @@
           <canvas id="fourier-canvas" height="220"></canvas>
         </div>
         <div class="btn-group">
-          <button class="btn btn-gold" id="play-fourier-btn" onclick="toggleFourier()">▶ Play</button>
+          <button class="btn btn-gold" id="play-fourier-btn" onclick="toggleFourier()">▶ 재생</button>
           <button class="btn" onclick="setPreset('sine')">순음</button>
           <button class="btn" onclick="setPreset('piano')">피아노</button>
           <button class="btn" onclick="setPreset('violin')">바이올린</button>
@@ -2172,7 +2170,7 @@
           <span class="val" id="cochlea-freq-val">440 Hz</span>
         </div>
         <div class="btn-group">
-          <button class="btn btn-gold" id="play-cochlea-btn" onclick="toggleCochlea()">▶ Play</button>
+          <button class="btn btn-gold" id="play-cochlea-btn" onclick="toggleCochlea()">▶ 재생</button>
           <button class="btn" onclick="setCochleaFreq(20)">20 Hz (하한)</button>
           <button class="btn" onclick="setCochleaFreq(100)">100 Hz (저역)</button>
           <button class="btn" onclick="setCochleaFreq(200)">200 Hz (저음)</button>
