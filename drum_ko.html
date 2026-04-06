@@ -600,7 +600,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
   </div>
 
   <!-- TIMELINE -->
-  <div class="gww-construction">
+  <div class="gww-construction" id="sec-iso-timeline">
     <div class="s-num" style="margin-top:1rem">답을 향한 역사적 여정</div>
     <div class="timeline">
       <div class="tl-item">
@@ -631,14 +631,14 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
   </div>
 
   <!-- SUNADA'S THEOREM -->
-  <div class="sunada-box">
+  <div class="sunada-box" id="sec-iso-sunada">
     <h4>수나다 정리 (1985)</h4>
     <p><span class="math">M</span>을 컴팩트 리만 다양체, <span class="math">G</span>를 <span class="math">M</span>에 등거리변환으로 작용하는 유한군이라 하자. <span class="math">H₁, H₂ ≤ G</span>가 <em>준켤레</em> 부분군이면 — 즉 모든 켤레류 <span class="math">[g] ⊂ G</span>에 대해 <span class="math">|H₁ ∩ [g]| = |H₂ ∩ [g]|</span>이면 — 몫 다양체 <span class="math">H₁\M</span>과 <span class="math">H₂\M</span>은 등스펙트럼이다.</p>
     <p>준켤레 조건은 <span class="math">G</span>의 <span class="math">L²(H₁\M)</span>과 <span class="math">L²(H₂\M)</span>에 대한 <em>표현 중복도</em>가 같음을 보장하여 동일한 스펙트럼을 강제합니다. 준켤레는 켤레를 의미하지 <em>않습니다</em> — 켤레이면 <span class="math">H₁\M ≅ H₂\M</span>이 등거리 동형이 됩니다. 바로 이 준켤레와 켤레 사이의 틈이 등스펙트럼 비합동 쌍이 존재하는 공간입니다.</p>
   </div>
 
   <!-- THE CONSTRUCTION -->
-  <div class="s-num" style="margin-top:3rem">GWW 구성법</div>
+  <div class="s-num" style="margin-top:3rem" id="sec-iso-gww">GWW 구성법</div>
 
   <div class="gww-grid">
     <div>
@@ -671,7 +671,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
   </div>
 
   <!-- TRANSPLANTATION OPERATOR -->
-  <div class="transplant-diagram">
+  <div class="transplant-diagram" id="sec-iso-transplant">
     <h4>이식 동형사상</h4>
     <p style="font-size:.98rem;color:var(--text);line-height:1.7;margin-bottom:1.2rem">
       The core of the proof is an explicit linear map <span class="math">T: L²(Ω₁) → L²(Ω₂)</span> that intertwines the Laplacians. Label the 7 triangles in <span class="math">Ω₁</span> as <span class="math">A₁…A₇</span> and in <span class="math">Ω₂</span> as <span class="math">B₁…B₇</span>. Given an eigenfunction <span class="math">φ</span> of <span class="math">−Δ</span> on <span class="math">Ω₁</span> with eigenvalue <span class="math">λ</span>, the transplant is:
@@ -701,7 +701,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
   </div>
 
   <!-- WHAT REMAINS OPEN -->
-  <div style="margin-top:3rem">
+  <div style="margin-top:3rem" id="sec-iso-open">
     <div class="s-num">미해결 문제들</div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.2rem;margin-top:1.5rem">
       <div class="gww-step">
@@ -792,7 +792,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
   </div>
 
   <!-- THE MATHEMATICS -->
-  <div class="nodal-theory">
+  <div class="nodal-theory" id="sec-nodal-theorems">
 
     <div class="theorem-row">
       <div class="theorem-card theorem-gold">
@@ -818,7 +818,7 @@ footer{border-top:1px solid var(--border);max-width:1160px;margin:0 auto;padding
   </div>
 
   <!-- FUTURE DIRECTIONS -->
-  <div class="future-section">
+  <div class="future-section" id="sec-nodal-future">
     <div class="s-num">연구의 최전선과 미해결 문제들</div>
     <div class="future-intro prose">
       <p>The theory of 마디 영역 sits at the meeting point of spectral theory, dynamical systems, probability, and topology. The following directions represent some of the most active and enticing open problems in the field — questions where a single idea could unlock a decade of mathematics.</p>
@@ -2579,7 +2579,14 @@ window.NARRATION_CONFIG = {
     { id: 4, section: '#sec-beat',    label: '§4 간섭과 맥놀이' },
     { id: 5, section: '#sec-weyl',    label: '§5 바일 법칙' },
     { id: 6, section: '#sec-iso',     label: '§6 등스펙트럼 드럼' },
-    { id: 7, section: '#sec-nodal',   label: '§7 마디 영역' }
+    { id: 7, section: '#sec-iso-timeline', label: '답을 향한 역사적 여정' },
+    { id: 8, section: '#sec-iso-sunada',   label: '수나다 정리' },
+    { id: 9, section: '#sec-iso-gww',      label: 'GWW 구성법' },
+    { id: 10, section: '#sec-iso-transplant', label: '이식 동형사상' },
+    { id: 11, section: '#sec-iso-open',    label: '등스펙트럼: 미해결 문제' },
+    { id: 12, section: '#sec-nodal',       label: '§7 마디 영역' },
+    { id: 13, section: '#sec-nodal-theorems', label: '마디 영역 정리들' },
+    { id: 14, section: '#sec-nodal-future',   label: '연구 최전선' }
   ]
 };
 </script>
