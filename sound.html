@@ -1723,7 +1723,7 @@ footer {
     <div class="reveal">
       <p class="section-num">06 — AN OPEN QUESTION</p>
       <h2>Is Your Brain Running a <span class="accent-purple">Fourier Transform</span>?</h2>
-      <p>Inside your ear, the cochlea's basilar membrane vibrates at different positions for different frequencies — it's a <strong>biological spectrum analyzer</strong>. It's just 3.5 cm long, yet it covers the full range of a concert piano.</p>
+      <p>Inside your ear, the cochlea's basilar membrane vibrates at different positions for different frequencies — it's a <strong>biological spectrum analyzer</strong>. It's just 3.5 cm long, yet it covers the entire range of human hearing — from a 20 Hz rumble you barely feel to a 20,000 Hz whistle at the edge of perception.</p>
     </div>
 
     <div class="demo-card reveal">
@@ -1734,14 +1734,17 @@ footer {
       </div>
       <div class="slider-row">
         <label>f</label>
-        <input type="range" id="cochlea-freq" min="100" max="8000" value="440" step="10">
+        <input type="range" id="cochlea-freq" min="20" max="20000" value="440" step="1">
         <span class="val" id="cochlea-freq-val">440 Hz</span>
       </div>
       <div class="btn-group">
         <button class="btn btn-gold" id="play-cochlea-btn" onclick="toggleCochlea()">▶ Play</button>
+        <button class="btn" onclick="setCochleaFreq(20)">20 Hz — Floor</button>
         <button class="btn" onclick="setCochleaFreq(200)">200 Hz — Low</button>
         <button class="btn" onclick="setCochleaFreq(1000)">1 kHz — Mid</button>
         <button class="btn" onclick="setCochleaFreq(4000)">4 kHz — High</button>
+        <button class="btn" onclick="setCochleaFreq(12000)">12 kHz — Bright</button>
+        <button class="btn" onclick="setCochleaFreq(20000)">20 kHz — Ceiling</button>
       </div>
     </div>
 
@@ -2551,8 +2554,8 @@ function drawCochlea() {
   const points = 300;
   // Frequency position on basilar membrane (log scale)
   // High freq = base (near entrance), low freq = apex (end)
-  const logMin = Math.log2(100), logMax = Math.log2(8000);
-  const logF = Math.log2(cochFreq);
+  const logMin = Math.log2(20), logMax = Math.log2(20000);
+  const logF = Math.log2(Math.max(20, Math.min(20000, cochFreq)));
   const fPos = 1 - (logF - logMin) / (logMax - logMin); // 0 = high freq (start), 1 = low freq (end)
   // Draw spiral
   cochCtx.beginPath();

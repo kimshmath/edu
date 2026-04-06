@@ -2156,8 +2156,7 @@
       <div class="reveal">
         <p class="section-num">06 — 열린 질문</p>
         <h2>우리 뇌는 <span class="accent-purple">푸리에 변환</span>을 하고 있을까?</h2>
-        <p>달팽이관(cochlea)의 기저막은 위치별로 다른 주파수에 공명합니다 — 사실상 <strong>물리적 주파수 분해기</strong>입니다. 길이는 겨우 3.5cm인데, 피아노 건반 전체의 주파수
-          범위를 커버합니다.</p>
+        <p>달팽이관(cochlea)의 기저막은 위치별로 다른 주파수에 공명합니다 — 사실상 <strong>물리적 주파수 분해기</strong>입니다. 길이는 겨우 3.5cm인데, 20 Hz의 낮은 진동부터 20,000 Hz의 날카로운 초음까지 — 인간 청각의 전 범위를 커버합니다.</p>
       </div>
 
       <div class="demo-card reveal">
@@ -2169,14 +2168,17 @@
         </div>
         <div class="slider-row">
           <label>f</label>
-          <input type="range" id="cochlea-freq" min="100" max="8000" value="440" step="10">
+          <input type="range" id="cochlea-freq" min="20" max="20000" value="440" step="1">
           <span class="val" id="cochlea-freq-val">440 Hz</span>
         </div>
         <div class="btn-group">
           <button class="btn btn-gold" id="play-cochlea-btn" onclick="toggleCochlea()">▶ Play</button>
+          <button class="btn" onclick="setCochleaFreq(20)">20 Hz (하한)</button>
           <button class="btn" onclick="setCochleaFreq(200)">200 Hz (저음)</button>
           <button class="btn" onclick="setCochleaFreq(1000)">1 kHz (중음)</button>
           <button class="btn" onclick="setCochleaFreq(4000)">4 kHz (고음)</button>
+          <button class="btn" onclick="setCochleaFreq(12000)">12 kHz (초고음)</button>
+          <button class="btn" onclick="setCochleaFreq(20000)">20 kHz (상한)</button>
         </div>
       </div>
 
@@ -2993,8 +2995,8 @@
       const points = 300;
       // Frequency position on basilar membrane (log scale)
       // High freq = base (near entrance), low freq = apex (end)
-      const logMin = Math.log2(100), logMax = Math.log2(8000);
-      const logF = Math.log2(cochFreq);
+      const logMin = Math.log2(20), logMax = Math.log2(20000);
+      const logF = Math.log2(Math.max(20, Math.min(20000, cochFreq)));
       const fPos = 1 - (logF - logMin) / (logMax - logMin); // 0 = high freq (start), 1 = low freq (end)
       // Draw spiral
       cochCtx.beginPath();
