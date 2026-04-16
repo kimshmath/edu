@@ -1,19 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <!-- Google tag (gtag.js) -->
-  
-
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-RQVK6SF2E6');
-  </script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>양면에 착지하는 동전</title>
+<title>양면에 착지하는 동전 — Mellow Math</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400&family=Space+Mono&family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 /* ════════════════════════════════════════════════════════════════
    DESIGN TOKENS — edu.kimsh.kr unified standard
@@ -183,9 +175,6 @@ footer p{color:var(--muted);font-size:.8rem;margin-bottom:.3rem}
   .btn-row{gap:.35rem}
 }
 </style>
-  <link rel="stylesheet" href="brand.css">
-<link rel="stylesheet" href="narration_player.css">
-  <link rel="stylesheet" href="typography.css">
 </head>
 <body>
 
@@ -206,13 +195,13 @@ footer p{color:var(--muted);font-size:.8rem;margin-bottom:.3rem}
   <canvas id="hero-canvas"></canvas>
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <div class="hero-category">기계</div>
+    <div class="hero-category">기계 · Machine</div>
     <h1 class="hero-title">
       <span class="title-line"><span class="title-word tl1">양면에</span> <span class="title-word tl2">착지하는</span></span>
       <span class="title-line"><span class="title-word tl3"><em class="hero-italic">동전</em></span></span>
     </h1>
     <p class="hero-sub">입자 하나가 두 틈새를 동시에 통과한다. 원자 하나가 여기와 저기에 동시에 존재한다. 자연은 선택하지 않는다 — 당신이 볼 때까지.</p>
-    <p class="hero-sub-kr">양면에 착지하는 동전 — 양자역학, 양자 하드웨어, 그리고 불확실성으로 계산하는 기계</p>
+    <p class="hero-sub-kr">The Coin That Lands on Both Sides — Quantum mechanics, quantum hardware, and the machines that compute with uncertainty</p>
   </div>
   <div class="hero-hint">스크롤</div>
 </section>
@@ -227,7 +216,7 @@ footer p{color:var(--muted);font-size:.8rem;margin-bottom:.3rem}
 <section class="wrap reveal" id="sec1" data-nav="1">
   <div class="sec-num">제1장</div>
   <h2 class="sec-title">선택을 거부하는 동전</h2>
-  <div class="sec-title-kr">선택을 거부하는 동전</div>
+  <div class="sec-title-kr">A Coin That Refuses to Choose</div>
 
   <p class="prose prose-drop">1927년, 벨 연구소의 물리학자들은 전자를 하나씩 — 정말 하나씩 — 두 개의 좁은 틈새가 있는 장벽을 향해 발사했다. 각 전자는 장벽 뒤의 검출 스크린에 하나의 점으로 도착했다. 여기까지는 이상할 것이 없다. 그런데 수천 개의 전자가 도착한 후, 점들은 밝고 어두운 띠의 패턴 — <em>파동 간섭</em>의 특징적 무늬 — 을 형성했다. 각 전자가 어떻게든 <span class="hi">두 틈새를 동시에 통과</span>하여 자기 자신과 간섭한 것이다.</p>
 
@@ -244,12 +233,12 @@ footer p{color:var(--muted);font-size:.8rem;margin-bottom:.3rem}
   <div class="ibox" style="position:relative">
     <div class="ibox-label"><span class="dot"></span> 상호작용</div>
     <div class="ibox-title">이중슬릿 실험</div>
-    <div class="ibox-desc">전자를 하나씩 발사하세요. 무작위 점으로 착지하는 것을 지켜보세요 — 그리고 간섭 무늬가 나타나는 것을 확인하세요. "경로 감지기"를 켜면 양자 행동이 사라지는 것을 볼 수 있습니다.</div>
+    <div class="ibox-desc">전자를 하나씩 발사하거나 연속 스트림으로 발사하여, 각 광자가 광원에서 출발해 틈새를 통과하고 검출 스크린에 착지하는 모습을 지켜보세요. 밝고 어두운 줄무늬가 축적됩니다 — 파동 간섭의 특징적 패턴입니다. "경로 감지기"를 켜면 양자 행동이 사라지는 것을 확인할 수 있습니다.</div>
 
     <div class="canvas-wrap" style="aspect-ratio:16/9;">
       <canvas id="slitCanvas"></canvas>
     </div>
-    <div class="canvas-caption" id="slitCaption">"발사"를 클릭하여 전자를 발사하세요 · 패턴은 호이겐스-프레넬 파동 방정식으로 계산됩니다</div>
+    <div class="canvas-caption" id="slitCaption">광자(금색)는 광원에서 장벽으로, 이후 (청록색) 장벽에서 스크린으로 이동합니다 · 착지 위치는 아래 프라운호퍼 공식에 의한 |ψ|²에서 샘플링됩니다</div>
 
     <div class="ctrl-row" style="margin-top:1rem">
       <span class="ctrl-label">틈새 간격</span>
@@ -276,9 +265,40 @@ footer p{color:var(--muted);font-size:.8rem;margin-bottom:.3rem}
     </div>
 
     <div class="stats" id="slitStats">
-      <div class="stat"><div class="stat-val" id="statCount">0</div><div class="stat-label">전자 수</div></div>
+      <div class="stat"><div class="stat-val" id="statCount">0</div><div class="stat-label">착지 수</div></div>
+      <div class="stat"><div class="stat-val" id="statFlight">0</div><div class="stat-label">비행 중</div></div>
       <div class="stat"><div class="stat-val" id="statMode">Quantum</div><div class="stat-label">모드</div></div>
       <div class="stat"><div class="stat-val" id="statMaxima">—</div><div class="stat-label">줄무늬</div></div>
+    </div>
+  </div>
+
+  <!-- ═══ EXPLANATION: How the simulation works ═══ -->
+  <div class="ibox" style="position:relative;background:var(--bg2);">
+    <div class="ibox-label"><span class="dot"></span> 내부 구조</div>
+    <div class="ibox-title">이 시뮬레이션은 어떻게 만들어졌는가</div>
+
+    <div style="font-family:var(--font-body);font-size:.92rem;font-weight:300;color:var(--text);line-height:1.85">
+
+      <p style="margin-bottom:1rem">당신이 발사하는 모든 광자는 양자 확률 분포에서 실제로 추출한 표본입니다. 스크린에 착지하는 위치는 두 평행 틈새에 대한 <em>프라운호퍼 회절 공식</em>으로 결정됩니다 — 광학 입문 교과서에서 사용되는 바로 그 식입니다.</p>
+
+      <p style="margin-bottom:1.2rem;color:var(--muted);font-size:.85rem"><em>d</em> = 틈새 간격, <em>a</em> = 틈새 폭, <em>λ</em> = 파장, <em>L</em> = 장벽에서 스크린까지의 거리, <em>y</em> = 스크린 중심에서 측정한 위치라고 하자. 소각 근사 sin&nbsp;θ ≈ y ⁄ L에서, 광자가 위치 <em>y</em>에 착지할 확률은:</p>
+
+      <div class="eq" style="margin:1.2rem 0">  I(y) ∝ cos²(π·d·y / λL)   ×   sinc²(π·a·y / λL)</div>
+
+      <p style="margin-bottom:.9rem"><span style="color:var(--cream)">첫째 인수 — <em>cos²</em></span> · <strong>간섭 항</strong>. 이것이 두 틈새의 중첩입니다: 틈새 1과 틈새 2에서 나온 진폭이 2π·d·sin&nbsp;θ ⁄ λ의 위상차를 가지고 스크린에 도착합니다. 위상이 맞으면 파동이 보강됩니다. 반대면 상쇄됩니다. 이것이 미세하고 균일한 간격의 줄무늬의 원천입니다.</p>
+
+      <p style="margin-bottom:.9rem"><span style="color:var(--cream)">둘째 인수 — <em>sinc²</em></span> · <strong>단일 틈새 회절 포락선</strong>. 틈새 하나만 있어도 스크린에 넓은 종 모양의 분포가 생깁니다 (<em>sinc</em> 함수, sinc(x) = sin(x)⁄x). 이 포락선이 간섭 줄무늬의 진폭을 조절합니다 — 중앙에서 가장 밝고 가장자리로 갈수록 희미해집니다.</p>
+
+      <p style="margin-bottom:1.2rem;color:var(--muted);font-size:.85rem">두 인수의 곱이 전체 패턴을 만듭니다: 좁은 간격의 간섭 줄무늬가 더 넓은 회절 포락선 안에 놓입니다.</p>
+
+      <p style="margin-bottom:.9rem"><span style="color:var(--cream)">샘플링 알고리즘.</span> <em>발사</em>를 클릭하면, 코드는 <strong>기각 샘플링(rejection sampling)</strong>을 사용합니다: 가시 범위에서 무작위 <em>y</em>를 뽑고, I(y)를 계산하고, 확률 I(y)/I<sub>max</sub>로 표본을 수락합니다. 수락될 때까지 반복합니다. 수락된 <em>y</em>가 광자가 착지하는 위치입니다 — 그리고 각 광자는 이 정확한 분포에서 독립적으로 무작위 추출된 것입니다.</p>
+
+      <p style="margin-bottom:.9rem"><span style="color:var(--cream)">애니메이션.</span> <em>발사</em>를 누르고 광자가 착지하기까지, 우리는 입자가 유한한 속도로 이동하는 모습을 애니메이션으로 보여줍니다: 광원 → 틈새 → 스크린. 이 궤적은 시각적 장치일 뿐입니다 — 양자역학적 실재는 광원과 스크린 사이에서 광자의 위치가 정의되지 않는다는 것입니다. 의미 있는 관측은 오직 착지 위치뿐입니다.</p>
+
+      <p style="margin-bottom:.9rem"><span style="color:var(--cream)">감지기 모드.</span> "경로 감지기"를 켜면 붕괴가 모델링됩니다: 세기 공식이 각 틈새 뒤에 하나씩 있는 두 개의 독립적인 가우시안이 됩니다. 간섭 항이 없습니다. 줄무늬는 고전적 두 봉우리 분포로 사라집니다 — 광자가 작은 총알처럼, 파동성 없이 행동할 때 보이는 정확한 모습입니다.</p>
+
+      <p style="margin-bottom:0;color:var(--muted);font-size:.85rem">이 시뮬레이션의 조절 가능한 변수: <em>d</em>는 20~120 μm · <em>a</em>는 5~40 μm · <em>λ</em>는 1~20 pm (X선 영역, 전자의 물질파에 적절). <em>d</em>가 커지면 줄무늬 간격이 좁아집니다. <em>a</em>가 커지면 회절 포락선이 좁아집니다. <em>λ</em>가 커지면 둘 다 넓어집니다.</p>
+
     </div>
   </div>
 
@@ -310,12 +330,6 @@ footer p{color:var(--muted);font-size:.8rem;margin-bottom:.3rem}
       <button class="btn" id="btnZoomReset">보기 초기화</button>
     </div>
   </div>
-
-  <p class="prose">이 패턴을 지배하는 방정식은 우아하다. 거리 <em>d</em>만큼 떨어진 두 좁은 틈새에 파장 <em>λ</em>의 파동을 비추면, 중심에서 각도 <em>θ</em>에 도착할 확률은:</p>
-
-  <div class="eq">  P(θ) ∝ cos²(π d sin θ / λ)  ×  sinc²(π a sin θ / λ)</div>
-
-  <p class="prose">첫 번째 인수가 줄무늬를 만든다 — 두 틈새 사이의 간섭이다. 두 번째 인수는 포락선 — 각 틈새의 유한한 폭 <em>a</em>에 의한 회절이다. 함께 위에서 보이는 아름다운 줄무늬 패턴을 만든다. 밝은 띠는 두 틈새의 파동이 <em>같은 위상</em>으로 도착하는 곳이다. 어두운 띠는 서로 상쇄하는 곳이다.</p>
 
   <p class="prose">진정으로 기묘한 것은 이것이다: 전자를 <span class="hi">하나씩</span> 발사해도 패턴이 나타난다. 어떤 전자도 다른 전자에 대해 "알지" 못한다. 각각이 <em>자기 자신</em>과 간섭한다. 간섭은 입자 사이가 아니라 — <em>가능성</em> 사이의 간섭이다.</p>
 
@@ -349,7 +363,7 @@ footer p{color:var(--muted);font-size:.8rem;margin-bottom:.3rem}
 <section class="wrap reveal" id="sec2" data-nav="2">
   <div class="sec-num">제2장</div>
   <h2 class="sec-title">으스스한 주사위</h2>
-  <div class="sec-title-kr">으스스한 주사위</div>
+  <div class="sec-title-kr">Spooky Dice</div>
 
   <p class="prose prose-drop">1935년, 알베르트 아인슈타인은 보리스 포돌스키, 네이선 로젠과 함께 양자역학이 불완전해야 한다고 주장하는 논문을 발표했다. 논리는 간단했다: 두 입자를 함께 준비한 다음 어떤 거리로든 분리하면 — 방 하나 건너든 은하 하나 건너든 — 양자역학은 한 입자를 측정하면 다른 입자의 상태가 <em>즉시</em> 결정된다고 예측한다. 아인슈타인은 이것을 <span class="ac">"으스스한 원격 작용"</span>이라 부르며 믿기를 거부했다.</p>
 
@@ -449,7 +463,7 @@ footer p{color:var(--muted);font-size:.8rem;margin-bottom:.3rem}
 <section class="wrap reveal" id="sec3" data-nav="3">
   <div class="sec-num">제3장</div>
   <h2 class="sec-title">큐비트 지구본</h2>
-  <div class="sec-title-kr">큐비트 지구본</div>
+  <div class="sec-title-kr">The Qubit Globe</div>
 
   <p class="prose prose-drop">고전적 비트는 컴퓨팅에서 가장 단순한 대상이다: 0 또는 1이다. 전등 스위치, 바닥에 놓인 동전. <span class="ac">큐비트</span> — 양자 비트 — 는 훨씬 풍부한 것이다. 상태는 단일한 값이 아니라 구의 표면 위의 점이다. 구 위의 모든 방향이 유효한 양자 상태다. 이 구를 <span class="hi">블로흐 구(Bloch sphere)</span>라 부르며, 양자 정보의 근본적 기하학이다.</p>
 
@@ -533,7 +547,7 @@ footer p{color:var(--muted);font-size:.8rem;margin-bottom:.3rem}
 <section class="wrap reveal" id="sec4" data-nav="4">
   <div class="sec-num">제4장</div>
   <h2 class="sec-title">가능성의 기하학</h2>
-  <div class="sec-title-kr">가능성의 기하학</div>
+  <div class="sec-title-kr">The Geometry of Maybe</div>
 
   <p class="prose prose-drop">중첩은 양자 컴퓨터에게 지수적으로 큰 공간에 대한 접근을 준다. 얽힘은 큐비트들이 고전적 대응물 없이 정보를 공유하게 해준다. 그러나 둘 다 그 자체로는 양자 컴퓨터가 왜 <em>더 빠른지</em> 설명하지 못한다. 빠진 재료 — 양자 기묘함을 계산 능력으로 바꾸는 것 — 는 <span class="ac">간섭(interference)</span>이다.</p>
 
@@ -649,7 +663,7 @@ footer p{color:var(--muted);font-size:.8rem;margin-bottom:.3rem}
 <section class="wrap reveal" id="sec5" data-nav="5">
   <div class="sec-num">제5장</div>
   <h2 class="sec-title">우주보다 차가운 곳</h2>
-  <div class="sec-title-kr">우주보다 차가운 곳</div>
+  <div class="sec-title-kr">Colder Than Space</div>
 
   <p class="prose prose-drop">The mathematics of quantum computing is beautiful. But to build an actual quantum computer, you must solve an engineering problem of staggering difficulty: keep quantum states alive long enough to compute with them. Qubits are extraordinarily fragile. A stray photon, a vibration from a passing truck, even a cosmic ray from deep space can destroy a quantum state in microseconds. The machines that protect qubits are among the most extreme engineering feats on Earth.</p>
 
@@ -767,7 +781,7 @@ footer p{color:var(--muted);font-size:.8rem;margin-bottom:.3rem}
 <section class="wrap reveal" id="sec6" data-nav="6">
   <div class="sec-num">제6장</div>
   <h2 class="sec-title">내부의 적</h2>
-  <div class="sec-title-kr">내부의 적</div>
+  <div class="sec-title-kr">The Enemy Within</div>
 
   <p class="prose prose-drop">양자 컴퓨터의 가장 큰 적은 해커가 아니다. 떠돌이 광자다. A thermal vibration. A cosmic ray that tunnels through the cryostat and flips a qubit. Even at 15 millikelvin, errors are relentless — the best superconducting qubits today fail roughly once every thousand operations. For comparison, the error rate in a classical computer is about one in a <em>quintillion</em>. Closing that gap is the central challenge of quantum computing.</p>
 
@@ -843,7 +857,7 @@ footer p{color:var(--muted);font-size:.8rem;margin-bottom:.3rem}
 <section class="wrap reveal" id="sec7" data-nav="7">
   <div class="sec-num">제7장</div>
   <h2 class="sec-title">양자 지평선</h2>
-  <div class="sec-title-kr">양자 지평선</div>
+  <div class="sec-title-kr">The Quantum Horizon</div>
 
   <p class="prose prose-drop">In 1981, Richard Feynman stood before an audience at MIT and posed a question: can a classical computer efficiently simulate quantum physics? His answer was no — and his proposed solution was a computer built from quantum mechanics itself. Four decades later, Feynman's vision is becoming real.</p>
 
@@ -948,8 +962,16 @@ footer p{color:var(--muted);font-size:.8rem;margin-bottom:.3rem}
 <!-- ════════════════════════════════════════════════════════════════
      FOOTER
      ════════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-attr">
+    <span class="footer-name">Sang-hyun Kim</span>
+    <span class="footer-inst">Korea Institute for Advanced Study</span>
+    <a class="footer-link" href="https://kimsh.kr" target="_blank">kimsh.kr</a>
+  </div>
+</footer>
 
 <!-- ═══ FLOATING BADGE ═══ -->
+<a class="floating-badge" href="https://edu.kimsh.kr" target="_blank">edu.kimsh.kr</a>
 
 <!-- ════════════════════════════════════════════════════════════════
      JAVASCRIPT
@@ -1071,18 +1093,34 @@ function initDoubleSlit() {
     W = c.clientWidth; H = c.clientHeight;
     c.width = W * dpr; c.height = H * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    drawBase();
   }
 
-  // Parameters
+  // ─── Parameters (controls) ───
   let slitSep = 60, slitW = 15, lambda = 8;
   let detectorOn = false;
-  let particles = [];
   let streaming = false;
-  let streamId = null;
-  const maxParticles = 8000;
+  let streamRate = 8; // photons per second (slow enough to watch)
 
-  // Controls
+  // ─── Particle state ───
+  // In-flight photons: traveling from source → slit → screen
+  // Landed photons: dots on the screen accumulating the pattern
+  let inFlight = [];   // { x, y, vx, vy, targetY, phase: 'toSlit'|'toScreen', slitChosen, bornT }
+  let landed = [];     // { x, y }
+  const maxLanded = 8000;
+
+  // Layout (all in canvas pixel coords)
+  function getLayout() {
+    return {
+      sourceX: W * .08,
+      sourceY: H * .5,
+      barrierX: W * .4,
+      screenX: W * .78,
+      slitGap: slitSep * .8,
+      slitH: slitW * .4,
+    };
+  }
+
+  // Slider controls
   const sepSlider = document.getElementById('slitSep');
   const widSlider = document.getElementById('slitWidth');
   const lamSlider = document.getElementById('slitLambda');
@@ -1090,21 +1128,19 @@ function initDoubleSlit() {
   widSlider.oninput = () => { slitW = +widSlider.value; document.getElementById('slitWidthVal').textContent = slitW + ' μm'; };
   lamSlider.oninput = () => { lambda = +lamSlider.value; document.getElementById('slitLambdaVal').textContent = lambda + ' pm'; };
 
-  // Probability distribution from Fraunhofer diffraction
-  function intensity(x) {
-    // x is position on screen, centered at 0
-    // Map to angle: θ = atan(x / L) ≈ x/L for small angles
-    const L = W * .4; // effective screen distance
-    const theta = x / L;
-    const d = slitSep * .8; // slit separation in screen units
-    const a = slitW * .4;   // slit width in screen units
-    const lam = lambda * 3; // wavelength in screen units
+  // ─── Fraunhofer intensity at screen y-offset from center ───
+  // Double-slit: I(y) ∝ cos²(πd·sinθ/λ) × sinc²(πa·sinθ/λ)
+  // where θ ≈ y/L, d = slit separation, a = slit width
+  function intensity(y) {
+    const L = W * .38;            // barrier → screen distance (canvas units)
+    const theta = y / L;          // small-angle approx
+    const d = slitSep * .8;       // slit separation (canvas units)
+    const a = slitW * .4;         // slit width (canvas units)
+    const lam = lambda * 3;       // wavelength (canvas units)
 
-    // Interference: cos²(π d sinθ / λ)
     const arg1 = Math.PI * d * theta / lam;
     const interference = Math.cos(arg1) ** 2;
 
-    // Diffraction envelope: sinc²(π a sinθ / λ)
     const arg2 = Math.PI * a * theta / lam;
     const sinc = arg2 === 0 ? 1 : Math.sin(arg2) / arg2;
     const envelope = sinc ** 2;
@@ -1112,53 +1148,91 @@ function initDoubleSlit() {
     return interference * envelope;
   }
 
-  // Classical distribution (two Gaussians)
-  function classicalIntensity(x) {
+  // Classical (one-slit-only) distribution: two Gaussians
+  function classicalIntensity(y) {
     const halfSep = slitSep * .4 * .5;
     const sigma = slitW * .6;
-    const g1 = Math.exp(-((x - halfSep) ** 2) / (2 * sigma ** 2));
-    const g2 = Math.exp(-((x + halfSep) ** 2) / (2 * sigma ** 2));
+    const g1 = Math.exp(-((y - halfSep) ** 2) / (2 * sigma * sigma));
+    const g2 = Math.exp(-((y + halfSep) ** 2) / (2 * sigma * sigma));
     return (g1 + g2) * .5;
   }
 
-  // Sample from distribution using rejection sampling
-  function sampleX() {
+  // Rejection-sample a y-offset from distribution
+  function samplePatternY() {
     const dist = detectorOn ? classicalIntensity : intensity;
-    const halfW = W * .35;
-    for (let tries = 0; tries < 1000; tries++) {
-      const x = (Math.random() - .5) * 2 * halfW;
-      const p = dist(x);
-      if (Math.random() < p) return x;
+    const halfRange = H * .35;
+    for (let t = 0; t < 500; t++) {
+      const y = (Math.random() - .5) * 2 * halfRange;
+      const p = dist(y);
+      if (Math.random() < p) return y;
     }
     return 0;
   }
 
-  function fireOne() {
-    if (particles.length >= maxParticles) return;
-    const x = sampleX();
-    const screenX = W * .75 + x * .001; // landing on the right side
-    // Actually, let's place screen on the right 20% of canvas
-    const sx = W * .78 + x;
-    const sy = H * .5 + (Math.random() - .5) * H * .6;
-    // Proper: distribute y uniformly, x from the diffraction pattern
-    const landX = W * .78;
-    const landY = H * .5 + x;
-    particles.push({ x: landX + (Math.random()-.5)*2, y: landY, age: 0 });
-    updateStats();
-    drawAll();
-    playChime(600 + Math.random() * 400, .05, .15);
+  // ─── Launch a photon: it flies from source → slit → screen ───
+  function launchPhoton() {
+    const L = getLayout();
+    // Choose a slit (for detector-off, the quantum view is "both slits" —
+    // we animate with a random choice but the landing position is still sampled
+    // from the quantum distribution so it reflects true |ψ|²)
+    const slitChoice = Math.random() < .5 ? -1 : 1;
+    // Speed: cover canvas in ~2s (so slow enough to see)
+    const toSlitDist = L.barrierX - L.sourceX;
+    const speed = toSlitDist / 80; // pixels per frame at 60fps = ~1.3s to slit
+    inFlight.push({
+      x: L.sourceX, y: L.sourceY,
+      vx: speed,
+      vy: (slitChoice * L.slitGap / 2 - 0) / (toSlitDist / speed), // aim at chosen slit
+      phase: 'toSlit',
+      slitChoice,
+      targetLandY: null, // decided when passes through barrier
+    });
   }
 
-  function fireBurst(n) {
-    for (let i = 0; i < n; i++) {
-      if (particles.length >= maxParticles) break;
-      const x = sampleX();
-      const landX = W * .78 + (Math.random()-.5)*2;
-      const landY = H * .5 + x;
-      particles.push({ x: landX, y: landY, age: 0 });
+  // ─── Animation: step all in-flight photons ───
+  function stepPhotons() {
+    const L = getLayout();
+    for (let i = inFlight.length - 1; i >= 0; i--) {
+      const p = inFlight[i];
+      p.x += p.vx;
+      p.y += p.vy;
+
+      if (p.phase === 'toSlit' && p.x >= L.barrierX) {
+        // Arrived at barrier — decide landing via the intensity pattern
+        // (This is the quantum reality: the particle is "observed" at the screen,
+        // not at the barrier. We sample from I(y) here to set the trajectory.)
+        p.x = L.barrierX;
+        p.y = L.sourceY + p.slitChoice * L.slitGap / 2; // now at slit
+        p.targetLandY = L.sourceY + samplePatternY();
+        // New velocity toward landing position
+        const remainDist = L.screenX - L.barrierX;
+        const remainFrames = 60; // ~1s to screen
+        p.vx = remainDist / remainFrames;
+        p.vy = (p.targetLandY - p.y) / remainFrames;
+        p.phase = 'toScreen';
+      } else if (p.phase === 'toScreen' && p.x >= L.screenX) {
+        // Land on screen
+        if (landed.length < maxLanded) {
+          landed.push({ x: L.screenX, y: p.targetLandY });
+        }
+        inFlight.splice(i, 1);
+        updateStats();
+        if (!streaming) playChime(600 + Math.random() * 400, .04, .12);
+      }
     }
-    updateStats();
-    drawAll();
+  }
+
+  // ─── Fire controls ───
+  function fireOne() {
+    launchPhoton();
+    playChime(700, .04, .12);
+  }
+
+  // Animated burst: queue up N photons to launch over ~1.5 seconds
+  let burstQueue = 0;
+  let burstAccumulator = 0;
+  function fireBurst(n) {
+    burstQueue += n;
     playChime(500, .15, .2);
   }
 
@@ -1166,13 +1240,6 @@ function initDoubleSlit() {
     streaming = !streaming;
     document.getElementById('btnStream').textContent = streaming ? '중지' : '연속 발사';
     document.getElementById('btnStream').classList.toggle('active', streaming);
-    if (streaming) doStream();
-  }
-
-  function doStream() {
-    if (!streaming) return;
-    fireBurst(5);
-    streamId = requestAnimationFrame(doStream);
   }
 
   function toggleDetector() {
@@ -1180,26 +1247,28 @@ function initDoubleSlit() {
     document.getElementById('btnDetector').textContent = '감지기: ' + (detectorOn ? '켜짐' : '꺼짐');
     document.getElementById('btnDetector').classList.toggle('active', detectorOn);
     document.getElementById('statMode').textContent = detectorOn ? '고전적' : '양자';
-    particles = [];
+    landed = [];
+    inFlight = [];
+    burstQueue = 0;
     updateStats();
-    drawAll();
     playChime(detectorOn ? 330 : 550, .12, .2);
   }
 
   function clearAll() {
-    particles = [];
+    landed = [];
+    inFlight = [];
     streaming = false;
-    if (streamId) cancelAnimationFrame(streamId);
+    burstQueue = 0;
     document.getElementById('btnStream').textContent = '연속 발사';
     document.getElementById('btnStream').classList.remove('active');
     updateStats();
-    drawAll();
   }
 
   function updateStats() {
-    document.getElementById('statCount').textContent = particles.length;
-    // Count approximate fringes visible
-    if (particles.length > 50 && !detectorOn) {
+    document.getElementById('statCount').textContent = landed.length;
+    const flightEl = document.getElementById('statFlight');
+    if (flightEl) flightEl.textContent = inFlight.length;
+    if (landed.length > 50 && !detectorOn) {
       const nFringes = Math.max(1, Math.floor(slitSep / lambda * 1.2));
       document.getElementById('statMaxima').textContent = nFringes;
     } else {
@@ -1207,88 +1276,139 @@ function initDoubleSlit() {
     }
   }
 
-  function drawBase() {
+  // ─── Drawing ───
+  function drawScene() {
+    const L = getLayout();
+
+    // Background
     ctx.fillStyle = '#060812';
     ctx.fillRect(0, 0, W, H);
 
-    // Barrier with slits
-    const bx = W * .4;
-    const gap = slitSep * .8;
-    const sw = slitW * .4;
-    ctx.fillStyle = '#1a1d35';
-    ctx.fillRect(bx - 3, 0, 6, H * .5 - gap / 2 - sw / 2);
-    ctx.fillRect(bx - 3, H * .5 - gap / 2 + sw / 2, 6, gap - sw);
-    ctx.fillRect(bx - 3, H * .5 + gap / 2 + sw / 2, 6, H - (H * .5 + gap / 2 + sw / 2));
-
-    // Slit highlights
-    ctx.fillStyle = 'rgba(201,168,76,.25)';
-    ctx.fillRect(bx - 1, H * .5 - gap / 2 - sw / 2, 2, sw);
-    ctx.fillRect(bx - 1, H * .5 + gap / 2 - sw / 2, 2, sw);
-
-    // Source indicator
+    // Source
     ctx.beginPath();
-    ctx.arc(W * .1, H * .5, 4, 0, Math.PI * 2);
-    ctx.fillStyle = var_violet;
+    ctx.arc(L.sourceX, L.sourceY, 5, 0, Math.PI * 2);
+    ctx.fillStyle = '#9a7abf';
+    ctx.shadowColor = 'rgba(154,122,191,.6)';
+    ctx.shadowBlur = 10;
     ctx.fill();
+    ctx.shadowBlur = 0;
 
-    // Label
-    ctx.font = '10px "Space Mono"';
-    ctx.fillStyle = '#5c6178';
-    ctx.fillText('electron source', W * .04, H * .5 + 18);
-    ctx.fillText('barrier', bx - 18, 18);
-    ctx.fillText('detector screen', W * .75, 18);
+    // Barrier with two slits
+    ctx.fillStyle = '#1a1d35';
+    ctx.fillRect(L.barrierX - 3, 0, 6, L.sourceY - L.slitGap / 2 - L.slitH / 2);
+    ctx.fillRect(L.barrierX - 3, L.sourceY - L.slitGap / 2 + L.slitH / 2, 6, L.slitGap - L.slitH);
+    ctx.fillRect(L.barrierX - 3, L.sourceY + L.slitGap / 2 + L.slitH / 2, 6, H - (L.sourceY + L.slitGap / 2 + L.slitH / 2));
 
-    // Detector screen
-    ctx.strokeStyle = 'rgba(255,255,255,.05)';
+    // Slit openings highlighted
+    ctx.fillStyle = 'rgba(201,168,76,.3)';
+    ctx.fillRect(L.barrierX - 1, L.sourceY - L.slitGap / 2 - L.slitH / 2, 2, L.slitH);
+    ctx.fillRect(L.barrierX - 1, L.sourceY + L.slitGap / 2 - L.slitH / 2, 2, L.slitH);
+
+    // Detector screen line
+    ctx.strokeStyle = 'rgba(255,255,255,.08)';
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(W * .78, 0);
-    ctx.lineTo(W * .78, H);
+    ctx.moveTo(L.screenX, 0);
+    ctx.lineTo(L.screenX, H);
     ctx.stroke();
-  }
 
-  const var_violet = '#9a7abf';
-
-  function drawAll() {
-    drawBase();
-
-    // Draw probability distribution curve on the right
-    ctx.beginPath();
-    ctx.strokeStyle = 'rgba(201,168,76,.2)';
-    ctx.lineWidth = 1;
+    // Probability distribution curve (faint)
     const dist = detectorOn ? classicalIntensity : intensity;
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(201,168,76,.18)';
+    ctx.lineWidth = 1;
     for (let py = 0; py < H; py++) {
-      const x = py - H * .5;
-      const p = dist(x);
-      const px = W * .78 + p * W * .18;
+      const y = py - L.sourceY;
+      const p = dist(y);
+      const px = L.screenX + p * W * .14;
       if (py === 0) ctx.moveTo(px, py);
       else ctx.lineTo(px, py);
     }
     ctx.stroke();
 
-    // Draw particles
-    particles.forEach(p => {
-      ctx.fillStyle = 'rgba(136,200,184,.7)';
-      ctx.fillRect(p.x, p.y, 1.5, 1.5);
+    // Labels
+    ctx.font = '10px "Space Mono"';
+    ctx.fillStyle = '#5c6178';
+    ctx.textAlign = 'left';
+    ctx.fillText('source', L.sourceX - 16, L.sourceY + 20);
+    ctx.fillText('barrier', L.barrierX - 18, 14);
+    ctx.fillText('detector', L.screenX, 14);
+    ctx.fillText('|ψ|²', L.screenX + 8, H - 8);
+
+    // Landed photons (accumulated pattern)
+    ctx.fillStyle = 'rgba(136,200,184,.7)';
+    landed.forEach(p => {
+      ctx.fillRect(p.x + (Math.random() - .5) * 3, p.y, 1.8, 1.8);
     });
 
-    // Draw histogram on the far right
-    if (particles.length > 20) {
+    // In-flight photons (bright, glowing dots)
+    inFlight.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
+      ctx.fillStyle = p.phase === 'toSlit' ? '#c9a84c' : '#88c8b8';
+      ctx.shadowColor = p.phase === 'toSlit' ? 'rgba(201,168,76,.7)' : 'rgba(136,200,184,.7)';
+      ctx.shadowBlur = 8;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Short motion trail
+      ctx.strokeStyle = p.phase === 'toSlit' ? 'rgba(201,168,76,.3)' : 'rgba(136,200,184,.3)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(p.x - p.vx * 6, p.y - p.vy * 6);
+      ctx.lineTo(p.x, p.y);
+      ctx.stroke();
+    });
+
+    // Histogram on far right
+    if (landed.length > 20) {
       const bins = new Array(Math.ceil(H / 4)).fill(0);
-      particles.forEach(p => {
+      landed.forEach(p => {
         const bin = Math.floor(p.y / 4);
         if (bin >= 0 && bin < bins.length) bins[bin]++;
       });
       const maxBin = Math.max(...bins, 1);
-      ctx.fillStyle = 'rgba(154,122,191,.2)';
+      ctx.fillStyle = 'rgba(154,122,191,.22)';
       bins.forEach((count, i) => {
-        const barW = (count / maxBin) * W * .12;
-        ctx.fillRect(W * .88, i * 4, barW, 3);
+        const barW = (count / maxBin) * W * .1;
+        ctx.fillRect(W * .9, i * 4, barW, 3);
       });
     }
   }
 
-  // Buttons
+  // ─── Main loop ───
+  let streamAccumulator = 0;
+  let lastT = performance.now();
+  function loop(now) {
+    const dt = Math.min(50, now - lastT) / 1000;
+    lastT = now;
+
+    // Stream mode: launch photons at streamRate per second
+    if (streaming) {
+      streamAccumulator += dt * streamRate;
+      while (streamAccumulator >= 1) {
+        launchPhoton();
+        streamAccumulator -= 1;
+      }
+    }
+
+    // Burst mode: drain the queue at ~70 photons per second
+    // so 100 photons fly out over ~1.4 seconds
+    if (burstQueue > 0) {
+      burstAccumulator += dt * 70;
+      while (burstAccumulator >= 1 && burstQueue > 0) {
+        launchPhoton();
+        burstAccumulator -= 1;
+        burstQueue -= 1;
+      }
+    }
+
+    stepPhotons();
+    drawScene();
+    requestAnimationFrame(loop);
+  }
+
+  // Button hookups
   document.getElementById('btnFire').onclick = fireOne;
   document.getElementById('btnBurst').onclick = () => fireBurst(100);
   document.getElementById('btnStream').onclick = toggleStream;
@@ -1297,6 +1417,7 @@ function initDoubleSlit() {
 
   window.addEventListener('resize', resize);
   resize();
+  requestAnimationFrame(loop);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -4606,54 +4727,5 @@ sections.forEach(s => observer.observe(s));
   updateDots();
 })();
 </script>
-
-
-<script>
-window.NARRATION_CONFIG = {
-  chapter: 'quantumcomputing',
-  basePath: 'assets/narration/quantumcomputing/',
-  segments: [
-    { id: 0,  section: '#hero', label: 'Hero' },
-    { id: 1,  section: '#sec1', label: 'Sec1' },
-    { id: 2,  section: '#sec2', label: 'Sec2' },
-    { id: 3,  section: '#sec3', label: 'Sec3' },
-    { id: 4,  section: '#sec4', label: 'Sec4' },
-    { id: 5,  section: '#sec5', label: 'Sec5' },
-    { id: 6,  section: '#sec6', label: 'Sec6' },
-    { id: 7,  section: '#sec7', label: 'Sec7' }
-  ]
-};
-</script>
-<script src="narration_player.js"></script>
-
-<div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
-  <script src="https://giscus.app/client.js"
-    data-repo="kimshmath/edu"
-    data-repo-id="R_kgDORrE8sw"
-    data-category="Comments"
-    data-category-id="DIC_kwDORrE8s84C45oL"
-    data-mapping="pathname"
-    data-strict="0"
-    data-reactions-enabled="1"
-    data-emit-metadata="0"
-    data-input-position="top"
-    data-theme="dark"
-    data-lang="ko"
-    crossorigin="anonymous"
-    async>
-  </script>
-</div>
-
-<footer>
-  <div class="footer-rule"></div>
-  <div class="footer-attr">
-    <div class="footer-name">Sang-hyun Kim</div>
-    <div class="footer-inst">Korea Institute for Advanced Study<br>AI4Math, KAIST</div>
-    <a href="https://kimsh.kr" class="footer-url">kimsh.kr</a>
-  </div>
-</footer>
-
-<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
-
 </body>
 </html>
