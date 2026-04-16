@@ -41,16 +41,6 @@
 html { font-size:16px; scroll-behavior:smooth; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
 body { background:var(--bg); color:var(--text); font-family:var(--font-body); line-height:1.8; overflow-x:hidden; }
 
-/* ═══ AUDIO OVERLAY ═══ */
-.audio-overlay{position:fixed;inset:0;z-index:99999;background:rgba(5,6,16,.97);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;opacity:1;transition:opacity .6s;pointer-events:all}
-.audio-overlay.hide{opacity:0;pointer-events:none}
-.ao-brand{font-family:var(--font-brand);font-size:.55rem;letter-spacing:.3em;text-transform:lowercase;color:#8db830;text-shadow:0 0 6px rgba(141,184,48,.4)}
-.ao-title{font-family:var(--font-display);font-size:1.6rem;font-weight:300;color:var(--cream);text-align:center;line-height:1.35;max-width:360px}
-.ao-sub{font-family:var(--font-body);font-size:.82rem;font-weight:300;color:var(--muted);text-align:center;max-width:360px;line-height:1.6}
-.ao-btn{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;padding:.75rem 2.2rem;border:1.5px solid var(--gold);border-radius:100px;color:var(--gold);background:transparent;cursor:pointer;transition:background .2s,box-shadow .2s;animation:aoGlow 2.5s ease-in-out infinite}
-@keyframes aoGlow{0%,100%{box-shadow:0 0 16px rgba(201,167,72,.2)}50%{box-shadow:0 0 36px rgba(201,167,72,.5)}}
-.ao-btn:hover{background:rgba(201,167,72,.1)}
-
 /* ═══ HERO ═══ */
 #hero{position:relative;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
 #hero-canvas{position:absolute;inset:0;width:100%;height:100%}
@@ -177,16 +167,6 @@ footer p{color:var(--muted);font-size:.8rem;margin-bottom:.3rem}
 </style>
 </head>
 <body>
-
-<!-- ════════════════════════════════════════════════════════════════
-     AUDIO OVERLAY
-     ════════════════════════════════════════════════════════════════ -->
-<div class="audio-overlay" id="audioOverlay">
-  <div class="ao-brand">edu.kimsh.kr</div>
-  <div class="ao-title">양면에 착지하는<br><em style="color:var(--gold)">동전</em></div>
-  <div class="ao-sub">양자역학, 양자 하드웨어, 그리고 불확실성으로 계산하는 기계</div>
-  <button class="ao-btn" id="aoBtn">시작하기</button>
-</div>
 
 <!-- ════════════════════════════════════════════════════════════════
      HERO — animated quantum interference background
@@ -978,13 +958,23 @@ footer p{color:var(--muted);font-size:.8rem;margin-bottom:.3rem}
      ════════════════════════════════════════════════════════════════ -->
 <script>
 /* ═══════════════════════════════════════════════════════════════
-   AUDIO OVERLAY
+   AUDIO & INITIALIZATION
    ═══════════════════════════════════════════════════════════════ */
 const audioCtx = { ctx: null };
-document.getElementById('aoBtn').addEventListener('click', () => {
-  try { audioCtx.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
-  document.getElementById('audioOverlay').classList.add('hide');
-  setTimeout(() => { document.getElementById('audioOverlay').style.display = 'none'; }, 700);
+function unlockAudio() {
+  if (audioCtx.ctx) return;
+  try {
+    audioCtx.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.ctx.state === 'suspended') audioCtx.ctx.resume();
+    playChime(440, .08, .15);
+  } catch(e) {}
+  document.removeEventListener('click', unlockAudio);
+  document.removeEventListener('touchstart', unlockAudio);
+}
+document.addEventListener('click', unlockAudio);
+document.addEventListener('touchstart', unlockAudio);
+
+window.addEventListener('load', () => {
   initHero();
   initDoubleSlit();
   initZoomPattern();
@@ -1003,7 +993,6 @@ document.getElementById('aoBtn').addEventListener('click', () => {
   initWillow();
   initTimeline();
   initRace();
-  playChime(440, .08, .5);
 });
 
 function playChime(freq, dur, vol) {
