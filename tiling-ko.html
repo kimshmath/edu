@@ -1,0 +1,3055 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>끝없는 바닥 — Mellow Math</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,700;1,9..144,300;1,9..144,400&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@300;400&family=Noto+Serif+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#04050c;--bg2:#090b18;--bg3:#0e1128;
+  --text:#b8b4ac;--cream:#ece8e0;--muted:#52566a;
+  --gold:#c9a84c;--gold2:#d4a853;--gold-dim:rgba(201,168,76,.08);
+  --violet:#8a6abf;--fern:#5a9a72;
+  --border:rgba(255,255,255,.04);
+  --font-display:'Fraunces',Georgia,serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-kr:'Noto Serif KR',serif;
+  --font-mono:'JetBrains Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:var(--font-kr);font-weight:300;
+  line-height:1.75;font-size:clamp(.92rem,1.1vw,1.05rem);
+  overflow-x:hidden;
+}
+body::after{
+  content:'';position:fixed;inset:0;z-index:9999;
+  pointer-events:none;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px;
+}
+
+h1,h2,h3{font-family:var(--font-display);color:var(--cream);font-weight:400;line-height:1.2}
+.prose{max-width:680px;margin:0 auto 1.5rem;font-size:clamp(.92rem,1.1vw,1.02rem);color:var(--text);font-family:var(--font-kr);line-height:1.9;letter-spacing:.005em}
+.prose-drop::first-letter{
+  font-family:var(--font-display);font-size:3.4em;float:left;
+  line-height:.82;margin-right:.12em;margin-top:.06em;
+  color:var(--gold);font-weight:700;
+}
+.hi{color:var(--cream)}
+.ac{color:var(--gold)}
+
+.hero{
+  position:relative;height:100vh;min-height:600px;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.hero-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.hero-vignette{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse at center,transparent 25%,rgba(4,5,12,.85) 85%);
+}
+.hero-content{
+  position:relative;z-index:2;text-align:center;
+  max-width:800px;padding:0 2rem;
+}
+.hero-label{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;opacity:.9}
+.hero-chapter{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
+.hero-title{font-family:var(--font-display);font-size:clamp(2.4rem,5.5vw,4.6rem);color:var(--cream);font-weight:400;line-height:1.08;margin-bottom:.8rem;text-shadow:0 2px 30px rgba(4,5,12,0.8)}
+.hero-title em{font-style:italic;color:var(--gold)}
+.hero-subtitle-kr{font-family:var(--font-kr);font-size:clamp(.9rem,1.6vw,1.15rem);color:var(--cream);margin-bottom:1rem;font-weight:300;opacity:.85}
+.hero-tagline{font-family:var(--font-display);font-style:italic;font-size:clamp(.85rem,1.3vw,1.05rem);color:var(--text);opacity:.8;margin-bottom:3rem}
+.hero-scroll{font-family:var(--font-mono);font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);animation:breathe 3s ease-in-out infinite}
+.hero-scroll::after{content:'';display:block;width:1px;height:40px;background:linear-gradient(to bottom,var(--gold),transparent);margin:12px auto 0}
+@keyframes breathe{0%,100%{opacity:.4}50%{opacity:1}}
+
+.chapter-section{position:relative;max-width:780px;margin:0 auto;padding:6rem 2rem}
+.section-number{font-family:var(--font-mono);font-size:.65rem;letter-spacing:.2em;color:var(--gold);margin-bottom:.6rem}
+.section-title{font-family:var(--font-display);font-size:clamp(1.6rem,3vw,2.2rem);color:var(--cream);margin-bottom:.3rem;font-weight:400}
+.section-title-kr{font-family:var(--font-kr);font-size:.85rem;color:var(--muted);font-weight:300;margin-bottom:2.5rem}
+.section-divider{width:60px;height:1px;margin:0 auto 4rem;background:linear-gradient(to right,transparent,var(--gold),transparent)}
+
+.pull-quote{text-align:center;margin:3rem auto;max-width:580px;padding:2rem 1rem}
+.pull-quote p{font-family:var(--font-display);font-style:italic;font-size:clamp(1rem,1.6vw,1.2rem);color:var(--cream);line-height:1.6}
+.pull-quote::after{content:'';display:block;width:80px;height:1px;margin:1.5rem auto 0;background:linear-gradient(to right,transparent,var(--gold),transparent)}
+
+.block-quote{background:var(--gold-dim);border-left:2px solid var(--gold);padding:1.5rem 2rem;margin:2rem auto;max-width:620px;border-radius:0 8px 8px 0}
+.block-quote p{font-family:var(--font-display);font-style:italic;font-size:.95rem;color:var(--cream);line-height:1.65}
+.block-quote .bq-attr{font-family:var(--font-mono);font-size:.65rem;color:var(--muted);margin-top:.8rem;letter-spacing:.06em}
+
+.ibox{background:var(--bg3);border-radius:16px;padding:2.5rem;margin:3rem auto;max-width:780px;position:relative;overflow:hidden}
+.ibox::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent)}
+.ibox-label{font-family:var(--font-mono);font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.ibox-label::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse-dot 2s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:.4}50%{opacity:1}}
+.ibox-title{font-family:var(--font-display);font-size:clamp(1.15rem,2vw,1.45rem);color:var(--cream);margin-bottom:.6rem}
+.ibox-desc{font-family:var(--font-body);font-size:.82rem;color:var(--text);margin-bottom:1.5rem;max-width:600px;line-height:1.7;opacity:.85}
+.ibox canvas{width:100%;border-radius:10px;background:var(--bg);display:block;margin-bottom:1.2rem}
+.ibox-controls{display:flex;flex-wrap:wrap;gap:.8rem;align-items:center;margin-bottom:1.2rem}
+.ibox-btn{font-family:var(--font-mono);font-size:.65rem;letter-spacing:.08em;padding:.55rem 1.1rem;border:1px solid var(--muted);border-radius:6px;background:transparent;color:var(--text);cursor:pointer;transition:all .25s cubic-bezier(.23,1,.32,1);text-transform:uppercase}
+.ibox-btn:hover{border-color:var(--gold);color:var(--gold)}
+.ibox-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
+.ibox-slider-wrap{display:flex;align-items:center;gap:.6rem}
+.ibox-slider-label{font-family:var(--font-mono);font-size:.58rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.ibox-slider{-webkit-appearance:none;appearance:none;width:140px;height:3px;border-radius:2px;background:var(--muted);outline:none;cursor:pointer}
+.ibox-slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:radial-gradient(circle at 40% 35%,var(--gold2),var(--gold));cursor:pointer;box-shadow:0 0 8px rgba(201,168,76,.4)}
+.ibox-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:.6rem;margin-top:1rem}
+.ibox-stat{background:rgba(255,255,255,.02);border-radius:8px;padding:.7rem .9rem;text-align:center}
+.ibox-stat-label{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.2rem}
+.ibox-stat-value{font-family:var(--font-mono);font-size:1.15rem;color:var(--gold);font-weight:400}
+
+.floating-badge{position:fixed;bottom:1.5rem;left:1.5rem;z-index:100;font-family:var(--font-mono);font-size:.58rem;letter-spacing:.14em;text-transform:lowercase;color:#8db830;text-decoration:none;text-shadow:0 0 12px rgba(141,184,48,.3);transition:all .3s}
+.floating-badge:hover{color:#a8d43a;transform:translateY(-1px);text-shadow:0 0 18px rgba(141,184,48,.5)}
+
+footer{text-align:center;padding:4rem 2rem 3rem;border-top:1px solid var(--border);margin-top:4rem}
+.footer-name{font-family:var(--font-display);font-size:.85rem;color:var(--cream);margin-bottom:.3rem}
+.footer-inst{font-family:var(--font-body);font-size:.7rem;color:var(--muted);margin-bottom:.15rem}
+.footer-url{font-family:var(--font-mono);font-size:.58rem;color:var(--gold);text-decoration:none;letter-spacing:.08em}
+.footer-url:hover{text-decoration:underline}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.23,1,.32,1),transform .8s cubic-bezier(.23,1,.32,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+.wpg-selector{display:grid;grid-template-columns:repeat(auto-fill,minmax(56px,1fr));gap:6px;margin-bottom:1.2rem}
+.wpg-btn{font-family:var(--font-mono);font-size:.55rem;padding:.4rem .2rem;border-radius:5px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .25s;text-align:center;line-height:1.3}
+.wpg-btn:hover{border-color:var(--gold);color:var(--gold)}
+.wpg-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.1)}
+.wpg-info{font-family:var(--font-mono);font-size:.6rem;color:var(--muted);margin-bottom:1rem;line-height:1.8}
+.wpg-info span{color:var(--gold)}
+.overlay-toggles{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.8rem}
+.overlay-toggle{font-family:var(--font-mono);font-size:.5rem;letter-spacing:.06em;padding:.35rem .7rem;border-radius:4px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .25s}
+.overlay-toggle:hover{border-color:var(--gold);color:var(--gold)}
+.overlay-toggle.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
+
+/* ============ PENTAGON GALLERY (Section II) ============ */
+.pent-gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:14px;
+  margin-bottom:1.8rem;
+}
+.pent-card{
+  background:rgba(255,255,255,.025);
+  border:1px solid var(--border);
+  border-radius:8px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  transition:border-color .3s,background .3s;
+}
+.pent-card:hover{border-color:var(--gold);background:rgba(201,168,76,.04)}
+.pent-card-img{
+  width:100%;
+  aspect-ratio:1/1;
+  background:#ece8e0;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  position:relative;
+}
+.pent-card-img img{
+  width:100%;height:100%;
+  object-fit:contain;
+  display:block;
+  filter:contrast(0.95) saturate(0.88);
+}
+.pent-card-img.pent-img-fallback{
+  background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(138,106,191,0.08));
+}
+.pent-card-img.pent-img-fallback::after{
+  content:attr(data-n);
+  font-family:var(--font-display);
+  font-size:1.3rem;color:var(--muted);
+  position:absolute;z-index:1;
+  letter-spacing:.05em;
+}
+.pent-card-img::before{
+  content:'Type';
+  position:absolute;top:8px;left:10px;
+  font-family:var(--font-mono);font-size:.5rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(0,0,0,.4);z-index:1;
+}
+.pent-card-body{
+  padding:.85rem 1rem 1rem;
+  display:flex;flex-direction:column;gap:.25rem;
+  border-top:1px solid rgba(255,255,255,.04);
+}
+.pent-card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:baseline;
+  gap:.5rem;
+  margin-bottom:.2rem;
+}
+.pent-card-num{font-family:var(--font-display);font-size:1.5rem;color:var(--gold);line-height:1;font-weight:400}
+.pent-card-yr{font-family:var(--font-mono);font-size:.56rem;color:var(--muted);letter-spacing:.1em}
+.pent-card-by{font-family:var(--font-body);font-size:.7rem;color:var(--cream);font-style:italic;opacity:.85;line-height:1.35;margin-bottom:.15rem}
+.pent-card-cond{font-family:var(--font-mono);font-size:.58rem;color:var(--text);line-height:1.6;opacity:.8;word-break:break-word}
+.pent-card-cond em{color:var(--gold);font-style:normal;font-weight:500}
+.pent-attrib{
+  font-family:var(--font-mono);font-size:.54rem;
+  color:var(--muted);letter-spacing:.06em;
+  margin-top:.8rem;text-align:right;opacity:.7;
+}
+.pent-attrib a{color:var(--muted);text-decoration:none;border-bottom:1px dotted rgba(255,255,255,.15)}
+.pent-attrib a:hover{color:var(--gold)}
+@media(max-width:520px){
+  .pent-gallery{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+  .pent-card-num{font-size:1.25rem}
+}
+
+/* ============ HAT PALETTE (Section V) ============ */
+.hat-palette{
+  display:flex;flex-wrap:wrap;gap:1.2rem;
+  margin-bottom:1rem;padding:.75rem 1rem;
+  background:rgba(255,255,255,.02);
+  border:1px solid var(--border);
+  border-radius:8px;
+  justify-content:center;
+}
+.hat-palette-swatch{
+  display:flex;flex-direction:column;align-items:center;gap:.35rem;
+}
+.hat-palette-swatch label{
+  font-family:var(--font-mono);font-size:.55rem;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);
+}
+.hat-palette-swatch input[type=color]{
+  width:44px;height:32px;
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:2px;
+  background:transparent;
+  cursor:pointer;
+}
+.hat-palette-swatch input[type=color]:hover{border-color:var(--gold)}
+
+/* ============ APERIODIC ZOOM (Section III) ============ */
+.zoom-controls{display:flex;flex-wrap:wrap;gap:.8rem;align-items:center;margin-bottom:1rem}
+.zoom-level-display{font-family:var(--font-mono);font-size:.65rem;color:var(--violet);letter-spacing:.1em;margin-left:.4rem;white-space:nowrap}
+.aperiodic-accent .ac{color:var(--violet)}
+.aperiodic-accent .section-number{color:var(--violet)}
+.aperiodic-accent .ibox::before{background:linear-gradient(to right,transparent,var(--violet),transparent)}
+.aperiodic-accent .ibox-label{color:var(--violet)}
+.aperiodic-accent .ibox-label::before{background:var(--violet)}
+.aperiodic-accent .pull-quote::after{background:linear-gradient(to right,transparent,var(--violet),transparent)}
+.aperiodic-accent .block-quote{border-left-color:var(--violet);background:rgba(138,106,191,.06)}
+
+/* ============ EPILOGUE / REFERENCES ============ */
+.epilogue-section{padding:4rem 1.5rem;max-width:900px;margin:0 auto}
+.epilogue-section .section-title{text-align:center;margin-bottom:2rem}
+.refs-list{list-style:none;padding:0;margin:1.5rem 0;counter-reset:ref}
+.refs-list li{
+  font-family:var(--font-body);font-size:.85rem;color:var(--text);
+  line-height:1.6;margin-bottom:1rem;padding-left:2.2rem;position:relative;
+  counter-increment:ref;
+}
+.refs-list li::before{
+  content:"[" counter(ref) "]";
+  position:absolute;left:0;top:0;
+  font-family:var(--font-mono);font-size:.7rem;color:var(--muted);
+  letter-spacing:.06em;
+}
+.refs-list li em{color:var(--cream);font-style:italic}
+.refs-list li a{color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(201,168,76,.25)}
+.refs-list li a:hover{border-bottom-color:var(--gold)}
+.refs-title{
+  font-family:var(--font-display);font-size:1.2rem;color:var(--cream);
+  margin-top:2.5rem;margin-bottom:.8rem;letter-spacing:.02em;
+}
+.refs-intro{
+  font-family:var(--font-body);font-size:.85rem;color:var(--muted);
+  font-style:italic;margin-bottom:1.5rem;
+}
+.aperiodic-accent .hi{color:var(--cream)}
+.aperiodic-accent .ibox-stat-value{color:var(--violet)}
+.aperiodic-accent .ibox-btn:hover{border-color:var(--violet);color:var(--violet)}
+.aperiodic-accent .ibox-btn.active{border-color:var(--violet);color:var(--violet);background:rgba(138,106,191,.1)}
+.sym-btn{min-width:2.6rem;padding:.5rem .75rem !important;text-align:center}
+
+@media(max-width:768px){
+  .chapter-section{padding:4rem 1.3rem}
+  .ibox{padding:1.5rem}
+  .ibox-stats{grid-template-columns:repeat(2,1fr)}
+  .wpg-selector{grid-template-columns:repeat(auto-fill,minmax(48px,1fr))}
+}
+@media(max-width:480px){
+  .hero-title{font-size:2rem}
+  .ibox-stats{grid-template-columns:1fr 1fr}
+  .ibox-controls{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<section class="hero" id="hero">
+  <canvas class="hero-canvas" id="heroCanvas"></canvas>
+  <div class="hero-vignette"></div>
+  <div class="hero-content">
+    <div class="hero-label">Wallpaper Groups · Aperiodic Tilings · Crystallography</div>
+    <div class="hero-chapter">제5장 · 공간</div>
+    <h1 class="hero-title">끝없는 <em>바닥</em></h1>
+    <div class="hero-tagline">도형들은 어떻게 평면을 채우기로 공모하는가 — 그리고 그들이 반복을 거부할 때 무슨 일이 벌어지는가</div>
+    <div class="hero-scroll">시작</div>
+  </div>
+</section>
+
+<div class="section-divider reveal"></div>
+
+<section class="chapter-section" id="section1">
+  <div class="section-number reveal">I</div>
+  <h2 class="section-title reveal">알함브라의 비밀</h2>
+
+
+  <p class="prose prose-drop reveal">
+    스페인 남부, 그라나다를 내려다보는 언덕 위에 700년 동안 수학을 가르쳐 온 궁전이 서 있다. 알함브라 궁전은 13–14세기 나스르 왕조가 세운, 이베리아 반도에서 꽃핀 무어 문명의 마지막 광휘였다. 궁전의 벽은 조각된 치장 벽토, 유약을 입힌 도자기, 채색된 회반죽으로 뒤덮여 있는데, 그 장식 속에는 놀라운 성취가 숨어 있다. <span class="hi">무어의 장인들은 오로지 손과 눈만으로, 평면 위에서 하나의 모티프가 반복될 수 있는 본질적으로 모든 방식을 발견했다</span>.
+  </p>
+
+  <p class="prose reveal">
+    그들에게는 군론이 없었다. 대칭 연산 — 회전, 반사, 미끄럼 반사, 평행이동 — 을 기술하는 언어도 없었다. 그들이 지닌 것은 이슬람 신학에 뿌리내린 미학적 요청이었다. 형상 표현을 피하고, 그 귀결로 기하학적 문양에 헌신하는 것. 이 제약은 곧 해방이 되었다. 세계를 묘사하는 과업에서 풀려난 알함브라의 장인들은 <span class="ac">반복이라는 구조 자체</span>에 눈을 돌렸다.
+  </p>
+
+  <p class="prose reveal">
+    평면 위에 반복되는 무늬 — 수학자들이 <span class="hi">벽지 문양(wallpaper pattern)</span>이라 부르는 것 — 은 얼핏 무한한 다양성을 품은 듯 보인다. 바닥을 정사각형으로 덮을 수도, 정육각형으로 덮을 수도, 에셔 풍의 서로 맞물린 물고기로 덮을 수도 있다. 그러나 이런 무늬들의 대칭은 무한히 다양하지 않다. 1891년, 러시아 결정학자 예브그라프 표도로프(Evgraf Fedorov)는 무어 장인들이 500년 전에 이미 직관적으로 파악한 정리를 증명했다. <span class="ac">두 방향으로 반복되는 무늬의 대칭 유형은 정확히 열일곱 가지뿐이다.</span> 열여섯도, 열여덟도 아닌, 열일곱.
+  </p>
+
+  <div class="pull-quote reveal">
+    <p>열일곱 — 평면이 하나의 모티프를 기억하고 영원히 되풀이할 수 있는 방식의 수이자, 저마다가 같은 대칭 언어의 서로 다른 방언이다.</p>
+  </div>
+
+  <p class="prose reveal">
+    열일곱이라는 수는 임의의 값이 아니다. 어떤 회전 대칭의 조합이 반복 격자와 양립할 수 있는지를 면밀히 따지는 대수적 논증에서 자연스럽게 도출된다. 벽지 문양은 2차·3차·4차·6차 회전을 가질 수 있지만, 5차나 7차는 결코 허용되지 않는다. 이것이 <span class="hi">결정학적 제약(crystallographic restriction)</span>이며, 아랍 타일 장식에서 결정의 원자 격자에 이르기까지 모든 것을 지배한다. 증명은 놀랍도록 기하적이다. 격자에 <em>n</em>차 회전이 있다면, 격자 위의 임의의 점을 회전시킨 상 역시 격자를 이루어야 한다. 5차나 7차 회전이면 이로부터 모순이 나온다 — 점들이 점점 더 가까워져서, 격자의 이산성을 깨뜨린다.
+  </p>
+
+  <p class="prose reveal">
+    열일곱 개의 군은 1924년, 표도로프의 앞선 연구를 몰랐던 헝가리 수학자 조지 폴리아(George Pólya)에 의해 독립적으로 재발견되었다. 몇 년 뒤 폴리아의 논문이 네덜란드 판화가 M.C. 에셔의 손에 들어갔다. 에셔는 1922년 알함브라를 방문한 이래 그곳에 사로잡혀 있었다. 그는 수학을 이해하지는 못했다 — 훗날 그는 추상적 기호가 "현기증"을 일으켰다고 적었다 — 그러나 <span class="ac">그 밑바탕에 놓인 아이디어를 예술가의 직관으로</span> 꿰뚫어 보았다. 이후 40년 동안 그는 공책을 테셀레이션으로 채웠고, 열일곱 군을 하나하나 탐구하며 딱딱한 타일을 도마뱀, 천사, 기사, 악마의 모습으로 구부렸다.
+  </p>
+
+  <div class="block-quote reveal">
+    <p>"나는 동료 예술가들보다 수학자들과 더 많은 것을 공유하는 듯하다."</p>
+    <div class="bq-attr">— M.C. 에셔, 1958</div>
+  </div>
+
+  <p class="prose reveal">
+    그 열일곱 가지 대칭 유형이란 정확히 무엇인가? 각 벽지 군은 일종의 요리법이다. 어떤 대칭 연산 — 회전·반사·미끄럼 반사 — 이 두 개의 평행이동과 결합하여 전체 무늬를 생성하는지를 지정한다. 가장 단순한 군 <em>p1</em>은 평행이동만을 가진다. 회전도 반사도 없다. 무늬는 반복되지만, 결코 뒤집히거나 돌지 않는다. 반대 극단의 <em>p6m</em>은 6차 회전, 여섯 방향의 거울선, 미끄럼 반사까지 담아낸다 — 벽지 문양이 가질 수 있는 최대 대칭이다. 그 양극 사이에 열다섯 가지 가능성이 더 자리하며, 저마다가 대칭 요소들의 고유한 조합이다.
+  </p>
+
+  <p class="prose reveal">
+    이 분류의 아름다움은 단순히 분류학적 차원에 머물지 않는다. 그것은 2차원 공간의 본질에 관한 깊은 진리를 드러낸다. <span class="hi">평면 자체가 반복에 대해 제한된 어휘만을 가지고 있다는 것이다.</span> 디자이너가 아무리 독창적이어도, 모티프가 아무리 복잡해도, 그 기저의 대칭은 반드시 이 열일곱 유형 중 하나여야 한다. 무어 장인들은 이 천장을 경험적으로 발견했고, 표도로프와 폴리아는 그것이 동시에 바닥이기도 함을 증명했다. 위로도, 아래로도 더는 없다. 열일곱이 이야기의 전부다.
+  </p>
+
+  <div class="ibox reveal" id="wpgBox">
+    <div class="ibox-label">인터랙티브</div>
+    <div class="ibox-title">벽지 군 탐험기</div>
+    <div class="ibox-desc">
+      아래에서 17개의 벽지 군 가운데 하나를 고른다. 기본 영역(fundamental domain)이 캔버스에 나타난다. 클릭·드래그로 그 안에 그림을 그려 보라. 모티프가 그 군의 대칭 연산에 따라 복제되는 모습을 볼 수 있다. 회전 중심, 거울선, 격자 구조를 보려면 오버레이를 켜라.
+    </div>
+
+    <div class="wpg-selector" id="wpgSelector"></div>
+
+    <div class="wpg-info" id="wpgInfo">
+      군: <span id="wpgName">p1</span> · 회전: <span id="wpgRot">없음</span> · 반사: <span id="wpgRef">없음</span> · 미끄럼: <span id="wpgGlide">없음</span>
+    </div>
+
+    <div class="overlay-toggles">
+      <button class="overlay-toggle" data-overlay="lattice">격자</button>
+      <button class="overlay-toggle" data-overlay="rotations">회전 중심</button>
+      <button class="overlay-toggle" data-overlay="mirrors">거울선</button>
+      <button class="overlay-toggle active" data-overlay="domain">기본 영역</button>
+    </div>
+
+    <div class="ibox-controls">
+      <div class="ibox-slider-wrap">
+        <span class="ibox-slider-label">붓 크기</span>
+        <input type="range" class="ibox-slider" id="brushSize" min="2" max="20" value="6">
+      </div>
+      <div class="ibox-slider-wrap">
+        <span class="ibox-slider-label">색</span>
+        <input type="color" id="brushColor" value="#c9a84c" style="width:28px;height:28px;border:1px solid var(--muted);border-radius:4px;background:transparent;cursor:pointer">
+      </div>
+      <button class="ibox-btn" id="clearCanvas">지우기</button>
+    </div>
+
+    <canvas id="wpgCanvas" width="720" height="480"></canvas>
+
+    <div class="ibox-stats">
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">군</div>
+        <div class="ibox-stat-value" id="statGroup">p1</div>
+      </div>
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">회전 차수</div>
+        <div class="ibox-stat-value" id="statRot">—</div>
+      </div>
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">거울축</div>
+        <div class="ibox-stat-value" id="statMirror">0</div>
+      </div>
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">대칭 개수</div>
+        <div class="ibox-stat-value" id="statSymCount">1</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION II ============ -->
+<div class="section-divider reveal"></div>
+
+<section class="chapter-section" id="section2">
+  <div class="section-number reveal">II</div>
+  <h2 class="section-title reveal">기하학자의 조각 맞추기</h2>
+
+
+  <p class="prose prose-drop reveal">
+    열일곱 개의 대칭은 무늬가 어떻게 반복될 수 있는지를 알려 주지만, 어떤 <em>도형</em>이 그 반복을 수행할지는 말해 주지 않는다. 타일링은 대칭 이상이다. 그것은 맞물리는 행위다. 특정한 다각형들이 변과 변을 맞대어, 빈틈도 겹침도 없이 평면을 덮어야 한다. 타일이 정다각형이라면 — 정삼각형, 정사각형, 정육각형 — 이야기는 짧고도 오래되었다. 모든 정다각형 중 오직 이 셋만이 자기 자신만으로 평면을 덮을 수 있다. 5차 회전 대칭을 가진 정오각형은 불가능하다. <span class="hi">108°의 내각은 360°를 정수로 나누지 못하기 때문이다.</span> 한 꼭짓점에서 만나는 정오각형 셋은 36°의 틈 — 황금 그노몬의 형상을 한 좁은 쐐기 — 을 남긴다.
+  </p>
+
+  <p class="prose reveal">
+    그러나 볼록 다각형의 세계가 정다각형만으로 끝나는 것은 아니다. 삼각형은 상상할 수 있는 모든 방식으로 평면을 덮는다 — 어떤 삼각형이든 타일링을 만든다. 두 개를 한 변을 따라 붙이면 평행사변형이 되고, 평행사변형은 당연히 평면을 덮기 때문이다. 사각형도 — 볼록하지 않더라도 — 평면을 덮는다. 흥미로운 물음은 오각형에서 시작된다. <span class="ac">어떤 볼록 오각형이 평면을 타일링할 수 있는가?</span>
+  </p>
+
+  <p class="prose reveal">
+    얼핏 단순해 보이는 이 물음에는 길고 놀라운 역사가 있다. 1918년, 루드비히 비베르바흐(Ludwig Bieberbach)의 제자였던 독일 수학자 카를 라인하르트(Karl Reinhardt)는 평면을 타일링하는 다섯 종류의 볼록 오각형을 발견했다. 각각은 각과 변에 대한 제약으로 정의되는 무한한 족(族)이었다. 라인하르트는 자신의 목록이 완전하다고 믿었다. 그는 틀렸다. 1968년, 리처드 커슈너(Richard Kershner)는 세 종류를 더 찾아내고서 또다시 문제의 해결을 선언했다. 그 역시 틀렸다.
+  </p>
+
+  <div class="pull-quote reveal">
+    <p>어떤 오각형이 평면을 타일링하는가라는 물음은 전문 기하학자들뿐 아니라 정규 교육을 받은 적 없는 샌디에이고의 한 주부를 끌어당겼다 — 그리고 그녀는 그 이전의 누구보다도 많은 새로운 오각형을 발견하게 된다.</p>
+  </div>
+
+  <p class="prose reveal">
+    1975년 7월, 마틴 가드너(Martin Gardner)는 <em>Scientific American</em>에 커슈너의 여덟 종류를 다룬 칼럼을 썼다. 그 독자들 가운데 마저리 라이스(Marjorie Rice)라는 주부가 있었다. 고등학교까지 교육받았고, 퍼즐에 강한 열정을 지닌 사람이었다. 그녀는 자기만의 표기법 — 전문 수학자들이 해독에 애를 먹을 만큼 독특한 기호와 그림 — 을 고안했고, 2년 안에 아무도 찾아내지 못했던 네 가지 새로운 오각형 유형을 발견했다. 그녀의 작업은 도리스 샤트슈나이더(Doris Schattschneider)가 검증했고, 샤트슈나이더는 라이스의 독특한 표기를 표준 수학 언어로 옮겨 주었다.
+  </p>
+
+  <div class="block-quote reveal">
+    <p>"내 인생 전부가 이 지점을 향해 오고 있었다는 느낌이 들기 시작했습니다. 왜냐고 설명할 수는 없었습니다. 그냥 그런 느낌이었습니다."</p>
+    <div class="bq-attr">— 마저리 라이스, 자신의 오각형 발견을 회고하며</div>
+  </div>
+
+  <p class="prose reveal">
+    목록은 자라났다. 1985년 롤프 슈타인(Rolf Stein)이 열네 번째 유형을 찾았다. 이후 문제는 — 겉보기에는 — 해결된 상태로 30년을 머물렀다. 2015년, 워싱턴 주립대 보델(Bothell) 캠퍼스의 케이시 만(Casey Mann), 제니퍼 맥라우드-만(Jennifer McLoud-Mann), 데이비드 폰 데라우(David Von Derau) 팀이 컴퓨터 탐색으로 열다섯 번째 유형을 찾아냈다. 매우 특정한 각과 변을 가진 오각형, 인간 탐색자와 이전의 알고리즘을 모두 빠져나갔던 도형이었다. 결과는 제법 떠들썩하게 발표되었고, 많은 수학자들은 이제야말로 끝이라고 여겼다.
+  </p>
+
+  <p class="prose reveal">
+    2년 뒤, 정말 끝이 났다. 2017년 프랑스 수학자 미카엘 라오(Michaël Rao)는 <span class="hi">컴퓨터 보조 전수 탐색으로 평면을 타일링하는 볼록 오각형이 정확히 열다섯 종류뿐임을 증명</span>했다. 열여섯 번째는 존재하지 않는다. 1918년 라인하르트가 연 문제, 그리고 샌디에이고의 한 주부가 자신의 부엌 식탁에서 조용히 진전시킨 문제는, 99년 뒤 가능한 모든 각과 변의 배치에 대한 엄밀한 열거를 통해 닫혔다.
+  </p>
+
+  <p class="prose reveal">
+    이 목록에 담긴 것은 기묘하다. 어떤 오각형은 대칭적이고, 반사축과 깔끔한 비례를 가진다. 또 어떤 것은 거의 괴이하다 — 임의적으로 보이는 제약, 60°, 135°, 105° 같은 각도, 이상한 방정식을 만족하는 비율의 변을 가진 불규칙한 도형이다. 저마다가 <em>오각형은 어떻게 자기 자신의 복제본과 맞물릴 수 있는가?</em>라는 물음에 대한 하나의 답이다. 저마다가 나름의 방식으로 작은 기적이다. 회전·반사·평행이동 속에서 자기 자신을 알아보고, 솔기 없이 서로를 물고 들어가는 평면의 한 조각.
+  </p>
+
+  <div class="ibox reveal" id="pentBox">
+    <div class="ibox-label">갤러리</div>
+    <div class="ibox-title">열다섯 개의 오각형</div>
+    <div class="ibox-desc">
+      열다섯 종류의 볼록 오각형이 평면을 타일링한다 — 정확히 열다섯뿐이다. 각 유형은 내각(A, B, C, D, E)과 변의 길이(a, b, c, d, e; 변 <em>a</em>는 꼭짓점 A와 B 사이에 놓이며, 이하 동일)에 대한 제약으로 정의되는 무한한 족이다. 아래의 마지막 열은 정의 조건을 나열한다. 그 조건을 만족하는 오각형이면 평면을 타일링한다.
+    </div>
+
+    <div class="pent-gallery" id="pentGallery"></div>
+
+    <div class="pent-attrib">타일링 도표 출처: <a href="https://en.wikipedia.org/wiki/Pentagonal_tiling" target="_blank" rel="noopener">Wikipedia: Pentagonal tiling</a> (CC BY-SA 4.0)</div>
+
+    <div class="ibox-stats">
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">총 유형 수</div>
+        <div class="ibox-stat-value">15</div>
+      </div>
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">최초 발견</div>
+        <div class="ibox-stat-value">1918</div>
+      </div>
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">마지막 발견</div>
+        <div class="ibox-stat-value">2015</div>
+      </div>
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">완결</div>
+        <div class="ibox-stat-value">2017</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION III ============ -->
+<div class="section-divider reveal"></div>
+
+<section class="chapter-section aperiodic-accent" id="section3">
+  <div class="section-number reveal">III</div>
+  <h2 class="section-title reveal">결정을 부수다</h2>
+
+
+  <p class="prose prose-drop reveal">
+    1960년대에 이르기까지, 수학자들은 평면을 타일링하는 도형의 집합은 반드시 <em>주기적으로</em>만 그럴 수 있다고 믿었다. 즉, 어떤 유한한 배치를 독립적인 두 개의 평행이동 벡터를 따라 반복함으로써 덮는다는 것이다. 이 믿음은 민간 전승의 지위를 누렸다. 널리 당연시되면서도 정리로 진술되지는 않았고, 결과적으로 대단히 잘못된 것으로 판명 났다. 그것이 무너져 가는 이야기는 결정 가능성(decidability)에 관한 질문에서 시작된다.
+  </p>
+
+  <p class="prose reveal">
+    1961년, 논리학자 하오 왕(Hao Wang)은 얼핏 무해해 보이는 문제를 제기했다. 각 변이 유한개의 색 가운데 하나로 칠해진 유한개의 정사각형 타일이 주어져 있고, 두 타일이 붙어 놓이려면 맞닿은 변의 색이 일치해야 한다고 하자. 이런 <span class="hi">왕 타일(Wang tiles)</span>의 집합이 주어졌을 때, 그것이 평면을 타일링할 수 있는지를 알고리즘적으로 판정할 수 있을까? 왕은 답이 예라고, 나아가 어떤 집합이 평면을 타일링할 수 있다면 반드시 <em>주기적으로</em>도 타일링할 수 있다고 추측했다. 그의 추측이 맞다면 판정 문제는 유한 탐색으로 귀착된다.
+  </p>
+
+  <p class="prose reveal">
+    1966년, 왕의 제자 로버트 버거(Robert Berger)는 그 추측이 거짓임을 증명했다. 그가 쓴 방법은 <span class="ac">구체적인 비주기적 집합을 찾아내는 것</span>이었다. 버거는 평면을 오직 비주기적으로만 타일링할 수 있는 20,426개의 왕 타일을 구성했다. 증명은 조합론적 재능의 결정체였다. 동시에 이것은 타일링 문제가 알고리즘적으로 <em>결정 불가능(undecidable)</em>하다는 사실을 확립했다. 임의의 왕 타일 집합을 받아 그것이 평면을 타일링하는지를 확실히 판정해 줄 절차는 존재하지 않는다.
+  </p>
+
+  <div class="pull-quote reveal">
+    <p>비주기적 타일 집합은 평면을 타일링하되 결코 주기적으로는 그렇게 하지 않는다. 그것은 허용되는 전역 배열이 오직 무한하고 비반복적인 것뿐인 유한한 도형 집합이다 — 자기 자신 위로 접혀 들어가기를 거부하는 무늬.</p>
+  </div>
+
+  <p class="prose reveal">
+    버거의 20,426개 타일 집합은 극적이었지만 비실용적이었다. 이후 10여 년간 수학자들은 그 수를 줄이기 위해 경쟁했다. 버거 자신은 104개까지 줄였다. 1971년, 라파엘 로빈슨(Raphael Robinson)은 홈(notch)으로 조립 규칙이 부여된 6개의 정사각형 타일로 줄였다. 그리고 1973년, <span class="ac">로저 펜로즈(Roger Penrose)는 놀라운 사실을 발견했다.</span> 단 <em>두 개</em>의 타일 — "연(kite)"과 "다트(dart)", 혹은 같은 뜻으로 굵은 마름모와 얇은 마름모 — 이면 충분하다는 것이었다. 단, 주기적 조립을 막는 표식이 있다는 조건 아래서. 펜로즈 타일링은 5차 대칭을 가지는데, 제1절에서 보았듯이 이는 주기적 무늬에는 금지된 대칭이다. 이것은 우연이 아니다. 5차 대칭을 가지는 타일링은 <em>반드시</em> 비주기적이다.
+  </p>
+
+  <div class="block-quote reveal">
+    <p>"2차원 공간에서 5차 대칭을 가진 구성 가능한 무늬를 발견한다는 것은 기묘한 경험이다. 정오각형으로는 평면을 덮을 수 없으므로, 처음에는 그런 것이 불가능해 보인다."</p>
+    <div class="bq-attr">— 로저 펜로즈, 1974</div>
+  </div>
+
+  <p class="prose reveal">
+    펜로즈 타일링이 가장 놀라운 이유는 비주기적이라는 사실만이 아니다. 그것은 <span class="hi">팽창(inflation)이라 부르는 크기 조절 연산 아래에서 자기 닮음</span>이라는 점이다. 임의의 펜로즈 타일링이 주어지면, 특정한 규칙에 따라 각각의 연과 다트를 더 작은 연과 다트로 분할할 수 있다. 결과 역시 펜로즈 타일링이지만, 타일이 더 작아진다. 반대로 타일들을 묶어(수축) 더 큰 규모의 펜로즈 타일링을 만들 수도 있다. 이는 펜로즈 타일링의 어떤 유한한 조각도 모든 규모에서 무한히 많은 번 나타난다는 뜻이다. 어느 곳을 확대해도 같은 국소 구성이 반복되어 보이지만, 전체 무늬는 결코 정확히 반복되지 않는다.
+  </p>
+
+  <p class="prose reveal">
+    펜로즈 타일링에서 연과 다트의 밀도 비는 정확히 황금비 φ ≈ 1.618 — 무리수다. 이 무리성 역시 우연이 아니라 비주기성의 지문이다. 기본 영역을 가지는 주기적 타일링은 유리수의 밀도만을 가질 수 있다. 5차 대칭에서 태어난 펜로즈 타일링은 골수에 φ를 품고 있다.
+  </p>
+
+  <p class="prose reveal">
+    한 가지 더 흥미로운 사실: 평면을 덮는 펜로즈 타일링 — 비가산적으로 많은 서로 다른 타일링들 — 중 어떤 두 개를 고르더라도, 그 둘은 <em>국소적으로 구별 불가능</em>하다. 즉 한 타일링에서 찾을 수 있는 유한한 조각은 다른 모든 타일링에서도 찾을 수 있다. 펜로즈 타일링에는 "국소적" 정체성이 없다. 그 전역적 구조는 어떤 유한한 관찰자도 접근할 수 없는 점근적 정보에 의해 결정된다. 마치 타일링 전체가 오직 일관된 하나의 전체로서만 존재하는 듯하고, 유한한 조각들은 가능한 모든 완결형에 동시에 속하는 파편들인 듯하다.
+  </p>
+
+  <div class="ibox reveal" id="zoomBox">
+    <div class="ibox-label">인터랙티브</div>
+    <div class="ibox-title">펜로즈 팽창 탐험기</div>
+    <div class="ibox-desc">
+      펜로즈 타일링은 자기 닮음이다. 각 마름모를 수축(더 작은 굵은·얇은 마름모로 분할)시키면 더 세밀한 펜로즈 타일링이 나온다. 슬라이더를 움직여 타일링을 팽창·수축시켜 보라. 모든 단계에서 같은 두 마름모의 기하학이 — 다만 다른 축척에서 — 나타난다. 드래그로 시점을 움직이고, 스크롤이나 핀치로 확대·축소할 수 있다.
+    </div>
+
+    <div class="zoom-controls">
+      <div class="ibox-slider-wrap">
+        <span class="ibox-slider-label">단계</span>
+        <input type="range" class="ibox-slider" id="zoomLevel" min="0" max="8" value="3" step="1">
+        <span class="zoom-level-display" id="zoomLevelDisplay">3</span>
+      </div>
+      <button class="ibox-btn" id="zoomOut" title="축소">−</button>
+      <button class="ibox-btn" id="zoomIn" title="확대">+</button>
+      <button class="ibox-btn" id="zoomReset">원래대로</button>
+      <button class="ibox-btn" id="showArcs">호 표시</button>
+    </div>
+
+    <canvas id="zoomCanvas" width="720" height="540"></canvas>
+
+    <div class="ibox-stats">
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">단계</div>
+        <div class="ibox-stat-value" id="zoomStatLvl">3</div>
+      </div>
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">굵은 마름모</div>
+        <div class="ibox-stat-value" id="zoomStatKite">—</div>
+      </div>
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">얇은 마름모</div>
+        <div class="ibox-stat-value" id="zoomStatDart">—</div>
+      </div>
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">굵은/얇은 비</div>
+        <div class="ibox-stat-value" id="zoomStatRatio">—</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION IV — FORBIDDEN SYMMETRY
+     The crystallographic restriction and Shechtman's quasicrystals
+     ============================================================ -->
+<section class="chapter-section aperiodic-accent" id="section4">
+  <div class="section-number">IV</div>
+  <h2 class="section-title">금지된 대칭</h2>
+  <div class="section-subtitle">준결정, 그리고 불가능했던 무늬</div>
+
+  <p class="prose reveal">
+    19세기 결정학자들은 너무나 근본적인 정리를 증명해, 그것은 자연 법칙으로서 교과서에 올라갔다. <em>결정학적 제약 정리</em>는 평면 위에 놓인 원자의 주기적 배열 — 과학이 아는 모든 결정의 토대 — 은 2, 3, 4, 6차의 회전 대칭만을 가질 수 있다고 말한다. 그 외의 회전은 허용되지 않는다. 논증은 초등적이었고 빈틈없어 보였다. 예를 들어 어떤 격자가 72° 회전에 대해 불변이라면, 이 회전을 격자의 임의의 두 점에 적용하여 원래 간격보다 가까운 새로운 격자점을 얻을 수 있다. 격자가 점들 사이에 최소 거리를 가진다는 가정에 모순이다. <span class="hi">5차 대칭은 금지되었다.</span> 7차, 8차, 9차, 10차도, 6차 자신을 제외한 6차보다 큰 모든 차수가 금지되었다.
+  </p>
+
+  <p class="prose reveal">
+    이 정리는 한 세기 동안 결정 과학을 지배했다. 열네 개의 브라베(Bravais) 격자, 230개의 공간군, 알려진 모든 결정 구조에 대한 모든 기술 — 모두 예외 없이 이 제약에 따랐다. 다른 주장을 한다는 것은 결정이 <em>무엇인지</em>를 오해한다는 뜻이었다.
+  </p>
+
+  <p class="prose reveal">
+    그러던 <span class="hi">1982년 4월 8일</span> 아침, 메릴랜드주 게이더스버그의 국립표준국(National Bureau of Standards)에서, 단 셰흐트만(Dan Shechtman)이라는 이스라엘 재료과학자가 급속 냉각된 알루미늄–망간 합금에 전자빔을 쏘았다. 그는 회절 무늬를 보고 있었다. 그가 본 것은 중심을 완벽한 원형으로 둘러싼 열 개의 밝은 점, 그 바깥의 또 다른 고리, 다시 그 바깥의 또 다른 고리 — 각각 10차 회전 대칭을 가진 고리들이었다. 연구 노트에서 시료 1725번 옆에 그는 이렇게 적었다. <em>10 Fold ???</em>
+  </p>
+
+  <div class="block-quote reveal">
+    <p>"그런 짐승은 없다."</p>
+    <div class="bq-attr">— 셰흐트만의 발견을 처음 들은 동료들</div>
+  </div>
+
+  <p class="prose reveal">
+    10차 회절 대칭은 5차 원자 대칭을 함의했다. 5차 원자 대칭은 결정학적 제약을 깨뜨리는 결정을 함의했다. 요컨대 존재할 수 없는 것을 함의한 셈이었다. 셰흐트만은 장비를 점검했다. 시료를 점검했다. 모든 각도와 방향에서 회절 무늬를 확인했다. 무늬는 실재했다. 결정은, 그러나, 불가능했다.
+  </p>
+
+  <p class="prose reveal">
+    동료들은 그를 믿지 않았다. 연구 그룹장은 그에게 결정학 교과서를 다시 읽어 보라고 했다. 결국 그는 연구 그룹에서 나가도록 요청받았다. 2년 동안 그의 논문은 출판되지 못한 채 묻혀 있었다. 한 세기의 정설에 맞서는 발견을 실을 용기를 내지 못한 저널들에 거듭 거절당한 것이다. 1984년 11월, 논문이 마침내 <em>Physical Review Letters</em>에 실렸을 때, 그 세기의 가장 저명한 화학자 중 한 명이 즉시 공격을 퍼부었다.
+  </p>
+
+  <div class="block-quote reveal">
+    <p>"준결정은 없다. 준과학자만이 있을 뿐이다."</p>
+    <div class="bq-attr">— 라이너스 폴링, 두 차례 노벨상 수상자, 셰흐트만의 발견에 대해</div>
+  </div>
+
+  <p class="prose reveal">
+    그러나 셰흐트만의 무늬는 있는 그대로 존재했다. 논문이 출판된 지 몇 주 만에 프린스턴 물리학자 폴 스타인하트(Paul Steinhardt)와 그의 제자 도브 르빈(Dov Levine)은 해명을 내놓았다. 셰흐트만의 합금 속 원자들은 주기적으로 배열되지 않았다. 그들은 <em>유사 주기적으로(quasiperiodically)</em> — 결코 정확히 반복되지는 않지만, 국소 구조가 모든 축척에서 되풀이되며, 황금비가 거리를 조절하는 무늬로 — 배열되어 있었다는 것이다. 펜로즈 타일링의 3차원 유사물이었다. 스타인하트는 그것에 이름을 붙였다. <span class="hi">준결정(quasicrystal)</span>.
+  </p>
+
+  <p class="prose reveal">
+    수학이 물리학을 기다리고 있었다. 버크벡 칼리지(Birkbeck College)의 결정학자 앨런 맥케이(Alan Mackay)는 이미 1982년 — 셰흐트만의 발견과 같은 해, 그와는 무관하게 — 펜로즈 타일링이 10차 대칭의 뾰족한 극점을 가진 회절 무늬를 만들어 낸다는 것을 계산해 두었다. 스타인하트가 셰흐트만의 전자 현미경 사진을 보자마자, 그는 그것을 알아보았다. 불가능한 무늬는 정확히 맥케이가 예언한 그 무늬였다.
+  </p>
+
+  <p class="prose reveal">
+    결정학적 제약이 틀렸던 것이 아니다. 그것은 <em>불완전</em>했을 뿐이다. 정리는 주기적 격자에 적용되었고, 모든 주기적 격자에 대해 지금도 참이다. 셰흐트만이 발견한 것은 주기적이지도 비정질적이지도 않은 물질 — 정리가 단지 기술하지 않은 질서 있는 물질의 제3상태였다. 1992년, 국제결정학연맹(IUCr)은 조용히 결정의 정의를 개정했다. 새로운 정의는 주기성을 언급하지 않는다. 이제 결정이란 — 주기적이든 아니든 — 뾰족하고 이산적인 회절 무늬를 가지는 고체일 뿐이다.
+  </p>
+
+  <div class="pull-quote reveal">
+    "셰흐트만의 연구에서 우리가 얻는 교훈이 하나 있다면, 그것은 자연 그 자체의 상상력을 과소평가하지 말라는 것이다."
+  </div>
+
+  <p class="prose reveal">
+    2011년, 단 셰흐트만은 단독으로 노벨 화학상을 받았다. 그 무렵 수백 종의 준결정 물질이 발견되어 있었다. 스웨덴 강철에서, 엔진 코팅에서, 태양계의 가장 이른 순간의 운석에서 그들은 모습을 드러냈다. 물리학이 수학을 뒤따랐고, 수학은 타일링을 뒤따랐으며, 타일링은 내내 거기 있었다 — 반복되기를 거부하는 평면의 한 조각, 금지되었으면서도 금지되지 않았던 대칭.
+  </p>
+
+  <div class="ibox reveal" id="diffBox">
+    <div class="ibox-label">인터랙티브</div>
+    <div class="ibox-title">5차 대칭은 왜 실패하는가</div>
+    <div class="ibox-desc">
+      변을 맞대어 하나의 정<em>n</em>각형으로 평면을 덮어 보려 시도해 보자. 모든 꼭짓점에서, 그곳에 모이는 다각형들의 내각의 합은 정확히 360°가 되어야 한다. 빈틈도 겹침도 없이. 정<em>n</em>각형의 내각은 (<em>n</em>−2)·180°/<em>n</em>이므로, 각 꼭짓점에 모이는 다각형의 수는 2<em>n</em>/(<em>n</em>−2)이다. 이 값이 정수인 것은 <em>n</em> = 3, 4, 6일 때뿐이다. 그 외의 모든 <em>n</em>에 대해, 다각형들은 빈 쐐기를 남기거나 이웃을 뚫고 지나간다.
+    </div>
+
+    <div class="ibox-controls">
+      <span class="ibox-slider-label" style="margin-right:.4rem">정<em>n</em>각형:</span>
+      <button class="ibox-btn sym-btn" data-n="3">3</button>
+      <button class="ibox-btn sym-btn" data-n="4">4</button>
+      <button class="ibox-btn sym-btn active" data-n="5">5</button>
+      <button class="ibox-btn sym-btn" data-n="6">6</button>
+      <button class="ibox-btn sym-btn" data-n="7">7</button>
+      <button class="ibox-btn sym-btn" data-n="8">8</button>
+      <button class="ibox-btn sym-btn" data-n="10">10</button>
+      <button class="ibox-btn sym-btn" data-n="12">12</button>
+    </div>
+
+    <canvas id="diffCanvas" width="720" height="480"></canvas>
+
+    <div class="ibox-stats">
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">내각</div>
+        <div class="ibox-stat-value" id="symStatAngle">108°</div>
+      </div>
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">맞물리는 다각형 수</div>
+        <div class="ibox-stat-value" id="symStatFit">3.33</div>
+      </div>
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">각 결함</div>
+        <div class="ibox-stat-value" id="symStatDefect">36°</div>
+      </div>
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">판정</div>
+        <div class="ibox-stat-value" id="symStatVerdict">금지</div>
+      </div>
+    </div>
+
+    <div class="pent-attrib" style="margin-top:1rem">애니메이션: 정<em>n</em>각형들이 중심 꼭짓점 주위로 하나씩 놓인다. 빈틈 또는 겹침이 강조되면서, 왜 <em>n</em> = 3, 4, 6만이 주기적 타일링을 허용하는지가 드러난다. 같은 {3, 4, 6} 산술을 다각형이 아닌 격자 차원에 적용하면, 결정학적 제약 {2, 3, 4, 6}이 완전하게 얻어진다.</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SECTION V
+     The Hat and the einstein problem (2023)
+     ============================================================ -->
+<section class="chapter-section aperiodic-accent" id="section5">
+  <div class="section-number">V</div>
+  <h2 class="section-title">하나의 돌</h2>
+  <div class="section-subtitle">데이비드 스미스의 모자, 그리고 60년 탐색의 끝</div>
+
+  <p class="prose reveal">
+    펜로즈는 두 개의 타일을 발견했다. 그러나 그가 제기한 물음 — 거의 제기되는 순간 자명해진 — 은 그 후로 50년 동안 답을 얻지 못했다. 하나의 타일만으로도 가능한가? 평면을 덮되 <em>오직</em> 비주기적으로만 덮는 단 하나의 도형 — 주기적 타일링은 불가능하고, 맞물림 규칙도, 장식도, 변 위의 장식 화살표도, 작은 글씨의 단서도 없는 그저 하나의 도형. 이것이 바로 <em>아인슈타인 문제(einstein problem)</em>였다. 알베르트에게서가 아니라 독일어 <em>ein Stein</em>, 즉 <em>한 개의 돌</em>에서 이름을 딴 것이다. 조합론적 타일링 이론의 성배였다.
+  </p>
+
+  <p class="prose reveal">
+    많은 수학자들은 그런 도형이 존재할 수 있는지 의심했다. 가장 근접한 시도였던 2010년의 소콜라–테일러(Socolar–Taylor) 타일은 서로 떨어진 타일들까지 제약하는 맞물림 규칙을 필요로 했다 — 도형 홀로 서는 것이라 하기 어려웠다. 또 다른 부분적 해법들은 타일의 정의 자체를 늘여 붙여, 타일이 연결되지 않은 조각들이 되거나, 규칙이 다시 슬며시 기어들어올 정도였다. 수십 년 동안 성배는 막 손에 닿지 않는 곳에 머물렀다.
+  </p>
+
+  <p class="prose reveal">
+    2022년 11월, 타일링을 연구하는 워털루 대학교의 컴퓨터 과학자 크레이그 캐플런(Craig Kaplan)의 메일함에 한 통의 이메일이 도착했다. 보낸 이는 <span class="hi">요크셔에 사는 은퇴한 인쇄 기술자 데이비드 스미스(David Smith)</span>, 정규 수학 교육을 받은 적 없는 자칭 "도형 애호가"였다. 첨부된 것은 스미스가 자신의 부엌 식탁에서 마분지로 오려 내던 13각형이었다. 그는 이상한 점을 눈치채고 있었다. 이 도형은 자신의 복제본과도, 거울상 복제본과도 맞물릴 수 있는데, 반복을 만들 수가 없었다.
+  </p>
+
+  <div class="block-quote reveal">
+    <p>"저는 늘 도형을 만지작거리고 실험합니다. 기묘한 무언가를 처음으로 발견하는 것은 분명 즐거운 일이지만, 그건 그저 제가 즐기는 방식의 일부일 뿐이에요."</p>
+    <div class="bq-attr">— 데이비드 스미스, 자신의 아마추어적 작업을 말하며</div>
+  </div>
+
+  <p class="prose reveal">
+    캐플런은 스미스가 "모자(the hat)"라 부르던 그 도형을 살폈다 — 한쪽으로 돌리면 페도라 모자처럼, 다른 쪽으로 돌리면 티셔츠처럼 보였기 때문이다. 몇 주간의 계산 실험을 거치며 캐플런은 확신했다. 모자는 아인슈타인이었다. 그러나 증명은 그의 전문성을 넘어서는 일이었다. 캐플런과 스미스는 오랫동안 타일링 이론을 연구해 온 하임 굿맨-스트라우스(Chaim Goodman-Strauss)에게 연락했고, 그는 소프트웨어 개발자 조지프 새뮤얼 마이어스(Joseph Samuel Myers)를 끌어들였다. 며칠 만에 마이어스는 — 놀라운 속도로 — 서로 독립된 두 개의 비주기성 증명 중 첫 번째를 내놓았다.
+  </p>
+
+  <p class="prose reveal">
+    도형 자체는 거의 평범하다. 그것은 <em>폴리카이트(polykite)</em>, 즉 [3.4.6.4] 라베스(Laves) 타일링 — 내각이 각각 60°, 90°, 120°, 90°인 똑같은 연 모양 타일들로 평면을 덮는 익숙한 장식 — 에서 잘라낸 여덟 개의 연을 이어 붙인 도형이다. 이 여덟 개의 연을 특정한 배치로 맞닿는 변을 따라 이으면 13각형이 나온다. 아이가 그릴 법한 도형이다. 그토록 단순한 형상이, 60년 동안 누구도 보여 주지 못한 성질을 지닌다는 사실은 — 굿맨-스트라우스의 표현을 빌리자면 — <em>"평생에 한 번 있을 법한 일"</em>이었다.
+  </p>
+
+  <p class="prose reveal">
+    <span class="hi">2023년 3월 20일</span>, 스미스, 마이어스, 캐플런, 굿맨-스트라우스는 arXiv에 프리프린트를 올렸다. 논문은 빠르게 퍼졌다. 며칠 안에 <em>New York Times</em>, <em>Scientific American</em>, <em>Nature</em>가 이를 보도했다. 수학계는 이 결과를 일종의 기쁜 불신으로 맞이했다. 1960년대부터 버텨 온 문제를, 한 아마추어와 한 소프트웨어 엔지니어, 그리고 두 명의 수학자가 단 몇 달 만에 증명해 낸 것이다.
+  </p>
+
+  <p class="prose reveal">
+    그러나 미묘한 문제가 있었다. 모자 타일링은 언제나 모자와 그 <em>거울상</em>을 섞어서 사용한다. 모자는 카이럴이 아니다 — 타일링이 회전과 평행이동만으로는 이루어지지 않고 반사를 필요로 한다. 일부 엄격주의자들은 이것이 아인슈타인 문제의 가장 엄밀한 해석을 어긴다고 주장했다. 두 달 안에 스미스와 공저자들은 그에 답했다. 2023년 5월, 그들은 두 번째 도형 — 모자의 가까운 친척으로 <em>유령(Spectre)</em>이라 이름 붙인 — 을 발표했다. 반사를 허용하지 않고, 오직 평행이동과 회전만으로 평면을 비주기적으로 덮는 도형이다. 성배는 완전히 정복되었다.
+  </p>
+
+  <div class="pull-quote reveal">
+    "모자는 훤히 드러난 곳에 숨어 있었다. 수학자들은 60년 동안 그것을 찾아 헤맸다. 한 아마추어가 도형을 오려 내고 기묘함을 알아채는 것만으로 그것을 발견했다."
+  </div>
+
+  <p class="prose reveal">
+    문화적 반응은 셰흐트만이나 펜로즈가 경험한 어떤 것보다도 컸다. 몇 주 안에 모자는 스카프로 짜이고, 티셔츠에 인쇄되고, 스테인드글라스로 잘리고, 종이접기로 재현되었다. 영국 수학 트러스트(UK Mathematics Trust)와 국립수학박물관(MoMath)은 아인슈타인 매드 햇 어워드(Einstein Mad Hat Awards)를 열었고, 32개국에서 245건의 응모가 들어왔다. 순수 기하학의 타일링 문제가, 잠시나마, 대중문화의 사안이 된 것이다 — 사람들이 소유하고 싶어 하는 대상으로. 그 중심에 선 사람이 브리들링턴(Bridlington)의 애호가 데이비드 스미스였다. 조합론의 최고 두뇌들이 풀지 못한 문제를 그는 자신의 여가 시간에 풀어냈다.
+  </p>
+
+  <p class="prose reveal">
+    2023년에 닫힌 것은 단지 아인슈타인 문제만이 아니다. 1966년 버거의 20,426개 타일에서 시작해, 로빈슨의 여섯 개와 펜로즈의 두 개를 거쳐, 결국 하나의 모자에 이르는 수학사의 한 장이 닫힌 것이다. 60년에 걸친 축소의 곡선, 그 끝에 아이도 오려 낼 수 있을 만큼 단순한 도형이 있다. <span class="hi">모자에 의한 모든 타일링은 비주기적이다.</span> 주기도, 반복도, 평행이동 대칭도 없다 — 오직 도형이, 영원히 자기 자신을 다시 배열하며, 단 한 번도 어떤 무늬에 갇히지 않는다.
+  </p>
+
+  <div class="ibox reveal" id="hatBox">
+    <div class="ibox-label">도형</div>
+    <div class="ibox-title">모자 폴리카이트</div>
+    <div class="ibox-desc">
+      모자는 [3.4.6.4] 라베스 타일링에서 가져온 여덟 개의 연으로 이루어진 13각형이다. 변의 길이는 두 종류: 짧은 변(길이 1) 여섯 개와 긴 변(길이 √3) 일곱 개. 모든 내각은 30°의 배수다. 이 단순함에도 불구하고, 모자와 그 거울상은 비가산적으로 많은 방식으로 평면을 덮는다 — 그 모두가 비주기적이다.
+    </div>
+
+    <canvas id="hatCanvas" width="720" height="420"></canvas>
+
+    <div class="ibox-stats">
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">변의 수</div>
+        <div class="ibox-stat-value">13</div>
+      </div>
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">연의 수</div>
+        <div class="ibox-stat-value">8</div>
+      </div>
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">발견</div>
+        <div class="ibox-stat-value">2022</div>
+      </div>
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">증명</div>
+        <div class="ibox-stat-value">2023</div>
+      </div>
+    </div>
+
+    <div class="pent-attrib" style="margin-top:1rem">
+      모자 도식 출처: Smith, Myers, Kaplan, Goodman-Strauss (2023), <em>An aperiodic monotile</em>, arXiv:2303.10798.
+    </div>
+  </div>
+
+  <div class="ibox reveal" id="hatTilingBox" style="margin-top:2rem">
+    <div class="ibox-label">인터랙티브</div>
+    <div class="ibox-title">모자와 거울상에 의한 비주기적 타일링</div>
+    <div class="ibox-desc">
+      Smith, Myers, Kaplan, Goodman-Strauss의 치환 시스템으로 생성한 모자 타일링 조각. 거울상 한 개마다 정방향 모자 세 개가 나타난다. 타일링은 네 가지 색으로 칠해져 있으며, 변을 맞댄 어떤 두 타일도 같은 색을 가지지 않는다 — 임의의 평면 지도에 대해 4색 정리가 허용하는 최소한의 색 수다. 팔레트는 취향대로 조정할 수 있다.
+    </div>
+
+    <div class="hat-palette" id="hatPalette"></div>
+
+    <div class="zoom-controls" style="margin-bottom:.75rem">
+      <button class="ibox-btn" id="hatZoomIn">확대 +</button>
+      <button class="ibox-btn" id="hatZoomOut">축소 −</button>
+      <button class="ibox-btn" id="hatZoomReset">원래대로</button>
+      <span class="zoom-level-display" id="hatZoomLevel">1.00×</span>
+    </div>
+
+    <canvas id="hatTilingCanvas" width="720" height="560" style="cursor:grab"></canvas>
+
+    <div class="ibox-stats">
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">그려진 모자 수</div>
+        <div class="ibox-stat-value" id="hatCountTotal">—</div>
+      </div>
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">정방향</div>
+        <div class="ibox-stat-value" id="hatCountUnref">—</div>
+      </div>
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">거울상</div>
+        <div class="ibox-stat-value" id="hatCountRef">—</div>
+      </div>
+      <div class="ibox-stat">
+        <div class="ibox-stat-label">비율</div>
+        <div class="ibox-stat-value" id="hatCountRatio">—</div>
+      </div>
+    </div>
+
+    <div class="pent-attrib" style="margin-top:1rem">
+      치환 시스템과 타일 기하: <a href="https://cs.uwaterloo.ca/~csk/hat/" target="_blank" rel="noopener">캐플런의 hatviz</a>에서 가져옴(BSD 3-clause). 4색 배정은 타일링의 변 인접 그래프에 탐욕적 알고리즘(DSATUR)을 적용해 계산했다.
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     EPILOGUE: Penrose's vision + References
+     ============================================================ -->
+<section class="epilogue-section" id="epilogue">
+  <h2 class="section-title">종결부</h2>
+
+  <p class="prose reveal">
+    14세기 그라나다에서 시작해 데이비드 스미스의 부엌 식탁에서 끝나는 이 이야기는, 한편으로는 평면에 관한 이야기다. 무엇이 평면을 덮을 수 있고 무엇이 그럴 수 없는지, 어떤 대칭이 반복으로 닫히고 어떤 대칭이 그것을 금하는지에 관한 이야기. 그러나 더 깊은 서사는 제약과 자유의 관계에 관한 것이다. 몇 개의 단순한 국소 규칙 — 맞물려야 하는 변, 들어맞아야 하는 각, 붙어야 하는 타일 — 이 경계 없는 복잡성의 무늬를 만들어 낸다. 유한한 구성이 모두 무한히 여러 번 나타나지만, 전역적으로는 단 한 번도 반복되지 않는 무늬. 이 점을 가장 또렷이 꿰뚫어 본 수학자 가운데 한 사람이 바로 로저 펜로즈였다. 그는 자신의 타일링 안에서 훨씬 더 거대한 것의 축소판을 보았다.
+  </p>
+
+  <div class="block-quote reveal">
+    <p>"내가 이 타일에 끌린 이유는, 우리가 도처에서 복잡함을 보면서도 그 모든 것이 아주 단순한 힘들에 지배되는 우주라는 생각 때문이다. 타일링은 관습적인 규칙을 따라 복잡한 무늬를 만든다. 그것은 우리가 세계에서 보는 것을 반영하는 아주 단순한 규칙들로 어떻게 복잡함이 충족될 수 있는지를 살피려 한 시도였다."</p>
+    <div class="bq-attr">— 로저 펜로즈, <em>Discover Magazine</em> 인터뷰, 2009</div>
+  </div>
+
+  <p class="prose reveal">
+    펜로즈의 말은 타일링을 넘어 물리학으로, 그리고 어째서 몇 개 되지 않는 단정한 기본 방정식들 — 아인슈타인, 슈뢰딩거, 디랙 — 이 우리처럼 복잡한 우주를 명시하기에 충분한가라는 수수께끼로 뻗어 나간다. 비주기적 타일링은 이 물음을 위한 소규모 실험실이다. 케플러와 뒤러가 그 시작을 그릴 수 있었을 만큼 단순한 기하학 안에서, 결정성과 새로움이 반대항이 아님을 보여 준다. 무엇 옆에 무엇이 놓일 수 있는지를 고정하는 법칙은, 그럼으로써 전체를 고정하지 않는다. 누구도 본 적 없고 다시는 되풀이되지 않을 무늬를 위한 무한한 여지를 남겨 두는 것이다. 알함브라의 장인들은 자신의 수공(手工) 속에서 이를 알았다. 펜로즈는 자신의 연과 다트 속에서 이를 알았다. 스미스는 부엌에서, 마분지를 한 번에 한 조각씩 오려 내다가 모자가 모습을 드러낼 때까지, 이를 다시 발견했다.
+  </p>
+
+  <p class="prose reveal">
+    이 장이 그리는 궤적은 그러므로 일련의 정리라기보다는, 서서히 깊어지는 이해의 과정이다. 가장 단순한 2차원 공간인 평면이, 누구도 상상한 것보다 더 많은 것을 품고 있다는 이해. 열일곱 개의 벽지 군, 열다섯 종류의 볼록 오각형, 두 개의 펜로즈 타일, 하나의 모자. 성배는 하나의 돌이었다. 그것은 훤히 드러난 곳에 숨어 있었고, 내내 거기에서 기다리고 있었다.
+  </p>
+
+  <div class="pull-quote reveal">
+    "그저 보기에 좋아서다."<br>
+    <span style="font-size:.75em;color:var(--muted);font-style:normal;font-family:var(--font-mono);letter-spacing:.08em">— 펜로즈, 왜 오각형을 택했는지에 대해</span>
+  </div>
+
+  <h3 class="refs-title">참고문헌과 더 읽을거리</h3>
+  <p class="refs-intro">이 장의 아이디어들에 대한 1차 문헌과 접근 가능한 해설을 선별해 실었다.</p>
+
+  <ol class="refs-list">
+    <li>
+      Smith, D., Myers, J. S., Kaplan, C. S., Goodman-Strauss, C. (2023).
+      <em>An aperiodic monotile.</em>
+      <a href="https://arxiv.org/abs/2303.10798" target="_blank" rel="noopener">arXiv:2303.10798</a>.
+      <em>Combinatorial Theory</em> 4(1)에 2024년 6월 게재. 모자를 발표한 원논문이며, 서로 독립된 두 비주기성 증명을 담고 있다.
+    </li>
+    <li>
+      Smith, D., Myers, J. S., Kaplan, C. S., Goodman-Strauss, C. (2023).
+      <em>A chiral aperiodic monotile.</em>
+      <a href="https://arxiv.org/abs/2305.17743" target="_blank" rel="noopener">arXiv:2305.17743</a>.
+      반사 없이 평면을 비주기적으로 덮는 유령(Spectre) 타일.
+    </li>
+    <li>
+      Penrose, R. (1974). <em>The rôle of aesthetics in pure and applied mathematical research.</em>
+      <em>Bulletin of the Institute of Mathematics and its Applications</em>, 10, 266–271.
+      펜로즈가 자신의 비주기적 타일링을 처음 발표한 글.
+    </li>
+    <li>
+      Gardner, M. (1977). <em>Extraordinary nonperiodic tiling that enriches the theory of tiles.</em>
+      <em>Scientific American</em>, 236(1), 110–121.
+      펜로즈 타일링을 일반 독자에게 소개한 에세이.
+    </li>
+    <li>
+      Grünbaum, B., Shephard, G. C. (1987). <em>Tilings and Patterns.</em> W. H. Freeman, New York.
+      벽지 군, 오각형 타일링, 비주기적 집합을 망라하는 타일링 이론의 표준 참고서.
+    </li>
+    <li>
+      Rao, M. (2017). <em>Exhaustive search of convex pentagons which tile the plane.</em>
+      <a href="https://arxiv.org/abs/1708.00274" target="_blank" rel="noopener">arXiv:1708.00274</a>.
+      평면을 덮는 볼록 오각형이 알려진 15개 족뿐임을 보인 컴퓨터 보조 증명.
+    </li>
+    <li>
+      Shechtman, D., Blech, I., Gratias, D., Cahn, J. W. (1984).
+      <em>Metallic phase with long-range orientational order and no translational symmetry.</em>
+      <em>Physical Review Letters</em>, 53, 1951–1953.
+      Al–Mn 합금에서 5차 회절을 보고한 논문 — 최초의 준결정 발견.
+    </li>
+    <li>
+      de Bruijn, N. G. (1981). <em>Algebraic theory of Penrose's non-periodic tilings of the plane.</em>
+      <em>Indagationes Mathematicae</em>, 43, 39–66.
+      펜로즈 타일링을 고차원 격자의 투영과 연결짓는 펜타그리드(pentagrid) 방법.
+    </li>
+    <li>
+      Fedorov, E. S. (1891). <em>Symmetry in the plane.</em>
+      <em>Proceedings of the Imperial St. Petersburg Mineralogical Society</em>, 28, 345–390 (러시아어).
+      열일곱 개의 벽지 군에 대한 최초의 완전한 열거.
+    </li>
+    <li>
+      Berger, R. (1966). <em>The undecidability of the domino problem.</em>
+      <em>Memoirs of the American Mathematical Society</em>, 66, 1–72.
+      최초의 비주기적 타일 집합 — 처음에는 20,426개의 도형이었다.
+    </li>
+    <li>
+      Kaplan, C. S. <em>An aperiodic monotile.</em>
+      <a href="https://cs.uwaterloo.ca/~csk/hat/" target="_blank" rel="noopener">cs.uwaterloo.ca/~csk/hat/</a>.
+      저자들이 함께 운영하는 페이지. 이미지·애니메이션·인터랙티브 도구를 제공한다.
+    </li>
+    <li>
+      Roberts, S. (2023). <em>Elusive "einstein" solves a longstanding math problem.</em>
+      <em>The New York Times</em>, 2023년 3월 28일.
+      모자의 발견에 대한 접근 가능한 보도.
+    </li>
+  </ol>
+
+  <p class="prose reveal" style="margin-top:2.5rem;font-size:.85rem;color:var(--muted);text-align:center;max-width:640px;margin-left:auto;margin-right:auto">
+    이 페이지의 모자 시각화는 크레이그 S. 캐플런의 <a href="https://github.com/isohedral/hatviz" target="_blank" rel="noopener" style="color:var(--violet)">hatviz</a>를 허락을 받고 각색한 것이다 (BSD 3-clause). 제2절의 오각형 타일링 도식은 Wikipedia에서 가져왔으며 CC BY-SA 4.0 라이선스를 따른다. 마지막 인터랙티브의 모자 조각은 캐플런의 치환 규칙으로 새로 생성했으며, 타일링의 변 인접 그래프에 대해 DSATUR 탐욕 알고리즘을 돌려 4색으로 칠했다.
+  </p>
+</section>
+
+<a class="floating-badge" href="https://edu.kimsh.kr">edu.kimsh.kr</a>
+
+<footer>
+  <div class="footer-name">Sang-hyun Kim</div>
+  <div class="footer-inst">Korea Institute for Advanced Study</div>
+  <div class="footer-inst">AI4MATH, KAIST</div>
+  <a class="footer-url" href="https://kimsh.kr">kimsh.kr</a>
+</footer>
+
+<script>
+"use strict";
+
+const PI = Math.PI, TAU = 2*PI;
+const PHI = (1+Math.sqrt(5))/2;
+
+/* Scroll reveal */
+const revealObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revealObs.unobserve(e.target)}});
+},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+
+/* ================================================
+   HERO: De Bruijn Pentagrid Penrose P3 Tiling
+   ================================================ */
+(function initHero(){
+  const canvas = document.getElementById('heroCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, dpr;
+  let heroVisible = true;
+
+  // Observe visibility
+  const heroEl = document.getElementById('hero');
+  const obs = new IntersectionObserver(([e])=>{heroVisible=e.isIntersecting},{threshold:.02});
+  obs.observe(heroEl);
+
+  function resize(){
+    dpr = devicePixelRatio||1;
+    W = canvas.clientWidth; H = canvas.clientHeight;
+    canvas.width = W*dpr; canvas.height = H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    regen();
+  }
+
+  // 5 direction vectors at 72° intervals
+  const dirs = [];
+  for(let k=0;k<5;k++){
+    const a = TAU*k/5;
+    dirs.push({x:Math.cos(a), y:Math.sin(a)});
+  }
+
+  // Offsets (avoid singularities)
+  const gamma = [0.13, 0.27, 0.41, 0.19, 0.33];
+
+  function intersect2Lines(i,ni,j,nj){
+    const a=dirs[i].x, b=dirs[i].y;
+    const c=dirs[j].x, d=dirs[j].y;
+    const e=ni+gamma[i], f=nj+gamma[j];
+    const det=a*d-b*c;
+    if(Math.abs(det)<1e-10) return null;
+    return {x:(e*d-f*b)/det, y:(a*f-c*e)/det};
+  }
+
+  function indexVector(px,py){
+    const K=[];
+    for(let k=0;k<5;k++){
+      K.push(Math.ceil(dirs[k].x*px + dirs[k].y*py - gamma[k]));
+    }
+    return K;
+  }
+
+  function dualPoint(K){
+    let x=0, y=0;
+    for(let k=0;k<5;k++){
+      x += K[k]*dirs[k].x;
+      y += K[k]*dirs[k].y;
+    }
+    return {x, y};
+  }
+
+  function generateTiling(N){
+    const tiles = [];
+
+    for(let i=0;i<5;i++){
+      for(let j=i+1;j<5;j++){
+        for(let ni=-N;ni<=N;ni++){
+          for(let nj=-N;nj<=N;nj++){
+            const p = intersect2Lines(i,ni,j,nj);
+            if(!p) continue;
+
+            // Compute index vector at intersection, then FIX K[i] and K[j]
+            // to the exact integer values ni, nj. Without this, floating-point
+            // precision in Math.ceil can produce inconsistent K, causing tile
+            // overlap (same rhombus generated from two (i,j,ni,nj) quadruples).
+            const K = indexVector(p.x, p.y);
+            K[i] = ni;
+            K[j] = nj;
+
+            const K10=K.slice(); K10[i]=ni+1;
+            const K01=K.slice(); K01[j]=nj+1;
+            const K11=K.slice(); K11[i]=ni+1; K11[j]=nj+1;
+
+            const v00=dualPoint(K);
+            const v10=dualPoint(K10);
+            const v01=dualPoint(K01);
+            const v11=dualPoint(K11);
+
+            const diff = Math.abs(j-i);
+            const isThick = (diff===1||diff===4);
+
+            tiles.push({
+              type: isThick?0:1,
+              pts: [v00, v10, v11, v01],
+            });
+          }
+        }
+      }
+    }
+    return tiles;
+  }
+
+  let allTiles = [];
+  const SCALE = 42;
+
+  function regen(){
+    const viewR = Math.hypot(W,H)/2/SCALE;
+    const N = Math.ceil(viewR) + 7;
+    allTiles = generateTiling(N);
+
+    for(const t of allTiles){
+      const cx = (t.pts[0].x+t.pts[1].x+t.pts[2].x+t.pts[3].x)/4;
+      const cy = (t.pts[0].y+t.pts[1].y+t.pts[2].y+t.pts[3].y)/4;
+      t.cx = cx; t.cy = cy;
+      t.dist = Math.hypot(cx, cy);
+      t.angle = Math.atan2(cy, cx);
+      t.seed = Math.random()*TAU;
+    }
+  }
+
+  let startTime = 0;
+  function draw(time){
+    if(!heroVisible){ requestAnimationFrame(draw); return; }
+    if(!startTime) startTime = time;
+    const t = (time - startTime)/1000;
+
+    ctx.clearRect(0,0,W,H);
+
+    // Background radial glow
+    const bgGrad = ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,Math.max(W,H)*0.6);
+    bgGrad.addColorStop(0, 'rgba(16,14,38,0.45)');
+    bgGrad.addColorStop(0.5, 'rgba(10,10,28,0.2)');
+    bgGrad.addColorStop(1, 'rgba(4,5,12,0)');
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0,0,W,H);
+
+    // Slow circular pan with harmonic variation
+    const panPeriod = 140;
+    const panR = 5.5;
+    const ox = W/2 + Math.cos(t*TAU/panPeriod)*panR*SCALE
+                    + Math.sin(t*TAU/panPeriod*0.37)*panR*SCALE*0.45;
+    const oy = H/2 + Math.sin(t*TAU/panPeriod*0.73)*panR*SCALE
+                    + Math.cos(t*TAU/panPeriod*0.29)*panR*SCALE*0.35;
+
+    const margin = 2;
+    const vxMin = (-ox/SCALE) - margin;
+    const vxMax = (W-ox)/SCALE + margin;
+    const vyMin = (-oy/SCALE) - margin;
+    const vyMax = (H-oy)/SCALE + margin;
+
+    // Draw tiles
+    for(const tile of allTiles){
+      if(tile.cx<vxMin||tile.cx>vxMax||tile.cy<vyMin||tile.cy>vyMax) continue;
+
+      const pts = tile.pts;
+      const isThick = tile.type===0;
+
+      // Breathing waves
+      // Subtle breathing wave (luminance only)
+      const wave = Math.sin(t*0.25 + tile.dist*0.8 + tile.seed)*0.04;
+      const deepWave = Math.sin(t*0.12 - tile.angle*2 + tile.seed*0.5)*0.03;
+
+      // Fixed hue per tile TYPE — no wandering
+      // Thick = warm gold/amber; Thin = cool violet
+      const hue = isThick ? 42 : 268;
+      const sat = isThick ? 58 : 48;
+      const lum = isThick ? 36 + wave*15 + deepWave*10 : 26 + wave*13 + deepWave*8;
+
+      const alpha = 0.85 + wave*0.1;
+      ctx.globalAlpha = Math.min(alpha, 0.95);
+
+      const sx0 = pts[0].x*SCALE+ox, sy0 = pts[0].y*SCALE+oy;
+      const sx1 = pts[1].x*SCALE+ox, sy1 = pts[1].y*SCALE+oy;
+      const sx2 = pts[2].x*SCALE+ox, sy2 = pts[2].y*SCALE+oy;
+      const sx3 = pts[3].x*SCALE+ox, sy3 = pts[3].y*SCALE+oy;
+
+      // Gradient fill — subtle shading within tile for depth
+      const grad = ctx.createLinearGradient(sx0,sy0,sx2,sy2);
+      grad.addColorStop(0, `hsl(${hue},${sat}%,${lum+4}%)`);
+      grad.addColorStop(0.5, `hsl(${hue},${sat}%,${lum}%)`);
+      grad.addColorStop(1, `hsl(${hue},${sat}%,${lum-4}%)`);
+      ctx.fillStyle = grad;
+
+      ctx.beginPath();
+      ctx.moveTo(sx0, sy0);
+      ctx.lineTo(sx1, sy1);
+      ctx.lineTo(sx2, sy2);
+      ctx.lineTo(sx3, sy3);
+      ctx.closePath();
+      ctx.fill();
+
+      // Edge — clearer boundaries
+      ctx.globalAlpha = alpha*0.7;
+      ctx.strokeStyle = `hsla(${hue},${sat+15}%,${lum+28}%,0.75)`;
+      ctx.lineWidth = 1.0;
+      ctx.stroke();
+
+      // Inner highlight
+      ctx.globalAlpha = alpha*0.2;
+      ctx.strokeStyle = `hsla(${hue},${sat+8}%,${lum+42}%,0.4)`;
+      ctx.lineWidth = 0.35;
+      ctx.stroke();
+
+      // Matching rule arcs
+      const arcAlpha = alpha*0.32*(0.5+wave);
+      if(arcAlpha > 0.04){
+        drawMatchArc(sx0,sy0,sx1,sy1,sx2,sy2,sx3,sy3, isThick, arcAlpha);
+      }
+    }
+
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+
+  function drawMatchArc(ax,ay,bx,by,cx,cy,dx,dy, isThick, alpha){
+    const edgeLen = Math.hypot(bx-ax, by-ay);
+
+    if(isThick){
+      // Arcs at A and C (72° vertices of thick rhombus)
+      const rA = edgeLen * 0.36;
+      const rC = edgeLen * 0.36;
+
+      ctx.lineWidth = 1.1;
+
+      const aAB = Math.atan2(by-ay, bx-ax);
+      const aAD = Math.atan2(dy-ay, dx-ax);
+      ctx.globalAlpha = alpha;
+      ctx.strokeStyle = `rgba(212,178,76,${alpha*0.9})`;
+      ctx.beginPath(); ctx.arc(ax,ay,rA,aAB,aAD,angleDir(aAB,aAD)); ctx.stroke();
+
+      const aCB = Math.atan2(by-cy, bx-cx);
+      const aCD = Math.atan2(dy-cy, dx-cx);
+      ctx.strokeStyle = `rgba(148,116,201,${alpha*0.7})`;
+      ctx.beginPath(); ctx.arc(cx,cy,rC,aCB,aCD,angleDir(aCB,aCD)); ctx.stroke();
+    } else {
+      // Arcs at B and D (36° vertices of thin rhombus)
+      const rB = edgeLen * 0.36;
+      const rD = edgeLen * 0.36;
+
+      ctx.lineWidth = 1.1;
+
+      const aBA = Math.atan2(ay-by, ax-bx);
+      const aBC = Math.atan2(cy-by, cx-bx);
+      ctx.globalAlpha = alpha;
+      ctx.strokeStyle = `rgba(148,116,201,${alpha*0.9})`;
+      ctx.beginPath(); ctx.arc(bx,by,rB,aBA,aBC,angleDir(aBA,aBC)); ctx.stroke();
+
+      const aDA = Math.atan2(ay-dy, ax-dx);
+      const aDC = Math.atan2(cy-dy, cx-dx);
+      ctx.strokeStyle = `rgba(212,178,76,${alpha*0.7})`;
+      ctx.beginPath(); ctx.arc(dx,dy,rD,aDA,aDC,angleDir(aDA,aDC)); ctx.stroke();
+    }
+  }
+
+  // Determine which direction (CW/CCW) gives the shorter arc (the interior angle)
+  function angleDir(a1, a2){
+    let diff = a2 - a1;
+    while(diff > PI) diff -= TAU;
+    while(diff < -PI) diff += TAU;
+    return diff < 0; // true = anti-clockwise
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  requestAnimationFrame(draw);
+})();
+
+/* ================================================
+   WALLPAPER GROUP EXPLORER
+   ================================================ */
+(function initWPG(){
+  const canvas = document.getElementById('wpgCanvas');
+  const ctx = canvas.getContext('2d');
+  let dpr, W, H;
+
+  const groups = [
+    {name:'p1',   rot:[],       mirrors:0, glide:false},
+    {name:'p2',   rot:[2],      mirrors:0, glide:false},
+    {name:'pm',   rot:[],       mirrors:1, glide:false},
+    {name:'pg',   rot:[],       mirrors:0, glide:true },
+    {name:'cm',   rot:[],       mirrors:1, glide:true },
+    {name:'pmm',  rot:[2],      mirrors:2, glide:false},
+    {name:'pmg',  rot:[2],      mirrors:1, glide:true },
+    {name:'pgg',  rot:[2],      mirrors:0, glide:true },
+    {name:'cmm',  rot:[2],      mirrors:2, glide:true },
+    {name:'p4',   rot:[2,4],    mirrors:0, glide:false},
+    {name:'p4m',  rot:[2,4],    mirrors:4, glide:true },
+    {name:'p4g',  rot:[2,4],    mirrors:2, glide:true },
+    {name:'p3',   rot:[3],      mirrors:0, glide:false},
+    {name:'p3m1', rot:[3],      mirrors:3, glide:true },
+    {name:'p31m', rot:[3],      mirrors:3, glide:true },
+    {name:'p6',   rot:[2,3,6],  mirrors:0, glide:false},
+    {name:'p6m',  rot:[2,3,6],  mirrors:6, glide:true },
+  ];
+
+  let currentGroup = groups[0];
+  let strokes = [];
+  let drawing = false;
+  let curStroke = null;
+  let brushColor = '#c9a84c';
+  let brushSz = 6;
+  let overlays = {lattice:false, rotations:false, mirrors:false, domain:true};
+
+  const cellW = 80, cellH = 80;
+
+  const selector = document.getElementById('wpgSelector');
+  groups.forEach((g,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'wpg-btn' + (i===0?' active':'');
+    btn.textContent = g.name;
+    btn.addEventListener('click',()=>{
+      selector.querySelectorAll('.wpg-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      currentGroup = g;
+      updateInfo();
+      render();
+    });
+    selector.appendChild(btn);
+  });
+
+  function updateInfo(){
+    const g = currentGroup;
+    document.getElementById('wpgName').textContent = g.name;
+    document.getElementById('wpgRot').textContent = g.rot.length?g.rot.map(r=>r+'차').join(', '):'없음';
+    document.getElementById('wpgRef').textContent = g.mirrors?g.mirrors+'개':'없음';
+    document.getElementById('wpgGlide').textContent = g.glide?'있음':'없음';
+    document.getElementById('statGroup').textContent = g.name;
+    document.getElementById('statRot').textContent = g.rot.length?g.rot.join(', '):'—';
+    document.getElementById('statMirror').textContent = g.mirrors;
+    let sc = 1;
+    g.rot.forEach(r=>sc += r-1);
+    sc += g.mirrors;
+    if(g.glide) sc++;
+    document.getElementById('statSymCount').textContent = sc;
+  }
+
+  function resizeCanvas(){
+    dpr = devicePixelRatio||1;
+    W = canvas.clientWidth; H = canvas.clientHeight||480;
+    canvas.width = W*dpr; canvas.height = H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    render();
+  }
+
+  function getTransforms(g){
+    const T = [(x,y)=>[x,y]];
+    const cw=cellW, ch=cellH;
+    const cos120=Math.cos(TAU/3), sin120=Math.sin(TAU/3);
+    const cos240=Math.cos(2*TAU/3), sin240=Math.sin(2*TAU/3);
+    const cx2=cw/2, cy2=ch/2;
+
+    switch(g.name){
+      case 'p1': break;
+      case 'p2': T.push((x,y)=>[cw-x, ch-y]); break;
+      case 'pm': T.push((x,y)=>[cw-x, y]); break;
+      case 'pg': T.push((x,y)=>[cw-x, (y+ch/2)%ch]); break;
+      case 'cm': T.push((x,y)=>[cw-x, y]); break;
+      case 'pmm':
+        T.push((x,y)=>[cw-x, y]);
+        T.push((x,y)=>[x, ch-y]);
+        T.push((x,y)=>[cw-x, ch-y]);
+        break;
+      case 'pmg':
+        T.push((x,y)=>[cw-x, y]);
+        T.push((x,y)=>[((x+cw/2)%cw), ch-y]);
+        T.push((x,y)=>[((cw-x+cw/2)%cw), ch-y]);
+        break;
+      case 'pgg':
+        T.push((x,y)=>[cw-x, ch-y]);
+        T.push((x,y)=>[(x+cw/2)%cw, ch-y]);
+        T.push((x,y)=>[(cw-x+cw/2)%cw, y]);
+        break;
+      case 'cmm':
+        T.push((x,y)=>[cw-x, y]);
+        T.push((x,y)=>[x, ch-y]);
+        T.push((x,y)=>[cw-x, ch-y]);
+        break;
+      case 'p4':
+        T.push((x,y)=>[y*cw/ch, (cw-x)*ch/cw]);
+        T.push((x,y)=>[cw-x, ch-y]);
+        T.push((x,y)=>[(ch-y)*cw/ch, x*ch/cw]);
+        break;
+      case 'p4m':
+        T.push((x,y)=>[y*cw/ch, x*ch/cw]);
+        T.push((x,y)=>[cw-x, y]);
+        T.push((x,y)=>[x, ch-y]);
+        T.push((x,y)=>[y*cw/ch, (cw-x)*ch/cw]);
+        T.push((x,y)=>[cw-x, ch-y]);
+        T.push((x,y)=>[(ch-y)*cw/ch, x*ch/cw]);
+        T.push((x,y)=>[(ch-y)*cw/ch, (cw-x)*ch/cw]);
+        break;
+      case 'p4g':
+        T.push((x,y)=>[y*cw/ch, (cw-x)*ch/cw]);
+        T.push((x,y)=>[cw-x, ch-y]);
+        T.push((x,y)=>[(ch-y)*cw/ch, x*ch/cw]);
+        T.push((x,y)=>[cw-x, y]);
+        T.push((x,y)=>[y*cw/ch, x*ch/cw]);
+        T.push((x,y)=>[x, ch-y]);
+        T.push((x,y)=>[(ch-y)*cw/ch, (cw-x)*ch/cw]);
+        break;
+      case 'p3':
+        T.push((x,y)=>{const dx=x-cx2,dy=y-cy2;return [cx2+dx*cos120-dy*sin120, cy2+dx*sin120+dy*cos120];});
+        T.push((x,y)=>{const dx=x-cx2,dy=y-cy2;return [cx2+dx*cos240-dy*sin240, cy2+dx*sin240+dy*cos240];});
+        break;
+      case 'p3m1':
+        T.push((x,y)=>{const dx=x-cx2,dy=y-cy2;return [cx2+dx*cos120-dy*sin120, cy2+dx*sin120+dy*cos120];});
+        T.push((x,y)=>{const dx=x-cx2,dy=y-cy2;return [cx2+dx*cos240-dy*sin240, cy2+dx*sin240+dy*cos240];});
+        T.push((x,y)=>[cw-x,y]);
+        T.push((x,y)=>{const dx=cw-x-cx2,dy=y-cy2;return [cx2+dx*cos120-dy*sin120, cy2+dx*sin120+dy*cos120];});
+        T.push((x,y)=>{const dx=cw-x-cx2,dy=y-cy2;return [cx2+dx*cos240-dy*sin240, cy2+dx*sin240+dy*cos240];});
+        break;
+      case 'p31m':
+        T.push((x,y)=>{const dx=x-cx2,dy=y-cy2;return [cx2+dx*cos120-dy*sin120, cy2+dx*sin120+dy*cos120];});
+        T.push((x,y)=>{const dx=x-cx2,dy=y-cy2;return [cx2+dx*cos240-dy*sin240, cy2+dx*sin240+dy*cos240];});
+        T.push((x,y)=>[x,ch-y]);
+        T.push((x,y)=>{const dx=x-cx2,dy=(ch-y)-cy2;return [cx2+dx*cos120-dy*sin120, cy2+dx*sin120+dy*cos120];});
+        T.push((x,y)=>{const dx=x-cx2,dy=(ch-y)-cy2;return [cx2+dx*cos240-dy*sin240, cy2+dx*sin240+dy*cos240];});
+        break;
+      case 'p6':
+        for(let k=1;k<=5;k++){
+          const c=Math.cos(TAU*k/6), s=Math.sin(TAU*k/6);
+          T.push((x,y)=>{const dx=x-cx2,dy=y-cy2;return [cx2+dx*c-dy*s, cy2+dx*s+dy*c];});
+        }
+        break;
+      case 'p6m':
+        for(let k=1;k<=5;k++){
+          const c=Math.cos(TAU*k/6), s=Math.sin(TAU*k/6);
+          T.push((x,y)=>{const dx=x-cx2,dy=y-cy2;return [cx2+dx*c-dy*s, cy2+dx*s+dy*c];});
+        }
+        T.push((x,y)=>[cw-x,y]);
+        for(let k=1;k<=5;k++){
+          const c=Math.cos(TAU*k/6), s=Math.sin(TAU*k/6);
+          T.push((x,y)=>{const dx=(cw-x)-cx2,dy=y-cy2;return [cx2+dx*c-dy*s, cy2+dx*s+dy*c];});
+        }
+        break;
+    }
+    return T;
+  }
+
+  function getLattice(g){
+    const hex=['p3','p3m1','p31m','p6','p6m'];
+    if(hex.includes(g.name)) return {v1:{x:cellW,y:0}, v2:{x:cellW/2,y:cellH*Math.sqrt(3)/2}};
+    if(g.name==='cm'||g.name==='cmm') return {v1:{x:cellW,y:0}, v2:{x:cellW/2,y:cellH}};
+    if(g.name.startsWith('p4')) return {v1:{x:cellW,y:0}, v2:{x:0,y:cellW}};
+    return {v1:{x:cellW,y:0}, v2:{x:0,y:cellH}};
+  }
+
+  function render(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = '#04050c';
+    ctx.fillRect(0,0,W,H);
+
+    const g = currentGroup;
+    const transforms = getTransforms(g);
+    const lattice = getLattice(g);
+    const maxDist = Math.max(W,H);
+    const rangeX = Math.ceil(maxDist/cellW)+2;
+    const rangeY = Math.ceil(maxDist/cellH)+2;
+
+    strokes.forEach(stroke=>{
+      if(stroke.points.length<2) return;
+      for(let ny=-rangeY;ny<=rangeY;ny++){
+        for(let nx=-rangeX;nx<=rangeX;nx++){
+          const ox = nx*lattice.v1.x + ny*lattice.v2.x;
+          const oy = nx*lattice.v1.y + ny*lattice.v2.y;
+          transforms.forEach(tfn=>{
+            ctx.beginPath();
+            ctx.strokeStyle = stroke.color;
+            ctx.lineWidth = stroke.size;
+            ctx.lineCap='round'; ctx.lineJoin='round';
+            let first=true;
+            stroke.points.forEach(pt=>{
+              const [tx,ty] = tfn(pt.x, pt.y);
+              const sx = tx+ox, sy = ty+oy;
+              if(sx<-cellW||sx>W+cellW||sy<-cellH||sy>H+cellH) return;
+              if(first){ctx.moveTo(sx,sy);first=false} else ctx.lineTo(sx,sy);
+            });
+            ctx.stroke();
+          });
+        }
+      }
+    });
+
+    if(overlays.domain){
+      ctx.strokeStyle='rgba(201,168,76,.25)';
+      ctx.lineWidth=1;
+      ctx.setLineDash([4,4]);
+      ctx.strokeRect(0,0,cellW,cellH);
+      ctx.setLineDash([]);
+      ctx.fillStyle='rgba(201,168,76,.03)';
+      ctx.fillRect(0,0,cellW,cellH);
+      ctx.font='9px "JetBrains Mono"';
+      ctx.fillStyle='rgba(201,168,76,.4)';
+      ctx.fillText('기본 영역',4,cellH-4);
+    }
+
+    if(overlays.lattice){
+      ctx.strokeStyle='rgba(201,168,76,.12)'; ctx.lineWidth=0.5;
+      for(let ny=-rangeY;ny<=rangeY;ny++){
+        for(let nx=-rangeX;nx<=rangeX;nx++){
+          const ox=nx*lattice.v1.x+ny*lattice.v2.x;
+          const oy=nx*lattice.v1.y+ny*lattice.v2.y;
+          ctx.strokeRect(ox,oy,cellW,cellH);
+        }
+      }
+    }
+
+    if(overlays.rotations && g.rot.length>0){
+      const pts=[[0,0],[cellW/2,cellH/2],[cellW,0],[0,cellH],[cellW,cellH]];
+      for(let ny=-rangeY;ny<=rangeY;ny++){
+        for(let nx=-rangeX;nx<=rangeX;nx++){
+          const ox=nx*lattice.v1.x+ny*lattice.v2.x;
+          const oy=nx*lattice.v1.y+ny*lattice.v2.y;
+          pts.forEach(([px,py])=>{
+            const sx=px+ox, sy=py+oy;
+            if(sx<-20||sx>W+20||sy<-20||sy>H+20) return;
+            const maxRot=Math.max.apply(null,g.rot);
+            const r=maxRot>=4?5:maxRot>=3?4:3;
+            ctx.beginPath(); ctx.arc(sx,sy,r,0,TAU);
+            ctx.fillStyle=maxRot>=4?'rgba(201,168,76,.5)':maxRot>=3?'rgba(138,106,191,.5)':'rgba(201,168,76,.3)';
+            ctx.fill();
+          });
+        }
+      }
+    }
+
+    if(overlays.mirrors && g.mirrors>0){
+      ctx.strokeStyle='rgba(138,106,191,.3)'; ctx.lineWidth=1; ctx.setLineDash([6,3]);
+      for(let ny=-rangeY;ny<=rangeY;ny++){
+        for(let nx=-rangeX;nx<=rangeX;nx++){
+          const ox=nx*lattice.v1.x+ny*lattice.v2.x;
+          const oy=nx*lattice.v1.y+ny*lattice.v2.y;
+          ctx.beginPath();ctx.moveTo(ox+cellW/2,oy);ctx.lineTo(ox+cellW/2,oy+cellH);ctx.stroke();
+          if(g.mirrors>=2){ctx.beginPath();ctx.moveTo(ox,oy+cellH/2);ctx.lineTo(ox+cellW,oy+cellH/2);ctx.stroke();}
+          if(g.mirrors>=4){
+            ctx.beginPath();ctx.moveTo(ox,oy);ctx.lineTo(ox+cellW,oy+cellH);ctx.stroke();
+            ctx.beginPath();ctx.moveTo(ox+cellW,oy);ctx.lineTo(ox,oy+cellH);ctx.stroke();
+          }
+        }
+      }
+      ctx.setLineDash([]);
+    }
+  }
+
+  function getPos(e){
+    const rect=canvas.getBoundingClientRect();
+    return {x:(e.clientX-rect.left)*(W/rect.width), y:(e.clientY-rect.top)*(H/rect.height)};
+  }
+
+  canvas.addEventListener('mousedown',(e)=>{
+    e.preventDefault(); drawing=true;
+    curStroke = {points:[getPos(e)], color:brushColor, size:brushSz/dpr};
+    strokes.push(curStroke);
+  });
+  canvas.addEventListener('mousemove',(e)=>{
+    if(!drawing||!curStroke) return;
+    curStroke.points.push(getPos(e)); render();
+  });
+  canvas.addEventListener('mouseup',()=>{drawing=false;curStroke=null});
+  canvas.addEventListener('mouseleave',()=>{drawing=false;curStroke=null});
+
+  canvas.addEventListener('touchstart',(e)=>{
+    e.preventDefault(); drawing=true;
+    curStroke={points:[getPos(e.touches[0])], color:brushColor, size:brushSz/dpr};
+    strokes.push(curStroke);
+  },{passive:false});
+  canvas.addEventListener('touchmove',(e)=>{
+    e.preventDefault();
+    if(!drawing||!curStroke) return;
+    curStroke.points.push(getPos(e.touches[0])); render();
+  },{passive:false});
+  canvas.addEventListener('touchend',()=>{drawing=false;curStroke=null});
+
+  document.getElementById('brushSize').addEventListener('input',e=>{brushSz=+e.target.value});
+  document.getElementById('brushColor').addEventListener('input',e=>{brushColor=e.target.value});
+  document.getElementById('clearCanvas').addEventListener('click',()=>{strokes=[];render()});
+
+  document.querySelectorAll('.overlay-toggle').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const key=btn.dataset.overlay;
+      overlays[key]=!overlays[key];
+      btn.classList.toggle('active',overlays[key]);
+      render();
+    });
+  });
+
+  const resObs = new ResizeObserver(()=>resizeCanvas());
+  resObs.observe(canvas.parentElement);
+  resizeCanvas();
+  updateInfo();
+})();
+
+/* ================================================
+   PENTAGON GALLERY (Section II)
+   ================================================
+   Informational gallery of the 15 convex pentagon types
+   that tile the plane. Each card shows the type number,
+   discoverer, year, and defining angle/edge conditions.
+   ================================================ */
+(function initPentagonGallery(){
+  const gallery = document.getElementById('pentGallery');
+  if(!gallery) return;
+
+  // Conditions transcribed directly from Wikipedia's Pentagonal tiling article.
+  // Labeling: sides a,b,c,d,e are clockwise from angles A,B,C,D,E, so A,B,C,D,E
+  // are opposite to d,e,a,b,c respectively.
+  const types = [
+    {n:1,  yr:1918, by:'Reinhardt',
+     cond:'<em>B</em> + <em>C</em> = 180°<br><em>A</em> + <em>D</em> + <em>E</em> = 360°'},
+    {n:2,  yr:1918, by:'Reinhardt',
+     cond:'<em>c</em> = <em>e</em><br><em>B</em> + <em>D</em> = 180°'},
+    {n:3,  yr:1918, by:'Reinhardt',
+     cond:'<em>a</em> = <em>b</em>, <em>d</em> = <em>c</em> + <em>e</em><br><em>A</em> = <em>C</em> = <em>D</em> = 120°'},
+    {n:4,  yr:1918, by:'Reinhardt',
+     cond:'<em>b</em> = <em>c</em>, <em>d</em> = <em>e</em><br><em>B</em> = <em>D</em> = 90°'},
+    {n:5,  yr:1918, by:'Reinhardt',
+     cond:'<em>a</em> = <em>b</em>, <em>d</em> = <em>e</em><br><em>A</em> = 60°, <em>D</em> = 120°'},
+    {n:6,  yr:1968, by:'Kershner',
+     cond:'<em>a</em> = <em>d</em> = <em>e</em>, <em>b</em> = <em>c</em><br><em>B</em> + <em>D</em> = 180°, 2<em>B</em> = <em>E</em>'},
+    {n:7,  yr:1968, by:'Kershner',
+     cond:'<em>b</em> = <em>c</em> = <em>d</em> = <em>e</em><br><em>B</em> + 2<em>E</em> = 2<em>C</em> + <em>D</em> = 360°'},
+    {n:8,  yr:1968, by:'Kershner',
+     cond:'<em>b</em> = <em>c</em> = <em>d</em> = <em>e</em><br>2<em>B</em> + <em>C</em> = <em>D</em> + 2<em>E</em> = 360°'},
+    {n:9,  yr:1975, by:'James',
+     cond:'<em>b</em> = <em>c</em> = <em>d</em> = <em>e</em><br>2<em>A</em> + <em>C</em> = <em>D</em> + 2<em>E</em> = 360°'},
+    {n:10, yr:1976, by:'Rice',
+     cond:'<em>a</em> = <em>b</em> = <em>c</em> + <em>e</em><br><em>A</em> = 90°, <em>B</em> + <em>E</em> = 180°<br><em>B</em> + 2<em>C</em> = 360°'},
+    {n:11, yr:1977, by:'Rice',
+     cond:'2<em>a</em> + <em>c</em> = <em>d</em> = <em>e</em><br><em>A</em> = 90°, 2<em>B</em> + <em>C</em> = 360°<br><em>C</em> + <em>E</em> = 180°'},
+    {n:12, yr:1977, by:'Rice',
+     cond:'2<em>a</em> = <em>d</em> = <em>c</em> + <em>e</em><br><em>A</em> = 90°, 2<em>B</em> + <em>C</em> = 360°<br><em>C</em> + <em>E</em> = 180°'},
+    {n:13, yr:1977, by:'Rice',
+     cond:'<em>d</em> = 2<em>a</em> = 2<em>e</em><br><em>B</em> = <em>E</em> = 90°<br>2<em>A</em> + <em>D</em> = 360°'},
+    {n:14, yr:1985, by:'Stein',
+     cond:'2<em>a</em> = 2<em>c</em> = <em>d</em> = <em>e</em><br><em>A</em> = 90°, <em>B</em> ≈ 145.34°<br><em>C</em> ≈ 69.32°'},
+    {n:15, yr:2015, by:'Mann, McLoud-Mann &amp; Von Derau',
+     cond:'<em>a</em> = <em>c</em> = <em>e</em>, <em>b</em> = 2<em>a</em><br><em>A</em> = 150°, <em>B</em> = 60°, <em>C</em> = 135°<br><em>D</em> = 105°, <em>E</em> = 90°'},
+  ];
+
+  // Wikimedia Commons image URLs (official hotlink via Special:Redirect).
+  // See: https://commons.wikimedia.org/wiki/Commons:Reusing_content_outside_Wikimedia/technical
+  const imgBase = 'https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/P5-type';
+
+  types.forEach(t=>{
+    const card = document.createElement('div');
+    card.className = 'pent-card';
+    card.innerHTML = `
+      <div class="pent-card-img">
+        <img src="${imgBase}${t.n}.png&amp;width=400"
+             alt="Pentagonal tiling type ${t.n} by ${t.by}"
+             loading="lazy"
+             referrerpolicy="no-referrer"
+             onerror="this.style.display='none';this.parentElement.classList.add('pent-img-fallback');this.parentElement.setAttribute('data-n','Type ${t.n}');">
+      </div>
+      <div class="pent-card-body">
+        <div class="pent-card-head">
+          <span class="pent-card-num">${t.n}</span>
+          <span class="pent-card-yr">${t.yr}</span>
+        </div>
+        <div class="pent-card-by">${t.by}</div>
+        <div class="pent-card-cond">${t.cond}</div>
+      </div>
+    `;
+    gallery.appendChild(card);
+  });
+})();
+
+/* ================================================
+   PENROSE INFLATION EXPLORER (Section III)
+   ================================================
+   Uses Robinson triangle subdivision for the P2 (kite/dart) tiling.
+   Each triangle is a half-kite (type 0) or half-dart (type 1).
+   Kites and darts are each composed of two same-type triangles
+   sharing their "base" edge (edge B-C in our labeling).
+
+   Rendering strategy:
+   - Fill triangles by type: kite halves = gold, dart halves = violet
+   - Identify internal (base) edges shared by same-type pairs
+   - Draw ONLY the outer edges of each kite/dart (not internal split)
+   - At each inflation level, the tiling becomes finer by factor φ
+   ================================================ */
+(function initPenroseInflation(){
+  const canvas = document.getElementById('zoomCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const PI = Math.PI, TAU = 2*PI;
+  const PHI = (1+Math.sqrt(5))/2;
+  const IPHI = 1/PHI;
+
+  let W, H, dpr;
+  let level = 3;
+  let showArcs = false;
+  let tris = [];
+  let outerEdges = [];
+
+  // View transform: pan offset (in pixels) and zoom factor (1 = fit-to-view)
+  let panX = 0, panY = 0;
+  let zoom = 1;
+  let dragging = false;
+  let dragStart = null;
+
+  /* ---- P3 half-rhombus subdivision ----
+     c=0: half-THIN rhombus, isoceles with 36° apex at A, base B-C (long diagonal of thin rhombus)
+     c=1: half-THICK rhombus, isoceles with 72° apex at A, base B-C (short diagonal of thick rhombus)
+     Two same-c triangles sharing their B-C edge form one rhombus.
+     This subdivision (due to de Bruijn) is exact: B-C is always the mirror edge. */
+  function subdivide(inTris){
+    const out = [];
+    for(const t of inTris){
+      const {c, A, B, C} = t;
+      if(c === 0){
+        // Half-thin -> 1 half-thin + 1 half-thick
+        const P = {x: A.x + (B.x-A.x)*IPHI, y: A.y + (B.y-A.y)*IPHI};
+        out.push({c:0, A:C, B:P, C:B});
+        out.push({c:1, A:P, B:C, C:A});
+      } else {
+        // Half-thick -> 2 half-thick + 1 half-thin
+        const Q = {x: B.x + (A.x-B.x)*IPHI, y: B.y + (A.y-B.y)*IPHI};
+        const R = {x: B.x + (C.x-B.x)*IPHI, y: B.y + (C.y-B.y)*IPHI};
+        out.push({c:1, A:R, B:C, C:A});
+        out.push({c:1, A:Q, B:R, C:B});
+        out.push({c:0, A:R, B:Q, C:A});
+      }
+    }
+    return out;
+  }
+
+  /* ---- Sun seed: 5 thin rhombi meeting at the center with their 36° corners.
+     10 half-thin triangles (c=0), 10×36°=360°. This is the standard symmetric
+     starting configuration for a Penrose P3 tiling. ---- */
+  function makeSeed(){
+    const seed = [];
+    for(let i=0;i<10;i++){
+      const a1 = TAU*i/10 - PI/2;
+      const a2 = TAU*(i+1)/10 - PI/2;
+      const p1 = {x:Math.cos(a1), y:Math.sin(a1)};
+      const p2 = {x:Math.cos(a2), y:Math.sin(a2)};
+      if(i%2===0) seed.push({c:0, A:{x:0,y:0}, B:p2, C:p1});
+      else        seed.push({c:0, A:{x:0,y:0}, B:p1, C:p2});
+    }
+    return seed;
+  }
+
+  /* ---- Compute outer edges ----
+     In the P3 subdivision above, the ONLY internal (mirror) edge of a triangle
+     is its B-C edge: if two same-c triangles share their B-C edge, that edge
+     is the rhombus's diagonal and should be hidden. All other edges (A-B, A-C,
+     and B-C edges not shared with same-c twin) are visible rhombus boundaries. */
+  function computeOuterEdges(tris){
+    function vkey(p){ return Math.round(p.x*1e5)+','+Math.round(p.y*1e5); }
+    function edgeKey(p1, p2){
+      const k1 = vkey(p1), k2 = vkey(p2);
+      return k1 < k2 ? k1+'|'+k2 : k2+'|'+k1;
+    }
+
+    // Collect only B-C edges per triangle, tagged by c
+    const bcMap = new Map();
+    for(const t of tris){
+      const k = edgeKey(t.B, t.C);
+      if(!bcMap.has(k)) bcMap.set(k, []);
+      bcMap.get(k).push(t.c);
+    }
+
+    // An edge is internal iff shared by two same-c triangles as B-C
+    const internalBC = new Set();
+    for(const [k, cs] of bcMap){
+      if(cs.length === 2 && cs[0] === cs[1]) internalBC.add(k);
+    }
+
+    // Collect all unique edges to draw, skipping internal B-C
+    const drawn = new Set();
+    const edges = [];
+    for(const t of tris){
+      // A-B and A-C are ALWAYS drawn
+      for(const [p1, p2] of [[t.A, t.B], [t.A, t.C]]){
+        const k = edgeKey(p1, p2);
+        if(!drawn.has(k)){
+          drawn.add(k);
+          edges.push([p1, p2]);
+        }
+      }
+      // B-C only if NOT internal
+      const kBC = edgeKey(t.B, t.C);
+      if(!internalBC.has(kBC) && !drawn.has(kBC)){
+        drawn.add(kBC);
+        edges.push([t.B, t.C]);
+      }
+    }
+
+    return edges;
+  }
+
+  /* ---- Count thick/thin rhombi ---- */
+  function countTiles(tris){
+    // c=0 halves → thin rhombi (paired); c=1 halves → thick rhombi
+    const c0 = tris.filter(t=>t.c===0).length;
+    const c1 = tris.filter(t=>t.c===1).length;
+    return {thin: c0/2, thick: c1/2};
+  }
+
+  /* ---- Regenerate at current level ---- */
+  function regen(){
+    tris = makeSeed();
+    for(let i=0;i<level;i++) tris = subdivide(tris);
+    outerEdges = computeOuterEdges(tris);
+
+    const counts = countTiles(tris);
+    document.getElementById('zoomStatLvl').textContent = level;
+    document.getElementById('zoomStatKite').textContent = Math.round(counts.thick);
+    document.getElementById('zoomStatDart').textContent = Math.round(counts.thin);
+    const ratio = counts.thin > 0 ? (counts.thick/counts.thin).toFixed(4) : '—';
+    document.getElementById('zoomStatRatio').textContent = ratio;
+  }
+
+  /* ---- Resize ---- */
+  function resize(){
+    dpr = devicePixelRatio||1;
+    W = canvas.clientWidth; H = canvas.clientHeight||540;
+    canvas.width = W*dpr; canvas.height = H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    draw();
+  }
+
+  /* ---- Draw matching-rule arcs on a triangle ----
+     Conway matching rule arcs cross each triangle.
+     For a half-kite (type 0): single arc from midpoint of A-B to midpoint of A-C
+     For a half-dart (type 1): different arc
+  */
+  function drawArcOnTriangle(t, scale, sx, sy){
+    const {c, A, B, C} = t;
+    if(c === 1){
+      // Half-thick: arcs
+      const r = Math.hypot(B.x-A.x, B.y-A.y) * IPHI;
+      const a1 = Math.atan2(B.y-A.y, B.x-A.x);
+      const a2 = Math.atan2(C.y-A.y, C.x-A.x);
+      ctx.strokeStyle = 'rgba(212,178,76,0.65)';
+      ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      ctx.arc(A.x*scale + sx, A.y*scale + sy, r*scale, a1, a2, a2<a1);
+      ctx.stroke();
+
+      const r2 = Math.hypot(B.x-A.x, B.y-A.y) * (1-IPHI);
+      const b1 = Math.atan2(A.y-B.y, A.x-B.x);
+      const b2 = Math.atan2(C.y-B.y, C.x-B.x);
+      ctx.strokeStyle = 'rgba(148,116,201,0.55)';
+      ctx.beginPath();
+      ctx.arc(B.x*scale + sx, B.y*scale + sy, r2*scale, b1, b2, b2<b1);
+      ctx.stroke();
+    } else {
+      // Half-thin
+      const r = Math.hypot(B.x-A.x, B.y-A.y) * (1-IPHI);
+      const a1 = Math.atan2(B.y-A.y, B.x-A.x);
+      const a2 = Math.atan2(C.y-A.y, C.x-A.x);
+      ctx.strokeStyle = 'rgba(148,116,201,0.65)';
+      ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      ctx.arc(A.x*scale + sx, A.y*scale + sy, r*scale, a1, a2, a2<a1);
+      ctx.stroke();
+
+      const r2 = Math.hypot(B.x-A.x, B.y-A.y) * IPHI;
+      const b1 = Math.atan2(A.y-B.y, A.x-B.x);
+      const b2 = Math.atan2(C.y-B.y, C.x-B.x);
+      ctx.strokeStyle = 'rgba(212,178,76,0.55)';
+      ctx.beginPath();
+      ctx.arc(B.x*scale + sx, B.y*scale + sy, r2*scale, b1, b2, b2<b1);
+      ctx.stroke();
+    }
+  }
+
+  /* ---- Draw ---- */
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+
+    // Background
+    ctx.fillStyle = '#04050c';
+    ctx.fillRect(0,0,W,H);
+
+    // Base radius (fit-to-view) multiplied by zoom factor
+    const baseRadius = Math.min(W, H) * 0.44;
+    const scale = baseRadius * zoom;
+    const sx = W/2 + panX, sy = H/2 + panY;
+
+    // Viewport cull bounds in world coords
+    const margin = 50 / scale;
+    const vMinX = (-W/2 - panX)/scale - margin;
+    const vMaxX = (W/2 - panX)/scale + margin;
+    const vMinY = (-H/2 - panY)/scale - margin;
+    const vMaxY = (H/2 - panY)/scale + margin;
+
+    // Fill triangles
+    for(const t of tris){
+      // Cull in world space
+      const maxX = Math.max(t.A.x, t.B.x, t.C.x);
+      const minX = Math.min(t.A.x, t.B.x, t.C.x);
+      const maxY = Math.max(t.A.y, t.B.y, t.C.y);
+      const minY = Math.min(t.A.y, t.B.y, t.C.y);
+      if(maxX < vMinX || minX > vMaxX || maxY < vMinY || minY > vMaxY) continue;
+
+      const ax = t.A.x*scale + sx, ay = t.A.y*scale + sy;
+      const bx = t.B.x*scale + sx, by = t.B.y*scale + sy;
+      const cx = t.C.x*scale + sx, cy = t.C.y*scale + sy;
+
+      if(t.c === 1){
+        // Half-thick rhombus: warm gold gradient
+        const grad = ctx.createLinearGradient(ax, ay, (bx+cx)/2, (by+cy)/2);
+        grad.addColorStop(0, 'hsl(42, 58%, 38%)');
+        grad.addColorStop(1, 'hsl(40, 55%, 28%)');
+        ctx.fillStyle = grad;
+      } else {
+        // Half-thin rhombus: deep violet gradient
+        const grad = ctx.createLinearGradient(ax, ay, (bx+cx)/2, (by+cy)/2);
+        grad.addColorStop(0, 'hsl(268, 48%, 30%)');
+        grad.addColorStop(1, 'hsl(265, 45%, 22%)');
+        ctx.fillStyle = grad;
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(ax, ay);
+      ctx.lineTo(bx, by);
+      ctx.lineTo(cx, cy);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    // Draw outer edges (kite/dart boundaries)
+    ctx.strokeStyle = 'rgba(236, 232, 224, 0.55)';
+    ctx.lineWidth = Math.max(0.4, 1.6 / Math.pow(1 + level*0.25, 0.7));
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    for(const [p1, p2] of outerEdges){
+      const x1 = p1.x*scale + sx, y1 = p1.y*scale + sy;
+      const x2 = p2.x*scale + sx, y2 = p2.y*scale + sy;
+      // Line-level cull
+      if((x1<-10&&x2<-10)||(x1>W+10&&x2>W+10)||(y1<-10&&y2<-10)||(y1>H+10&&y2>H+10)) continue;
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+    }
+    ctx.stroke();
+
+    // Optional matching arcs
+    if(showArcs){
+      for(const t of tris){
+        const maxX = Math.max(t.A.x, t.B.x, t.C.x);
+        const minX = Math.min(t.A.x, t.B.x, t.C.x);
+        const maxY = Math.max(t.A.y, t.B.y, t.C.y);
+        const minY = Math.min(t.A.y, t.B.y, t.C.y);
+        if(maxX < vMinX || minX > vMaxX || maxY < vMinY || minY > vMaxY) continue;
+        drawArcOnTriangle(t, scale, sx, sy);
+      }
+    }
+
+    // Subtle vignette
+    const vg = ctx.createRadialGradient(W/2, H/2, Math.min(W,H)*0.25, W/2, H/2, Math.max(W,H)*0.6);
+    vg.addColorStop(0, 'rgba(4,5,12,0)');
+    vg.addColorStop(1, 'rgba(4,5,12,0.6)');
+    ctx.fillStyle = vg;
+    ctx.fillRect(0,0,W,H);
+  }
+
+  /* ---- Controls ---- */
+  const levelSlider = document.getElementById('zoomLevel');
+  const levelDisplay = document.getElementById('zoomLevelDisplay');
+  levelSlider.addEventListener('input', e=>{
+    level = +e.target.value;
+    levelDisplay.textContent = level;
+    regen();
+    draw();
+  });
+
+  function zoomAtCenter(factor){
+    const baseRadius = Math.min(W, H) * 0.44;
+    const scaleBefore = baseRadius * zoom;
+    // World point at center of canvas (with current pan)
+    const worldX = -panX / scaleBefore;
+    const worldY = -panY / scaleBefore;
+    zoom = Math.max(0.1, Math.min(50, zoom * factor));
+    const scaleAfter = baseRadius * zoom;
+    panX = -worldX * scaleAfter;
+    panY = -worldY * scaleAfter;
+    draw();
+  }
+
+  document.getElementById('zoomIn').addEventListener('click', ()=>zoomAtCenter(1.4));
+  document.getElementById('zoomOut').addEventListener('click', ()=>zoomAtCenter(1/1.4));
+
+  document.getElementById('zoomReset').addEventListener('click', ()=>{
+    level = 3;
+    levelSlider.value = 3;
+    levelDisplay.textContent = 3;
+    panX = 0; panY = 0;
+    zoom = 1;
+    regen();
+    draw();
+  });
+
+  document.getElementById('showArcs').addEventListener('click', (e)=>{
+    showArcs = !showArcs;
+    e.target.classList.toggle('active', showArcs);
+    draw();
+  });
+
+  /* ---- Pan via mouse drag ---- */
+  function getLocalPos(e){
+    const rect = canvas.getBoundingClientRect();
+    return {x: e.clientX - rect.left, y: e.clientY - rect.top};
+  }
+
+  canvas.addEventListener('mousedown', e=>{
+    dragging = true;
+    const p = getLocalPos(e);
+    dragStart = {x: p.x - panX, y: p.y - panY};
+    canvas.style.cursor = 'grabbing';
+  });
+  canvas.addEventListener('mousemove', e=>{
+    if(!dragging) return;
+    const p = getLocalPos(e);
+    panX = p.x - dragStart.x;
+    panY = p.y - dragStart.y;
+    draw();
+  });
+  canvas.addEventListener('mouseup', ()=>{ dragging = false; canvas.style.cursor = 'grab'; });
+  canvas.addEventListener('mouseleave', ()=>{ dragging = false; canvas.style.cursor = 'grab'; });
+  canvas.style.cursor = 'grab';
+
+  /* ---- Wheel zoom (zoom toward mouse position) ---- */
+  canvas.addEventListener('wheel', e=>{
+    e.preventDefault();
+    const p = getLocalPos(e);
+    // World point under cursor before zoom
+    const baseRadius = Math.min(W, H) * 0.44;
+    const scaleBefore = baseRadius * zoom;
+    const worldX = (p.x - W/2 - panX) / scaleBefore;
+    const worldY = (p.y - H/2 - panY) / scaleBefore;
+
+    const zoomFactor = Math.exp(-e.deltaY * 0.0015);
+    zoom = Math.max(0.1, Math.min(50, zoom * zoomFactor));
+
+    // Adjust pan so the same world point stays under cursor
+    const scaleAfter = baseRadius * zoom;
+    panX = p.x - W/2 - worldX * scaleAfter;
+    panY = p.y - H/2 - worldY * scaleAfter;
+
+    draw();
+  }, {passive:false});
+
+  /* ---- Touch: one finger pan, two finger pinch-zoom ---- */
+  let touchState = null;
+
+  canvas.addEventListener('touchstart', e=>{
+    if(e.touches.length === 1){
+      const t = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      touchState = {mode:'pan', startX: t.clientX - rect.left - panX, startY: t.clientY - rect.top - panY};
+    } else if(e.touches.length === 2){
+      const t1 = e.touches[0], t2 = e.touches[1];
+      const rect = canvas.getBoundingClientRect();
+      const cx = (t1.clientX + t2.clientX)/2 - rect.left;
+      const cy = (t1.clientY + t2.clientY)/2 - rect.top;
+      const dist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+      const baseRadius = Math.min(W, H) * 0.44;
+      const scale0 = baseRadius * zoom;
+      const worldX = (cx - W/2 - panX) / scale0;
+      const worldY = (cy - H/2 - panY) / scale0;
+      touchState = {mode:'pinch', startDist: dist, startZoom: zoom, worldX, worldY, cx, cy};
+    }
+  }, {passive:true});
+
+  canvas.addEventListener('touchmove', e=>{
+    if(!touchState) return;
+    e.preventDefault();
+    if(touchState.mode === 'pan' && e.touches.length === 1){
+      const t = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      panX = t.clientX - rect.left - touchState.startX;
+      panY = t.clientY - rect.top - touchState.startY;
+      draw();
+    } else if(touchState.mode === 'pinch' && e.touches.length === 2){
+      const t1 = e.touches[0], t2 = e.touches[1];
+      const rect = canvas.getBoundingClientRect();
+      const cx = (t1.clientX + t2.clientX)/2 - rect.left;
+      const cy = (t1.clientY + t2.clientY)/2 - rect.top;
+      const dist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+      zoom = Math.max(0.1, Math.min(50, touchState.startZoom * (dist / touchState.startDist)));
+
+      const baseRadius = Math.min(W, H) * 0.44;
+      const scaleAfter = baseRadius * zoom;
+      panX = cx - W/2 - touchState.worldX * scaleAfter;
+      panY = cy - H/2 - touchState.worldY * scaleAfter;
+      draw();
+    }
+  }, {passive:false});
+
+  canvas.addEventListener('touchend', e=>{
+    if(e.touches.length === 0){ touchState = null; }
+    else if(e.touches.length === 1){
+      // Switch from pinch to pan
+      const t = e.touches[0];
+      const rect = canvas.getBoundingClientRect();
+      touchState = {mode:'pan', startX: t.clientX - rect.left - panX, startY: t.clientY - rect.top - panY};
+    }
+  });
+
+  /* ---- Init ---- */
+  const resObs = new ResizeObserver(()=>resize());
+  resObs.observe(canvas.parentElement);
+  regen();
+  resize();
+
+  // Lazy init when in view
+  const inView = new IntersectionObserver(([e])=>{
+    if(e.isIntersecting) draw();
+  }, {threshold: 0.05});
+  inView.observe(document.getElementById('zoomBox'));
+})();
+
+
+/* ================================================
+   WHY FIVE-FOLD SYMMETRY FAILS (Section IV)
+   ================================================
+   Animates the attempt to tile the plane edge-to-edge with a single
+   regular n-gon. Polygons are placed one by one around a central vertex.
+   The interior angle α = (n-2)·180°/n of a regular n-gon, and k = 360°/α
+   polygons fit around each vertex exactly when k ∈ ℤ. This integrality
+   holds only for n ∈ {3, 4, 6}, giving triangles (k=6), squares (k=4),
+   and hexagons (k=3). For other n, the polygons either leave an angular
+   gap (underfill) or overlap their neighbor (overfill).
+   ================================================ */
+(function initTileAttempt(){
+  const canvas = document.getElementById('diffCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const PI = Math.PI, TAU = 2*PI;
+  let W, H, dpr;
+  let n = 5;
+  let animProgress = 0;   // 0 → k polygons placed
+  let rafId = null;
+  let lastTime = 0;
+
+  function interiorAngle(n){
+    return (n-2) * 180 / n;
+  }
+
+  function polygonsFitting(n){
+    return 360 / interiorAngle(n);
+  }
+
+  // Outcome: 'allowed', 'underfill' (gap), or 'overfill' (overlap)
+  function outcome(n){
+    const k = polygonsFitting(n);
+    if(Math.abs(k - Math.round(k)) < 1e-9) return 'allowed';
+    return 'underfill';  // For n ≥ 5, interior angle > 90° so 3 copies < 360° < 4 copies
+                          // (n=5 → 3×108=324 under, 4×108=432 over)
+                          // We animate placing floor(k)+1 copies and show overlap,
+                          // OR floor(k) copies and show gap. Choose floor+1 → overlap.
+  }
+
+  /* Build a regular polygon with edge length 1, placed so that one of its
+     vertices sits at the origin and two edges emanate from that vertex.
+     The angle between those edges is the interior angle α.
+     If we want to "attach" k polygons around the origin, the i-th copy
+     is rotated so that its first outgoing edge lies along angle i·α. */
+  function regularNgon(n){
+    const alpha = interiorAngle(n) * PI / 180;
+    // Start with a reference polygon with vertex at origin, one edge along +x
+    // and the interior of the polygon above the x-axis (positive y).
+    // Vertices go counterclockwise around the polygon.
+    const verts = [];
+    // Edge angles emanating from vertex 0 are 0 and α (interior angle).
+    // So vertex 1 is at (1, 0) (along edge 0 of length 1).
+    // From there, turn by exterior angle (180°-α) to get next edge direction.
+    const exterior = PI - alpha;
+    let x = 0, y = 0, dir = 0;
+    verts.push({x, y});
+    for(let i=0;i<n-1;i++){
+      x += Math.cos(dir);
+      y += Math.sin(dir);
+      verts.push({x, y});
+      dir += exterior;
+    }
+    return verts;
+  }
+
+  /* Place the j-th copy around the central vertex: rotate the reference
+     polygon by j·α around the origin. */
+  function placedCopy(refVerts, j, alpha){
+    const c = Math.cos(j*alpha), s = Math.sin(j*alpha);
+    return refVerts.map(v => ({
+      x: v.x*c - v.y*s,
+      y: v.x*s + v.y*c
+    }));
+  }
+
+  function resize(){
+    dpr = devicePixelRatio||1;
+    W = canvas.clientWidth; H = canvas.clientHeight||480;
+    canvas.width = W*dpr; canvas.height = H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    draw();
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = '#04050c';
+    ctx.fillRect(0,0,W,H);
+
+    const cx = W/2, cy = H/2;
+    const alpha = interiorAngle(n) * PI / 180;
+    const kExact = polygonsFitting(n);
+    const kPlaced = Math.max(1, Math.min(Math.floor(kExact + 1), Math.floor(animProgress) + 1));
+    const frac = Math.max(0, Math.min(1, animProgress - Math.floor(animProgress)));
+    const out = outcome(n);
+    // The n-gon has "diameter" approximately 1 / sin(π/n) for circumradius.
+    // Fit the ring of k polygons within canvas: maximum extent is roughly
+    // 2 × circumradius of the outer rosette.
+    // Outer extent: each polygon extends about cot(π/n) from center (apothem distance),
+    // so total rosette radius ≈ 1 + cot(π/n) (rough upper bound on point farthest from center).
+    // Simpler: compute bounding box over all copies with edge length 1, then scale.
+
+    const refVerts = regularNgon(n);
+    const totalCopies = Math.ceil(kExact + 1);   // place up to ceil(k)+1 for visualization
+    let minX=Infinity, maxX=-Infinity, minY=Infinity, maxY=-Infinity;
+    for(let j=0;j<=totalCopies;j++){
+      const vs = placedCopy(refVerts, j, alpha);
+      for(const v of vs){
+        if(v.x<minX) minX=v.x; if(v.x>maxX) maxX=v.x;
+        if(v.y<minY) minY=v.y; if(v.y>maxY) maxY=v.y;
+      }
+    }
+    const pad = 40;
+    const sX = (W - 2*pad) / Math.max(maxX-minX, 0.001);
+    const sY = (H - 2*pad) / Math.max(maxY-minY, 0.001);
+    const S = Math.min(sX, sY) * 0.85;
+    const ox = cx - (minX + maxX)/2 * S;
+    const oy = cy - (minY + maxY)/2 * S;
+
+    function tx(p){ return ox + p.x * S; }
+    function ty(p){ return oy + p.y * S; }
+
+    // Draw the completed polygons (fully placed)
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    for(let j=0; j<kPlaced; j++){
+      const vs = placedCopy(refVerts, j, alpha);
+      // Check if this copy overlaps with neighbor (j+1)·α > 360° region covered by copy 0
+      // Draw filled with gold.
+      ctx.fillStyle = 'hsla(42, 55%, 40%, 0.82)';
+      ctx.strokeStyle = 'rgba(236, 232, 224, 0.9)';
+      ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      ctx.moveTo(tx(vs[0]), ty(vs[0]));
+      for(let i=1;i<vs.length;i++) ctx.lineTo(tx(vs[i]), ty(vs[i]));
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    // Draw the currently-being-placed polygon with partial alpha (sliding in)
+    if(kPlaced < totalCopies && frac > 0){
+      const j = kPlaced;
+      const vs = placedCopy(refVerts, j, alpha);
+      ctx.fillStyle = `hsla(42, 55%, 50%, ${0.3 + 0.5*frac})`;
+      ctx.strokeStyle = `rgba(236, 232, 224, ${0.4 + 0.5*frac})`;
+      ctx.lineWidth = 1.6;
+      ctx.beginPath();
+      ctx.moveTo(tx(vs[0]), ty(vs[0]));
+      for(let i=1;i<vs.length;i++) ctx.lineTo(tx(vs[i]), ty(vs[i]));
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    // Once animation is "complete" (all polygons placed), highlight the gap or overlap
+    const fullyPlaced = kPlaced >= totalCopies && frac >= 0.99;
+    const animDone = kPlaced >= Math.ceil(kExact) && (out === 'allowed' || fullyPlaced);
+
+    if(animDone){
+      if(out === 'allowed'){
+        // Success banner
+        ctx.fillStyle = 'rgba(140, 200, 140, 0.18)';
+        ctx.beginPath();
+        ctx.arc(tx({x:0,y:0}), ty({x:0,y:0}), 14, 0, TAU);
+        ctx.fill();
+      } else {
+        // Overlap animation: the last placed polygon sits on top of the first.
+        // Highlight the overlap region. For n ≥ 5, floor(k)·α leaves gap,
+        // ceil(k)·α overshoots. Show the angular overshoot/gap as a wedge.
+        const kFloor = Math.floor(kExact);
+        const kCeil = kFloor + 1;
+        // When kCeil polygons placed: angular overshoot = kCeil·α - 360°
+        const overshootRad = kCeil*alpha - TAU;
+        // The overshoot is the angular region where the last polygon overlaps
+        // the first. Draw a highlighted wedge at the center.
+        ctx.fillStyle = 'rgba(230, 90, 70, 0.28)';
+        const wedgeR = 0.65 * S;  // wedge reaches ~apothem distance
+        ctx.beginPath();
+        ctx.moveTo(tx({x:0,y:0}), ty({x:0,y:0}));
+        ctx.arc(tx({x:0,y:0}), ty({x:0,y:0}), wedgeR,
+          -overshootRad, 0, false);
+        ctx.closePath();
+        ctx.fill();
+
+        // Draw red stroke outline of the overshoot wedge
+        ctx.strokeStyle = 'rgba(230, 90, 70, 0.95)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(tx({x:0,y:0}), ty({x:0,y:0}));
+        ctx.lineTo(
+          tx({x: Math.cos(-overshootRad)*0.65, y: Math.sin(-overshootRad)*0.65}),
+          ty({x: Math.cos(-overshootRad)*0.65, y: Math.sin(-overshootRad)*0.65})
+        );
+        ctx.stroke();
+
+        // Label
+        const labelR = 0.38 * S;
+        const labelAngle = -overshootRad/2;
+        const lx = tx({x: Math.cos(labelAngle)*labelR/S, y: Math.sin(labelAngle)*labelR/S});
+        const ly = ty({x: Math.cos(labelAngle)*labelR/S, y: Math.sin(labelAngle)*labelR/S});
+        ctx.fillStyle = 'rgba(240, 110, 90, 0.95)';
+        ctx.font = 'bold 13px ' + (getComputedStyle(document.body).getPropertyValue('--font-mono')||'JetBrains Mono') + ', monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        const overshootDeg = (overshootRad * 180/PI).toFixed(1);
+        ctx.fillText(`겹침: ${overshootDeg}°`, lx, ly);
+        ctx.textAlign = 'start';
+        ctx.textBaseline = 'alphabetic';
+      }
+    }
+
+    // Central vertex dot
+    ctx.fillStyle = 'rgba(236, 232, 224, 0.9)';
+    ctx.beginPath();
+    ctx.arc(tx({x:0,y:0}), ty({x:0,y:0}), 3.2, 0, TAU);
+    ctx.fill();
+
+    // Update stats
+    const alphaD = interiorAngle(n);
+    document.getElementById('symStatAngle').textContent = alphaD.toFixed(n<=6?0:2) + '°';
+    document.getElementById('symStatFit').textContent = kExact.toFixed(n<=6?0:3);
+    const defect = 360 - Math.ceil(kExact)*alphaD;
+    document.getElementById('symStatDefect').textContent = defect.toFixed(1) + '°';
+    const verdictEl = document.getElementById('symStatVerdict');
+    verdictEl.textContent = out === 'allowed' ? '허용' : '금지';
+    verdictEl.style.color = out === 'allowed' ? 'rgba(140, 200, 140, 1)' : 'rgba(230, 130, 110, 1)';
+  }
+
+  /* Animation loop: place polygons one after another, then pause. */
+  function animate(time){
+    if(!lastTime) lastTime = time;
+    const dt = (time - lastTime) / 1000;
+    lastTime = time;
+
+    const totalCopies = Math.ceil(polygonsFitting(n) + 1);
+    const targetDuration = 1.2; // seconds to place each polygon
+    animProgress += dt / targetDuration;
+
+    if(animProgress >= totalCopies + 1.5){
+      // Loop after a pause
+      animProgress = 0;
+    }
+
+    draw();
+    rafId = requestAnimationFrame(animate);
+  }
+
+  function startAnim(){
+    if(rafId) cancelAnimationFrame(rafId);
+    animProgress = 0;
+    lastTime = 0;
+    rafId = requestAnimationFrame(animate);
+  }
+
+  function stopAnim(){
+    if(rafId){ cancelAnimationFrame(rafId); rafId = null; }
+  }
+
+  /* n-selection buttons */
+  document.querySelectorAll('.sym-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.sym-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      n = +btn.dataset.n;
+      startAnim();
+    });
+  });
+
+  const resObs = new ResizeObserver(()=>resize());
+  resObs.observe(canvas.parentElement);
+  resize();
+
+  // Start animation only when visible
+  const inView = new IntersectionObserver(entries=>{
+    for(const e of entries){
+      if(e.isIntersecting) startAnim();
+      else stopAnim();
+    }
+  }, {threshold: 0.05});
+  inView.observe(document.getElementById('diffBox'));
+})();
+
+
+/* ================================================
+   HAT POLYKITE (Section V)
+   ================================================
+   Renders the 13-sided hat polygon together with its
+   decomposition into the 8 kites of the [3.4.6.4] Laves
+   tiling. Vertex coordinates are from Kaplan's hatviz
+   (https://github.com/isohedral/hatviz), used with
+   permission under the repo's BSD 3-clause license.
+   ================================================ */
+(function initHatVisualization(){
+  const canvas = document.getElementById('hatCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const hr3 = Math.sqrt(3)/2;
+  let W, H, dpr;
+
+  // hexPt(x, y) places a point using a skew-hex coordinate system:
+  // basis vectors u = (1, 0), v = (1/2, √3/2). This embeds the hat on
+  // the vertices of the underlying triangle/hexagon grid from which
+  // the [3.4.6.4] Laves kites are cut.
+  const hexPt = (x, y) => [x + 0.5*y, hr3*y];
+
+  // Authentic hat_outline from Kaplan's hatviz (geometry.js):
+  const HAT = [
+    hexPt(0, 0), hexPt(-1,-1), hexPt(0,-2), hexPt(2,-2),
+    hexPt(2,-1), hexPt(4,-2), hexPt(5,-1), hexPt(4, 0),
+    hexPt(3, 0), hexPt(2, 2), hexPt(0, 3), hexPt(0, 2),
+    hexPt(-1, 2),
+  ];
+
+  // Internal edges of the eight [3.4.6.4] kites that compose the hat.
+  // Each kite has one 60° vertex (at an "even" hex lattice point),
+  // one 120° vertex (at the kite's opposite corner), and two 90° vertices.
+  // These internal segments are the kite boundaries within the hat.
+  // Indices refer to HAT vertex positions or to interior points below.
+  // Interior hub points (not on the outline):
+  const HUB_C = hexPt(0, 0);       // already on outline (v0)
+  const HUB_R = hexPt(3, 0);       // already on outline (v8)
+  const HUB_T = hexPt(2, 1);       // true interior hub, upper
+  const HUB_B = hexPt(1, -1);      // true interior hub, lower middle
+
+  // Kite boundary edges: pairs of points defining internal lines.
+  // These are edges of the [3.4.6.4] Laves tiling that fall INSIDE the hat.
+  const KITE_EDGES = [
+    // Edges radiating from HUB_B (lower middle interior hub):
+    [HUB_B, HAT[0]],   // to v0
+    [HUB_B, HAT[2]],   // to v2
+    [HUB_B, HAT[3]],   // to v3
+    [HUB_B, HAT[4]],   // to v4
+    // Edges radiating from HUB_T (upper interior hub):
+    [HUB_T, HAT[0]],   // to v0
+    [HUB_T, HAT[4]],   // to v4
+    [HUB_T, HAT[8]],   // to v8
+    [HUB_T, HAT[9]],   // to v9
+    [HUB_T, HAT[11]],  // to v11
+    // Edges from v8 (right hub) to neighbors inside the hat:
+    [HAT[8], HAT[4]],  // splits right lobe
+    // Extra internal edge for upper-left kite:
+    [HAT[0], HAT[11]],
+    [HAT[0], HAT[12]],
+  ];
+
+  function resize(){
+    dpr = devicePixelRatio||1;
+    W = canvas.clientWidth; H = canvas.clientHeight||420;
+    canvas.width = W*dpr; canvas.height = H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    draw();
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = '#04050c';
+    ctx.fillRect(0,0,W,H);
+
+    // Fit to canvas
+    let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+    for(const [x,y] of HAT){
+      if(x<minX) minX=x; if(x>maxX) maxX=x;
+      if(y<minY) minY=y; if(y>maxY) maxY=y;
+    }
+    const pad = 40;
+    const scaleX = (W - 2*pad) / (maxX - minX);
+    const scaleY = (H - 2*pad) / (maxY - minY);
+    const scale = Math.min(scaleX, scaleY) * 0.88;
+    const cx = W/2 - (minX + maxX)/2 * scale;
+    const cy = H/2 - (minY + maxY)/2 * scale;
+
+    // Note: Y is flipped for screen coordinates (math up = screen down)
+    function sx(p){ return cx + p[0]*scale; }
+    function sy(p){ return cy + p[1]*scale; }  // flip handled by scaling
+
+    // Fill the hat with warm gold gradient
+    const grad = ctx.createLinearGradient(sx([minX,0]), sy([0,minY]), sx([maxX,0]), sy([0,maxY]));
+    grad.addColorStop(0, 'hsl(42, 52%, 40%)');
+    grad.addColorStop(1, 'hsl(38, 50%, 28%)');
+    ctx.fillStyle = grad;
+    ctx.beginPath();
+    ctx.moveTo(sx(HAT[0]), sy(HAT[0]));
+    for(let i=1;i<HAT.length;i++) ctx.lineTo(sx(HAT[i]), sy(HAT[i]));
+    ctx.closePath();
+    ctx.fill();
+
+    // Internal kite boundaries (dashed cream)
+    ctx.strokeStyle = 'rgba(236, 232, 224, 0.35)';
+    ctx.lineWidth = 1.1;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    for(const [p1, p2] of KITE_EDGES){
+      ctx.moveTo(sx(p1), sy(p1));
+      ctx.lineTo(sx(p2), sy(p2));
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Outline the hat (bright cream)
+    ctx.strokeStyle = 'rgba(236, 232, 224, 0.95)';
+    ctx.lineWidth = 2.4;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(sx(HAT[0]), sy(HAT[0]));
+    for(let i=1;i<HAT.length;i++) ctx.lineTo(sx(HAT[i]), sy(HAT[i]));
+    ctx.closePath();
+    ctx.stroke();
+
+    // Vertex dots
+    ctx.fillStyle = 'rgba(236, 232, 224, 0.9)';
+    for(const v of HAT){
+      ctx.beginPath();
+      ctx.arc(sx(v), sy(v), 3.2, 0, 2*Math.PI);
+      ctx.fill();
+    }
+
+    // Edge-length legend in the corner
+    const legendX = 24, legendY = H - 64;
+    const legScale = Math.min(scale, 48);
+    ctx.strokeStyle = 'rgba(201, 168, 76, 0.95)';
+    ctx.lineWidth = 2.2;
+    ctx.beginPath();
+    ctx.moveTo(legendX, legendY);
+    ctx.lineTo(legendX + legScale, legendY);
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(201, 168, 76, 0.9)';
+    ctx.font = '11px ' + (getComputedStyle(document.body).getPropertyValue('--font-mono')||'JetBrains Mono') + ', monospace';
+    ctx.fillText('짧은 변 = 1', legendX + legScale + 8, legendY + 4);
+
+    ctx.strokeStyle = 'rgba(148, 116, 201, 0.95)';
+    ctx.beginPath();
+    ctx.moveTo(legendX, legendY + 24);
+    ctx.lineTo(legendX + legScale*Math.sqrt(3), legendY + 24);
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(148, 116, 201, 0.9)';
+    ctx.fillText('긴 변 = √3', legendX + legScale*Math.sqrt(3) + 8, legendY + 28);
+  }
+
+  const resObs = new ResizeObserver(()=>resize());
+  resObs.observe(canvas.parentElement);
+  resize();
+
+  const inView = new IntersectionObserver(([e])=>{
+    if(e.isIntersecting) draw();
+  }, {threshold: 0.05});
+  inView.observe(document.getElementById('hatBox'));
+})();
+
+/* ================================================
+   HAT TILING INTERACTIVE (Section V)
+   ================================================
+   Generates a patch of hat tiles using Kaplan, Smith, Myers, and
+   Goodman-Strauss's substitution system, then applies a greedy
+   four-colouring based on edge adjacency so no two edge-sharing
+   tiles share a colour. Palette is user-adjustable via four colour
+   pickers.
+
+   Code for the substitution (H_init, T_init, P_init, F_init,
+   constructPatch, constructMetatiles) is adapted from Kaplan's
+   hatviz (BSD 3-clause) — see the hat.js and geometry.js files
+   on https://github.com/isohedral/hatviz
+   ================================================ */
+(function initHatTiling(){
+  const canvas = document.getElementById('hatTilingCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const r3 = Math.sqrt(3);
+  const hr3 = r3 / 2;
+  const ident = [1, 0, 0, 0, 1, 0];
+
+  // --- Geometry helpers (from geometry.js) ---
+  function pt(x, y){ return {x, y}; }
+  function hexPt(x, y){ return pt(x + 0.5*y, hr3*y); }
+  function mul(A, B){
+    return [
+      A[0]*B[0] + A[1]*B[3], A[0]*B[1] + A[1]*B[4], A[0]*B[2] + A[1]*B[5] + A[2],
+      A[3]*B[0] + A[4]*B[3], A[3]*B[1] + A[4]*B[4], A[3]*B[2] + A[4]*B[5] + A[5],
+    ];
+  }
+  function inv(T){
+    const det = T[0]*T[4] - T[1]*T[3];
+    return [
+      T[4]/det, -T[1]/det, (T[1]*T[5] - T[2]*T[4])/det,
+      -T[3]/det, T[0]/det, (T[2]*T[3] - T[0]*T[5])/det,
+    ];
+  }
+  function trot(ang){ const c = Math.cos(ang), s = Math.sin(ang); return [c,-s,0,s,c,0]; }
+  function ttrans(tx, ty){ return [1,0,tx,0,1,ty]; }
+  function rotAbout(p, ang){ return mul(ttrans(p.x,p.y), mul(trot(ang), ttrans(-p.x,-p.y))); }
+  function transPt(M, P){ return pt(M[0]*P.x + M[1]*P.y + M[2], M[3]*P.x + M[4]*P.y + M[5]); }
+  function matchSeg(p, q){ return [q.x-p.x, p.y-q.y, p.x, q.y-p.y, q.x-p.x, p.y]; }
+  function matchTwo(p1, q1, p2, q2){ return mul(matchSeg(p2,q2), inv(matchSeg(p1,q1))); }
+  function padd(p,q){ return {x:p.x+q.x, y:p.y+q.y}; }
+  function psub(p,q){ return {x:p.x-q.x, y:p.y-q.y}; }
+  function intersect(p1, q1, p2, q2){
+    const d = (q2.y-p2.y)*(q1.x-p1.x) - (q2.x-p2.x)*(q1.y-p1.y);
+    const uA = ((q2.x-p2.x)*(p1.y-p2.y) - (q2.y-p2.y)*(p1.x-p2.x)) / d;
+    return pt(p1.x + uA*(q1.x-p1.x), p1.y + uA*(q1.y-p1.y));
+  }
+
+  const hat_outline = [
+    hexPt(0, 0), hexPt(-1,-1), hexPt(0,-2), hexPt(2,-2),
+    hexPt(2,-1), hexPt(4,-2), hexPt(5,-1), hexPt(4, 0),
+    hexPt(3, 0), hexPt(2, 2), hexPt(0, 3), hexPt(0, 2),
+    hexPt(-1, 2),
+  ];
+
+  // --- Tile / MetaTile classes ---
+  class HatTile {
+    constructor(label){ this.label = label; this.shape = hat_outline; }
+  }
+  class MetaTile {
+    constructor(shape, width){ this.shape = shape; this.width = width; this.children = []; }
+    addChild(T, geom){ this.children.push({T, geom}); }
+    evalChild(n, i){ return transPt(this.children[n].T, this.children[n].geom.shape[i]); }
+    recentre(){
+      let cx = 0, cy = 0;
+      for(const p of this.shape){ cx += p.x; cy += p.y; }
+      cx /= this.shape.length; cy /= this.shape.length;
+      for(let i=0;i<this.shape.length;i++){
+        this.shape[i] = {x: this.shape[i].x - cx, y: this.shape[i].y - cy};
+      }
+      const M = ttrans(-cx, -cy);
+      for(const ch of this.children) ch.T = mul(M, ch.T);
+    }
+  }
+
+  const H1_hat = new HatTile('H1'); // reflected hat
+  const H_hat  = new HatTile('H');
+  const T_hat  = new HatTile('T');
+  const P_hat  = new HatTile('P');
+  const F_hat  = new HatTile('F');
+
+  const H_init = (function(){
+    const H_outline = [pt(0,0), pt(4,0), pt(4.5,hr3), pt(2.5,5*hr3), pt(1.5,5*hr3), pt(-0.5,hr3)];
+    const meta = new MetaTile(H_outline, 2);
+    meta.addChild(matchTwo(hat_outline[5], hat_outline[7], H_outline[5], H_outline[0]), H_hat);
+    meta.addChild(matchTwo(hat_outline[9], hat_outline[11], H_outline[1], H_outline[2]), H_hat);
+    meta.addChild(matchTwo(hat_outline[5], hat_outline[7], H_outline[3], H_outline[4]), H_hat);
+    meta.addChild(mul(ttrans(2.5, hr3), mul([-0.5,-hr3,0,hr3,-0.5,0], [0.5,0,0,0,-0.5,0])), H1_hat);
+    return meta;
+  })();
+  const T_init = (function(){
+    const T_outline = [pt(0,0), pt(3,0), pt(1.5, 3*hr3)];
+    const meta = new MetaTile(T_outline, 2);
+    meta.addChild([0.5, 0, 0.5, 0, 0.5, hr3], T_hat);
+    return meta;
+  })();
+  const P_init = (function(){
+    const P_outline = [pt(0,0), pt(4,0), pt(3, 2*hr3), pt(-1, 2*hr3)];
+    const meta = new MetaTile(P_outline, 2);
+    meta.addChild([0.5, 0, 1.5, 0, 0.5, hr3], P_hat);
+    meta.addChild(mul(ttrans(0, 2*hr3), mul([0.5,hr3,0,-hr3,0.5,0], [0.5,0,0,0,0.5,0])), P_hat);
+    return meta;
+  })();
+  const F_init = (function(){
+    const F_outline = [pt(0,0), pt(3,0), pt(3.5, hr3), pt(3, 2*hr3), pt(-1, 2*hr3)];
+    const meta = new MetaTile(F_outline, 2);
+    meta.addChild([0.5, 0, 1.5, 0, 0.5, hr3], F_hat);
+    meta.addChild(mul(ttrans(0, 2*hr3), mul([0.5,hr3,0,-hr3,0.5,0], [0.5,0,0,0,0.5,0])), F_hat);
+    return meta;
+  })();
+
+  function constructPatch(H, T, P, F){
+    const rules = [
+      ['H'],
+      [0, 0, 'P', 2], [1, 0, 'H', 2], [2, 0, 'P', 2], [3, 0, 'H', 2],
+      [4, 4, 'P', 2], [0, 4, 'F', 3], [2, 4, 'F', 3],
+      [4, 1, 3, 2, 'F', 0], [8, 3, 'H', 0], [9, 2, 'P', 0], [10, 2, 'H', 0],
+      [11, 4, 'P', 2], [12, 0, 'H', 2], [13, 0, 'F', 3], [14, 2, 'F', 1],
+      [15, 3, 'H', 4], [8, 2, 'F', 1], [17, 3, 'H', 0], [18, 2, 'P', 0],
+      [19, 2, 'H', 2], [20, 4, 'F', 3], [20, 0, 'P', 2], [22, 0, 'H', 2],
+      [23, 4, 'F', 3], [23, 0, 'F', 3], [16, 0, 'P', 2], [9, 4, 0, 2, 'T', 2],
+      [4, 0, 'F', 3],
+    ];
+    const ret = new MetaTile([], H.width);
+    const shapes = {'H':H, 'T':T, 'P':P, 'F':F};
+    for(const r of rules){
+      if(r.length === 1){
+        ret.addChild(ident, shapes[r[0]]);
+      } else if(r.length === 4){
+        const poly = ret.children[r[0]].geom.shape;
+        const Tm = ret.children[r[0]].T;
+        const P = transPt(Tm, poly[(r[1]+1) % poly.length]);
+        const Q = transPt(Tm, poly[r[1]]);
+        const nshp = shapes[r[2]];
+        const npoly = nshp.shape;
+        ret.addChild(matchTwo(npoly[r[3]], npoly[(r[3]+1)%npoly.length], P, Q), nshp);
+      } else {
+        const chP = ret.children[r[0]];
+        const chQ = ret.children[r[2]];
+        const P = transPt(chQ.T, chQ.geom.shape[r[3]]);
+        const Q = transPt(chP.T, chP.geom.shape[r[1]]);
+        const nshp = shapes[r[4]];
+        const npoly = nshp.shape;
+        ret.addChild(matchTwo(npoly[r[5]], npoly[(r[5]+1)%npoly.length], P, Q), nshp);
+      }
+    }
+    return ret;
+  }
+
+  function constructMetatiles(patch){
+    const bps1 = patch.evalChild(8, 2);
+    const bps2 = patch.evalChild(21, 2);
+    const rbps = transPt(rotAbout(bps1, -2.0*Math.PI/3.0), bps2);
+    const p72 = patch.evalChild(7, 2);
+    const p252 = patch.evalChild(25, 2);
+    const llc = intersect(bps1, rbps, patch.evalChild(6, 2), p72);
+    let w = psub(patch.evalChild(6, 2), llc);
+
+    const new_H_outline = [llc, bps1];
+    w = transPt(trot(-Math.PI/3), w);
+    new_H_outline.push(padd(new_H_outline[1], w));
+    new_H_outline.push(patch.evalChild(14, 2));
+    w = transPt(trot(-Math.PI/3), w);
+    new_H_outline.push(psub(new_H_outline[3], w));
+    new_H_outline.push(patch.evalChild(6, 2));
+
+    const new_H = new MetaTile(new_H_outline, patch.width * 2);
+    for(const ch of [0, 9, 16, 27, 26, 6, 1, 8, 10, 15]){
+      new_H.addChild(patch.children[ch].T, patch.children[ch].geom);
+    }
+
+    const new_P_outline = [p72, padd(p72, psub(bps1, llc)), bps1, llc];
+    const new_P = new MetaTile(new_P_outline, patch.width * 2);
+    for(const ch of [7, 2, 3, 4, 28]){
+      new_P.addChild(patch.children[ch].T, patch.children[ch].geom);
+    }
+
+    const new_F_outline = [bps2, patch.evalChild(24, 2), patch.evalChild(25, 0),
+                            p252, padd(p252, psub(llc, bps1))];
+    const new_F = new MetaTile(new_F_outline, patch.width * 2);
+    for(const ch of [21, 20, 22, 23, 24, 25]){
+      new_F.addChild(patch.children[ch].T, patch.children[ch].geom);
+    }
+
+    const AAA = new_H_outline[2];
+    const BBB = padd(new_H_outline[1], psub(new_H_outline[4], new_H_outline[5]));
+    const CCC = transPt(rotAbout(BBB, -Math.PI/3), AAA);
+    const new_T_outline = [BBB, CCC, AAA];
+    const new_T = new MetaTile(new_T_outline, patch.width * 2);
+    new_T.addChild(patch.children[11].T, patch.children[11].geom);
+
+    new_H.recentre();
+    new_P.recentre();
+    new_F.recentre();
+    new_T.recentre();
+
+    return [new_H, new_T, new_P, new_F];
+  }
+
+  // --- Collect all hat tiles from a meta tile tree ---
+  function collectHats(meta, T, out){
+    for(const ch of meta.children){
+      const newT = mul(T, ch.T);
+      if(ch.geom instanceof HatTile){
+        const verts = hat_outline.map(p => transPt(newT, p));
+        out.push({label: ch.geom.label, verts});
+      } else {
+        collectHats(ch.geom, newT, out);
+      }
+    }
+  }
+
+  // --- Build edge-adjacency graph ---
+  // Two tiles are adjacent if they share an edge. Because the hat has one
+  // long "collinear" edge (v2-v3, length 2) made of two kite-edges, a
+  // neighbor across it has TWO length-1 edges. To detect that case we
+  // split every hat edge longer than 1.4 at its midpoint, then hash edges.
+  function buildAdjacency(hats){
+    function vkey(p){ return Math.round(p.x*1000) + ',' + Math.round(p.y*1000); }
+    function edgeKey(a, b){
+      const k1 = vkey(a), k2 = vkey(b);
+      return k1 < k2 ? k1 + '|' + k2 : k2 + '|' + k1;
+    }
+    function splitEdges(verts){
+      const out = [];
+      const n = verts.length;
+      for(let j=0;j<n;j++){
+        const a = verts[j], b = verts[(j+1)%n];
+        const L = Math.hypot(b.x-a.x, b.y-a.y);
+        if(L > 1.4){
+          const m = {x:(a.x+b.x)/2, y:(a.y+b.y)/2};
+          out.push([a, m]); out.push([m, b]);
+        } else {
+          out.push([a, b]);
+        }
+      }
+      return out;
+    }
+    const edgeToTiles = new Map();
+    for(let i=0;i<hats.length;i++){
+      for(const [a, b] of splitEdges(hats[i].verts)){
+        const k = edgeKey(a, b);
+        if(!edgeToTiles.has(k)) edgeToTiles.set(k, []);
+        edgeToTiles.get(k).push(i);
+      }
+    }
+    const adj = Array.from({length: hats.length}, () => new Set());
+    for(const [, arr] of edgeToTiles){
+      if(arr.length >= 2){
+        for(let i=0;i<arr.length;i++){
+          for(let j=i+1;j<arr.length;j++){
+            adj[arr[i]].add(arr[j]);
+            adj[arr[j]].add(arr[i]);
+          }
+        }
+      }
+    }
+    return adj;
+  }
+
+  // --- DSATUR greedy 4-coloring ---
+  // Repeatedly picks the uncolored vertex with the highest saturation
+  // (number of distinct neighbor colors), breaking ties by degree.
+  // For this hat tiling at depth 2 with edge adjacency, this converges
+  // to a proper 4-coloring with 0 violations.
+  function colorDSATUR(adj){
+    const n = adj.length;
+    const adjArr = adj.map(s => Array.from(s));
+    const colors = new Array(n).fill(-1);
+    const degree = adjArr.map(a => a.length);
+    for(let step=0; step<n; step++){
+      let best = -1, bestSat = -1, bestDeg = -1;
+      for(let v=0; v<n; v++){
+        if(colors[v] >= 0) continue;
+        const used = new Set();
+        for(const u of adjArr[v]) if(colors[u] >= 0) used.add(colors[u]);
+        const sat = used.size;
+        if(sat > bestSat || (sat === bestSat && degree[v] > bestDeg)){
+          best = v; bestSat = sat; bestDeg = degree[v];
+        }
+      }
+      const used = new Set();
+      for(const u of adjArr[best]) if(colors[u] >= 0) used.add(colors[u]);
+      let c = 0;
+      while(used.has(c)) c++;
+      colors[best] = c;
+    }
+    return colors;
+  }
+
+  // --- Build the tiling ---
+  // Two substitutions from H_init → patch → patch' gives a meaty number of tiles.
+  let tiles = [H_init, T_init, P_init, F_init];
+  for(let lev=0; lev<2; lev++){
+    const patch = constructPatch(...tiles);
+    tiles = constructMetatiles(patch);
+  }
+  // One more substitution to get a lot of hats
+  const finalPatch = constructPatch(...tiles);
+
+  // Collect all hats
+  const hats = [];
+  collectHats(finalPatch, ident, hats);
+
+  // Adjacency + coloring
+  const adj = buildAdjacency(hats);
+  const colors = colorDSATUR(adj);
+
+  // Verify no adjacency violations (sanity check)
+  let violations = 0;
+  for(let i=0;i<adj.length;i++){
+    for(const j of adj[i]){
+      if(i < j && colors[i] === colors[j]) violations++;
+    }
+  }
+  if(violations > 0) console.warn('Hat tiling coloring violations:', violations);
+
+  // Number of distinct colors actually used
+  const colorsUsed = new Set(colors).size;
+
+  // Count reflected vs unreflected (H1 is reflected, others unreflected)
+  let unrefCount = 0, refCount = 0;
+  for(const h of hats){
+    if(h.label === 'H1') refCount++;
+    else unrefCount++;
+  }
+  document.getElementById('hatCountTotal').textContent = hats.length;
+  document.getElementById('hatCountUnref').textContent = unrefCount;
+  document.getElementById('hatCountRef').textContent = refCount;
+  document.getElementById('hatCountRatio').textContent =
+    refCount > 0 ? (unrefCount/refCount).toFixed(3) : '—';
+
+  // Palette state
+  const defaultPalette = ['#c9a84c', '#8a6abf', '#6ba074', '#c97a5c'];
+  let palette = defaultPalette.slice();
+
+  // Build palette UI
+  const paletteContainer = document.getElementById('hatPalette');
+  paletteContainer.innerHTML = '';
+  for(let i=0;i<4;i++){
+    const wrap = document.createElement('div');
+    wrap.className = 'hat-palette-swatch';
+    const label = document.createElement('label');
+    label.textContent = 'Color ' + (i+1);
+    const input = document.createElement('input');
+    input.type = 'color';
+    input.value = defaultPalette[i];
+    input.addEventListener('input', e => {
+      palette[i] = e.target.value;
+      draw();
+    });
+    wrap.appendChild(label);
+    wrap.appendChild(input);
+    paletteContainer.appendChild(wrap);
+  }
+
+  // --- Drawing ---
+  let W, H, dpr;
+
+  // Precompute bounding box of full patch
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  for(const h of hats){
+    for(const v of h.verts){
+      if(v.x < minX) minX = v.x;
+      if(v.x > maxX) maxX = v.x;
+      if(v.y < minY) minY = v.y;
+      if(v.y > maxY) maxY = v.y;
+    }
+  }
+  // Crop aggressively to a central region for a cleaner patch (initial view)
+  const margin = 0.18;
+  const cropMinX = minX + (maxX-minX)*margin;
+  const cropMaxX = maxX - (maxX-minX)*margin;
+  const cropMinY = minY + (maxY-minY)*margin;
+  const cropMaxY = maxY - (maxY-minY)*margin;
+
+  // Zoom/pan state (in screen coordinates, applied on top of the base fit)
+  let zoom = 1.0;
+  let panX = 0, panY = 0;
+  const ZOOM_MIN = 0.4, ZOOM_MAX = 12.0;
+
+  function updateZoomDisplay(){
+    const el = document.getElementById('hatZoomLevel');
+    if(el) el.textContent = zoom.toFixed(2) + '×';
+  }
+
+  function resize(){
+    dpr = devicePixelRatio||1;
+    W = canvas.clientWidth; H = canvas.clientHeight||560;
+    canvas.width = W*dpr; canvas.height = H*dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    draw();
+  }
+
+  // Compute base fit-scale (same as before), then apply zoom/pan on top
+  function baseScale(){
+    const pad = 16;
+    const sX = (W - 2*pad) / (cropMaxX - cropMinX);
+    const sY = (H - 2*pad) / (cropMaxY - cropMinY);
+    return Math.min(sX, sY);
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = '#04050c';
+    ctx.fillRect(0,0,W,H);
+
+    const s0 = baseScale();
+    const s = s0 * zoom;
+    // Center the crop region on canvas, then apply pan
+    const ox = W/2 - (cropMinX + cropMaxX)/2 * s + panX;
+    const oy = H/2 - (cropMinY + cropMaxY)/2 * s + panY;
+
+    function tx(p){ return ox + p.x*s; }
+    function ty(p){ return oy + p.y*s; }
+
+    // Visible world-coordinate bounds for culling
+    const vMinX = (0 - ox) / s, vMaxX = (W - ox) / s;
+    const vMinY = (0 - oy) / s, vMaxY = (H - oy) / s;
+
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    const strokeWidth = Math.max(0.6, Math.min(1.6, 1.1 * Math.sqrt(zoom)));
+    ctx.lineWidth = strokeWidth;
+    for(let i=0;i<hats.length;i++){
+      const h = hats[i];
+      // Cull tiles entirely outside visible area (with margin for partial tiles)
+      let allOut = true;
+      for(const v of h.verts){
+        if(v.x >= vMinX-3 && v.x <= vMaxX+3 &&
+           v.y >= vMinY-3 && v.y <= vMaxY+3){ allOut = false; break; }
+      }
+      if(allOut) continue;
+
+      ctx.fillStyle = palette[colors[i]];
+      ctx.strokeStyle = 'rgba(12, 12, 20, 0.85)';
+      ctx.beginPath();
+      const v0 = h.verts[0];
+      ctx.moveTo(tx(v0), ty(v0));
+      for(let j=1;j<h.verts.length;j++){
+        ctx.lineTo(tx(h.verts[j]), ty(h.verts[j]));
+      }
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+  }
+
+  // --- Zoom around a focal point in canvas-pixel coordinates ---
+  function zoomAt(factor, cxPix, cyPix){
+    const newZoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, zoom * factor));
+    if(newZoom === zoom) return;
+    // Keep the world point under the cursor fixed:
+    // world(x,y) at cursor before zoom = world(x,y) at cursor after zoom
+    const s0 = baseScale();
+    const sBefore = s0 * zoom;
+    const sAfter  = s0 * newZoom;
+    // Current world coords under cursor:
+    const oxB = W/2 - (cropMinX + cropMaxX)/2 * sBefore + panX;
+    const oyB = H/2 - (cropMinY + cropMaxY)/2 * sBefore + panY;
+    const wx = (cxPix - oxB) / sBefore;
+    const wy = (cyPix - oyB) / sBefore;
+    // We want: cxPix = W/2 - (cropMidX)*sAfter + newPanX + wx*sAfter
+    // So newPanX = cxPix - W/2 + (cropMidX)*sAfter - wx*sAfter
+    panX = cxPix - W/2 + (cropMinX + cropMaxX)/2 * sAfter - wx * sAfter;
+    panY = cyPix - H/2 + (cropMinY + cropMaxY)/2 * sAfter - wy * sAfter;
+    zoom = newZoom;
+    updateZoomDisplay();
+    draw();
+  }
+
+  // --- Zoom buttons ---
+  document.getElementById('hatZoomIn')?.addEventListener('click', () => {
+    zoomAt(1.5, W/2, H/2);
+  });
+  document.getElementById('hatZoomOut')?.addEventListener('click', () => {
+    zoomAt(1/1.5, W/2, H/2);
+  });
+  document.getElementById('hatZoomReset')?.addEventListener('click', () => {
+    zoom = 1.0; panX = 0; panY = 0;
+    updateZoomDisplay();
+    draw();
+  });
+
+  // --- Mouse wheel zoom ---
+  canvas.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const cx = e.clientX - rect.left;
+    const cy = e.clientY - rect.top;
+    const factor = e.deltaY < 0 ? 1.12 : 1/1.12;
+    zoomAt(factor, cx, cy);
+  }, { passive: false });
+
+  // --- Mouse drag pan ---
+  let dragging = false, lastX = 0, lastY = 0;
+  canvas.addEventListener('pointerdown', (e) => {
+    dragging = true;
+    lastX = e.clientX;
+    lastY = e.clientY;
+    canvas.style.cursor = 'grabbing';
+    canvas.setPointerCapture(e.pointerId);
+  });
+  canvas.addEventListener('pointermove', (e) => {
+    if(!dragging) return;
+    panX += e.clientX - lastX;
+    panY += e.clientY - lastY;
+    lastX = e.clientX;
+    lastY = e.clientY;
+    draw();
+  });
+  canvas.addEventListener('pointerup', (e) => {
+    dragging = false;
+    canvas.style.cursor = 'grab';
+    try { canvas.releasePointerCapture(e.pointerId); } catch(_){}
+  });
+  canvas.addEventListener('pointercancel', () => {
+    dragging = false;
+    canvas.style.cursor = 'grab';
+  });
+
+  // --- Touch pinch-to-zoom ---
+  const activeTouches = new Map();
+  let pinchDist = 0, pinchMid = null;
+  canvas.addEventListener('touchstart', (e) => {
+    for(const t of e.changedTouches) activeTouches.set(t.identifier, {x:t.clientX, y:t.clientY});
+    if(activeTouches.size === 2){
+      const [a, b] = Array.from(activeTouches.values());
+      pinchDist = Math.hypot(b.x-a.x, b.y-a.y);
+      const rect = canvas.getBoundingClientRect();
+      pinchMid = {x: (a.x+b.x)/2 - rect.left, y: (a.y+b.y)/2 - rect.top};
+    }
+  }, { passive: true });
+  canvas.addEventListener('touchmove', (e) => {
+    for(const t of e.changedTouches) activeTouches.set(t.identifier, {x:t.clientX, y:t.clientY});
+    if(activeTouches.size === 2){
+      e.preventDefault();
+      const [a, b] = Array.from(activeTouches.values());
+      const d = Math.hypot(b.x-a.x, b.y-a.y);
+      if(pinchDist > 0 && pinchMid){
+        zoomAt(d / pinchDist, pinchMid.x, pinchMid.y);
+      }
+      pinchDist = d;
+    }
+  }, { passive: false });
+  canvas.addEventListener('touchend', (e) => {
+    for(const t of e.changedTouches) activeTouches.delete(t.identifier);
+    pinchDist = 0; pinchMid = null;
+  });
+
+  updateZoomDisplay();
+
+  const resObs = new ResizeObserver(()=>resize());
+  resObs.observe(canvas.parentElement);
+  resize();
+
+  const inView = new IntersectionObserver(([e])=>{
+    if(e.isIntersecting) draw();
+  }, {threshold: 0.05});
+  inView.observe(document.getElementById('hatTilingBox'));
+})();
+
+</script>
+</body>
+</html>
