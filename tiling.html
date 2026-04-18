@@ -1386,22 +1386,26 @@ setTimeout(()=>{
     }
     ctx.restore();
 
-    // ── Camera: grand opening zoom-in + slow breathing ──
-    // Start at ~0.38× scale (wide cosmic view showing the full 5-fold symmetry),
-    // then ease into normal scale over ~7 seconds via a smooth S-curve.
-    // After settling, a gentle breathing motion keeps the tiling alive.
+    // ── Camera: grand opening zoom-OUT from close to cosmic, then hold ──
+    // Start at 1.6× scale (close-in on the central sun cartwheel),
+    // then ease OUT to 0.38× over ~7 seconds — revealing the full 5-fold
+    // symmetric expanse of the de Bruijn Penrose tiling.
+    // After settling, a gentle breathing motion keeps it alive.
     const openingDuration = 7.0;
+    const startZoom = 1.6;   // close-in opening
+    const endZoom   = 0.38;  // wide cosmic view (held)
     let openingZoom;
     if(t < openingDuration){
       // Smootherstep: 6t^5 - 15t^4 + 10t^3  (zero derivative at both endpoints)
       const u = t / openingDuration;
       const ease = u*u*u*(u*(u*6 - 15) + 10);
-      openingZoom = 0.38 + (1.0 - 0.38) * ease;
+      openingZoom = startZoom + (endZoom - startZoom) * ease;
     } else {
-      openingZoom = 1.0;
+      openingZoom = endZoom;
     }
     const zoomPeriod = 48;
-    const breathe = 0.12*Math.sin(t*TAU/zoomPeriod) + 0.06*Math.sin(t*TAU/zoomPeriod*1.7);
+    // Scale breathing amplitude with the held zoom so it feels proportional at the wide view
+    const breathe = (0.06*Math.sin(t*TAU/zoomPeriod) + 0.03*Math.sin(t*TAU/zoomPeriod*1.7));
     // Fade in the breathing gradually so the opening feels stately, not jittery
     const breatheAmp = t < openingDuration ? (t/openingDuration)*(t/openingDuration) : 1;
     const zoom = openingZoom + breathe * breatheAmp;

@@ -1385,22 +1385,25 @@ setTimeout(()=>{
     }
     ctx.restore();
 
-    // ── 카메라: 웅장한 오프닝 줌인 + 느린 호흡 ──
-    // 약 0.38× 스케일(전체 5중 대칭이 한눈에 들어오는 우주적 원경)에서 시작해,
-    // 매끄러운 S-곡선으로 7초 동안 정상 스케일까지 확대된다.
+    // ── 카메라: 웅장한 줌-아웃 오프닝 — 가까이서 시작해 우주적 원경으로 펼쳐진 뒤 고정 ──
+    // 1.6× 스케일(중앙 태양 cartwheel의 클로즈업)에서 시작해,
+    // 매끄러운 S-곡선으로 7초에 걸쳐 0.38×(5중 대칭 전체가 드러나는 광각)으로 축소된다.
     // 안정된 후에는 은은한 호흡 운동이 타일링을 살아있게 유지한다.
     const openingDuration = 7.0;
+    const startZoom = 1.6;   // 클로즈업 시작점
+    const endZoom   = 0.38;  // 광각 종점(유지)
     let openingZoom;
     if(t < openingDuration){
       // smootherstep: 6t^5 - 15t^4 + 10t^3  (양쪽 끝에서 도함수 0)
       const u = t / openingDuration;
       const ease = u*u*u*(u*(u*6 - 15) + 10);
-      openingZoom = 0.38 + (1.0 - 0.38) * ease;
+      openingZoom = startZoom + (endZoom - startZoom) * ease;
     } else {
-      openingZoom = 1.0;
+      openingZoom = endZoom;
     }
     const zoomPeriod = 48;
-    const breathe = 0.12*Math.sin(t*TAU/zoomPeriod) + 0.06*Math.sin(t*TAU/zoomPeriod*1.7);
+    // 광각에서 호흡 진폭이 과하지 않도록 절반 수준으로 조정
+    const breathe = (0.06*Math.sin(t*TAU/zoomPeriod) + 0.03*Math.sin(t*TAU/zoomPeriod*1.7));
     // 호흡을 서서히 페이드 인 — 오프닝이 진중하게 느껴지도록
     const breatheAmp = t < openingDuration ? (t/openingDuration)*(t/openingDuration) : 1;
     const zoom = openingZoom + breathe * breatheAmp;
