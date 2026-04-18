@@ -340,10 +340,17 @@ footer{text-align:center;padding:4rem 2rem 3rem;border-top:1px solid var(--borde
   overflow:hidden;
   position:relative;
 }
+.pent-card-img-fallback{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  background:#ece8e0;
+}
+.pent-card-img-fallback svg{width:100%;height:100%;display:block}
 .pent-card-img img{
   width:100%;height:100%;
   object-fit:contain;
   display:block;
+  position:relative;z-index:1;
   filter:contrast(0.95) saturate(0.88);
 }
 .pent-card-img svg{
@@ -673,7 +680,7 @@ footer{text-align:center;padding:4rem 2rem 3rem;border-top:1px solid var(--borde
 
     <div class="pent-gallery" id="pentGallery"></div>
 
-    <div class="pent-attrib">Tiling diagrams from <a href="https://en.wikipedia.org/wiki/Pentagonal_tiling" target="_blank" rel="noopener">Wikipedia: Pentagonal tiling</a> (CC BY-SA 4.0)</div>
+    <div class="pent-attrib">Full gallery of all 15 tilings on <a href="https://en.wikipedia.org/wiki/Pentagonal_tiling#Monohedral_convex_pentagonal_tilings" target="_blank" rel="noopener">Wikipedia</a> · individual diagrams licensed CC BY-SA 4.0</div>
 
     <div class="ibox-stats">
       <div class="ibox-stat">
@@ -1157,11 +1164,36 @@ footer{text-align:center;padding:4rem 2rem 3rem;border-top:1px solid var(--borde
 const PI = Math.PI, TAU = 2*PI;
 const PHI = (1+Math.sqrt(5))/2;
 
-/* Scroll reveal */
+/* Scroll reveal — robust against tall elements and mid-page loads */
 const revealObs = new IntersectionObserver((entries)=>{
   entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');revealObs.unobserve(e.target)}});
-},{threshold:.12});
+},{threshold:0, rootMargin:'0px 0px -10% 0px'});
 document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+
+// On page load, immediately reveal anything already in (or above) the viewport.
+// Handles tall elements (e.g., the 15-card gallery) that may never trigger a
+// single-threshold intersection, and handles refreshes at mid-page.
+function forceRevealIfInView(){
+  const winH = window.innerHeight;
+  document.querySelectorAll('.reveal:not(.visible)').forEach(el=>{
+    const r = el.getBoundingClientRect();
+    // Reveal if any part is in viewport OR the element has already scrolled past the top
+    if(r.top < winH && r.bottom > 0){
+      el.classList.add('visible');
+      revealObs.unobserve(el);
+    }
+  });
+}
+window.addEventListener('load', forceRevealIfInView);
+window.addEventListener('scroll', forceRevealIfInView, {passive:true});
+// Safety: after 3 seconds, force-reveal anything still hidden (prevents
+// permanent invisibility bug on slow devices or unusual scroll positions)
+setTimeout(()=>{
+  document.querySelectorAll('.reveal:not(.visible)').forEach(el=>{
+    const r = el.getBoundingClientRect();
+    if(r.top < window.innerHeight * 1.5) el.classList.add('visible');
+  });
+}, 3000);
 
 /* ================================================
    HERO: De Bruijn Pentagrid Penrose P3 Tiling
@@ -2036,21 +2068,20 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
 
     // Use actual tessellation image from Wikipedia (CC BY-SA 4.0), with SVG fallback
     const imgSrc = `pentagons/P5-type${t.n}.png`;
-    const cardImgContent = `
-      <img src="${imgSrc}" alt="Pentagonal tiling type ${t.n}"
-           loading="lazy"
-           onerror="this.parentElement.innerHTML=this.dataset.fallback;">
-    `;
 
     const card = document.createElement('div');
     card.className = 'pent-card' + (t.n === 1 ? ' is-interactive' : '');
     const interactiveBadge = t.n === 1 ? `<div class="pent-card-badge">Interactive</div>` : '';
+    // Cream background on the image container ensures no black flash if image is slow/missing.
+    // The SVG fallback is rendered inline and only revealed if the <img> fails to load.
     card.innerHTML = `
       ${interactiveBadge}
-      <div class="pent-card-img">
+      <div class="pent-card-img" data-n="${t.n}">
+        <div class="pent-card-img-fallback">${svgFallback}</div>
         <img src="${imgSrc}" alt="Pentagonal tiling type ${t.n}" loading="lazy"
-             data-fallback='${svgFallback.replace(/'/g, "&apos;").replace(/\n/g, '')}'
-             onerror="this.parentElement.innerHTML=this.getAttribute('data-fallback');">
+             onload="this.style.opacity=1;this.previousElementSibling.style.display='none'"
+             onerror="this.remove()"
+             style="opacity:0;transition:opacity .25s">
       </div>
       <div class="pent-card-body">
         <div class="pent-card-head">
@@ -2396,14 +2427,37 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
 
   let type1Unit = null;  // {pentagon, pentagonR, hexagon, latticeV1, latticeV2}
 
-  function buildType1(A, B, D, a, b, c, d){
-    // B given, C = 180 - B. A, D given. E = 360 - A - D.
+  function buildType1(A, B, D, a, b_unused, c, d){
+    // Type 1 pentagon: B + C = 180° (constraint), so C = 180 - B.
+    // Since interior angles sum to 540° and B + C = 180°, we have A + D + E = 360°.
+    // Given user parameters A, B, D, a, c, d, the edges b and e are uniquely
+    // determined by the pentagon-closure conditions (2 linear equations in b, e).
+    //
+    // Walking the pentagon from v0=(0,0) along edge a (east), turning at each
+    // vertex by the exterior angle (180°-interior), the closure conditions
+    //   v4 + e·(cos θ4, sin θ4) = (0,0)
+    // give the linear system:
+    //   b·cos(B)  + e·cos(A)  = a - c + d·cos(D)
+    //   b·sin(B)  - e·sin(A)  = d·sin(D)
+    // Solving (with det = -sin(A+B)):
+    //   b = [sin(A)·(a-c) + d·sin(A+D)] / sin(A+B)
+    //   e = [sin(B)·(a-c) + d·sin(B-D)] / sin(A+B)
     const C = 180 - B;
     const E = 360 - A - D;
     // Sanity: all angles positive, sum = 540
     if(A<5 || B<5 || C<5 || D<5 || E<5 || A>175 || B>175 || C>175 || D>175 || E>175) return null;
 
     const deg = Math.PI/180;
+    const sinA = Math.sin(A*deg), sinB = Math.sin(B*deg);
+    const sinAB = Math.sin((A+B)*deg);
+    const sinAD = Math.sin((A+D)*deg);
+    const sinBD = Math.sin((B-D)*deg);
+    if(Math.abs(sinAB) < 1e-6) return null;  // degenerate (A+B=180°)
+
+    const b = (sinA*(a-c) + d*sinAD) / sinAB;
+    const e = (sinB*(a-c) + d*sinBD) / sinAB;
+    if(b <= 0 || e <= 0) return null;  // invalid (non-positive edge length)
+
     let x=0, y=0, dir=0;
     const pts = [[0,0]];
     x += a; pts.push([x,y]);                            // B
@@ -2413,6 +2467,7 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
     x += c*Math.cos(dir); y += c*Math.sin(dir); pts.push([x,y]);  // D
     dir += (180-D)*deg;
     x += d*Math.cos(dir); y += d*Math.sin(dir); pts.push([x,y]);  // E
+    // Closure (v5 should equal v0): verified analytically, don't re-walk.
 
     // Verify pentagon is convex (all cross products same sign)
     function cross(p,q,r){ return (q[0]-p[0])*(r[1]-p[1]) - (q[1]-p[1])*(r[0]-p[0]); }
@@ -2464,6 +2519,10 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
       latticeV1: v1,
       latticeV2: v2,
       midBC,
+      computedB: b,
+      computedE: e,
+      computedC: C,
+      computedAngleE: E,
     };
   }
 
