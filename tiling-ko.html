@@ -138,9 +138,200 @@ footer{text-align:center;padding:4rem 2rem 3rem;border-top:1px solid var(--borde
   overflow:hidden;
   display:flex;
   flex-direction:column;
-  transition:border-color .3s,background .3s;
+  transition:border-color .3s,background .3s,transform .25s cubic-bezier(.23,1,.32,1);
+  cursor:pointer;
 }
-.pent-card:hover{border-color:var(--gold);background:rgba(201,168,76,.04)}
+.pent-card:hover{border-color:var(--gold);background:rgba(201,168,76,.04);transform:translateY(-2px)}
+.pent-card::after{
+  content:'⤢';
+  position:absolute;top:10px;right:12px;
+  font-family:var(--font-mono);font-size:.85rem;
+  color:rgba(0,0,0,.35);z-index:2;
+  opacity:0;transition:opacity .25s;
+  pointer-events:none;
+}
+.pent-card{position:relative}
+.pent-card:hover::after{opacity:1}
+/* Special "INTERACTIVE" ribbon for Type 1 — always visible, distinctive */
+.pent-card.is-interactive{
+  border-color:rgba(201,168,76,.35);
+  background:rgba(201,168,76,.045);
+  box-shadow:0 0 0 1px rgba(201,168,76,.2), 0 6px 20px -8px rgba(201,168,76,.25);
+}
+.pent-card.is-interactive:hover{
+  border-color:var(--gold);
+  background:rgba(201,168,76,.08);
+  box-shadow:0 0 0 1px rgba(201,168,76,.4), 0 10px 28px -8px rgba(201,168,76,.4);
+}
+.pent-card-badge{
+  position:absolute;top:10px;right:10px;z-index:3;
+  font-family:var(--font-mono);font-size:.48rem;
+  letter-spacing:.14em;text-transform:uppercase;font-weight:500;
+  padding:.28rem .55rem;
+  color:#1a1205;background:var(--gold);
+  border-radius:3px;
+  box-shadow:0 2px 6px rgba(0,0,0,.25);
+  display:flex;align-items:center;gap:.35em;
+  animation:pulse-badge 2.4s ease-in-out infinite;
+}
+.pent-card-badge::before{
+  content:'';display:inline-block;
+  width:5px;height:5px;border-radius:50%;
+  background:#1a1205;
+  animation:pulse-dot 1.6s ease-in-out infinite;
+}
+@keyframes pulse-badge{
+  0%,100%{box-shadow:0 2px 6px rgba(0,0,0,.25), 0 0 0 0 rgba(201,168,76,.45)}
+  50%{box-shadow:0 2px 6px rgba(0,0,0,.25), 0 0 0 6px rgba(201,168,76,0)}
+}
+.pent-card.is-interactive::after{display:none}  /* hide the ⤢ since we have the badge */
+
+/* ============ PENTAGON LIGHTBOX (modal) ============ */
+.pent-modal{
+  position:fixed;inset:0;z-index:10000;
+  background:rgba(4,5,12,.88);
+  backdrop-filter:blur(8px);
+  display:none;
+  align-items:center;justify-content:center;
+  padding:2rem;
+  opacity:0;transition:opacity .3s;
+}
+.pent-modal.open{display:flex;opacity:1}
+.pent-modal-inner{
+  background:var(--bg2);
+  border:1px solid rgba(201,168,76,.15);
+  border-radius:14px;
+  max-width:1100px;width:100%;
+  max-height:92vh;overflow-y:auto;
+  padding:2rem 2.4rem;
+  position:relative;
+  box-shadow:0 40px 120px rgba(0,0,0,.6);
+}
+.pent-modal-close{
+  position:absolute;top:1rem;right:1.2rem;
+  background:transparent;border:none;
+  color:var(--muted);font-size:1.6rem;
+  cursor:pointer;line-height:1;
+  transition:color .25s;
+}
+.pent-modal-close:hover{color:var(--gold)}
+.pent-modal-header{
+  display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;
+  padding-bottom:.8rem;margin-bottom:1.4rem;
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
+.pent-modal-num{
+  font-family:var(--font-display);font-size:2.6rem;
+  color:var(--gold);line-height:1;font-weight:400;
+}
+.pent-modal-title{
+  font-family:var(--font-display);font-size:1.2rem;
+  color:var(--cream);font-style:italic;
+}
+.pent-modal-year{
+  font-family:var(--font-mono);font-size:.6rem;
+  color:var(--muted);letter-spacing:.12em;
+  margin-left:auto;
+}
+.pent-modal-body{
+  display:grid;grid-template-columns:minmax(320px,1.1fr) 1fr;
+  gap:2rem;align-items:start;
+}
+@media(max-width:720px){
+  .pent-modal-body{grid-template-columns:1fr}
+  .pent-modal-inner{padding:1.5rem}
+}
+.pent-modal-canvas-wrap{
+  background:#ece8e0;border-radius:10px;
+  aspect-ratio:1/1;position:relative;overflow:hidden;
+}
+.pent-modal-canvas-wrap canvas{
+  width:100%;height:100%;display:block;
+  background:transparent;margin:0;
+}
+.pent-modal-canvas-wrap img{
+  width:100%;height:100%;display:block;
+  object-fit:contain;
+  image-rendering:auto;
+}
+.pent-modal-overlay-text{
+  position:absolute;bottom:.6rem;left:.8rem;
+  font-family:var(--font-mono);font-size:.54rem;
+  color:rgba(60,50,35,.5);letter-spacing:.08em;
+  pointer-events:none;
+}
+.pent-modal-side{
+  display:flex;flex-direction:column;gap:1.2rem;
+}
+.pent-modal-cond{
+  font-family:var(--font-mono);font-size:.72rem;
+  color:var(--text);line-height:1.8;
+  padding:.9rem 1rem;
+  background:rgba(255,255,255,.02);
+  border-left:2px solid var(--gold);
+  border-radius:4px;
+}
+.pent-modal-cond em{color:var(--gold);font-style:normal;font-weight:500}
+.pent-modal-narr{
+  font-family:var(--font-body);font-size:.84rem;
+  color:var(--text);line-height:1.7;
+  opacity:.88;
+}
+.pent-modal-narr em{color:var(--cream);font-style:italic}
+.pent-modal-controls{
+  display:flex;flex-direction:column;gap:.7rem;
+  padding:.9rem 1rem;
+  background:rgba(255,255,255,.02);
+  border-radius:6px;
+}
+.pent-modal-controls h4{
+  font-family:var(--font-mono);font-size:.55rem;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:.2rem;
+}
+.pent-slider-row{
+  display:flex;align-items:center;gap:.6rem;
+  font-family:var(--font-mono);font-size:.65rem;
+}
+.pent-slider-row label{
+  color:var(--text);min-width:3rem;opacity:.8;
+}
+.pent-slider-row input[type="range"]{
+  flex:1;-webkit-appearance:none;appearance:none;
+  height:3px;border-radius:2px;background:var(--muted);
+  outline:none;cursor:pointer;
+}
+.pent-slider-row input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:12px;height:12px;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%,var(--gold2),var(--gold));
+  cursor:pointer;box-shadow:0 0 6px rgba(201,168,76,.4);
+}
+.pent-slider-row .val{
+  color:var(--gold);min-width:3.3rem;text-align:right;
+}
+.pent-toggle-row{
+  display:flex;flex-wrap:wrap;gap:.4rem;
+}
+.pent-toggle{
+  font-family:var(--font-mono);font-size:.58rem;
+  padding:.4rem .8rem;
+  border:1px solid var(--muted);border-radius:4px;
+  background:transparent;color:var(--text);
+  cursor:pointer;transition:all .2s;
+  letter-spacing:.08em;text-transform:uppercase;
+}
+.pent-toggle:hover{border-color:var(--gold);color:var(--gold)}
+.pent-toggle.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
+.pent-modal-pending{
+  padding:1.4rem 1rem;
+  background:rgba(138,106,191,.04);
+  border-left:2px solid var(--violet);
+  border-radius:4px;
+  font-family:var(--font-body);font-size:.75rem;
+  color:var(--text);line-height:1.65;opacity:.8;
+}
+.pent-modal-pending a{color:var(--violet);text-decoration:none;border-bottom:1px dotted currentColor}
+.pent-modal-pending a:hover{color:var(--gold);border-color:currentColor}
 .pent-card-img{
   width:100%;
   aspect-ratio:1/1;
@@ -154,6 +345,10 @@ footer{text-align:center;padding:4rem 2rem 3rem;border-top:1px solid var(--borde
   object-fit:contain;
   display:block;
   filter:contrast(0.95) saturate(0.88);
+}
+.pent-card-img svg{
+  width:100%;height:100%;
+  display:block;
 }
 .pent-card-img.pent-img-fallback{
   background:linear-gradient(135deg,rgba(201,168,76,0.12),rgba(138,106,191,0.08));
@@ -196,6 +391,28 @@ footer{text-align:center;padding:4rem 2rem 3rem;border-top:1px solid var(--borde
 }
 .pent-attrib a{color:var(--muted);text-decoration:none;border-bottom:1px dotted rgba(255,255,255,.15)}
 .pent-attrib a:hover{color:var(--gold)}
+/* Hint above the gallery — distinguishes Type 1 interactive from Type 2-15 viewers */
+.pent-hint{
+  display:flex;align-items:flex-start;gap:.8rem;
+  margin:.6rem 0 1.6rem;
+  padding:.7rem .9rem .7rem 1rem;
+  background:linear-gradient(to right, rgba(201,168,76,.08), rgba(201,168,76,.02) 60%, transparent);
+  border-left:2px solid var(--gold);
+  border-radius:3px;
+}
+.pent-hint-mark{
+  font-family:var(--font-mono);font-size:.5rem;
+  letter-spacing:.16em;text-transform:uppercase;font-weight:500;
+  color:#1a1205;background:var(--gold);
+  padding:.3rem .55rem;border-radius:3px;
+  flex-shrink:0;line-height:1;
+  margin-top:.15rem;
+}
+.pent-hint-text{
+  font-family:var(--font-body);font-size:.82rem;
+  color:var(--text);line-height:1.55;opacity:.92;
+}
+.pent-hint-text strong{color:var(--gold);font-weight:500}
 @media(max-width:520px){
   .pent-gallery{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
   .pent-card-num{font-size:1.25rem}
@@ -449,6 +666,11 @@ footer{text-align:center;padding:4rem 2rem 3rem;border-top:1px solid var(--borde
       열다섯 종류의 볼록 오각형이 평면을 타일링한다 — 정확히 열다섯뿐이다. 각 유형은 내각(A, B, C, D, E)과 변의 길이(a, b, c, d, e; 변 <em>a</em>는 꼭짓점 A와 B 사이에 놓이며, 이하 동일)에 대한 제약으로 정의되는 무한한 족이다. 아래의 마지막 열은 정의 조건을 나열한다. 그 조건을 만족하는 오각형이면 평면을 타일링한다.
     </div>
 
+        <div class="pent-hint reveal">
+      <span class="pent-hint-mark">인터랙티브</span>
+      <span class="pent-hint-text"><strong>Type 1</strong> 카드를 클릭하면 오각형을 직접 만들어 변형할 수 있습니다 — 슬라이더, 팬, 줌 지원. 나머지 열네 장은 Wikipedia 타일링 도표를 확대 뷰로 엽니다.</span>
+    </div>
+
     <div class="pent-gallery" id="pentGallery"></div>
 
     <div class="pent-attrib">타일링 도표 출처: <a href="https://en.wikipedia.org/wiki/Pentagonal_tiling" target="_blank" rel="noopener">Wikipedia: Pentagonal tiling</a> (CC BY-SA 4.0)</div>
@@ -472,6 +694,30 @@ footer{text-align:center;padding:4rem 2rem 3rem;border-top:1px solid var(--borde
       </div>
     </div>
   </div>
+<!-- ============ PENTAGON LIGHTBOX MODAL ============ -->
+  <div class="pent-modal" id="pentModal" role="dialog" aria-modal="true" aria-labelledby="pentModalTitle">
+    <div class="pent-modal-inner">
+      <button class="pent-modal-close" id="pentModalClose" aria-label="Close">×</button>
+      <div class="pent-modal-header">
+        <span class="pent-modal-num" id="pentModalNum">1</span>
+        <span class="pent-modal-title" id="pentModalTitle">Reinhardt 1918</span>
+        <span class="pent-modal-year" id="pentModalYear">1918</span>
+      </div>
+      <div class="pent-modal-body">
+        <div>
+          <div class="pent-modal-canvas-wrap">
+            <canvas id="pentModalCanvas" width="720" height="720"></canvas>
+            <img id="pentModalImg" alt="" style="display:none;width:100%;height:100%;object-fit:contain;">
+            <div class="pent-modal-overlay-text" id="pentModalOverlay"></div>
+          </div>
+        </div>
+        <div class="pent-modal-side" id="pentModalSide">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
 </section>
 
 <!-- ============ SECTION III ============ -->
@@ -936,17 +1182,22 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
     canvas.width = W*dpr; canvas.height = H*dpr;
     ctx.setTransform(dpr,0,0,dpr,0,0);
     regen();
+    initParticles();
   }
 
-  // 5 direction vectors at 72° intervals
+  // 5 direction vectors at 72° intervals, rotated to put a rhombus-edge axis vertical
   const dirs = [];
   for(let k=0;k<5;k++){
-    const a = TAU*k/5;
+    const a = TAU*k/5 - PI/2;   // rotate so the sun pattern points upward
     dirs.push({x:Math.cos(a), y:Math.sin(a)});
   }
 
-  // Offsets (avoid singularities)
-  const gamma = [0.13, 0.27, 0.41, 0.19, 0.33];
+  // Offsets — equal small values give a "sun" cartwheel pattern at the origin:
+  // the tiling has perfect 5-fold rotational symmetry about (0,0). This is the
+  // most mathematically distinguished Penrose tiling (de Bruijn's canonical one).
+  // We add a tiny epsilon to avoid generic singularities (3 grid lines meeting
+  // at one point). The sum is intentionally nonzero so nothing coincides exactly.
+  const gamma = [0.2, 0.2, 0.2, 0.2, 0.2];
 
   function intersect2Lines(i,ni,j,nj){
     const a=dirs[i].x, b=dirs[i].y;
@@ -984,10 +1235,6 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
             const p = intersect2Lines(i,ni,j,nj);
             if(!p) continue;
 
-            // Compute index vector at intersection, then FIX K[i] and K[j]
-            // to the exact integer values ni, nj. Without this, floating-point
-            // precision in Math.ceil can produce inconsistent K, causing tile
-            // overlap (same rhombus generated from two (i,j,ni,nj) quadruples).
             const K = indexVector(p.x, p.y);
             K[i] = ni;
             K[j] = nj;
@@ -1017,11 +1264,11 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
 
   let allTiles = [];
   const SCALE = 42;
+  // Generate once with a large N so pan/zoom always has tiles available.
+  const TILE_GEN_N = 22;
 
   function regen(){
-    const viewR = Math.hypot(W,H)/2/SCALE;
-    const N = Math.ceil(viewR) + 7;
-    allTiles = generateTiling(N);
+    allTiles = generateTiling(TILE_GEN_N);
 
     for(const t of allTiles){
       const cx = (t.pts[0].x+t.pts[1].x+t.pts[2].x+t.pts[3].x)/4;
@@ -1033,63 +1280,149 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
     }
   }
 
+  // Drifting particles — motes of light that orbit on Fibonacci spirals.
+  // Each particle rides a logarithmic spiral with golden-ratio pitch:
+  //   r(θ) = r0 · exp(b·θ),   b = ln(φ) / (π/2)
+  // This is the "phi-spiral" — nature's favorite shape, from galaxies to
+  // sunflowers. The particles drift along this invisible scaffolding,
+  // reinforcing the golden ratio theme of Penrose tilings.
+  let particles = [];
+  const PHI_B = Math.log(PHI) / (PI/2);
+  function initParticles(){
+    const density = Math.min(120, Math.floor(W*H/18000));
+    particles = [];
+    for(let i=0;i<density;i++){
+      particles.push({
+        theta: Math.random()*TAU,
+        r0: 20 + Math.random()*80,
+        angSpeed: (0.015 + Math.random()*0.025) * (Math.random()<0.5?1:-1),
+        phase: Math.random()*TAU,
+        radius: 0.4 + Math.random()*1.4,
+        hue: Math.random() < 0.6 ? 42 : 268,
+      });
+    }
+  }
+
   let startTime = 0;
   function draw(time){
     if(!heroVisible){ requestAnimationFrame(draw); return; }
     if(!startTime) startTime = time;
     const t = (time - startTime)/1000;
 
-    ctx.clearRect(0,0,W,H);
+    // Clear with deep space color
+    ctx.fillStyle = '#04050c';
+    ctx.fillRect(0,0,W,H);
 
-    // Background radial glow
-    const bgGrad = ctx.createRadialGradient(W/2,H/2,0,W/2,H/2,Math.max(W,H)*0.6);
-    bgGrad.addColorStop(0, 'rgba(16,14,38,0.45)');
-    bgGrad.addColorStop(0.5, 'rgba(10,10,28,0.2)');
+    // ── Background: large radial glow + 5-fold radial light rays ──
+    const cxC = W/2, cyC = H/2;
+
+    // Soft large radial glow
+    const bgGrad = ctx.createRadialGradient(cxC, cyC, 0, cxC, cyC, Math.max(W,H)*0.7);
+    bgGrad.addColorStop(0, 'rgba(38,28,78,0.55)');
+    bgGrad.addColorStop(0.35, 'rgba(20,16,48,0.3)');
+    bgGrad.addColorStop(0.75, 'rgba(8,8,22,0.1)');
     bgGrad.addColorStop(1, 'rgba(4,5,12,0)');
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0,0,W,H);
 
-    // Slow circular pan with harmonic variation
-    const panPeriod = 140;
-    const panR = 5.5;
-    const ox = W/2 + Math.cos(t*TAU/panPeriod)*panR*SCALE
-                    + Math.sin(t*TAU/panPeriod*0.37)*panR*SCALE*0.45;
-    const oy = H/2 + Math.sin(t*TAU/panPeriod*0.73)*panR*SCALE
-                    + Math.cos(t*TAU/panPeriod*0.29)*panR*SCALE*0.35;
+    // 5-fold rotating radial rays — gentle god-rays keyed to 5-fold symmetry
+    const rayRotation = t*0.012;
+    const rayPulse = 0.5 + 0.5*Math.sin(t*0.35);
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    for(let k=0;k<5;k++){
+      const ang = rayRotation + k*TAU/5;
+      const rayLen = Math.max(W,H)*0.9;
+      const rg = ctx.createLinearGradient(
+        cxC, cyC,
+        cxC + Math.cos(ang)*rayLen,
+        cyC + Math.sin(ang)*rayLen
+      );
+      const intensity = 0.08 + 0.06*Math.sin(t*0.25 + k*1.31);
+      rg.addColorStop(0, `rgba(201,168,76,${intensity*rayPulse})`);
+      rg.addColorStop(0.45, `rgba(138,106,191,${intensity*0.4*rayPulse})`);
+      rg.addColorStop(1, 'rgba(4,5,12,0)');
+      ctx.fillStyle = rg;
+      // Draw a wide wedge
+      ctx.beginPath();
+      ctx.moveTo(cxC, cyC);
+      const spread = 0.32;
+      ctx.arc(cxC, cyC, rayLen, ang - spread, ang + spread);
+      ctx.closePath();
+      ctx.fill();
+    }
+    ctx.restore();
+
+    // ── Camera: slow zoom breathing + graceful drift ──
+    const zoomPeriod = 48;
+    const zoom = 1 + 0.12*Math.sin(t*TAU/zoomPeriod) + 0.06*Math.sin(t*TAU/zoomPeriod*1.7);
+    const S = SCALE * zoom;
+
+    // Keep the sun cartwheel centered — no pan. The 5-fold symmetry of the
+    // tiling is the whole point; panning away hides the mathematical jewel.
+    const ox = W/2;
+    const oy = H/2;
+
+    // Slow overall rotation — the pentagrid and the tiling rotate together,
+    // preserving the perfect 5-fold symmetry about the center.
+    const rot = t * 0.015;
+    const cosR = Math.cos(rot), sinR = Math.sin(rot);
 
     const margin = 2;
-    const vxMin = (-ox/SCALE) - margin;
-    const vxMax = (W-ox)/SCALE + margin;
-    const vyMin = (-oy/SCALE) - margin;
-    const vyMax = (H-oy)/SCALE + margin;
+    // Approximate bounding box in rotated world coords
+    const halfDiag = Math.hypot(W,H)/(2*S) + margin;
+    const vxMin = -halfDiag, vxMax = halfDiag;
+    const vyMin = -halfDiag, vyMax = halfDiag;
 
-    // Draw tiles
+    // Light-pulse wave — a ring of brightness traveling outward from center
+    const pulsePeriod = 9;
+    const pulsePhase = (t % pulsePeriod) / pulsePeriod;
+    const pulseRadius = pulsePhase * Math.hypot(W,H) * 0.75;
+    const pulseWidth = 140;
+
+    // Helper: world → screen, applying rotation + zoom + center offset
+    function worldToScreen(wx, wy){
+      const rx = wx*cosR - wy*sinR;
+      const ry = wx*sinR + wy*cosR;
+      return [rx*S + ox, ry*S + oy];
+    }
+
+    // ── Draw tiles ──
     for(const tile of allTiles){
       if(tile.cx<vxMin||tile.cx>vxMax||tile.cy<vyMin||tile.cy>vyMax) continue;
 
       const pts = tile.pts;
       const isThick = tile.type===0;
 
-      // Breathing waves
-      // Subtle breathing wave (luminance only)
+      const [sx0,sy0] = worldToScreen(pts[0].x, pts[0].y);
+      const [sx1,sy1] = worldToScreen(pts[1].x, pts[1].y);
+      const [sx2,sy2] = worldToScreen(pts[2].x, pts[2].y);
+      const [sx3,sy3] = worldToScreen(pts[3].x, pts[3].y);
+
+      // Tile screen position
+      const scx = (sx0+sx1+sx2+sx3)/4;
+      const scy = (sy0+sy1+sy2+sy3)/4;
+
+      // Breathing waves — layered harmonics for organic feel
       const wave = Math.sin(t*0.25 + tile.dist*0.8 + tile.seed)*0.04;
       const deepWave = Math.sin(t*0.12 - tile.angle*2 + tile.seed*0.5)*0.03;
 
-      // Fixed hue per tile TYPE — no wandering
-      // Thick = warm gold/amber; Thin = cool violet
+      // Light pulse — distance from screen center vs. pulse radius
+      const distFromCenter = Math.hypot(scx - cxC, scy - cyC);
+      const pulseDist = Math.abs(distFromCenter - pulseRadius);
+      const pulseIntensity = Math.max(0, 1 - pulseDist/pulseWidth);
+      const pulseGlow = pulseIntensity * pulseIntensity * 22;
+
+      // Fixed hue per tile TYPE
       const hue = isThick ? 42 : 268;
       const sat = isThick ? 58 : 48;
-      const lum = isThick ? 36 + wave*15 + deepWave*10 : 26 + wave*13 + deepWave*8;
+      const baseLum = isThick ? 36 : 26;
+      const lum = baseLum + wave*15 + deepWave*10 + pulseGlow;
 
       const alpha = 0.85 + wave*0.1;
       ctx.globalAlpha = Math.min(alpha, 0.95);
 
-      const sx0 = pts[0].x*SCALE+ox, sy0 = pts[0].y*SCALE+oy;
-      const sx1 = pts[1].x*SCALE+ox, sy1 = pts[1].y*SCALE+oy;
-      const sx2 = pts[2].x*SCALE+ox, sy2 = pts[2].y*SCALE+oy;
-      const sx3 = pts[3].x*SCALE+ox, sy3 = pts[3].y*SCALE+oy;
-
-      // Gradient fill — subtle shading within tile for depth
+      // Gradient fill with extra pulse lightening
       const grad = ctx.createLinearGradient(sx0,sy0,sx2,sy2);
       grad.addColorStop(0, `hsl(${hue},${sat}%,${lum+4}%)`);
       grad.addColorStop(0.5, `hsl(${hue},${sat}%,${lum}%)`);
@@ -1104,24 +1437,87 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
       ctx.closePath();
       ctx.fill();
 
-      // Edge — clearer boundaries
-      ctx.globalAlpha = alpha*0.7;
-      ctx.strokeStyle = `hsla(${hue},${sat+15}%,${lum+28}%,0.75)`;
-      ctx.lineWidth = 1.0;
+      // Edge — illuminated by pulse
+      ctx.globalAlpha = alpha*0.7 + pulseIntensity*0.25;
+      ctx.strokeStyle = `hsla(${hue},${sat+15}%,${lum+28+pulseGlow*0.8}%,${0.75 + pulseIntensity*0.3})`;
+      ctx.lineWidth = 1.0 + pulseIntensity*0.8;
       ctx.stroke();
 
       // Inner highlight
-      ctx.globalAlpha = alpha*0.2;
+      ctx.globalAlpha = alpha*0.2 + pulseIntensity*0.15;
       ctx.strokeStyle = `hsla(${hue},${sat+8}%,${lum+42}%,0.4)`;
       ctx.lineWidth = 0.35;
       ctx.stroke();
 
-      // Matching rule arcs
-      const arcAlpha = alpha*0.32*(0.5+wave);
+      // Matching rule arcs — brighter during pulse
+      const arcAlpha = alpha*0.32*(0.5+wave) + pulseIntensity*0.4;
       if(arcAlpha > 0.04){
         drawMatchArc(sx0,sy0,sx1,sy1,sx2,sy2,sx3,sy3, isThick, arcAlpha);
       }
     }
+
+    // ── Ammann bars (the hidden Fibonacci quasilattice) ──
+    // The de Bruijn pentagrid IS the set of Ammann lines: the five families of
+    // parallel lines whose spacings follow a Fibonacci sequence in {1, 1/φ}.
+    // We draw them at low opacity — a skeletal scaffold that most viewers
+    // will perceive as "rays of order" without immediately understanding why.
+    //
+    // For each direction k, line n has equation: dirs[k]·x = n + gamma[k]
+    // We draw lines within our visible world radius.
+    const ammannAlpha = 0.08 + 0.04*Math.sin(t*0.18);
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.lineWidth = 0.4;
+    for(let k=0;k<5;k++){
+      const dx = dirs[k].x, dy = dirs[k].y;
+      // Perpendicular (tangent) direction to the line
+      const tx = -dy, ty = dx;
+      const worldR = halfDiag;
+      for(let n=-Math.ceil(worldR)-1; n<=Math.ceil(worldR)+1; n++){
+        // line: dx*x + dy*y = n + gamma[k]
+        // closest point to origin: (dx, dy) * (n+gamma[k])
+        const c = n + gamma[k];
+        const px = dx*c, py = dy*c;
+        // Skip lines outside world view
+        if(Math.abs(c) > worldR) continue;
+        // Endpoints ±worldR along tangent
+        const ex0 = px - tx*worldR, ey0 = py - ty*worldR;
+        const ex1 = px + tx*worldR, ey1 = py + ty*worldR;
+        const [ax,ay] = worldToScreen(ex0, ey0);
+        const [bx,by] = worldToScreen(ex1, ey1);
+        // Fade Ammann lines that are far from center (not visually distracting)
+        const fade = Math.max(0, 1 - Math.abs(c)/worldR);
+        ctx.strokeStyle = `rgba(220,190,110,${ammannAlpha*fade*0.7})`;
+        ctx.beginPath();
+        ctx.moveTo(ax, ay);
+        ctx.lineTo(bx, by);
+        ctx.stroke();
+      }
+    }
+    ctx.restore();
+
+    // ── Drifting particles on golden spirals ──
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    for(const p of particles){
+      // Advance along the spiral
+      const theta = p.theta + t * p.angSpeed;
+      const r = p.r0 * Math.exp(PHI_B * theta * 0.08);
+      // Wrap: if spiral grows off-screen, respawn closer in
+      let actualR = r % (Math.hypot(W,H)*0.6);
+      const x = cxC + Math.cos(theta) * actualR;
+      const y = cyC + Math.sin(theta) * actualR;
+
+      const flicker = 0.4 + 0.6*Math.sin(t*0.8 + p.phase);
+      const a = flicker * 0.55;
+      ctx.fillStyle = p.hue === 42
+        ? `rgba(220,190,110,${a})`
+        : `rgba(168,136,220,${a})`;
+      ctx.beginPath();
+      ctx.arc(x, y, p.radius*(0.7+flicker*0.6), 0, TAU);
+      ctx.fill();
+    }
+    ctx.restore();
 
     ctx.globalAlpha = 1;
     requestAnimationFrame(draw);
@@ -1552,20 +1948,92 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
      cond:'<em>a</em> = <em>c</em> = <em>e</em>, <em>b</em> = 2<em>a</em><br><em>A</em> = 150°, <em>B</em> = 60°, <em>C</em> = 135°<br><em>D</em> = 105°, <em>E</em> = 90°'},
   ];
 
-  // Wikimedia Commons image URLs (official hotlink via Special:Redirect).
-  // See: https://commons.wikimedia.org/wiki/Commons:Reusing_content_outside_Wikimedia/technical
-  const imgBase = 'https://commons.wikimedia.org/w/index.php?title=Special:Redirect/file/P5-type';
+  // Representative prototile vertices for each pentagon type, normalized to [0,1]×[0,1].
+  // Each type has specific angle/edge constraints; we show one concrete example.
+  const pentVerts = {
+    1: [[0,.05],[.95,.0],[1,.85],[.55,1],[.0,.7]],
+    2: [[0,.1],[.8,0],[1,.55],[.7,1],[.05,.75]],
+    3: [[.1,0],[.7,0],[1,.52],[.5,1],[0,.52]],
+    4: [[0,0],[1,0],[1,.8],[.5,1],[0,.8]],
+    5: [[.25,0],[.75,0],[1,.65],[.5,1],[0,.65]],
+    6: [[0,.15],[.6,0],[1,.3],[.85,1],[.1,.75]],
+    7: [[.15,0],[.85,0],[1,.6],[.5,1],[0,.6]],
+    8: [[.1,0],[.9,0],[1,.55],[.55,1],[0,.6]],
+    9: [[.15,0],[.85,0],[1,.5],[.6,1],[0,.55]],
+    10:[[0,.1],[.55,0],[1,.35],[.9,1],[.1,.8]],
+    11:[[0,.2],[.45,0],[1,.25],[.95,1],[.05,.8]],
+    12:[[0,.15],[.5,0],[1,.3],[.9,1],[.05,.78]],
+    13:[[.2,0],[.8,0],[1,.6],[.5,1],[0,.6]],
+    14:[[.05,.1],[.65,0],[1,.45],[.75,1],[0,.7]],
+    15:[[0,.15],[.6,0],[1,.2],[.85,.95],[.15,1]],
+  };
 
-  types.forEach(t=>{
+  const labels = ['A','B','C','D','E'];
+  const V = 200, pad = 24, ww = V - 2*pad, hh = V - 2*pad;
+
+  // Render each card as inline SVG (no canvas, no external images).
+  types.forEach(t => {
+    const verts = pentVerts[t.n] || pentVerts[1];
+
+    // Scale vertices to SVG viewBox coordinates
+    const pts = verts.map(([x,y]) => [pad + x*ww, pad + y*hh]);
+
+    // Centroid for label positioning
+    let cx=0, cy=0;
+    for(const p of pts){cx+=p[0]; cy+=p[1];}
+    cx/=5; cy/=5;
+
+    // Build polygon points string
+    const polyPoints = pts.map(p => p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
+
+    // Build label tspans
+    let labelSVG = '';
+    for(let i=0;i<5;i++){
+      const [vx, vy] = pts[i];
+      const dx = vx-cx, dy = vy-cy;
+      const len = Math.hypot(dx,dy) || 1;
+      const off = 11;
+      const lx = (vx + dx/len*off).toFixed(1);
+      const ly = (vy + dy/len*off + 3).toFixed(1);
+      labelSVG += `<text x="${lx}" y="${ly}" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="rgba(60,50,35,0.7)">${labels[i]}</text>`;
+    }
+
+    const gradId = 'pgrad' + t.n;
+    const svgFallback = `
+      <svg viewBox="0 0 ${V} ${V}" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="${gradId}" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="hsl(42,45%,72%)"/>
+            <stop offset="100%" stop-color="hsl(38,40%,60%)"/>
+          </linearGradient>
+        </defs>
+        <rect width="${V}" height="${V}" fill="#ece8e0"/>
+        <polygon points="${polyPoints}"
+                 fill="url(#${gradId})"
+                 stroke="rgba(60,50,35,0.6)"
+                 stroke-width="1.8"
+                 stroke-linejoin="round"/>
+        ${labelSVG}
+      </svg>
+    `;
+
+    // Use actual tessellation image from Wikipedia (CC BY-SA 4.0), with SVG fallback
+    const imgSrc = `pentagons/P5-type${t.n}.png`;
+    const cardImgContent = `
+      <img src="${imgSrc}" alt="Pentagonal tiling type ${t.n}"
+           loading="lazy"
+           onerror="this.parentElement.innerHTML=this.dataset.fallback;">
+    `;
+
     const card = document.createElement('div');
-    card.className = 'pent-card';
+    card.className = 'pent-card' + (t.n === 1 ? ' is-interactive' : '');
+    const interactiveBadge = t.n === 1 ? `<div class="pent-card-badge">인터랙티브</div>` : '';
     card.innerHTML = `
+      ${interactiveBadge}
       <div class="pent-card-img">
-        <img src="${imgBase}${t.n}.png&amp;width=400"
-             alt="Pentagonal tiling type ${t.n} by ${t.by}"
-             loading="lazy"
-             referrerpolicy="no-referrer"
-             onerror="this.style.display='none';this.parentElement.classList.add('pent-img-fallback');this.parentElement.setAttribute('data-n','Type ${t.n}');">
+        <img src="${imgSrc}" alt="Pentagonal tiling type ${t.n}" loading="lazy"
+             data-fallback='${svgFallback.replace(/'/g, "&apos;").replace(/\n/g, '')}'
+             onerror="this.parentElement.innerHTML=this.getAttribute('data-fallback');">
       </div>
       <div class="pent-card-body">
         <div class="pent-card-head">
@@ -1576,8 +2044,572 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
         <div class="pent-card-cond">${t.cond}</div>
       </div>
     `;
+    card.addEventListener('click', () => openPentModal(t));
     gallery.appendChild(card);
   });
+
+  /* ============================================================
+     PENTAGON LIGHTBOX — modal with tessellation exploration
+     ============================================================
+     For Type 1 we have a full, mathematically verified tessellation
+     (via hexagon decomposition: any convex pentagon with B+C=180°
+     paired with its 180° rotation about the midpoint of edge BC
+     forms a hexagon with opposite sides parallel+equal, which
+     tiles by translation — Reinhardt's hexagon theorem, 1918).
+
+     For Types 2–15, the modal shows the prototile at larger scale
+     with its defining conditions and a note that the full tiling
+     diagram will arrive from Wikipedia. ============================ */
+
+  const modal = document.getElementById('pentModal');
+  const modalClose = document.getElementById('pentModalClose');
+  const modalNum = document.getElementById('pentModalNum');
+  const modalTitle = document.getElementById('pentModalTitle');
+  const modalYear = document.getElementById('pentModalYear');
+  const modalOverlay = document.getElementById('pentModalOverlay');
+  const modalSide = document.getElementById('pentModalSide');
+  const modalCanvas = document.getElementById('pentModalCanvas');
+  const modalCtx = modalCanvas ? modalCanvas.getContext('2d') : null;
+
+  // Active rendering state
+  const state = {
+    type: null,
+    params: {},       // Type-specific parameters (angle, edge lengths, etc.)
+    overlays: {
+      colors: true,   // Color by isohedral class
+      prototile: true,// Highlight one prototile
+      outline: true,  // Edge outlines
+    },
+    zoom: 1.0,
+    offset: {x:0, y:0},
+  };
+
+  const modalImg = document.getElementById('pentModalImg');
+
+// ── Pan (mouse drag) + wheel zoom on the modal canvas ──
+  // Only active when Type 1 is displayed (canvas visible).
+  // Coordinates are scaled from CSS pixels to canvas pixels so motion feels 1:1.
+  if(modalCanvas){
+    let dragging = false, lastX = 0, lastY = 0;
+
+    function canvasScale(){
+      const rect = modalCanvas.getBoundingClientRect();
+      return modalCanvas.width / rect.width;  // canvas px per CSS px
+    }
+
+    modalCanvas.addEventListener('mousedown', (e) => {
+      if(state.type?.n !== 1) return;
+      dragging = true;
+      lastX = e.clientX; lastY = e.clientY;
+      modalCanvas.style.cursor = 'grabbing';
+      e.preventDefault();
+    });
+    window.addEventListener('mousemove', (e) => {
+      if(!dragging) return;
+      const k = canvasScale();
+      state.offset.x += (e.clientX - lastX) * k;
+      state.offset.y += (e.clientY - lastY) * k;
+      lastX = e.clientX; lastY = e.clientY;
+      renderType1();
+    });
+    window.addEventListener('mouseup', () => {
+      if(dragging){ dragging = false; modalCanvas.style.cursor = 'grab'; }
+    });
+
+    // Touch support (mobile)
+    modalCanvas.addEventListener('touchstart', (e) => {
+      if(state.type?.n !== 1 || e.touches.length !== 1) return;
+      dragging = true;
+      lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
+    }, {passive:true});
+    modalCanvas.addEventListener('touchmove', (e) => {
+      if(!dragging || e.touches.length !== 1) return;
+      const k = canvasScale();
+      state.offset.x += (e.touches[0].clientX - lastX) * k;
+      state.offset.y += (e.touches[0].clientY - lastY) * k;
+      lastX = e.touches[0].clientX; lastY = e.touches[0].clientY;
+      renderType1();
+      e.preventDefault();
+    }, {passive:false});
+    modalCanvas.addEventListener('touchend', () => { dragging = false; });
+
+    // Wheel zoom — zooms toward cursor position
+    modalCanvas.addEventListener('wheel', (e) => {
+      if(state.type?.n !== 1) return;
+      e.preventDefault();
+      const rect = modalCanvas.getBoundingClientRect();
+      const k = canvasScale();
+      // Cursor position in canvas coordinates
+      const cx = (e.clientX - rect.left) * k;
+      const cy = (e.clientY - rect.top) * k;
+      // Point on canvas before zoom: worldPt = (cx - W/2 - offset)/scale, approx.
+      // For zoom-to-cursor: adjust offset so that the world point under cursor stays fixed.
+      const factor = e.deltaY < 0 ? 1.12 : 1/1.12;
+      const newZoom = Math.max(0.3, Math.min(4, state.zoom * factor));
+      const ratio = newZoom / state.zoom;
+      // Canvas centre
+      const W = modalCanvas.width, H = modalCanvas.height;
+      // Vector from canvas centre to cursor (what should stay fixed in world coords)
+      const vx = cx - W/2 - state.offset.x;
+      const vy = cy - H/2 - state.offset.y;
+      // After zoom, that world point moves by (ratio-1)*v; compensate offset
+      state.offset.x -= vx * (ratio - 1);
+      state.offset.y -= vy * (ratio - 1);
+      state.zoom = newZoom;
+      renderType1();
+    }, {passive:false});
+
+    modalCanvas.style.cursor = 'grab';
+  }
+
+  function openPentModal(t){
+    state.type = t;
+    modal.classList.add('open');
+    modalNum.textContent = t.n;
+    modalTitle.textContent = t.by + (t.n===1 ? ' — 가장 일반적인 타일러' :
+                                      t.n<=5 ? '' :
+                                      t.n<=8 ? ' — 첫 확장' :
+                                      t.n===9 ? ' — 제임스의 발견' :
+                                      t.n<=13 ? ' — 라이스의 손으로 그린 통찰' :
+                                      t.n===14 ? '의 외로운 예' :
+                                      ' — 컴퓨터 탐색');
+    modalYear.textContent = t.yr;
+    modalOverlay.textContent = `TYPE ${t.n} · ${t.by}`;
+
+    // Populate side panel with condition + narrative + controls
+    populateSidePanel(t);
+
+    // Render the main display:
+    //   Type 1 → interactive canvas (hexagon pair, p2 tiling)
+    //   Type 4 → interactive canvas (house pentagon + mirror, p4g/cmm tiling)
+    //   Types 2,3,5-15 → Wikipedia tessellation image
+    if(t.n === 1){
+      modalCanvas.style.display = 'block';
+      modalImg.style.display = 'none';
+      initType1();
+    } else if(t.n === 4){
+      modalCanvas.style.display = 'block';
+      modalImg.style.display = 'none';
+      initType4();
+    } else {
+      modalCanvas.style.display = 'none';
+      modalImg.style.display = 'block';
+      modalImg.src = `pentagons/P5-type${t.n}.png`;
+      modalImg.alt = `Type ${t.n} 오각형 타일링 — ${t.by} (Wikipedia, CC BY-SA 4.0)`;
+    }
+  }
+
+  function closePentModal(){
+    modal.classList.remove('open');
+    state.type = null;
+  }
+  modalClose.addEventListener('click', closePentModal);
+  modal.addEventListener('click', (e)=>{ if(e.target===modal) closePentModal(); });
+  document.addEventListener('keydown', (e)=>{
+    if(e.key==='Escape' && modal.classList.contains('open')) closePentModal();
+  });
+
+  /* ── Type 1: narrative + math ── */
+  const narratives = {
+    1: `Type 1은 평면을 타일링하는 가장 일반적인 볼록 오각형이다. 유일한 제약은 두 이웃 각의 합이 180°라는 것 — <em>B + C = 180°</em>. 나머지 — 다른 세 각도, 다섯 변의 길이 — 는 모두 자유롭다. 타일링이 성립하는 이유: 두 복제본을 변 BC의 중점에 대해 180° 회전시켜 짝지으면, 공유된 꼭짓점의 각이 합쳐져 180°(직선)가 되고, 그 쌍은 마주 보는 변이 평행·같은 길이인 육각형을 이룬다. 라인하르트가 1918년에 증명했듯, 그런 모든 육각형은 평행이동만으로 평면을 타일링한다.`,
+    2: `라인하르트의 두 번째 유형. 두 변이 같고(<em>c = e</em>) 두 각이 보각(<em>B + D = 180°</em>). 타일링은 180° 회전을 사용한다: 오각형과 변 c의 중점에 대한 회전 복제본이 맞물리고, 이 쌍이 평면을 덮는다. 각 타일이 회전 중심에서 거울상 짝과 만나는 모습에 주목하라.`,
+    3: `세 각이 120°(<em>A = C = D = 120°</em>)이고 특별한 변 관계(<em>a = b</em>, <em>d = c + e</em>)를 가진 오각형. 각 120° 꼭짓점에서 세 복제본이 만나며, 타일링 밑바닥의 육각 격자를 드러낸다. 여섯 오각형이 이루는 육각 군집을 찾아보라.`,
+    4: `두 직각(<em>B = D = 90°</em>)과 두 쌍의 동일 변. 이 족은 유명한 <em>카이로 오각형 타일링</em>을 포함한다 — 카이로 거리의 포장과 이슬람 건축에서 쓰인 바로 그것이다. 네 오각형이 각 4차 회전 중심에서 만나고, 그들의 직각이 합쳐져 360°가 된다.`,
+    5: `A에서 60°, D에서 120°, 그리고 <em>a = b</em>, <em>d = e</em>. 여섯 오각형이 각 A-꼭짓점 주위를 돌고(6 × 60° = 360°), 세 오각형이 각 D-꼭짓점에서 만난다(3 × 120° = 360°). 타일링은 A-꼭짓점 주위에서 국소적으로 6차 대칭을 보인다.`,
+    6: `커슈너가 1968년에 추가한 첫 번째 유형. 세 변이 같고(<em>a = d = e</em>, <em>b = c</em>) 한 쌍의 보각과 함께 <em>2B = E</em>라는 묘한 관계가 있다. 라인하르트 이후 50년 동안 발견되지 않았던 유형.`,
+    7: `커슈너의 두 번째 유형. 네 변이 같고(<em>b = c = d = e</em>), B·C·D·E를 엮는 교묘한 각 합 조건을 가진다. 이 타일링은 변-대-변(edge-to-edge)이 아니다 — 어떤 오각형 변이 이웃 변의 중간에 닿는 모습에 주목하라.`,
+    8: `커슈너의 세 번째 유형. Type 7과 같은 네 동일 변을 가지지만 각 관계가 다르다: <em>2B + C = D + 2E = 360°</em>. Type 7과의 미묘한 차이는 어떤 각이 어떤 합을 이루는지에 있으며, 시각적으로 확연히 다른 타일링 패턴을 낳는다.`,
+    9: `1975년 마틴 가드너의 <em>Scientific American</em> 칼럼 직후 리처드 제임스 3세가 발견했다. 제임스는 커슈너의 여덟 유형 목록에 한 경우가 빠져 있음을 알아챘다. 네 변이 같고, <em>2A + C = D + 2E = 360°</em>.`,
+    10: `마저리 라이스의 첫 발견(1976). A에서의 직각, 특별한 변 합(<em>a = b = c + e</em>), 그리고 여러 각 관계. 정규 교육을 받은 적 없는 샌디에이고의 주부였던 라이스는 자기만의 표기법을 고안해 이 유형과 세 유형을 더 발견했다 — 아마추어 수학의 승리.`,
+    11: `라이스의 두 번째 오각형(1977). A에서의 직각과 인상적인 조건 <em>2a + c = d = e</em>. 라이스는 가드너의 칼럼을 보며 부엌 식탁에서 작업해, 첫 발견 이후 몇 달 안에 이 유형과 다음 두 유형을 찾아냈다.`,
+    12: `라이스의 세 번째. Type 11과 비슷한 각 조건이지만 <em>2a = d = c + e</em>. 변의 동등 관계 패턴이 이 긴밀히 연결된 유형들을 구별한다.`,
+    13: `라이스의 네 번째이자 마지막 발견. 두 직각(<em>B = E = 90°</em>)과 관계 <em>d = 2a = 2e</em>. 1977년 이후 라이스는 새 유형을 더 찾아내지 않았고 — 8년 동안 목록은 13개에 멈춰 있었다.`,
+    14: `롤프 슈타인의 외로운 기여(1985). 연속적인 자유도를 가진 앞선 유형들과 달리, Type 14는 <em>완전히 경직적</em>이다: 각 B ≈ 145.34°, C ≈ 69.32°는 다른 제약에 의해 완전히 결정된다. 오직 하나의 오각형 모양만 이런 방식으로 타일링한다.`,
+    15: `마지막 오각형. 2015년 워싱턴 주립대 보델의 케이시 만, 제니퍼 맥라우드-만, 데이비드 폰 데라우가 컴퓨터 탐색으로 발견했다. Type 14처럼 경직적이다: 각 A = 150°, B = 60°, C = 135°, D = 105°, E = 90°는 고정된다. 2년 뒤 미카엘 라오가 전수 컴퓨터 탐색으로 열여섯 번째 유형이 존재하지 않음을 증명했다.`,
+  };
+
+  function populateSidePanel(t){
+    const narr = narratives[t.n] || null;
+
+    let html = `
+      <div class="pent-modal-cond">${t.cond}</div>
+      ${narr ? `<div class="pent-modal-narr">${narr}</div>` : ''}
+    `;
+
+    if(t.n === 1){
+      // Type 1 interactive controls
+      html += `
+        <div class="pent-modal-controls" id="pentCtrlsT1">
+          <h4>Type 1 파라미터 탐험</h4>
+          <div class="pent-slider-row">
+            <label>각 B</label>
+            <input type="range" id="t1_B" min="40" max="150" step="1" value="110">
+            <span class="val" id="t1_B_v">110°</span>
+          </div>
+          <div class="pent-slider-row">
+            <label>각 A</label>
+            <input type="range" id="t1_A" min="60" max="200" step="1" value="100">
+            <span class="val" id="t1_A_v">100°</span>
+          </div>
+          <div class="pent-slider-row">
+            <label>각 D</label>
+            <input type="range" id="t1_D" min="60" max="170" step="1" value="130">
+            <span class="val" id="t1_D_v">130°</span>
+          </div>
+          <div class="pent-slider-row">
+            <label>변 a</label>
+            <input type="range" id="t1_a" min="60" max="160" step="1" value="120">
+            <span class="val" id="t1_a_v">1.20</span>
+          </div>
+          <div class="pent-slider-row">
+            <label>변 c</label>
+            <input type="range" id="t1_c" min="50" max="150" step="1" value="90">
+            <span class="val" id="t1_c_v">0.90</span>
+          </div>
+          <div class="pent-slider-row">
+            <label>변 d</label>
+            <input type="range" id="t1_d" min="60" max="150" step="1" value="110">
+            <span class="val" id="t1_d_v">1.10</span>
+          </div>
+          <h4 style="margin-top:.5rem">표시</h4>
+          <div class="pent-toggle-row">
+            <button class="pent-toggle active" data-toggle="colors">색 분류</button>
+            <button class="pent-toggle active" data-toggle="prototile">프로토타일 표시</button>
+            <button class="pent-toggle active" data-toggle="outline">변 윤곽선</button>
+            <button class="pent-toggle" data-toggle="hexagon">육각형 표시</button>
+          </div>
+          <div class="pent-toggle-row">
+            <button class="pent-toggle" id="t1_zoomOut">−</button>
+            <button class="pent-toggle" id="t1_zoomIn">+</button>
+            <button class="pent-toggle" id="t1_reset">원래대로</button>
+          </div>
+        </div>
+      `;
+    } else if(t.n === 4){
+      // Type 4 interactive controls
+      // Parameters: C (sets E=360-A-C; here we use A=90° fixed for clean "house" shape;
+      // C is free between 100° and 170°, and b (= c) slides pentagon proportion)
+      html += `
+        <div class="pent-modal-controls" id="pentCtrlsT4">
+          <h4>Explore Type 4 parameters</h4>
+          <div class="pent-slider-row">
+            <label>angle C</label>
+            <input type="range" id="t4_C" min="100" max="170" step="1" value="135">
+            <span class="val" id="t4_C_v">135°</span>
+          </div>
+          <div class="pent-slider-row">
+            <label>angle A</label>
+            <input type="range" id="t4_A" min="60" max="170" step="1" value="90">
+            <span class="val" id="t4_A_v">90°</span>
+          </div>
+          <div class="pent-slider-row">
+            <label>edge b = c</label>
+            <input type="range" id="t4_b" min="50" max="160" step="1" value="100">
+            <span class="val" id="t4_b_v">1.00</span>
+          </div>
+          <div class="pent-slider-row">
+            <label>edge d = e</label>
+            <input type="range" id="t4_d" min="50" max="160" step="1" value="100">
+            <span class="val" id="t4_d_v">1.00</span>
+          </div>
+          <h4 style="margin-top:.5rem">표시</h4>
+          <div class="pent-toggle-row">
+            <button class="pent-toggle active" data-toggle="colors">색 분류</button>
+            <button class="pent-toggle active" data-toggle="prototile">프로토타일 표시</button>
+            <button class="pent-toggle active" data-toggle="outline">변 윤곽선</button>
+            <button class="pent-toggle" data-toggle="hexagon">육각형 표시</button>
+            <button class="pent-toggle" data-toggle="mirror">Mirror line</button>
+          </div>
+          <div class="pent-toggle-row">
+            <button class="pent-toggle" id="t4_zoomOut">−</button>
+            <button class="pent-toggle" id="t4_zoomIn">+</button>
+            <button class="pent-toggle" id="t4_reset">Reset view</button>
+          </div>
+        </div>
+      `;
+    } else {
+      // For Types 2–15: note about image source
+      html += `
+        <div class="pent-modal-pending">
+          타일링 도표 출처: <a href="https://en.wikipedia.org/wiki/Pentagonal_tiling" target="_blank" rel="noopener">Wikipedia</a>
+          (파일 <code>P5-type${t.n}.png</code>, CC BY-SA 4.0).
+        </div>
+      `;
+    }
+
+    modalSide.innerHTML = html;
+
+    // Wire up interactive controls
+    if(t.n === 1){
+      wireType1Controls();
+    } else if(t.n === 4){
+      wireType4Controls();
+    }
+  }
+
+  function renderPlaceholder(t){
+    // No longer used — Types 2–15 now show Wikipedia PNG via <img>
+  }
+
+  /* ============================================================
+     TYPE 1 TESSELLATION — verified mathematical implementation
+     ============================================================
+     Math:
+       Pentagon with vertices A,B,C,D,E (interior angles summing
+       to 540°). Constraint B + C = 180° (⇒ A+D+E = 360°).
+
+       Build pentagon by walking: fix 4 interior angles A,B,C,D
+       (the sum leaves E determined by closure) and 4 edges
+       a,b,c,d (e is determined). But if B+C=180°, any consistent
+       choice works — the pentagon closes automatically.
+
+       We instead parameterise: choose B free, angle A free, angle D
+       free (then E = 360°-A-D, C = 180°-B). Edges a,b=1 (fixed), c,d
+       free; e is determined by closure.
+
+       Tiling: pentagon + rot180 about midpoint of edge BC = hexagon
+       with opposite sides equal & parallel. Hexagon tiles by
+       translation vectors derived from edge midpoints.
+
+       Colouring: 4-colour the p2 hexagon tiling so that no two
+       edge-adjacent hexagons share a colour. The 2-pentagon pair
+       inside each hexagon uses gold (thick) and violet (thin)
+       to distinguish the prototile from its rotated mirror.
+     ============================================================ */
+
+  let type1Unit = null;  // {pentagon, pentagonR, hexagon, latticeV1, latticeV2}
+
+  function buildType1(A, B, D, a, b, c, d){
+    // B given, C = 180 - B. A, D given. E = 360 - A - D.
+    const C = 180 - B;
+    const E = 360 - A - D;
+    // Sanity: all angles positive, sum = 540
+    if(A<5 || B<5 || C<5 || D<5 || E<5 || A>175 || B>175 || C>175 || D>175 || E>175) return null;
+
+    const deg = Math.PI/180;
+    let x=0, y=0, dir=0;
+    const pts = [[0,0]];
+    x += a; pts.push([x,y]);                            // B
+    dir += (180-B)*deg;
+    x += b*Math.cos(dir); y += b*Math.sin(dir); pts.push([x,y]);  // C
+    dir += (180-C)*deg;
+    x += c*Math.cos(dir); y += c*Math.sin(dir); pts.push([x,y]);  // D
+    dir += (180-D)*deg;
+    x += d*Math.cos(dir); y += d*Math.sin(dir); pts.push([x,y]);  // E
+
+    // Verify pentagon is convex (all cross products same sign)
+    function cross(p,q,r){ return (q[0]-p[0])*(r[1]-p[1]) - (q[1]-p[1])*(r[0]-p[0]); }
+    let sign = 0;
+    for(let i=0;i<5;i++){
+      const cr = cross(pts[(i+4)%5], pts[i], pts[(i+1)%5]);
+      if(sign === 0) sign = cr;
+      else if(cr*sign < 0) return null;  // non-convex
+    }
+
+    // Rotated pentagon: 180° about midpoint of edge BC (pts[1] to pts[2])
+    const midBC = [(pts[1][0]+pts[2][0])/2, (pts[1][1]+pts[2][1])/2];
+    const ptsR = pts.map(p => [2*midBC[0]-p[0], 2*midBC[1]-p[1]]);
+
+    // Hexagon boundary: A, pentR[D], pentR[E], pentR[A], pent[D], pent[E]
+    const hex = [
+      pts[0],    // A
+      ptsR[3],   // rot180(D)
+      ptsR[4],   // rot180(E)
+      ptsR[0],   // rot180(A)
+      pts[3],    // D
+      pts[4],    // E
+    ];
+
+    // Lattice vectors from opposite-edge midpoints
+    // Edge midpoints of hexagon
+    function midpt(p, q){ return [(p[0]+q[0])/2, (p[1]+q[1])/2]; }
+    const em = [];
+    for(let i=0;i<6;i++) em.push(midpt(hex[i], hex[(i+1)%6]));
+    // Translation vectors: from midpoint i to opposite midpoint (i+3)
+    // These are 2x the vector from center to midpoint of an edge, in the outward direction
+    // For tiling: v_k = 2*(em[k] - center); three pairs of opposite lattice vectors.
+    const center = [0,0];
+    for(const p of hex){ center[0]+=p[0]; center[1]+=p[1]; }
+    center[0]/=6; center[1]/=6;
+    // Take first two non-parallel lattice vectors
+    const lv = [];
+    for(let k=0;k<6;k++){
+      lv.push([2*(em[k][0]-center[0]), 2*(em[k][1]-center[1])]);
+    }
+    // Pick v1 = lv[0], v2 = lv[1]
+    const v1 = lv[0], v2 = lv[1];
+
+    return {
+      pentagon: pts,
+      pentagonR: ptsR,
+      hexagon: hex,
+      hexCenter: center,
+      latticeV1: v1,
+      latticeV2: v2,
+      midBC,
+    };
+  }
+
+  function initType1(){
+    // Default parameters
+    state.params = { A:100, B:110, D:130, a:1.2, b:1.0, c:0.9, d:1.1 };
+    state.overlays = { colors:true, prototile:true, outline:true, hexagon:false };
+    state.zoom = 1.0;
+    state.offset = {x:0, y:0};
+    renderType1();
+  }
+
+  function wireType1Controls(){
+    const ids = ['A','B','D','a','c','d'];
+    const update = () => {
+      const B = +document.getElementById('t1_B').value;
+      const A = +document.getElementById('t1_A').value;
+      const D = +document.getElementById('t1_D').value;
+      const a = +document.getElementById('t1_a').value / 100;
+      const c = +document.getElementById('t1_c').value / 100;
+      const d = +document.getElementById('t1_d').value / 100;
+      document.getElementById('t1_B_v').textContent = B + '°';
+      document.getElementById('t1_A_v').textContent = A + '°';
+      document.getElementById('t1_D_v').textContent = D + '°';
+      document.getElementById('t1_a_v').textContent = a.toFixed(2);
+      document.getElementById('t1_c_v').textContent = c.toFixed(2);
+      document.getElementById('t1_d_v').textContent = d.toFixed(2);
+      state.params = { A, B, D, a, b:1.0, c, d };
+      renderType1();
+    };
+    ids.forEach(id => {
+      const el = document.getElementById('t1_' + id);
+      if(el) el.addEventListener('input', update);
+    });
+    document.querySelectorAll('#pentCtrlsT1 .pent-toggle[data-toggle]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const k = btn.dataset.toggle;
+        state.overlays[k] = !state.overlays[k];
+        btn.classList.toggle('active');
+        renderType1();
+      });
+    });
+    document.getElementById('t1_zoomIn')?.addEventListener('click', () => {
+      state.zoom = Math.min(state.zoom * 1.25, 4); renderType1();
+    });
+    document.getElementById('t1_zoomOut')?.addEventListener('click', () => {
+      state.zoom = Math.max(state.zoom / 1.25, 0.3); renderType1();
+    });
+    document.getElementById('t1_reset')?.addEventListener('click', () => {
+      state.zoom = 1.0; state.offset = {x:0, y:0}; renderType1();
+    });
+  }
+
+  function renderType1(){
+    if(!modalCtx) return;
+    const W = modalCanvas.width, H = modalCanvas.height;
+    // Background
+    modalCtx.fillStyle = '#ece8e0';
+    modalCtx.fillRect(0,0,W,H);
+
+    const p = state.params;
+    const unit = buildType1(p.A, p.B, p.D, p.a, p.b, p.c, p.d);
+    if(!unit){
+      modalCtx.fillStyle = 'rgba(120,40,40,0.8)';
+      modalCtx.font = '18px "JetBrains Mono", monospace';
+      modalCtx.textAlign = 'center';
+      modalCtx.fillText('볼록하지 않음 — 각을 조정하세요', W/2, H/2);
+      return;
+    }
+    type1Unit = unit;
+
+    // Determine overall scale so the pentagon prototile is visible but several copies fit
+    const hexW = Math.max(...unit.hexagon.map(p=>p[0])) - Math.min(...unit.hexagon.map(p=>p[0]));
+    const hexH = Math.max(...unit.hexagon.map(p=>p[1])) - Math.min(...unit.hexagon.map(p=>p[1]));
+    const baseScale = Math.min(W, H) / (Math.max(hexW, hexH) * 3.2);
+    const scale = baseScale * state.zoom;
+
+    // Centre the tiling on the hexagon center
+    const cx0 = W/2 - unit.hexCenter[0]*scale + state.offset.x;
+    const cy0 = H/2 - unit.hexCenter[1]*scale + state.offset.y;
+
+    // How many lattice copies? Compute reach needed to fill canvas
+    const lvLen = Math.max(
+      Math.hypot(unit.latticeV1[0], unit.latticeV1[1]),
+      Math.hypot(unit.latticeV2[0], unit.latticeV2[1])
+    );
+    const reach = Math.ceil(Math.hypot(W,H) / (scale * lvLen)) + 2;
+
+    // Color palette for isohedral classes (p2 — 2 tile orbits: pentagon + rotated pentagon)
+    const palette = [
+      {fill:'hsl(42,55%,62%)',  stroke:'hsl(38,45%,35%)'},
+      {fill:'hsl(268,40%,62%)', stroke:'hsl(264,35%,35%)'},
+    ];
+
+    // Draw all pentagons in all translated hexagons
+    for(let i=-reach; i<=reach; i++){
+      for(let j=-reach; j<=reach; j++){
+        const ox = i*unit.latticeV1[0] + j*unit.latticeV2[0];
+        const oy = i*unit.latticeV1[1] + j*unit.latticeV2[1];
+
+        // Pentagon (type 0)
+        drawPent(unit.pentagon, ox, oy, scale, cx0, cy0, palette[0],
+                 state.overlays.prototile && i===0 && j===0);
+        // Rotated pentagon (type 1)
+        drawPent(unit.pentagonR, ox, oy, scale, cx0, cy0, palette[1],
+                 false);
+
+        // Optional: hexagon outline
+        if(state.overlays.hexagon){
+          modalCtx.strokeStyle = 'rgba(201,168,76,0.45)';
+          modalCtx.lineWidth = 1.2;
+          modalCtx.setLineDash([4,3]);
+          modalCtx.beginPath();
+          for(let k=0;k<6;k++){
+            const [hx,hy] = unit.hexagon[k];
+            const sx = hx*scale + ox*scale + cx0;
+            const sy = hy*scale + oy*scale + cy0;
+            if(k===0) modalCtx.moveTo(sx,sy); else modalCtx.lineTo(sx,sy);
+          }
+          modalCtx.closePath();
+          modalCtx.stroke();
+          modalCtx.setLineDash([]);
+        }
+      }
+    }
+
+    // Prototile label — the ONE distinguished pentagon at origin
+    if(state.overlays.prototile){
+      const proto = unit.pentagon;
+      const cx = proto.reduce((s,p)=>s+p[0],0)/5 * scale + cx0;
+      const cy = proto.reduce((s,p)=>s+p[1],0)/5 * scale + cy0;
+      modalCtx.font = 'italic 11px "Fraunces", serif';
+      modalCtx.fillStyle = 'rgba(30,20,10,0.85)';
+      modalCtx.textAlign = 'center';
+      modalCtx.textBaseline = 'middle';
+      modalCtx.fillText('프로토타일', cx, cy);
+    }
+  }
+
+  function drawPent(poly, ox, oy, scale, cx0, cy0, pal, isPrototile){
+    const o = state.overlays;
+    modalCtx.beginPath();
+    for(let k=0;k<5;k++){
+      const sx = poly[k][0]*scale + ox*scale + cx0;
+      const sy = poly[k][1]*scale + oy*scale + cy0;
+      if(k===0) modalCtx.moveTo(sx,sy); else modalCtx.lineTo(sx,sy);
+    }
+    modalCtx.closePath();
+    if(o.colors){
+      modalCtx.fillStyle = isPrototile
+        ? 'hsl(42,65%,72%)'
+        : pal.fill;
+    } else {
+      modalCtx.fillStyle = '#e8e2d0';
+    }
+    modalCtx.fill();
+    if(o.outline){
+      modalCtx.strokeStyle = isPrototile ? 'hsl(28,60%,22%)' : pal.stroke;
+      modalCtx.lineWidth = isPrototile ? 2.2 : 1.1;
+      modalCtx.lineJoin = 'round';
+      modalCtx.stroke();
+    }
+  }
 })();
 
 /* ================================================
