@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cayley graph of F₂ — re-rooting animation</title>
+<style>
+  :root {
+    --bg0: #080b18;
+    --bg1: #11172c;
+    --fg: rgba(245,247,255,.88);
+    --muted: rgba(245,247,255,.55);
+  }
+  html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: radial-gradient(1200px 900px at 50% 35%, #1b2542 0%, var(--bg1) 43%, var(--bg0) 100%);
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: .18;
+    background-image:
+      radial-gradient(circle at 12% 22%, rgba(255,255,255,.18) 0 1px, transparent 1.5px),
+      radial-gradient(circle at 82% 64%, rgba(255,255,255,.14) 0 1px, transparent 1.5px),
+      linear-gradient(115deg, rgba(255,255,255,.045), transparent 35%, rgba(0,0,0,.12) 70%);
+    background-size: 23px 23px, 31px 31px, 100% 100%;
+    mix-blend-mode: screen;
+  }
+  #wrap {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+  }
+  svg {
+    width: 100vw;
+    height: 100vh;
+    display: block;
+  }
+  .title {
+    position: fixed;
+    left: clamp(18px, 3vw, 44px);
+    top: clamp(16px, 3vw, 38px);
+    color: var(--fg);
+    letter-spacing: .01em;
+    text-shadow: 0 3px 16px rgba(0,0,0,.55);
+    user-select: none;
+    transition: opacity .35s ease;
+  }
+  .title h1 {
+    margin: 0 0 .25rem 0;
+    font-size: clamp(19px, 3vw, 42px);
+    font-weight: 650;
+  }
+  .title p {
+    margin: 0;
+    font-size: clamp(12px, 1.25vw, 18px);
+    color: var(--muted);
+  }
+  .controls {
+    position: fixed;
+    right: 22px;
+    bottom: 18px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    padding: 9px 10px;
+    border: 1px solid rgba(255,255,255,.13);
+    border-radius: 999px;
+    background: rgba(5,8,18,.42);
+    color: rgba(255,255,255,.86);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 35px rgba(0,0,0,.28);
+    opacity: .28;
+    transition: opacity .25s ease;
+    user-select: none;
+  }
+  .controls:hover { opacity: .98; }
+  button {
+    border: 0;
+    color: inherit;
+    background: rgba(255,255,255,.12);
+    border-radius: 999px;
+    padding: 7px 12px;
+    font: inherit;
+    cursor: pointer;
+  }
+  button:hover { background: rgba(255,255,255,.20); }
+  .hint { font-size: 12px; color: rgba(255,255,255,.55); padding: 0 4px; }
+  .hidden-ui { opacity: 0 !important; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="wrap">
+<svg id="stage" viewBox="0 0 2048 1960" preserveAspectRatio="xMidYMid meet" aria-label="Animation of re-rooting the Cayley graph of the free group F_2">
+  <defs>
+    <filter id="nodeGlow" x="-80%" y="-80%" width="260%" height="260%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="edgeGlow" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="bigGlow" x="-120%" y="-120%" width="340%" height="340%" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <linearGradient id="redEdge" x1="0%" x2="100%" y1="0%" y2="0%">
+      <stop offset="0%" stop-color="#ff260e"/>
+      <stop offset="100%" stop-color="#ff6247"/>
+    </linearGradient>
+  </defs>
+  <g id="edgeLayer"></g>
+  <g id="fanLayer"></g>
+  <g id="haloLayer"></g>
+  <g id="nodeLayer"></g>
+</svg>
+</div>
+<div class="title" id="titleBlock">
+  <h1>Cayley graph of <span style="font-variant-numeric: lining-nums;">F₂</span></h1>
+  <p>The same 4-regular tree, viewed from an adjacent vertex.</p>
+</div>
+<div class="controls" id="controls">
+  <button id="playPause" title="Space">Pause</button>
+  <button id="restart" title="R">Restart</button>
+  <button id="full" title="Fullscreen">Fullscreen</button>
+  <span class="hint">Space: pause · R: restart · H: hide text</span>
+</div>
+<script>
+(() => {
+  "use strict";
+
+  const W = 2048, H = 1960;
+  const palette = {
+    red:    "#ff2a16",
+    purple: "#8d32ff",
+    blue:   "#3f86ff",
+    yellow: "#fff000",
+    halo:   "rgba(255,255,255,.86)"
+  };
+
+  const root = "";
+  const selected = "a";
+
+  const stage = document.getElementById("stage");
+  const edgeLayer = document.getElementById("edgeLayer");
+  const fanLayer = document.getElementById("fanLayer");
+  const haloLayer = document.getElementById("haloLayer");
+  const nodeLayer = document.getElementById("nodeLayer");
+
+  const id = w => w === "" ? "e" : w;
+  const wordLength = w => w.length;
+  const parentWord = w => w.length > 0 ? w.slice(0, -1) : "";
+  const edgeKey = (u,v) => id(u) < id(v) ? `${id(u)}|${id(v)}` : `${id(v)}|${id(u)}`;
+  const isSelectedEdge = (u,v) => (u === root && v === selected) || (u === selected && v === root);
+
+  function nodeColor(word) {
+    const n = wordLength(word);
+    if (n === 0) return palette.red;
+    if (n === 1) return palette.purple;
+    if (n === 2) return palette.blue;
+    return palette.yellow;
+  }
+
+  function edgeColor(u, v) {
+    const n = Math.max(wordLength(u), wordLength(v));
+    if (n === 0) return palette.red;
+    if (n === 1) return palette.purple;
+    if (n === 2) return palette.blue;
+    return palette.yellow;
+  }
+
+  function continuationColor(word) {
+    const n = wordLength(word);
+    if (n <= 1) return palette.purple;
+    return palette.yellow;
+  }
+
+  function makeState(name) {
+    return { name, nodes: new Map(), edges: new Map(), terminals: new Set(), halo: {x: W/2, y: 420, r: 86}, highlight: 0 };
+  }
+
+  function addNode(s, word, x, y, depth, opacity = 1, size = null) {
+    const defaultSize = depth === 0 ? 132 : (depth === 1 ? 104 : 72);
+    s.nodes.set(word, {x, y, depth, opacity, size: size ?? defaultSize});
+  }
+
+  function addEdge(s, u, v, opacity = 1) {
+    s.edges.set(edgeKey(u,v), {u, v, opacity});
+  }
+
+  function addTerminal(s, word) {
+    s.terminals.add(word);
+  }
+
+  const branchChildren = {
+    "A": ["AA", "Ab", "AB"],
+    "b": ["bA", "ba", "bb"],
+    "B": ["BA", "Ba", "BB"],
+    "a": ["aa", "ab", "aB"]
+  };
+
+  function initialState() {
+    const s = makeState("initial");
+    addNode(s, root, 1024, 420, 0, 1, 132);
+    const children = ["A", "b", "B", "a"];
+    const xs = [390, 820, 1260, 1690];
+    const y1 = 840;
+    const y2 = 1605;
+    const offsets = [-220, 0, 220];
+    for (let i = 0; i < children.length; i++) {
+      const c = children[i];
+      addNode(s, c, xs[i], y1, 1, 1, 98);
+      addEdge(s, root, c);
+      const kids = branchChildren[c];
+      for (let j = 0; j < kids.length; j++) {
+        const k = kids[j];
+        addNode(s, k, xs[i] + offsets[j], y2, 2, 1, 70);
+        addEdge(s, c, k);
+        addTerminal(s, k);
+      }
+    }
+    s.halo = {x: 1024, y: 420, r: 92};
+    s.highlight = 0;
+    return s;
+  }
+
+  function liftedChildState() {
+    const s = initialState();
+    s.name = "lifted child";
+    s.nodes.set("a", {x: 1690, y: 420, depth: 1, opacity: 1, size: 104});
+    const xs = [1585, 1745, 1905];
+    ["aa", "ab", "aB"].forEach((w, i) => {
+      s.nodes.set(w, {x: xs[i], y: 1605, depth: 2, opacity: 1, size: 70});
+    });
+    s.halo = {x: 1135, y: 420, r: 82};
+    s.highlight = 1;
+    return s;
+  }
+
+  function swingState() {
+    const s = initialState();
+    s.name = "swing across the edge";
+    // Keep the left part visible, but lower its emphasis.
+    const dimWords = ["AA", "Ab", "AB", "bA", "ba", "bb", "BA", "Ba", "BB"];
+    for (const w of dimWords) {
+      const p = s.nodes.get(w);
+      if (p) s.nodes.set(w, {...p, opacity: .38});
+    }
+
+    s.nodes.set(root, {x: 1010, y: 500, depth: 1, opacity: 1, size: 112});
+    s.nodes.set("a", {x: 1690, y: 230, depth: 0, opacity: 1, size: 122});
+
+    // Start pulling the old neighboring branches down beneath the red vertex.
+    s.nodes.set("A", {x: 435, y: 900, depth: 1, opacity: .85, size: 94});
+    s.nodes.set("b", {x: 800, y: 900, depth: 1, opacity: .78, size: 94});
+    s.nodes.set("B", {x: 1185, y: 900, depth: 1, opacity: .72, size: 94});
+
+    // The three forward branches of the selected child become prominent.
+    const xs = [1508, 1692, 1876];
+    ["aa", "ab", "aB"].forEach((w, i) => {
+      s.nodes.set(w, {x: xs[i], y: 890, depth: 1, opacity: 1, size: 82});
+    });
+
+    s.halo = {x: 1585, y: 284, r: 90};
+    s.highlight = 1;
+    return s;
+  }
+
+  function finalState() {
+    const s = makeState("re-rooted");
+    addNode(s, "a", 1024, 420, 0, 1, 132);
+    addNode(s, root, 390, 840, 1, 1, 104);
+    addNode(s, "aa", 820, 840, 1, 1, 100);
+    addNode(s, "ab", 1260, 840, 1, 1, 100);
+    addNode(s, "aB", 1690, 840, 1, 1, 100);
+    addEdge(s, "a", root);
+    addEdge(s, "a", "aa");
+    addEdge(s, "a", "ab");
+    addEdge(s, "a", "aB");
+    const bottom = ["A", "b", "B"];
+    const xs = [150, 310, 470];
+    for (let i = 0; i < bottom.length; i++) {
+      addNode(s, bottom[i], xs[i], 1605, 2, 1, 72);
+      addEdge(s, root, bottom[i]);
+      addTerminal(s, bottom[i]);
+    }
+    ["aa", "ab", "aB"].forEach(addTerminal.bind(null, s));
+    s.halo = {x: 1024, y: 420, r: 92};
+    s.highlight = 1;
+    return s;
+  }
+
+  const states = [initialState(), liftedChildState(), swingState(), finalState()];
+
+  const allNodes = new Set();
+  const allEdges = new Map();
+  const allTerminals = new Set();
+  for (const s of states) {
+    for (const w of s.nodes.keys()) allNodes.add(w);
+    for (const [k, e] of s.edges.entries()) if (!allEdges.has(k)) allEdges.set(k, e);
+    for (const t of s.terminals) allTerminals.add(t);
+  }
+
+  function fallbackNode(s, word) {
+    let w = word;
+    while (w.length > 0) {
+      w = parentWord(w);
+      if (s.nodes.has(w)) {
+        const p = s.nodes.get(w);
+        return {x: p.x, y: p.y, depth: p.depth + 1, opacity: 0, size: 8};
+      }
+    }
+    const c = s.nodes.get(root) || {x: W/2, y: 420, depth: 0, size: 8};
+    return {x: c.x, y: c.y, depth: c.depth + 1, opacity: 0, size: 8};
+  }
+
+  function getNode(s, word) {
+    return s.nodes.get(word) || fallbackNode(s, word);
+  }
+
+  function getEdge(s, key) {
+    return s.edges.get(key) || {opacity: 0};
+  }
+
+  const ns = "http://www.w3.org/2000/svg";
+  const el = (tag) => document.createElementNS(ns, tag);
+
+  const edgeEls = new Map();
+  for (const [k, e] of allEdges.entries()) {
+    const line = el("line");
+    line.setAttribute("stroke-linecap", "round");
+    line.setAttribute("filter", "url(#edgeGlow)");
+    edgeLayer.appendChild(line);
+    edgeEls.set(k, line);
+  }
+
+  const highlight = el("line");
+  highlight.setAttribute("stroke", "url(#redEdge)");
+  highlight.setAttribute("stroke-linecap", "round");
+  highlight.setAttribute("filter", "url(#bigGlow)");
+  edgeLayer.appendChild(highlight);
+
+  const fanEls = new Map();
+  for (const t of allTerminals) {
+    const group = el("g");
+    const paths = [];
+    for (let i = 0; i < 3; i++) {
+      const p = el("path");
+      p.setAttribute("fill", "none");
+      p.setAttribute("stroke-linecap", "round");
+      p.setAttribute("filter", "url(#edgeGlow)");
+      group.appendChild(p);
+      paths.push(p);
+    }
+    fanLayer.appendChild(group);
+    fanEls.set(t, {group, paths});
+  }
+
+  const haloOuter = el("circle");
+  haloOuter.setAttribute("fill", "none");
+  haloOuter.setAttribute("stroke", "rgba(255,255,255,.28)");
+  haloOuter.setAttribute("stroke-width", "11");
+  haloOuter.setAttribute("filter", "url(#bigGlow)");
+  haloLayer.appendChild(haloOuter);
+
+  const haloInner = el("circle");
+  haloInner.setAttribute("fill", "none");
+  haloInner.setAttribute("stroke", "rgba(255,255,255,.78)");
+  haloInner.setAttribute("stroke-width", "3.5");
+  haloLayer.appendChild(haloInner);
+
+  const nodeEls = new Map();
+  const orderedNodes = Array.from(allNodes).sort((a,b) => wordLength(b) - wordLength(a));
+  for (const w of orderedNodes) {
+    const r = el("rect");
+    r.setAttribute("rx", "7");
+    r.setAttribute("ry", "7");
+    r.setAttribute("filter", "url(#nodeGlow)");
+    nodeLayer.appendChild(r);
+    nodeEls.set(w, r);
+  }
+
+  const segments = [
+    {from: 0, to: 0, duration: 900},
+    {from: 0, to: 1, duration: 2300},
+    {from: 1, to: 1, duration: 450},
+    {from: 1, to: 2, duration: 2300},
+    {from: 2, to: 3, duration: 3000},
+    {from: 3, to: 3, duration: 2900}
+  ];
+  const totalDuration = segments.reduce((a,s) => a + s.duration, 0);
+
+  let startTime = performance.now();
+  let paused = false;
+  let pauseTime = 0;
+  let stoppedAtEnd = false;
+
+  function clamp(x, a = 0, b = 1) { return Math.max(a, Math.min(b, x)); }
+  function lerp(a,b,t) { return a + (b-a)*t; }
+  function ease(t) {
+    t = clamp(t);
+    return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2;
+  }
+
+  function hash01(str) {
+    let h = 2166136261;
+    for (let i = 0; i < str.length; i++) {
+      h ^= str.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return ((h >>> 0) % 10000) / 10000;
+  }
+
+  function currentSegment(tms) {
+    let t = Math.min(tms, totalDuration);
+    let acc = 0;
+    for (const s of segments) {
+      if (t <= acc + s.duration) {
+        const local = s.duration === 0 ? 1 : (t - acc) / s.duration;
+        return {seg: s, u: ease(local), raw: local};
+      }
+      acc += s.duration;
+    }
+    const last = segments[segments.length-1];
+    return {seg: last, u: 1, raw: 1};
+  }
+
+  function interpNode(a, b, word, u) {
+    const p = getNode(a, word);
+    const q = getNode(b, word);
+    return {
+      x: lerp(p.x, q.x, u),
+      y: lerp(p.y, q.y, u),
+      depth: lerp(p.depth ?? 2, q.depth ?? 2, u),
+      opacity: lerp(p.opacity ?? 1, q.opacity ?? 1, u),
+      size: lerp(p.size ?? 70, q.size ?? 70, u)
+    };
+  }
+
+  function terminalPresence(s, word) {
+    return s.terminals.has(word) ? 1 : 0;
+  }
+
+  function fanPath(x, y, size, which, word) {
+    const long = y < 1180;
+    const spread = long ? 118 : 82;
+    const length = long ? (H - y - 165) : 212;
+    const dx = [-spread, 0, spread][which];
+    const j = (hash01(word + ":" + which) - .5) * (long ? 30 : 18);
+    const startY = y + size * .45;
+    const endX = x + dx + j * .3;
+    const endY = Math.min(H - 112, startY + length + Math.abs(j)*.35);
+    const c1x = x + dx * .17 + j;
+    const c1y = startY + length * .32;
+    const c2x = x + dx * .72 - j * .25;
+    const c2y = startY + length * .76;
+    return `M ${x.toFixed(1)} ${startY.toFixed(1)} C ${c1x.toFixed(1)} ${c1y.toFixed(1)}, ${c2x.toFixed(1)} ${c2y.toFixed(1)}, ${endX.toFixed(1)} ${endY.toFixed(1)}`;
+  }
+
+  function render(now) {
+    if (!paused) {
+      const elapsed = now - startTime;
+      if (elapsed >= totalDuration && !stoppedAtEnd) {
+        stoppedAtEnd = true;
+        document.getElementById("playPause").textContent = "Replay";
+      }
+      draw(Math.min(elapsed, totalDuration));
+    }
+    requestAnimationFrame(render);
+  }
+
+  function draw(elapsed) {
+    const {seg, u} = currentSegment(elapsed);
+    const a = states[seg.from];
+    const b = states[seg.to];
+
+    const nodePos = new Map();
+    for (const w of allNodes) nodePos.set(w, interpNode(a, b, w, u));
+
+    // Base graph edges.
+    for (const [k, e] of allEdges.entries()) {
+      const p = nodePos.get(e.u);
+      const q = nodePos.get(e.v);
+      const ep = getEdge(a, k);
+      const eq = getEdge(b, k);
+      const eOpacity = lerp(ep.opacity ?? 0, eq.opacity ?? 0, u) * Math.min(p.opacity, q.opacity);
+      const line = edgeEls.get(k);
+      line.setAttribute("x1", p.x); line.setAttribute("y1", p.y);
+      line.setAttribute("x2", q.x); line.setAttribute("y2", q.y);
+      line.setAttribute("stroke", edgeColor(e.u, e.v));
+      line.setAttribute("stroke-width", isSelectedEdge(e.u, e.v) ? 6.5 : (Math.max(wordLength(e.u), wordLength(e.v)) <= 1 ? 7 : 5.7));
+      line.setAttribute("opacity", Math.max(0, Math.min(.78, eOpacity * .66)));
+    }
+
+    // Highlight the edge across which the viewpoint moves.
+    const p0 = nodePos.get(root);
+    const p1 = nodePos.get(selected);
+    const glow = lerp(a.highlight, b.highlight, u);
+    highlight.setAttribute("x1", p0.x); highlight.setAttribute("y1", p0.y);
+    highlight.setAttribute("x2", p1.x); highlight.setAttribute("y2", p1.y);
+    highlight.setAttribute("stroke-width", 9.5 + 2.5 * Math.sin((elapsed/1000)*Math.PI));
+    highlight.setAttribute("opacity", .92 * glow);
+
+    // Infinite continuation fans.
+    for (const t of allTerminals) {
+      const p = nodePos.get(t);
+      const pres = lerp(terminalPresence(a,t), terminalPresence(b,t), u);
+      const alpha = clamp(p.opacity * pres);
+      const fan = fanEls.get(t);
+      const color = continuationColor(t);
+      fan.group.setAttribute("opacity", alpha);
+      for (let i = 0; i < 3; i++) {
+        const path = fan.paths[i];
+        path.setAttribute("d", fanPath(p.x, p.y, p.size, i, t));
+        path.setAttribute("stroke", color);
+        path.setAttribute("stroke-width", p.y < 1180 ? 8.5 : 7.5);
+      }
+    }
+
+    // Moving center-of-view halo.
+    const hx = lerp(a.halo.x, b.halo.x, u);
+    const hy = lerp(a.halo.y, b.halo.y, u);
+    const hr = lerp(a.halo.r, b.halo.r, u) + 5 * Math.sin(elapsed / 520);
+    haloOuter.setAttribute("cx", hx); haloOuter.setAttribute("cy", hy); haloOuter.setAttribute("r", hr);
+    haloInner.setAttribute("cx", hx); haloInner.setAttribute("cy", hy); haloInner.setAttribute("r", hr - 10);
+    const haloOpacity = .42 + .13 * Math.sin(elapsed/650);
+    haloOuter.setAttribute("opacity", haloOpacity);
+    haloInner.setAttribute("opacity", .74);
+
+    // Nodes on top.
+    for (const w of orderedNodes) {
+      const p = nodePos.get(w);
+      const r = nodeEls.get(w);
+      const size = p.size;
+      r.setAttribute("x", p.x - size/2);
+      r.setAttribute("y", p.y - size/2);
+      r.setAttribute("width", size);
+      r.setAttribute("height", size);
+      r.setAttribute("fill", nodeColor(w));
+      r.setAttribute("opacity", clamp(p.opacity));
+    }
+  }
+
+  requestAnimationFrame(render);
+
+  function restart() {
+    startTime = performance.now();
+    paused = false;
+    stoppedAtEnd = false;
+    document.getElementById("playPause").textContent = "Pause";
+  }
+
+  function togglePause() {
+    if (stoppedAtEnd) {
+      restart();
+      return;
+    }
+    if (!paused) {
+      paused = true;
+      pauseTime = performance.now();
+      document.getElementById("playPause").textContent = "Play";
+    } else {
+      paused = false;
+      startTime += performance.now() - pauseTime;
+      document.getElementById("playPause").textContent = "Pause";
+    }
+  }
+
+  document.getElementById("playPause").addEventListener("click", togglePause);
+  document.getElementById("restart").addEventListener("click", restart);
+  document.getElementById("full").addEventListener("click", () => {
+    if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+    else document.exitFullscreen?.();
+  });
+
+  let uiHidden = false;
+  function toggleUI() {
+    uiHidden = !uiHidden;
+    document.getElementById("titleBlock").classList.toggle("hidden-ui", uiHidden);
+    document.getElementById("controls").classList.toggle("hidden-ui", uiHidden);
+  }
+
+  window.addEventListener("keydown", (ev) => {
+    if (ev.code === "Space") { ev.preventDefault(); togglePause(); }
+    if (ev.key === "r" || ev.key === "R") restart();
+    if (ev.key === "h" || ev.key === "H") toggleUI();
+  });
+
+  // Start with a first frame drawn immediately.
+  draw(0);
+})();
+</script>
+</body>
+</html>
