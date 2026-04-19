@@ -1,28 +1,35 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <!-- Google tag (gtag.js) -->
-  
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-RQVK6SF2E6');
   </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Making the Sun out of a single bean</title>
-  
+
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/lines/LineSegmentsGeometry.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/lines/LineMaterial.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/lines/LineSegments2.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/globe.gl@2.30.0/dist/globe.gl.min.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
 
   <style>
@@ -284,6 +291,7 @@
       .controls { gap: 0.5rem; }
     }
   </style>
+
   <link rel="stylesheet" href="brand.css">
 <link rel="stylesheet" href="narration_player.css">
   <link rel="stylesheet" href="typography.css">
@@ -291,7 +299,6 @@
 <body>
 
   <div id="ambient-particles"></div>
-  
 
   <header class="hero" id="hero">
     <canvas id="hero-canvas"></canvas>
@@ -304,317 +311,317 @@
   </header>
 
   <main class="chapter-container">
+
+```
+<section class="chapter-section" id="section-1">
+  <span class="sec-num reveal">01</span>
+  <h2 class="sec-title reveal">The Anatomy of a Miracle</h2>
+  <p class="prose prose-drop reveal">In 1924, two Polish mathematicians, Stefan Banach and Alfred Tarski, published a paper containing a theorem so deeply counterintuitive it is universally known as a paradox. They proved that it is mathematically possible to take a solid, three-dimensional sphere, shatter it into just five jagged, invisible pieces, and reassemble those exact pieces to form <span class="hi">two perfectly solid spheres of the exact same size</span>. There is no stretching, no bending, and no addition of new material. The pieces are simply moved through space and snapped back together.</p>
+  <p class="prose reveal">By logical extension, one could take a single, ordinary pea, carve it into a finite number of fragments, and reassemble them to form a solid sphere the size of the Sun. To the physical mind, this sounds like sheer alchemy. It feels like a blatant violation of the conservation of mass, an affront to the very concept of reality. Yet, within the pure, unyielding rules of modern geometry, it is an undeniable truth.</p>
+
+  <div class="block-quote reveal">
+    “On peut décomposer une sphère en un nombre fini de morceaux et les réassembler pour former deux sphères de même rayon.”
+    <span class="quote-attr">— Stefan Banach & Alfred Tarski, Fundamenta Mathematicae (1924)</span>
+  </div>
+
+  <p class="prose reveal">This is not a trick of physics, but a profound revelation about the <span class="ac">infinite density of mathematical space</span>. In the physical world, matter is made of atoms, and cutting an object eventually leaves you with indivisible particles. But in the mathematical universe, a geometric sphere is composed of an uncountably infinite number of dimensionless points. The paradox exploits the bottomless, fractal nature of this infinity, where the whole can be perfectly hidden within a mere fraction of its parts.</p>
+
+  <div class="ibox reveal" id="ibox-infinity">
+    <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
+    <h3 class="ibox-title">The Engine of Infinity</h3>
+    <p class="ibox-desc">The Banach-Tarski paradox relies on the peculiar arithmetic of infinity. In an infinitely dense space, you can mathematically shift every point outward to create empty space out of nowhere, without losing a single drop of the original volume. Drag the slider to shift the glowing points along the golden spiral. Notice how the spiral stretches eternally without depleting the source, miraculously leaving behind perfectly empty sockets at the center to accommodate entirely new points.</p>
     
-    <section class="chapter-section" id="section-1">
-      <span class="sec-num reveal">01</span>
-      <h2 class="sec-title reveal">The Anatomy of a Miracle</h2>
-      <p class="prose prose-drop reveal">In 1924, two Polish mathematicians, Stefan Banach and Alfred Tarski, published a paper containing a theorem so deeply counterintuitive it is universally known as a paradox. They proved that it is mathematically possible to take a solid, three-dimensional sphere, shatter it into just five jagged, invisible pieces, and reassemble those exact pieces to form <span class="hi">two perfectly solid spheres of the exact same size</span>. There is no stretching, no bending, and no addition of new material. The pieces are simply moved through space and snapped back together.</p>
-      <p class="prose reveal">By logical extension, one could take a single, ordinary pea, carve it into a finite number of fragments, and reassemble them to form a solid sphere the size of the Sun. To the physical mind, this sounds like sheer alchemy. It feels like a blatant violation of the conservation of mass, an affront to the very concept of reality. Yet, within the pure, unyielding rules of modern geometry, it is an undeniable truth.</p>
-
-      <div class="block-quote reveal">
-        “On peut décomposer une sphère en un nombre fini de morceaux et les réassembler pour former deux sphères de même rayon.”
-        <span class="quote-attr">— Stefan Banach & Alfred Tarski, Fundamenta Mathematicae (1924)</span>
+    <div class="canvas-container" style="height: 380px;">
+      <canvas id="canvas-1" class="interactive"></canvas>
+    </div>
+    
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">Shift Elements (n → n + k)</span>
+        <input type="range" id="slider-shift" min="0" max="40" value="0" step="0.1">
       </div>
-
-      <p class="prose reveal">This is not a trick of physics, but a profound revelation about the <span class="ac">infinite density of mathematical space</span>. In the physical world, matter is made of atoms, and cutting an object eventually leaves you with indivisible particles. But in the mathematical universe, a geometric sphere is composed of an uncountably infinite number of dimensionless points. The paradox exploits the bottomless, fractal nature of this infinity, where the whole can be perfectly hidden within a mere fraction of its parts.</p>
-
-      <div class="ibox reveal" id="ibox-infinity">
-        <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
-        <h3 class="ibox-title">The Engine of Infinity</h3>
-        <p class="ibox-desc">The Banach-Tarski paradox relies on the peculiar arithmetic of infinity. In an infinitely dense space, you can mathematically shift every point outward to create empty space out of nowhere, without losing a single drop of the original volume. Drag the slider to shift the glowing points along the golden spiral. Notice how the spiral stretches eternally without depleting the source, miraculously leaving behind perfectly empty sockets at the center to accommodate entirely new points.</p>
-        
-        <div class="canvas-container" style="height: 380px;">
-          <canvas id="canvas-1" class="interactive"></canvas>
-        </div>
-        
-        <div class="controls">
-          <div class="ctrl-group">
-            <span class="ctrl-label">Shift Elements (n → n + k)</span>
-            <input type="range" id="slider-shift" min="0" max="40" value="0" step="0.1">
-          </div>
-        </div>
-        <div class="stats">
-          <div class="stat-card">
-            <div class="ctrl-label">Shift Offset (k)</div>
-            <div class="stat-val" id="stat-k">0.0</div>
-          </div>
-          <div class="stat-card">
-            <div class="ctrl-label">Vacated Voids</div>
-            <div class="stat-val" id="stat-vacated">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="ctrl-label">Total Points</div>
-            <div class="stat-val">∞</div>
-          </div>
-        </div>
+    </div>
+    <div class="stats">
+      <div class="stat-card">
+        <div class="ctrl-label">Shift Offset (k)</div>
+        <div class="stat-val" id="stat-k">0.0</div>
       </div>
-    </section>
-
-    <section class="chapter-section" id="section-2">
-      <span class="sec-num reveal">02</span>
-      <h2 class="sec-title reveal">The Labyrinth of Rotations</h2>
-      
-      <p class="prose prose-drop reveal">The true architect of this paradox was not Banach or Tarski, but the German mathematician Felix Hausdorff. A decade earlier, Hausdorff discovered that the magic does not lie within the sphere itself, but within the invisible scaffolding of three-dimensional space: the rules of rotation. When you rotate an object, the order of your movements fundamentally changes the outcome. Turning a sphere left, then up, leaves it in a different position than turning it up, then left. This lack of commutativity breeds a fractal universe of possibilities.</p>
-      
-      <p class="prose reveal">Imagine standing at the center of an invisible labyrinth where every step is a rigid rotation. You can turn in four distinct directions. If you carefully choose the exact angle of these rotations, they will never neatly cancel out or repeat themselves. Every new combination of movements creates a completely unique, never-before-seen orientation. The only way to return to your starting point is to precisely backtrack your exact sequence of steps. Mathematicians call this infinitely branching, loopless structure a <span class="ac">free group</span>.</p>
-
-      <p class="prose reveal">The paradox blooms entirely within the infinite branches of this group. Because the tree extends forever, a single sub-branch contains a perfect, identical copy of the entire tree hidden within it. If you grab just one branch and apply a single reverse rotation, it instantly expands to cover almost the entire labyrinth. This mathematical sleight of hand—summoning the whole from a mere fraction—is the exact mechanism that duplicates the sphere.</p>
-
-      <div class="ibox reveal" id="ibox-cayley">
-        <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
-        <h3 class="ibox-title">The Free Group in 3D</h3>
-        <p class="ibox-desc">This is the Cayley Graph of the free group. At first glance, it looks like a flat fractal where the edges get progressively smaller. But <span class="hi">drag the canvas to rotate the space</span>. You will discover it is actually a perfectly symmetrical 3D Euclidean structure where every single branch is exactly the same unit length. The "shrinking" was merely an illusion of perspective.</p>
-        
-        <div class="canvas-container" style="height: 480px; position: relative;">
-          <canvas id="cayley-canvas" style="position: absolute; inset: 0; width: 100%; height: 100%; outline: none; cursor: grab;"></canvas>
-          <div class="overlay-hint">DRAG TO ROTATE · SHIFT-DRAG TO PAN · SCROLL TO ZOOM</div>
-        </div>
-        
-        <div class="controls">
-          <div class="ctrl-group">
-            <span class="ctrl-label">Branching Depth</span>
-            <input type="range" id="slider-cayley" min="0" max="5" value="0" step="1">
-          </div>
-        </div>
-        
-        <div class="stats">
-          <div class="stat-card">
-            <div class="ctrl-label">Depth</div>
-            <div class="stat-val" id="stat-cay-depth">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="ctrl-label">Unique Nodes</div>
-            <div class="stat-val" id="stat-cay-nodes">1</div>
-          </div>
-          <div class="stat-card">
-            <div class="ctrl-label">Branches</div>
-            <div class="stat-val" id="stat-cay-edges">0</div>
-          </div>
-        </div>
+      <div class="stat-card">
+        <div class="ctrl-label">Vacated Voids</div>
+        <div class="stat-val" id="stat-vacated">0</div>
       </div>
-    </section>
-
-    <section class="chapter-section" id="section-3">
-      <span class="sec-num reveal">03</span>
-      <h2 class="sec-title reveal">The Magic Angle</h2>
-      
-      <p class="prose prose-drop reveal">We now have an infinitely branching, paradoxical tree of rotations. But how does this translate to a physical sphere? The secret lies in a highly specific geometry: a magic angle of exactly <span class="hi math-ktx">\arccos(1/3)</span>, which is roughly 70.53 degrees.</p>
-      
-      <p class="prose reveal">Hausdorff proved that if you rotate a sphere by this precise angle along two orthogonal axes (like the Equator and the Prime Meridian), the movements behave exactly like the abstract free group. As you combine North, South, East, and West rotations, a single point dances across the surface of the sphere. Because these specific angles are mathematically "irrational" with respect to a full circle, they never form a closed loop.</p>
-      
-      <p class="prose reveal">No matter how long you wander this spherical labyrinth, the point will never step in its own footprints. Every sequence creates a completely unique destination.</p>
-
-      <div class="ibox reveal" id="ibox-manual">
-        <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
-        <h3 class="ibox-title">The Paradoxical Compass</h3>
-        <p class="ibox-desc">You are looking at a single point starting on the equator. Click the buttons below to manually apply the exact 70.53° rotations. The <span style="color: #ff5a5a;">red</span> and <span style="color: #4fb3ff;">blue</span> dots mark the four pivots of the two rotation axes. Notice that the closer the traveling point gets to a pivot, the shorter its visible arc for that rotation — the rotation angle is always 70.53°, but the chord on the sphere surface shrinks. To return to the start, you must exactly backtrack your sequence of steps.</p>
-        
-        <div class="canvas-container" style="height: 400px; position: relative;">
-          <canvas id="manual-canvas" style="position: absolute; inset: 0; width: 100%; height: 100%; outline: none; cursor: grab;"></canvas>
-          <div class="overlay-hint">DRAG TO ROTATE SPHERE</div>
-        </div>
-
-        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.2rem; margin: 0.8rem 0 0.2rem; font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em;">
-          <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #ff5a5a; box-shadow: 0 0 6px #ff5a5a;"></span>N pivot</span>
-          <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #a01c1c;"></span>S pivot</span>
-          <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #4fb3ff; box-shadow: 0 0 6px #4fb3ff;"></span>E pivot</span>
-          <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #1d4c8a;"></span>W pivot</span>
-          <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: var(--cream); box-shadow: 0 0 6px var(--cream);"></span>traveling point</span>
-        </div>
-
-        <div class="controls" style="justify-content: center; gap: 0.8rem;">
-          <button class="btn btn-n" id="btn-m-N">North</button>
-          <button class="btn btn-s" id="btn-m-S">South</button>
-          <button class="btn btn-e" id="btn-m-E">East</button>
-          <button class="btn btn-w" id="btn-m-W">West</button>
-          <button class="btn btn-outline" id="btn-m-reset">Reset</button>
-        </div>
-        
-        <div class="stats">
-          <div class="stat-card" style="flex: 2;">
-            <div class="ctrl-label">Rotation Sequence</div>
-            <div class="stat-val" id="stat-m-word" style="font-size: 1.1rem; padding-top: 4px; letter-spacing: 2px;">Start</div>
-          </div>
-          <div class="stat-card">
-            <div class="ctrl-label">Steps Taken</div>
-            <div class="stat-val" id="stat-m-len">0</div>
-          </div>
-        </div>
+      <div class="stat-card">
+        <div class="ctrl-label">Total Points</div>
+        <div class="stat-val">∞</div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <section class="chapter-section" id="section-4">
-      <span class="sec-num reveal">04</span>
-      <h2 class="sec-title reveal">The Infinite Choreography</h2>
-      
-      <p class="prose prose-drop reveal">Now, imagine automating what you just did. Pick a single point on the globe—say, a city like London or Tokyo—and apply <em>every possible sequence</em> of those four rotations simultaneously out to infinity.</p>
-      
-      <p class="prose reveal">The entire collection of landing spots is called the point's <span class="hi">orbit</span>. Because the free group never loops back on itself, the orbit never overlaps. It forms a dense, infinitely scattered cloud of mathematical dust that wraps around the entire Earth. If you pick a different starting point that isn't already part of the cloud, you get a completely separate, non-overlapping orbit.</p>
+<section class="chapter-section" id="section-2">
+  <span class="sec-num reveal">02</span>
+  <h2 class="sec-title reveal">The Labyrinth of Rotations</h2>
+  
+  <p class="prose prose-drop reveal">The true architect of this paradox was not Banach or Tarski, but the German mathematician Felix Hausdorff. A decade earlier, Hausdorff discovered that the magic does not lie within the sphere itself, but within the invisible scaffolding of three-dimensional space: the rules of rotation. When you rotate an object, the order of your movements fundamentally changes the outcome. Turning a sphere left, then up, leaves it in a different position than turning it up, then left. This lack of commutativity breeds a fractal universe of possibilities.</p>
+  
+  <p class="prose reveal">Imagine standing at the center of an invisible labyrinth where every step is a rigid rotation. You can turn in four distinct directions. If you carefully choose the exact angle of these rotations, they will never neatly cancel out or repeat themselves. Every new combination of movements creates a completely unique, never-before-seen orientation. The only way to return to your starting point is to precisely backtrack your exact sequence of steps. Mathematicians call this infinitely branching, loopless structure a <span class="ac">free group</span>.</p>
 
-      <p class="prose reveal">This is the secret to Banach and Tarski's shattered pieces. The entire continuous surface of the sphere can be perfectly partitioned into these distinct, infinite orbits. By shifting these clouds along the paths of the free group, mathematicians can effectively clone the entire sphere.</p>
+  <p class="prose reveal">The paradox blooms entirely within the infinite branches of this group. Because the tree extends forever, a single sub-branch contains a perfect, identical copy of the entire tree hidden within it. If you grab just one branch and apply a single reverse rotation, it instantly expands to cover almost the entire labyrinth. This mathematical sleight of hand—summoning the whole from a mere fraction—is the exact mechanism that duplicates the sphere.</p>
 
-      <div class="ibox reveal" id="ibox-globe">
-        <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
-        <h3 class="ibox-title">Orbit Propagation</h3>
-        <p class="ibox-desc">We have placed seven distinctly colored starting points (cities) on the globe. Drag the slider to systematically increase the depth of the rotation tree for all of them simultaneously. Watch as each single city spawns an expanding fractal cloud of points, smoothly interweaving to blanket the Earth in a brilliant mosaic of colors. In the true mathematical paradox, this explosion of dust continues to absolute infinity.</p>
-        
-        <div id="globe-wrapper">
-          <div id="globe-container"></div>
-          <div id="city-labels"></div>
-          <div id="globe-loading">
-            <div class="spinner"></div>
-            <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em;">Loading Atlas...</div>
-          </div>
-        </div>
-        
-        <div class="controls">
-          <div class="ctrl-group">
-            <span class="ctrl-label">Propagation Depth</span>
-            <input type="range" id="slider-globe" min="0" max="4" value="0" step="1">
-          </div>
-        </div>
-        
-        <div class="stats">
-          <div class="stat-card">
-            <div class="ctrl-label">Orbit Depth</div>
-            <div class="stat-val" id="stat-gl-depth">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="ctrl-label">Points per City</div>
-            <div class="stat-val" id="stat-gl-pts">1</div>
-          </div>
-          <div class="stat-card">
-            <div class="ctrl-label">Total Points</div>
-            <div class="stat-val" id="stat-gl-tot">7</div>
-          </div>
-        </div>
+  <div class="ibox reveal" id="ibox-cayley">
+    <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
+    <h3 class="ibox-title">The Free Group in 3D</h3>
+    <p class="ibox-desc">This is the Cayley Graph of the free group. At first glance, it looks like a flat fractal where the edges get progressively smaller. But <span class="hi">drag the canvas to rotate the space</span>. You will discover it is actually a perfectly symmetrical 3D Euclidean structure where every single branch is exactly the same unit length. The "shrinking" was merely an illusion of perspective.</p>
+    
+    <div class="canvas-container" style="height: 480px; position: relative;">
+      <canvas id="cayley-canvas" style="position: absolute; inset: 0; width: 100%; height: 100%; outline: none; cursor: grab;"></canvas>
+      <div class="overlay-hint">DRAG TO ROTATE · SHIFT-DRAG TO PAN · SCROLL TO ZOOM</div>
+    </div>
+    
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">Branching Depth</span>
+        <input type="range" id="slider-cayley" min="0" max="5" value="0" step="1">
       </div>
-    </section>
-
-    <section class="chapter-section" id="section-5">
-      <span class="sec-num reveal">05</span>
-      <h2 class="sec-title reveal">The Ghost in the Axioms</h2>
-      
-      <p class="prose prose-drop reveal">To actually create the paradoxical pieces, one cannot use a physical knife. A knife cuts continuous, smooth surfaces, leaving distinct shapes with well-defined volumes. To execute the Banach-Tarski paradox, mathematicians must invoke a purely logical blade: the <span class="hi">Axiom of Choice</span>. They must reach into the uncountable abyss of distinct orbits and pluck out exactly one representative point from each.</p>
-      
-      <p class="prose reveal">Formulated by Ernst Zermelo in 1904, this axiom states a deceptively simple premise: if you have an infinite collection of bins, you can reach in and pick exactly one item from each to form a new set, even if you have no explicit rule for how to make the choice. In the finite world, this is trivial. In the realm of the infinite, it allows mathematicians to make an uncountably infinite number of arbitrary choices simultaneously.</p>
-
-      <div class="block-quote reveal">
-        “Dass auch für jede unendliche Menge ein solches Auswahlprinzip gültig sei, ist ein logisches Gesetz... welches bei mathematischen Deduktionen vielfach angewendet wird.”
-        <span class="quote-attr">— Ernst Zermelo, Mathematische Annalen (1904)</span>
+    </div>
+    
+    <div class="stats">
+      <div class="stat-card">
+        <div class="ctrl-label">Depth</div>
+        <div class="stat-val" id="stat-cay-depth">0</div>
       </div>
-
-      <p class="prose reveal">By applying this axiom, Banach and Tarski conceptually plucked points from the sphere to form their five pieces. The resulting fragments are so scattered, so infinitely jagged and disconnected, that they fall through the cracks of geometry itself. They are <span class="ac">non-measurable sets</span>—dust-like clouds completely devoid of an inside or an outside. This is the ghost in the axioms: the paradox does not violate the conservation of volume because the pieces simply have no volume to conserve in the first place.</p>
-
-      <div class="ibox reveal" id="ibox-dust">
-        <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
-        <h3 class="ibox-title">The Unmeasurable Dust</h3>
-        <p class="ibox-desc">Volume is not a fundamental property of space; it is a human construct that only applies to well-behaved shapes. Drag the slider to apply the Axiom of Choice. Watch as a solid, measurable geometry fractures into infinite, irrational equivalence classes. As the points scatter, the very concept of volume begins to fluctuate wildly until it breaks down completely.</p>
-        
-        <div class="canvas-container" style="height: 380px;">
-          <canvas id="canvas-4" class="interactive"></canvas>
-        </div>
-        
-        <div class="controls">
-          <div class="ctrl-group">
-            <span class="ctrl-label">Invoke Axiom of Choice (Scatter)</span>
-            <input type="range" id="slider-choice" min="0" max="1" value="0" step="0.01">
-          </div>
-        </div>
-        
-        <div class="stats">
-          <div class="stat-card" style="flex: 1.5;">
-            <div class="ctrl-label">Mathematical Volume (V)</div>
-            <div class="stat-val" id="stat-vol">1.0000 V₀</div>
-          </div>
-          <div class="stat-card">
-            <div class="ctrl-label">Geometry State</div>
-            <div class="stat-val" id="stat-state" style="font-size: 1rem; padding-top: 4px; color: var(--fern);">Measurable</div>
-          </div>
-        </div>
+      <div class="stat-card">
+        <div class="ctrl-label">Unique Nodes</div>
+        <div class="stat-val" id="stat-cay-nodes">1</div>
       </div>
-    </section>
-
-    <section class="chapter-section" id="section-6">
-      <span class="sec-num reveal">06</span>
-      <h2 class="sec-title reveal">The Architect of the Multiverse</h2>
-      
-      <p class="prose prose-drop reveal">For decades, the Axiom of Choice was a source of deep anxiety. If a logical rule allows a pea to be carved into the Sun, should it be banished from mathematics? Or must we accept these beautiful, terrifying paradoxes as the price of doing modern math? The ultimate resolution arrived in 1963 through the brilliant mind of Paul Cohen.</p>
-      
-      <p class="prose reveal">Cohen invented a revolutionary technique called <span class="hi">forcing</span>, which allowed him to mathematically prove that the Axiom of Choice is entirely independent of the foundational rules of set theory. You can neither prove it true nor prove it false using standard logic. Mathematics is not a single, absolute reality dictating a unique truth, but a <span class="ac">multiverse of logical possibilities</span>.</p>
-
-      <div class="block-quote reveal">
-        “A point of view which the author feels may eventually come to be accepted is that CH [and the Axiom of Choice] is obviously false... the continuum is an incredibly rich set given to us by one bold new axiom.”
-        <span class="quote-attr">— Paul J. Cohen, Set Theory and the Continuum Hypothesis (1966)</span>
+      <div class="stat-card">
+        <div class="ctrl-label">Branches</div>
+        <div class="stat-val" id="stat-cay-edges">0</div>
       </div>
+    </div>
+  </div>
+</section>
 
-      <p class="prose reveal">We are left with a profound choice. We can walk through the standard universe (ZFC) where the Axiom of Choice holds true, embracing the chaotic freedom of non-measurable dust and the magic of duplicate spheres. Or, we can step into an alternative universe (ZF) where the axiom is rejected—a rigid, symmetric world where every shape has a strictly conserved volume, and the Banach-Tarski paradox is fundamentally impossible. The shape of reality depends entirely on the invisible rules we choose to accept.</p>
+<section class="chapter-section" id="section-3">
+  <span class="sec-num reveal">03</span>
+  <h2 class="sec-title reveal">The Magic Angle</h2>
+  
+  <p class="prose prose-drop reveal">We now have an infinitely branching, paradoxical tree of rotations. But how does this translate to a physical sphere? The secret lies in a highly specific geometry: a magic angle of exactly <span class="hi math-ktx">\arccos(1/3)</span>, which is roughly 70.53 degrees.</p>
+  
+  <p class="prose reveal">Hausdorff proved that if you rotate a sphere by this precise angle along two orthogonal axes (like the Equator and the Prime Meridian), the movements behave exactly like the abstract free group. As you combine North, South, East, and West rotations, a single point dances across the surface of the sphere. Because these specific angles are mathematically "irrational" with respect to a full circle, they never form a closed loop.</p>
+  
+  <p class="prose reveal">No matter how long you wander this spherical labyrinth, the point will never step in its own footprints. Every sequence creates a completely unique destination.</p>
 
-      <div class="ibox reveal" id="ibox-sandbox">
-        <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
-        <h3 class="ibox-title">The Multiverse Sandbox</h3>
-        <p class="ibox-desc">You are the architect. Toggle the Axiom of Choice to switch between two distinct mathematical universes. When OFF, the generated particles are bound by strict symmetry, forming a measurable, crystalline lattice where volume is perfectly conserved. When ON, the lattice shatters; particles duplicate and follow the paradoxical branches of the free group, swirling into two distinct copies.</p>
-        
-        <div class="canvas-container" style="height: 380px;">
-          <canvas id="canvas-5" class="interactive"></canvas>
-        </div>
-        
-        <div class="controls">
-          <div class="ctrl-group" style="flex: 0; min-width: 150px;">
-            <span class="ctrl-label">Axiom of Choice</span>
-            <div class="toggle-wrapper">
-              <span class="mono" style="font-size: 0.8rem; color: var(--text);">OFF</span>
-              <label class="switch">
-                <input type="checkbox" id="toggle-axiom" checked>
-                <span class="slider-toggle"></span>
-              </label>
-              <span class="mono" style="font-size: 0.8rem; color: var(--gold);">ON</span>
-            </div>
-          </div>
-        </div>
-        
-        <div class="stats">
-          <div class="stat-card">
-            <div class="ctrl-label">Universe Logic</div>
-            <div class="stat-val" id="stat-univ">ZFC</div>
-          </div>
-          <div class="stat-card">
-            <div class="ctrl-label">Paradoxes</div>
-            <div class="stat-val" id="stat-para">Enabled</div>
-          </div>
-          <div class="stat-card">
-            <div class="ctrl-label">Structure / Volume</div>
-            <div class="stat-val" id="stat-struct" style="font-size: 1rem; padding-top: 4px; color: var(--violet);">Fractured (Undefined V₀)</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="pull-quote reveal" style="margin-top: 2rem;">
-      “The essence of mathematics lies in its freedom.”<br>
-      <span style="font-size: 0.9rem; font-family: var(--font-body); font-style: normal; color: var(--muted); display: block; margin-top: 1rem;">— Georg Cantor</span>
+  <div class="ibox reveal" id="ibox-manual">
+    <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
+    <h3 class="ibox-title">The Paradoxical Compass</h3>
+    <p class="ibox-desc">You are looking at a single point starting on the equator. Click the buttons below to manually apply the exact 70.53° rotations. The <span style="color: #ff5a5a;">red</span> and <span style="color: #4fb3ff;">blue</span> dots mark the four pivots of the two rotation axes. Notice that the closer the traveling point gets to a pivot, the shorter its visible arc for that rotation — the rotation angle is always 70.53°, but the chord on the sphere surface shrinks. To return to the start, you must exactly backtrack your sequence of steps.</p>
+    
+    <div class="canvas-container" style="height: 400px; position: relative;">
+      <canvas id="manual-canvas" style="position: absolute; inset: 0; width: 100%; height: 100%; outline: none; cursor: grab;"></canvas>
+      <div class="overlay-hint">DRAG TO ROTATE SPHERE</div>
     </div>
 
-    <div class="coda reveal">
-      In the end, reality is not merely what we see.<br>
-      It is the invisible scaffolding of rules we choose to believe,<br>
-      and the beautiful, terrifying infinities they unlock.
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.2rem; margin: 0.8rem 0 0.2rem; font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em;">
+      <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #ff5a5a; box-shadow: 0 0 6px #ff5a5a;"></span>N pivot</span>
+      <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #a01c1c;"></span>S pivot</span>
+      <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #4fb3ff; box-shadow: 0 0 6px #4fb3ff;"></span>E pivot</span>
+      <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #1d4c8a;"></span>W pivot</span>
+      <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: var(--cream); box-shadow: 0 0 6px var(--cream);"></span>traveling point</span>
     </div>
 
-    <div class="ref-section reveal">
-      <h3 class="ref-heading">References</h3>
-      <ul class="ref-list">
-        <li><span class="ref-author">Banach, S. & Tarski, A.,</span> <span class="ref-title">Sur la décomposition des ensembles de points en parties respectivement congruentes,</span> <span class="ref-detail">Fundamenta Mathematicae, 1924.</span></li>
-        <li><span class="ref-author">Hausdorff, F.,</span> <span class="ref-title">Bemerkung über den Inhalt von Punktmengen,</span> <span class="ref-detail">Mathematische Annalen, 1914.</span></li>
-        <li><span class="ref-author">Zermelo, E.,</span> <span class="ref-title">Beweis, dass jede Menge wohlgeordnet werden kann,</span> <span class="ref-detail">Mathematische Annalen, 1904.</span></li>
-        <li><span class="ref-author">Cohen, P. J.,</span> <span class="ref-title">Set Theory and the Continuum Hypothesis,</span> <span class="ref-detail">W. A. Benjamin, 1966.</span></li>
-        <li><span class="ref-author">Wagon, S.,</span> <span class="ref-title">The Banach-Tarski Paradox,</span> <span class="ref-detail">Cambridge University Press, 1985.</span></li>
-      </ul>
+    <div class="controls" style="justify-content: center; gap: 0.8rem;">
+      <button class="btn btn-n" id="btn-m-N">North</button>
+      <button class="btn btn-s" id="btn-m-S">South</button>
+      <button class="btn btn-e" id="btn-m-E">East</button>
+      <button class="btn btn-w" id="btn-m-W">West</button>
+      <button class="btn btn-outline" id="btn-m-reset">Reset</button>
     </div>
+    
+    <div class="stats">
+      <div class="stat-card" style="flex: 2;">
+        <div class="ctrl-label">Rotation Sequence</div>
+        <div class="stat-val" id="stat-m-word" style="font-size: 1.1rem; padding-top: 4px; letter-spacing: 2px;">Start</div>
+      </div>
+      <div class="stat-card">
+        <div class="ctrl-label">Steps Taken</div>
+        <div class="stat-val" id="stat-m-len">0</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chapter-section" id="section-4">
+  <span class="sec-num reveal">04</span>
+  <h2 class="sec-title reveal">The Infinite Choreography</h2>
+  
+  <p class="prose prose-drop reveal">Now, imagine automating what you just did. Pick a single point on the globe—say, a city like London or Tokyo—and apply <em>every possible sequence</em> of those four rotations simultaneously out to infinity.</p>
+  
+  <p class="prose reveal">The entire collection of landing spots is called the point's <span class="hi">orbit</span>. Because the free group never loops back on itself, the orbit never overlaps. It forms a dense, infinitely scattered cloud of mathematical dust that wraps around the entire Earth. If you pick a different starting point that isn't already part of the cloud, you get a completely separate, non-overlapping orbit.</p>
+
+  <p class="prose reveal">This is the secret to Banach and Tarski's shattered pieces. The entire continuous surface of the sphere can be perfectly partitioned into these distinct, infinite orbits. By shifting these clouds along the paths of the free group, mathematicians can effectively clone the entire sphere.</p>
+
+  <div class="ibox reveal" id="ibox-globe">
+    <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
+    <h3 class="ibox-title">Orbit Propagation</h3>
+    <p class="ibox-desc">We have placed seven distinctly colored starting points (cities) on the globe. Drag the slider to systematically increase the depth of the rotation tree for all of them simultaneously. Watch as each single city spawns an expanding fractal cloud of points, smoothly interweaving to blanket the Earth in a brilliant mosaic of colors. In the true mathematical paradox, this explosion of dust continues to absolute infinity.</p>
+    
+    <div id="globe-wrapper">
+      <div id="globe-container"></div>
+      <div id="city-labels"></div>
+      <div id="globe-loading">
+        <div class="spinner"></div>
+        <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em;">Loading Atlas...</div>
+      </div>
+    </div>
+    
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">Propagation Depth</span>
+        <input type="range" id="slider-globe" min="0" max="4" value="0" step="1">
+      </div>
+    </div>
+    
+    <div class="stats">
+      <div class="stat-card">
+        <div class="ctrl-label">Orbit Depth</div>
+        <div class="stat-val" id="stat-gl-depth">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="ctrl-label">Points per City</div>
+        <div class="stat-val" id="stat-gl-pts">1</div>
+      </div>
+      <div class="stat-card">
+        <div class="ctrl-label">Total Points</div>
+        <div class="stat-val" id="stat-gl-tot">7</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chapter-section" id="section-5">
+  <span class="sec-num reveal">05</span>
+  <h2 class="sec-title reveal">The Ghost in the Axioms</h2>
+  
+  <p class="prose prose-drop reveal">To actually create the paradoxical pieces, one cannot use a physical knife. A knife cuts continuous, smooth surfaces, leaving distinct shapes with well-defined volumes. To execute the Banach-Tarski paradox, mathematicians must invoke a purely logical blade: the <span class="hi">Axiom of Choice</span>. They must reach into the uncountable abyss of distinct orbits and pluck out exactly one representative point from each.</p>
+  
+  <p class="prose reveal">Formulated by Ernst Zermelo in 1904, this axiom states a deceptively simple premise: if you have an infinite collection of bins, you can reach in and pick exactly one item from each to form a new set, even if you have no explicit rule for how to make the choice. In the finite world, this is trivial. In the realm of the infinite, it allows mathematicians to make an uncountably infinite number of arbitrary choices simultaneously.</p>
+
+  <div class="block-quote reveal">
+    “Dass auch für jede unendliche Menge ein solches Auswahlprinzip gültig sei, ist ein logisches Gesetz... welches bei mathematischen Deduktionen vielfach angewendet wird.”
+    <span class="quote-attr">— Ernst Zermelo, Mathematische Annalen (1904)</span>
+  </div>
+
+  <p class="prose reveal">By applying this axiom, Banach and Tarski conceptually plucked points from the sphere to form their five pieces. The resulting fragments are so scattered, so infinitely jagged and disconnected, that they fall through the cracks of geometry itself. They are <span class="ac">non-measurable sets</span>—dust-like clouds completely devoid of an inside or an outside. This is the ghost in the axioms: the paradox does not violate the conservation of volume because the pieces simply have no volume to conserve in the first place.</p>
+
+  <div class="ibox reveal" id="ibox-dust">
+    <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
+    <h3 class="ibox-title">The Unmeasurable Dust</h3>
+    <p class="ibox-desc">Volume is not a fundamental property of space; it is a human construct that only applies to well-behaved shapes. Drag the slider to apply the Axiom of Choice. Watch as a solid, measurable geometry fractures into infinite, irrational equivalence classes. As the points scatter, the very concept of volume begins to fluctuate wildly until it breaks down completely.</p>
+    
+    <div class="canvas-container" style="height: 380px;">
+      <canvas id="canvas-4" class="interactive"></canvas>
+    </div>
+    
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">Invoke Axiom of Choice (Scatter)</span>
+        <input type="range" id="slider-choice" min="0" max="1" value="0" step="0.01">
+      </div>
+    </div>
+    
+    <div class="stats">
+      <div class="stat-card" style="flex: 1.5;">
+        <div class="ctrl-label">Mathematical Volume (V)</div>
+        <div class="stat-val" id="stat-vol">1.0000 V₀</div>
+      </div>
+      <div class="stat-card">
+        <div class="ctrl-label">Geometry State</div>
+        <div class="stat-val" id="stat-state" style="font-size: 1rem; padding-top: 4px; color: var(--fern);">Measurable</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chapter-section" id="section-6">
+  <span class="sec-num reveal">06</span>
+  <h2 class="sec-title reveal">The Architect of the Multiverse</h2>
+  
+  <p class="prose prose-drop reveal">For decades, the Axiom of Choice was a source of deep anxiety. If a logical rule allows a pea to be carved into the Sun, should it be banished from mathematics? Or must we accept these beautiful, terrifying paradoxes as the price of doing modern math? The ultimate resolution arrived in 1963 through the brilliant mind of Paul Cohen.</p>
+  
+  <p class="prose reveal">Cohen invented a revolutionary technique called <span class="hi">forcing</span>, which allowed him to mathematically prove that the Axiom of Choice is entirely independent of the foundational rules of set theory. You can neither prove it true nor prove it false using standard logic. Mathematics is not a single, absolute reality dictating a unique truth, but a <span class="ac">multiverse of logical possibilities</span>.</p>
+
+  <div class="block-quote reveal">
+    “A point of view which the author feels may eventually come to be accepted is that CH [and the Axiom of Choice] is obviously false... the continuum is an incredibly rich set given to us by one bold new axiom.”
+    <span class="quote-attr">— Paul J. Cohen, Set Theory and the Continuum Hypothesis (1966)</span>
+  </div>
+
+  <p class="prose reveal">We are left with a profound choice. We can walk through the standard universe (ZFC) where the Axiom of Choice holds true, embracing the chaotic freedom of non-measurable dust and the magic of duplicate spheres. Or, we can step into an alternative universe (ZF) where the axiom is rejected—a rigid, symmetric world where every shape has a strictly conserved volume, and the Banach-Tarski paradox is fundamentally impossible. The shape of reality depends entirely on the invisible rules we choose to accept.</p>
+
+  <div class="ibox reveal" id="ibox-sandbox">
+    <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
+    <h3 class="ibox-title">The Multiverse Sandbox</h3>
+    <p class="ibox-desc">You are the architect. Toggle the Axiom of Choice to switch between two distinct mathematical universes. When OFF, the generated particles are bound by strict symmetry, forming a measurable, crystalline lattice where volume is perfectly conserved. When ON, the lattice shatters; particles duplicate and follow the paradoxical branches of the free group, swirling into two distinct copies.</p>
+    
+    <div class="canvas-container" style="height: 380px;">
+      <canvas id="canvas-5" class="interactive"></canvas>
+    </div>
+    
+    <div class="controls">
+      <div class="ctrl-group" style="flex: 0; min-width: 150px;">
+        <span class="ctrl-label">Axiom of Choice</span>
+        <div class="toggle-wrapper">
+          <span class="mono" style="font-size: 0.8rem; color: var(--text);">OFF</span>
+          <label class="switch">
+            <input type="checkbox" id="toggle-axiom" checked>
+            <span class="slider-toggle"></span>
+          </label>
+          <span class="mono" style="font-size: 0.8rem; color: var(--gold);">ON</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="stats">
+      <div class="stat-card">
+        <div class="ctrl-label">Universe Logic</div>
+        <div class="stat-val" id="stat-univ">ZFC</div>
+      </div>
+      <div class="stat-card">
+        <div class="ctrl-label">Paradoxes</div>
+        <div class="stat-val" id="stat-para">Enabled</div>
+      </div>
+      <div class="stat-card">
+        <div class="ctrl-label">Structure / Volume</div>
+        <div class="stat-val" id="stat-struct" style="font-size: 1rem; padding-top: 4px; color: var(--violet);">Fractured (Undefined V₀)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="pull-quote reveal" style="margin-top: 2rem;">
+  “The essence of mathematics lies in its freedom.”<br>
+  <span style="font-size: 0.9rem; font-family: var(--font-body); font-style: normal; color: var(--muted); display: block; margin-top: 1rem;">— Georg Cantor</span>
+</div>
+
+<div class="coda reveal">
+  In the end, reality is not merely what we see.<br>
+  It is the invisible scaffolding of rules we choose to believe,<br>
+  and the beautiful, terrifying infinities they unlock.
+</div>
+
+<div class="ref-section reveal">
+  <h3 class="ref-heading">References</h3>
+  <ul class="ref-list">
+    <li><span class="ref-author">Banach, S. & Tarski, A.,</span> <span class="ref-title">Sur la décomposition des ensembles de points en parties respectivement congruentes,</span> <span class="ref-detail">Fundamenta Mathematicae, 1924.</span></li>
+    <li><span class="ref-author">Hausdorff, F.,</span> <span class="ref-title">Bemerkung über den Inhalt von Punktmengen,</span> <span class="ref-detail">Mathematische Annalen, 1914.</span></li>
+    <li><span class="ref-author">Zermelo, E.,</span> <span class="ref-title">Beweis, dass jede Menge wohlgeordnet werden kann,</span> <span class="ref-detail">Mathematische Annalen, 1904.</span></li>
+    <li><span class="ref-author">Cohen, P. J.,</span> <span class="ref-title">Set Theory and the Continuum Hypothesis,</span> <span class="ref-detail">W. A. Benjamin, 1966.</span></li>
+    <li><span class="ref-author">Wagon, S.,</span> <span class="ref-title">The Banach-Tarski Paradox,</span> <span class="ref-detail">Cambridge University Press, 1985.</span></li>
+  </ul>
+</div>
+```
 
   </main>
-
-  
 
   <script>
     // --- KaTeX Auto-Render ---
@@ -680,50 +687,224 @@
     }
 
     // --- Hero Canvas Animation ---
+    // The paradox in motion: a single sphere of points slowly reveals itself as five
+    // intertwined orbits (the five pieces of the Banach-Tarski decomposition), then
+    // fractures and reassembles into TWO identical spheres, then merges back. The
+    // rhythm is: breathe in (unified) -> reveal (five pieces in one sphere) -> cleave
+    // (drift apart into two spheres) -> settle (two identical copies) -> merge.
     const heroCanvas = document.getElementById('hero-canvas');
     let heroCtx, heroW, heroH, heroDpr, heroPoints = [];
-    const numHeroPoints = 2500;
+    const numHeroPoints = 3200;
 
     function initHero() {
       const setup = setupCanvas(heroCanvas);
       heroCtx = setup.ctx; heroW = setup.width; heroH = setup.height; heroDpr = setup.dpr;
       if (heroPoints.length === 0) {
+        // Fibonacci sphere distribution -> even coverage, no visible bands.
         const phi = Math.PI * (3 - Math.sqrt(5));
         for (let i = 0; i < numHeroPoints; i++) {
           const y = 1 - (i / (numHeroPoints - 1)) * 2;
           const radius = Math.sqrt(1 - y * y); const theta = phi * i;
-          heroPoints.push({ x: Math.cos(theta) * radius, y, z: Math.sin(theta) * radius, pieceId: i % 5, side: (i % 5 < 3) ? -1 : 1 });
+          // The pieceId assignment mimics the Banach-Tarski partition: each point
+          // is stably bound to one of 5 "orbit classes". During the cleave phase,
+          // pieces 0..2 go to the left copy and pieces 3..4 (which use a small extra
+          // center piece) go to the right -- recombining into two full spheres.
+          const pieceId = i % 5;
+          heroPoints.push({
+            x: Math.cos(theta) * radius, y, z: Math.sin(theta) * radius,
+            pieceId,
+            // Slight per-piece jitter so the "reveal" looks organic, not banded.
+            jitter: (Math.sin(i * 17.31) * 0.5 + 0.5),
+            // Each piece gets a slightly different phase offset so the five orbit
+            // classes visibly "breathe" at subtly different rates -- more alive.
+            pieceOffset: (pieceId / 5) * Math.PI * 2,
+          });
         }
       }
     }
     window.addEventListener('resize', initHero); initHero();
 
+    // --- easing helpers ---
+    function smoothstep(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
+
     let heroTime = 0;
     function renderHero() {
       if (!State.heroVisible || (State.paused && heroTime > State.heroTimeout/1000)) return;
-      heroTime += 0.005; heroCtx.clearRect(0, 0, heroW, heroH);
+      heroTime += 0.004;
+
+      // Subtle radial backdrop -- not a solid black floor. Cheap: one radial gradient
+      // redrawn each frame in CSS coords, then we go into device-pixel space for points.
+      const W = heroW / heroDpr, H = heroH / heroDpr;
+      const bgGrad = heroCtx.createRadialGradient(W*0.5, H*0.42, 0, W*0.5, H*0.42, Math.max(W,H)*0.85);
+      bgGrad.addColorStop(0, 'rgba(18, 20, 46, 1)');
+      bgGrad.addColorStop(0.55, 'rgba(8, 10, 22, 1)');
+      bgGrad.addColorStop(1, 'rgba(4, 5, 12, 1)');
+      heroCtx.setTransform(heroDpr, 0, 0, heroDpr, 0, 0);
+      heroCtx.fillStyle = bgGrad;
+      heroCtx.fillRect(0, 0, W, H);
+      heroCtx.setTransform(1, 0, 0, 1, 0, 0);
+
       const cx = heroW / 2, cy = heroH / 2, radius = Math.min(heroW, heroH) * 0.22;
-      const phase = (Math.sin(heroTime * 0.8) + 1) / 2, smoothPhase = phase * phase * (3 - 2 * phase);
-      const splitDist = radius * 2.2 * smoothPhase, rotX = heroTime * 0.4, rotY = heroTime * 0.6;
-      const cosX = Math.cos(rotX), sinX = Math.sin(rotX), cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+
+      // One smooth breathing cycle: merged (t=0) -> cleaved (t=0.5) -> merged (t=1).
+      // A raised cosine gives clean ease-in/ease-out at both ends with no dwell.
+      // Color reveal rides the same curve so the sphere is "cream & whole" at merge
+      // and "five-piece & duplicated" at the peak of separation -- the visual beat
+      // and the conceptual beat coincide.
+      const T = 3.0;
+      const t = (heroTime % T) / T;
+      const cleave = 0.5 - 0.5 * Math.cos(2 * Math.PI * t);
+      const reveal = cleave;                                 // colors emerge as pieces cleave
+
+      // Global rotation: gentle, keeps the sphere feeling alive even in unified phase.
+      const rotX = heroTime * 0.22, rotY = heroTime * 0.33;
+      const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+      const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+
+      // Additive blending for a soft bloom feel. Drawn twice per point: an outer
+      // glow halo (larger, low alpha) and an inner core (small, high alpha).
+      heroCtx.globalCompositeOperation = 'lighter';
+
+      const fov = 1000 * heroDpr;
+
+      // Depth-sort by drawing farthest points first (simple approach: sort indices).
+      // Sphere has 3200 points; sort per frame is cheap enough (one allocation).
+      const order = renderHero._order || (renderHero._order = new Int32Array(numHeroPoints));
+      const depths = renderHero._depths || (renderHero._depths = new Float32Array(numHeroPoints));
+
+      // Compute transformed positions + depths up front.
+      const tx = renderHero._tx || (renderHero._tx = new Float32Array(numHeroPoints));
+      const ty = renderHero._ty || (renderHero._ty = new Float32Array(numHeroPoints));
+      const tz = renderHero._tz || (renderHero._tz = new Float32Array(numHeroPoints));
+
+      // How far the two copies pull apart, in screen radii.
+      const separation = radius * 2.35 * cleave;
 
       for (let i = 0; i < numHeroPoints; i++) {
         const p = heroPoints[i];
-        let y1 = p.y * cosX - p.z * sinX, z1 = p.y * sinX + p.z * cosX;
-        let x2 = p.x * cosY + z1 * sinY, z2 = -p.x * sinY + z1 * cosY;
-        const fx = x2 * radius + p.side * splitDist, fy = y1 * radius, fz = z2 * radius;
-        const fov = 1000 * heroDpr, zDepth = fz + fov * 0.6;
-        if (zDepth < 0.1) continue;
-        const scale = fov / zDepth, px = cx + fx * scale, py = cy + fy * scale;
-        const alpha = Math.min(1, Math.max(0.1, scale * 0.8));
-        
-        heroCtx.beginPath();
-        heroCtx.arc(px, py, Math.max(0.5, 1.8 * heroDpr * scale), 0, Math.PI * 2);
-        if (smoothPhase > 0.1) { heroCtx.fillStyle = pieceColors[p.pieceId]; heroCtx.globalAlpha = alpha * 0.8; } 
-        else { heroCtx.fillStyle = '#ece8e0'; heroCtx.globalAlpha = alpha; }
-        heroCtx.fill();
+        // Rotate around X, then Y.
+        const y1 = p.y * cosX - p.z * sinX;
+        const z1 = p.y * sinX + p.z * cosX;
+        const x2 = p.x * cosY + z1 * sinY;
+        const z2 = -p.x * sinY + z1 * cosY;
+        // Direction: pieces 0,1,2 go to the LEFT copy; pieces 3,4 go to the RIGHT copy.
+        // This asymmetry is faithful to how Banach-Tarski's partition actually works:
+        // the decomposition is not symmetric across pieces, yet the reassembled
+        // spheres are identical. We simulate that here by having each copy be
+        // populated from ALL points (each point draws twice during cleave, once on
+        // each side, faded by piece) -- so each copy looks like a complete sphere.
+        // Primary copy direction for THIS point:
+        const primarySide = (p.pieceId <= 2) ? -1 : +1;
+
+        tx[i] = x2 * radius + primarySide * separation;
+        ty[i] = y1 * radius;
+        tz[i] = z2 * radius;
+        depths[i] = tz[i];
+        order[i] = i;
       }
+
+      // Sort by depth (painter's algorithm: far first, near last).
+      // Simple insertion-free sort: use typed-array sort via indexed sort on a helper array.
+      const idxArr = Array.from(order);
+      idxArr.sort((a, b) => depths[a] - depths[b]);
+
+      // Piece color lookup (via pieceColors defined above).
+      // When unified, all points are cream/white with just a whisper of piece tint.
+      // When revealed, the piece tint is full.
+      for (let k = 0; k < numHeroPoints; k++) {
+        const i = idxArr[k];
+        const p = heroPoints[i];
+        const zDepth = tz[i] + fov * 0.6;
+        if (zDepth < 0.1) continue;
+        const scale = fov / zDepth;
+        const py = cy + ty[i] * scale;
+
+        // Primary x-position already baked into tx[i]; mirror flips the separation offset.
+        const primarySide = (p.pieceId <= 2) ? -1 : +1;
+        const primaryX = tx[i];
+        const mirrorX = primaryX - primarySide * (2 * separation);
+        const px  = cx + primaryX * scale;
+        const pxM = cx + mirrorX  * scale;
+
+        const depthNorm = Math.max(0.35, Math.min(1.15, scale));
+        const spriteSize = 6.8 * heroDpr * depthNorm;
+        const halfS = spriteSize * 0.5;
+        const alpha = 0.7 * depthNorm;
+
+        // Smooth crossfade: cream at reveal=0, piece color at reveal=1.
+        // With a 5s cycle the transition is brief, so a hard threshold would flicker;
+        // two overlapping stamps give a clean dissolve. Skip whichever is near zero.
+        const creamSprite = getGlowSprite('#ece8e0');
+        const pieceSprite = getGlowSprite(pieceColors[p.pieceId]);
+        const aCream = alpha * (1 - reveal);
+        const aPiece = alpha * reveal;
+
+        // Primary copy
+        if (aCream > 0.02) {
+          heroCtx.globalAlpha = aCream;
+          heroCtx.drawImage(creamSprite, px - halfS, py - halfS, spriteSize, spriteSize);
+        }
+        if (aPiece > 0.02) {
+          heroCtx.globalAlpha = aPiece;
+          heroCtx.drawImage(pieceSprite, px - halfS, py - halfS, spriteSize, spriteSize);
+        }
+        // Mirror copy (only during cleave)
+        if (cleave > 0.02) {
+          const mc = aCream * cleave, mp = aPiece * cleave;
+          if (mc > 0.02) {
+            heroCtx.globalAlpha = mc;
+            heroCtx.drawImage(creamSprite, pxM - halfS, py - halfS, spriteSize, spriteSize);
+          }
+          if (mp > 0.02) {
+            heroCtx.globalAlpha = mp;
+            heroCtx.drawImage(pieceSprite, pxM - halfS, py - halfS, spriteSize, spriteSize);
+          }
+        }
+      }
+
+      heroCtx.globalCompositeOperation = 'source-over';
       heroCtx.globalAlpha = 1.0;
+    }
+
+    // Pre-rendered glow sprite per piece color -- drawing 3200+ radial gradients per
+    // frame is too expensive. We bake each piece color (plus cream) once, then stamp
+    // via drawImage with globalAlpha. Much faster and visually equivalent.
+    const SPRITE_SIZE = 64;
+    const glowSprites = {};
+    function getGlowSprite(hex) {
+      if (glowSprites[hex]) return glowSprites[hex];
+      const c = document.createElement('canvas');
+      c.width = c.height = SPRITE_SIZE;
+      const g = c.getContext('2d');
+      const [r, gC, b] = hexToRgb(hex);
+      const cx = SPRITE_SIZE / 2, cy = SPRITE_SIZE / 2;
+      // Soft outer halo
+      const grad = g.createRadialGradient(cx, cy, 0, cx, cy, cx);
+      grad.addColorStop(0,    `rgba(${r},${gC},${b},0.85)`);
+      grad.addColorStop(0.25, `rgba(${r},${gC},${b},0.55)`);
+      grad.addColorStop(0.55, `rgba(${r},${gC},${b},0.18)`);
+      grad.addColorStop(1,    `rgba(${r},${gC},${b},0)`);
+      g.fillStyle = grad;
+      g.fillRect(0, 0, SPRITE_SIZE, SPRITE_SIZE);
+      // Bright core
+      const coreR = 3;
+      const coreGrad = g.createRadialGradient(cx, cy, 0, cx, cy, coreR);
+      coreGrad.addColorStop(0, `rgba(${Math.min(255,r+50)},${Math.min(255,gC+50)},${Math.min(255,b+50)},1)`);
+      coreGrad.addColorStop(1, `rgba(${r},${gC},${b},0)`);
+      g.fillStyle = coreGrad;
+      g.beginPath();
+      g.arc(cx, cy, coreR, 0, Math.PI * 2);
+      g.fill();
+      return (glowSprites[hex] = c);
+    }
+
+    // Cached hex->rgb parsing (pieceColors are constant, so we can cache).
+    const _hexCache = {};
+    function hexToRgb(hex) {
+      if (_hexCache[hex]) return _hexCache[hex];
+      const h = hex.replace('#','');
+      const r = parseInt(h.substring(0,2),16), g = parseInt(h.substring(2,4),16), b = parseInt(h.substring(4,6),16);
+      return (_hexCache[hex] = [r, g, b]);
     }
 
     // --- Interactive 1: Engine of Infinity (Robust Fermat's Spiral) ---
@@ -1436,7 +1617,6 @@
 
   </script>
 
-
 <script>
 window.NARRATION_CONFIG = {
   chapter: 'banach-tarski',
@@ -1451,6 +1631,7 @@ window.NARRATION_CONFIG = {
   ]
 };
 </script>
+
 <script src="narration_player.js"></script>
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
