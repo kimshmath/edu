@@ -407,13 +407,21 @@
       <div class="ibox reveal" id="ibox-manual">
         <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
         <h3 class="ibox-title">The Paradoxical Compass</h3>
-        <p class="ibox-desc">You are looking at a single point starting on the equator. Click the buttons below to manually apply the exact 70.53° rotations. Notice how the glowing trail weaves a chaotic, non-repeating pattern across the globe. To return to the start, you must exactly backtrack your sequence of steps.</p>
+        <p class="ibox-desc">You are looking at a single point starting on the equator. Click the buttons below to manually apply the exact 70.53° rotations. The <span style="color: #ff5a5a;">red</span> and <span style="color: #4fb3ff;">blue</span> dots mark the four pivots of the two rotation axes. Notice that the closer the traveling point gets to a pivot, the shorter its visible arc for that rotation — the rotation angle is always 70.53°, but the chord on the sphere surface shrinks. To return to the start, you must exactly backtrack your sequence of steps.</p>
         
         <div class="canvas-container" style="height: 400px; position: relative;">
           <canvas id="manual-canvas" style="position: absolute; inset: 0; width: 100%; height: 100%; outline: none; cursor: grab;"></canvas>
           <div class="overlay-hint">DRAG TO ROTATE SPHERE</div>
         </div>
-        
+
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.2rem; margin: 0.8rem 0 0.2rem; font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em;">
+          <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #ff5a5a; box-shadow: 0 0 6px #ff5a5a;"></span>N pivot</span>
+          <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #a01c1c;"></span>S pivot</span>
+          <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #4fb3ff; box-shadow: 0 0 6px #4fb3ff;"></span>E pivot</span>
+          <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #1d4c8a;"></span>W pivot</span>
+          <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: var(--cream); box-shadow: 0 0 6px var(--cream);"></span>traveling point</span>
+        </div>
+
         <div class="controls" style="justify-content: center; gap: 0.8rem;">
           <button class="btn btn-n" id="btn-m-N">North</button>
           <button class="btn btn-s" id="btn-m-S">South</button>
@@ -915,7 +923,7 @@
     const manualCanvas = document.getElementById('manual-canvas');
     let manRenderer, manScene, manCamera, manSphereGroup, manPathGroup;
     let manInitialized = false, manAnimating = false;
-    let manWord = [], manHistory = [];
+    let manWord = [], manHistory = [], manSegments = [];
     let manCurrentVec = new THREE.Vector3(0, 0, 1); 
     let manAnimStart, manAnimTarget, manAnimProgress = 0;
     let manIsBacktracking = false;
@@ -936,22 +944,96 @@
     function initManual3D() {
       if (typeof THREE === 'undefined' || manInitialized) return;
       manRenderer = new THREE.WebGLRenderer({ canvas: manualCanvas, antialias: true, alpha: true });
-      manRenderer.setPixelRatio(Math.min(devicePixelRatio, 2)); manRenderer.setClearColor(0x0e1128, 1);
+      manRenderer.setPixelRatio(devicePixelRatio); manRenderer.setClearColor(0x0e1128, 1);
       manScene = new THREE.Scene(); manCamera = new THREE.PerspectiveCamera(45, manualCanvas.parentElement.clientWidth/manualCanvas.parentElement.clientHeight, 0.1, 100);
       manCamera.position.set(0, 0, 3.8); manCamera.lookAt(0,0,0);
       manSphereGroup = new THREE.Group(); manScene.add(manSphereGroup);
 
-      const globeGeo = new THREE.SphereGeometry(1, 32, 16);
-      const globeMat = new THREE.MeshBasicMaterial({ color: 0x52566a, wireframe: true, transparent: true, opacity: 0.15 });
-      manSphereGroup.add(new THREE.Mesh(globeGeo, globeMat));
+      // Broadcast-quality smooth sphere: clean flat-graphic look, no environment reflections.
+      // MeshPhongMaterial gives uniform Lambert-style shading plus a gentle highlight,
+      // without the mirror-like environment reflections that metallic PBR pulls in.
+      const sphereGeo = new THREE.SphereGeometry(1, 96, 64);
+      function makeGlobeMat(side) {
+        return new THREE.MeshPhongMaterial({
+          color: 0x5f6c7d,                // cool blue-grey base
+          specular: 0x1a1f28,             // very subtle specular -- not a highlight spot
+          shininess: 18,                  // soft, broad highlight
+          transparent: true,
+          opacity: side === THREE.BackSide ? 0.20 : 0.45,
+          side: side,
+          depthWrite: false,
+        });
+      }
+      const globeBack = new THREE.Mesh(sphereGeo, makeGlobeMat(THREE.BackSide));
+      globeBack.renderOrder = 0;
+      globeBack.scale.setScalar(0.999);
+      const globeFront = new THREE.Mesh(sphereGeo, makeGlobeMat(THREE.FrontSide));
+      globeFront.renderOrder = 2;
+      manSphereGroup.add(globeBack);
+      manSphereGroup.add(globeFront);
 
-      const ptGeo = new THREE.SphereGeometry(0.06, 16, 16);
-      const ptMat = new THREE.MeshBasicMaterial({ color: 0xc9a84c });
-      manPointMesh = new THREE.Mesh(ptGeo, ptMat);
+      // Simple two-light rig: soft directional key + generous ambient. No rim, no fill --
+      // we want clean, unambiguous form shading, not cinematic drama.
+      // Lights live on the scene (not the sphere group) so highlights stay world-fixed.
+      const ambient = new THREE.AmbientLight(0xffffff, 0.55);
+      manScene.add(ambient);
+      const keyLight = new THREE.DirectionalLight(0xffffff, 0.75);
+      keyLight.position.set(1.8, 2.0, 2.5);
+      manScene.add(keyLight);
+
+      // Empty wire-material array kept so the resize handler (which walks this list)
+      // still works for the trail material that registers itself on first draw.
+      manSphereGroup.userData.wireMaterials = [];
+
+      // Fixed points of each rotation (unchanged):
+      // N/S rotate about X -> poles at (±1, 0, 0), red.  E/W rotate about Y -> (0, ±1, 0), blue.
+      const COL_NS_BRIGHT = 0xff5a5a;
+      const COL_NS_DARK   = 0xa01c1c;
+      const COL_EW_BRIGHT = 0x4fb3ff;
+      const COL_EW_DARK   = 0x1d4c8a;
+      const poleGeo = new THREE.SphereGeometry(0.06, 24, 24);
+      const poleData = [
+        { pos: [ 1, 0, 0], color: COL_NS_BRIGHT },
+        { pos: [-1, 0, 0], color: COL_NS_DARK   },
+        { pos: [ 0, 1, 0], color: COL_EW_BRIGHT },
+        { pos: [ 0,-1, 0], color: COL_EW_DARK   },
+      ];
+      poleData.forEach(p => {
+        const m = new THREE.Mesh(poleGeo, new THREE.MeshBasicMaterial({ color: p.color, depthTest: false }));
+        m.position.set(p.pos[0], p.pos[1], p.pos[2]);
+        m.renderOrder = 10;
+        manSphereGroup.add(m);
+      });
+
+      // Traveling point: a flat, camera-facing sprite with a soft-edged white disc
+      // texture. Using a Sprite (not a SphereGeometry) guarantees a truly flat solid dot
+      // with no polygon seams or self-shading, even at 4K and at any viewing angle.
+      const dotCanvas = document.createElement('canvas');
+      dotCanvas.width = dotCanvas.height = 128;
+      const dotCtx = dotCanvas.getContext('2d');
+      // Draw a solid white disc with a 1-pixel anti-aliased edge. No halo, no gradient.
+      dotCtx.clearRect(0, 0, 128, 128);
+      dotCtx.fillStyle = '#ffffff';
+      dotCtx.beginPath();
+      dotCtx.arc(64, 64, 56, 0, Math.PI * 2);
+      dotCtx.fill();
+      const dotTex = new THREE.CanvasTexture(dotCanvas);
+      dotTex.minFilter = THREE.LinearFilter;
+      dotTex.magFilter = THREE.LinearFilter;
+      const ptMat = new THREE.SpriteMaterial({
+        map: dotTex,
+        color: 0xffffff,
+        depthTest: false,
+        transparent: true,
+      });
+      manPointMesh = new THREE.Sprite(ptMat);
+      manPointMesh.scale.set(0.13, 0.13, 0.13);
       manPointMesh.position.copy(manCurrentVec);
+      manPointMesh.renderOrder = 11;
       manSphereGroup.add(manPointMesh);
 
       manPathGroup = new THREE.Group();
+      manPathGroup.renderOrder = 10;
       manSphereGroup.add(manPathGroup);
 
       manHistory.push(manCurrentVec.clone());
@@ -974,25 +1056,66 @@
       const w = manualCanvas.parentElement.clientWidth, h = manualCanvas.parentElement.clientHeight;
       if (w < 1 || h < 1) return;
       manRenderer.setSize(w, h); manCamera.aspect = w/h; manCamera.updateProjectionMatrix();
+      // LineMaterial needs screen resolution to scale line thickness correctly.
+      const mats = manSphereGroup && manSphereGroup.userData.wireMaterials;
+      if (mats) mats.forEach(m => m.resolution.set(w, h));
     }
 
+    // Reused material reference for the trail so resize updates its resolution too.
+    let manTrailMat = null;
     function updateManualTrail() {
       manPathGroup.clear();
       const pts = [];
-      for(let i=0; i<manHistory.length-1; i++){
-        const p1 = manHistory[i], p2 = manHistory[i+1];
-        // Draw curved Great Circle arc by lerping and normalizing
-        for(let t=0; t<=1.01; t+=0.05) pts.push(new THREE.Vector3().copy(p1).lerp(p2, Math.min(1,t)).normalize().multiplyScalar(1.01));
+      // Each segment is an arc of a small circle about the fixed rotation axis.
+      // Reconstruct the exact swept path by incrementally rotating the segment's
+      // start vector about its axis by angle t*totalAngle.
+      for (let i = 0; i < manSegments.length; i++) {
+        const seg = manSegments[i];
+        const STEPS = 32;
+        for (let s = 0; s <= STEPS; s++) {
+          const t = s / STEPS;
+          const v = seg.startVec.clone().applyAxisAngle(seg.axis, seg.angle * t).multiplyScalar(1.012);
+          pts.push(v);
+        }
       }
-      if (pts.length < 2) return;
-      const geo = new THREE.BufferGeometry().setFromPoints(pts);
-      const mat = new THREE.LineBasicMaterial({ color: 0x8a6abf });
-      manPathGroup.add(new THREE.Line(geo, mat));
+      if (pts.length >= 2) {
+        // Flatten consecutive points into LineSegments2 input format: each internal vertex
+        // is duplicated so that [p0,p1,p1,p2,p2,p3,...] reads as connected segments.
+        const flat = [];
+        for (let i = 0; i < pts.length - 1; i++) {
+          flat.push(pts[i].x, pts[i].y, pts[i].z, pts[i+1].x, pts[i+1].y, pts[i+1].z);
+        }
+        const lsGeo = new THREE.LineSegmentsGeometry();
+        lsGeo.setPositions(flat);
+        if (!manTrailMat) {
+          manTrailMat = new THREE.LineMaterial({
+            color: 0xc9a4ff,
+            linewidth: 4.0,
+            transparent: true,
+            opacity: 0.95,
+            depthTest: false,          // always visible, never occluded by the sphere
+            dashed: false,
+          });
+          const w = manualCanvas.parentElement.clientWidth || 1, h = manualCanvas.parentElement.clientHeight || 1;
+          manTrailMat.resolution.set(w, h);
+          // Hook this material into the resize-time resolution updater.
+          manSphereGroup.userData.wireMaterials.push(manTrailMat);
+        }
+        const trailLine = new THREE.LineSegments2(lsGeo, manTrailMat);
+        trailLine.computeLineDistances();
+        trailLine.renderOrder = 10;
+        manPathGroup.add(trailLine);
+      }
 
+      // Waypoint dots: flat solid dots, always visible -- never occluded by the sphere.
+      const dotGeo = new THREE.SphereGeometry(0.035, 16, 16);
+      const dotMat = new THREE.MeshBasicMaterial({ color: 0xc9a4ff, depthTest: false });
       manHistory.forEach((p, idx) => {
-        if (idx === 0) return; 
-        const dot = new THREE.Mesh(new THREE.SphereGeometry(0.02, 8, 8), new THREE.MeshBasicMaterial({ color: 0x8a6abf }));
-        dot.position.copy(p).multiplyScalar(1.01); manPathGroup.add(dot);
+        if (idx === 0) return;
+        const dot = new THREE.Mesh(dotGeo, dotMat);
+        dot.position.copy(p).multiplyScalar(1.015);
+        dot.renderOrder = 11;
+        manPathGroup.add(dot);
       });
     }
 
@@ -1002,13 +1125,20 @@
       const move = MAN_MOVES[dir];
       const lastMove = manWord.length ? manWord[manWord.length-1] : null;
 
-      if (lastMove === move.inv) { 
-        manWord.pop(); manHistory.pop(); 
-        manAnimTarget = manHistory[manHistory.length-1].clone(); 
+      if (lastMove === move.inv) {
+        manWord.pop(); manHistory.pop(); manSegments.pop();
+        manAnimTarget = manHistory[manHistory.length-1].clone();
+        // Undo the previous rotation: rotate current position by the inverse angle about the same axis.
+        manAnimAxis = move.axis;
+        manAnimAngle = move.angle; // move is the inverse of the popped move, so this takes us back.
         manIsBacktracking = true;
-      } else { 
-        manWord.push(dir); 
-        manAnimTarget = manCurrentVec.clone().applyAxisAngle(move.axis, move.angle); 
+      } else {
+        manWord.push(dir);
+        manAnimAxis = move.axis;
+        manAnimAngle = move.angle;
+        manAnimTarget = manCurrentVec.clone().applyAxisAngle(move.axis, move.angle);
+        // Record the segment so updateManualTrail can re-draw the exact small-circle arc.
+        manSegments.push({ axis: move.axis, angle: move.angle, startVec: manCurrentVec.clone() });
         manIsBacktracking = false;
       }
 
@@ -1027,7 +1157,7 @@
     ['n','s','e','w'].forEach(dir => document.getElementById(`btn-m-${dir.toUpperCase()}`).addEventListener('click', () => applyManualMove(dir.toUpperCase())));
     
     document.getElementById('btn-m-reset').addEventListener('click', () => {
-      manWord = []; manCurrentVec = new THREE.Vector3(0, 0, 1); manHistory = [manCurrentVec.clone()];
+      manWord = []; manCurrentVec = new THREE.Vector3(0, 0, 1); manHistory = [manCurrentVec.clone()]; manSegments = [];
       manPointMesh.position.copy(manCurrentVec); updateManualTrail(); manSphereGroup.rotation.set(0,0,0);
       document.getElementById('stat-m-word').innerHTML = "Start"; document.getElementById('stat-m-len').innerText = 0;
       resetIdleTimer();
@@ -1048,10 +1178,11 @@
           updateManualTrail();
         } else {
           const ease = manAnimProgress < 0.5 ? 2 * manAnimProgress * manAnimProgress : 1 - Math.pow(-2 * manAnimProgress + 2, 2) / 2;
-          const curVec = manAnimStart.clone().lerp(manAnimTarget, ease).normalize();
+          // Rotate about the fixed axis by a fraction of the full angle -- this traces the true small-circle arc.
+          const curVec = manAnimStart.clone().applyAxisAngle(manAnimAxis, manAnimAngle * ease);
           manPointMesh.position.copy(curVec);
         }
-      } else { manSphereGroup.rotation.y += 0.001; } 
+      } else { /* viewpoint stays fixed; user can still drag to look around */ }
       manRenderer.render(manScene, manCamera);
     }
 

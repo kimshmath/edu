@@ -407,13 +407,21 @@
       <div class="ibox reveal" id="ibox-manual">
         <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
         <h3 class="ibox-title">역설의 나침반</h3>
-        <p class="ibox-desc">적도 위에서 시작하는 하나의 점을 보고 있다. 아래 버튼을 클릭하여 정확히 70.53° 회전을 수동으로 적용해 보라. 빛나는 궤적이 지구 위에서 혼돈스럽고 반복되지 않는 패턴을 짜나가는 것을 관찰하라. 출발점으로 돌아가려면, 정확히 자신의 걸음 순서를 되돌아가야 한다.</p>
+        <p class="ibox-desc">적도 위에서 시작하는 하나의 점을 보고 있다. 아래 버튼을 클릭하여 정확히 70.53° 회전을 수동으로 적용해 보라. 구 위의 <span style="color: #ff5a5a;">빨강</span>과 <span style="color: #4fb3ff;">파랑</span> 점은 두 회전축의 네 극점(회전의 고정점)이다. 점이 극점에 가까워질수록 그 축 주위 회전이 만드는 호의 길이가 짧아진다는 점에 주목하라 — 회전각은 언제나 70.53°이지만, 구면 위 이동 거리는 극점까지의 거리에 따라 줄어든다. 출발점으로 돌아가려면, 정확히 자신의 걸음 순서를 되돌아가야 한다.</p>
         
         <div class="canvas-container" style="height: 400px; position: relative;">
           <canvas id="manual-canvas" style="position: absolute; inset: 0; width: 100%; height: 100%; outline: none; cursor: grab;"></canvas>
           <div class="overlay-hint">드래그하여 구 회전</div>
         </div>
-        
+
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.2rem; margin: 0.8rem 0 0.2rem; font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); letter-spacing: 0.04em;">
+          <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #ff5a5a; box-shadow: 0 0 6px #ff5a5a;"></span>북 극점</span>
+          <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #a01c1c;"></span>남 극점</span>
+          <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #4fb3ff; box-shadow: 0 0 6px #4fb3ff;"></span>동 극점</span>
+          <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #1d4c8a;"></span>서 극점</span>
+          <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: var(--cream); box-shadow: 0 0 6px var(--cream);"></span>이동하는 점</span>
+        </div>
+
         <div class="controls" style="justify-content: center; gap: 0.8rem;">
           <button class="btn btn-n" id="btn-m-N">북</button>
           <button class="btn btn-s" id="btn-m-S">남</button>
@@ -915,7 +923,7 @@
     const manualCanvas = document.getElementById('manual-canvas');
     let manRenderer, manScene, manCamera, manSphereGroup, manPathGroup;
     let manInitialized = false, manAnimating = false;
-    let manWord = [], manHistory = [];
+    let manWord = [], manHistory = [], manSegments = [];
     let manCurrentVec = new THREE.Vector3(0, 0, 1); 
     let manAnimStart, manAnimTarget, manAnimProgress = 0;
     let manIsBacktracking = false;
@@ -936,22 +944,94 @@
     function initManual3D() {
       if (typeof THREE === 'undefined' || manInitialized) return;
       manRenderer = new THREE.WebGLRenderer({ canvas: manualCanvas, antialias: true, alpha: true });
-      manRenderer.setPixelRatio(Math.min(devicePixelRatio, 2)); manRenderer.setClearColor(0x0e1128, 1);
+      manRenderer.setPixelRatio(devicePixelRatio); manRenderer.setClearColor(0x0e1128, 1);
       manScene = new THREE.Scene(); manCamera = new THREE.PerspectiveCamera(45, manualCanvas.parentElement.clientWidth/manualCanvas.parentElement.clientHeight, 0.1, 100);
       manCamera.position.set(0, 0, 3.8); manCamera.lookAt(0,0,0);
       manSphereGroup = new THREE.Group(); manScene.add(manSphereGroup);
 
-      const globeGeo = new THREE.SphereGeometry(1, 32, 16);
-      const globeMat = new THREE.MeshBasicMaterial({ color: 0x52566a, wireframe: true, transparent: true, opacity: 0.15 });
-      manSphereGroup.add(new THREE.Mesh(globeGeo, globeMat));
+      // 방송용 매끈한 구면: 환경 반사 없는 깔끔한 그래픽 느낌. MeshPhongMaterial로
+      // 균일한 명암 + 부드러운 하이라이트를 내되, 금속 PBR의 거울 반사는 피한다.
+      // 반투명 Phong 정렬 문제를 피하기 위해 앞뒤 면을 별도 메시로 그린다.
+      const sphereGeo = new THREE.SphereGeometry(1, 96, 64);
+      function makeGlobeMat(side) {
+        return new THREE.MeshPhongMaterial({
+          color: 0x5f6c7d,
+          specular: 0x1a1f28,
+          shininess: 18,
+          transparent: true,
+          opacity: side === THREE.BackSide ? 0.20 : 0.45,
+          side: side,
+          depthWrite: false,
+        });
+      }
+      const globeBack = new THREE.Mesh(sphereGeo, makeGlobeMat(THREE.BackSide));
+      globeBack.renderOrder = 0;
+      globeBack.scale.setScalar(0.999);
+      const globeFront = new THREE.Mesh(sphereGeo, makeGlobeMat(THREE.FrontSide));
+      globeFront.renderOrder = 2;
+      manSphereGroup.add(globeBack);
+      manSphereGroup.add(globeFront);
 
-      const ptGeo = new THREE.SphereGeometry(0.06, 16, 16);
-      const ptMat = new THREE.MeshBasicMaterial({ color: 0xc9a84c });
-      manPointMesh = new THREE.Mesh(ptGeo, ptMat);
+      // 단순한 2-광원 구성: 부드러운 방향성 key + 넉넉한 ambient.
+      // 조명은 manScene에 두어 사용자가 구를 드래그해도 하이라이트가 월드 공간에 고정된다.
+      const ambient = new THREE.AmbientLight(0xffffff, 0.55);
+      manScene.add(ambient);
+      const keyLight = new THREE.DirectionalLight(0xffffff, 0.75);
+      keyLight.position.set(1.8, 2.0, 2.5);
+      manScene.add(keyLight);
+
+      // 리사이즈 핸들러가 trail 재질의 resolution을 갱신하는 데 쓰이므로 빈 배열을 유지.
+      manSphereGroup.userData.wireMaterials = [];
+
+      // 회전의 고정점(극점):
+      // N/S는 X축 회전 → 극점은 (±1, 0, 0), 빨강
+      // E/W는 Y축 회전 → 극점은 (0, ±1, 0), 파랑
+      // 같은 축의 +쪽은 밝은 색조, -쪽은 어두운 색조로 두어 두 끝을 구분할 수 있다.
+      const COL_NS_BRIGHT = 0xff5a5a;   // +X  (N pivot)
+      const COL_NS_DARK   = 0xa01c1c;   // -X  (S pivot)
+      const COL_EW_BRIGHT = 0x4fb3ff;   // +Y  (E pivot)
+      const COL_EW_DARK   = 0x1d4c8a;   // -Y  (W pivot)
+      const poleGeo = new THREE.SphereGeometry(0.06, 24, 24);
+      const poleData = [
+        { pos: [ 1, 0, 0], color: COL_NS_BRIGHT },
+        { pos: [-1, 0, 0], color: COL_NS_DARK   },
+        { pos: [ 0, 1, 0], color: COL_EW_BRIGHT },
+        { pos: [ 0,-1, 0], color: COL_EW_DARK   },
+      ];
+      poleData.forEach(p => {
+        const m = new THREE.Mesh(poleGeo, new THREE.MeshBasicMaterial({ color: p.color, depthTest: false }));
+        m.position.set(p.pos[0], p.pos[1], p.pos[2]);
+        m.renderOrder = 10;
+        manSphereGroup.add(m);
+      });
+
+      // 이동하는 점: 항상 카메라를 향하는 2D Sprite. 구면 메쉬 대신 sprite를 쓰면
+      // 폴리곤 분할이나 자체 음영 없이 완전한 단색 원이 보장된다.
+      const dotCanvas = document.createElement('canvas');
+      dotCanvas.width = dotCanvas.height = 128;
+      const dotCtx = dotCanvas.getContext('2d');
+      dotCtx.clearRect(0, 0, 128, 128);
+      dotCtx.fillStyle = '#ffffff';
+      dotCtx.beginPath();
+      dotCtx.arc(64, 64, 56, 0, Math.PI * 2);
+      dotCtx.fill();
+      const dotTex = new THREE.CanvasTexture(dotCanvas);
+      dotTex.minFilter = THREE.LinearFilter;
+      dotTex.magFilter = THREE.LinearFilter;
+      const ptMat = new THREE.SpriteMaterial({
+        map: dotTex,
+        color: 0xffffff,
+        depthTest: false,
+        transparent: true,
+      });
+      manPointMesh = new THREE.Sprite(ptMat);
+      manPointMesh.scale.set(0.13, 0.13, 0.13);
       manPointMesh.position.copy(manCurrentVec);
+      manPointMesh.renderOrder = 11;
       manSphereGroup.add(manPointMesh);
 
       manPathGroup = new THREE.Group();
+      manPathGroup.renderOrder = 10;
       manSphereGroup.add(manPathGroup);
 
       manHistory.push(manCurrentVec.clone());
@@ -974,25 +1054,65 @@
       const w = manualCanvas.parentElement.clientWidth, h = manualCanvas.parentElement.clientHeight;
       if (w < 1 || h < 1) return;
       manRenderer.setSize(w, h); manCamera.aspect = w/h; manCamera.updateProjectionMatrix();
+      // LineMaterial의 선 두께가 올바르게 계산되도록 화면 해상도를 갱신
+      const mats = manSphereGroup && manSphereGroup.userData.wireMaterials;
+      if (mats) mats.forEach(m => m.resolution.set(w, h));
     }
 
+    // Trail 재질을 재사용하여 resize 시 resolution을 갱신할 수 있도록 참조 유지
+    let manTrailMat = null;
     function updateManualTrail() {
       manPathGroup.clear();
       const pts = [];
-      for(let i=0; i<manHistory.length-1; i++){
-        const p1 = manHistory[i], p2 = manHistory[i+1];
-        // Draw curved Great Circle arc by lerping and normalizing
-        for(let t=0; t<=1.01; t+=0.05) pts.push(new THREE.Vector3().copy(p1).lerp(p2, Math.min(1,t)).normalize().multiplyScalar(1.01));
+      // 각 구간은 고정축 회전이 그리는 소원(small circle) 호이다.
+      // 시작 벡터를 축 주위로 t·각도만큼 점진적으로 회전시켜 정확한 경로를 재구성한다.
+      for (let i = 0; i < manSegments.length; i++) {
+        const seg = manSegments[i];
+        const STEPS = 32;
+        for (let s = 0; s <= STEPS; s++) {
+          const t = s / STEPS;
+          const v = seg.startVec.clone().applyAxisAngle(seg.axis, seg.angle * t).multiplyScalar(1.012);
+          pts.push(v);
+        }
       }
-      if (pts.length < 2) return;
-      const geo = new THREE.BufferGeometry().setFromPoints(pts);
-      const mat = new THREE.LineBasicMaterial({ color: 0x8a6abf });
-      manPathGroup.add(new THREE.Line(geo, mat));
+      if (pts.length >= 2) {
+        // LineSegments2 입력 형식으로 평탄화: 내부 vertex는 중복되어
+        // [p0,p1, p1,p2, p2,p3, ...]이 연결된 선분 열로 읽히게 한다.
+        const flat = [];
+        for (let i = 0; i < pts.length - 1; i++) {
+          flat.push(pts[i].x, pts[i].y, pts[i].z, pts[i+1].x, pts[i+1].y, pts[i+1].z);
+        }
+        const lsGeo = new THREE.LineSegmentsGeometry();
+        lsGeo.setPositions(flat);
+        if (!manTrailMat) {
+          manTrailMat = new THREE.LineMaterial({
+            color: 0xc9a4ff,
+            linewidth: 4.0,
+            transparent: true,
+            opacity: 0.95,
+            depthTest: false,          // 구면에 가려지지 않고 항상 보이도록
+            dashed: false,
+          });
+          const w = manualCanvas.parentElement.clientWidth || 1, h = manualCanvas.parentElement.clientHeight || 1;
+          manTrailMat.resolution.set(w, h);
+          // 리사이즈 시 resolution이 갱신되도록 등록
+          manSphereGroup.userData.wireMaterials.push(manTrailMat);
+        }
+        const trailLine = new THREE.LineSegments2(lsGeo, manTrailMat);
+        trailLine.computeLineDistances();
+        trailLine.renderOrder = 10;
+        manPathGroup.add(trailLine);
+      }
 
+      // Waypoint dots: 평평한 단색 점. 항상 구면 위에 보이도록 depthTest를 끈다.
+      const dotGeo = new THREE.SphereGeometry(0.035, 16, 16);
+      const dotMat = new THREE.MeshBasicMaterial({ color: 0xc9a4ff, depthTest: false });
       manHistory.forEach((p, idx) => {
-        if (idx === 0) return; 
-        const dot = new THREE.Mesh(new THREE.SphereGeometry(0.02, 8, 8), new THREE.MeshBasicMaterial({ color: 0x8a6abf }));
-        dot.position.copy(p).multiplyScalar(1.01); manPathGroup.add(dot);
+        if (idx === 0) return;
+        const dot = new THREE.Mesh(dotGeo, dotMat);
+        dot.position.copy(p).multiplyScalar(1.015);
+        dot.renderOrder = 11;
+        manPathGroup.add(dot);
       });
     }
 
@@ -1002,13 +1122,20 @@
       const move = MAN_MOVES[dir];
       const lastMove = manWord.length ? manWord[manWord.length-1] : null;
 
-      if (lastMove === move.inv) { 
-        manWord.pop(); manHistory.pop(); 
-        manAnimTarget = manHistory[manHistory.length-1].clone(); 
+      if (lastMove === move.inv) {
+        manWord.pop(); manHistory.pop(); manSegments.pop();
+        manAnimTarget = manHistory[manHistory.length-1].clone();
+        // 역행: 현재 위치를 같은 축 주위로 역각도만큼 회전시켜 이전 위치로 돌아간다.
+        manAnimAxis = move.axis;
+        manAnimAngle = move.angle;   // move는 방금 뺀 이동의 역이므로 이 각도가 되돌아가는 각도
         manIsBacktracking = true;
-      } else { 
-        manWord.push(dir); 
-        manAnimTarget = manCurrentVec.clone().applyAxisAngle(move.axis, move.angle); 
+      } else {
+        manWord.push(dir);
+        manAnimAxis = move.axis;
+        manAnimAngle = move.angle;
+        manAnimTarget = manCurrentVec.clone().applyAxisAngle(move.axis, move.angle);
+        // 구간 기록: updateManualTrail이 정확한 소원 호를 다시 그릴 수 있도록
+        manSegments.push({ axis: move.axis, angle: move.angle, startVec: manCurrentVec.clone() });
         manIsBacktracking = false;
       }
 
@@ -1027,7 +1154,7 @@
     ['n','s','e','w'].forEach(dir => document.getElementById(`btn-m-${dir.toUpperCase()}`).addEventListener('click', () => applyManualMove(dir.toUpperCase())));
     
     document.getElementById('btn-m-reset').addEventListener('click', () => {
-      manWord = []; manCurrentVec = new THREE.Vector3(0, 0, 1); manHistory = [manCurrentVec.clone()];
+      manWord = []; manCurrentVec = new THREE.Vector3(0, 0, 1); manHistory = [manCurrentVec.clone()]; manSegments = [];
       manPointMesh.position.copy(manCurrentVec); updateManualTrail(); manSphereGroup.rotation.set(0,0,0);
       document.getElementById('stat-m-word').innerHTML = "시작"; document.getElementById('stat-m-len').innerText = 0;
       resetIdleTimer();
@@ -1048,10 +1175,11 @@
           updateManualTrail();
         } else {
           const ease = manAnimProgress < 0.5 ? 2 * manAnimProgress * manAnimProgress : 1 - Math.pow(-2 * manAnimProgress + 2, 2) / 2;
-          const curVec = manAnimStart.clone().lerp(manAnimTarget, ease).normalize();
+          // 고정축 주위로 전체 각도의 일부만큼 회전 → 실제 소원 호를 따라 이동
+          const curVec = manAnimStart.clone().applyAxisAngle(manAnimAxis, manAnimAngle * ease);
           manPointMesh.position.copy(curVec);
         }
-      } else { manSphereGroup.rotation.y += 0.001; } 
+      } else { /* 시점은 고정; 사용자가 드래그하면 회전 */ }
       manRenderer.render(manScene, manCamera);
     }
 
