@@ -1,28 +1,35 @@
 <!DOCTYPE html>
+
 <html lang="ko">
 <head>
   <!-- Google tag (gtag.js) -->
-  
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-RQVK6SF2E6"></script>
+
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-RQVK6SF2E6');
   </script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>완두콩 한 알로 태양 만들기</title>
-  
+
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/lines/LineSegmentsGeometry.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/lines/LineMaterial.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/lines/LineSegments2.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/globe.gl@2.30.0/dist/globe.gl.min.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
 
   <style>
@@ -284,6 +291,7 @@
       .controls { gap: 0.5rem; }
     }
   </style>
+
   <link rel="stylesheet" href="brand.css">
 <link rel="stylesheet" href="narration_player.css">
   <link rel="stylesheet" href="typography.css">
@@ -291,330 +299,332 @@
 <body>
 
   <div id="ambient-particles"></div>
-  
 
   <header class="hero" id="hero">
     <canvas id="hero-canvas"></canvas>
     <div class="hero-vignette"></div>
-    
-    <div class="hero-chapter reveal" style="transition-delay: 0.1s">공간</div>
-    <h1 class="hero-title reveal" style="transition-delay: 0.2s">완두콩 한 알로 <em>태양</em> 만들기</h1>
-    <div class="hero-tagline reveal" style="transition-delay: 0.3s">무한의 균열 속으로, 순수한 논리의 의지에 기하학이 굴복하는 곳까지.</div>
-    <div class="hero-scroll">시작</div>
+
+```
+<div class="hero-chapter reveal" style="transition-delay: 0.1s">공간</div>
+<h1 class="hero-title reveal" style="transition-delay: 0.2s">완두콩 한 알로 <em>태양</em> 만들기</h1>
+<div class="hero-tagline reveal" style="transition-delay: 0.3s">무한의 균열 속으로, 순수한 논리의 의지에 기하학이 굴복하는 곳까지.</div>
+<div class="hero-scroll">시작</div>
+```
+
   </header>
 
   <main class="chapter-container">
+
+```
+<section class="chapter-section" id="section-1">
+  <span class="sec-num reveal">01</span>
+  <h2 class="sec-title reveal">기적의 해부학</h2>
+  <p class="prose prose-drop reveal">1924년, 두 명의 폴란드 수학자 스테판 바나흐와 알프레트 타르스키가 너무나 반직관적이어서 보편적으로 '역설'이라 불리는 정리를 담은 논문을 발표했다. 그들은 하나의 단단한 3차원 구를 단 다섯 개의 들쭉날쭉하고 눈에 보이지 않는 조각으로 쪼갠 뒤, 그 조각들을 재조립하여 <span class="hi">원래와 정확히 같은 크기의 완벽한 구 두 개</span>를 만들 수 있음을 증명했다. 늘림도 없고, 구부림도 없고, 새로운 재료의 추가도 없다. 조각들을 단지 공간 속에서 이동시켜 다시 맞추기만 하면 된다.</p>
+  <p class="prose reveal">논리적으로 확장하면, 평범한 완두콩 하나를 유한 개의 조각으로 나눈 뒤 재조립하여 태양 크기의 구를 만들 수 있다. 물리적 직관으로는 완전한 연금술처럼 들린다. 질량 보존 법칙에 대한 노골적인 위반이자, 현실이라는 개념 자체에 대한 모독처럼 느껴진다. 그러나 순수하고 엄밀한 현대 기하학의 규칙 안에서, 이것은 부정할 수 없는 진실이다.</p>
+
+  <div class="block-quote reveal">
+    “On peut décomposer une sphère en un nombre fini de morceaux et les réassembler pour former deux sphères de même rayon.”
+    <span class="quote-attr">— 스테판 바나흐 & 알프레트 타르스키, Fundamenta Mathematicae (1924)</span>
+  </div>
+
+  <p class="prose reveal">이것은 물리학의 속임수가 아니라, <span class="ac">수학적 공간의 무한한 조밀성</span>에 대한 심오한 계시이다. 물리 세계에서 물질은 원자로 이루어져 있고, 물체를 계속 자르면 결국 더 이상 나눌 수 없는 입자에 도달한다. 하지만 수학의 우주에서 기하학적 구는 셀 수 없이 무한한 차원 없는 점들로 이루어져 있다. 이 역설은 바로 이 무한의 바닥 없는, 프랙탈적 본성을 이용한다—전체가 그 부분의 극히 일부 안에 완벽하게 숨겨질 수 있는 세계.</p>
+
+  <div class="ibox reveal" id="ibox-infinity">
+    <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
+    <h3 class="ibox-title">무한의 엔진</h3>
+    <p class="ibox-desc">바나흐-타르스키 역설은 무한의 기묘한 산술에 의존한다. 무한히 조밀한 공간에서는 모든 점을 바깥으로 이동시켜 원래 부피의 한 방울도 잃지 않고도 빈 공간을 무에서 만들어낼 수 있다. 슬라이더를 드래그하여 빛나는 점들을 황금 나선을 따라 이동시켜 보라. 나선이 원천을 고갈시키지 않고도 영원히 늘어나며, 중심에 완벽히 비어 있는 자리를 남겨 완전히 새로운 점들을 수용하는 기적을 관찰해 보라.</p>
     
-    <section class="chapter-section" id="section-1">
-      <span class="sec-num reveal">01</span>
-      <h2 class="sec-title reveal">기적의 해부학</h2>
-      <p class="prose prose-drop reveal">1924년, 두 명의 폴란드 수학자 스테판 바나흐와 알프레트 타르스키가 너무나 반직관적이어서 보편적으로 '역설'이라 불리는 정리를 담은 논문을 발표했다. 그들은 하나의 단단한 3차원 구를 단 다섯 개의 들쭉날쭉하고 눈에 보이지 않는 조각으로 쪼갠 뒤, 그 조각들을 재조립하여 <span class="hi">원래와 정확히 같은 크기의 완벽한 구 두 개</span>를 만들 수 있음을 증명했다. 늘림도 없고, 구부림도 없고, 새로운 재료의 추가도 없다. 조각들을 단지 공간 속에서 이동시켜 다시 맞추기만 하면 된다.</p>
-      <p class="prose reveal">논리적으로 확장하면, 평범한 완두콩 하나를 유한 개의 조각으로 나눈 뒤 재조립하여 태양 크기의 구를 만들 수 있다. 물리적 직관으로는 완전한 연금술처럼 들린다. 질량 보존 법칙에 대한 노골적인 위반이자, 현실이라는 개념 자체에 대한 모독처럼 느껴진다. 그러나 순수하고 엄밀한 현대 기하학의 규칙 안에서, 이것은 부정할 수 없는 진실이다.</p>
-
-      <div class="block-quote reveal">
-        “On peut décomposer une sphère en un nombre fini de morceaux et les réassembler pour former deux sphères de même rayon.”
-        <span class="quote-attr">— 스테판 바나흐 & 알프레트 타르스키, Fundamenta Mathematicae (1924)</span>
+    <div class="canvas-container" style="height: 380px;">
+      <canvas id="canvas-1" class="interactive"></canvas>
+    </div>
+    
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">원소 이동 (n → n + k)</span>
+        <input type="range" id="slider-shift" min="0" max="40" value="0" step="0.1">
       </div>
-
-      <p class="prose reveal">이것은 물리학의 속임수가 아니라, <span class="ac">수학적 공간의 무한한 조밀성</span>에 대한 심오한 계시이다. 물리 세계에서 물질은 원자로 이루어져 있고, 물체를 계속 자르면 결국 더 이상 나눌 수 없는 입자에 도달한다. 하지만 수학의 우주에서 기하학적 구는 셀 수 없이 무한한 차원 없는 점들로 이루어져 있다. 이 역설은 바로 이 무한의 바닥 없는, 프랙탈적 본성을 이용한다—전체가 그 부분의 극히 일부 안에 완벽하게 숨겨질 수 있는 세계.</p>
-
-      <div class="ibox reveal" id="ibox-infinity">
-        <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
-        <h3 class="ibox-title">무한의 엔진</h3>
-        <p class="ibox-desc">바나흐-타르스키 역설은 무한의 기묘한 산술에 의존한다. 무한히 조밀한 공간에서는 모든 점을 바깥으로 이동시켜 원래 부피의 한 방울도 잃지 않고도 빈 공간을 무에서 만들어낼 수 있다. 슬라이더를 드래그하여 빛나는 점들을 황금 나선을 따라 이동시켜 보라. 나선이 원천을 고갈시키지 않고도 영원히 늘어나며, 중심에 완벽히 비어 있는 자리를 남겨 완전히 새로운 점들을 수용하는 기적을 관찰해 보라.</p>
-        
-        <div class="canvas-container" style="height: 380px;">
-          <canvas id="canvas-1" class="interactive"></canvas>
-        </div>
-        
-        <div class="controls">
-          <div class="ctrl-group">
-            <span class="ctrl-label">원소 이동 (n → n + k)</span>
-            <input type="range" id="slider-shift" min="0" max="40" value="0" step="0.1">
-          </div>
-        </div>
-        <div class="stats">
-          <div class="stat-card">
-            <div class="ctrl-label">이동량 (k)</div>
-            <div class="stat-val" id="stat-k">0.0</div>
-          </div>
-          <div class="stat-card">
-            <div class="ctrl-label">생성된 빈자리</div>
-            <div class="stat-val" id="stat-vacated">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="ctrl-label">전체 점의 수</div>
-            <div class="stat-val">∞</div>
-          </div>
-        </div>
+    </div>
+    <div class="stats">
+      <div class="stat-card">
+        <div class="ctrl-label">이동량 (k)</div>
+        <div class="stat-val" id="stat-k">0.0</div>
       </div>
-    </section>
-
-    <section class="chapter-section" id="section-2">
-      <span class="sec-num reveal">02</span>
-      <h2 class="sec-title reveal">회전의 미궁</h2>
-      
-      <p class="prose prose-drop reveal">이 역설의 진정한 설계자는 바나흐도 타르스키도 아닌, 독일의 수학자 펠릭스 하우스도르프였다. 그보다 10년 전, 하우스도르프는 마법이 구 자체에 있는 것이 아니라, 3차원 공간의 보이지 않는 뼈대—회전의 법칙—안에 있음을 발견했다. 물체를 회전시킬 때, 움직임의 순서가 결과를 근본적으로 바꾼다. 구를 왼쪽으로 돌린 뒤 위로 돌리면, 위로 먼저 돌린 뒤 왼쪽으로 돌린 것과 다른 위치에 놓인다. 이 비교환성이 프랙탈적인 가능성의 우주를 낳는다.</p>
-      
-      <p class="prose reveal">보이지 않는 미궁의 한가운데 서 있다고 상상하라. 모든 발걸음이 강체 회전이다. 네 가지 방향으로 돌 수 있다. 이 회전들의 각도를 정밀하게 선택하면, 그것들은 결코 깔끔하게 상쇄되거나 반복되지 않는다. 매번 새로운 움직임의 조합은 완전히 고유한, 이전에 한 번도 본 적 없는 배향을 만들어낸다. 출발점으로 돌아가는 유일한 방법은 정확히 자신의 발자취를 되돌아가는 것뿐이다. 수학자들은 이 무한히 분기하고, 고리가 없는 구조를 <span class="ac">자유군(free group)</span>이라 부른다.</p>
-
-      <p class="prose reveal">역설은 전적으로 이 군의 무한한 가지들 안에서 꽃핀다. 나무가 영원히 뻗어 나가기 때문에, 하나의 하위 가지 안에 전체 나무의 완벽하고 동일한 복사본이 숨겨져 있다. 하나의 가지만 잡고 단 한 번의 역회전을 적용하면, 그것은 즉시 미궁 전체를 거의 다 뒤덮을 만큼 팽창한다. 이 수학적 마술—극히 일부에서 전체를 소환하는 것—이 바로 구를 복제하는 정확한 메커니즘이다.</p>
-
-      <div class="ibox reveal" id="ibox-cayley">
-        <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
-        <h3 class="ibox-title">3차원 속의 자유군</h3>
-        <p class="ibox-desc">이것은 자유군의 케일리 그래프이다. 얼핏 보면 변의 길이가 점점 줄어드는 평면 프랙탈처럼 보인다. 하지만 <span class="hi">캔버스를 드래그하여 공간을 회전시켜 보라</span>. 실은 모든 가지가 정확히 같은 단위 길이를 가진 완벽하게 대칭적인 3차원 유클리드 구조임을 발견하게 될 것이다. "줄어듦"은 단지 원근법의 환상이었다.</p>
-        
-        <div class="canvas-container" style="height: 480px; position: relative;">
-          <canvas id="cayley-canvas" style="position: absolute; inset: 0; width: 100%; height: 100%; outline: none; cursor: grab;"></canvas>
-          <div class="overlay-hint">드래그하여 회전 · Shift+드래그로 이동 · 스크롤로 확대/축소</div>
-        </div>
-        
-        <div class="controls">
-          <div class="ctrl-group">
-            <span class="ctrl-label">분기 깊이</span>
-            <input type="range" id="slider-cayley" min="0" max="5" value="0" step="1">
-          </div>
-        </div>
-        
-        <div class="stats">
-          <div class="stat-card">
-            <div class="ctrl-label">깊이</div>
-            <div class="stat-val" id="stat-cay-depth">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="ctrl-label">고유 노드</div>
-            <div class="stat-val" id="stat-cay-nodes">1</div>
-          </div>
-          <div class="stat-card">
-            <div class="ctrl-label">가지</div>
-            <div class="stat-val" id="stat-cay-edges">0</div>
-          </div>
-        </div>
+      <div class="stat-card">
+        <div class="ctrl-label">생성된 빈자리</div>
+        <div class="stat-val" id="stat-vacated">0</div>
       </div>
-    </section>
-
-    <section class="chapter-section" id="section-3">
-      <span class="sec-num reveal">03</span>
-      <h2 class="sec-title reveal">마법의 각도</h2>
-      
-      <p class="prose prose-drop reveal">이제 우리는 무한히 분기하는, 역설적인 회전의 나무를 가지고 있다. 하지만 이것이 실제 구로 어떻게 번역될까? 비밀은 매우 특수한 기하학에 있다: 정확히 <span class="hi math-ktx">\arccos(1/3)</span>, 대략 70.53도의 마법의 각도.</p>
-      
-      <p class="prose reveal">하우스도르프는 이 정확한 각도로 두 직교 축(적도와 본초 자오선처럼)을 따라 구를 회전시키면, 그 움직임이 정확히 추상적 자유군처럼 행동함을 증명했다. 북·남·동·서 회전을 조합하면, 하나의 점이 구의 표면 위에서 춤을 춘다. 이 특정 각도들이 완전한 원에 대해 수학적으로 "무리수적"이기 때문에, 결코 닫힌 고리를 형성하지 않는다.</p>
-      
-      <p class="prose reveal">이 구면 미궁을 아무리 오래 헤매더라도, 점은 결코 자신의 발자국을 다시 밟지 않는다. 매 순서열은 완전히 고유한 목적지를 만들어낸다.</p>
-
-      <div class="ibox reveal" id="ibox-manual">
-        <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
-        <h3 class="ibox-title">역설의 나침반</h3>
-        <p class="ibox-desc">적도 위에서 시작하는 하나의 점을 보고 있다. 아래 버튼을 클릭하여 정확히 70.53° 회전을 수동으로 적용해 보라. 구 위의 <span style="color: #ff5a5a;">빨강</span>과 <span style="color: #4fb3ff;">파랑</span> 점은 두 회전축의 네 극점(회전의 고정점)이다. 점이 극점에 가까워질수록 그 축 주위 회전이 만드는 호의 길이가 짧아진다는 점에 주목하라 — 회전각은 언제나 70.53°이지만, 구면 위 이동 거리는 극점까지의 거리에 따라 줄어든다. 출발점으로 돌아가려면, 정확히 자신의 걸음 순서를 되돌아가야 한다.</p>
-        
-        <div class="canvas-container" style="height: 400px; position: relative;">
-          <canvas id="manual-canvas" style="position: absolute; inset: 0; width: 100%; height: 100%; outline: none; cursor: grab;"></canvas>
-          <div class="overlay-hint">드래그하여 구 회전</div>
-        </div>
-
-        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.2rem; margin: 0.8rem 0 0.2rem; font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); letter-spacing: 0.04em;">
-          <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #ff5a5a; box-shadow: 0 0 6px #ff5a5a;"></span>북 극점</span>
-          <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #a01c1c;"></span>남 극점</span>
-          <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #4fb3ff; box-shadow: 0 0 6px #4fb3ff;"></span>동 극점</span>
-          <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #1d4c8a;"></span>서 극점</span>
-          <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: var(--cream); box-shadow: 0 0 6px var(--cream);"></span>이동하는 점</span>
-        </div>
-
-        <div class="controls" style="justify-content: center; gap: 0.8rem;">
-          <button class="btn btn-n" id="btn-m-N">북</button>
-          <button class="btn btn-s" id="btn-m-S">남</button>
-          <button class="btn btn-e" id="btn-m-E">동</button>
-          <button class="btn btn-w" id="btn-m-W">서</button>
-          <button class="btn btn-outline" id="btn-m-reset">초기화</button>
-        </div>
-        
-        <div class="stats">
-          <div class="stat-card" style="flex: 2;">
-            <div class="ctrl-label">회전 순서열</div>
-            <div class="stat-val" id="stat-m-word" style="font-size: 1.1rem; padding-top: 4px; letter-spacing: 2px;">시작</div>
-          </div>
-          <div class="stat-card">
-            <div class="ctrl-label">걸음 수</div>
-            <div class="stat-val" id="stat-m-len">0</div>
-          </div>
-        </div>
+      <div class="stat-card">
+        <div class="ctrl-label">전체 점의 수</div>
+        <div class="stat-val">∞</div>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
-    <section class="chapter-section" id="section-4">
-      <span class="sec-num reveal">04</span>
-      <h2 class="sec-title reveal">무한의 안무</h2>
-      
-      <p class="prose prose-drop reveal">이제, 방금 한 것을 자동화한다고 상상하라. 지구 위의 한 점을—가령 런던이나 도쿄 같은 도시를—고르고, 네 가지 회전의 <em>가능한 모든 순서열</em>을 동시에 무한까지 적용한다.</p>
-      
-      <p class="prose reveal">도달점들의 전체 모음을 그 점의 <span class="hi">궤도(orbit)</span>라 부른다. 자유군이 결코 스스로에게 되돌아가지 않으므로, 궤도는 결코 겹치지 않는다. 지구 전체를 감싸는, 조밀하게 무한히 흩어진 수학적 먼지 구름을 형성한다. 구름에 아직 속하지 않은 다른 출발점을 고르면, 완전히 별개의, 겹치지 않는 궤도를 얻는다.</p>
+<section class="chapter-section" id="section-2">
+  <span class="sec-num reveal">02</span>
+  <h2 class="sec-title reveal">회전의 미궁</h2>
+  
+  <p class="prose prose-drop reveal">이 역설의 진정한 설계자는 바나흐도 타르스키도 아닌, 독일의 수학자 펠릭스 하우스도르프였다. 그보다 10년 전, 하우스도르프는 마법이 구 자체에 있는 것이 아니라, 3차원 공간의 보이지 않는 뼈대—회전의 법칙—안에 있음을 발견했다. 물체를 회전시킬 때, 움직임의 순서가 결과를 근본적으로 바꾼다. 구를 왼쪽으로 돌린 뒤 위로 돌리면, 위로 먼저 돌린 뒤 왼쪽으로 돌린 것과 다른 위치에 놓인다. 이 비교환성이 프랙탈적인 가능성의 우주를 낳는다.</p>
+  
+  <p class="prose reveal">보이지 않는 미궁의 한가운데 서 있다고 상상하라. 모든 발걸음이 강체 회전이다. 네 가지 방향으로 돌 수 있다. 이 회전들의 각도를 정밀하게 선택하면, 그것들은 결코 깔끔하게 상쇄되거나 반복되지 않는다. 매번 새로운 움직임의 조합은 완전히 고유한, 이전에 한 번도 본 적 없는 배향을 만들어낸다. 출발점으로 돌아가는 유일한 방법은 정확히 자신의 발자취를 되돌아가는 것뿐이다. 수학자들은 이 무한히 분기하고, 고리가 없는 구조를 <span class="ac">자유군(free group)</span>이라 부른다.</p>
 
-      <p class="prose reveal">이것이 바나흐와 타르스키의 산산조각난 조각들의 비밀이다. 구의 전체 연속적 표면은 이 별개의 무한 궤도들로 완벽하게 분할될 수 있다. 이 구름들을 자유군의 경로를 따라 이동시킴으로써, 수학자들은 사실상 구 전체를 복제할 수 있다.</p>
+  <p class="prose reveal">역설은 전적으로 이 군의 무한한 가지들 안에서 꽃핀다. 나무가 영원히 뻗어 나가기 때문에, 하나의 하위 가지 안에 전체 나무의 완벽하고 동일한 복사본이 숨겨져 있다. 하나의 가지만 잡고 단 한 번의 역회전을 적용하면, 그것은 즉시 미궁 전체를 거의 다 뒤덮을 만큼 팽창한다. 이 수학적 마술—극히 일부에서 전체를 소환하는 것—이 바로 구를 복제하는 정확한 메커니즘이다.</p>
 
-      <div class="ibox reveal" id="ibox-globe">
-        <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
-        <h3 class="ibox-title">궤도 전파</h3>
-        <p class="ibox-desc">지구 위에 일곱 개의 서로 다른 색을 가진 출발점(도시)을 배치했다. 슬라이더를 드래그하여 모든 도시의 회전 나무 깊이를 동시에 체계적으로 증가시켜 보라. 각각의 도시가 팽창하는 프랙탈 점 구름을 발생시키며, 부드럽게 교차하면서 지구를 찬란한 색채의 모자이크로 뒤덮는 것을 관찰하라. 진정한 수학적 역설에서, 이 먼지의 폭발은 절대적 무한까지 계속된다.</p>
-        
-        <div id="globe-wrapper">
-          <div id="globe-container"></div>
-          <div id="city-labels"></div>
-          <div id="globe-loading">
-            <div class="spinner"></div>
-            <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em;">지도 불러오는 중...</div>
-          </div>
-        </div>
-        
-        <div class="controls">
-          <div class="ctrl-group">
-            <span class="ctrl-label">전파 깊이</span>
-            <input type="range" id="slider-globe" min="0" max="4" value="0" step="1">
-          </div>
-        </div>
-        
-        <div class="stats">
-          <div class="stat-card">
-            <div class="ctrl-label">궤도 깊이</div>
-            <div class="stat-val" id="stat-gl-depth">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="ctrl-label">도시당 점 수</div>
-            <div class="stat-val" id="stat-gl-pts">1</div>
-          </div>
-          <div class="stat-card">
-            <div class="ctrl-label">전체 점의 수</div>
-            <div class="stat-val" id="stat-gl-tot">7</div>
-          </div>
-        </div>
+  <div class="ibox reveal" id="ibox-cayley">
+    <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
+    <h3 class="ibox-title">3차원 속의 자유군</h3>
+    <p class="ibox-desc">이것은 자유군의 케일리 그래프이다. 얼핏 보면 변의 길이가 점점 줄어드는 평면 프랙탈처럼 보인다. 하지만 <span class="hi">캔버스를 드래그하여 공간을 회전시켜 보라</span>. 실은 모든 가지가 정확히 같은 단위 길이를 가진 완벽하게 대칭적인 3차원 유클리드 구조임을 발견하게 될 것이다. "줄어듦"은 단지 원근법의 환상이었다.</p>
+    
+    <div class="canvas-container" style="height: 480px; position: relative;">
+      <canvas id="cayley-canvas" style="position: absolute; inset: 0; width: 100%; height: 100%; outline: none; cursor: grab;"></canvas>
+      <div class="overlay-hint">드래그하여 회전 · Shift+드래그로 이동 · 스크롤로 확대/축소</div>
+    </div>
+    
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">분기 깊이</span>
+        <input type="range" id="slider-cayley" min="0" max="5" value="0" step="1">
       </div>
-    </section>
-
-    <section class="chapter-section" id="section-5">
-      <span class="sec-num reveal">05</span>
-      <h2 class="sec-title reveal">공리 속의 유령</h2>
-      
-      <p class="prose prose-drop reveal">역설적 조각들을 실제로 만들기 위해서는 물리적인 칼을 쓸 수 없다. 칼은 연속적이고 매끄러운 표면을 잘라, 부피가 잘 정의된 뚜렷한 형상을 남긴다. 바나흐-타르스키 역설을 실행하려면, 수학자들은 순수하게 논리적인 칼날을 소환해야 한다: <span class="hi">선택 공리(Axiom of Choice)</span>. 그들은 별개의 궤도들로 이루어진 셀 수 없는 심연 속에 손을 뻗어, 각각에서 정확히 하나의 대표 점을 뽑아내야 한다.</p>
-      
-      <p class="prose reveal">1904년 에른스트 체르멜로가 공식화한 이 공리는 기만적으로 단순한 전제를 진술한다: 무한한 상자 모음이 있을 때, 각 상자에서 정확히 하나의 항목을 꺼내 새로운 집합을 만들 수 있다—선택 방법에 대한 명시적 규칙이 없더라도. 유한의 세계에서 이것은 사소하다. 그러나 무한의 영역에서, 이 공리는 수학자들이 셀 수 없이 무한한 수의 임의적 선택을 동시에 할 수 있게 한다.</p>
-
-      <div class="block-quote reveal">
-        “Dass auch für jede unendliche Menge ein solches Auswahlprinzip gültig sei, ist ein logisches Gesetz... welches bei mathematischen Deduktionen vielfach angewendet wird.”
-        <span class="quote-attr">— 에른스트 체르멜로, Mathematische Annalen (1904)</span>
+    </div>
+    
+    <div class="stats">
+      <div class="stat-card">
+        <div class="ctrl-label">깊이</div>
+        <div class="stat-val" id="stat-cay-depth">0</div>
       </div>
-
-      <p class="prose reveal">이 공리를 적용함으로써, 바나흐와 타르스키는 개념적으로 구에서 점들을 뽑아 다섯 조각을 형성했다. 결과물인 조각들은 너무나 흩어져 있고, 너무나 무한히 들쭉날쭉하고 단절되어 있어서, 기하학 자체의 틈새로 빠져 나간다. 그것들은 <span class="ac">비가측 집합(non-measurable set)</span>—안과 밖이 전혀 없는 먼지 같은 구름이다. 이것이 공리 속의 유령이다: 역설이 부피 보존을 위반하지 않는 이유는, 조각들에게 애초에 보존할 부피가 없기 때문이다.</p>
-
-      <div class="ibox reveal" id="ibox-dust">
-        <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
-        <h3 class="ibox-title">측정 불가능한 먼지</h3>
-        <p class="ibox-desc">부피는 공간의 근본적 속성이 아니다; 잘 행동하는 도형에만 적용되는 인간의 구성물이다. 슬라이더를 드래그하여 선택 공리를 적용하라. 단단하고 측정 가능한 기하학이 무한한 무리수적 동치류로 갈라지는 것을 관찰하라. 점들이 흩어지면서, 부피라는 개념 자체가 격렬히 요동치기 시작하고, 마침내 완전히 무너진다.</p>
-        
-        <div class="canvas-container" style="height: 380px;">
-          <canvas id="canvas-4" class="interactive"></canvas>
-        </div>
-        
-        <div class="controls">
-          <div class="ctrl-group">
-            <span class="ctrl-label">선택 공리 발동 (산란)</span>
-            <input type="range" id="slider-choice" min="0" max="1" value="0" step="0.01">
-          </div>
-        </div>
-        
-        <div class="stats">
-          <div class="stat-card" style="flex: 1.5;">
-            <div class="ctrl-label">수학적 부피 (V)</div>
-            <div class="stat-val" id="stat-vol">1.0000 V₀</div>
-          </div>
-          <div class="stat-card">
-            <div class="ctrl-label">기하학 상태</div>
-            <div class="stat-val" id="stat-state" style="font-size: 1rem; padding-top: 4px; color: var(--fern);">가측</div>
-          </div>
-        </div>
+      <div class="stat-card">
+        <div class="ctrl-label">고유 노드</div>
+        <div class="stat-val" id="stat-cay-nodes">1</div>
       </div>
-    </section>
-
-    <section class="chapter-section" id="section-6">
-      <span class="sec-num reveal">06</span>
-      <h2 class="sec-title reveal">다중우주의 건축가</h2>
-      
-      <p class="prose prose-drop reveal">수십 년간, 선택 공리는 깊은 불안의 원천이었다. 논리적 규칙이 완두콩을 태양으로 조각하는 것을 허용한다면, 수학에서 추방해야 할까? 아니면 이 아름답고 두려운 역설들을 현대 수학을 하기 위한 대가로 받아들여야 할까? 궁극적 해결은 1963년, 폴 코헨이라는 빛나는 정신을 통해 도래했다.</p>
-      
-      <p class="prose reveal">코헨은 <span class="hi">강제법(forcing)</span>이라는 혁명적 기법을 발명했고, 이를 통해 선택 공리가 집합론의 기초적 규칙들로부터 완전히 독립적임을 수학적으로 증명할 수 있었다. 표준 논리로는 그것을 참이라 증명할 수도 거짓이라 증명할 수도 없다. 수학은 유일한 진리를 지시하는 단일한 절대적 현실이 아니라, <span class="ac">논리적 가능성의 다중우주</span>이다.</p>
-
-      <div class="block-quote reveal">
-        “A point of view which the author feels may eventually come to be accepted is that CH [and the Axiom of Choice] is obviously false... the continuum is an incredibly rich set given to us by one bold new axiom.”
-        <span class="quote-attr">— 폴 J. 코헨, Set Theory and the Continuum Hypothesis (1966)</span>
+      <div class="stat-card">
+        <div class="ctrl-label">가지</div>
+        <div class="stat-val" id="stat-cay-edges">0</div>
       </div>
+    </div>
+  </div>
+</section>
 
-      <p class="prose reveal">우리에게는 심오한 선택이 남는다. 선택 공리가 참인 표준 우주(ZFC)를 걸으며, 비가측 먼지의 혼돈스러운 자유와 복제된 구의 마법을 포용할 수 있다. 아니면, 공리가 거부된 대안적 우주(ZF)로 발을 내디딜 수 있다—모든 도형이 엄격히 보존된 부피를 갖고, 바나흐-타르스키 역설이 원천적으로 불가능한 강직하고 대칭적인 세계. 현실의 형상은 전적으로 우리가 받아들이기로 선택한 보이지 않는 규칙들에 달려 있다.</p>
+<section class="chapter-section" id="section-3">
+  <span class="sec-num reveal">03</span>
+  <h2 class="sec-title reveal">마법의 각도</h2>
+  
+  <p class="prose prose-drop reveal">이제 우리는 무한히 분기하는, 역설적인 회전의 나무를 가지고 있다. 하지만 이것이 실제 구로 어떻게 번역될까? 비밀은 매우 특수한 기하학에 있다: 정확히 <span class="hi math-ktx">\arccos(1/3)</span>, 대략 70.53도의 마법의 각도.</p>
+  
+  <p class="prose reveal">하우스도르프는 이 정확한 각도로 두 직교 축(적도와 본초 자오선처럼)을 따라 구를 회전시키면, 그 움직임이 정확히 추상적 자유군처럼 행동함을 증명했다. 북·남·동·서 회전을 조합하면, 하나의 점이 구의 표면 위에서 춤을 춘다. 이 특정 각도들이 완전한 원에 대해 수학적으로 "무리수적"이기 때문에, 결코 닫힌 고리를 형성하지 않는다.</p>
+  
+  <p class="prose reveal">이 구면 미궁을 아무리 오래 헤매더라도, 점은 결코 자신의 발자국을 다시 밟지 않는다. 매 순서열은 완전히 고유한 목적지를 만들어낸다.</p>
 
-      <div class="ibox reveal" id="ibox-sandbox">
-        <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
-        <h3 class="ibox-title">다중우주 샌드박스</h3>
-        <p class="ibox-desc">당신이 건축가다. 선택 공리를 토글하여 두 개의 별개의 수학적 우주 사이를 전환하라. OFF일 때, 생성된 입자들은 엄격한 대칭에 묶여 부피가 완벽히 보존되는 가측 결정 격자를 형성한다. ON일 때, 격자가 산산조각 나며; 입자들이 복제되어 자유군의 역설적 가지를 따라가고, 소용돌이치며 두 개의 별개의 복사본을 이룬다.</p>
-        
-        <div class="canvas-container" style="height: 380px;">
-          <canvas id="canvas-5" class="interactive"></canvas>
-        </div>
-        
-        <div class="controls">
-          <div class="ctrl-group" style="flex: 0; min-width: 150px;">
-            <span class="ctrl-label">선택 공리</span>
-            <div class="toggle-wrapper">
-              <span class="mono" style="font-size: 0.8rem; color: var(--text);">OFF</span>
-              <label class="switch">
-                <input type="checkbox" id="toggle-axiom" checked>
-                <span class="slider-toggle"></span>
-              </label>
-              <span class="mono" style="font-size: 0.8rem; color: var(--gold);">ON</span>
-            </div>
-          </div>
-        </div>
-        
-        <div class="stats">
-          <div class="stat-card">
-            <div class="ctrl-label">우주의 논리</div>
-            <div class="stat-val" id="stat-univ">ZFC</div>
-          </div>
-          <div class="stat-card">
-            <div class="ctrl-label">역설</div>
-            <div class="stat-val" id="stat-para">활성</div>
-          </div>
-          <div class="stat-card">
-            <div class="ctrl-label">구조 / 부피</div>
-            <div class="stat-val" id="stat-struct" style="font-size: 1rem; padding-top: 4px; color: var(--violet);">분열됨 (미정의 V₀)</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="pull-quote reveal" style="margin-top: 2rem;">
-      “수학의 본질은 그 자유에 있다.”<br>
-      <span style="font-size: 0.9rem; font-family: var(--font-body); font-style: normal; color: var(--muted); display: block; margin-top: 1rem;">— 게오르크 칸토어</span>
+  <div class="ibox reveal" id="ibox-manual">
+    <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
+    <h3 class="ibox-title">역설의 나침반</h3>
+    <p class="ibox-desc">적도 위에서 시작하는 하나의 점을 보고 있다. 아래 버튼을 클릭하여 정확히 70.53° 회전을 수동으로 적용해 보라. 구 위의 <span style="color: #ff5a5a;">빨강</span>과 <span style="color: #4fb3ff;">파랑</span> 점은 두 회전축의 네 극점(회전의 고정점)이다. 점이 극점에 가까워질수록 그 축 주위 회전이 만드는 호의 길이가 짧아진다는 점에 주목하라 — 회전각은 언제나 70.53°이지만, 구면 위 이동 거리는 극점까지의 거리에 따라 줄어든다. 출발점으로 돌아가려면, 정확히 자신의 걸음 순서를 되돌아가야 한다.</p>
+    
+    <div class="canvas-container" style="height: 400px; position: relative;">
+      <canvas id="manual-canvas" style="position: absolute; inset: 0; width: 100%; height: 100%; outline: none; cursor: grab;"></canvas>
+      <div class="overlay-hint">드래그하여 구 회전</div>
     </div>
 
-    <div class="coda reveal">
-      결국, 현실은 단지 우리가 보는 것이 아니다.<br>
-      그것은 우리가 믿기로 선택한 보이지 않는 규칙의 뼈대이며,<br>
-      그 규칙이 열어젖히는 아름답고 두려운 무한이다.
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.2rem; margin: 0.8rem 0 0.2rem; font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); letter-spacing: 0.04em;">
+      <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #ff5a5a; box-shadow: 0 0 6px #ff5a5a;"></span>북 극점</span>
+      <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #a01c1c;"></span>남 극점</span>
+      <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #4fb3ff; box-shadow: 0 0 6px #4fb3ff;"></span>동 극점</span>
+      <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: #1d4c8a;"></span>서 극점</span>
+      <span style="display: inline-flex; align-items: center; gap: 0.4rem;"><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background: var(--cream); box-shadow: 0 0 6px var(--cream);"></span>이동하는 점</span>
     </div>
 
-    <div class="ref-section reveal">
-      <h3 class="ref-heading">참고문헌</h3>
-      <ul class="ref-list">
-        <li><span class="ref-author">Banach, S. & Tarski, A.,</span> <span class="ref-title">Sur la décomposition des ensembles de points en parties respectivement congruentes,</span> <span class="ref-detail">Fundamenta Mathematicae, 1924.</span></li>
-        <li><span class="ref-author">Hausdorff, F.,</span> <span class="ref-title">Bemerkung über den Inhalt von Punktmengen,</span> <span class="ref-detail">Mathematische Annalen, 1914.</span></li>
-        <li><span class="ref-author">Zermelo, E.,</span> <span class="ref-title">Beweis, dass jede Menge wohlgeordnet werden kann,</span> <span class="ref-detail">Mathematische Annalen, 1904.</span></li>
-        <li><span class="ref-author">Cohen, P. J.,</span> <span class="ref-title">Set Theory and the Continuum Hypothesis,</span> <span class="ref-detail">W. A. Benjamin, 1966.</span></li>
-        <li><span class="ref-author">Wagon, S.,</span> <span class="ref-title">The Banach-Tarski Paradox,</span> <span class="ref-detail">Cambridge University Press, 1985.</span></li>
-      </ul>
+    <div class="controls" style="justify-content: center; gap: 0.8rem;">
+      <button class="btn btn-n" id="btn-m-N">북</button>
+      <button class="btn btn-s" id="btn-m-S">남</button>
+      <button class="btn btn-e" id="btn-m-E">동</button>
+      <button class="btn btn-w" id="btn-m-W">서</button>
+      <button class="btn btn-outline" id="btn-m-reset">초기화</button>
     </div>
+    
+    <div class="stats">
+      <div class="stat-card" style="flex: 2;">
+        <div class="ctrl-label">회전 순서열</div>
+        <div class="stat-val" id="stat-m-word" style="font-size: 1.1rem; padding-top: 4px; letter-spacing: 2px;">시작</div>
+      </div>
+      <div class="stat-card">
+        <div class="ctrl-label">걸음 수</div>
+        <div class="stat-val" id="stat-m-len">0</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chapter-section" id="section-4">
+  <span class="sec-num reveal">04</span>
+  <h2 class="sec-title reveal">무한의 안무</h2>
+  
+  <p class="prose prose-drop reveal">이제, 방금 한 것을 자동화한다고 상상하라. 지구 위의 한 점을—가령 런던이나 도쿄 같은 도시를—고르고, 네 가지 회전의 <em>가능한 모든 순서열</em>을 동시에 무한까지 적용한다.</p>
+  
+  <p class="prose reveal">도달점들의 전체 모음을 그 점의 <span class="hi">궤도(orbit)</span>라 부른다. 자유군이 결코 스스로에게 되돌아가지 않으므로, 궤도는 결코 겹치지 않는다. 지구 전체를 감싸는, 조밀하게 무한히 흩어진 수학적 먼지 구름을 형성한다. 구름에 아직 속하지 않은 다른 출발점을 고르면, 완전히 별개의, 겹치지 않는 궤도를 얻는다.</p>
+
+  <p class="prose reveal">이것이 바나흐와 타르스키의 산산조각난 조각들의 비밀이다. 구의 전체 연속적 표면은 이 별개의 무한 궤도들로 완벽하게 분할될 수 있다. 이 구름들을 자유군의 경로를 따라 이동시킴으로써, 수학자들은 사실상 구 전체를 복제할 수 있다.</p>
+
+  <div class="ibox reveal" id="ibox-globe">
+    <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
+    <h3 class="ibox-title">궤도 전파</h3>
+    <p class="ibox-desc">지구 위에 일곱 개의 서로 다른 색을 가진 출발점(도시)을 배치했다. 슬라이더를 드래그하여 모든 도시의 회전 나무 깊이를 동시에 체계적으로 증가시켜 보라. 각각의 도시가 팽창하는 프랙탈 점 구름을 발생시키며, 부드럽게 교차하면서 지구를 찬란한 색채의 모자이크로 뒤덮는 것을 관찰하라. 진정한 수학적 역설에서, 이 먼지의 폭발은 절대적 무한까지 계속된다.</p>
+    
+    <div id="globe-wrapper">
+      <div id="globe-container"></div>
+      <div id="city-labels"></div>
+      <div id="globe-loading">
+        <div class="spinner"></div>
+        <div style="font-family: var(--font-mono); font-size: 0.7rem; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em;">지도 불러오는 중...</div>
+      </div>
+    </div>
+    
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">전파 깊이</span>
+        <input type="range" id="slider-globe" min="0" max="4" value="0" step="1">
+      </div>
+    </div>
+    
+    <div class="stats">
+      <div class="stat-card">
+        <div class="ctrl-label">궤도 깊이</div>
+        <div class="stat-val" id="stat-gl-depth">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="ctrl-label">도시당 점 수</div>
+        <div class="stat-val" id="stat-gl-pts">1</div>
+      </div>
+      <div class="stat-card">
+        <div class="ctrl-label">전체 점의 수</div>
+        <div class="stat-val" id="stat-gl-tot">7</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chapter-section" id="section-5">
+  <span class="sec-num reveal">05</span>
+  <h2 class="sec-title reveal">공리 속의 유령</h2>
+  
+  <p class="prose prose-drop reveal">역설적 조각들을 실제로 만들기 위해서는 물리적인 칼을 쓸 수 없다. 칼은 연속적이고 매끄러운 표면을 잘라, 부피가 잘 정의된 뚜렷한 형상을 남긴다. 바나흐-타르스키 역설을 실행하려면, 수학자들은 순수하게 논리적인 칼날을 소환해야 한다: <span class="hi">선택 공리(Axiom of Choice)</span>. 그들은 별개의 궤도들로 이루어진 셀 수 없는 심연 속에 손을 뻗어, 각각에서 정확히 하나의 대표 점을 뽑아내야 한다.</p>
+  
+  <p class="prose reveal">1904년 에른스트 체르멜로가 공식화한 이 공리는 기만적으로 단순한 전제를 진술한다: 무한한 상자 모음이 있을 때, 각 상자에서 정확히 하나의 항목을 꺼내 새로운 집합을 만들 수 있다—선택 방법에 대한 명시적 규칙이 없더라도. 유한의 세계에서 이것은 사소하다. 그러나 무한의 영역에서, 이 공리는 수학자들이 셀 수 없이 무한한 수의 임의적 선택을 동시에 할 수 있게 한다.</p>
+
+  <div class="block-quote reveal">
+    “Dass auch für jede unendliche Menge ein solches Auswahlprinzip gültig sei, ist ein logisches Gesetz... welches bei mathematischen Deduktionen vielfach angewendet wird.”
+    <span class="quote-attr">— 에른스트 체르멜로, Mathematische Annalen (1904)</span>
+  </div>
+
+  <p class="prose reveal">이 공리를 적용함으로써, 바나흐와 타르스키는 개념적으로 구에서 점들을 뽑아 다섯 조각을 형성했다. 결과물인 조각들은 너무나 흩어져 있고, 너무나 무한히 들쭉날쭉하고 단절되어 있어서, 기하학 자체의 틈새로 빠져 나간다. 그것들은 <span class="ac">비가측 집합(non-measurable set)</span>—안과 밖이 전혀 없는 먼지 같은 구름이다. 이것이 공리 속의 유령이다: 역설이 부피 보존을 위반하지 않는 이유는, 조각들에게 애초에 보존할 부피가 없기 때문이다.</p>
+
+  <div class="ibox reveal" id="ibox-dust">
+    <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
+    <h3 class="ibox-title">측정 불가능한 먼지</h3>
+    <p class="ibox-desc">부피는 공간의 근본적 속성이 아니다; 잘 행동하는 도형에만 적용되는 인간의 구성물이다. 슬라이더를 드래그하여 선택 공리를 적용하라. 단단하고 측정 가능한 기하학이 무한한 무리수적 동치류로 갈라지는 것을 관찰하라. 점들이 흩어지면서, 부피라는 개념 자체가 격렬히 요동치기 시작하고, 마침내 완전히 무너진다.</p>
+    
+    <div class="canvas-container" style="height: 380px;">
+      <canvas id="canvas-4" class="interactive"></canvas>
+    </div>
+    
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">선택 공리 발동 (산란)</span>
+        <input type="range" id="slider-choice" min="0" max="1" value="0" step="0.01">
+      </div>
+    </div>
+    
+    <div class="stats">
+      <div class="stat-card" style="flex: 1.5;">
+        <div class="ctrl-label">수학적 부피 (V)</div>
+        <div class="stat-val" id="stat-vol">1.0000 V₀</div>
+      </div>
+      <div class="stat-card">
+        <div class="ctrl-label">기하학 상태</div>
+        <div class="stat-val" id="stat-state" style="font-size: 1rem; padding-top: 4px; color: var(--fern);">가측</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="chapter-section" id="section-6">
+  <span class="sec-num reveal">06</span>
+  <h2 class="sec-title reveal">다중우주의 건축가</h2>
+  
+  <p class="prose prose-drop reveal">수십 년간, 선택 공리는 깊은 불안의 원천이었다. 논리적 규칙이 완두콩을 태양으로 조각하는 것을 허용한다면, 수학에서 추방해야 할까? 아니면 이 아름답고 두려운 역설들을 현대 수학을 하기 위한 대가로 받아들여야 할까? 궁극적 해결은 1963년, 폴 코헨이라는 빛나는 정신을 통해 도래했다.</p>
+  
+  <p class="prose reveal">코헨은 <span class="hi">강제법(forcing)</span>이라는 혁명적 기법을 발명했고, 이를 통해 선택 공리가 집합론의 기초적 규칙들로부터 완전히 독립적임을 수학적으로 증명할 수 있었다. 표준 논리로는 그것을 참이라 증명할 수도 거짓이라 증명할 수도 없다. 수학은 유일한 진리를 지시하는 단일한 절대적 현실이 아니라, <span class="ac">논리적 가능성의 다중우주</span>이다.</p>
+
+  <div class="block-quote reveal">
+    “A point of view which the author feels may eventually come to be accepted is that CH [and the Axiom of Choice] is obviously false... the continuum is an incredibly rich set given to us by one bold new axiom.”
+    <span class="quote-attr">— 폴 J. 코헨, Set Theory and the Continuum Hypothesis (1966)</span>
+  </div>
+
+  <p class="prose reveal">우리에게는 심오한 선택이 남는다. 선택 공리가 참인 표준 우주(ZFC)를 걸으며, 비가측 먼지의 혼돈스러운 자유와 복제된 구의 마법을 포용할 수 있다. 아니면, 공리가 거부된 대안적 우주(ZF)로 발을 내디딜 수 있다—모든 도형이 엄격히 보존된 부피를 갖고, 바나흐-타르스키 역설이 원천적으로 불가능한 강직하고 대칭적인 세계. 현실의 형상은 전적으로 우리가 받아들이기로 선택한 보이지 않는 규칙들에 달려 있다.</p>
+
+  <div class="ibox reveal" id="ibox-sandbox">
+    <div class="ibox-label"><div class="pulse-dot"></div> Interactive</div>
+    <h3 class="ibox-title">다중우주 샌드박스</h3>
+    <p class="ibox-desc">당신이 건축가다. 선택 공리를 토글하여 두 개의 별개의 수학적 우주 사이를 전환하라. OFF일 때, 생성된 입자들은 엄격한 대칭에 묶여 부피가 완벽히 보존되는 가측 결정 격자를 형성한다. ON일 때, 격자가 산산조각 나며; 입자들이 복제되어 자유군의 역설적 가지를 따라가고, 소용돌이치며 두 개의 별개의 복사본을 이룬다.</p>
+    
+    <div class="canvas-container" style="height: 380px;">
+      <canvas id="canvas-5" class="interactive"></canvas>
+    </div>
+    
+    <div class="controls">
+      <div class="ctrl-group" style="flex: 0; min-width: 150px;">
+        <span class="ctrl-label">선택 공리</span>
+        <div class="toggle-wrapper">
+          <span class="mono" style="font-size: 0.8rem; color: var(--text);">OFF</span>
+          <label class="switch">
+            <input type="checkbox" id="toggle-axiom" checked>
+            <span class="slider-toggle"></span>
+          </label>
+          <span class="mono" style="font-size: 0.8rem; color: var(--gold);">ON</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="stats">
+      <div class="stat-card">
+        <div class="ctrl-label">우주의 논리</div>
+        <div class="stat-val" id="stat-univ">ZFC</div>
+      </div>
+      <div class="stat-card">
+        <div class="ctrl-label">역설</div>
+        <div class="stat-val" id="stat-para">활성</div>
+      </div>
+      <div class="stat-card">
+        <div class="ctrl-label">구조 / 부피</div>
+        <div class="stat-val" id="stat-struct" style="font-size: 1rem; padding-top: 4px; color: var(--violet);">분열됨 (미정의 V₀)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="pull-quote reveal" style="margin-top: 2rem;">
+  “수학의 본질은 그 자유에 있다.”<br>
+  <span style="font-size: 0.9rem; font-family: var(--font-body); font-style: normal; color: var(--muted); display: block; margin-top: 1rem;">— 게오르크 칸토어</span>
+</div>
+
+<div class="coda reveal">
+  결국, 현실은 단지 우리가 보는 것이 아니다.<br>
+  그것은 우리가 믿기로 선택한 보이지 않는 규칙의 뼈대이며,<br>
+  그 규칙이 열어젖히는 아름답고 두려운 무한이다.
+</div>
+
+<div class="ref-section reveal">
+  <h3 class="ref-heading">참고문헌</h3>
+  <ul class="ref-list">
+    <li><span class="ref-author">Banach, S. & Tarski, A.,</span> <span class="ref-title">Sur la décomposition des ensembles de points en parties respectivement congruentes,</span> <span class="ref-detail">Fundamenta Mathematicae, 1924.</span></li>
+    <li><span class="ref-author">Hausdorff, F.,</span> <span class="ref-title">Bemerkung über den Inhalt von Punktmengen,</span> <span class="ref-detail">Mathematische Annalen, 1914.</span></li>
+    <li><span class="ref-author">Zermelo, E.,</span> <span class="ref-title">Beweis, dass jede Menge wohlgeordnet werden kann,</span> <span class="ref-detail">Mathematische Annalen, 1904.</span></li>
+    <li><span class="ref-author">Cohen, P. J.,</span> <span class="ref-title">Set Theory and the Continuum Hypothesis,</span> <span class="ref-detail">W. A. Benjamin, 1966.</span></li>
+    <li><span class="ref-author">Wagon, S.,</span> <span class="ref-title">The Banach-Tarski Paradox,</span> <span class="ref-detail">Cambridge University Press, 1985.</span></li>
+  </ul>
+</div>
+```
 
   </main>
-
-  
 
   <script>
     // --- KaTeX Auto-Render ---
@@ -680,50 +690,199 @@
     }
 
     // --- Hero Canvas Animation ---
+    // 역설의 숨결: 3200개 점으로 이루어진 하나의 구가 조용히 회전하다가,
+    // 다섯 조각으로 색이 드러나며 두 개의 동일한 구로 복제된다. 최대 분리 순간
+    // 다시 하나로 수렴하고 — 이 호흡을 T초 주기로 반복한다. 색의 드러남과
+    // 분리의 세기가 한 커브에 연동되어, 시각적 박자와 개념적 박자가 일치한다.
     const heroCanvas = document.getElementById('hero-canvas');
     let heroCtx, heroW, heroH, heroDpr, heroPoints = [];
-    const numHeroPoints = 2500;
+    const numHeroPoints = 3200;
 
     function initHero() {
       const setup = setupCanvas(heroCanvas);
       heroCtx = setup.ctx; heroW = setup.width; heroH = setup.height; heroDpr = setup.dpr;
       if (heroPoints.length === 0) {
+        // 피보나치 구면 분포: 띠 현상 없이 균일한 분포
         const phi = Math.PI * (3 - Math.sqrt(5));
         for (let i = 0; i < numHeroPoints; i++) {
           const y = 1 - (i / (numHeroPoints - 1)) * 2;
           const radius = Math.sqrt(1 - y * y); const theta = phi * i;
-          heroPoints.push({ x: Math.cos(theta) * radius, y, z: Math.sin(theta) * radius, pieceId: i % 5, side: (i % 5 < 3) ? -1 : 1 });
+          // pieceId는 Banach-Tarski 분할을 모사: 각 점은 5개 "궤도 클래스" 중 하나에
+          // 고정 배정된다. 분리 단계에서 0..2 조각은 왼쪽 복제본으로, 3..4 조각은
+          // 오른쪽 복제본으로 이동하되, 각 복제본은 전체 점 구름을 받아 완전한 구가 된다.
+          const pieceId = i % 5;
+          heroPoints.push({
+            x: Math.cos(theta) * radius, y, z: Math.sin(theta) * radius,
+            pieceId,
+            jitter: (Math.sin(i * 17.31) * 0.5 + 0.5),
+            pieceOffset: (pieceId / 5) * Math.PI * 2,
+          });
         }
       }
     }
     window.addEventListener('resize', initHero); initHero();
 
+    // --- easing helpers ---
+    function smoothstep(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
+
     let heroTime = 0;
     function renderHero() {
       if (!State.heroVisible || (State.paused && heroTime > State.heroTimeout/1000)) return;
-      heroTime += 0.005; heroCtx.clearRect(0, 0, heroW, heroH);
+      heroTime += 0.004;
+
+      // 은은한 방사형 배경: 완전 검정 대신 상단에서 살짝 떠오르는 남보라.
+      const W = heroW / heroDpr, H = heroH / heroDpr;
+      const bgGrad = heroCtx.createRadialGradient(W*0.5, H*0.42, 0, W*0.5, H*0.42, Math.max(W,H)*0.85);
+      bgGrad.addColorStop(0, 'rgba(18, 20, 46, 1)');
+      bgGrad.addColorStop(0.55, 'rgba(8, 10, 22, 1)');
+      bgGrad.addColorStop(1, 'rgba(4, 5, 12, 1)');
+      heroCtx.setTransform(heroDpr, 0, 0, heroDpr, 0, 0);
+      heroCtx.fillStyle = bgGrad;
+      heroCtx.fillRect(0, 0, W, H);
+      heroCtx.setTransform(1, 0, 0, 1, 0, 0);
+
       const cx = heroW / 2, cy = heroH / 2, radius = Math.min(heroW, heroH) * 0.22;
-      const phase = (Math.sin(heroTime * 0.8) + 1) / 2, smoothPhase = phase * phase * (3 - 2 * phase);
-      const splitDist = radius * 2.2 * smoothPhase, rotX = heroTime * 0.4, rotY = heroTime * 0.6;
-      const cosX = Math.cos(rotX), sinX = Math.sin(rotX), cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+
+      // 하나의 부드러운 호흡 사이클: 합쳐짐(t=0) → 갈라짐(t=0.5) → 합쳐짐(t=1).
+      // 반쯤 올린 코사인으로 양 끝에서 자연스러운 ease-in/out을 만들고 중간 dwell은 없다.
+      // 색상 reveal도 같은 커브에 연동하여, 시각적 박자와 개념적 박자가 일치한다.
+      const T = 3.0;
+      const t = (heroTime % T) / T;
+      const cleave = 0.5 - 0.5 * Math.cos(2 * Math.PI * t);
+      const reveal = cleave;
+
+      // 전역 회전: 합쳐진 단계에서도 구가 살아 숨쉬는 느낌이 나도록 항상 돌아간다.
+      const rotX = heroTime * 0.22, rotY = heroTime * 0.33;
+      const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+      const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+
+      // 가산 블렌딩(additive)로 점이 겹칠 때 밝게 누적되어 별빛/성운 느낌을 낸다.
+      heroCtx.globalCompositeOperation = 'lighter';
+
+      const fov = 1000 * heroDpr;
+
+      // Depth sort용 버퍼 (매 프레임 재할당 방지)
+      const order = renderHero._order || (renderHero._order = new Int32Array(numHeroPoints));
+      const depths = renderHero._depths || (renderHero._depths = new Float32Array(numHeroPoints));
+      const tx = renderHero._tx || (renderHero._tx = new Float32Array(numHeroPoints));
+      const ty = renderHero._ty || (renderHero._ty = new Float32Array(numHeroPoints));
+      const tz = renderHero._tz || (renderHero._tz = new Float32Array(numHeroPoints));
+
+      // 두 복제본이 벌어지는 거리 (화면 반지름 단위)
+      const separation = radius * 2.35 * cleave;
 
       for (let i = 0; i < numHeroPoints; i++) {
         const p = heroPoints[i];
-        let y1 = p.y * cosX - p.z * sinX, z1 = p.y * sinX + p.z * cosX;
-        let x2 = p.x * cosY + z1 * sinY, z2 = -p.x * sinY + z1 * cosY;
-        const fx = x2 * radius + p.side * splitDist, fy = y1 * radius, fz = z2 * radius;
-        const fov = 1000 * heroDpr, zDepth = fz + fov * 0.6;
-        if (zDepth < 0.1) continue;
-        const scale = fov / zDepth, px = cx + fx * scale, py = cy + fy * scale;
-        const alpha = Math.min(1, Math.max(0.1, scale * 0.8));
-        
-        heroCtx.beginPath();
-        heroCtx.arc(px, py, Math.max(0.5, 1.8 * heroDpr * scale), 0, Math.PI * 2);
-        if (smoothPhase > 0.1) { heroCtx.fillStyle = pieceColors[p.pieceId]; heroCtx.globalAlpha = alpha * 0.8; } 
-        else { heroCtx.fillStyle = '#ece8e0'; heroCtx.globalAlpha = alpha; }
-        heroCtx.fill();
+        const y1 = p.y * cosX - p.z * sinX;
+        const z1 = p.y * sinX + p.z * cosX;
+        const x2 = p.x * cosY + z1 * sinY;
+        const z2 = -p.x * sinY + z1 * cosY;
+        // 0,1,2 조각은 왼쪽 복제본으로 / 3,4 조각은 오른쪽 복제본으로. 정리의 비대칭
+        // 분배를 그대로 따른다. 각 점은 cleave 단계에서 mirror 위치에도 그려져,
+        // 결과적으로 양쪽 구 모두 완전한 점 구름을 갖게 된다.
+        const primarySide = (p.pieceId <= 2) ? -1 : +1;
+        tx[i] = x2 * radius + primarySide * separation;
+        ty[i] = y1 * radius;
+        tz[i] = z2 * radius;
+        depths[i] = tz[i];
+        order[i] = i;
       }
+
+      // Depth 정렬 (원거리 먼저 그리기 — painter's algorithm)
+      const idxArr = Array.from(order);
+      idxArr.sort((a, b) => depths[a] - depths[b]);
+
+      for (let k = 0; k < numHeroPoints; k++) {
+        const i = idxArr[k];
+        const p = heroPoints[i];
+        const zDepth = tz[i] + fov * 0.6;
+        if (zDepth < 0.1) continue;
+        const scale = fov / zDepth;
+        const py = cy + ty[i] * scale;
+
+        const primarySide = (p.pieceId <= 2) ? -1 : +1;
+        const primaryX = tx[i];
+        const mirrorX = primaryX - primarySide * (2 * separation);
+        const px  = cx + primaryX * scale;
+        const pxM = cx + mirrorX  * scale;
+
+        const depthNorm = Math.max(0.35, Math.min(1.15, scale));
+        const spriteSize = 6.8 * heroDpr * depthNorm;
+        const halfS = spriteSize * 0.5;
+        const alpha = 0.7 * depthNorm;
+
+        // 부드러운 크로스페이드: reveal=0이면 크림색, reveal=1이면 조각 색.
+        // 두 스프라이트를 겹쳐 그려 짧은 주기에서도 색 전환이 깔끔하게 이뤄진다.
+        const creamSprite = getGlowSprite('#ece8e0');
+        const pieceSprite = getGlowSprite(pieceColors[p.pieceId]);
+        const aCream = alpha * (1 - reveal);
+        const aPiece = alpha * reveal;
+
+        // Primary copy
+        if (aCream > 0.02) {
+          heroCtx.globalAlpha = aCream;
+          heroCtx.drawImage(creamSprite, px - halfS, py - halfS, spriteSize, spriteSize);
+        }
+        if (aPiece > 0.02) {
+          heroCtx.globalAlpha = aPiece;
+          heroCtx.drawImage(pieceSprite, px - halfS, py - halfS, spriteSize, spriteSize);
+        }
+        // Mirror copy (cleave 단계에만)
+        if (cleave > 0.02) {
+          const mc = aCream * cleave, mp = aPiece * cleave;
+          if (mc > 0.02) {
+            heroCtx.globalAlpha = mc;
+            heroCtx.drawImage(creamSprite, pxM - halfS, py - halfS, spriteSize, spriteSize);
+          }
+          if (mp > 0.02) {
+            heroCtx.globalAlpha = mp;
+            heroCtx.drawImage(pieceSprite, pxM - halfS, py - halfS, spriteSize, spriteSize);
+          }
+        }
+      }
+
+      heroCtx.globalCompositeOperation = 'source-over';
       heroCtx.globalAlpha = 1.0;
+    }
+
+    // 매 프레임 3200+ 개의 radial gradient를 생성하는 비용을 피하기 위해,
+    // 조각 색상별로 한 번씩만 glow 스프라이트를 구워두고 drawImage로 복사한다.
+    const SPRITE_SIZE = 64;
+    const glowSprites = {};
+    function getGlowSprite(hex) {
+      if (glowSprites[hex]) return glowSprites[hex];
+      const c = document.createElement('canvas');
+      c.width = c.height = SPRITE_SIZE;
+      const g = c.getContext('2d');
+      const [r, gC, b] = hexToRgb(hex);
+      const cx = SPRITE_SIZE / 2, cy = SPRITE_SIZE / 2;
+      // 부드러운 외곽 할로
+      const grad = g.createRadialGradient(cx, cy, 0, cx, cy, cx);
+      grad.addColorStop(0,    `rgba(${r},${gC},${b},0.85)`);
+      grad.addColorStop(0.25, `rgba(${r},${gC},${b},0.55)`);
+      grad.addColorStop(0.55, `rgba(${r},${gC},${b},0.18)`);
+      grad.addColorStop(1,    `rgba(${r},${gC},${b},0)`);
+      g.fillStyle = grad;
+      g.fillRect(0, 0, SPRITE_SIZE, SPRITE_SIZE);
+      // 밝은 중앙 코어
+      const coreR = 3;
+      const coreGrad = g.createRadialGradient(cx, cy, 0, cx, cy, coreR);
+      coreGrad.addColorStop(0, `rgba(${Math.min(255,r+50)},${Math.min(255,gC+50)},${Math.min(255,b+50)},1)`);
+      coreGrad.addColorStop(1, `rgba(${r},${gC},${b},0)`);
+      g.fillStyle = coreGrad;
+      g.beginPath();
+      g.arc(cx, cy, coreR, 0, Math.PI * 2);
+      g.fill();
+      return (glowSprites[hex] = c);
+    }
+
+    // hex → rgb 파싱 캐시 (pieceColors는 고정이므로 한 번만 파싱)
+    const _hexCache = {};
+    function hexToRgb(hex) {
+      if (_hexCache[hex]) return _hexCache[hex];
+      const h = hex.replace('#','');
+      const r = parseInt(h.substring(0,2),16), g = parseInt(h.substring(2,4),16), b = parseInt(h.substring(4,6),16);
+      return (_hexCache[hex] = [r, g, b]);
     }
 
     // --- Interactive 1: Engine of Infinity (Robust Fermat's Spiral) ---
@@ -1433,7 +1592,6 @@
 
   </script>
 
-
 <script>
 window.NARRATION_CONFIG = {
   chapter: 'banach-tarski',
@@ -1448,6 +1606,7 @@ window.NARRATION_CONFIG = {
   ]
 };
 </script>
+
 <script src="narration_player.js"></script>
 
 <div class="giscus-wrap" style="max-width:900px;margin:4rem auto 2rem;padding:0 2rem;">
