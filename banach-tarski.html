@@ -1326,7 +1326,7 @@
       manAnimStart = manCurrentVec.clone();
       manAnimProgress = 0; manAnimating = true;
 
-      document.getElementById('stat-m-word').innerHTML = manWord.length === 0 ? "Start" : manWord.map(w => {
+      document.getElementById('stat-m-word').innerHTML = manWord.length === 0 ? "Start" : manWord.slice().reverse().map(w => {
         if (w==='N') return '<span style="color:var(--fern);">N</span>';
         if (w==='S') return '<span style="color:var(--sky);">S</span>';
         if (w==='E') return '<span style="color:var(--gold);">E</span>';

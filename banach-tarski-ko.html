@@ -1301,7 +1301,7 @@
       manAnimStart = manCurrentVec.clone();
       manAnimProgress = 0; manAnimating = true;
 
-      document.getElementById('stat-m-word').innerHTML = manWord.length === 0 ? "시작" : manWord.map(w => {
+      document.getElementById('stat-m-word').innerHTML = manWord.length === 0 ? "시작" : manWord.slice().reverse().map(w => {
         if (w==='N') return '<span style="color:var(--fern);">북</span>';
         if (w==='S') return '<span style="color:var(--sky);">남</span>';
         if (w==='E') return '<span style="color:var(--gold);">동</span>';
