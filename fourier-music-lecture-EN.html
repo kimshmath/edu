@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>푸리에 해석 · 소리를 숫자로 듣다</title>
+<title>Fourier Analysis · Hearing Sound as Numbers</title>
 
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -297,101 +297,101 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 <div id="progress"></div>
 
 <div id="toolbar">
-  <button id="stopbtn" title="모든 소리 정지"><span class="sq"></span>정지</button>
-  <button id="notebtn" title="발표자 노트 (N)">N</button>
-  <button id="fsbtn" title="전체화면 (F)">⤢</button>
-  <a href="fourier-music-lecture-EN.html" id="langbtn" title="English version">EN</a>
-  <button id="kbtn" title="단축키 (?)">?</button>
+  <button id="stopbtn" title="Stop all sound"><span class="sq"></span>Stop</button>
+  <button id="notebtn" title="Speaker notes (N)">N</button>
+  <button id="fsbtn" title="Fullscreen (F)">⤢</button>
+  <a href="fourier-music-lecture.html" id="langbtn" title="Korean version">KO</a>
+  <button id="kbtn" title="Shortcuts (?)">?</button>
 </div>
 
 <div id="deck">
 
   <!-- 1 · TITLE -->
-  <section class="slide center" data-enter="hero" data-ch="여는 글" data-min="1" style="--accent:#7C6CF0"
-    data-notes="환영 인사. 한 문장 약속: ‘오늘 끝나면 모든 소리를 사인파의 합으로 듣게 됩니다.’ 배경 파형은 실제로 사인파 3개를 더해 그린 것이라고 짧게 언급. 청중에게 음악 전공/이과를 손들어 확인하고 톤을 맞추세요.">
+  <section class="slide center" data-enter="hero" data-ch="Opening" data-min="1" style="--accent:#7C6CF0"
+    data-notes="Welcome. A one-sentence promise: “By the time we finish today, you'll hear every sound as a sum of sine waves.” Briefly mention that the background waveform is actually drawn by adding three sine waves. Ask for a show of hands (music vs. science backgrounds) and pitch your tone accordingly.">
     <div class="inner center">
       <div class="viz-wrap" style="width:min(760px,92vw);margin-bottom:0.9rem;border-radius:18px;">
-        <span class="viz-tag">live · 푸리에 기계 — 아래에서 골라보세요</span>
+        <span class="viz-tag">live · Fourier machine — pick one below</span>
         <canvas id="heroCanvas" class="viz" height="248"></canvas>
       </div>
       <div class="heromenu" id="heroMenu" style="justify-content:center"></div>
       <div class="eyebrow" style="justify-content:center">FOURIER ANALYSIS · FOR MUSIC</div>
-      <h1 class="title-xl">소리를 숫자로 듣다</h1>
-      <p class="lead dim" style="margin-top:1.2rem;text-align:center">푸리에 해석 개괄 — 음악 속의 수학<br>
-        <span class="caption">음악학에 관심 있는 고등학생을 위한 60분 강의</span></p>
+      <h1 class="title-xl">Hearing Sound as Numbers</h1>
+      <p class="lead dim" style="margin-top:1.2rem;text-align:center">An overview of Fourier analysis — the math inside music<br>
+        <span class="caption">A 60-minute lecture for high-schoolers curious about musicology</span></p>
       <div class="caption" style="margin-top:1.5rem;text-align:center;color:var(--ink-dim);letter-spacing:.04em">
-        고등과학원 <span style="color:var(--accent);font-weight:600">김상현</span>
+        Korea Institute for Advanced Study <span style="color:var(--accent);font-weight:600">Sang-hyun Kim</span>
       </div>
     </div>
   </section>
 
   <!-- 2 · HOOK -->
-  <section class="slide" data-ch="여는 글" data-min="1.5" style="--accent:#7C6CF0"
-    data-notes="핵심 도입. 같은 높이의 ‘라(A4, 440Hz)’를 세 가지 음색으로 들려주세요. 청중이 ‘분명 같은 음인데 다르다’를 느끼는 것이 목표. 질문을 던지고 답은 미루세요: ‘그 차이의 정체가 오늘의 주제입니다.’ 아직 스펙트럼은 보여주지 않습니다.">
+  <section class="slide" data-ch="Opening" data-min="1.5" style="--accent:#7C6CF0"
+    data-notes="The key hook. Play the same pitch — A4, 440 Hz — in three different timbres. The goal is for the audience to feel “it's clearly the same note, yet it sounds different.” Pose the question but defer the answer: “The identity of that difference is today's subject.” Don't show the spectrum yet.">
     <div class="inner split">
       <div class="stack">
-        <div class="eyebrow">먼저, 귀로 확인</div>
-        <h2 class="title-lg">같은 ‘라’인데<br>왜 다르게 들릴까?</h2>
-        <p class="body"><b class="hl-ink">같은 440 Hz, 같은 음높이.</b> 그런데 왜 서로 다른 악기로 들릴까?<br><br>
-          이 <span class="hl">음색(timbre)</span>의 차이는 어디서 올까요? 오늘 강의가 끝나면, 이 질문에 <span class="hl">숫자로</span> 답할 수 있게 됩니다.</p>
+        <div class="eyebrow">First, check with your ears</div>
+        <h2 class="title-lg">Same “A” —<br>so why does it sound different?</h2>
+        <p class="body"><b class="hl-ink">Same 440 Hz, same pitch.</b> So why do they sound like different instruments?<br><br>
+          Where does this difference in <span class="hl">timbre</span> come from? By the end of today's lecture, you'll be able to answer that question <span class="hl">with numbers</span>.</p>
       </div>
       <div class="panel">
         <div class="caption" style="margin-bottom:12px">TONE · 440 Hz · A4</div>
         <div class="btn-row">
-          <button class="btn play" data-timbre="pure">▶ 순음</button>
-          <button class="btn play" data-timbre="organ">▶ 오르간풍</button>
-          <button class="btn play" data-timbre="reed">▶ 리드풍</button>
+          <button class="btn play" data-timbre="pure">▶ Pure tone</button>
+          <button class="btn play" data-timbre="organ">▶ Organ-like</button>
+          <button class="btn play" data-timbre="reed">▶ Reed-like</button>
         </div>
         <div class="viz-wrap" style="margin-top:14px">
           <span class="viz-tag">waveform</span>
           <canvas id="hookWave" class="viz" height="150"></canvas>
         </div>
-        <div class="caption" style="margin-top:8px;text-align:center">파형은 다르다 — 그러나 주기(=음높이)는 같다</div>
+        <div class="caption" style="margin-top:8px;text-align:center">The waveforms differ — but the period (= pitch) is the same</div>
       </div>
     </div>
   </section>
 
   <!-- 3 · AGENDA -->
-  <section class="slide" data-ch="여는 글" data-min="1.5" style="--accent:#7C6CF0"
-    data-notes="오늘의 지도. 6부 구성을 빠르게 훑되, 색이 저주파(보라)에서 고주파(빨강)로 올라간다는 점을 한 번 짚으면 시각적 일관성이 살아납니다. ‘분석과 합성’이 두 축이라는 큰 그림만 심어주세요.">
+  <section class="slide" data-ch="Opening" data-min="1.5" style="--accent:#7C6CF0"
+    data-notes="Today's map. Skim the six-part structure quickly; pointing out once that the color rises from low frequency (violet) to high frequency (red) makes the visual language cohere. Just plant the big picture that “analysis and synthesis” are the two axes.">
     <div class="inner stack">
-      <div class="eyebrow">강의 지도 · 60분</div>
-      <h2 class="h-sec">소리에서 출발해 푸리에 변환까지</h2>
+      <div class="eyebrow">Lecture map · 60 min</div>
+      <h2 class="h-sec">From sound to the Fourier transform</h2>
       <div class="agenda">
-        <div class="ag-row"><span class="n">01</span><span class="d" style="color:#7C6CF0"></span><span class="t">소리란 무엇인가 — 순음과 사인파</span><span class="m">≈ 9분</span></div>
-        <div class="ag-row"><span class="n">02</span><span class="d" style="color:#4D7CFF"></span><span class="t">소리를 더한다 — 배음과 합성</span><span class="m">≈ 14분</span></div>
-        <div class="ag-row"><span class="n">03</span><span class="d" style="color:#22D3EE"></span><span class="t">음색의 비밀 — 배음 지문</span><span class="m">≈ 5분</span></div>
-        <div class="ag-row"><span class="n">04</span><span class="d" style="color:#2DD4A7"></span><span class="t">푸리에 급수 — 레시피를 찾는 수학</span><span class="m">≈ 11분</span></div>
-        <div class="ag-row"><span class="n">05</span><span class="d" style="color:#FACC15"></span><span class="t">푸리에 변환 — 스펙트럼과 스펙트로그램</span><span class="m">≈ 10분</span></div>
-        <div class="ag-row"><span class="n">06</span><span class="d" style="color:#FB7185"></span><span class="t">음악 속 푸리에 — 응용과 음악학</span><span class="m">≈ 8분</span></div>
+        <div class="ag-row"><span class="n">01</span><span class="d" style="color:#7C6CF0"></span><span class="t">What is sound — pure tones and sine waves</span><span class="m">≈ 9 min</span></div>
+        <div class="ag-row"><span class="n">02</span><span class="d" style="color:#4D7CFF"></span><span class="t">Adding sounds — harmonics and synthesis</span><span class="m">≈ 14 min</span></div>
+        <div class="ag-row"><span class="n">03</span><span class="d" style="color:#22D3EE"></span><span class="t">The secret of timbre — the harmonic fingerprint</span><span class="m">≈ 5 min</span></div>
+        <div class="ag-row"><span class="n">04</span><span class="d" style="color:#2DD4A7"></span><span class="t">Fourier series — the math of finding the recipe</span><span class="m">≈ 11 min</span></div>
+        <div class="ag-row"><span class="n">05</span><span class="d" style="color:#FACC15"></span><span class="t">Fourier transform — spectrum and spectrogram</span><span class="m">≈ 10 min</span></div>
+        <div class="ag-row"><span class="n">06</span><span class="d" style="color:#FB7185"></span><span class="t">Fourier in music — applications and musicology</span><span class="m">≈ 8 min</span></div>
       </div>
     </div>
   </section>
 
   <!-- ===== PART 1 DIVIDER ===== -->
-  <section class="slide" data-ch="01 소리란 무엇인가" data-min="0.5" style="--accent:#7C6CF0"
-    data-notes="1부 시작. 한 호흡 쉬어가는 슬라이드. ‘소리는 결국 시간에 따른 숫자 하나’라는 관점 전환을 예고.">
+  <section class="slide" data-ch="01 What Is Sound" data-min="0.5" style="--accent:#7C6CF0"
+    data-notes="Start of Part 1. A breather slide. Foreshadow the shift in perspective: “sound is, in the end, a single number that varies over time.”">
     <div class="inner split">
       <div class="big-num">01</div>
       <div class="stack">
         <div class="eyebrow">PART ONE</div>
-        <h2 class="title-lg">소리란 무엇인가</h2>
-        <p class="body">공기의 떨림이 어떻게 <span class="hl">높이</span>와 <span class="hl">세기</span>를 가질까?</p>
+        <h2 class="title-lg">What Is Sound</h2>
+        <p class="body">How does a trembling of air acquire a <span class="hl">pitch</span> and a <span class="hl">loudness</span>?</p>
       </div>
     </div>
   </section>
 
   <!-- 4 · sound = pressure -->
-  <section class="slide" data-ch="01 소리란 무엇인가" data-min="1.5" style="--accent:#7C6CF0"
-    data-notes="개념: 소리 = 공기 압력의 시간 변화 p(t). 마이크는 이 곡선을 숫자열로 기록하고, 스피커는 숫자열을 다시 떨림으로 바꾼다. ‘소리를 다룬다 = 함수 p(t)를 다룬다’를 못 박으세요.">
+  <section class="slide" data-ch="01 What Is Sound" data-min="1.5" style="--accent:#7C6CF0"
+    data-notes="Concept: sound = the time-variation of air pressure, p(t). A microphone records this curve as a sequence of numbers, and a speaker turns the numbers back into vibration. Nail down: “to work with sound = to work with the function p(t).”">
     <div class="inner split">
       <div class="stack">
-        <div class="eyebrow">관점 전환</div>
-        <h2 class="title-lg">소리란, 시간에 따른<br>무엇의 오르내림일까?</h2>
-        <p class="body">소리란, 시간에 따라 오르내리는 <span class="hl">기압값 하나</span>일 뿐일까?</p>
+        <div class="eyebrow">A shift in perspective</div>
+        <h2 class="title-lg">Sound is the rise and fall<br>of what, over time?</h2>
+        <p class="body">Is sound really just a <span class="hl">single pressure value</span> rising and falling over time?</p>
         <div class="formula inlinek">
           $$ p = p(t) $$
-          <div class="gloss">마이크는 이 곡선을 <b>숫자열</b>로 기록하고, 스피커는 숫자열을 다시 떨림으로 되돌립니다. 즉 <b>소리를 다룬다 = 함수 p(t)를 다룬다</b>.</div>
+          <div class="gloss">A microphone records this curve as a <b>sequence of numbers</b>, and a speaker turns the numbers back into vibration. In other words, <b>to handle sound = to handle the function p(t)</b>.</div>
         </div>
       </div>
       <div class="viz-wrap">
@@ -402,20 +402,20 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
   </section>
 
   <!-- 5 · pure tone demo -->
-  <section class="slide" data-ch="01 소리란 무엇인가" data-min="2" style="--accent:#7C6CF0"
-    data-notes="첫 인터랙션. 순음 = 사인파. 진동수 슬라이더를 올리면 음이 높아지고, 진폭 슬라이더를 올리면 커집니다. 학생에게 직접 조작시켜 보세요(앞으로 나오게 하거나 손으로 지목). 진동수와 진폭, 두 숫자가 ‘음높이/세기’라는 점을 체득시키는 것이 목표.">
+  <section class="slide" data-ch="01 What Is Sound" data-min="2" style="--accent:#7C6CF0"
+    data-notes="First interaction. Pure tone = sine wave. Raise the frequency slider and the pitch rises; raise the amplitude slider and it gets louder. Let a student operate it themselves (invite them up or call on someone). The goal is to make the two numbers — frequency and amplitude — felt as “pitch / loudness.”">
     <div class="inner split">
       <div class="stack">
-        <div class="eyebrow">가장 단순한 소리</div>
-        <h2 class="title-lg">순음 = 사인파</h2>
+        <div class="eyebrow">The simplest sound</div>
+        <h2 class="title-lg">Pure tone = sine wave</h2>
         <div class="formula inlinek">
           $$ y(t) = A\,\sin(2\pi f t + \varphi) $$
-          <div class="gloss"><b>f</b> 진동수(Hz) → 음높이 · <b>A</b> 진폭 → 세기 · <b>φ</b> 위상 → 출발 위치</div>
+          <div class="gloss"><b>f</b> frequency (Hz) → pitch · <b>A</b> amplitude → loudness · <b>φ</b> phase → starting position</div>
         </div>
         <div class="controls" style="margin-top:.6rem">
-          <div class="ctrl-row"><label>진동수 f</label><input id="pt-freq" type="range" min="110" max="880" value="440" step="1"><span class="readout" id="pt-freq-r">440 Hz</span></div>
-          <div class="ctrl-row"><label>진폭 A</label><input id="pt-amp" type="range" min="0" max="100" value="60" step="1"><span class="readout" id="pt-amp-r">0.60</span></div>
-          <div class="btn-row"><button id="pt-play" class="btn play">▶ 재생</button><span class="caption" id="pt-note" style="align-self:center">— A4 · 라</span></div>
+          <div class="ctrl-row"><label>Frequency f</label><input id="pt-freq" type="range" min="110" max="880" value="440" step="1"><span class="readout" id="pt-freq-r">440 Hz</span></div>
+          <div class="ctrl-row"><label>Amplitude A</label><input id="pt-amp" type="range" min="0" max="100" value="60" step="1"><span class="readout" id="pt-amp-r">0.60</span></div>
+          <div class="btn-row"><button id="pt-play" class="btn play">▶ Play</button><span class="caption" id="pt-note" style="align-self:center">— A4</span></div>
         </div>
       </div>
       <div class="viz-wrap">
@@ -426,34 +426,34 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
   </section>
 
   <!-- 6 · pitch / amplitude mapping -->
-  <section class="slide" data-ch="01 소리란 무엇인가" data-min="1.5" style="--accent:#7C6CF0"
-    data-notes="정리 슬라이드. 두 축의 매핑을 한 번에. 진동수는 ‘1초에 몇 번 떠는가’, 진폭은 ‘얼마나 세게 떠는가’. 사람 가청 범위 20Hz~20kHz도 가볍게 언급.">
+  <section class="slide" data-ch="01 What Is Sound" data-min="1.5" style="--accent:#7C6CF0"
+    data-notes="A recap slide. Both mappings at once. Frequency is “how many times it vibrates per second,” amplitude is “how strongly it vibrates.” Mention the human hearing range, 20 Hz–20 kHz, in passing.">
     <div class="inner stack center">
-      <div class="eyebrow" style="justify-content:center">두 개의 숫자</div>
-      <h2 class="h-sec" style="text-align:center">무엇이 ‘높이’를, 무엇이 ‘크기’를 정할까?</h2>
+      <div class="eyebrow" style="justify-content:center">Two numbers</div>
+      <h2 class="h-sec" style="text-align:center">What sets the “pitch,” and what sets the “loudness”?</h2>
       <div class="fade-grid" style="max-width:760px">
-        <div class="fcard"><div class="ic">FREQUENCY</div><h4>진동수 f — 음높이</h4><p>1초에 떠는 횟수(Hz). 많이 떨수록 높은 음. 옥타브가 오르면 진동수는 2배.</p></div>
-        <div class="fcard"><div class="ic">AMPLITUDE</div><h4>진폭 A — 세기</h4><p>떨림의 크기. 클수록 큰 소리. 데시벨은 진폭을 로그로 잰 척도.</p></div>
-        <div class="fcard"><div class="ic">RANGE</div><h4>사람의 귀</h4><p>대략 20Hz ~ 20kHz를 듣습니다. 피아노 가장 낮은 음은 약 27.5Hz.</p></div>
+        <div class="fcard"><div class="ic">FREQUENCY</div><h4>Frequency f — pitch</h4><p>Vibrations per second (Hz). The more it vibrates, the higher the note. Up one octave doubles the frequency.</p></div>
+        <div class="fcard"><div class="ic">AMPLITUDE</div><h4>Amplitude A — loudness</h4><p>The size of the vibration. Bigger means louder. The decibel is a logarithmic measure of amplitude.</p></div>
+        <div class="fcard"><div class="ic">RANGE</div><h4>The human ear</h4><p>We hear roughly 20 Hz – 20 kHz. The lowest note on a piano is about 27.5 Hz.</p></div>
       </div>
     </div>
   </section>
 
   <!-- 7 · octave -->
-  <section class="slide" data-ch="01 소리란 무엇인가" data-min="1.5" style="--accent:#7C6CF0"
-    data-notes="화성의 씨앗. 진동수 비가 단순하면 잘 어울린다(협화음). 옥타브 2:1, 완전5도 3:2를 ‘따로/함께’ 들려주고, 합쳐진 파형도 깔끔히 반복함을 보여주세요. 다음 2부(배음)로 가는 다리.">
+  <section class="slide" data-ch="01 What Is Sound" data-min="1.5" style="--accent:#7C6CF0"
+    data-notes="The seed of harmony. Simple frequency ratios sound consonant. Play the octave (2:1) and the perfect fifth (3:2) separately, then together, and show that the combined waveform still repeats cleanly. A bridge into Part 2 (harmonics).">
     <div class="inner split">
       <div class="stack">
-        <div class="eyebrow">진동수의 비</div>
-        <h2 class="title-lg">왜 단순한 비율은<br>잘 어울릴까?</h2>
-        <p class="body">왜 <span class="hl">간단한 정수비</span>의 두 음은 서로 어울려 들릴까?</p>
+        <div class="eyebrow">Ratios of frequency</div>
+        <h2 class="title-lg">Why do simple ratios<br>sound so pleasing?</h2>
+        <p class="body">Why do two notes in a <span class="hl">simple whole-number ratio</span> sound pleasing together?</p>
         <div class="btn-row" style="margin-top:.4rem">
           <button class="btn" data-int="220">220 Hz</button>
-          <button class="btn" data-int="440">440 · 2:1 옥타브</button>
-          <button class="btn" data-int="660">660 · 3:2 5도</button>
-          <button class="btn play" data-int="chord">▶ 셋 함께</button>
+          <button class="btn" data-int="440">440 · 2:1 octave</button>
+          <button class="btn" data-int="660">660 · 3:2 fifth</button>
+          <button class="btn play" data-int="chord">▶ All three together</button>
         </div>
-        <div class="caption" style="margin-top:.5rem">옥타브 = 진동수 ×2 · 완전5도 = ×3/2 · 완전4도 = ×4/3</div>
+        <div class="caption" style="margin-top:.5rem">Octave = frequency ×2 · perfect fifth = ×3/2 · perfect fourth = ×4/3</div>
       </div>
       <div class="viz-wrap">
         <span class="viz-tag">interval</span>
@@ -463,34 +463,34 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
   </section>
 
   <!-- ===== PART 2 DIVIDER ===== -->
-  <section class="slide" data-ch="02 소리를 더한다" data-min="0.5" style="--accent:#4D7CFF"
-    data-notes="2부 시작 — 강의의 심장. 색이 보라에서 파랑으로 한 단계 올라갑니다. ‘더하기’가 오늘의 핵심 동사임을 예고.">
+  <section class="slide" data-ch="02 Adding Sounds" data-min="0.5" style="--accent:#4D7CFF"
+    data-notes="Start of Part 2 — the heart of the lecture. The color steps up from violet to blue. Foreshadow that “adding” is today's key verb.">
     <div class="inner split">
       <div class="big-num">02</div>
       <div class="stack">
         <div class="eyebrow">PART TWO</div>
-        <h2 class="title-lg">소리를 더한다 — 배음</h2>
-        <p class="body">사인파 하나는 단조롭다 — 몇 개를 <span class="hl">쌓아야</span> 진짜 소리가 될까?</p>
+        <h2 class="title-lg">Adding Sounds — Harmonics</h2>
+        <p class="body">A single sine wave is dull — how many must you <span class="hl">stack</span> to make a real sound?</p>
       </div>
     </div>
   </section>
 
   <!-- 8 · add two -->
-  <section class="slide" data-ch="02 소리를 더한다" data-min="1.5" style="--accent:#4D7CFF"
-    data-notes="합성의 첫걸음. 440과 660을 따로, 그리고 더해서 들려주세요. 두 사인파를 ‘더한다’는 것이 파형에서 무엇을 의미하는지(같은 시각의 값끼리 합) 캔버스로 보여줍니다. 합도 주기적으로 반복함을 강조.">
+  <section class="slide" data-ch="02 Adding Sounds" data-min="1.5" style="--accent:#4D7CFF"
+    data-notes="The first step of synthesis. Play 440 and 660 separately, then their sum. Use the canvas to show what “adding” two sine waves means for the waveform (summing the values at each instant). Emphasize that the sum is still periodic.">
     <div class="inner split rev">
       <div class="viz-wrap">
         <span class="viz-tag">440 + 660 Hz</span>
         <canvas id="add-wave" class="viz" height="280"></canvas>
       </div>
       <div class="stack">
-        <div class="eyebrow">두 파동을 합치면</div>
-        <h2 class="title-lg">더하기 = 같은 순간의<br>값끼리 합</h2>
-        <p class="body">두 파동을 더하면, 왜 여전히 <span class="hl">주기적으로 반복</span>할까?</p>
+        <div class="eyebrow">When you combine two waves</div>
+        <h2 class="title-lg">Adding = summing the values<br>at the same instant</h2>
+        <p class="body">When you add two waves, why does the result still <span class="hl">repeat periodically</span>?</p>
         <div class="btn-row" style="margin-top:.3rem">
-          <button class="btn" data-add="f">▶ 440만</button>
-          <button class="btn" data-add="g">▶ 660만</button>
-          <button class="btn play" data-add="sum">▶ 합 (440+660)</button>
+          <button class="btn" data-add="f">▶ 440 only</button>
+          <button class="btn" data-add="g">▶ 660 only</button>
+          <button class="btn play" data-add="sum">▶ Sum (440+660)</button>
         </div>
         <div class="formula inlinek" style="margin-top:1rem">$$ y_1 + y_2 = \sin(2\pi f_1 t) + \sin(2\pi f_2 t) $$</div>
       </div>
@@ -498,29 +498,29 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
   </section>
 
   <!-- 9.5 · BEATS (sum-to-product) -->
-  <section class="slide" data-ch="02 소리를 더한다" data-min="2" style="--accent:#4D7CFF"
-    data-notes="삼각함수 합·곱 공식의 가장 아름다운 응용. 진동수가 거의 같은 두 음을 더하면 sinA+sinB = 2cos((A−B)/2)·sin((A+B)/2) — 합이 곱이 됩니다. 빠른 ‘반송파’(평균 진동수)가 느린 ‘포락선’(차이의 절반) 안에서 숨쉬는 그림을 보여주세요. 핵심: 귀에 들리는 크기는 |포락선|이라 맥놀이 진동수 = |f₁−f₂|(포락선 진동수의 2배). ‘조율’ 버튼은 Δf를 8→0으로 줄여 맥놀이가 점점 느려지다 완전히 사라지는 순간을 들려줍니다 — 피아노 조율사가 하는 바로 그것. 그림은 반송파를 보기 좋게 느리게 그린 도식이며, 실제 맥놀이 진동수는 우측 수치로 보여줍니다.">
+  <section class="slide" data-ch="02 Adding Sounds" data-min="2" style="--accent:#4D7CFF"
+    data-notes="The most beautiful application of the sum-to-product identity. Add two nearly equal tones and sinA+sinB = 2cos((A−B)/2)·sin((A+B)/2) — a sum becomes a product. Show the fast “carrier” (the average frequency) breathing inside a slow “envelope” (half the difference). Key point: what the ear hears is |envelope|, so the beat frequency = |f₁−f₂| (twice the envelope frequency). The “Tune” button shrinks Δf from 8→0, letting the beating slow down and then vanish entirely — exactly what a piano tuner does. The picture draws the carrier slowed down for clarity; the true beat frequency is shown by the number on the right.">
     <div class="inner stack">
-      <div class="eyebrow">근접한 두 음의 마법 · sum → product</div>
+      <div class="eyebrow">The magic of two close tones · sum → product</div>
       <div class="split" style="grid-template-columns:0.82fr 1.18fr;align-items:center">
         <div class="stack">
-          <h2 class="title-lg">맥놀이<br>합이 곱으로 바뀐다</h2>
-          <p class="body">거의 같은 두 음을 더하면, 왜 소리가 <span class="hl">느리게 출렁</span>일까?</p>
+          <h2 class="title-lg">Beats<br>a sum turns into a product</h2>
+          <p class="body">Add two nearly equal tones and why does the sound <span class="hl">swell slowly</span>?</p>
           <div class="formula inlinek">
             $$ \sin A+\sin B = 2\,\cos\tfrac{A-B}{2}\,\sin\tfrac{A+B}{2} $$
-            <div class="gloss">두 사인의 <b>합</b>이 코사인과 사인의 <b>곱</b>으로 — 삼각함수 합·곱 공식 하나면 맥놀이가 설명됩니다.</div>
+            <div class="gloss">The <b>sum</b> of two sines becomes a <b>product</b> of a cosine and a sine — a single sum-to-product identity explains beats.</div>
           </div>
-          <p class="caption" style="margin-top:.2rem">평균 <span class="readout" id="beat-avg" style="min-width:auto">440 Hz</span> &nbsp;·&nbsp; 맥놀이 <span class="readout" id="beat-rate" style="min-width:auto;color:#FACC15">4.0 Hz</span></p>
+          <p class="caption" style="margin-top:.2rem">Average <span class="readout" id="beat-avg" style="min-width:auto">440 Hz</span> &nbsp;·&nbsp; beats <span class="readout" id="beat-rate" style="min-width:auto;color:#FACC15">4.0 Hz</span></p>
         </div>
         <div class="stack" style="gap:12px">
-          <div class="viz-wrap"><span class="viz-tag">빠른 반송파가 느린 포락선 안에서 숨쉰다</span><canvas id="beat-wave" class="viz" height="236"></canvas></div>
+          <div class="viz-wrap"><span class="viz-tag">a fast carrier breathing inside a slow envelope</span><canvas id="beat-wave" class="viz" height="236"></canvas></div>
           <div class="formula inlinek" style="margin:0;padding:.85rem 1.15rem;border-left-color:#FACC15">
             $$ \sin 2\pi f_1 t+\sin 2\pi f_2 t \;=\; 2\,\cos\!\big(2\pi\tfrac{f_1-f_2}{2}\,t\big)\,\sin\!\big(2\pi\tfrac{f_1+f_2}{2}\,t\big) $$
-            <div class="gloss"><b style="color:#FACC15">느린 포락선</b> = 차이의 절반 진동수 · <b style="color:#22D3EE">빠른 반송파</b> = 평균 진동수 · 들리는 크기는 |포락선|이라 <b>맥놀이 = 초당 |f₁−f₂|번</b></div>
+            <div class="gloss"><b style="color:#FACC15">Slow envelope</b> = half-the-difference frequency · <b style="color:#22D3EE">fast carrier</b> = average frequency · what you hear is |envelope|, so <b>beats = |f₁−f₂| per second</b></div>
           </div>
           <div class="controls">
-            <div class="ctrl-row"><label>차이 Δf</label><input id="beat-d" type="range" min="0" max="12" value="4" step="0.5"><span class="readout" id="beat-d-r">4.0 Hz</span></div>
-            <div class="btn-row"><button id="beat-play" class="btn play">▶ 두 음 재생</button><button id="beat-tune" class="btn">🎚 조율 · 맥놀이 → 0</button></div>
+            <div class="ctrl-row"><label>Difference Δf</label><input id="beat-d" type="range" min="0" max="12" value="4" step="0.5"><span class="readout" id="beat-d-r">4.0 Hz</span></div>
+            <div class="btn-row"><button id="beat-play" class="btn play">▶ Play both tones</button><button id="beat-tune" class="btn">🎚 Tune · beats → 0</button></div>
           </div>
         </div>
       </div>
@@ -528,115 +528,115 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
   </section>
 
   <!-- 9 · key idea harmonics -->
-  <section class="slide" data-ch="02 소리를 더한다" data-min="1.5" style="--accent:#4D7CFF"
-    data-notes="오늘의 한 문장. 복잡한 ‘주기음’은 기본 진동수의 정수배(배음)들의 합. f0=기음, 2f0, 3f0…=배음. 이 한 줄이 강의 전체를 지탱한다고 강하게 말하세요. 다음 슬라이드에서 직접 만들어 봅니다.">
+  <section class="slide" data-ch="02 Adding Sounds" data-min="1.5" style="--accent:#4D7CFF"
+    data-notes="The one sentence for today. Any complex “periodic tone” is a sum of integer multiples (harmonics) of a fundamental frequency. f0 = fundamental; 2f0, 3f0, … = harmonics. Say emphatically that this single line carries the whole lecture. On the next slide we build one ourselves.">
     <div class="inner center stack">
-      <div class="tag-pill">오늘의 핵심 아이디어</div>
-      <h2 class="title-lg" style="text-align:center;max-width:20ch">아무리 복잡한 소리도<br>무엇들의 합일까?</h2>
+      <div class="tag-pill">The key idea of today</div>
+      <h2 class="title-lg" style="text-align:center;max-width:20ch">However complex a sound —<br>a sum of what?</h2>
       <div class="formula inlinek" style="max-width:720px;text-align:left">
         $$ f(t) = \sum_{n=1}^{\infty} A_n \,\sin\!\big(2\pi\, n f_0\, t + \varphi_n\big) $$
-        <div class="gloss"><b>f₀</b> 기음(기본 진동수) → 음높이 결정 · <b>2f₀, 3f₀, …</b> 배음(harmonics) · <b>Aₙ</b> 각 배음의 세기 → 음색 결정</div>
+        <div class="gloss"><b>f₀</b> fundamental (base frequency) → sets pitch · <b>2f₀, 3f₀, …</b> harmonics · <b>Aₙ</b> strength of each harmonic → sets timbre</div>
       </div>
-      <p class="body" style="text-align:center;max-width:50ch">모든 소리의 ‘레시피’ = <span class="hl">배음마다 얼마씩 섞었는가(Aₙ)</span>, 그 하나.</p>
+      <p class="body" style="text-align:center;max-width:50ch">The “recipe” of any sound = <span class="hl">how much of each harmonic you mix in (Aₙ)</span> — that one thing.</p>
     </div>
   </section>
 
   <!-- 10 · HARMONIC BUILDER (big) -->
-  <section class="slide" data-ch="02 소리를 더한다" data-min="2.5" style="--accent:#4D7CFF"
-    data-notes="대표 데모. 배음 합성기. 슬라이더로 1~8배음의 세기를 조절 → 위 파형, 아래 스펙트럼이 즉시 바뀌고 소리도 바뀝니다. 프리셋을 눌러 사인/사각/톱니/오르간/클라리넷을 비교하세요. 학생이 직접 자기 음색을 만들게 하면 가장 좋습니다. 막대 색=진동수(색 매핑) 환기.">
+  <section class="slide" data-ch="02 Adding Sounds" data-min="2.5" style="--accent:#4D7CFF"
+    data-notes="The flagship demo. A harmonic synthesizer. Adjust the strengths of harmonics 1–8 with the sliders → the waveform above and the spectrum below change instantly, and so does the sound. Press the presets to compare sine / square / saw / organ / clarinet. Best of all, let a student build their own timbre. Remind them: bar color = frequency (the color mapping).">
     <div class="inner stack">
-      <div class="eyebrow">직접 만들어 보기 · 가산 합성(additive synthesis)</div>
+      <div class="eyebrow">Build it yourself · additive synthesis</div>
       <div class="split" style="grid-template-columns:0.92fr 1.08fr;align-items:start">
         <div class="panel">
-          <div class="caption" style="margin-bottom:10px">배음 세기 — 슬라이더를 올려 섞으세요</div>
+          <div class="caption" style="margin-bottom:10px">Harmonic strengths — raise the sliders to mix</div>
           <div class="hsliders" id="hb-sliders"></div>
           <div class="chips" style="margin-top:16px" id="hb-presets">
-            <span class="chip on" data-preset="sine">사인</span>
-            <span class="chip" data-preset="square">사각파</span>
-            <span class="chip" data-preset="saw">톱니파</span>
-            <span class="chip" data-preset="organ">오르간</span>
-            <span class="chip" data-preset="clarinet">클라리넷</span>
+            <span class="chip on" data-preset="sine">Sine</span>
+            <span class="chip" data-preset="square">Square</span>
+            <span class="chip" data-preset="saw">Sawtooth</span>
+            <span class="chip" data-preset="organ">Organ</span>
+            <span class="chip" data-preset="clarinet">Clarinet</span>
           </div>
           <div class="btn-row" style="margin-top:16px">
-            <button id="hb-play" class="btn play">▶ 재생 (f₀ = 220 Hz)</button>
+            <button id="hb-play" class="btn play">▶ Play (f₀ = 220 Hz)</button>
           </div>
         </div>
         <div class="stack" style="gap:10px">
           <div class="viz-wrap"><span class="viz-tag">waveform</span><canvas id="hb-wave" class="viz" height="150"></canvas></div>
-          <div class="viz-wrap"><span class="viz-tag">spectrum · 색 = 진동수</span><canvas id="hb-spec" class="viz" height="118"></canvas></div>
+          <div class="viz-wrap"><span class="viz-tag">spectrum · color = frequency</span><canvas id="hb-spec" class="viz" height="118"></canvas></div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- 11 · square wave convergence -->
-  <section class="slide" data-ch="02 소리를 더한다" data-min="2" style="--accent:#4D7CFF"
-    data-notes="놀라운 수렴. 홀수 배음 1 + 1/3 + 1/5 + …만 더하면 매끈한 사인들이 모여 ‘각진’ 사각파가 된다. 항을 하나씩 늘리며 파형이 다가가는 것을 보여주고, 모서리의 작은 출렁임(깁스 현상)도 짚으세요. ‘무한히 더하면 정확히 사각파’.">
+  <section class="slide" data-ch="02 Adding Sounds" data-min="2" style="--accent:#4D7CFF"
+    data-notes="A surprising convergence. Add only the odd harmonics 1 + 1/3 + 1/5 + … and smooth sines assemble into an “angular” square wave. Add terms one by one to show the waveform approaching it, and point out the small overshoot at the corners (the Gibbs phenomenon). “Add infinitely many and you get exactly a square wave.”">
     <div class="inner split rev">
       <div class="viz-wrap">
         <span class="viz-tag" id="sq-tag">N = 1 harmonic</span>
         <canvas id="sq-wave" class="viz" height="280"></canvas>
       </div>
       <div class="stack">
-        <div class="eyebrow">사인으로 각을 만들다</div>
-        <h2 class="title-lg">매끈한 사인만으로<br>‘각’을 만들 수 있을까?</h2>
+        <div class="eyebrow">Making corners from sines</div>
+        <h2 class="title-lg">Can smooth sines alone<br>make a sharp “corner”?</h2>
         <div class="formula inlinek">$$ \tfrac{4}{\pi}\Big(\sin\omega t + \tfrac{1}{3}\sin 3\omega t + \tfrac{1}{5}\sin 5\omega t + \cdots\Big) $$</div>
-        <div class="ctrl-row" style="margin-top:.3rem"><label>항 수 N</label><input id="sq-n" type="range" min="1" max="49" value="1" step="2"><span class="readout" id="sq-n-r">1</span></div>
-        <div class="btn-row"><button id="sq-play" class="btn play">▶ 현재 N 듣기</button><button id="sq-anim" class="btn">▶ 쌓이는 과정</button></div>
-        <p class="caption" style="margin-top:.6rem">모서리의 작은 출렁임 = 깁스 현상(Gibbs phenomenon)</p>
+        <div class="ctrl-row" style="margin-top:.3rem"><label>Number of terms N</label><input id="sq-n" type="range" min="1" max="49" value="1" step="2"><span class="readout" id="sq-n-r">1</span></div>
+        <div class="btn-row"><button id="sq-play" class="btn play">▶ Hear current N</button><button id="sq-anim" class="btn">▶ Build-up</button></div>
+        <p class="caption" style="margin-top:.6rem">The small overshoot at the corners = the Gibbs phenomenon</p>
       </div>
     </div>
   </section>
 
   <!-- 12 · sawtooth / triangle -->
-  <section class="slide" data-ch="02 소리를 더한다" data-min="1.5" style="--accent:#4D7CFF"
-    data-notes="다른 파형들. 톱니파=모든 배음(1, 1/2, 1/3…), 삼각파=홀수 배음을 1/n²로. 각 파형이 ‘배음 레시피만 다를 뿐’임을 강조. 톱니파가 배음이 풍부해 더 ‘밝고 거친’ 소리. 신디사이저 기본 파형이라는 점 언급.">
+  <section class="slide" data-ch="02 Adding Sounds" data-min="1.5" style="--accent:#4D7CFF"
+    data-notes="Other waveforms. The sawtooth = all harmonics (1, 1/2, 1/3, …); the triangle = odd harmonics falling off as 1/n². Emphasize that each waveform “differs only in its harmonic recipe.” The sawtooth, rich in harmonics, sounds “brighter and rougher.” Mention that these are the basic synthesizer waveforms.">
     <div class="inner stack center">
-      <div class="eyebrow" style="justify-content:center">레시피만 바꾸면</div>
-      <h2 class="h-sec" style="text-align:center">같은 재료, 비율만 바꾸면?</h2>
+      <div class="eyebrow" style="justify-content:center">Change only the recipe</div>
+      <h2 class="h-sec" style="text-align:center">Same ingredients — just change the proportions?</h2>
       <div class="btn-row" style="margin:.4rem 0 1.1rem">
-        <button class="btn" data-wf="sine">사인</button>
-        <button class="btn" data-wf="square">사각파</button>
-        <button class="btn" data-wf="saw">톱니파</button>
-        <button class="btn" data-wf="triangle">삼각파</button>
+        <button class="btn" data-wf="sine">Sine</button>
+        <button class="btn" data-wf="square">Square</button>
+        <button class="btn" data-wf="saw">Sawtooth</button>
+        <button class="btn" data-wf="triangle">Triangle</button>
       </div>
       <div class="split" style="align-items:center;max-width:920px">
         <div class="viz-wrap"><span class="viz-tag" id="wf-tag">sine</span><canvas id="wf-wave" class="viz" height="200"></canvas></div>
         <div class="stack">
           <div class="formula inlinek" id="wf-formula" style="margin-top:0"></div>
-          <p class="caption" id="wf-desc">— 파형을 선택하면 배음 레시피가 나타납니다</p>
+          <p class="caption" id="wf-desc">— pick a waveform to reveal its harmonic recipe</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ===== PART 3 DIVIDER ===== -->
-  <section class="slide" data-ch="03 음색의 비밀" data-min="0.5" style="--accent:#22D3EE"
-    data-notes="3부 — 색이 청록(cyan)으로. 도입 훅의 ‘같은 라, 다른 소리’ 수수께끼를 이제 풀 차례라고 예고.">
+  <section class="slide" data-ch="03 The Secret of Timbre" data-min="0.5" style="--accent:#22D3EE"
+    data-notes="Part 3 — the color turns cyan. Foreshadow that it's now time to solve the opening riddle: “same A, different sound.”">
     <div class="inner split">
       <div class="big-num">03</div>
       <div class="stack">
         <div class="eyebrow">PART THREE</div>
-        <h2 class="title-lg">음색의 비밀</h2>
-        <p class="body">바이올린과 피아노는 왜 <span class="hl">다르게</span> 들릴까?</p>
+        <h2 class="title-lg">The Secret of Timbre</h2>
+        <p class="body">Why do a violin and a piano sound <span class="hl">different</span>?</p>
       </div>
     </div>
   </section>
 
   <!-- 13 · instrument fingerprint -->
-  <section class="slide" data-ch="03 음색의 비밀" data-min="2" style="--accent:#22D3EE"
-    data-notes="수수께끼 해소. 같은 음높이의 ‘악기풍’ 음을 눌러 비교. 각 악기는 배음 막대(스펙트럼)의 모양이 다르다 — 이것이 ‘배음 지문’. 도입 슬라이드의 세 소리가 사실 배음 레시피만 달랐음을 연결하세요.">
+  <section class="slide" data-ch="03 The Secret of Timbre" data-min="2" style="--accent:#22D3EE"
+    data-notes="Solving the riddle. Press the “instrument-like” tones at the same pitch to compare. Each instrument has a different shape of harmonic bars (spectrum) — this is its “harmonic fingerprint.” Connect back: the three sounds from the opening slide differed only in their harmonic recipe.">
     <div class="inner stack">
-      <div class="eyebrow">같은 음높이, 다른 지문</div>
-      <h2 class="h-sec">악기를 가르는 건 무엇일까?</h2>
+      <div class="eyebrow">Same pitch, different fingerprint</div>
+      <h2 class="h-sec">What tells the instruments apart?</h2>
       <div class="split" style="grid-template-columns:0.85fr 1.15fr;align-items:center">
         <div class="stack">
-          <p class="body">같은 <span class="hl">220 Hz</span> — 악기의 정체는 어느 <span class="hl">막대</span>에 숨어 있을까?</p>
+          <p class="body">The same <span class="hl">220 Hz</span> — in which <span class="hl">bars</span> is the instrument's identity hiding?</p>
           <div class="btn-row" style="margin-top:.4rem">
-            <button class="btn" data-inst="flute">▶ 플루트풍</button>
-            <button class="btn" data-inst="clarinet">▶ 클라리넷풍</button>
-            <button class="btn" data-inst="violin">▶ 바이올린풍</button>
-            <button class="btn" data-inst="brass">▶ 금관풍</button>
+            <button class="btn" data-inst="flute">▶ Flute-like</button>
+            <button class="btn" data-inst="clarinet">▶ Clarinet-like</button>
+            <button class="btn" data-inst="violin">▶ Violin-like</button>
+            <button class="btn" data-inst="brass">▶ Brass-like</button>
           </div>
         </div>
         <div class="viz-wrap"><span class="viz-tag" id="inst-tag">flute · spectrum</span><canvas id="inst-spec" class="viz" height="240"></canvas></div>
@@ -645,289 +645,289 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
   </section>
 
   <!-- 14 · timbre = spectrum -->
-  <section class="slide" data-ch="03 음색의 비밀" data-min="1.5" style="--accent:#22D3EE"
-    data-notes="정의 정리. 음색 = 배음 진폭의 분포(스펙트럼). 단 실제 악기는 시작/감쇠(어택·감쇠, ADSR)와 잡음도 음색에 기여 — 정적 스펙트럼은 1차 근사임을 솔직히 덧붙이면 이과 학생에게 신뢰를 줍니다.">
+  <section class="slide" data-ch="03 The Secret of Timbre" data-min="1.5" style="--accent:#22D3EE"
+    data-notes="Pinning down the definition. Timbre = the distribution of harmonic amplitudes (the spectrum). But real instruments also owe their timbre to onset/decay (attack–decay, ADSR) and noise — honestly adding that the static spectrum is a first approximation earns trust with science-minded students.">
     <div class="inner split">
       <div class="stack">
-        <div class="eyebrow">음색의 정체</div>
-        <h2 class="title-lg">음색이란, 결국<br>무엇일까?</h2>
-        <p class="body">높이도 크기도 같은데, 무엇이 악기를 가를까? — 배음 진폭 <span class="inlinek">\(A_1,A_2,A_3,\dots\)</span> 의 비율.</p>
+        <div class="eyebrow">The identity of timbre</div>
+        <h2 class="title-lg">Timbre is, in the end,<br>what?</h2>
+        <p class="body">Same pitch, same loudness — so what tells the instruments apart? The ratios of the harmonic amplitudes <span class="inlinek">\(A_1,A_2,A_3,\dots\)</span>.</p>
         <ul class="pts">
-          <li><b>밝은 소리</b><span class="sub">고차 배음이 강함 (금관·톱니파)</span></li>
-          <li><b>둥근 소리</b><span class="sub">저차 배음 위주 (플루트·사인)</span></li>
-          <li><b>속 빈 소리</b><span class="sub">홀수 배음 우세 (클라리넷·사각파)</span></li>
+          <li><b>Bright sound</b><span class="sub">strong high harmonics (brass · sawtooth)</span></li>
+          <li><b>Round sound</b><span class="sub">mostly low harmonics (flute · sine)</span></li>
+          <li><b>Hollow sound</b><span class="sub">odd harmonics dominant (clarinet · square wave)</span></li>
         </ul>
       </div>
       <div class="panel" style="align-self:center">
-        <div class="caption" style="margin-bottom:8px">한 걸음 더 — 진짜 악기는</div>
-        <p class="body" style="font-size:.98rem">진짜 악기는 배음 분포가 <b class="hl-ink">시간에 따라 변한다</b>. 어택·소멸·미세한 잡음까지가 ‘그 악기’. 정적 스펙트럼은 좋은 <span class="hl">첫 근사</span> — 변화는 5부 스펙트로그램에서.</p>
+        <div class="caption" style="margin-bottom:8px">One step further — real instruments</div>
+        <p class="body" style="font-size:.98rem">In a real instrument the harmonic distribution <b class="hl-ink">changes over time</b>. Attack, decay, and even faint noise are part of “that instrument.” The static spectrum is a good <span class="hl">first approximation</span> — the changes come in the Part 5 spectrogram.</p>
       </div>
     </div>
   </section>
 
   <!-- ===== PART 4 DIVIDER ===== -->
-  <section class="slide" data-ch="04 푸리에 급수" data-min="0.5" style="--accent:#2DD4A7"
-    data-notes="4부 — 색이 청록-초록(teal)으로, 수학이 본격화. 지금까지는 ‘합성(만들기)’을 했고, 이제 반대 방향 ‘분석(레시피 찾기)’을 배운다고 틀을 잡으세요.">
+  <section class="slide" data-ch="04 Fourier Series" data-min="0.5" style="--accent:#2DD4A7"
+    data-notes="Part 4 — the color turns teal and the math gets serious. Frame it: so far we've done “synthesis (building)”; now we learn the reverse direction, “analysis (finding the recipe).”">
     <div class="inner split">
       <div class="big-num">04</div>
       <div class="stack">
         <div class="eyebrow">PART FOUR</div>
-        <h2 class="title-lg">푸리에 급수</h2>
-        <p class="body">소리를 듣고, 그 <span class="hl">레시피를 거꾸로</span> 읽어낼 수 있을까?</p>
+        <h2 class="title-lg">Fourier Series</h2>
+        <p class="body">Can we listen to a sound and read off its <span class="hl">recipe in reverse</span>?</p>
       </div>
     </div>
   </section>
 
   <!-- 15 · Fourier series declaration -->
-  <section class="slide" data-ch="04 푸리에 급수" data-min="1.5" style="--accent:#2DD4A7"
-    data-notes="역사적 선언(1807, 열 방정식 연구 중). ‘모든 주기함수는 사인·코사인의 합’. 당시엔 충격적이고 논쟁적이었음을 한마디. 식은 겁주지 말고 ‘우리가 손으로 한 그 합을, 일반 함수로 적은 것’이라고 안심시키세요.">
+  <section class="slide" data-ch="04 Fourier Series" data-min="1.5" style="--accent:#2DD4A7"
+    data-notes="The historic claim (1807, during his study of the heat equation): “every periodic function is a sum of sines and cosines.” Note in a word that it was shocking and controversial at the time. Don't let the formula intimidate — reassure them it's just “the sum we did by hand, written for a general function.”">
     <div class="inner center stack">
-      <div class="eyebrow" style="justify-content:center">조제프 푸리에 · 1807</div>
-      <h2 class="title-lg" style="text-align:center;max-width:22ch">정말 ‘모든’ 주기함수를<br>사인의 합으로 쓸 수 있을까?</h2>
+      <div class="eyebrow" style="justify-content:center">Joseph Fourier · 1807</div>
+      <h2 class="title-lg" style="text-align:center;max-width:22ch">Can we really write “every” periodic function<br>as a sum of sines?</h2>
       <div class="formula inlinek" style="max-width:780px;text-align:left">
         $$ f(t) = \frac{a_0}{2} + \sum_{n=1}^{\infty}\Big[a_n\cos\tfrac{2\pi n t}{T} + b_n\sin\tfrac{2\pi n t}{T}\Big] $$
-        <div class="gloss"><b>T</b> 주기(기음의 한 사이클) · <b>n번째 항</b> = n배 진동수 성분 · <b>aₙ, bₙ</b> = 그 성분을 얼마나 섞을지 (우리가 슬라이더로 정하던 그 값!)</div>
+        <div class="gloss"><b>T</b> period (one cycle of the fundamental) · <b>n-th term</b> = the n× frequency component · <b>aₙ, bₙ</b> = how much of that component to mix in (the very values we set with the sliders!)</div>
       </div>
-      <p class="caption" style="text-align:center">열 전도를 풀다 발견 — 당대엔 충격적 주장.</p>
+      <p class="caption" style="text-align:center">Discovered while solving heat conduction — a shocking claim in its day.</p>
     </div>
   </section>
 
   <!-- 16 · amp-phase form -->
-  <section class="slide" data-ch="04 푸리에 급수" data-min="1.5" style="--accent:#2DD4A7"
-    data-notes="형태 정리. sin·cos 짝은 ‘진폭+위상’ 하나로 묶을 수 있다. 그래서 9번 슬라이드의 Aₙ·φₙ 형태와 같은 얘기. 음악적으로는 Aₙ이 음색을, φₙ(위상)은 귀에 거의 안 들린다는 점(Ohm의 위상 법칙)을 흥미롭게 덧붙이면 좋습니다.">
+  <section class="slide" data-ch="04 Fourier Series" data-min="1.5" style="--accent:#2DD4A7"
+    data-notes="Reorganizing the form. A sin·cos pair can be bundled into a single “amplitude + phase.” So this is the same story as the Aₙ·φₙ form from slide 9. Musically, it's worth adding the intriguing fact that Aₙ carries the timbre while φₙ (phase) is nearly inaudible (Ohm's phase law).">
     <div class="inner split">
       <div class="stack">
-        <div class="eyebrow">두 얼굴의 파동</div>
-        <h2 class="title-lg">cos와 sin의 합은<br>하나의 사인일까?</h2>
-        <p class="body">같은 진동수의 <span class="inlinek">\(a_n\cos + b_n\sin\)</span> → 크기·위상을 가진 <span class="hl">사인 하나</span>.</p>
+        <div class="eyebrow">A wave with two faces</div>
+        <h2 class="title-lg">Is a sum of cos and sin<br>a single sine?</h2>
+        <p class="body">At the same frequency, <span class="inlinek">\(a_n\cos + b_n\sin\)</span> → a <span class="hl">single sine</span> with an amplitude and a phase.</p>
         <div class="formula inlinek">
           $$ a_n\cos\theta + b_n\sin\theta = A_n\sin(\theta+\varphi_n) $$
           <div class="gloss">$$A_n=\sqrt{a_n^2+b_n^2}\qquad \tan\varphi_n=\tfrac{a_n}{b_n}$$</div>
         </div>
       </div>
       <div class="panel" style="align-self:center">
-        <div class="caption" style="margin-bottom:8px">음악적 사실 하나</div>
-        <p class="body" style="font-size:.98rem">음색은 거의 전적으로 <b class="hl-ink">배음 크기 Aₙ</b>가 결정. 위상 <span class="inlinek">\(\varphi_n\)</span> 을 뒤섞어 파형이 달라져도 귀엔 <span class="hl">같은 소리</span>(옴의 위상 법칙). 그래서 ‘막대’만으로 음색을 말할 수 있다.</p>
+        <div class="caption" style="margin-bottom:8px">One musical fact</div>
+        <p class="body" style="font-size:.98rem">Timbre is almost entirely set by the <b class="hl-ink">harmonic magnitudes Aₙ</b>. Scramble the phases <span class="inlinek">\(\varphi_n\)</span> and the waveform changes, yet the ear hears the <span class="hl">same sound</span> (Ohm's phase law). That's why the “bars” alone can describe timbre.</p>
       </div>
     </div>
   </section>
 
   <!-- 17 · correlation / analysis -->
-  <section class="slide" data-ch="04 푸리에 급수" data-min="2" style="--accent:#2DD4A7"
-    data-notes="분석의 직관 — 가장 중요한 개념 슬라이드. ‘어떤 진동수가 들어있나?’를 알아내는 법: 신호에 시험 사인파를 곱해서 한 주기 평균(=넓이)을 본다. 진동수가 ‘맞으면’ 곱이 양수로 쌓여 큰 값, ‘안 맞으면’ 양수·음수가 상쇄돼 0. 슬라이더로 시험 진동수를 바꾸며 검출 막대가 배음에서만 솟는 걸 보여주세요. 이것이 적분의 정체.">
+  <section class="slide" data-ch="04 Fourier Series" data-min="2" style="--accent:#2DD4A7"
+    data-notes="The intuition of analysis — the most important concept slide. How to find out “which frequencies are present”: multiply the signal by a test sine wave and look at the average over one period (= the area). If the frequency “matches,” the product piles up positive into a large value; if it “doesn't,” positives and negatives cancel to 0. Sweep the test frequency with the slider and show the detection bar rising only at the harmonics. This is what integration really is.">
     <div class="inner stack">
-      <div class="eyebrow">레시피를 거꾸로 읽기 · 공명 검출기</div>
-      <h2 class="h-sec">숨은 진동수를, 어떻게 끄집어낼까?</h2>
+      <div class="eyebrow">Reading the recipe in reverse · a resonance detector</div>
+      <h2 class="h-sec">How do we pull out a hidden frequency?</h2>
       <div class="split" style="grid-template-columns:0.78fr 1.22fr;align-items:start">
         <div class="stack">
-          <p class="body">특정 진동수가 소리 속에 있는지 어떻게 알까? — <span class="hl">곱하고 평균</span>. 맞으면 크게 쌓이고, 아니면 상쇄돼 0.</p>
-          <div class="ctrl-row" style="margin-top:.3rem"><label>시험 f</label><input id="corr-f" type="range" min="50" max="650" value="120" step="2"><span class="readout" id="corr-f-r">×1.0</span></div>
-          <div class="caption" id="corr-msg" style="margin-top:.2rem">신호 = 기음 + 2·3배음. 시험 진동수를 움직여 보라.</div>
+          <p class="body">How do we know whether a given frequency is in the sound? — <span class="hl">multiply and average</span>. If it matches, it piles up large; if not, it cancels to 0.</p>
+          <div class="ctrl-row" style="margin-top:.3rem"><label>Test f</label><input id="corr-f" type="range" min="50" max="650" value="120" step="2"><span class="readout" id="corr-f-r">×1.0</span></div>
+          <div class="caption" id="corr-msg" style="margin-top:.2rem">Signal = fundamental + 2nd & 3rd harmonics. Try sweeping the test frequency.</div>
         </div>
         <div class="stack" style="gap:9px">
-          <div class="viz-wrap"><span class="viz-tag">signal × test → product (넓이가 검출값)</span><canvas id="corr-top" class="viz" height="150"></canvas></div>
-          <div class="viz-wrap"><span class="viz-tag">detection vs test frequency · 배음에서만 솟음</span><canvas id="corr-plot" class="viz" height="120"></canvas></div>
+          <div class="viz-wrap"><span class="viz-tag">signal × test → product (area = detection value)</span><canvas id="corr-top" class="viz" height="150"></canvas></div>
+          <div class="viz-wrap"><span class="viz-tag">detection vs test frequency · peaks only at harmonics</span><canvas id="corr-plot" class="viz" height="120"></canvas></div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- 18 · coefficient integral -->
-  <section class="slide" data-ch="04 푸리에 급수" data-min="1.5" style="--accent:#2DD4A7"
-    data-notes="식으로 봉인. 방금의 ‘곱하고 평균’이 바로 푸리에 계수 적분이다. ∫f·cos dt = 그 진동수 성분의 크기. 직교성(맞지 않는 사인끼리는 평균 0)이 이 마법을 보장. 적분기호를 ‘평균 내는 기계’로 다시 읽어주세요.">
+  <section class="slide" data-ch="04 Fourier Series" data-min="1.5" style="--accent:#2DD4A7"
+    data-notes="Sealing it with a formula. That “multiply and average” is exactly the Fourier-coefficient integral. ∫f·cos dt = the magnitude of that frequency component. Orthogonality (mismatched sines average to 0) guarantees the magic. Re-read the integral sign as an “averaging machine.”">
     <div class="inner split">
       <div class="stack">
-        <div class="eyebrow">방금 그것의 수식</div>
-        <h2 class="title-lg">적분 = 평균 내는 기계</h2>
+        <div class="eyebrow">The formula for what we just did</div>
+        <h2 class="title-lg">Integration = an averaging machine</h2>
         <div class="formula inlinek">
           $$ a_n = \frac{2}{T}\int_{0}^{T} f(t)\,\cos\tfrac{2\pi n t}{T}\,dt $$
-          <div class="gloss">신호에 n배 진동수 코사인을 <b>곱하고</b>, 한 주기 동안 <b>평균</b>(적분)낸 값 = 그 성분의 크기. bₙ도 사인으로 똑같이.</div>
+          <div class="gloss">Take the signal, <b>multiply</b> by the n× frequency cosine, and <b>average</b> (integrate) over one period = the magnitude of that component. Same for bₙ with the sine.</div>
         </div>
       </div>
       <div class="stack" style="align-self:center">
         <div class="formula inlinek" style="margin-top:0">
           $$ \int_0^T \!\sin\tfrac{2\pi m t}{T}\,\sin\tfrac{2\pi n t}{T}\,dt = 0 \;\;(m\neq n) $$
-          <div class="gloss"><b>직교성(orthogonality)</b> — 서로 다른 배음끼리는 곱해 평균하면 0. 그래서 각 성분이 서로 간섭 없이 ‘깨끗하게’ 추출됩니다.</div>
+          <div class="gloss"><b>Orthogonality</b> — different harmonics multiply and average to 0. That's why each component is extracted “cleanly,” without interference.</div>
         </div>
-        <p class="caption">합성(만들기) ↔ 분석(읽기) — 같은 사인파 언어, 완벽한 대칭.</p>
+        <p class="caption">Synthesis (building) ↔ analysis (reading) — the same sine-wave language, a perfect symmetry.</p>
       </div>
     </div>
   </section>
 
   <!-- ===== PART 5 DIVIDER ===== -->
-  <section class="slide" data-ch="05 푸리에 변환" data-min="0.5" style="--accent:#FACC15"
-    data-notes="5부 — 색이 금빛(amber)으로 크게 점프. 급수(주기·이산 배음)에서 변환(비주기·연속 스펙트럼)으로 일반화. 실제 음악·말소리는 완벽히 반복하지 않으니 변환이 필요.">
+  <section class="slide" data-ch="05 Fourier Transform" data-min="0.5" style="--accent:#FACC15"
+    data-notes="Part 5 — a big jump to amber. Generalize from the series (periodic, discrete harmonics) to the transform (non-periodic, continuous spectrum). Real music and speech don't repeat perfectly, so the transform is needed.">
     <div class="inner split">
       <div class="big-num">05</div>
       <div class="stack">
         <div class="eyebrow">PART FIVE</div>
-        <h2 class="title-lg">푸리에 변환</h2>
-        <p class="body">영원히 반복하지 않는 소리는, 어떻게 <span class="hl">분석</span>할까?</p>
+        <h2 class="title-lg">Fourier Transform</h2>
+        <p class="body">How do we <span class="hl">analyze</span> a sound that never repeats forever?</p>
       </div>
     </div>
   </section>
 
   <!-- 18b · HERO coefficients (numeric) -->
-  <section class="slide" data-ch="04 푸리에 급수" data-min="2" style="--accent:#2DD4A7"
-    data-notes="첫 화면 기계의 '설계도'. 방금 배운 계수 적분을 실제 숫자로 돌린다. 파형을 고르면(사각파·톱니·고양이 귀·서울 스카이라인) 각 배음의 aₙ, bₙ, 크기 Aₙ=√(aₙ²+bₙ²), 위상 φₙ이 표로 계산된다. 핵심 해석: 배음 n → 반지름 Aₙ, 1주기에 n바퀴, 시작 φₙ인 '원' 하나. 이 원들을 더한 게 첫 화면의 회전 기계다. 슬라이더로 배음 수 N을 늘리면 앞 N개 합이 목표 파형으로 수렴하는 걸 보여주세요. '표의 숫자가 실제로 그 애니메이션을 돌린다'고 강조.">
+  <section class="slide" data-ch="04 Fourier Series" data-min="2" style="--accent:#2DD4A7"
+    data-notes="The “blueprint” of the opening-screen machine. Run the coefficient integral you just learned on real numbers. Pick a waveform (square · sawtooth · cat ears · Seoul skyline) and a table computes each harmonic's aₙ, bₙ, magnitude Aₙ=√(aₙ²+bₙ²), and phase φₙ. Key reading: harmonic n → one “circle” of radius Aₙ that turns n times per period starting at φₙ. Adding these circles is the rotating machine on the opening screen. Raise the harmonic count N with the slider to show the first-N sum converging to the target waveform. Emphasize: “the numbers in the table actually drive that animation.”">
     <div class="inner">
-      <div class="eyebrow">첫 화면 기계의 설계도 · 계수를 숫자로</div>
+      <div class="eyebrow">Blueprint of the opening-screen machine · coefficients as numbers</div>
       <div class="split" style="grid-template-columns:0.94fr 1.06fr;align-items:start">
         <div class="stack">
-          <h2 class="title-lg" style="margin-bottom:.5rem">원의 반지름 = 푸리에 계수</h2>
+          <h2 class="title-lg" style="margin-bottom:.5rem">Circle radius = Fourier coefficient</h2>
           <div class="formula inlinek" style="font-size:.9rem">$$ a_n=\tfrac{2}{N}\!\sum_{k} f_k\cos\tfrac{2\pi nk}{N},\ \ b_n=\tfrac{2}{N}\!\sum_{k} f_k\sin\tfrac{2\pi nk}{N} $$ $$ A_n=\sqrt{a_n^2+b_n^2},\qquad \varphi_n=\operatorname{atan2}(a_n,b_n) $$</div>
-          <p class="body" style="font-size:.95rem;margin:.1rem 0 .4rem">배음 <span class="inlinek">\(n\)</span> 하나 = 반지름 <b class="hl-ink">Aₙ</b>, 1주기에 <b class="hl-ink">n바퀴</b>, 시작 각 <b class="hl-ink">φₙ</b>인 원. 이 원들을 꼬리에 꼬리로 더한 것이 <b class="hl">첫 화면의 회전 기계</b>입니다.</p>
+          <p class="body" style="font-size:.95rem;margin:.1rem 0 .4rem">One harmonic <span class="inlinek">\(n\)</span> = a circle of radius <b class="hl-ink">Aₙ</b> that makes <b class="hl-ink">n turns per period</b>, starting at angle <b class="hl-ink">φₙ</b>. Adding these circles tip-to-tail is the <b class="hl">rotating machine on the opening screen</b>.</p>
           <div class="heromenu" id="cf-menu" style="margin:.2rem 0 .5rem">
-            <span class="hgroup">파형</span>
-            <button class="hchip on" data-cf="square">사각파</button>
-            <button class="hchip" data-cf="saw">톱니</button>
-            <button class="hchip" data-cf="catears">고양이 귀</button>
-            <button class="hchip" data-cf="seoul_sky">서울</button>
+            <span class="hgroup">Waveform</span>
+            <button class="hchip on" data-cf="square">Square</button>
+            <button class="hchip" data-cf="saw">Sawtooth</button>
+            <button class="hchip" data-cf="catears">Cat ears</button>
+            <button class="hchip" data-cf="seoul_sky">Seoul</button>
           </div>
           <div id="cf-table"></div>
         </div>
         <div class="stack" style="gap:12px">
-          <div class="viz-wrap"><span class="viz-tag">앞 N개 배음의 합 → 목표 파형</span><canvas id="cf-wave" class="viz" height="220"></canvas></div>
-          <div class="ctrl-row"><label>배음 수 N</label><input id="cf-n" type="range" min="1" max="24" value="4" step="1"><span class="readout" id="cf-nout">4 배음</span></div>
-          <div class="viz-wrap"><span class="viz-tag">|Aₙ| 스펙트럼</span><canvas id="cf-spec" class="viz" height="150"></canvas></div>
+          <div class="viz-wrap"><span class="viz-tag">sum of the first N harmonics → target waveform</span><canvas id="cf-wave" class="viz" height="220"></canvas></div>
+          <div class="ctrl-row"><label>Harmonic count N</label><input id="cf-n" type="range" min="1" max="24" value="4" step="1"><span class="readout" id="cf-nout">4 harmonic</span></div>
+          <div class="viz-wrap"><span class="viz-tag">|Aₙ| spectrum</span><canvas id="cf-spec" class="viz" height="150"></canvas></div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- 19 · series -> transform -->
-  <section class="slide" data-ch="05 푸리에 변환" data-min="1.5" style="--accent:#FACC15"
-    data-notes="개념 다리. 주기 T를 무한히 늘리면 배음 간격(1/T)이 0으로 좁아지고, 막대들이 빽빽해져 연속 곡선이 된다. 합(Σ)이 적분(∫)으로 바뀌는 자연스러운 흐름. 그림 위주로 직관 전달.">
+  <section class="slide" data-ch="05 Fourier Transform" data-min="1.5" style="--accent:#FACC15"
+    data-notes="A conceptual bridge. Stretch the period T to infinity and the spacing between harmonics (1/T) shrinks to 0; the bars grow dense and become a continuous curve. A natural flow from a sum (Σ) to an integral (∫). Convey the intuition mostly through the picture.">
     <div class="inner split rev">
       <div class="viz-wrap"><span class="viz-tag">discrete → continuous spectrum</span><canvas id="s2t" class="viz" height="260"></canvas></div>
       <div class="stack">
-        <div class="eyebrow">급수에서 변환으로</div>
-        <h2 class="title-lg">주기를 무한히 늘리면<br>무슨 일이 생길까?</h2>
-        <p class="body">주기 <span class="inlinek">\(T\)</span> 를 무한히 키우면? — 간격 <span class="inlinek">\(1/T\to 0\)</span>, 막대는 <span class="hl">연속 스펙트럼</span>, 합 <span class="inlinek">\(\sum\)</span> 은 적분 <span class="inlinek">\(\int\)</span> 으로.</p>
-        <div class="btn-row"><button id="s2t-anim" class="btn">▶ 주기 늘리기</button></div>
+        <div class="eyebrow">From series to transform</div>
+        <h2 class="title-lg">Stretch the period to infinity —<br>what happens?</h2>
+        <p class="body">Grow the period <span class="inlinek">\(T\)</span> without bound? — the spacing <span class="inlinek">\(1/T\to 0\)</span>, the bars become a <span class="hl">continuous spectrum</span>, and the sum <span class="inlinek">\(\sum\)</span> becomes an integral <span class="inlinek">\(\int\)</span>.</p>
+        <div class="btn-row"><button id="s2t-anim" class="btn">▶ Stretch the period</button></div>
       </div>
     </div>
   </section>
 
   <!-- 20 · Euler + FT -->
-  <section class="slide" data-ch="05 푸리에 변환" data-min="1.5" style="--accent:#FACC15"
-    data-notes="변환식. 오일러 공식으로 sin·cos를 e^{iθ}로 묶으면 식이 한 줄로 우아해진다. F(ω)=∫f(t)e^{-iωt}dt. ‘복소수가 무섭다’는 학생에겐 e^{-iωt}=‘진동수 ω로 도는 회전 탐침’이라고 직관 제공. 결과 |F(ω)|가 스펙트럼.">
+  <section class="slide" data-ch="05 Fourier Transform" data-min="1.5" style="--accent:#FACC15"
+    data-notes="The transform formula. Euler's formula bundles sin·cos into e^{iθ}, and the formula becomes one elegant line: F(ω)=∫f(t)e^{-iωt}dt. For students afraid of complex numbers, offer the intuition e^{-iωt} = “a rotating probe spinning at frequency ω.” The result |F(ω)| is the spectrum.">
     <div class="inner center stack">
-      <div class="eyebrow" style="justify-content:center">한 줄로 우아하게</div>
-      <h2 class="h-sec" style="text-align:center">사인과 코사인을, 하나로 묶을 수 있을까?</h2>
+      <div class="eyebrow" style="justify-content:center">One elegant line</div>
+      <h2 class="h-sec" style="text-align:center">Can we bundle sine and cosine into one?</h2>
       <div class="formula inlinek" style="max-width:560px;text-align:center">$$ e^{i\theta} = \cos\theta + i\,\sin\theta $$</div>
       <div class="formula inlinek" style="max-width:680px;text-align:left">
         $$ \hat f(\omega) = \int_{-\infty}^{\infty} f(t)\,e^{-i\omega t}\,dt $$
-        <div class="gloss"><b>푸리에 변환</b> — 신호 f(t)에 ‘진동수 ω로 도는 탐침’ <span class="inlinek">\(e^{-i\omega t}\)</span> 을 곱해 평균. 크기 <span class="inlinek">\(|\hat f(\omega)|\)</span> = 그 진동수가 들어있는 양 = <b>스펙트럼</b>.</div>
+        <div class="gloss"><b>The Fourier transform</b> — multiply the signal f(t) by the “probe spinning at frequency ω,” <span class="inlinek">\(e^{-i\omega t}\)</span>, and average. The magnitude <span class="inlinek">\(|\hat f(\omega)|\)</span> = how much of that frequency is present = the <b>spectrum</b>.</div>
       </div>
-      <p class="caption" style="text-align:center">17번의 ‘곱하고 평균’ — 모든 진동수에 한꺼번에.</p>
+      <p class="caption" style="text-align:center">The “multiply and average” of slide 17 — for every frequency at once.</p>
     </div>
   </section>
 
   <!-- 21 · spectrum analyzer -->
-  <section class="slide" data-ch="05 푸리에 변환" data-min="2" style="--accent:#FACC15"
-    data-notes="실시간 데모. 진동수 스윕(낮은음→높은음)을 재생하면 막대(실시간 FFT)가 왼→오로 이동. 화음 버튼으로 여러 막대가 동시에 뜨는 것도 보여주세요. 이게 음악 앱·튜너가 화면에 그리는 바로 그것. (AnalyserNode 기반)">
+  <section class="slide" data-ch="05 Fourier Transform" data-min="2" style="--accent:#FACC15"
+    data-notes="A live demo. Play a frequency sweep (low→high) and the bar (a live FFT) moves left→right. Use the chord button to show several bars rising at once. This is exactly what a music app or tuner draws on screen. (Built on AnalyserNode.)">
     <div class="inner stack">
-      <div class="eyebrow">실시간 스펙트럼 · FFT</div>
-      <h2 class="h-sec">소리를 진동수 막대로 펼쳐 보다</h2>
-      <div class="viz-wrap" style="margin-top:.4rem"><span class="viz-tag">live spectrum · 색 = 진동수</span><canvas id="sa-canvas" class="viz" height="300"></canvas></div>
+      <div class="eyebrow">Live spectrum · FFT</div>
+      <h2 class="h-sec">Spreading sound into frequency bars</h2>
+      <div class="viz-wrap" style="margin-top:.4rem"><span class="viz-tag">live spectrum · color = frequency</span><canvas id="sa-canvas" class="viz" height="300"></canvas></div>
       <div class="btn-row" style="margin-top:14px">
-        <button class="btn play" data-sa="sweep">▶ 진동수 스윕</button>
-        <button class="btn" data-sa="chord">▶ 도·미·솔 화음</button>
-        <button class="btn" data-sa="rich">▶ 배음 풍부한 음</button>
+        <button class="btn play" data-sa="sweep">▶ Frequency sweep</button>
+        <button class="btn" data-sa="chord">▶ C·E·G chord</button>
+        <button class="btn" data-sa="rich">▶ Harmonic-rich tone</button>
       </div>
     </div>
   </section>
 
   <!-- 22 · spectrogram -->
-  <section class="slide" data-enter="spectrogram" data-ch="05 푸리에 변환" data-min="2" style="--accent:#FACC15"
-    data-notes="음악학의 핵심 도구. 스펙트로그램 = 가로 시간, 세로 진동수, 밝기 세기. 멜로디를 재생하면 음표가 ‘점·줄’로 그려지고 배음이 층층이 보입니다. 새소리·말소리·민족음악 녹음 분석에 쓰는 바로 그 그림이라고 연결(다음 응용으로 이어짐).">
+  <section class="slide" data-enter="spectrogram" data-ch="05 Fourier Transform" data-min="2" style="--accent:#FACC15"
+    data-notes="A core tool of musicology. Spectrogram = time across, frequency up, intensity as brightness. Play a melody and the notes are drawn as “dots and lines,” with harmonics stacked in layers. Connect it: this is the very picture used to analyze birdsong, speech, and field recordings of traditional music (leading into the applications).">
     <div class="inner stack">
-      <div class="eyebrow">시간 × 진동수 · 음악학의 현미경</div>
-      <h2 class="h-sec">스펙트로그램 — 진동수의 악보</h2>
+      <div class="eyebrow">Time × frequency · the microscope of musicology</div>
+      <h2 class="h-sec">Spectrogram — a score of frequencies</h2>
       <div class="viz-wrap" style="margin-top:.4rem"><span class="viz-tag">spectrogram · ↑freq · →time</span><canvas id="sg-canvas" class="viz" height="300"></canvas></div>
       <div class="btn-row" style="margin-top:14px">
-        <button class="btn play" data-sg="melody">▶ 멜로디</button>
-        <button class="btn" data-sg="chirp">▶ 상승음(글리산도)</button>
-        <button class="btn" data-sg="harm">▶ 배음 층 보기</button>
-        <button class="btn" data-sg="clear">지우기</button>
+        <button class="btn play" data-sg="melody">▶ Melody</button>
+        <button class="btn" data-sg="chirp">▶ Rising tone (glissando)</button>
+        <button class="btn" data-sg="harm">▶ Show harmonic layers</button>
+        <button class="btn" data-sg="clear">Clear</button>
       </div>
     </div>
   </section>
 
   <!-- 22c · 3D SOUND OBJECT (waveform ⟂ spectrogram) -->
-  <section class="slide" data-enter="sound3d" data-ch="05 푸리에 변환" data-min="3.5" style="--accent:#FACC15"
-    data-notes="이 강의의 시각적 절정. 파형(1~4부)과 스펙트로그램(5부)이 사실은 한 소리의 두 그림자임을 3차원으로 보여줍니다. 이번엔 소리가 실시간으로 오른쪽→왼쪽으로 흘러가며(오른쪽 끝=지금), 시간에 따라 화면이 살아 움직입니다. 세 축: x=시간, y=진폭(소리 크기), z=주파수. 앞 벽(xy면)의 청록 리본이 파형이고, 바닥(xz면)의 열지도가 스펙트로그램입니다. 마우스로 끌어 돌리고 휠로 확대하세요(터치: 한 손가락 회전·두 손가락 확대). ‘시점’으로 정면을 보면 파형만, 위에서 보면 스펙트로그램만, 측면을 보면 지금 이 순간의 스펙트럼(오른쪽 벽의 금색 선)만 남습니다 — 관점이 곧 변환입니다. 샘플을 바꿔가며 대비시키세요: 플루트는 배음이 적어 파형이 깔끔하고 능선이 하나, 바이올린·첼로·오르간은 배음이 많아 능선이 여러 줄, 클라리넷은 홀수 배음만 도드라집니다. 화음은 여러 능선이 나란히, 멜로디·글리산도는 시간에 따라 능선이 계단처럼/비스듬히 움직입니다. 압권은 ‘그림’ 소리: 고양이·서울·도쿄 스카이라인·심장박동을 켜고 위에서 내려다보면, 스펙트로그램이 그 윤곽 자체를 그려냅니다 — 소리의 음높이가 그림의 높낮이를 따라가기 때문입니다. 파형(앞 벽)만으로는 그림이 보이지 않지만 스펙트로그램(바닥)에는 또렷이 나타나는 대비가, 왜 우리가 스펙트럼을 보는지를 말해 줍니다. 이 시간↔주파수의 맞바꿈이 다음 슬라이드의 불확정성 원리로 이어집니다.">
+  <section class="slide" data-enter="sound3d" data-ch="05 Fourier Transform" data-min="3.5" style="--accent:#FACC15"
+    data-notes="The visual climax of the lecture. It shows in 3D that the waveform (Parts 1–4) and the spectrogram (Part 5) are really two shadows of one sound. This time the sound flows in real time from right to left (the right edge = now), and the scene comes alive over time. Three axes: x = time, y = amplitude (loudness), z = frequency. The cyan ribbon on the front wall (the xy plane) is the waveform; the heat-map on the floor (the xz plane) is the spectrogram. Drag with the mouse to rotate and scroll to zoom (touch: one finger to rotate, two to zoom). Under “Views,” looking head-on leaves only the waveform, looking from above leaves only the spectrogram, and looking from the side leaves only the spectrum at this instant (the gold line on the right wall) — a change of viewpoint is the transform itself. Contrast the samples: the flute, poor in harmonics, has a clean waveform and a single ridge; violin, cello, and organ, rich in harmonics, show several ridges; the clarinet emphasizes only the odd harmonics. A chord shows several parallel ridges; melody and glissando make ridges move over time, like a staircase or a slant. The showstopper is the “picture” sounds: turn on the cat, the Seoul or Tokyo skyline, or a heartbeat and look down from above, and the spectrogram literally draws that outline — because the pitch of the sound follows the height of the picture. The waveform (front wall) alone shows no picture, yet the spectrogram (floor) shows it clearly — that contrast is exactly why we look at the spectrum. This time↔frequency trade-off leads into the uncertainty principle on the next slide.">
     <div class="inner stack">
-      <div class="eyebrow">3차원 · 하나의 소리, 두 개의 그림자</div>
-      <h2 class="h-sec">파형과 스펙트로그램은, 같은 것의 다른 그림자다</h2>
+      <div class="eyebrow">3D · one sound, two shadows</div>
+      <h2 class="h-sec">Waveform and spectrogram: two shadows of the same thing</h2>
       <p class="body" style="max-width:66ch;margin:.1rem 0 .7rem">
-        가로축은 <span class="hl">시간</span>, 세로축은 <span class="hl">진폭</span>(소리 크기), 깊이축은 <span class="hl">주파수</span>.
-        소리가 <span class="hl">실시간으로 오른쪽→왼쪽으로 흘러</span> — 오른쪽 끝이 <b class="hl-ink">지금</b>입니다.
-        앞 벽(<b class="hl-ink">xy면</b>)의 청록 리본은 <b class="hl-ink">파형</b>, 바닥(<b class="hl-ink">xz면</b>)의 열지도는 <b class="hl-ink">스펙트로그램</b>.
-        악기·화음·변주를 고르거나, <b class="hl-ink">소리로 그린 그림</b>(고양이·스카이라인)을 켜 보세요 — 스펙트로그램이 그 형체를 그려냅니다. 끌어 돌리고 · 휠로 확대하세요.</p>
+        The horizontal axis is <span class="hl">time</span>, the vertical axis is <span class="hl">amplitude</span> (loudness), and the depth axis is <span class="hl">frequency</span>.
+        The sound <span class="hl">flows in real time from right to left</span> — the right edge is <b class="hl-ink">now</b>.
+        The cyan ribbon on the front wall (the <b class="hl-ink">xy plane</b>) is the <b class="hl-ink">waveform</b>; the heat-map on the floor (the <b class="hl-ink">xz plane</b>) is the <b class="hl-ink">spectrogram</b>.
+        Pick an instrument, chord, or evolving sound, or turn on a <b class="hl-ink">picture drawn as sound</b> (cat · skyline) — the spectrogram draws its shape. Drag to rotate · scroll to zoom.</p>
       <div class="s3d-wrap">
         <span class="s3d-badge">3D · time × amplitude × frequency</span>
         <div class="s3d-legend">
-          <div class="lrow"><span class="sw" style="color:#22D3EE;background:#22D3EE"></span>앞 벽 xy · 파형</div>
-          <div class="lrow"><span class="sw" style="color:#FACC15;background:#FACC15"></span>바닥 xz · 스펙트로그램</div>
-          <div class="lrow" style="margin-top:2px">색 = 주파수</div>
+          <div class="lrow"><span class="sw" style="color:#22D3EE;background:#22D3EE"></span>front wall xy · waveform</div>
+          <div class="lrow"><span class="sw" style="color:#FACC15;background:#FACC15"></span>floor xz · spectrogram</div>
+          <div class="lrow" style="margin-top:2px">color = frequency</div>
           <div class="lbar"></div>
-          <div class="lscale"><span>낮은음</span><span>높은음</span></div>
+          <div class="lscale"><span>low</span><span>high</span></div>
         </div>
-        <div id="s3d-stage"><div class="s3d-loading" id="s3d-loading">3D 장면 준비 중…</div></div>
-        <div class="s3d-hint"><b>끌기</b> 회전 · <b>휠</b> 확대 · <b>오른쪽 끝 = 지금</b></div>
+        <div id="s3d-stage"><div class="s3d-loading" id="s3d-loading">Preparing 3D scene…</div></div>
+        <div class="s3d-hint"><b>Drag</b> rotate · <b>scroll</b> zoom · <b>right edge = now</b></div>
         <div class="s3d-bar">
-          <span class="grp">악기</span>
-          <button class="hchip on" data-s3d-sig="violin">바이올린</button>
-          <button class="hchip" data-s3d-sig="flute">플루트</button>
-          <button class="hchip" data-s3d-sig="clarinet">클라리넷</button>
-          <button class="hchip" data-s3d-sig="cello">첼로</button>
-          <button class="hchip" data-s3d-sig="organ">오르간</button>
-          <span class="grp">화음·변주</span>
-          <button class="hchip" data-s3d-sig="chord">화음</button>
-          <button class="hchip" data-s3d-sig="melody">멜로디</button>
-          <button class="hchip" data-s3d-sig="chirp">글리산도</button>
-          <span class="grp">그림 · 소리로 그린</span>
-          <button class="hchip" data-s3d-sig="cat">🐱 고양이</button>
-          <button class="hchip" data-s3d-sig="seoul">서울</button>
-          <button class="hchip" data-s3d-sig="tokyo">도쿄</button>
-          <button class="hchip" data-s3d-sig="heartbeat">심장박동</button>
+          <span class="grp">Instrument</span>
+          <button class="hchip on" data-s3d-sig="violin">Violin</button>
+          <button class="hchip" data-s3d-sig="flute">Flute</button>
+          <button class="hchip" data-s3d-sig="clarinet">Clarinet</button>
+          <button class="hchip" data-s3d-sig="cello">Cello</button>
+          <button class="hchip" data-s3d-sig="organ">Organ</button>
+          <span class="grp">Chord · Evolving</span>
+          <button class="hchip" data-s3d-sig="chord">Chord</button>
+          <button class="hchip" data-s3d-sig="melody">Melody</button>
+          <button class="hchip" data-s3d-sig="chirp">Glissando</button>
+          <span class="grp">Picture · drawn as sound</span>
+          <button class="hchip" data-s3d-sig="cat">🐱 Cat</button>
+          <button class="hchip" data-s3d-sig="seoul">Seoul</button>
+          <button class="hchip" data-s3d-sig="tokyo">Tokyo</button>
+          <button class="hchip" data-s3d-sig="heartbeat">Heartbeat</button>
           <span class="grp" style="flex-basis:100%;height:0;margin:0"></span>
-          <span class="grp">시점</span>
-          <button class="hchip" data-s3d-view="persp">원근</button>
-          <button class="hchip" data-s3d-view="front">정면=파형</button>
-          <button class="hchip" data-s3d-view="top">위=스펙트로그램</button>
-          <button class="hchip" data-s3d-view="side">측면=스펙트럼</button>
+          <span class="grp">View</span>
+          <button class="hchip" data-s3d-view="persp">Perspective</button>
+          <button class="hchip" data-s3d-view="front">Front = waveform</button>
+          <button class="hchip" data-s3d-view="top">Top = spectrogram</button>
+          <button class="hchip" data-s3d-view="side">Side = spectrum</button>
           <span class="grp" style="flex-basis:100%;height:0;margin:0"></span>
-          <button class="btn play" id="s3d-play">▶ 재생</button>
-          <button class="hchip" id="s3d-spin">자동 회전 · 켜기</button>
-          <button class="hchip" id="s3d-reset">시점 초기화</button>
+          <button class="btn play" id="s3d-play">▶ Play</button>
+          <button class="hchip" id="s3d-spin">Auto-rotate · on</button>
+          <button class="hchip" id="s3d-reset">Reset view</button>
         </div>
       </div>
-      <div class="caption" style="margin-top:8px">정면에서 보면 파형만, 위에서 보면 스펙트로그램만 — <span class="hl">관점을 바꾸는 것</span>이 곧 시간·주파수 사이의 변환입니다. <span class="hl">‘그림’ 소리</span>를 위에서 보면, 바닥에 그 윤곽이 흐릅니다.</div>
+      <div class="caption" style="margin-top:8px">From the front, only the waveform; from above, only the spectrogram — <span class="hl">changing your viewpoint</span> is the very transform between time and frequency. Look at a <span class="hl">“picture” sound</span> from above and its outline flows across the floor.</div>
     </div>
   </section>
 
   <!-- 22b · DFT / FFT algorithm -->
-  <section class="slide" data-ch="05 푸리에 변환" data-min="2" style="--accent:#FACC15"
-    data-notes="계산의 심장. 이산 푸리에 변환 DFT는 모든 진동수에 대해 '곱하고 더하기' — 신호 길이 N이면 곱셈이 N×N번(나이브 O(N²)). FFT(쿨리–튜키)는 짝수/홀수 항으로 반씩 쪼개는 분할정복으로 O(N log N). 슬라이더로 N을 키우면 나이브 vs FFT 연산량과 배속(N/log N)이 실시간으로 보인다: N=1024면 약 100배, N≈100만이면 약 5만 배. 스펙트럼 분석기·스펙트로그램·MP3가 실시간으로 도는 건 전부 FFT 덕분이라고 연결. 오른쪽 나비(butterfly) 그림은 FFT의 기본 연산 a±ωb.">
+  <section class="slide" data-ch="05 Fourier Transform" data-min="2" style="--accent:#FACC15"
+    data-notes="The heart of the computation. The discrete Fourier transform (DFT) is “multiply and add” for every frequency — for a signal of length N that's N×N multiplications (naïve O(N²)). The FFT (Cooley–Tukey) splits into even/odd terms, halving repeatedly (divide and conquer), for O(N log N). Raise N with the slider and the naïve-vs-FFT operation counts and the speed-up (N/log N) update live: about 100× at N=1024, about 50,000× at N≈1,000,000. Connect: spectrum analyzers, spectrograms, and MP3 run in real time thanks entirely to the FFT. The butterfly diagram on the right is the FFT's basic operation, a±ωb.">
     <div class="inner">
-      <div class="eyebrow">계산의 심장 · DFT와 FFT</div>
+      <div class="eyebrow">The heart of computation · DFT and FFT</div>
       <div class="split" style="grid-template-columns:1.02fr 0.98fr;align-items:center">
         <div class="stack">
-          <h2 class="title-lg" style="margin-bottom:.5rem">N² 을 N·log N 으로</h2>
-          <div class="formula inlinek">$$ X_k=\sum_{n=0}^{N-1} x_n\,e^{-2\pi i\,kn/N} $$<div class="gloss">모든 진동수 k에 대해 신호와 <b class="hl-ink">‘곱하고 더하기’</b> — 정직하게 하면 곱셈이 <b class="hl">N×N</b>번. N이 커지면 감당이 안 됩니다.</div></div>
-          <div class="formula inlinek" style="border-left-color:#2DD4A7">$$ X_k=E_k+e^{-2\pi i k/N}\,O_k $$<div class="gloss">짝수 항 <span class="inlinek">\(E_k\)</span> 와 홀수 항 <span class="inlinek">\(O_k\)</span> 로 <b class="hl-ink">반씩 쪼개기</b>를 반복(분할정복) → <b class="hl">O(N log N)</b>. 이것이 <b>FFT</b>(고속 푸리에 변환).</div></div>
+          <h2 class="title-lg" style="margin-bottom:.5rem">Turning N² into N·log N</h2>
+          <div class="formula inlinek">$$ X_k=\sum_{n=0}^{N-1} x_n\,e^{-2\pi i\,kn/N} $$<div class="gloss">For every frequency k, <b class="hl-ink">“multiply and add”</b> with the signal — done honestly that's <b class="hl">N×N</b> multiplications. As N grows this becomes unmanageable.</div></div>
+          <div class="formula inlinek" style="border-left-color:#2DD4A7">$$ X_k=E_k+e^{-2\pi i k/N}\,O_k $$<div class="gloss">Repeatedly <b class="hl-ink">split in half</b> into even terms <span class="inlinek">\(E_k\)</span> and odd terms <span class="inlinek">\(O_k\)</span> (divide and conquer) → <b class="hl">O(N log N)</b>. This is the <b>FFT</b> (fast Fourier transform).</div></div>
           <div class="statgrid">
-            <div class="ctrl-row"><label>길이 N</label><input id="dff-n" type="range" min="4" max="20" value="10" step="1"><span class="readout" id="dff-N">1,024</span></div>
-            <div class="statline"><span>나이브 O(N²)</span><b id="dff-sq" style="color:#FB7185">1,048,576</b></div>
+            <div class="ctrl-row"><label>Length N</label><input id="dff-n" type="range" min="4" max="20" value="10" step="1"><span class="readout" id="dff-N">1,024</span></div>
+            <div class="statline"><span>Naïve O(N²)</span><b id="dff-sq" style="color:#FB7185">1,048,576</b></div>
             <div class="statline"><span>FFT O(N·log₂N)</span><b id="dff-fft" style="color:#2DD4A7">10,240</b></div>
-            <div class="statline"><span>빨라짐</span><b id="dff-sp" style="color:#FACC15">약 102배</b></div>
+            <div class="statline"><span>Speed-up</span><b id="dff-sp" style="color:#FACC15">≈ 102×</b></div>
           </div>
         </div>
         <div class="stack" style="gap:12px">
-          <div class="viz-wrap"><span class="viz-tag">연산량: 나이브 vs FFT (세로 로그축)</span><canvas id="dff-chart" class="viz" height="240"></canvas></div>
+          <div class="viz-wrap"><span class="viz-tag">operations: naïve vs FFT (log vertical axis)</span><canvas id="dff-chart" class="viz" height="240"></canvas></div>
           <div class="butterfly">
             <svg viewBox="0 0 340 100" width="100%" height="76" preserveAspectRatio="xMidYMid meet">
               <line x1="24" y1="26" x2="160" y2="26" stroke="#7C6CF0" stroke-width="2"/>
@@ -942,7 +942,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
               <text x="10" y="78" fill="#98a2c0" font-size="13" font-family="monospace">b</text>
               <text x="256" y="30" fill="#cfe0f5" font-size="12" font-family="monospace">a + ωb</text>
               <text x="256" y="78" fill="#cfe0f5" font-size="12" font-family="monospace">a − ωb</text>
-              <text x="120" y="96" fill="#8fe0c0" font-size="11" font-family="monospace">나비 연산 (×ω)</text>
+              <text x="120" y="96" fill="#8fe0c0" font-size="11" font-family="monospace">butterfly (×ω)</text>
             </svg>
           </div>
         </div>
@@ -951,69 +951,69 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
   </section>
 
   <!-- 23 · uncertainty -->
-  <section class="slide" data-ch="05 푸리에 변환" data-min="1.5" style="--accent:#FACC15"
-    data-notes="멋진 한 방. 시간과 진동수를 동시에 무한정 정밀하게 알 수는 없다 — 스펙트로그램에서 ‘창’을 좁히면 시간은 또렷, 진동수는 흐릿(반대도 성립). 이게 양자역학 불확정성 원리와 같은 수학. 음악에선 ‘짧은 타악음은 음높이가 모호’로 체감.">
+  <section class="slide" data-ch="05 Fourier Transform" data-min="1.5" style="--accent:#FACC15"
+    data-notes="A memorable punch. You cannot know time and frequency both with unlimited precision — narrow the “window” in the spectrogram and time sharpens while frequency blurs (and vice versa). This is the same math as the uncertainty principle in quantum mechanics. In music you feel it as “a short percussive hit has an ambiguous pitch.”">
     <div class="inner split">
       <div class="stack">
-        <div class="eyebrow">피할 수 없는 맞바꿈</div>
-        <h2 class="title-lg">시간과 진동수를<br>동시에 알 수 있을까?</h2>
+        <div class="eyebrow">An unavoidable trade-off</div>
+        <h2 class="title-lg">Can we know time and frequency<br>at the same time?</h2>
         <div class="formula inlinek">
           $$ \Delta t \cdot \Delta f \;\gtrsim\; \frac{1}{4\pi} $$
-          <div class="gloss">분석 창을 <b>짧게</b> → 시간은 정확, 진동수는 번짐. <b>길게</b> → 진동수는 정확, 시간은 번짐.</div>
+          <div class="gloss">Make the analysis window <b>short</b> → time is sharp, frequency blurs. <b>Long</b> → frequency is sharp, time blurs.</div>
         </div>
       </div>
       <div class="panel" style="align-self:center">
-        <div class="caption" style="margin-bottom:8px">두 세계의 같은 수학</div>
-        <p class="body" style="font-size:.98rem">이 맞바꿈은 양자역학 <b class="hl-ink">불확정성 원리</b>와 같은 수식. <span class="hl">아주 짧은 타악음</span>의 음높이가 모호한 이유이기도 하다.</p>
+        <div class="caption" style="margin-bottom:8px">The same math in two worlds</div>
+        <p class="body" style="font-size:.98rem">This trade-off is the same formula as the <b class="hl-ink">uncertainty principle</b> in quantum mechanics. It's also why the pitch of <span class="hl">a very short percussive hit</span> is ambiguous.</p>
       </div>
     </div>
   </section>
 
   <!-- ===== PART 6 DIVIDER ===== -->
-  <section class="slide" data-ch="06 음악 속 푸리에" data-min="0.5" style="--accent:#FB7185"
-    data-notes="6부 — 색이 붉은빛(가장 높은 진동수)으로 마무리 구간. 이론을 일상의 음악 기술로 착지. 특히 음악학 연구와의 연결을 향해 갑니다.">
+  <section class="slide" data-ch="06 Fourier in Music" data-min="0.5" style="--accent:#FB7185"
+    data-notes="Part 6 — the closing stretch, in red (the highest frequency). Land the theory in everyday music technology, heading especially toward the link with musicology research.">
     <div class="inner split">
       <div class="big-num">06</div>
       <div class="stack">
         <div class="eyebrow">PART SIX</div>
-        <h2 class="title-lg">음악 속 푸리에</h2>
-        <p class="body">웨이블릿·신디사이저·MP3·튜너·오토튠 — 푸리에의 아이디어는 <span class="hl">어디까지</span> 확장될까?</p>
+        <h2 class="title-lg">Fourier in Music</h2>
+        <p class="body">Wavelets · synthesizers · MP3 · tuners · Auto-Tune — <span class="hl">how far</span> does Fourier's idea reach?</p>
       </div>
     </div>
   </section>
 
   <!-- 23b · wavelet -->
-  <section class="slide" data-ch="05 푸리에 변환" data-min="2" style="--accent:#FB7185"
-    data-notes="불확정성의 답 · 웨이블릿. 푸리에는 '무슨 진동수'는 알려주지만 '언제'는 잃는다. 스펙트로그램(STFT)은 고정 크기 창 → 시간·진동수 해상도가 한꺼번에 고정. 웨이블릿은 창 크기를 진동수에 맞춰 바꾼다: 높은 음엔 짧은 창(정확한 시간), 낮은 음엔 긴 창(정확한 진동수) — 다중해상도. 母웨이블릿 ψ(예: Morlet=가우스로 감싼 사인)를 늘이고(규모 a) 옮기며(위치 b) 신호와 겹쳐본다. 슬라이더로 a를 키우면 웨이블릿이 늘어나(저주파·넓은 시간) 보인다. 오른쪽 격자: STFT는 균일한 칸, 웨이블릿은 고주파에서 가늘고(시간 또렷) 저주파에서 넓은(진동수 또렷) 칸. 음악에선 드럼 타격(순간·넓은 주파수)과 지속음(길게·좁은 주파수)을 함께 포착.">
+  <section class="slide" data-ch="05 Fourier Transform" data-min="2" style="--accent:#FB7185"
+    data-notes="The answer to uncertainty · wavelets. Fourier tells you “which frequency” but loses “when.” The spectrogram (STFT) uses a fixed-size window → time and frequency resolution are both locked at once. The wavelet changes its window size with frequency: a short window for high notes (precise time), a long window for low notes (precise frequency) — multi-resolution. Stretch (scale a) and shift (position b) a mother wavelet ψ (e.g. Morlet = a sine wrapped in a Gaussian) and overlap it with the signal. Raise a with the slider and the wavelet stretches (low frequency, wide in time). The grid on the right: the STFT has uniform cells, while the wavelet has cells that are thin at high frequency (sharp time) and wide at low frequency (sharp frequency). In music this captures both a drum hit (instantaneous, broad frequency) and a sustained tone (long, narrow frequency).">
     <div class="inner">
-      <div class="eyebrow">불확정성의 답 · 웨이블릿</div>
+      <div class="eyebrow">The answer to uncertainty · wavelets</div>
       <div class="split" style="grid-template-columns:1fr 1fr;align-items:center">
         <div class="stack">
-          <h2 class="title-lg" style="margin-bottom:.5rem">언제, 어떤 음이 울렸나</h2>
-          <p class="body" style="font-size:.96rem;margin:.1rem 0 .4rem">무슨 진동수인지는 알아도 — <b>언제</b> 울렸는지는? 스펙트로그램은 창이 고정(좁히면 시간↑·진동수↓). 웨이블릿은 <b class="hl">창 크기를 진동수에 맞춰</b> 바꾼다.</p>
-          <div class="formula inlinek">$$ W(a,b)=\frac{1}{\sqrt{a}}\int f(t)\,\psi^{*}\!\Big(\frac{t-b}{a}\Big)dt $$<div class="gloss">규모 <span class="inlinek">\(a\)</span> (≈1/진동수)로 <b>늘이고</b>, 위치 <span class="inlinek">\(b\)</span> 로 <b>옮기며</b> 신호와 겹쳐봅니다. 母웨이블릿 <span class="inlinek">\(\psi\)</span> 는 예컨대 Morlet — 가우스로 감싼 사인.</div></div>
-          <p class="caption">높은 음엔 짧은 창(정확한 시간), 낮은 음엔 긴 창(정확한 진동수) — 다중해상도.</p>
-          <div class="ctrl-row" style="margin-top:.3rem"><label>규모 a</label><input id="wv-a" type="range" min="40" max="200" value="90" step="1"><span class="readout" id="wv-aout">a = 0.90</span></div>
+          <h2 class="title-lg" style="margin-bottom:.5rem">When did which note sound?</h2>
+          <p class="body" style="font-size:.96rem;margin:.1rem 0 .4rem">You know which frequency — but <b>when</b> did it sound? The spectrogram has a fixed window (narrow it and time↑, frequency↓). The wavelet changes its <b class="hl">window size with frequency</b>.</p>
+          <div class="formula inlinek">$$ W(a,b)=\frac{1}{\sqrt{a}}\int f(t)\,\psi^{*}\!\Big(\frac{t-b}{a}\Big)dt $$<div class="gloss"><b>Stretch</b> by a scale <span class="inlinek">\(a\)</span> (≈ 1/frequency) and <b>shift</b> by a position <span class="inlinek">\(b\)</span>, overlapping with the signal. The mother wavelet <span class="inlinek">\(\psi\)</span> is, for example, the Morlet — a sine wrapped in a Gaussian.</div></div>
+          <p class="caption">A short window for high notes (precise time), a long window for low notes (precise frequency) — multi-resolution.</p>
+          <div class="ctrl-row" style="margin-top:.3rem"><label>Scale a</label><input id="wv-a" type="range" min="40" max="200" value="90" step="1"><span class="readout" id="wv-aout">a = 0.90</span></div>
         </div>
         <div class="stack" style="gap:12px">
-          <div class="viz-wrap"><span class="viz-tag">Morlet 웨이블릿 · ψ((t−b)/a)</span><canvas id="wv-morlet" class="viz" height="150"></canvas></div>
-          <div class="viz-wrap"><span class="viz-tag">시간–진동수 타일링 (↑진동수, 시간→)</span><canvas id="wv-tiling" class="viz" height="180"></canvas></div>
+          <div class="viz-wrap"><span class="viz-tag">Morlet wavelet · ψ((t−b)/a)</span><canvas id="wv-morlet" class="viz" height="150"></canvas></div>
+          <div class="viz-wrap"><span class="viz-tag">time–frequency tiling (↑frequency, time→)</span><canvas id="wv-tiling" class="viz" height="180"></canvas></div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- 24 · synth -->
-  <section class="slide" data-ch="06 음악 속 푸리에" data-min="1.5" style="--accent:#FB7185"
-    data-notes="신디사이저. 가산 합성=배음을 직접 더하기(우리가 한 것). 감산 합성=배음 풍부한 파형을 필터로 깎기. 두 방향 모두 ‘스펙트럼을 설계’하는 일. 빠르게.">
+  <section class="slide" data-ch="06 Fourier in Music" data-min="1.5" style="--accent:#FB7185"
+    data-notes="Synthesizers. Additive synthesis = adding harmonics directly (what we did). Subtractive synthesis = carving a harmonic-rich waveform with a filter. Both directions are “designing the spectrum.” Keep it quick.">
     <div class="inner split">
       <div class="stack">
-        <div class="eyebrow">소리를 디자인하다</div>
-        <h2 class="title-lg">신디사이저</h2>
+        <div class="eyebrow">Designing sound</div>
+        <h2 class="title-lg">Synthesizers</h2>
         <ul class="pts">
-          <li><b>가산 합성</b><span class="sub">배음을 하나씩 더해 음색을 빚는다 — 오늘 우리가 한 바로 그것</span></li>
-          <li><b>감산 합성</b><span class="sub">배음이 풍부한 파형(톱니)에서 필터로 깎아낸다</span></li>
-          <li><b>공통점</b><span class="sub">결국 ‘스펙트럼을 설계’하는 일</span></li>
+          <li><b>Additive synthesis</b><span class="sub">add harmonics one by one to sculpt a timbre — exactly what we did today</span></li>
+          <li><b>Subtractive synthesis</b><span class="sub">carve a harmonic-rich waveform (sawtooth) with a filter</span></li>
+          <li><b>In common</b><span class="sub">in the end, “designing the spectrum”</span></li>
         </ul>
       </div>
       <div class="viz-wrap" style="align-self:center"><span class="viz-tag">design the spectrum</span><canvas id="synthSpec" class="viz" height="220"></canvas></div>
@@ -1021,137 +1021,137 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
   </section>
 
   <!-- 25 · MP3 -->
-  <section class="slide" data-ch="06 음악 속 푸리에" data-min="1.5" style="--accent:#FB7185"
-    data-notes="압축. MP3·AAC는 신호를 진동수 성분으로 분해한 뒤, 사람이 못 듣는 성분(마스킹된 약한 진동수 등)을 버려 용량을 줄인다. 심리음향 + 푸리에. ‘무손실이 아니라 똑똑한 버리기’.">
+  <section class="slide" data-ch="06 Fourier in Music" data-min="1.5" style="--accent:#FB7185"
+    data-notes="Compression. MP3 and AAC break the signal into frequency components, then discard the ones people can't hear (weak, masked frequencies, etc.) to shrink the size. Psychoacoustics + Fourier. “Not lossless — smart discarding.”">
     <div class="inner split rev">
       <div class="viz-wrap" style="align-self:center"><span class="viz-tag">keep audible · drop the rest</span><canvas id="mp3Spec" class="viz" height="220"></canvas></div>
       <div class="stack">
-        <div class="eyebrow">100배 작게</div>
-        <h2 class="title-lg">MP3 · AAC 압축</h2>
-        <p class="body">어떻게 음질을 지키며 <span class="hl">100배</span> 줄일까? — 안 들리는 진동수를 과감히 버린다.</p>
-        <p class="caption" style="margin-top:.4rem">푸리에 변환 + 심리음향(psychoacoustics) = 똑똑하게 버리는 압축</p>
+        <div class="eyebrow">100× smaller</div>
+        <h2 class="title-lg">MP3 · AAC compression</h2>
+        <p class="body">How do we shrink it <span class="hl">100×</span> while keeping the quality? — boldly discard the inaudible frequencies.</p>
+        <p class="caption" style="margin-top:.4rem">Fourier transform + psychoacoustics = compression by smart discarding</p>
       </div>
     </div>
   </section>
 
   <!-- 26 · tuner / autotune -->
-  <section class="slide" data-ch="06 음악 속 푸리에" data-min="1.5" style="--accent:#FB7185"
-    data-notes="피치 검출·교정. 튜너 앱=FFT로 기음 진동수를 찾아 음 이름 표시. 오토튠=검출한 음높이를 목표 음으로 이동. 노이즈 캔슬링도 진동수 영역에서 처리. 일상 기술로 마무리.">
+  <section class="slide" data-ch="06 Fourier in Music" data-min="1.5" style="--accent:#FB7185"
+    data-notes="Pitch detection and correction. A tuner app uses an FFT to find the fundamental frequency and show the note name. Auto-Tune shifts the detected pitch toward a target note. Noise cancellation, too, works in the frequency domain. Wrap up with everyday technology.">
     <div class="inner stack center">
-      <div class="eyebrow" style="justify-content:center">진동수를 읽고, 고치고, 지운다</div>
-      <h2 class="h-sec" style="text-align:center">튜너 · 오토튠 · 노이즈 캔슬링</h2>
+      <div class="eyebrow" style="justify-content:center">Read the frequency, fix it, erase it</div>
+      <h2 class="h-sec" style="text-align:center">Tuner · Auto-Tune · noise cancellation</h2>
       <div class="fade-grid" style="max-width:840px">
-        <div class="fcard"><div class="ic">TUNER</div><h4>튜너 앱</h4><p>FFT로 기음 진동수를 찾아 ‘이 음은 A=441Hz, 살짝 높음’처럼 알려줍니다.</p></div>
-        <div class="fcard"><div class="ic">AUTO-TUNE</div><h4>피치 교정</h4><p>검출한 음높이를 가장 가까운 ‘옳은’ 음으로 이동시켜 보정합니다.</p></div>
-        <div class="fcard"><div class="ic">DENOISE</div><h4>노이즈 제거</h4><p>잡음의 진동수 성분만 골라 줄이거나 빼냅니다 — 진동수 영역의 수술.</p></div>
+        <div class="fcard"><div class="ic">TUNER</div><h4>Tuner app</h4><p>An FFT finds the fundamental frequency and tells you things like “this note is A = 441 Hz, slightly sharp.”</p></div>
+        <div class="fcard"><div class="ic">AUTO-TUNE</div><h4>Pitch correction</h4><p>Shift the detected pitch to the nearest “correct” note to fix it.</p></div>
+        <div class="fcard"><div class="ic">DENOISE</div><h4>Denoising</h4><p>Pick out just the noise's frequency components and reduce or remove them — surgery in the frequency domain.</p></div>
       </div>
     </div>
   </section>
 
   <!-- 27 · musicology -->
-  <section class="slide" data-ch="06 음악 속 푸리에" data-min="1.5" style="--accent:#FB7185"
-    data-notes="청중 맞춤 — 음악학 연구와의 직접 연결. 스펙트럼/스펙트로그램은 ‘소리를 측정 가능한 데이터로’ 만든다. 음律 체계 비교(순정률 vs 평균율의 진동수 비), 음색의 정량 분석, 민족음악·구전 녹음의 음향 분석, 역사적 악기·녹음 복원, 말소리/새소리 연구까지. 연구 주제로 확장 가능함을 강조하며 동기 부여.">
+  <section class="slide" data-ch="06 Fourier in Music" data-min="1.5" style="--accent:#FB7185"
+    data-notes="Tailored to the audience — a direct link to musicology research. The spectrum and spectrogram turn “sound into measurable data.” Comparing tuning systems (the frequency ratios of just intonation vs. equal temperament), quantitative analysis of timbre, acoustic analysis of ethnomusicological and oral-tradition recordings, restoration of historical instruments and recordings, even speech and birdsong studies. Motivate by stressing how these open into research topics.">
     <div class="inner stack">
-      <div class="eyebrow">소리를 ‘측정 가능한 데이터’로</div>
-      <h2 class="h-sec">음악학 연구에서의 푸리에</h2>
+      <div class="eyebrow">Turning sound into “measurable data”</div>
+      <h2 class="h-sec">Fourier in musicology research</h2>
       <div class="fade-grid" style="margin-top:1rem">
-        <div class="fcard"><div class="ic">TUNING</div><h4>음률 체계</h4><p>순정률·평균율의 차이를 진동수 비로 정밀 비교. 역사적 조율을 수치로 복원.</p></div>
-        <div class="fcard"><div class="ic">TIMBRE</div><h4>음색의 정량화</h4><p>연주자·악기·시대별 음색을 스펙트럼 특징으로 객관적으로 분석·분류.</p></div>
-        <div class="fcard"><div class="ic">ARCHIVE</div><h4>민족음악·구전</h4><p>현장 녹음의 음정·리듬·음색을 스펙트로그램으로 채보하고 보존.</p></div>
-        <div class="fcard"><div class="ic">RESTORE</div><h4>녹음 복원</h4><p>오래된 음반의 잡음·왜곡을 진동수 영역에서 보정해 되살림.</p></div>
-        <div class="fcard"><div class="ic">VOICE</div><h4>목소리·발성</h4><p>포먼트(공명 진동수)로 모음·창법·언어를 분석 — 음성학과의 다리.</p></div>
-        <div class="fcard"><div class="ic">PERCEPTION</div><h4>청각 인지</h4><p>왜 어떤 화음이 협화로 들리는지, 배음 구조로 설명하는 심리음향 연구.</p></div>
+        <div class="fcard"><div class="ic">TUNING</div><h4>Tuning systems</h4><p>Precisely compare just intonation and equal temperament through frequency ratios. Reconstruct historical tunings numerically.</p></div>
+        <div class="fcard"><div class="ic">TIMBRE</div><h4>Quantifying timbre</h4><p>Objectively analyze and classify timbre by performer, instrument, and era through spectral features.</p></div>
+        <div class="fcard"><div class="ic">ARCHIVE</div><h4>Ethnomusicology · oral tradition</h4><p>Transcribe and preserve the pitch, rhythm, and timbre of field recordings with spectrograms.</p></div>
+        <div class="fcard"><div class="ic">RESTORE</div><h4>Recording restoration</h4><p>Correct the noise and distortion of old records in the frequency domain to bring them back to life.</p></div>
+        <div class="fcard"><div class="ic">VOICE</div><h4>Voice · vocal production</h4><p>Analyze vowels, singing techniques, and languages through formants (resonant frequencies) — a bridge to phonetics.</p></div>
+        <div class="fcard"><div class="ic">PERCEPTION</div><h4>Auditory perception</h4><p>Psychoacoustic research explaining, through harmonic structure, why certain chords sound consonant.</p></div>
       </div>
     </div>
   </section>
 
   <!-- ===== PART 7 WRAP ===== -->
   <!-- 27b · ear = physical Fourier (cochlea) -->
-  <section class="slide" data-enter="cochleaA" data-ch="06 음악 속 푸리에" data-min="2.5" style="--accent:#FB7185"
-    data-notes="충격적 사실: 당신의 귀가 이미 푸리에 변환을 한다. 소리 → 달팽이관(cochlea) 속 기저막(basilar membrane)에 진행파(traveling wave) → 진동수마다 '다른 위치'에서 가장 크게 공명 → 그 위치의 융모세포(hair cells)가 휘며 청신경을 발화. 음위상(tonotopy): 입구(base, 좁고 단단)=고음, 끝(apex, 넓고 부드러움)=저음. 단 3.5 cm에 피아노 전 음역이 들어간다. 슬라이더로 진동수를 올리면 공명 봉우리(빛나는 융모)가 기저막을 따라 이동하는 걸 보여주세요. 스윕/듣기 버튼도. 핵심 한 줄: 각 융모가 특정 진동수에만 반응 = 소리를 진동수 성분으로 '물리적으로' 분해 = 하드웨어 푸리에 변환.">
+  <section class="slide" data-enter="cochleaA" data-ch="06 Fourier in Music" data-min="2.5" style="--accent:#FB7185"
+    data-notes="A striking fact: your ear already performs a Fourier transform. Sound → a traveling wave on the basilar membrane inside the cochlea → for each frequency, the largest resonance occurs at a “different position” → the hair cells there bend and fire the auditory nerve. Tonotopy: the entrance (base, narrow and stiff) = high notes, the far end (apex, wide and soft) = low notes. The entire range of a piano fits in just 3.5 cm. Raise the frequency with the slider to show the resonance peak (the glowing hair cells) moving along the basilar membrane. There are also sweep/play buttons. The one-line takeaway: each hair cell responds to only a specific frequency = the sound is “physically” decomposed into frequency components = a hardware Fourier transform.">
     <div class="inner">
-      <div class="eyebrow">당신의 귀 · 살아있는 스펙트럼 분석기</div>
+      <div class="eyebrow">Your ear · a living spectrum analyzer</div>
       <div class="split" style="grid-template-columns:0.82fr 1.18fr;align-items:center">
         <div class="stack">
-          <h2 class="title-lg" style="margin-bottom:.5rem">귀도 스스로<br><span class="hl">푸리에 변환</span>을 할까?</h2>
-          <p class="body" style="font-size:.97rem">귀는 어떻게 진동수를 <b class="hl-ink">자리</b>로 바꿀까? — 기저막의 진행파가 진동수마다 다른 위치에서 출렁이고, 그 자리 <b class="hl-ink">융모세포</b>가 발화한다.</p>
-          <p class="body" style="font-size:.97rem;margin-top:.2rem">입구는 좁고 단단 → <b>고음</b>, 끝은 넓고 부드러움 → <b>저음</b>. 단 <b class="hl">3.5 cm</b>에 피아노 전 음역.</p>
+          <h2 class="title-lg" style="margin-bottom:.5rem">Does the ear itself<br>perform a <span class="hl">Fourier transform</span>?</h2>
+          <p class="body" style="font-size:.97rem">How does the ear turn frequency into <b class="hl-ink">position</b>? — a traveling wave on the basilar membrane peaks at a different place for each frequency, and the <b class="hl-ink">hair cells</b> there fire.</p>
+          <p class="body" style="font-size:.97rem;margin-top:.2rem">The entrance is narrow and stiff → <b>high notes</b>; the far end is wide and soft → <b>low notes</b>. The whole piano range in just <b class="hl">3.5 cm</b>.</p>
           <div class="heromenu" id="coch-menu" style="margin:.3rem 0 .4rem">
-            <button class="hchip" data-coch="110">낮은음</button>
-            <button class="hchip" data-coch="2093">높은음</button>
-            <button class="hchip" data-coch="sweep">스윕 ↕</button>
-            <button class="hchip" data-coch="play">▶ 듣기</button>
+            <button class="hchip" data-coch="110">low</button>
+            <button class="hchip" data-coch="2093">high</button>
+            <button class="hchip" data-coch="sweep">Sweep ↕</button>
+            <button class="hchip" data-coch="play">▶ Listen</button>
           </div>
-          <div class="ctrl-row"><label>진동수 f</label><input id="coch-f" type="range" min="40" max="8000" value="440" step="1"><span class="readout" id="coch-fr">440 Hz</span></div>
-          <p class="caption">빛나는 융모 = 지금 발화하는 세포. 각 세포는 <b>특정 진동수에만</b> 반응 → 하드웨어 푸리에 변환.</p>
+          <div class="ctrl-row"><label>Frequency f</label><input id="coch-f" type="range" min="40" max="8000" value="440" step="1"><span class="readout" id="coch-fr">440 Hz</span></div>
+          <p class="caption">The glowing hairs = cells firing right now. Each cell responds to <b>only a specific frequency</b> → a hardware Fourier transform.</p>
         </div>
-        <div class="viz-wrap"><span class="viz-tag">달팽이관을 펼친 그림 · 진행파와 융모</span><canvas id="coch-a" class="viz" height="300"></canvas></div>
+        <div class="viz-wrap"><span class="viz-tag">the cochlea unrolled · traveling wave and hair cells</span><canvas id="coch-a" class="viz" height="300"></canvas></div>
       </div>
     </div>
   </section>
 
   <!-- 27c · spectrum = neural code + brain -->
-  <section class="slide" data-ch="06 음악 속 푸리에" data-min="2.5" style="--accent:#FB7185"
-    data-notes="이어서: 그 스펙트럼이 곧 귀가 뇌로 보내는 신호다. 실제 소리는 배음이 많아 기저막에 여러 봉우리가 동시에 생긴다 — 이 '흥분 패턴'이 바로 우리가 계산한 스펙트럼. 하모닉스/화음/두 순음 프리셋으로 여러 봉우리를 보여주고 들려주세요. 이 진동수순 지도(tonotopy)는 청신경 → 청각피질까지 보존된다(자리 부호, place code): 음높이=어느 자리, 음색=배음 봉우리들의 패턴, 그래서 악기 구분·화음 분해가 된다. 특정 진동수 난청 = 특정 위치 융모 손상. 뉘앙스: 정확히는 순수 푸리에가 아니라 유한한 시간 창 + 로그 간격 해상도 + 외유모세포의 비선형 증폭 → 오히려 우리가 본 웨이블릿에 가깝다. 마무리 한 줄로 강의 전체 흐름(파형→배음→급수→변환→귀)을 닫아주세요.">
+  <section class="slide" data-ch="06 Fourier in Music" data-min="2.5" style="--accent:#FB7185"
+    data-notes="Continuing: that spectrum is precisely the signal the ear sends to the brain. Real sounds are harmonic-rich, so several peaks form on the basilar membrane at once — this “excitation pattern” is exactly the spectrum we computed. Use the harmonics/chord/two-pure-tones presets to show and play several peaks. This frequency-ordered map (tonotopy) is preserved from the auditory nerve up to the auditory cortex (a place code): pitch = which place, timbre = the pattern of harmonic peaks — which is how we tell instruments apart and hear chords broken into parts. Hearing loss at a specific frequency = damage to hair cells at a specific position. Nuance: strictly it isn't a pure Fourier transform but a finite time window + logarithmic-spacing resolution + nonlinear amplification by outer hair cells → in fact closer to the wavelet we saw. Close with one line tying together the whole lecture (waveform → harmonics → series → transform → ear).">
     <div class="inner">
-      <div class="eyebrow">스펙트럼 = 신경 신호 · 자리 부호</div>
+      <div class="eyebrow">Spectrum = neural signal · place code</div>
       <div class="split rev" style="grid-template-columns:1.18fr 0.82fr;align-items:center">
-        <div class="viz-wrap"><span class="viz-tag">여러 배음 = 기저막의 여러 봉우리</span><canvas id="coch-b" class="viz" height="300"></canvas></div>
+        <div class="viz-wrap"><span class="viz-tag">several harmonics = several peaks on the basilar membrane</span><canvas id="coch-b" class="viz" height="300"></canvas></div>
         <div class="stack">
-          <h2 class="title-lg" style="margin-bottom:.5rem">우리가 계산한 스펙트럼은<br>귀 속에도 <span class="hl">있을까</span>?</h2>
+          <h2 class="title-lg" style="margin-bottom:.5rem">Is the spectrum we computed<br>also <span class="hl">inside the ear</span>?</h2>
           <div class="heromenu" id="cochb-menu" style="margin:.1rem 0 .4rem">
-            <button class="hchip on" data-cochb="harm">하모닉스</button>
-            <button class="hchip" data-cochb="chord">화음</button>
-            <button class="hchip" data-cochb="two">두 순음</button>
-            <button id="cochb-play" class="hchip" style="border-color:var(--accent)">▶ 듣기</button>
+            <button class="hchip on" data-cochb="harm">Harmonics</button>
+            <button class="hchip" data-cochb="chord">Chord</button>
+            <button class="hchip" data-cochb="two">Two pure tones</button>
+            <button id="cochb-play" class="hchip" style="border-color:var(--accent)">▶ Listen</button>
           </div>
-          <p class="body" style="font-size:.96rem">배음 많은 소리는 여러 위치에서 동시에 공명 — 이 <b class="hl-ink">흥분 패턴</b>이 곧 스펙트럼. 이 지도는 <b class="hl-ink">청각피질까지 보존</b>(자리 부호). 음높이=어느 자리, <b>음색=봉우리 패턴</b>.</p>
-          <div class="formula inlinek" style="border-left-color:#FB7185;font-size:.92rem"><div class="gloss" style="margin:0">엄밀히는 순수 푸리에가 아닙니다 — <b class="hl">유한한 시간 창</b> · <b class="hl">로그 간격</b> 해상도 · 외유모세포의 <b>비선형 증폭</b>. 오히려 방금 본 <b class="hl-ink">웨이블릿</b>에 가깝죠.</div></div>
-          <p class="caption">“푸리에는 1822년에 절반을 풀었고, 나머지는 신경과학이 지금도 푸는 중.”</p>
+          <p class="body" style="font-size:.96rem">A harmonic-rich sound resonates at several positions at once — this <b class="hl-ink">excitation pattern</b> is the spectrum. The map is <b class="hl-ink">preserved up to the auditory cortex</b> (a place code). Pitch = which place, <b>timbre = the pattern of peaks</b>.</p>
+          <div class="formula inlinek" style="border-left-color:#FB7185;font-size:.92rem"><div class="gloss" style="margin:0">Strictly it isn't a pure Fourier transform — a <b class="hl">finite time window</b> · <b class="hl">logarithmic-spacing</b> resolution · <b>nonlinear amplification</b> by the outer hair cells. It's actually closer to the <b class="hl-ink">wavelet</b> we just saw.</div></div>
+          <p class="caption">“Fourier solved half of it in 1822; neuroscience is still solving the rest.”</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- 28 · big picture -->
-  <section class="slide" data-ch="정리" data-min="1.5" style="--accent:#22D3EE"
-    data-notes="큰 그림 봉인. 두 방향만 기억하면 된다: 합성=레시피로 만들기(Σ), 분석=레시피 찾기(∫). 그리고 한 문장: ‘모든 소리는 사인파의 합이다.’ 색을 청록으로 되돌려 ‘스펙트럼 전체를 한 바퀴 돌아 왔다’는 느낌을 줘도 좋습니다.">
+  <section class="slide" data-ch="Summary" data-min="1.5" style="--accent:#22D3EE"
+    data-notes="Sealing the big picture. Remember just two directions: synthesis = building from a recipe (Σ), analysis = finding the recipe (∫). And one sentence: “every sound is a sum of sine waves.” Returning the color to cyan can give the sense that we've come full circle around the whole spectrum.">
     <div class="inner center stack">
-      <div class="eyebrow" style="justify-content:center">한 장으로</div>
-      <h2 class="title-lg" style="text-align:center;max-width:24ch">결국 모든 소리는<br>무엇의 합일까?</h2>
+      <div class="eyebrow" style="justify-content:center">In one slide</div>
+      <h2 class="title-lg" style="text-align:center;max-width:24ch">In the end, every sound<br>is a sum of what?</h2>
       <div class="split" style="max-width:880px;margin-top:1rem;align-items:stretch">
         <div class="panel center" style="gap:.6rem">
-          <div class="caption" style="color:var(--accent)">SYNTHESIS · 합성</div>
+          <div class="caption" style="color:var(--accent)">SYNTHESIS · building</div>
           <div class="formula inlinek" style="margin:0;border-left-color:#2DD4A7;width:100%">$$ \sum_n A_n\sin(2\pi n f_0 t+\varphi_n) $$</div>
-          <p class="body" style="font-size:.95rem;text-align:center">배음을 더해 소리를 <b class="hl-ink">만든다</b></p>
+          <p class="body" style="font-size:.95rem;text-align:center">add harmonics to <b class="hl-ink">build</b> a sound</p>
         </div>
         <div class="panel center" style="gap:.6rem">
-          <div class="caption" style="color:var(--accent)">ANALYSIS · 분석</div>
+          <div class="caption" style="color:var(--accent)">ANALYSIS · reading</div>
           <div class="formula inlinek" style="margin:0;border-left-color:#FACC15;width:100%">$$ \int f(t)\,e^{-i\omega t}\,dt $$</div>
-          <p class="body" style="font-size:.95rem;text-align:center">소리에서 레시피를 <b class="hl-ink">읽는다</b></p>
+          <p class="body" style="font-size:.95rem;text-align:center"><b class="hl-ink">read</b> the recipe from a sound</p>
         </div>
       </div>
-      <p class="body" style="text-align:center;margin-top:1.2rem;max-width:50ch">음높이=<span class="hl">진동수</span>, 음색=<span class="hl">배음 분포</span>, 화성=<span class="hl">진동수의 비</span> — 음악의 언어가 곧 푸리에의 언어.</p>
+      <p class="body" style="text-align:center;margin-top:1.2rem;max-width:50ch">Pitch = <span class="hl">frequency</span>, timbre = <span class="hl">harmonic distribution</span>, harmony = <span class="hl">frequency ratios</span> — the language of music is the language of Fourier.</p>
     </div>
   </section>
 
   <!-- 29 · sandbox -->
-  <section class="slide" data-ch="정리" data-min="1.5" style="--accent:#22D3EE"
-    data-notes="자유 놀이터 + 다음 단계. 남는 시간에 학생이 직접 음색을 만들게 하세요. 더 배울 거리: 이산 푸리에 변환(DFT)과 FFT 알고리즘, 윈도우 함수, 웨이블릿(시간-진동수 동시 분석), MIR(음악 정보 검색). 도전 과제를 던지며 마무리.">
+  <section class="slide" data-ch="Summary" data-min="1.5" style="--accent:#22D3EE"
+    data-notes="A free playground + next steps. In any remaining time, let students build their own timbres. Further reading: the discrete Fourier transform (DFT) and the FFT algorithm, window functions, wavelets (joint time–frequency analysis), and MIR (music information retrieval). End by posing a challenge.">
     <div class="inner stack">
-      <div class="eyebrow">직접 만들어 보기 · sandbox</div>
+      <div class="eyebrow">Build it yourself · sandbox</div>
       <div class="split" style="grid-template-columns:0.92fr 1.08fr;align-items:start">
         <div class="panel">
-          <div class="caption" style="margin-bottom:10px">나만의 음색 — 배음을 섞어 보세요</div>
+          <div class="caption" style="margin-bottom:10px">Your own timbre — mix the harmonics</div>
           <div class="hsliders" id="sb-sliders"></div>
-          <div class="btn-row" style="margin-top:16px"><button id="sb-play" class="btn play">▶ 재생</button><button id="sb-rand" class="btn">🎲 무작위</button></div>
+          <div class="btn-row" style="margin-top:16px"><button id="sb-play" class="btn play">▶ Play</button><button id="sb-rand" class="btn">🎲 Random</button></div>
         </div>
         <div class="stack" style="gap:10px">
           <div class="viz-wrap"><span class="viz-tag">waveform</span><canvas id="sb-wave" class="viz" height="120"></canvas></div>
           <div class="viz-wrap"><span class="viz-tag">spectrum</span><canvas id="sb-spec" class="viz" height="92"></canvas></div>
           <div class="panel" style="padding:12px 14px">
-            <div class="caption" style="color:var(--accent);margin-bottom:6px">더 깊이 들어가려면</div>
-            <p class="body" style="font-size:.86rem;line-height:1.5">DFT·FFT 알고리즘 · 윈도우 함수 · 웨이블릿(시간–진동수 동시 분석) · 음악 정보 검색(MIR)</p>
+            <div class="caption" style="color:var(--accent);margin-bottom:6px">To go deeper</div>
+            <p class="body" style="font-size:.86rem;line-height:1.5">DFT / FFT algorithms · window functions · wavelets (joint time–frequency analysis) · music information retrieval (MIR)</p>
           </div>
         </div>
       </div>
@@ -1159,19 +1159,19 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
   </section>
 
   <!-- 30 · closing -->
-  <section class="slide center" data-enter="end" data-ch="맺음" data-min="1" style="--accent:#7C6CF0"
-    data-notes="마무리. 처음의 ‘같은 라, 다른 소리’ 질문에 이제 답할 수 있음을 상기. 감사 인사 후 질문 받기. 도전 한 줄: ‘좋아하는 곡 한 구절의 스펙트로그램을 그려와 보세요.’">
+  <section class="slide center" data-enter="end" data-ch="Closing" data-min="1" style="--accent:#7C6CF0"
+    data-notes="The finale. Recall that we can now answer the opening question, “same A, different sound.” Thank the audience, then take questions. One challenge line: “Bring back the spectrogram of a phrase from your favorite song.”">
     <div class="inner center">
       <div class="viz-wrap" style="width:min(520px,86vw);margin-bottom:2rem;border-radius:18px;">
         <span class="viz-tag">live</span>
         <canvas id="endCanvas" class="viz" height="160"></canvas>
       </div>
       <div class="eyebrow" style="justify-content:center">THANK YOU</div>
-      <h2 class="title-lg" style="text-align:center">그래서, 같은 음이란<br>무엇일까?</h2>
-      <p class="body" style="text-align:center;margin-top:1rem;max-width:46ch">소리는 사인파의 합, 음악은 그 합을 다루는 예술.<br><span class="caption">질문을 환영합니다 · 이제 모든 소리를 숫자로 듣는 귀</span></p>
+      <h2 class="title-lg" style="text-align:center">So — what is the “same note”?</h2>
+      <p class="body" style="text-align:center;margin-top:1rem;max-width:46ch">Sound is a sum of sine waves; music is the art of shaping that sum.<br><span class="caption">Questions welcome · ears that now hear every sound as numbers</span></p>
       <div class="caption" style="margin-top:2.2rem;text-align:center;line-height:2;color:var(--ink-dim);letter-spacing:.03em">
-        고등과학원 <span style="color:var(--accent);font-weight:600">김상현</span><br>
-        이 자료는 온라인에서도 볼 수 있습니다 · <a href="https://edu.kimsh.kr" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb, var(--accent) 45%, transparent);padding-bottom:1px">edu.kimsh.kr</a>
+        Korea Institute for Advanced Study <span style="color:var(--accent);font-weight:600">Sang-hyun Kim</span><br>
+        These materials are also available online · <a href="https://edu.kimsh.kr" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb, var(--accent) 45%, transparent);padding-bottom:1px">edu.kimsh.kr</a>
       </div>
     </div>
   </section>
@@ -1179,8 +1179,8 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 </div>
 
 <!-- chrome -->
-<div id="hud"><span class="ch" id="hud-ch">여는 글</span><span id="counter">01 / 30</span></div>
-<div class="kbd-hint"><kbd>←</kbd> <kbd>→</kbd> 이동 · <kbd>N</kbd> 노트 · <kbd>F</kbd> 전체화면 · <kbd>?</kbd> 도움말</div>
+<div id="hud"><span class="ch" id="hud-ch">Opening</span><span id="counter">01 / 30</span></div>
+<div class="kbd-hint"><kbd>←</kbd> <kbd>→</kbd> navigate · <kbd>N</kbd> notes · <kbd>F</kbd> fullscreen · <kbd>?</kbd> help</div>
 <div class="navbtns"><button id="prev">‹</button><button id="next">›</button></div>
 
 <div id="notes">
@@ -1190,20 +1190,20 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 
 <div id="help">
   <div class="card">
-    <h3>단축키</h3>
-    <div class="kk"><span>다음 / 이전 슬라이드</span><span><kbd>→</kbd> <kbd>←</kbd></span></div>
-    <div class="kk"><span>다음 슬라이드</span><span><kbd>Space</kbd></span></div>
-    <div class="kk"><span>발표자 노트 (시간 배분)</span><span><kbd>N</kbd></span></div>
-    <div class="kk"><span>전체화면</span><span><kbd>F</kbd></span></div>
-    <div class="kk"><span>모든 소리 정지</span><span><kbd>S</kbd></span></div>
-    <div class="kk"><span>처음 / 끝으로</span><span><kbd>Home</kbd> <kbd>End</kbd></span></div>
-    <div class="kk" style="border:none"><span>이 창 닫기</span><span><kbd>?</kbd> <kbd>Esc</kbd></span></div>
+    <h3>Shortcuts</h3>
+    <div class="kk"><span>Next / previous slide</span><span><kbd>→</kbd> <kbd>←</kbd></span></div>
+    <div class="kk"><span>Next slide</span><span><kbd>Space</kbd></span></div>
+    <div class="kk"><span>Speaker notes (time budget)</span><span><kbd>N</kbd></span></div>
+    <div class="kk"><span>Fullscreen</span><span><kbd>F</kbd></span></div>
+    <div class="kk"><span>Stop all sound</span><span><kbd>S</kbd></span></div>
+    <div class="kk"><span>Jump to start / end</span><span><kbd>Home</kbd> <kbd>End</kbd></span></div>
+    <div class="kk" style="border:none"><span>Close this panel</span><span><kbd>?</kbd> <kbd>Esc</kbd></span></div>
   </div>
 </div>
 
 <script>
 /* =========================================================================
-   푸리에 해석 · 소리를 숫자로 듣다  —  interaction / audio / visualization
+   Fourier Analysis · Hearing Sound as Numbers  —  interaction / audio / visualization
    ========================================================================= */
 (function(){
 "use strict";
@@ -1318,12 +1318,12 @@ function attachZoom(cv,redraw){
   const id=cv.id; if(!zoomState.has(id)) zoomState.set(id,1);
   const wrap=cv.parentElement; if(!wrap) return;
   const ctl=document.createElement('div'); ctl.className='zoomctl';
-  ctl.innerHTML='<button class="zb" data-z="out" title="축소 · 더 넓은 시간 범위">−</button>'
-              +'<span class="zlab" title="클릭하면 원래 크기(폭 ×1)로"></span>'
-              +'<button class="zb" data-z="in" title="확대 · 자세히">＋</button>';
+  ctl.innerHTML='<button class="zb" data-z="out" title="Zoom out · wider time range">−</button>'
+              +'<span class="zlab" title="Click to reset to original size (width ×1)"></span>'
+              +'<button class="zb" data-z="in" title="Zoom in · detail">＋</button>';
   wrap.appendChild(ctl);
   const lab=ctl.querySelector('.zlab');
-  const sync=()=>{ lab.textContent='폭×'+fmtZoom(zoomState.get(id)); };
+  const sync=()=>{ lab.textContent='width ×'+fmtZoom(zoomState.get(id)); };
   ctl.querySelector('[data-z="out"]').addEventListener('click',()=>{ zoomState.set(id,Math.min(8,zoomState.get(id)*2)); sync(); redraw(); });
   ctl.querySelector('[data-z="in"]').addEventListener('click',()=>{ zoomState.set(id,Math.max(0.25,zoomState.get(id)/2)); sync(); redraw(); });
   lab.addEventListener('click',()=>{ zoomState.set(id,1); sync(); redraw(); });
@@ -1360,7 +1360,7 @@ function tone(cfg){
 function stopAll(){ AU.voices.forEach(v=>{try{v.stop&&v.stop();}catch(e){}}); AU.voices.clear(); saStop(); sgStop(); }
 
 /* note name from frequency */
-const NOTE=['도(C)','도#','레(D)','레#','미(E)','파(F)','파#','솔(G)','솔#','라(A)','라#','시(B)'];
+const NOTE=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
 function noteName(f){
   const n=Math.round(12*Math.log2(f/440))+9; // A4 index 9
   const name=NOTE[((n%12)+12)%12]; const oct=4+Math.floor((n-9)/12);
@@ -1445,9 +1445,9 @@ function renderNotes(){
   const s=slides[cur];
   document.getElementById('nt-ch').textContent=s.getAttribute('data-ch')||'';
   const m=parseFloat(s.getAttribute('data-min'))||0;
-  document.getElementById('nt-title').textContent='슬라이드 '+(cur+1)+' · 약 '+(m%1?m.toFixed(1):m)+'분';
-  document.getElementById('nt-time').textContent='누적 '+Math.round(cumMin(cur))+'분 / 총 '+Math.round(totalMin())+'분';
-  document.getElementById('nt-body').textContent=s.getAttribute('data-notes')||'(노트 없음)';
+  document.getElementById('nt-title').textContent='Slide '+(cur+1)+' · ~'+(m%1?m.toFixed(1):m)+' min';
+  document.getElementById('nt-time').textContent='Cumulative '+Math.round(cumMin(cur))+' min / total '+Math.round(totalMin())+' min';
+  document.getElementById('nt-body').textContent=s.getAttribute('data-notes')||'(no notes)';
 }
 
 document.addEventListener('keydown',e=>{
@@ -1546,28 +1546,28 @@ function timbreAB(amps){ const a=new Array(amps.length+1).fill(0), b=new Array(a
 const CELLO=[1,0.9,0.65,0.55,0.5,0.45,0.32,0.3,0.22,0.18];
 function W(id,label,group,ab,extra){ const o={id:id,label:label,kind:'wave',group:group}; if(ab){o.a=ab.a;o.b=ab.b;} if(extra){for(const k in extra) o[k]=extra[k];} return o; }
 const PRESETS=[
-  W('auto','자동','음색',null,{morph:true}),
-  W('sine','사인','음색',timbreAB(RECIPES.sine)),
-  W('square','사각파','음색',timbreAB(RECIPES.square)),
-  W('saw','톱니','음색',timbreAB(RECIPES.saw)),
-  W('flute','플루트','음색',timbreAB(INST.flute)),
-  W('clarinet','클라리넷','음색',timbreAB(INST.clarinet)),
-  W('violin','바이올린','음색',timbreAB(INST.violin)),
-  W('cello','첼로','음색',timbreAB(CELLO)),
-  W('organ','오르간','음색',timbreAB(RECIPES.organ)),
-  W('catears','고양이 귀','모양',analyzeReal(PROFILE.catears)),
-  W('mountains','산맥','모양',analyzeReal(PROFILE.mountains)),
-  W('seoul_sky','서울','모양',analyzeReal(PROFILE.seoul_sky)),
-  W('tokyo_sky','도쿄','모양',analyzeReal(PROFILE.tokyo_sky)),
-  W('manhattan_sky','맨해튼','모양',analyzeReal(PROFILE.manhattan_sky)),
-  W('heartbeat','심장박동','모양',analyzeReal(PROFILE.heartbeat)),
-  W('clouds','구름','모양',analyzeReal(PROFILE.clouds)),
-  {id:'heart',label:'하트',kind:'shape',group:'그림'},
-  {id:'star',label:'별',kind:'shape',group:'그림'},
-  {id:'cat',label:'고양이',kind:'shape',group:'그림'},
-  {id:'butterfly',label:'나비',kind:'shape',group:'그림'},
-  {id:'note',label:'음표',kind:'shape',group:'그림'},
-  {id:'seoul',label:'서울',kind:'shape',group:'그림'}
+  W('auto','Auto','timbre',null,{morph:true}),
+  W('sine','Sine','timbre',timbreAB(RECIPES.sine)),
+  W('square','Square','timbre',timbreAB(RECIPES.square)),
+  W('saw','Sawtooth','timbre',timbreAB(RECIPES.saw)),
+  W('flute','Flute','timbre',timbreAB(INST.flute)),
+  W('clarinet','Clarinet','timbre',timbreAB(INST.clarinet)),
+  W('violin','Violin','timbre',timbreAB(INST.violin)),
+  W('cello','Cello','timbre',timbreAB(CELLO)),
+  W('organ','Organ','timbre',timbreAB(RECIPES.organ)),
+  W('catears','Cat ears','Shape',analyzeReal(PROFILE.catears)),
+  W('mountains','Mountains','Shape',analyzeReal(PROFILE.mountains)),
+  W('seoul_sky','Seoul','Shape',analyzeReal(PROFILE.seoul_sky)),
+  W('tokyo_sky','Tokyo','Shape',analyzeReal(PROFILE.tokyo_sky)),
+  W('manhattan_sky','Manhattan','Shape',analyzeReal(PROFILE.manhattan_sky)),
+  W('heartbeat','Heartbeat','Shape',analyzeReal(PROFILE.heartbeat)),
+  W('clouds','Clouds','Shape',analyzeReal(PROFILE.clouds)),
+  {id:'heart',label:'Heart',kind:'shape',group:'Picture'},
+  {id:'star',label:'Star',kind:'shape',group:'Picture'},
+  {id:'cat',label:'Cat',kind:'shape',group:'Picture'},
+  {id:'butterfly',label:'Butterfly',kind:'shape',group:'Picture'},
+  {id:'note',label:'Note',kind:'shape',group:'Picture'},
+  {id:'seoul',label:'Seoul',kind:'shape',group:'Picture'}
 ];
 const PRESET_MAP={}; PRESETS.forEach(function(p){PRESET_MAP[p.id]=p;});
 
@@ -1611,8 +1611,8 @@ function makeEpicycle(cfg){
       ctx.strokeStyle=specColor(u,0.8); ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(nx,ny); ctx.stroke(); px=nx; py=ny; }
     ctx.strokeStyle='rgba(255,255,255,0.30)'; ctx.lineWidth=1; ctx.setLineDash([3,3]); ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(penX,My+waveBuf[0]); ctx.stroke(); ctx.setLineDash([]);
     ctx.fillStyle='#EAF6FF'; ctx.shadowColor='#22D3EE'; ctx.shadowBlur=12; ctx.beginPath(); ctx.arc(penX,My+waveBuf[0],3.1,0,Math.PI*2); ctx.fill(); ctx.shadowBlur=0;
-    ctx.font='10px "JetBrains Mono",monospace'; ctx.fillStyle='rgba(255,255,255,0.32)'; ctx.textAlign='center'; ctx.fillText(morph?'배음이 변하는 소리':PRESET_MAP[cur].label, Mx, h-10);
-    ctx.fillStyle='rgba(45,212,167,0.6)'; ctx.textAlign='left'; ctx.fillText('f(t) · 소리의 파형', penX+8, 15);
+    ctx.font='10px "JetBrains Mono",monospace'; ctx.fillStyle='rgba(255,255,255,0.32)'; ctx.textAlign='center'; ctx.fillText(morph?'a sound whose harmonics change':PRESET_MAP[cur].label, Mx, h-10);
+    ctx.fillStyle='rgba(45,212,167,0.6)'; ctx.textAlign='left'; ctx.fillText('f(t) · waveform of the sound', penX+8, 15);
   }
   function drawShape(){
     const ctx=cv._ctx; if(!ctx) return; const w=cv._w,h=cv._h; const o=ensureShape(cur), C=o.C;
@@ -1630,11 +1630,11 @@ function makeEpicycle(cfg){
     ctx.strokeStyle=grd; ctx.shadowColor='#22D3EE'; ctx.shadowBlur=8; ctx.beginPath();
     for(let j=0;j<cnt;j++){ const idx=(trail._n-cnt+j+M*2)%M; const x=trail[idx*2],y=trail[idx*2+1]; j?ctx.lineTo(x,y):ctx.moveTo(x,y); } ctx.stroke(); ctx.restore();
     ctx.fillStyle='#EAF6FF'; ctx.shadowColor='#22D3EE'; ctx.shadowBlur=12; ctx.beginPath(); ctx.arc(px,py,3,0,Math.PI*2); ctx.fill(); ctx.shadowBlur=0;
-    ctx.font='10px "JetBrains Mono",monospace'; ctx.fillStyle='rgba(255,255,255,0.32)'; ctx.textAlign='center'; ctx.fillText(PRESET_MAP[cur].label+' · 회전벡터 '+C.length+'개', w/2, h-8);
+    ctx.font='10px "JetBrains Mono",monospace'; ctx.fillStyle='rgba(255,255,255,0.32)'; ctx.textAlign='center'; ctx.fillText(PRESET_MAP[cur].label+' · '+C.length+' rotating vectors', w/2, h-8);
   }
   function frame(){ if(!run) return; t+=spd; if(mode==='wave'){ phase+=dThetaBase*spd; drawWave(); } else { tauPh+=dTauBase*spd; drawShape(); } raf=requestAnimationFrame(frame); }
   if(menuEl){ let html='', last=null; cfg.presets.forEach(function(id){ const p=PRESET_MAP[id]; if(!p) return; if(p.group!==last){ html+='<span class="hgroup">'+p.group+'</span>'; last=p.group; } html+='<button class="hchip" data-p="'+id+'">'+p.label+'</button>'; });
-    html+='<span class="hgroup">속도</span><input type="range" class="spdrange" min="12" max="180" value="'+Math.round(spd*100)+'"><span class="spdlab">'+fmtSpd(spd)+'</span>';
+    html+='<span class="hgroup">Speed</span><input type="range" class="spdrange" min="12" max="180" value="'+Math.round(spd*100)+'"><span class="spdlab">'+fmtSpd(spd)+'</span>';
     menuEl.innerHTML=html;
     menuEl.querySelectorAll('.hchip').forEach(function(ch){ ch.addEventListener('click',function(){ try{ac();}catch(e){} select(ch.getAttribute('data-p')); if(!run){run=true; if(!raf) raf=requestAnimationFrame(frame);} }); });
     const rng=menuEl.querySelector('.spdrange'), lab=menuEl.querySelector('.spdlab');
@@ -1682,7 +1682,7 @@ ENTERS.end=()=>ambient('endCanvas');
   const cv=document.getElementById('pt-wave');
   const fEl=document.getElementById('pt-freq'),aEl=document.getElementById('pt-amp');
   const fR=document.getElementById('pt-freq-r'),aR=document.getElementById('pt-amp-r'),noteR=document.getElementById('pt-note');
-  const playBtn=document.getElementById('pt-play'); const tg=regToggle(playBtn,'■ 정지','▶ 재생');
+  const playBtn=document.getElementById('pt-play'); const tg=regToggle(playBtn,'■ Stop','▶ Play');
   let voice=null;
   function freq(){return +fEl.value;} function amp(){return +aEl.value/100;}
   function draw(){
@@ -1740,14 +1740,14 @@ ENTERS.end=()=>ambient('endCanvas');
   drawInit.push(()=>draw('sum')); attachZoom(cv,()=>draw(cur));
 })();
 
-/* --- BEATS : sum-to-product (맥놀이) --- */
+/* --- BEATS : sum-to-product (beats) --- */
 (function(){
   const cv=document.getElementById('beat-wave');
   const dEl=document.getElementById('beat-d'),dR=document.getElementById('beat-d-r');
   const avgR=document.getElementById('beat-avg'),beatR=document.getElementById('beat-rate');
   const playBtn=document.getElementById('beat-play'),tuneBtn=document.getElementById('beat-tune');
   const base=440; let v1=null,v2=null,override=null,tuneRaf=0;
-  const tg=regToggle(playBtn,'■ 정지','▶ 두 음 재생');
+  const tg=regToggle(playBtn,'■ Stop','▶ Play both tones');
   function df(){ return override!=null?override:+dEl.value; }
   function f1(){return base;} function f2(){return base+df();}
   function draw(){
@@ -1776,7 +1776,7 @@ ENTERS.end=()=>ambient('endCanvas');
   }
   function readouts(){ const d=df(); if(dR)dR.textContent=d.toFixed(1)+' Hz';
     if(avgR) avgR.textContent=((f1()+f2())/2).toFixed(0)+' Hz';
-    if(beatR) beatR.textContent=d<0.05?'없음 · 완전 일치':(d.toFixed(1)+' Hz');
+    if(beatR) beatR.textContent=d<0.05?'none · perfect match':(d.toFixed(1)+' Hz');
   }
   function live(){ try{const t=AU.ctx?AU.ctx.currentTime:0; if(v1)v1.o.frequency.setTargetAtTime(f1(),t,0.03); if(v2)v2.o.frequency.setTargetAtTime(f2(),t,0.03);}catch(e){} }
   function update(){ readouts(); draw(); live(); }
@@ -1814,7 +1814,7 @@ function makeBuilder(opt){
   for(let k=0;k<N;k++) html+=`<div class="hsl"><input type="range" min="0" max="100" value="${k===0?100:0}" data-h="${k}"><span class="lab">${k+1}</span></div>`;
   cont.innerHTML=html;
   const inputs=[].slice.call(cont.querySelectorAll('input'));
-  let voice=null; const tg=regToggle(playBtn,'■ 정지',opt.playLabel||'▶ 재생');
+  let voice=null; const tg=regToggle(playBtn,'■ Stop',opt.playLabel||'▶ Play');
   function read(){ for(let k=0;k<N;k++) amps[k]=inputs[k].value/100; }
   function draw(){
     drawWave(waveCv,x=>{let s=0,sum=0;for(let k=0;k<N;k++){s+=amps[k]*Math.sin(2*Math.PI*(k+1)*2*x);sum+=Math.abs(amps[k]);}return s/Math.max(0.8,sum*0.85);},{c0:opt.c0||'#4D7CFF',c1:opt.c1||'#22D3EE',glow:opt.glow||'#4D7CFF',scale:0.95});
@@ -1833,7 +1833,7 @@ function makeBuilder(opt){
 }
 let HB=null, SB=null;
 (function(){
-  HB=makeBuilder({sliders:'hb-sliders',wave:'hb-wave',spec:'hb-spec',play:'hb-play',freq:220,playLabel:'▶ 재생 (f₀ = 220 Hz)'});
+  HB=makeBuilder({sliders:'hb-sliders',wave:'hb-wave',spec:'hb-spec',play:'hb-play',freq:220,playLabel:'▶ Play (f₀ = 220 Hz)'});
   const chips=document.querySelectorAll('#hb-presets .chip');
   chips.forEach(c=>c.addEventListener('click',()=>{
     chips.forEach(x=>x.classList.remove('on')); c.classList.add('on');
@@ -1848,7 +1848,7 @@ let HB=null, SB=null;
   const cv=document.getElementById('sq-wave');
   const nEl=document.getElementById('sq-n'),nR=document.getElementById('sq-n-r'),tag=document.getElementById('sq-tag');
   const playBtn=document.getElementById('sq-play'),animBtn=document.getElementById('sq-anim');
-  const tg=regToggle(playBtn,'■ 정지','▶ 현재 N 듣기');
+  const tg=regToggle(playBtn,'■ Stop','▶ Hear current N');
   let voice=null, animRaf=0;
   function partial(x,N){ let s=0; for(let k=1;k<=N;k+=2){ s+=(1/k)*Math.sin(2*Math.PI*k*1.5*x); } return (4/Math.PI)*s; }
   function squareRef(x){ return Math.sin(2*Math.PI*1.5*x)>=0?0.92:-0.92; }
@@ -1884,10 +1884,10 @@ let HB=null, SB=null;
     return 0;
   }
   const META={
-    sine:{f:'$$y=\\sin\\theta$$',d:'배음 하나뿐 — 가장 순수한 소리'},
-    square:{f:'$$\\tfrac{4}{\\pi}\\sum_{k\\,odd}\\tfrac{1}{k}\\sin k\\theta$$',d:'홀수 배음만 · 1/k로 감소 — 속 빈 듯한 소리'},
-    saw:{f:'$$\\tfrac{2}{\\pi}\\sum_{k}\\tfrac{(-1)^{k+1}}{k}\\sin k\\theta$$',d:'모든 배음 · 1/k — 밝고 거친 소리(신디 기본)'},
-    triangle:{f:'$$\\tfrac{8}{\\pi^2}\\sum_{k\\,odd}\\tfrac{\\pm1}{k^2}\\sin k\\theta$$',d:'홀수 배음 · 1/k² 급감 — 부드럽고 둥근 소리'}
+    sine:{f:'$$y=\\sin\\theta$$',d:'just one harmonic — the purest sound'},
+    square:{f:'$$\\tfrac{4}{\\pi}\\sum_{k\\,odd}\\tfrac{1}{k}\\sin k\\theta$$',d:'odd harmonics only · falling as 1/k — a hollow-sounding tone'},
+    saw:{f:'$$\\tfrac{2}{\\pi}\\sum_{k}\\tfrac{(-1)^{k+1}}{k}\\sin k\\theta$$',d:'all harmonics · 1/k — bright and rough (the synth default)'},
+    triangle:{f:'$$\\tfrac{8}{\\pi^2}\\sum_{k\\,odd}\\tfrac{\\pm1}{k^2}\\sin k\\theta$$',d:'odd harmonics · steep 1/k² falloff — soft and round'}
   };
   let cur='sine';
   function drawCur(){ tag.textContent=cur; drawWave(cv,x=>val(cur,x)*0.92,{c0:'#4D7CFF',c1:'#22D3EE',glow:'#4D7CFF'}); }
@@ -1966,8 +1966,8 @@ let HB=null, SB=null;
   }
   function upd(){ const ft=+fEl.value; fR.textContent='×'+(ft/f0).toFixed(2); drawTop(ft); drawPlot(ft);
     const near=Math.abs(ft-Math.round(ft/f0)*f0); const onH=Math.round(ft/f0); 
-    if(near<10 && onH>=1 && onH<=3) msg.textContent='✓ '+onH+'배음과 일치 — 검출값이 솟습니다 (넓이가 한쪽으로 쌓임).';
-    else msg.textContent='✗ 배음과 어긋남 — 플러스·마이너스가 상쇄돼 검출값 ≈ 0.';
+    if(near<10 && onH>=1 && onH<=3) msg.textContent='✓ '+onH+'× f₀ — a harmonic! The detection value spikes (the area piles up on one side).';
+    else msg.textContent='✗ off the harmonics — plus and minus cancel out, so the detection value ≈ 0.';
   }
   fEl.addEventListener('input',upd);
   drawInit.push(()=>{buildCurve();upd();});
@@ -1993,7 +1993,7 @@ let HB=null, SB=null;
       ctx.fillStyle=`rgba(${c[0]},${c[1]},${c[2]},0.92)`;ctx.shadowColor=`rgb(${c[0]},${c[1]},${c[2]})`;ctx.shadowBlur=6;
       ctx.fillRect(px-bw/2,base-bh,bw,bh);ctx.shadowBlur=0;}
     ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font='10px "JetBrains Mono",monospace';ctx.textAlign='center';
-    ctx.fillText(n<=8?('주기 작음 · 막대 '+ (n+1)+'개'):(n>=40?'주기 → ∞ · 연속 스펙트럼':'주기 커짐 · 막대 촘촘'),w/2,base+15);
+    ctx.fillText(n<=8?('short period · '+ (n+1)+' bars'):(n>=40?'period → ∞ · continuous spectrum':'longer period · bars crowd together'),w/2,base+15);
   }
   animBtn.addEventListener('click',()=>{ cancelAnimationFrame(raf); let d=5; let last=performance.now();
     (function step(now){ if(now-last>90){ d=Math.min(60,d*1.18+1); draw(d); last=now; if(d>=60)return;} raf=requestAnimationFrame(step); })(last);
@@ -2089,18 +2089,18 @@ ENTERS.spectrogram=()=>{ sgClear(); return ()=>{}; };
 
 /* ===================== 3D SOUND OBJECT · time × amplitude × frequency =====================
    A LIVE, continuously scrolling "time-river": sound flows RIGHT->LEFT, the right edge is
-   지금(now). The front wall (xy, cyan) is the WAVEFORM shadow; the floor (xz, heatmap) is
+   now(now). The front wall (xy, cyan) is the WAVEFORM shadow; the floor (xz, heatmap) is
    the SPECTROGRAM shadow -- two shadows of one luminous object. Pick an instrument, a chord,
    an evolving sound, or a PICTURE drawn as sound (cat / skyline / heartbeat): the spectrogram
    literally draws the outline while you hear its pitch trace. Fully orbit-able; head-on = the
-   waveform, top-down = the spectrogram, side-on = the current spectrum. 관점이 곧 변환이다.   */
+   waveform, top-down = the spectrogram, side-on = the current spectrum. a change of viewpoint is the transform.   */
 (function(){
   const stage = document.getElementById('s3d-stage');
   const loadingEl = document.getElementById('s3d-loading');
   if(!stage){ ENTERS.sound3d = ()=>()=>{}; return; }
   if(!window.THREE){
     ENTERS.sound3d = function(){
-      if(loadingEl){ loadingEl.textContent='3D 라이브러리를 불러오지 못했습니다 · 인터넷 연결이 필요합니다.'; loadingEl.style.display='flex'; }
+      if(loadingEl){ loadingEl.textContent='Failed to load the 3D library · an internet connection is required.'; loadingEl.style.display='flex'; }
       return ()=>{};
     };
     return;
@@ -2207,7 +2207,7 @@ ENTERS.spectrogram=()=>{ sgClear(); return ()=>{}; };
   function buildMelody(){
     const seq=[261.63,293.66,329.63,349.23,392.0,440.0,493.88,523.25];
     const nd=0.42, winDur=seq.length*nd, amps=[1,0.5,0.28,0.15], fmax=2300;
-    const d={key:'melody',label:'멜로디',fmax,dynamic:true,winDur,
+    const d={key:'melody',label:'Melody',fmax,dynamic:true,winDur,
       ticks:[{f:seq[0],label:noteName(seq[0])},{f:seq[seq.length-1],label:noteName(seq[seq.length-1])},{f:2*seq[0],label:'2f₀'}]};
     const IMG=new Float32Array(T*K);
     for(let i=0;i<T;i++){ const t=winDur*i/(T-1); let note=Math.floor(t/nd); if(note>seq.length-1)note=seq.length-1; const lt=t-note*nd, e=noteEnv(lt,nd), f0=seq[note];
@@ -2225,7 +2225,7 @@ ENTERS.spectrogram=()=>{ sgClear(); return ()=>{}; };
 
   function buildChirp(){
     const f0=170, f1=1300, winDur=3.0, amps=[1,0.55,0.3,0.16], fmax=2800;
-    const d={key:'chirp',label:'글리산도',fmax,dynamic:true,winDur,
+    const d={key:'chirp',label:'Glissando',fmax,dynamic:true,winDur,
       ticks:[{f:f0,label:noteName(f0)},{f:f1,label:noteName(f1)},{f:2*f0,label:'2×'}]};
     const IMG=new Float32Array(T*K);
     for(let i=0;i<T;i++){ const u=i/(T-1); const fi=f0*Math.pow(f1/f0,u), e=edgeFade(u,0.08);
@@ -2268,18 +2268,18 @@ ENTERS.spectrogram=()=>{ sgClear(); return ()=>{}; };
   }
 
   const BUILD={
-    violin:  ()=>buildTone({key:'violin',  label:'바이올린', f0:196.00, amps:INST.violin,    fmax:1700, ticks:tk(196.00,[1,2,3,5])}),
-    flute:   ()=>buildTone({key:'flute',   label:'플루트',   f0:293.66, amps:INST.flute,     fmax:2100, ticks:tk(293.66,[1,2,3])}),
-    clarinet:()=>buildTone({key:'clarinet',label:'클라리넷', f0:196.00, amps:INST.clarinet,  fmax:1700, ticks:tk(196.00,[1,3,5,7])}),
-    cello:   ()=>buildTone({key:'cello',   label:'첼로',     f0:130.81, amps:CELLO,          fmax:1500, ticks:tk(130.81,[1,2,3,5])}),
-    organ:   ()=>buildTone({key:'organ',   label:'오르간',   f0:196.00, amps:RECIPES.organ,  fmax:1700, ticks:tk(196.00,[1,2,3,5])}),
-    chord:   ()=>buildChord({key:'chord',  label:'화음',     notes:[261.63,329.63,392.00], amps:[1,0.5,0.28,0.16], fmax:1700}),
+    violin:  ()=>buildTone({key:'violin',  label:'Violin', f0:196.00, amps:INST.violin,    fmax:1700, ticks:tk(196.00,[1,2,3,5])}),
+    flute:   ()=>buildTone({key:'flute',   label:'Flute',   f0:293.66, amps:INST.flute,     fmax:2100, ticks:tk(293.66,[1,2,3])}),
+    clarinet:()=>buildTone({key:'clarinet',label:'Clarinet', f0:196.00, amps:INST.clarinet,  fmax:1700, ticks:tk(196.00,[1,3,5,7])}),
+    cello:   ()=>buildTone({key:'cello',   label:'Cello',     f0:130.81, amps:CELLO,          fmax:1500, ticks:tk(130.81,[1,2,3,5])}),
+    organ:   ()=>buildTone({key:'organ',   label:'Organ',   f0:196.00, amps:RECIPES.organ,  fmax:1700, ticks:tk(196.00,[1,2,3,5])}),
+    chord:   ()=>buildChord({key:'chord',  label:'Chord',     notes:[261.63,329.63,392.00], amps:[1,0.5,0.28,0.16], fmax:1700}),
     melody:  ()=>buildMelody(),
     chirp:   ()=>buildChirp(),
-    cat:     ()=>buildImage({key:'cat',      label:'고양이',        profile:PROFILE.catears,   flo:230, fhi:1150, winDur:4.6, fill:true,  seam:0.05, ticks:tkHz([230,1150])}),
-    seoul:   ()=>buildImage({key:'seoul',    label:'서울 스카이라인', profile:PROFILE.seoul_sky, flo:180, fhi:1220, winDur:5.0, fill:true,  seam:0.07, ticks:tkHz([180,1220])}),
-    tokyo:   ()=>buildImage({key:'tokyo',    label:'도쿄 스카이라인', profile:PROFILE.tokyo_sky, flo:180, fhi:1250, winDur:5.0, fill:true,  seam:0.07, ticks:tkHz([180,1250])}),
-    heartbeat:()=>buildImage({key:'heartbeat',label:'심장박동',      profile:PROFILE.heartbeat, flo:150, fhi:900,  winDur:4.2, fill:false, seam:0.05, ticks:tkHz([150,900])})
+    cat:     ()=>buildImage({key:'cat',      label:'Cat',        profile:PROFILE.catears,   flo:230, fhi:1150, winDur:4.6, fill:true,  seam:0.05, ticks:tkHz([230,1150])}),
+    seoul:   ()=>buildImage({key:'seoul',    label:'Seoul skyline', profile:PROFILE.seoul_sky, flo:180, fhi:1220, winDur:5.0, fill:true,  seam:0.07, ticks:tkHz([180,1220])}),
+    tokyo:   ()=>buildImage({key:'tokyo',    label:'Tokyo skyline', profile:PROFILE.tokyo_sky, flo:180, fhi:1250, winDur:5.0, fill:true,  seam:0.07, ticks:tkHz([180,1250])}),
+    heartbeat:()=>buildImage({key:'heartbeat',label:'Heartbeat',      profile:PROFILE.heartbeat, flo:150, fhi:900,  winDur:4.2, fill:false, seam:0.05, ticks:tkHz([150,900])})
   };
   const cache={};
 
@@ -2384,12 +2384,12 @@ ENTERS.spectrogram=()=>{ sgClear(); return ()=>{}; };
     const ng=new THREE.BufferGeometry(); ng.setAttribute('position',new THREE.BufferAttribute(new Float32Array([HX,-1.2,ZFRONT, HX,1.34,ZFRONT]),3));
     const nowLine=new THREE.Line(ng,new THREE.LineBasicMaterial({color:0xFFE08A,transparent:true,opacity:0.85,blending:THREE.AdditiveBlending,depthWrite:false})); nowLine.frustumCulled=false; group.add(nowLine);
 
-    const sT=makeLabel('시간  t  ◂ 흐름',{color:'#cfe0f5',glow:'#22D3EE',h:0.32}); sT.position.set(-0.2,-1.5,ZFRONT+0.05); group.add(sT);
-    const sF=makeLabel('주파수  f ↗',{color:'#f4d98a',glow:'#FACC15',h:0.32}); sF.position.set(-HX-0.55,-0.02,0); group.add(sF);
-    const sA=makeLabel('진폭  y ↑',{color:'#cfe0f5',glow:'#7C6CF0',h:0.32}); sA.position.set(-HX-0.5,HY*0.55,HZ); group.add(sA);
-    const sW=makeLabel('◂ 앞 벽 = 파형',{color:'#9becff',h:0.27,opacity:0.9}); sW.position.set(HX-1.15,1.02,ZFRONT+0.05); group.add(sW);
-    const sS=makeLabel('바닥 = 스펙트로그램',{color:'#f4d98a',h:0.27,opacity:0.9}); sS.position.set(0.15,0.03,-HZ-0.35); group.add(sS);
-    const sN=makeLabel('지금 ▸',{color:'#FFE08A',glow:'#FACC15',h:0.28}); sN.position.set(HX+0.02,1.2,ZFRONT+0.05); group.add(sN);
+    const sT=makeLabel('time  t  ◂ flow',{color:'#cfe0f5',glow:'#22D3EE',h:0.32}); sT.position.set(-0.2,-1.5,ZFRONT+0.05); group.add(sT);
+    const sF=makeLabel('frequency  f ↗',{color:'#f4d98a',glow:'#FACC15',h:0.32}); sF.position.set(-HX-0.55,-0.02,0); group.add(sF);
+    const sA=makeLabel('amplitude  y ↑',{color:'#cfe0f5',glow:'#7C6CF0',h:0.32}); sA.position.set(-HX-0.5,HY*0.55,HZ); group.add(sA);
+    const sW=makeLabel('◂ front wall = waveform',{color:'#9becff',h:0.27,opacity:0.9}); sW.position.set(HX-1.15,1.02,ZFRONT+0.05); group.add(sW);
+    const sS=makeLabel('floor = spectrogram',{color:'#f4d98a',h:0.27,opacity:0.9}); sS.position.set(0.15,0.03,-HZ-0.35); group.add(sS);
+    const sN=makeLabel('now ▸',{color:'#FFE08A',glow:'#FACC15',h:0.28}); sN.position.set(HX+0.02,1.2,ZFRONT+0.05); group.add(sN);
   }
 
   /* ---- write relief / floor / ridge from a magnitude field ---- */
@@ -2445,8 +2445,8 @@ ENTERS.spectrogram=()=>{ sgClear(); return ()=>{}; };
     tickGroup=new THREE.Group();
     (desc.ticks||[]).forEach(t=>{ if(!t.label||t.f>=desc.fmax) return; const k=Math.round((t.f/desc.fmax)*(K-1)), z=zOf(k);
       const sp=makeLabel(t.label,{color:'#aeb8d4',h:0.23,opacity:0.92}); sp.position.set(HX+0.42,0.02,z); tickGroup.add(sp); });
-    const tn=makeLabel('지금',{color:'#c9b878',h:0.2}); tn.position.set(HX-0.05,-1.66,ZFRONT); tickGroup.add(tn);
-    const tpp=makeLabel('과거 ◂',{color:'#8b95ae',h:0.2}); tpp.position.set(-HX+0.4,-1.66,ZFRONT); tickGroup.add(tpp);
+    const tn=makeLabel('now',{color:'#c9b878',h:0.2}); tn.position.set(HX-0.05,-1.66,ZFRONT); tickGroup.add(tn);
+    const tpp=makeLabel('past ◂',{color:'#8b95ae',h:0.2}); tpp.position.set(-HX+0.4,-1.66,ZFRONT); tickGroup.add(tpp);
     group.add(tickGroup);
   }
 
@@ -2500,8 +2500,8 @@ ENTERS.spectrogram=()=>{ sgClear(); return ()=>{}; };
 
   /* =================== UI WIRING =================== */
   const $ = s=>document.querySelector(s);
-  function updateSpinLabel(){ const b=$('#s3d-spin'); if(b){ b.classList.toggle('on',autoRotate); b.textContent=autoRotate?'자동 회전 · 끄기':'자동 회전 · 켜기'; } }
-  function setPlayLabel(on){ const b=$('#s3d-play'); if(b){ b.textContent=on?'■ 정지':'▶ 재생'; b.classList.toggle('on',on); } }
+  function updateSpinLabel(){ const b=$('#s3d-spin'); if(b){ b.classList.toggle('on',autoRotate); b.textContent=autoRotate?'Auto-rotate · off':'Auto-rotate · on'; } }
+  function setPlayLabel(on){ const b=$('#s3d-play'); if(b){ b.textContent=on?'■ Stop':'▶ Play'; b.classList.toggle('on',on); } }
 
   function setSignal(key){
     stopAudio();
@@ -2595,7 +2595,7 @@ ENTERS.spectrogram=()=>{ sgClear(); return ()=>{}; };
 
   /* =================== ENTER / LEAVE (slide controller) =================== */
   ENTERS.sound3d = function(){
-    if(!built){ try{ build(); }catch(err){ console.warn('3D build failed',err); if(loadingEl){loadingEl.textContent='3D 장면을 초기화하지 못했습니다.';loadingEl.style.display='flex';} return ()=>{}; } }
+    if(!built){ try{ build(); }catch(err){ console.warn('3D build failed',err); if(loadingEl){loadingEl.textContent='Failed to initialize the 3D scene.';loadingEl.style.display='flex';} return ()=>{}; } }
     running=true; last=performance.now();
     requestAnimationFrame(()=>{ resize(); });
     raf=requestAnimationFrame(loop);
@@ -2625,8 +2625,8 @@ ENTERS.spectrogram=()=>{ sgClear(); return ()=>{}; };
     const amps=[1,0.2,0.7,0.08,0.5,0.05,0.35,0.04,0.22,0.03,0.15,0.02];
     const ghost=amps.map((v,i)=>v<0.12); // drop the very weak/masked ones
     drawBars(cv,amps,{ghost});
-    const ctx=cv._ctx,w=cv._w; ctx.fillStyle='rgba(251,113,133,0.8)';ctx.font='10px "JetBrains Mono",monospace';ctx.textAlign='right';ctx.fillText('버림 ✕',w-12,18);
-    ctx.fillStyle='rgba(34,211,238,0.85)';ctx.textAlign='left';ctx.fillText('유지',12,18);
+    const ctx=cv._ctx,w=cv._w; ctx.fillStyle='rgba(251,113,133,0.8)';ctx.font='10px "JetBrains Mono",monospace';ctx.textAlign='right';ctx.fillText('discard ✕',w-12,18);
+    ctx.fillStyle='rgba(34,211,238,0.85)';ctx.textAlign='left';ctx.fillText('keep',12,18);
   });
 })();
 
@@ -2662,16 +2662,16 @@ window.addEventListener('resize',()=>{ clearTimeout(resizeT); resizeT=setTimeout
   function sgn(x){ return (x<0?'−':'')+Math.abs(x).toFixed(3); }
   function renderTable(rows){ let h='<div class="ctab"><div class="ctr chd"><span>n</span><span>aₙ</span><span>bₙ</span><span>Aₙ</span><span>φₙ</span></div>'; rows.filter(function(r){return r.A>1e-4;}).slice(0,8).forEach(function(r){ h+='<div class="ctr"><span>'+r.n+'</span><span>'+sgn(r.a)+'</span><span>'+sgn(r.b)+'</span><span class="cA">'+r.A.toFixed(3)+'</span><span>'+Math.round(r.phi*180/Math.PI)+'°</span></div>'; }); h+='</div>'; if(tb) tb.innerHTML=h; }
   function val(rows,t){ let s=0; for(let i=0;i<rows.length;i++){const r=rows[i]; s+=r.A*Math.sin(2*Math.PI*r.n*t+r.phi);} return s; }
-  function draw(){ const rows=rowsOf(cur); const N=Math.max(1,+nEl.value||1); if(nOut) nOut.textContent=N+' 배음';
+  function draw(){ const rows=rowsOf(cur); const N=Math.max(1,+nEl.value||1); if(nOut) nOut.textContent=N+' harmonics';
     if(wave._ctx){ const ctx=wave._ctx,w=wave._w,h=wave._h,mid=h/2,per=1.3,M=760; const ys=new Array(M+1); let mx=1e-6; for(let i=0;i<=M;i++){ ys[i]=val(rows,i/M*per); mx=Math.max(mx,Math.abs(ys[i])); } const amp=(h/2-16)/mx;
       ctx.clearRect(0,0,w,h); grid(ctx,w,h);
       ctx.strokeStyle='rgba(255,255,255,0.22)'; ctx.lineWidth=1.5; ctx.beginPath(); for(let i=0;i<=M;i++){ const x=i/M*w,y=mid-ys[i]*amp; i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.stroke();
       const part=rows.slice(0,N); ctx.strokeStyle='#22D3EE'; ctx.lineWidth=2.6; ctx.lineJoin='round'; ctx.shadowColor='#22D3EE'; ctx.shadowBlur=9; ctx.beginPath(); for(let i=0;i<=M;i++){ const x=i/M*w,y=mid-val(part,i/M*per)*amp; i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.stroke(); ctx.shadowBlur=0;
-      ctx.font='10px "JetBrains Mono",monospace'; ctx.fillStyle='rgba(255,255,255,0.32)'; ctx.textAlign='left'; ctx.fillText('흐림 = 목표 f(t)   ·   밝음 = 앞 '+N+'개 배음의 합', 8, 14);
+      ctx.font='10px "JetBrains Mono",monospace'; ctx.fillStyle='rgba(255,255,255,0.32)'; ctx.textAlign='left'; ctx.fillText('faint = target f(t)   ·   bright = first '+N+' harmonics summed', 8, 14);
     }
     if(spec._ctx){ const ctx=spec._ctx,w=spec._w,h=spec._h; ctx.clearRect(0,0,w,h); const sig=rows.filter(function(r){return r.A>1e-4;}); const K=Math.min(sig.length,20)||1; let maxA=1e-6; for(let i=0;i<K;i++) maxA=Math.max(maxA,sig[i].A); const bw=w/K;
       for(let i=0;i<K;i++){ const r=sig[i]; const bh=(r.A/maxA)*(h-24); ctx.fillStyle=(i<N)?specColor(i/Math.max(1,K-1)):'rgba(255,255,255,0.13)'; ctx.fillRect(i*bw+bw*0.22, h-bh-6, bw*0.56, bh); }
-      ctx.font='9px "JetBrains Mono",monospace'; ctx.fillStyle='rgba(255,255,255,0.32)'; ctx.textAlign='left'; ctx.fillText('색 = 지금 포함된 '+N+'개 배음', 6, 12);
+      ctx.font='9px "JetBrains Mono",monospace'; ctx.fillStyle='rgba(255,255,255,0.32)'; ctx.textAlign='left'; ctx.fillText('color = the first '+N+' harmonics', 6, 12);
     }
     renderTable(rows);
   }
@@ -2699,7 +2699,7 @@ window.addEventListener('resize',()=>{ clearTimeout(resizeT); resizeT=setTimeout
     ctx.fillStyle='#2DD4A7'; ctx.fillText('O(N log N)', X(9)+2, Y(Math.pow(2,9)*9)+14);
     ctx.fillStyle='rgba(255,255,255,0.42)'; ctx.textAlign='center'; ctx.fillText('N = 2^'+pmark, X(pmark), h-6);
   }
-  function upd(){ const p=Math.max(1,+nEl.value||10); const N=Math.pow(2,p),sq=N*N,fft=N*p; if(eN)eN.textContent=comma(N); if(eSq)eSq.textContent=comma(sq); if(eFft)eFft.textContent=comma(fft); if(eSp)eSp.textContent='약 '+comma(sq/fft)+'배'; drawChart(p); }
+  function upd(){ const p=Math.max(1,+nEl.value||10); const N=Math.pow(2,p),sq=N*N,fft=N*p; if(eN)eN.textContent=comma(N); if(eSq)eSq.textContent=comma(sq); if(eFft)eFft.textContent=comma(fft); if(eSp)eSp.textContent='≈ '+comma(sq/fft)+'×'; drawChart(p); }
   if(nEl) nEl.addEventListener('input',upd); drawInit.push(upd);
 })();
 
@@ -2717,8 +2717,8 @@ window.addEventListener('resize',()=>{ clearTimeout(resizeT); resizeT=setTimeout
   }
   function drawTiling(){ if(!til._ctx) return; const ctx=til._ctx,w=til._w,h=til._h; ctx.clearRect(0,0,w,h); const gap=22, pw=(w-gap)/2, ph=h-26, top=4;
     function panel(x0,label){ ctx.strokeStyle='rgba(255,255,255,0.16)'; ctx.lineWidth=1; ctx.strokeRect(x0,top,pw,ph); ctx.font='10px "JetBrains Mono",monospace'; ctx.fillStyle='rgba(255,255,255,0.55)'; ctx.textAlign='center'; ctx.fillText(label, x0+pw/2, h-8); }
-    panel(0,'STFT · 균일 격자'); const cols=8, rows=6; for(let c=0;c<cols;c++)for(let r=0;r<rows;r++){ ctx.strokeStyle='rgba(124,108,240,0.5)'; ctx.lineWidth=1; ctx.strokeRect(c*pw/cols, top+r*ph/rows, pw/cols, ph/rows); }
-    const x1=pw+gap; panel(x1,'웨이블릿 · 다중해상도'); const cc=[8,4,2,1], tot=15; let yy=top; for(let L=0;L<cc.length;L++){ const bh=cc[L]/tot*ph, u=1-L/(cc.length-1); ctx.strokeStyle=specColor(0.12+0.82*u,0.75); ctx.lineWidth=1; for(let c=0;c<cc[L];c++){ ctx.strokeRect(x1+c*pw/cc[L], yy, pw/cc[L], bh); } yy+=bh; }
+    panel(0,'STFT · uniform grid'); const cols=8, rows=6; for(let c=0;c<cols;c++)for(let r=0;r<rows;r++){ ctx.strokeStyle='rgba(124,108,240,0.5)'; ctx.lineWidth=1; ctx.strokeRect(c*pw/cols, top+r*ph/rows, pw/cols, ph/rows); }
+    const x1=pw+gap; panel(x1,'Wavelet · multi-resolution'); const cc=[8,4,2,1], tot=15; let yy=top; for(let L=0;L<cc.length;L++){ const bh=cc[L]/tot*ph, u=1-L/(cc.length-1); ctx.strokeStyle=specColor(0.12+0.82*u,0.75); ctx.lineWidth=1; for(let c=0;c<cc[L];c++){ ctx.strokeRect(x1+c*pw/cc[L], yy, pw/cc[L], bh); } yy+=bh; }
   }
   function draw(){ drawMorlet(); drawTiling(); }
   if(aEl) aEl.addEventListener('input',drawMorlet); drawInit.push(draw);
@@ -2727,7 +2727,7 @@ window.addEventListener('resize',()=>{ clearTimeout(resizeT); resizeT=setTimeout
 /* --- DEMO: cochlea = biological Fourier analyzer --- */
 const COCH=(function(){
   const FMAX=20000, FMIN=20;
-  function f2x(f){ f=Math.min(FMAX,Math.max(FMIN,f)); return Math.log(f/FMAX)/Math.log(FMIN/FMAX); } // 0=base(고음) .. 1=apex(저음)
+  function f2x(f){ f=Math.min(FMAX,Math.max(FMIN,f)); return Math.log(f/FMAX)/Math.log(FMIN/FMAX); } // 0=base(high) .. 1=apex(low)
   function bump(x,p){ const d=x-p; return d<0?Math.exp(-Math.pow(d/0.17,2)):Math.exp(-Math.pow(d/0.075,2)); }
   const NOTE=[[41.2,'E1'],[110,'A2'],[261.6,'C4'],[440,'A4'],[1046.5,'C6'],[4186,'C8']];
   function draw(cv,peaks,t){ if(!cv||!cv._ctx) return; const ctx=cv._ctx,w=cv._w,h=cv._h;
@@ -2751,8 +2751,8 @@ const COCH=(function(){
     // frequency / note ruler
     ctx.font='9px "JetBrains Mono",monospace'; ctx.textAlign='center';
     for(let i=0;i<NOTE.length;i++){ const f=NOTE[i][0],X=Xp(f2x(f)); ctx.strokeStyle='rgba(255,255,255,0.14)'; ctx.beginPath(); ctx.moveTo(X,midY+4); ctx.lineTo(X,midY+12); ctx.stroke(); ctx.fillStyle='rgba(255,255,255,0.42)'; ctx.fillText(NOTE[i][1],X,h-24); ctx.fillStyle='rgba(255,255,255,0.28)'; const lbl= f>=1000?(f/1000).toFixed(f>=10000?0:1)+'k':Math.round(f)+''; ctx.fillText(lbl+'Hz',X,h-13); }
-    ctx.textAlign='left'; ctx.fillStyle='rgba(255,255,255,0.5)'; ctx.font='10px "JetBrains Mono",monospace'; ctx.fillText('입구 base · 고음 · 단단', x0+2, 14);
-    ctx.textAlign='right'; ctx.fillText('끝 apex · 저음 · 부드러움', x1-2, 14);
+    ctx.textAlign='left'; ctx.fillStyle='rgba(255,255,255,0.5)'; ctx.font='10px "JetBrains Mono",monospace'; ctx.fillText('entrance (base) · high · stiff', x0+2, 14);
+    ctx.textAlign='right'; ctx.fillText('far end (apex) · low · soft', x1-2, 14);
   }
   return {draw:draw,f2x:f2x};
 })();
