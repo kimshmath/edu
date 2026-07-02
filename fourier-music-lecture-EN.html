@@ -495,6 +495,10 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
   #deck section:nth-of-type(40) .body{font-size:.92rem!important;}
   #deck section:nth-of-type(40) .caption{font-size:1rem;}
 }
+
+/* ---- P hotkey: visual pulse on the triggered play button ---- */
+@keyframes hotpulse{from{box-shadow:0 0 0 2px var(--accent),0 0 18px 2px var(--accent);}to{box-shadow:0 0 0 12px rgba(255,255,255,0),0 0 24px 6px rgba(255,255,255,0);}}
+.hotpulse{animation:hotpulse .72s ease-out;}
 </style>
 </head>
 <body>
@@ -1383,7 +1387,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 
 <!-- chrome -->
 <div id="hud"><span class="ch" id="hud-ch">Opening</span><span id="counter">01 / 30</span></div>
-<div class="kbd-hint"><kbd>←</kbd> <kbd>→</kbd> navigate · <kbd>N</kbd> notes · <kbd>F</kbd> fullscreen · <kbd>?</kbd> help</div>
+<div class="kbd-hint"><kbd>←</kbd> <kbd>→</kbd> navigate · <kbd>P</kbd> play · <kbd>S</kbd> stop · <kbd>N</kbd> notes · <kbd>F</kbd> fullscreen · <kbd>?</kbd> help</div>
 <div class="navbtns"><button id="prev">‹</button><button id="next">›</button></div>
 <div id="runfoot">Sang-hyun Kim (KIAS)<span class="sep">·</span><a href="https://edu.kimsh.kr" target="_blank" rel="noopener">edu.kimsh.kr</a></div>
 
@@ -1399,6 +1403,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
     <div class="kk"><span>Next slide</span><span><kbd>Space</kbd></span></div>
     <div class="kk"><span>Speaker notes (time budget)</span><span><kbd>N</kbd></span></div>
     <div class="kk"><span>Fullscreen</span><span><kbd>F</kbd></span></div>
+    <div class="kk"><span>Play this slide’s sound (press again = next)</span><span><kbd>P</kbd></span></div>
     <div class="kk"><span>Stop all sound</span><span><kbd>S</kbd></span></div>
     <div class="kk"><span>Jump to start / end</span><span><kbd>Home</kbd> <kbd>End</kbd></span></div>
     <div class="kk" style="border:none"><span>Close this panel</span><span><kbd>?</kbd> <kbd>Esc</kbd></span></div>
@@ -1618,7 +1623,7 @@ function show(i){
   i=clamp(i,0,total-1);
   // leave current
   activeStops.forEach(fn=>{try{fn&&fn();}catch(e){}}); activeStops=[];
-  stopAll(); resetToggles();
+  stopAll(); resetToggles(); phSlide=-1;  /* P hotkey restarts from the first play button on slide change */
   slides[cur].classList.remove('active'); slides[cur].classList.add('prev');
   cur=i;
   slides.forEach((s,k)=>{ if(k!==cur) s.classList.remove('active'); });
@@ -1675,12 +1680,27 @@ document.addEventListener('keydown',e=>{
   else if(e.key===' '){e.preventDefault();next();}
   else if(e.key==='Home'){e.preventDefault();show(0);}
   else if(e.key==='End'){e.preventDefault();show(total-1);}
-  else if(e.key==='n'||e.key==='N'){toggleNotes();}
-  else if(e.key==='f'||e.key==='F'){toggleFS();}
-  else if(e.key==='s'||e.key==='S'){stopAll();}
+  else if(e.metaKey||e.ctrlKey||e.altKey){/* leave browser shortcuts (Cmd+P, Ctrl+F, ...) alone */}
+  else if(e.key==='n'||e.key==='N'||e.code==='KeyN'){toggleNotes();}
+  else if(e.key==='f'||e.key==='F'||e.code==='KeyF'){toggleFS();}
+  else if(e.key==='s'||e.key==='S'||e.code==='KeyS'){stopAll();}
+  else if(e.key==='p'||e.key==='P'||e.code==='KeyP'){ if(!e.repeat){ e.preventDefault(); playHotkey(); } }
   else if(e.key==='?'){helpEl.classList.toggle('show');}
   else if(e.key==='Escape'){helpEl.classList.remove('show'); if(notesOpen)toggleNotes();}
 });
+
+/* P : play hotkey — clicks the current slide's \u25B6 button; repeated presses cycle through several */
+let phSlide=-1, phIdx=0;
+function playHotkey(){
+  const sec=slides[cur]; if(!sec) return;
+  const btns=[...sec.querySelectorAll('button')].filter(b=>b.textContent.indexOf('\u25B6')>-1 && b.offsetWidth>0 && !b.disabled);
+  if(!btns.length) return;
+  if(phSlide!==cur){ phSlide=cur; phIdx=0; } else { phIdx=(phIdx+1)%btns.length; }
+  const b=btns[phIdx];
+  b.click();
+  b.classList.remove('hotpulse'); void b.offsetWidth; b.classList.add('hotpulse');
+  setTimeout(()=>{ b.classList.remove('hotpulse'); }, 720);
+}
 
 /* swipe on touch — ignore gestures starting on interactive controls (sliders, 3D, canvases, menus) so they don't flip slides */
 let tx=0, ty=0, tSwipe=false;
