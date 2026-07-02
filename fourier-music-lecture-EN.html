@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Fourier Analysis · Hearing Sound as Numbers</title>
+<title>Fourier Analysis · Sound, Heard as Number</title>
 
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -379,6 +379,9 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
   .slide{padding-bottom:16vh;}
 }
 
+
+/* ---- fit slide content to the viewport (optimized for 1600x900) ---- */
+#deck .inner{transform-origin:center center;}
 </style>
 </head>
 <body>
@@ -404,9 +407,8 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
       </div>
       <div class="heromenu" id="heroMenu" style="justify-content:center"></div>
       <div class="eyebrow" style="justify-content:center">FOURIER ANALYSIS · FOR MUSIC</div>
-      <h1 class="title-xl">Hearing Sound as Numbers</h1>
-      <p class="lead dim" style="margin-top:1.2rem;text-align:center">An overview of Fourier analysis — the math inside music<br>
-        <span class="caption">A 60-minute lecture for high-schoolers curious about musicology</span></p>
+      <h1 class="title-xl">Sound, Heard as Number</h1>
+      <p class="lead dim" style="margin-top:1.2rem;text-align:center">An overview of Fourier analysis — the math inside music</p>
       <div class="caption" style="margin-top:1.5rem;text-align:center;color:var(--ink-dim);letter-spacing:.04em">
         Korea Institute for Advanced Study <span style="color:var(--accent);font-weight:600">Sang-hyun Kim</span>
       </div>
@@ -421,7 +423,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
         <div class="eyebrow">First, check with your ears</div>
         <h2 class="title-lg">Same “A” —<br>so why does it sound different?</h2>
         <p class="body"><b class="hl-ink">Same 440 Hz, same pitch.</b> So why do they sound like different instruments?<br><br>
-          Where does this difference in <span class="hl">timbre</span> come from? By the end of today's lecture, you'll be able to answer that question <span class="hl">with numbers</span>.</p>
+          Where does the difference in <span class="hl">timbre</span> come from?</p>
       </div>
       <div class="panel">
         <div class="caption" style="margin-bottom:12px">TONE · 440 Hz · A4</div>
@@ -835,7 +837,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
       <div class="stack" style="align-self:center">
         <div class="formula inlinek" style="margin-top:0">
           $$ \int_0^T \!\sin\tfrac{2\pi m t}{T}\,\sin\tfrac{2\pi n t}{T}\,dt = 0 \;\;(m\neq n) $$
-          <div class="gloss"><b>Orthogonality</b> — different harmonics multiply and average to 0. That's why each component is extracted “cleanly,” without interference.</div>
+          <div class="gloss"><b>Orthogonality</b> — different harmonics multiply and average to 0, so each component is extracted “cleanly,” without interference.</div>
         </div>
         <p class="caption">Synthesis (building) ↔ analysis (reading) — the same sine-wave language, a perfect symmetry.</p>
       </div>
@@ -951,9 +953,8 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
       <h2 class="h-sec">Waveform and spectrogram: two shadows of the same thing</h2>
       <p class="body" style="max-width:66ch;margin:.1rem 0 .7rem">
         The horizontal axis is <span class="hl">time</span>, the vertical axis is <span class="hl">amplitude</span> (loudness), and the depth axis is <span class="hl">frequency</span>.
-        The sound <span class="hl">flows in real time from right to left</span> — the right edge is <b class="hl-ink">now</b>.
-        The cyan ribbon on the front wall (the <b class="hl-ink">xy plane</b>) is the <b class="hl-ink">waveform</b>; the heat-map on the floor (the <b class="hl-ink">xz plane</b>) is the <b class="hl-ink">spectrogram</b>.
-        Pick an instrument, chord, or evolving sound, or turn on a <b class="hl-ink">picture drawn as sound</b> (cat · skyline) — the spectrogram draws its shape. Drag to rotate · scroll to zoom.</p>
+        The sound runs <span class="hl">in real time, right to left</span>. <b class="hl-ink">"Now"</b> = the right edge.
+        The cyan ribbon on the front wall (the <b class="hl-ink">xy plane</b>) is the <b class="hl-ink">waveform</b>; the heat-map on the floor (the <b class="hl-ink">xz plane</b>) is the <b class="hl-ink">spectrogram</b>.</p>
       <div class="s3d-wrap">
         <span class="s3d-badge">3D · time × amplitude × frequency</span>
         <div class="s3d-legend">
@@ -1005,7 +1006,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
       <div class="split" style="grid-template-columns:1.02fr 0.98fr;align-items:center">
         <div class="stack">
           <h2 class="title-lg" style="margin-bottom:.5rem">Turning N² into N·log N</h2>
-          <div class="formula inlinek">$$ X_k=\sum_{n=0}^{N-1} x_n\,e^{-2\pi i\,kn/N} $$<div class="gloss">For every frequency k, <b class="hl-ink">“multiply and add”</b> with the signal — done honestly that's <b class="hl">N×N</b> multiplications. As N grows this becomes unmanageable.</div></div>
+          <div class="formula inlinek">$$ X_k=\sum_{n=0}^{N-1} x_n\,e^{-2\pi i\,kn/N} $$<div class="gloss">For every frequency k, <b class="hl-ink">“multiply and add”</b> with the signal — done honestly that's <b class="hl">N×N</b> multiplications: far too many!</div></div>
           <div class="formula inlinek" style="border-left-color:#2DD4A7">$$ X_k=E_k+e^{-2\pi i k/N}\,O_k $$<div class="gloss">Repeatedly <b class="hl-ink">split in half</b> into even terms <span class="inlinek">\(E_k\)</span> and odd terms <span class="inlinek">\(O_k\)</span> (divide and conquer) → <b class="hl">O(N log N)</b>. This is the <b>FFT</b> (fast Fourier transform).</div></div>
           <div class="statgrid">
             <div class="ctrl-row"><label>Length N</label><input id="dff-n" type="range" min="4" max="20" value="10" step="1"><span class="readout" id="dff-N">1,024</span></div>
@@ -1194,7 +1195,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
             <button id="cochb-play" class="hchip" style="border-color:var(--accent)">▶ Listen</button>
           </div>
           <p class="body" style="font-size:.96rem">A harmonic-rich sound resonates at several positions at once — this <b class="hl-ink">excitation pattern</b> is the spectrum. The map is <b class="hl-ink">preserved up to the auditory cortex</b> (a place code). Pitch = which place, <b>timbre = the pattern of peaks</b>.</p>
-          <div class="formula inlinek" style="border-left-color:#FB7185;font-size:.92rem"><div class="gloss" style="margin:0">Strictly it isn't a pure Fourier transform — a <b class="hl">finite time window</b> · <b class="hl">logarithmic-spacing</b> resolution · <b>nonlinear amplification</b> by the outer hair cells. It's actually closer to the <b class="hl-ink">wavelet</b> we just saw.</div></div>
+          <div class="formula inlinek" style="border-left-color:#FB7185;font-size:.92rem"><div class="gloss" style="margin:0">Strictly speaking, it isn't a pure Fourier analyzer — a <b class="hl">finite time window</b> · <b class="hl">logarithmic-spacing</b> resolution · <b>nonlinear amplification</b> by the outer hair cells. It's actually closer to the <b class="hl-ink">wavelet</b> we just saw!</div></div>
           <p class="caption">“Fourier solved half of it in 1822; neuroscience is still solving the rest.”</p>
         </div>
       </div>
@@ -1256,10 +1257,10 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
       </div>
       <div class="eyebrow" style="justify-content:center">THANK YOU</div>
       <h2 class="title-lg" style="text-align:center">So — what is the “same note”?</h2>
-      <p class="body" style="text-align:center;margin-top:1rem;max-width:46ch">Sound is a sum of sine waves; music is the art of shaping that sum.<br><span class="caption">Questions welcome · ears that now hear every sound as numbers</span></p>
+      <p class="body" style="text-align:center;margin-top:1rem;max-width:46ch">Sound is a sum of sine waves; music is the art of shaping that sum.<br><span class="caption">So — does our ear hear all music as number?</span></p>
       <div class="caption" style="margin-top:2.2rem;text-align:center;line-height:2;color:var(--ink-dim);letter-spacing:.03em">
         Korea Institute for Advanced Study <span style="color:var(--accent);font-weight:600">Sang-hyun Kim</span><br>
-        These materials are also available online · <a href="https://edu.kimsh.kr" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb, var(--accent) 45%, transparent);padding-bottom:1px">edu.kimsh.kr</a>
+        Also available online · <a href="https://edu.kimsh.kr" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb, var(--accent) 45%, transparent);padding-bottom:1px">edu.kimsh.kr</a>
       </div>
     </div>
   </section>
@@ -1292,7 +1293,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 
 <script>
 /* =========================================================================
-   Fourier Analysis · Hearing Sound as Numbers  —  interaction / audio / visualization
+   Fourier Analysis · Sound, Heard as Number  —  interaction / audio / visualization
    ========================================================================= */
 (function(){
 "use strict";
@@ -1485,6 +1486,20 @@ const elCounter=document.getElementById('counter');
 const elHudCh=document.getElementById('hud-ch');
 
 function pad2(n){return (n<10?'0':'')+n;}
+function fitSlide(sec){
+  if(!sec) return;
+  const inner=sec.querySelector('.inner'); if(!inner) return;
+  inner.style.transform='';
+  if(window.innerWidth<=820) return;              /* small screens keep natural scroll */
+  const cs=getComputedStyle(sec);
+  const availH=sec.clientHeight - parseFloat(cs.paddingTop||0) - parseFloat(cs.paddingBottom||0);
+  const availW=sec.clientWidth  - parseFloat(cs.paddingLeft||0) - parseFloat(cs.paddingRight||0);
+  const ch=inner.scrollHeight, cw=inner.scrollWidth;
+  if(ch<2||cw<2||availH<2) return;
+  let k=Math.min(availH/ch, availW/cw, 1);
+  if(k<0.999){ k=Math.max(0.6, k*0.985); inner.style.transform='scale('+k.toFixed(4)+')'; }
+}
+function fitCurrent(){ try{ fitSlide(slides[cur]); }catch(e){} }
 function show(i){
   i=clamp(i,0,total-1);
   // leave current
@@ -1502,6 +1517,7 @@ function show(i){
   // enter
   const ekey=slides[cur].getAttribute('data-enter');
   if(ekey && ENTERS[ekey]){ const stop=ENTERS[ekey](); if(stop) activeStops.push(stop); }
+  requestAnimationFrame(fitCurrent);
 }
 function next(){ if(cur<total-1) show(cur+1); }
 function prev(){ if(cur>0) show(cur-1); }
@@ -2740,7 +2756,7 @@ function fitAll(){
 function runDrawInit(){ drawInit.forEach(fn=>{try{fn();}catch(e){console.warn(e);}}); }
 
 let resizeT=0;
-window.addEventListener('resize',()=>{ clearTimeout(resizeT); resizeT=setTimeout(()=>{ fitAll(); runDrawInit(); if(cur===0)show(0); }, 160); });
+window.addEventListener('resize',()=>{ clearTimeout(resizeT); resizeT=setTimeout(()=>{ fitAll(); runDrawInit(); if(cur===0)show(0); fitCurrent(); }, 160); });
 
 /* --- DEMO: HERO coefficients (numeric Fourier coefficients that drive the machine) --- */
 (function(){
@@ -2922,7 +2938,7 @@ function boot(){
 
 boot();
 // fonts/late layout may shift canvas metrics — re-fit once without re-rendering math
-window.addEventListener('load',()=>{ fitAll(); runDrawInit(); if(cur===0) show(0); });
+window.addEventListener('load',()=>{ try{ if(window.top===window.self) window.resizeTo(1600,900); }catch(e){} fitAll(); runDrawInit(); if(cur===0) show(0); fitCurrent(); if(document.fonts&&document.fonts.ready){ document.fonts.ready.then(()=>{ try{ fitAll(); fitCurrent(); }catch(e){} }); } });
 
 })();
 

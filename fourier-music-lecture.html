@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>푸리에 해석 · 소리를 숫자로 듣다</title>
+<title>푸리에 해석 · 수(數)로 듣는 소리</title>
 
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -379,6 +379,9 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
   .slide{padding-bottom:16vh;}
 }
 
+
+/* ---- fit slide content to the viewport (optimized for 1600x900) ---- */
+#deck .inner{transform-origin:center center;}
 </style>
 </head>
 <body>
@@ -404,9 +407,8 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
       </div>
       <div class="heromenu" id="heroMenu" style="justify-content:center"></div>
       <div class="eyebrow" style="justify-content:center">FOURIER ANALYSIS · FOR MUSIC</div>
-      <h1 class="title-xl">소리를 숫자로 듣다</h1>
-      <p class="lead dim" style="margin-top:1.2rem;text-align:center">푸리에 해석 개괄 — 음악 속의 수학<br>
-        <span class="caption">음악학에 관심 있는 고등학생을 위한 60분 강의</span></p>
+      <h1 class="title-xl">수(數)로 듣는 소리</h1>
+      <p class="lead dim" style="margin-top:1.2rem;text-align:center">푸리에 해석 개괄 — 음악 속의 수학</p>
       <div class="caption" style="margin-top:1.5rem;text-align:center;color:var(--ink-dim);letter-spacing:.04em">
         고등과학원 <span style="color:var(--accent);font-weight:600">김상현</span>
       </div>
@@ -421,7 +423,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
         <div class="eyebrow">먼저, 귀로 확인</div>
         <h2 class="title-lg">같은 ‘라’인데<br>왜 다르게 들릴까?</h2>
         <p class="body"><b class="hl-ink">같은 440 Hz, 같은 음높이.</b> 그런데 왜 서로 다른 악기로 들릴까?<br><br>
-          이 <span class="hl">음색(timbre)</span>의 차이는 어디서 올까요? 오늘 강의가 끝나면, 이 질문에 <span class="hl">숫자로</span> 답할 수 있게 됩니다.</p>
+          <span class="hl">음색(timbre)</span>의 차이는 어디서 올까?</p>
       </div>
       <div class="panel">
         <div class="caption" style="margin-bottom:12px">TONE · 440 Hz · A4</div>
@@ -835,7 +837,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
       <div class="stack" style="align-self:center">
         <div class="formula inlinek" style="margin-top:0">
           $$ \int_0^T \!\sin\tfrac{2\pi m t}{T}\,\sin\tfrac{2\pi n t}{T}\,dt = 0 \;\;(m\neq n) $$
-          <div class="gloss"><b>직교성(orthogonality)</b> — 서로 다른 배음끼리는 곱해 평균하면 0. 그래서 각 성분이 서로 간섭 없이 ‘깨끗하게’ 추출됩니다.</div>
+          <div class="gloss"><b>직교성(orthogonality)</b> — 서로 다른 배음끼리는 곱해 평균하면 0 이고, 따라서 각 성분이 서로 간섭 없이 ‘깨끗하게’ 추출.</div>
         </div>
         <p class="caption">합성(만들기) ↔ 분석(읽기) — 같은 사인파 언어, 완벽한 대칭.</p>
       </div>
@@ -951,9 +953,8 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
       <h2 class="h-sec">파형과 스펙트로그램은, 같은 것의 다른 그림자다</h2>
       <p class="body" style="max-width:66ch;margin:.1rem 0 .7rem">
         가로축은 <span class="hl">시간</span>, 세로축은 <span class="hl">진폭</span>(소리 크기), 깊이축은 <span class="hl">주파수</span>.
-        소리가 <span class="hl">실시간으로 오른쪽→왼쪽으로 흘러</span> — 오른쪽 끝이 <b class="hl-ink">지금</b>입니다.
-        앞 벽(<b class="hl-ink">xy면</b>)의 청록 리본은 <b class="hl-ink">파형</b>, 바닥(<b class="hl-ink">xz면</b>)의 열지도는 <b class="hl-ink">스펙트로그램</b>.
-        악기·화음·변주를 고르거나, <b class="hl-ink">소리로 그린 그림</b>(고양이·스카이라인)을 켜 보세요 — 스펙트로그램이 그 형체를 그려냅니다. 끌어 돌리고 · 휠로 확대하세요.</p>
+        소리는 <span class="hl">실시간으로 오른쪽→왼쪽으로</span>. <b class="hl-ink">"지금"</b> = 오른쪽 끝.
+        앞 벽(<b class="hl-ink">xy면</b>)의 청록 리본은 <b class="hl-ink">파형</b>, 바닥(<b class="hl-ink">xz면</b>)의 열지도는 <b class="hl-ink">스펙트로그램</b>.</p>
       <div class="s3d-wrap">
         <span class="s3d-badge">3D · time × amplitude × frequency</span>
         <div class="s3d-legend">
@@ -1005,7 +1006,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
       <div class="split" style="grid-template-columns:1.02fr 0.98fr;align-items:center">
         <div class="stack">
           <h2 class="title-lg" style="margin-bottom:.5rem">N² 을 N·log N 으로</h2>
-          <div class="formula inlinek">$$ X_k=\sum_{n=0}^{N-1} x_n\,e^{-2\pi i\,kn/N} $$<div class="gloss">모든 진동수 k에 대해 신호와 <b class="hl-ink">‘곱하고 더하기’</b> — 정직하게 하면 곱셈이 <b class="hl">N×N</b>번. N이 커지면 감당이 안 됩니다.</div></div>
+          <div class="formula inlinek">$$ X_k=\sum_{n=0}^{N-1} x_n\,e^{-2\pi i\,kn/N} $$<div class="gloss">모든 진동수 k에 대해 신호와 <b class="hl-ink">‘곱하고 더하기’</b> — 정직하게 하면 곱셈이 <b class="hl">N×N</b>번: 너무 크다!</div></div>
           <div class="formula inlinek" style="border-left-color:#2DD4A7">$$ X_k=E_k+e^{-2\pi i k/N}\,O_k $$<div class="gloss">짝수 항 <span class="inlinek">\(E_k\)</span> 와 홀수 항 <span class="inlinek">\(O_k\)</span> 로 <b class="hl-ink">반씩 쪼개기</b>를 반복(분할정복) → <b class="hl">O(N log N)</b>. 이것이 <b>FFT</b>(고속 푸리에 변환).</div></div>
           <div class="statgrid">
             <div class="ctrl-row"><label>길이 N</label><input id="dff-n" type="range" min="4" max="20" value="10" step="1"><span class="readout" id="dff-N">1,024</span></div>
@@ -1194,7 +1195,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
             <button id="cochb-play" class="hchip" style="border-color:var(--accent)">▶ 듣기</button>
           </div>
           <p class="body" style="font-size:.96rem">배음 많은 소리는 여러 위치에서 동시에 공명 — 이 <b class="hl-ink">흥분 패턴</b>이 곧 스펙트럼. 이 지도는 <b class="hl-ink">청각피질까지 보존</b>(자리 부호). 음높이=어느 자리, <b>음색=봉우리 패턴</b>.</p>
-          <div class="formula inlinek" style="border-left-color:#FB7185;font-size:.92rem"><div class="gloss" style="margin:0">엄밀히는 순수 푸리에가 아닙니다 — <b class="hl">유한한 시간 창</b> · <b class="hl">로그 간격</b> 해상도 · 외유모세포의 <b>비선형 증폭</b>. 오히려 방금 본 <b class="hl-ink">웨이블릿</b>에 가깝죠.</div></div>
+          <div class="formula inlinek" style="border-left-color:#FB7185;font-size:.92rem"><div class="gloss" style="margin:0">엄밀히 말해 순수 푸리에 해석 기관은 아님 — <b class="hl">유한한 시간 창</b> · <b class="hl">로그 간격</b> 해상도 · 외유모세포의 <b>비선형 증폭</b>. 오히려 방금 본 <b class="hl-ink">웨이블릿</b>에 가깝다!</div></div>
           <p class="caption">“푸리에는 1822년에 절반을 풀었고, 나머지는 신경과학이 지금도 푸는 중.”</p>
         </div>
       </div>
@@ -1256,10 +1257,10 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
       </div>
       <div class="eyebrow" style="justify-content:center">THANK YOU</div>
       <h2 class="title-lg" style="text-align:center">그래서, 같은 음이란<br>무엇일까?</h2>
-      <p class="body" style="text-align:center;margin-top:1rem;max-width:46ch">소리는 사인파의 합, 음악은 그 합을 다루는 예술.<br><span class="caption">질문을 환영합니다 · 이제 모든 소리를 숫자로 듣는 귀</span></p>
+      <p class="body" style="text-align:center;margin-top:1rem;max-width:46ch">소리는 사인파의 합, 음악은 그 합을 다루는 예술.<br><span class="caption">그래서, 우리의 귀는 모든 음악을 수로 듣는 걸까?</span></p>
       <div class="caption" style="margin-top:2.2rem;text-align:center;line-height:2;color:var(--ink-dim);letter-spacing:.03em">
         고등과학원 <span style="color:var(--accent);font-weight:600">김상현</span><br>
-        이 자료는 온라인에서도 볼 수 있습니다 · <a href="https://edu.kimsh.kr" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb, var(--accent) 45%, transparent);padding-bottom:1px">edu.kimsh.kr</a>
+        이 자료는 온라인에서도 이용 가능 · <a href="https://edu.kimsh.kr" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb, var(--accent) 45%, transparent);padding-bottom:1px">edu.kimsh.kr</a>
       </div>
     </div>
   </section>
@@ -1292,7 +1293,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 
 <script>
 /* =========================================================================
-   푸리에 해석 · 소리를 숫자로 듣다  —  interaction / audio / visualization
+   푸리에 해석 · 수(數)로 듣는 소리  —  interaction / audio / visualization
    ========================================================================= */
 (function(){
 "use strict";
@@ -1485,6 +1486,20 @@ const elCounter=document.getElementById('counter');
 const elHudCh=document.getElementById('hud-ch');
 
 function pad2(n){return (n<10?'0':'')+n;}
+function fitSlide(sec){
+  if(!sec) return;
+  const inner=sec.querySelector('.inner'); if(!inner) return;
+  inner.style.transform='';
+  if(window.innerWidth<=820) return;              /* small screens keep natural scroll */
+  const cs=getComputedStyle(sec);
+  const availH=sec.clientHeight - parseFloat(cs.paddingTop||0) - parseFloat(cs.paddingBottom||0);
+  const availW=sec.clientWidth  - parseFloat(cs.paddingLeft||0) - parseFloat(cs.paddingRight||0);
+  const ch=inner.scrollHeight, cw=inner.scrollWidth;
+  if(ch<2||cw<2||availH<2) return;
+  let k=Math.min(availH/ch, availW/cw, 1);
+  if(k<0.999){ k=Math.max(0.6, k*0.985); inner.style.transform='scale('+k.toFixed(4)+')'; }
+}
+function fitCurrent(){ try{ fitSlide(slides[cur]); }catch(e){} }
 function show(i){
   i=clamp(i,0,total-1);
   // leave current
@@ -1502,6 +1517,7 @@ function show(i){
   // enter
   const ekey=slides[cur].getAttribute('data-enter');
   if(ekey && ENTERS[ekey]){ const stop=ENTERS[ekey](); if(stop) activeStops.push(stop); }
+  requestAnimationFrame(fitCurrent);
 }
 function next(){ if(cur<total-1) show(cur+1); }
 function prev(){ if(cur>0) show(cur-1); }
@@ -2740,7 +2756,7 @@ function fitAll(){
 function runDrawInit(){ drawInit.forEach(fn=>{try{fn();}catch(e){console.warn(e);}}); }
 
 let resizeT=0;
-window.addEventListener('resize',()=>{ clearTimeout(resizeT); resizeT=setTimeout(()=>{ fitAll(); runDrawInit(); if(cur===0)show(0); }, 160); });
+window.addEventListener('resize',()=>{ clearTimeout(resizeT); resizeT=setTimeout(()=>{ fitAll(); runDrawInit(); if(cur===0)show(0); fitCurrent(); }, 160); });
 
 /* --- DEMO: HERO coefficients (numeric Fourier coefficients that drive the machine) --- */
 (function(){
@@ -2922,7 +2938,7 @@ function boot(){
 
 boot();
 // fonts/late layout may shift canvas metrics — re-fit once without re-rendering math
-window.addEventListener('load',()=>{ fitAll(); runDrawInit(); if(cur===0) show(0); });
+window.addEventListener('load',()=>{ try{ if(window.top===window.self) window.resizeTo(1600,900); }catch(e){} fitAll(); runDrawInit(); if(cur===0) show(0); fitCurrent(); if(document.fonts&&document.fonts.ready){ document.fonts.ready.then(()=>{ try{ fitAll(); fitCurrent(); }catch(e){} }); } });
 
 })();
 
