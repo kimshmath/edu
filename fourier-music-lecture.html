@@ -419,6 +419,54 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 @media (max-width:860px){
   #stage{ display:contents; }
 }
+
+/* ---- presentation type scale: enlarge small text tiers for lecture-hall legibility ---- */
+@media (min-width:861px){
+  html{font-size:18px;}                       /* global +12.5% via rem (stage mode only) */
+  .caption{font-size:1.16rem;}
+  .viz-tag{font-size:.9rem;}
+  .formula .katex{font-size:1.58em;}
+  .formula .gloss{font-size:1.16rem;}
+  .btn{font-size:1rem;}
+  .chip{font-size:1rem;}
+  .heromenu .hchip{font-size:1rem;}
+  .ctab{font-size:1rem;}
+  .statline{font-size:1.06rem;}
+  .fcard p{font-size:1.14rem;}
+  .fcard h4{font-size:1.3rem;}
+  .ag-row .m{font-size:1rem;}
+  .ctrl-row label{font-size:.98rem;}
+  #notes .nt-body{font-size:1.14rem;}
+}
+
+/* ---- dense-slide reclaim + micro-UI legibility (stage mode) ---- */
+@media (min-width:861px){
+  /* micro-UI legibility bumps */
+  .eyebrow{font-size:.92rem;}
+  .zoomctl .zlab{font-size:.8rem;min-width:50px;}
+  .heromenu .hgroup,.s3d-bar .grp{font-size:.76rem;}
+  .s3d-legend .lrow{font-size:.8rem;}
+  .s3d-legend .lscale{font-size:.66rem;}
+  .s3d-hint{font-size:.8rem;}
+  .s3d-badge{font-size:.78rem;}
+  .tag-pill{font-size:.84rem;}
+  .s3d-bar .hchip{font-size:.9rem;}          /* dense control bar: keep compact */
+  /* global vertical reclaim */
+  .slide{padding:calc(5.5*var(--vh)) calc(7*var(--vw)) calc(7.5*var(--vh));}
+  /* slide "3D spectrogram": tighten without cutting */
+  .slide:has(#s3d-stage) .eyebrow{margin-bottom:.8rem;}
+  .slide:has(#s3d-stage) .h-sec{margin-bottom:.5rem;}
+  .slide:has(#s3d-stage) .body{margin:.1rem 0 .45rem!important;}
+  .slide:has(#s3d-stage) #s3d-stage{height:calc(36.5*var(--vh));}
+  .slide:has(#s3d-stage) .s3d-bar{padding:8px 12px 2px;gap:7px;}
+  /* slide "FFT": compress formula chrome */
+  .slide:has(#dff-chart) .formula{padding:.7rem 1.1rem;margin:.65rem 0;}
+  .slide:has(#dff-chart) .statgrid{gap:6px;}
+  .slide:has(#dff-chart) .statline{padding:.24em .7em;}
+  .slide:has(#dff-chart) .eyebrow{margin-bottom:.9rem;}
+  /* slide "cochlea": small trim */
+  .slide:has(#coch-b) .formula{margin:.9rem 0;}
+}
 </style>
 </head>
 <body>
