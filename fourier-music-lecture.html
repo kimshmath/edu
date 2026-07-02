@@ -81,7 +81,7 @@ body{
 .lead{font-size:clamp(1.16rem,1.85vw,1.5rem);line-height:1.6;color:var(--ink);max-width:46ch;font-weight:400;}
 .dim{color:var(--ink-dim);}
 .body{font-size:clamp(1.1rem,1.55vw,1.3rem);line-height:1.62;color:var(--ink-dim);max-width:52ch;}
-.caption{font-family:var(--mono);font-size:.9rem;color:var(--ink-faint);letter-spacing:.02em;}
+.caption{font-family:var(--mono);font-size:1rem;color:var(--ink-faint);letter-spacing:.02em;}
 .hl{color:var(--accent);font-weight:600;}
 .hl-ink{color:var(--ink);font-weight:600;}
 
@@ -104,7 +104,7 @@ ul.pts li .sub{display:block;color:var(--ink-dim);font-size:.92em;margin-top:.15
   box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
 }
 .formula .katex{font-size:1.44em;color:#F2F6FF;}
-.formula .gloss{font-family:var(--kr);color:var(--ink-dim);font-size:1rem;margin-top:.7rem;line-height:1.5;}
+.formula .gloss{font-family:var(--kr);color:var(--ink-dim);font-size:1.08rem;margin-top:.7rem;line-height:1.5;}
 .formula .gloss b{color:var(--accent);font-weight:600;}
 .inlinek .katex{color:#dfe7fb;}
 
@@ -119,7 +119,7 @@ ul.pts li .sub{display:block;color:var(--ink-dim);font-size:.92em;margin-top:.15
 .viz-wrap{background:linear-gradient(180deg,#080C16,#05070E);border:1px solid var(--line);border-radius:16px;
   padding:10px;position:relative;box-shadow:inset 0 0 60px rgba(0,0,0,.5);}
 canvas.viz{display:block;width:100%;border-radius:9px;}
-.viz-tag{position:absolute;top:16px;left:18px;font-family:var(--mono);font-size:.74rem;letter-spacing:.18em;
+.viz-tag{position:absolute;top:16px;left:18px;font-family:var(--mono);font-size:.84rem;letter-spacing:.18em;
   text-transform:uppercase;color:var(--ink-faint);pointer-events:none;}
 .zoomctl{position:absolute;top:10px;right:12px;display:flex;align-items:center;gap:3px;z-index:4;
   background:rgba(9,13,22,0.55);border:1px solid var(--line);border-radius:9px;padding:2px 3px;backdrop-filter:blur(5px);}
@@ -132,7 +132,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 .heromenu{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 auto 1.4rem;max-width:840px;}
 .heromenu .hgroup{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin:0 3px 0 10px;white-space:nowrap;}
 .heromenu .hgroup:first-child{margin-left:0;}
-.heromenu .hchip{font-family:var(--kr);font-size:.83rem;font-weight:500;color:var(--ink-dim);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:.36em .82em;cursor:pointer;transition:border-color .15s,color .15s,background .15s;line-height:1;}
+.heromenu .hchip{font-family:var(--kr);font-size:.92rem;font-weight:500;color:var(--ink-dim);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:.36em .82em;cursor:pointer;transition:border-color .15s,color .15s,background .15s;line-height:1;}
 .heromenu .hchip:hover{border-color:var(--accent,#7C6CF0);color:#fff;}
 .heromenu .hchip.on{background:var(--accent,#7C6CF0);color:#04121a;border-color:transparent;font-weight:600;}
 .heromenu .spdrange{-webkit-appearance:none;appearance:none;width:108px;height:4px;border-radius:3px;background:var(--line);outline:none;cursor:pointer;vertical-align:middle;margin:0 2px;}
@@ -140,7 +140,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 .heromenu .spdrange::-moz-range-thumb{width:13px;height:13px;border:2px solid #0b0f1a;border-radius:50%;background:var(--accent,#7C6CF0);cursor:pointer;}
 .heromenu .spdlab{font-family:var(--mono);font-size:.76rem;color:var(--ink-dim);min-width:40px;text-align:center;}
 
-.ctab{font-family:var(--mono);font-size:.8rem;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
+.ctab{font-family:var(--mono);font-size:.88rem;border:1px solid var(--line);border-radius:10px;overflow:hidden;}
 .ctab .ctr{display:grid;grid-template-columns:.55fr 1fr 1fr 1fr .75fr;}
 .ctab .ctr>span{padding:.3em .55em;text-align:right;border-top:1px solid var(--line);color:var(--ink-dim);}
 .ctab .ctr>span:first-child{text-align:center;color:var(--ink-faint);}
@@ -148,15 +148,15 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 .ctab .chd>span{border-top:none;color:var(--ink-faint);font-size:.66rem;letter-spacing:.03em;}
 .ctab .cA{color:var(--accent,#2DD4A7);font-weight:600;}
 .statgrid{display:flex;flex-direction:column;gap:8px;margin-top:.3rem;}
-.statline{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:.9rem;padding:.32em .72em;background:var(--panel);border:1px solid var(--line);border-radius:8px;color:var(--ink-dim);}
+.statline{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:.98rem;padding:.32em .72em;background:var(--panel);border:1px solid var(--line);border-radius:8px;color:var(--ink-dim);}
 .statline b{font-size:1.02rem;}
 .butterfly{border:1px solid var(--line);border-radius:10px;padding:6px 8px 2px;background:var(--panel);}
 .controls{display:flex;flex-direction:column;gap:14px;}
 .ctrl-row{display:flex;align-items:center;gap:12px;}
-.ctrl-row label{font-family:var(--mono);font-size:.8rem;letter-spacing:.08em;color:var(--ink-dim);
+.ctrl-row label{font-family:var(--mono);font-size:.9rem;letter-spacing:.08em;color:var(--ink-dim);
   min-width:74px;text-transform:uppercase;}
 .ctrl-row input[type=range]{flex:1;accent-color:var(--accent);height:4px;cursor:pointer;}
-.readout{font-family:var(--mono);font-size:.9rem;color:var(--accent);min-width:74px;text-align:right;}
+.readout{font-family:var(--mono);font-size:1rem;color:var(--accent);min-width:74px;text-align:right;}
 
 .btn{font-family:var(--kr);font-weight:600;font-size:.9rem;color:var(--ink);
   background:var(--panel-2);border:1px solid var(--line);border-radius:10px;
@@ -170,7 +170,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 .btn .dot{width:8px;height:8px;border-radius:50%;background:currentColor;}
 
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
-.chip{font-family:var(--mono);font-size:.82rem;color:var(--ink-dim);background:var(--panel-2);
+.chip{font-family:var(--mono);font-size:.92rem;color:var(--ink-dim);background:var(--panel-2);
   border:1px solid var(--line);border-radius:999px;padding:.4em .85em;cursor:pointer;transition:.16s;}
 .chip:hover{border-color:var(--accent);color:#fff;}
 .chip.on{background:var(--accent);color:#04121a;border-color:transparent;font-weight:600;}
@@ -178,7 +178,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 .hsliders{display:grid;grid-template-columns:repeat(4,1fr);gap:10px 16px;}
 .hsl{display:flex;flex-direction:column;align-items:center;gap:5px;}
 .hsl input[type=range]{writing-mode:vertical-lr;direction:rtl;width:6px;height:74px;cursor:pointer;}
-.hsl .lab{font-family:var(--mono);font-size:.72rem;color:var(--ink-dim);}
+.hsl .lab{font-family:var(--mono);font-size:.82rem;color:var(--ink-dim);}
 
 /* ---------- agenda ---------- */
 .agenda{display:flex;flex-direction:column;gap:2px;margin-top:1.2rem;}
@@ -187,7 +187,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 .ag-row .n{font-family:var(--mono);font-size:.86rem;color:var(--ink-faint);}
 .ag-row .d{width:11px;height:11px;border-radius:50%;box-shadow:0 0 12px currentColor;}
 .ag-row .t{font-weight:600;font-size:clamp(1.08rem,1.6vw,1.3rem);color:var(--ink);}
-.ag-row .m{font-family:var(--mono);font-size:.85rem;color:var(--ink-dim);}
+.ag-row .m{font-family:var(--mono);font-size:.92rem;color:var(--ink-dim);}
 
 /* ---------- chrome ---------- */
 #progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),#6C5CE7);
@@ -237,8 +237,8 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 .fade-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:1.4rem;}
 .fcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 16px 18px;}
 .fcard .ic{font-family:var(--mono);font-size:.76rem;letter-spacing:.14em;color:var(--accent);text-transform:uppercase;margin-bottom:.5rem;}
-.fcard h4{margin:.1rem 0 .4rem;font-size:1.14rem;font-weight:700;color:#fff;}
-.fcard p{margin:0;font-size:.96rem;line-height:1.5;color:var(--ink-dim);}
+.fcard h4{margin:.1rem 0 .4rem;font-size:1.22rem;font-weight:700;color:#fff;}
+.fcard p{margin:0;font-size:1.04rem;line-height:1.5;color:var(--ink-dim);}
 
 /* ---------- 3D sound object ---------- */
 .s3d-wrap{position:relative;background:
@@ -247,7 +247,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
     linear-gradient(180deg,#070B14,#04060C);
   border:1px solid var(--line);border-radius:16px;overflow:hidden;
   box-shadow:inset 0 0 80px rgba(0,0,0,.6);}
-#s3d-stage{position:relative;width:100%;height:clamp(340px,52vh,560px);touch-action:none;cursor:grab;}
+#s3d-stage{position:relative;width:100%;height:clamp(296px,46vh,500px);touch-action:none;cursor:grab;}
 #s3d-stage:active{cursor:grabbing;}
 #s3d-stage canvas{display:block;width:100%;height:100%;}
 .s3d-badge{position:absolute;top:14px;left:16px;font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;
@@ -265,7 +265,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 .s3d-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:12px 14px 4px;}
 .s3d-bar .grp{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin:0 2px 0 8px;}
 .s3d-bar .grp:first-child{margin-left:0;}
-.s3d-bar .hchip{font-family:var(--kr);font-size:.82rem;font-weight:500;color:var(--ink-dim);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:.34em .78em;cursor:pointer;transition:border-color .15s,color .15s,background .15s;line-height:1;}
+.s3d-bar .hchip{font-family:var(--kr);font-size:.9rem;font-weight:500;color:var(--ink-dim);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:.34em .78em;cursor:pointer;transition:border-color .15s,color .15s,background .15s;line-height:1;}
 .s3d-bar .hchip:hover{border-color:var(--accent,#FACC15);color:#fff;}
 .s3d-bar .hchip.on{background:var(--accent,#FACC15);color:#04121a;border-color:transparent;font-weight:600;}
 .s3d-bar .btn.play{padding:.5em .95em;font-size:.84rem;}
@@ -401,15 +401,15 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
   <section class="slide center" data-enter="hero" data-ch="여는 글" data-min="1" style="--accent:#7C6CF0"
     data-notes="환영 인사. 한 문장 약속: ‘오늘 끝나면 모든 소리를 사인파의 합으로 듣게 됩니다.’ 배경 파형은 실제로 사인파 3개를 더해 그린 것이라고 짧게 언급. 청중에게 음악 전공/이과를 손들어 확인하고 톤을 맞추세요.">
     <div class="inner center">
-      <div class="viz-wrap" style="width:min(760px,92vw);margin-bottom:0.9rem;border-radius:18px;">
+      <div class="viz-wrap" style="width:min(680px,88vw);margin-bottom:0.55rem;border-radius:18px;">
         <span class="viz-tag">live · 푸리에 기계 — 아래에서 골라보세요</span>
-        <canvas id="heroCanvas" class="viz" height="248"></canvas>
+        <canvas id="heroCanvas" class="viz" height="196"></canvas>
       </div>
       <div class="heromenu" id="heroMenu" style="justify-content:center"></div>
       <div class="eyebrow" style="justify-content:center">FOURIER ANALYSIS · FOR MUSIC</div>
       <h1 class="title-xl">수(數)로 듣는 소리</h1>
-      <p class="lead dim" style="margin-top:1.2rem;text-align:center">푸리에 해석 개괄 — 음악 속의 수학</p>
-      <div class="caption" style="margin-top:1.5rem;text-align:center;color:var(--ink-dim);letter-spacing:.04em">
+      <p class="lead dim" style="margin-top:0.7rem;text-align:center">푸리에 해석 개괄 — 음악 속의 수학</p>
+      <div class="caption" style="margin-top:0.85rem;text-align:center;color:var(--ink-dim);letter-spacing:.04em">
         고등과학원 <span style="color:var(--accent);font-weight:600">김상현</span>
       </div>
     </div>
@@ -434,7 +434,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
         </div>
         <div class="viz-wrap" style="margin-top:14px">
           <span class="viz-tag">waveform</span>
-          <canvas id="hookWave" class="viz" height="150"></canvas>
+          <canvas id="hookWave" class="viz" height="134"></canvas>
         </div>
         <div class="caption" style="margin-top:8px;text-align:center">파형은 다르다 — 그러나 주기(=음높이)는 같다</div>
       </div>
@@ -486,7 +486,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
       </div>
       <div class="viz-wrap">
         <span class="viz-tag">air pressure · p(t)</span>
-        <canvas id="pressureWave" class="viz" height="280"></canvas>
+        <canvas id="pressureWave" class="viz" height="248"></canvas>
       </div>
     </div>
   </section>
@@ -510,7 +510,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
       </div>
       <div class="viz-wrap">
         <span class="viz-tag">y(t) = A sin(2πft)</span>
-        <canvas id="pt-wave" class="viz" height="280"></canvas>
+        <canvas id="pt-wave" class="viz" height="248"></canvas>
       </div>
     </div>
   </section>
@@ -547,7 +547,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
       </div>
       <div class="viz-wrap">
         <span class="viz-tag">interval</span>
-        <canvas id="oct-wave" class="viz" height="280"></canvas>
+        <canvas id="oct-wave" class="viz" height="248"></canvas>
       </div>
     </div>
   </section>
@@ -571,7 +571,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
     <div class="inner split rev">
       <div class="viz-wrap">
         <span class="viz-tag">440 + 660 Hz</span>
-        <canvas id="add-wave" class="viz" height="280"></canvas>
+        <canvas id="add-wave" class="viz" height="248"></canvas>
       </div>
       <div class="stack">
         <div class="eyebrow">두 파동을 합치면</div>
@@ -603,7 +603,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
           <p class="caption" style="margin-top:.2rem">평균 <span class="readout" id="beat-avg" style="min-width:auto">440 Hz</span> &nbsp;·&nbsp; 맥놀이 <span class="readout" id="beat-rate" style="min-width:auto;color:#FACC15">4.0 Hz</span></p>
         </div>
         <div class="stack" style="gap:12px">
-          <div class="viz-wrap"><span class="viz-tag">빠른 반송파가 느린 포락선 안에서 숨쉰다</span><canvas id="beat-wave" class="viz" height="236"></canvas></div>
+          <div class="viz-wrap"><span class="viz-tag">빠른 반송파가 느린 포락선 안에서 숨쉰다</span><canvas id="beat-wave" class="viz" height="210"></canvas></div>
           <div class="formula inlinek" style="margin:0;padding:.85rem 1.15rem;border-left-color:#FACC15">
             $$ \sin 2\pi f_1 t+\sin 2\pi f_2 t \;=\; 2\,\cos\!\big(2\pi\tfrac{f_1-f_2}{2}\,t\big)\,\sin\!\big(2\pi\tfrac{f_1+f_2}{2}\,t\big) $$
             <div class="gloss"><b style="color:#FACC15">느린 포락선</b> = 차이의 절반 진동수 · <b style="color:#22D3EE">빠른 반송파</b> = 평균 진동수 · 들리는 크기는 |포락선|이라 <b>맥놀이 = 초당 |f₁−f₂|번</b></div>
@@ -652,8 +652,8 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
           </div>
         </div>
         <div class="stack" style="gap:10px">
-          <div class="viz-wrap"><span class="viz-tag">waveform</span><canvas id="hb-wave" class="viz" height="150"></canvas></div>
-          <div class="viz-wrap"><span class="viz-tag">spectrum · 색 = 진동수</span><canvas id="hb-spec" class="viz" height="118"></canvas></div>
+          <div class="viz-wrap"><span class="viz-tag">waveform</span><canvas id="hb-wave" class="viz" height="134"></canvas></div>
+          <div class="viz-wrap"><span class="viz-tag">spectrum · 색 = 진동수</span><canvas id="hb-spec" class="viz" height="106"></canvas></div>
         </div>
       </div>
     </div>
@@ -665,7 +665,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
     <div class="inner split rev">
       <div class="viz-wrap">
         <span class="viz-tag" id="sq-tag">N = 1 harmonic</span>
-        <canvas id="sq-wave" class="viz" height="280"></canvas>
+        <canvas id="sq-wave" class="viz" height="248"></canvas>
       </div>
       <div class="stack">
         <div class="eyebrow">사인으로 각을 만들다</div>
@@ -691,7 +691,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
         <button class="btn" data-wf="triangle">삼각파</button>
       </div>
       <div class="split" style="align-items:center;max-width:920px">
-        <div class="viz-wrap"><span class="viz-tag" id="wf-tag">sine</span><canvas id="wf-wave" class="viz" height="200"></canvas></div>
+        <div class="viz-wrap"><span class="viz-tag" id="wf-tag">sine</span><canvas id="wf-wave" class="viz" height="178"></canvas></div>
         <div class="stack">
           <div class="formula inlinek" id="wf-formula" style="margin-top:0"></div>
           <p class="caption" id="wf-desc">— 파형을 선택하면 배음 레시피가 나타납니다</p>
@@ -729,7 +729,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
             <button class="btn" data-inst="brass">▶ 금관풍</button>
           </div>
         </div>
-        <div class="viz-wrap"><span class="viz-tag" id="inst-tag">flute · spectrum</span><canvas id="inst-spec" class="viz" height="240"></canvas></div>
+        <div class="viz-wrap"><span class="viz-tag" id="inst-tag">flute · spectrum</span><canvas id="inst-spec" class="viz" height="214"></canvas></div>
       </div>
     </div>
   </section>
@@ -815,8 +815,8 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
           <div class="caption" id="corr-msg" style="margin-top:.2rem">신호 = 기음 + 2·3배음. 시험 진동수를 움직여 보라.</div>
         </div>
         <div class="stack" style="gap:9px">
-          <div class="viz-wrap"><span class="viz-tag">signal × test → product (넓이가 검출값)</span><canvas id="corr-top" class="viz" height="150"></canvas></div>
-          <div class="viz-wrap"><span class="viz-tag">detection vs test frequency · 배음에서만 솟음</span><canvas id="corr-plot" class="viz" height="120"></canvas></div>
+          <div class="viz-wrap"><span class="viz-tag">signal × test → product (넓이가 검출값)</span><canvas id="corr-top" class="viz" height="134"></canvas></div>
+          <div class="viz-wrap"><span class="viz-tag">detection vs test frequency · 배음에서만 솟음</span><canvas id="corr-plot" class="viz" height="108"></canvas></div>
         </div>
       </div>
     </div>
@@ -877,9 +877,9 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
           <div id="cf-table"></div>
         </div>
         <div class="stack" style="gap:12px">
-          <div class="viz-wrap"><span class="viz-tag">회전 기계 · 원 N개 = 앞 N개 배음의 합</span><canvas id="cf-epi" class="viz" height="240"></canvas></div>
+          <div class="viz-wrap"><span class="viz-tag">회전 기계 · 원 N개 = 앞 N개 배음의 합</span><canvas id="cf-epi" class="viz" height="214"></canvas></div>
           <div class="ctrl-row"><label>배음 수 N</label><input id="cf-n" type="range" min="1" max="24" value="4" step="1"><span class="readout" id="cf-nout">4 배음</span></div>
-          <div class="viz-wrap"><span class="viz-tag">|Aₙ| 스펙트럼</span><canvas id="cf-spec" class="viz" height="150"></canvas></div>
+          <div class="viz-wrap"><span class="viz-tag">|Aₙ| 스펙트럼</span><canvas id="cf-spec" class="viz" height="134"></canvas></div>
         </div>
       </div>
     </div>
@@ -889,7 +889,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
   <section class="slide" data-ch="05 푸리에 변환" data-min="1.5" style="--accent:#FACC15"
     data-notes="개념 다리. 주기 T를 무한히 늘리면 배음 간격(1/T)이 0으로 좁아지고, 막대들이 빽빽해져 연속 곡선이 된다. 합(Σ)이 적분(∫)으로 바뀌는 자연스러운 흐름. 그림 위주로 직관 전달.">
     <div class="inner split rev">
-      <div class="viz-wrap"><span class="viz-tag">discrete → continuous spectrum</span><canvas id="s2t" class="viz" height="260"></canvas></div>
+      <div class="viz-wrap"><span class="viz-tag">discrete → continuous spectrum</span><canvas id="s2t" class="viz" height="230"></canvas></div>
       <div class="stack">
         <div class="eyebrow">급수에서 변환으로</div>
         <h2 class="title-lg">주기를 무한히 늘리면<br>무슨 일이 생길까?</h2>
@@ -920,7 +920,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
     <div class="inner stack">
       <div class="eyebrow">실시간 스펙트럼 · FFT</div>
       <h2 class="h-sec">소리를 진동수 막대로 펼쳐 보다</h2>
-      <div class="viz-wrap" style="margin-top:.4rem"><span class="viz-tag">live spectrum · 색 = 진동수</span><canvas id="sa-canvas" class="viz" height="300"></canvas></div>
+      <div class="viz-wrap" style="margin-top:.4rem"><span class="viz-tag">live spectrum · 색 = 진동수</span><canvas id="sa-canvas" class="viz" height="266"></canvas></div>
       <div class="btn-row" style="margin-top:14px">
         <button class="btn play" data-sa="sweep">▶ 진동수 스윕</button>
         <button class="btn" data-sa="chord">▶ 도·미·솔 화음</button>
@@ -935,7 +935,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
     <div class="inner stack">
       <div class="eyebrow">시간 × 진동수 · 음악학의 현미경</div>
       <h2 class="h-sec">스펙트로그램 — 진동수의 악보</h2>
-      <div class="viz-wrap" style="margin-top:.4rem"><span class="viz-tag">spectrogram · ↑freq · →time</span><canvas id="sg-canvas" class="viz" height="300"></canvas></div>
+      <div class="viz-wrap" style="margin-top:.4rem"><span class="viz-tag">spectrogram · ↑freq · →time</span><canvas id="sg-canvas" class="viz" height="266"></canvas></div>
       <div class="btn-row" style="margin-top:14px">
         <button class="btn play" data-sg="melody">▶ 멜로디</button>
         <button class="btn" data-sg="chirp">▶ 상승음(글리산도)</button>
@@ -1016,7 +1016,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
           </div>
         </div>
         <div class="stack" style="gap:12px">
-          <div class="viz-wrap"><span class="viz-tag">연산량: 나이브 vs FFT (세로 로그축)</span><canvas id="dff-chart" class="viz" height="240"></canvas></div>
+          <div class="viz-wrap"><span class="viz-tag">연산량: 나이브 vs FFT (세로 로그축)</span><canvas id="dff-chart" class="viz" height="214"></canvas></div>
           <div class="butterfly">
             <svg viewBox="0 0 340 100" width="100%" height="76" preserveAspectRatio="xMidYMid meet">
               <line x1="24" y1="26" x2="160" y2="26" stroke="#7C6CF0" stroke-width="2"/>
@@ -1085,8 +1085,8 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
           <div class="ctrl-row" style="margin-top:.3rem"><label>규모 a</label><input id="wv-a" type="range" min="40" max="200" value="90" step="1"><span class="readout" id="wv-aout">a = 0.90</span></div>
         </div>
         <div class="stack" style="gap:12px">
-          <div class="viz-wrap"><span class="viz-tag">Morlet 웨이블릿 · ψ((t−b)/a)</span><canvas id="wv-morlet" class="viz" height="150"></canvas></div>
-          <div class="viz-wrap"><span class="viz-tag">시간–진동수 타일링 (↑진동수, 시간→)</span><canvas id="wv-tiling" class="viz" height="180"></canvas></div>
+          <div class="viz-wrap"><span class="viz-tag">Morlet 웨이블릿 · ψ((t−b)/a)</span><canvas id="wv-morlet" class="viz" height="134"></canvas></div>
+          <div class="viz-wrap"><span class="viz-tag">시간–진동수 타일링 (↑진동수, 시간→)</span><canvas id="wv-tiling" class="viz" height="162"></canvas></div>
         </div>
       </div>
     </div>
@@ -1105,7 +1105,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
           <li><b>공통점</b><span class="sub">결국 ‘스펙트럼을 설계’하는 일</span></li>
         </ul>
       </div>
-      <div class="viz-wrap" style="align-self:center"><span class="viz-tag">design the spectrum</span><canvas id="synthSpec" class="viz" height="220"></canvas></div>
+      <div class="viz-wrap" style="align-self:center"><span class="viz-tag">design the spectrum</span><canvas id="synthSpec" class="viz" height="196"></canvas></div>
     </div>
   </section>
 
@@ -1113,7 +1113,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
   <section class="slide" data-ch="06 음악 속 푸리에" data-min="1.5" style="--accent:#FB7185"
     data-notes="압축. MP3·AAC는 신호를 진동수 성분으로 분해한 뒤, 사람이 못 듣는 성분(마스킹된 약한 진동수 등)을 버려 용량을 줄인다. 심리음향 + 푸리에. ‘무손실이 아니라 똑똑한 버리기’.">
     <div class="inner split rev">
-      <div class="viz-wrap" style="align-self:center"><span class="viz-tag">keep audible · drop the rest</span><canvas id="mp3Spec" class="viz" height="220"></canvas></div>
+      <div class="viz-wrap" style="align-self:center"><span class="viz-tag">keep audible · drop the rest</span><canvas id="mp3Spec" class="viz" height="196"></canvas></div>
       <div class="stack">
         <div class="eyebrow">100배 작게</div>
         <h2 class="title-lg">MP3 · AAC 압축</h2>
@@ -1174,7 +1174,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
           <div class="ctrl-row"><label>진동수 f</label><input id="coch-f" type="range" min="40" max="8000" value="440" step="1"><span class="readout" id="coch-fr">440 Hz</span></div>
           <p class="caption">빛나는 융모 = 지금 발화하는 세포. 각 세포는 <b>특정 진동수에만</b> 반응 → 하드웨어 푸리에 변환.</p>
         </div>
-        <div class="viz-wrap"><span class="viz-tag">달팽이관을 펼친 그림 · 진행파와 융모</span><canvas id="coch-a" class="viz" height="300"></canvas></div>
+        <div class="viz-wrap"><span class="viz-tag">달팽이관을 펼친 그림 · 진행파와 융모</span><canvas id="coch-a" class="viz" height="266"></canvas></div>
       </div>
     </div>
   </section>
@@ -1185,7 +1185,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
     <div class="inner">
       <div class="eyebrow">스펙트럼 = 신경 신호 · 자리 부호</div>
       <div class="split rev" style="grid-template-columns:1.18fr 0.82fr;align-items:center">
-        <div class="viz-wrap"><span class="viz-tag">여러 배음 = 기저막의 여러 봉우리</span><canvas id="coch-b" class="viz" height="300"></canvas></div>
+        <div class="viz-wrap"><span class="viz-tag">여러 배음 = 기저막의 여러 봉우리</span><canvas id="coch-b" class="viz" height="266"></canvas></div>
         <div class="stack">
           <h2 class="title-lg" style="margin-bottom:.5rem">우리가 계산한 스펙트럼은<br>귀 속에도 <span class="hl">있을까</span>?</h2>
           <div class="heromenu" id="cochb-menu" style="margin:.1rem 0 .4rem">
@@ -1236,8 +1236,8 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
           <div class="btn-row" style="margin-top:16px"><button id="sb-play" class="btn play">▶ 재생</button><button id="sb-rand" class="btn">🎲 무작위</button></div>
         </div>
         <div class="stack" style="gap:10px">
-          <div class="viz-wrap"><span class="viz-tag">waveform</span><canvas id="sb-wave" class="viz" height="120"></canvas></div>
-          <div class="viz-wrap"><span class="viz-tag">spectrum</span><canvas id="sb-spec" class="viz" height="92"></canvas></div>
+          <div class="viz-wrap"><span class="viz-tag">waveform</span><canvas id="sb-wave" class="viz" height="108"></canvas></div>
+          <div class="viz-wrap"><span class="viz-tag">spectrum</span><canvas id="sb-spec" class="viz" height="88"></canvas></div>
           <div class="panel" style="padding:12px 14px">
             <div class="caption" style="color:var(--accent);margin-bottom:6px">더 깊이 들어가려면</div>
             <p class="body" style="font-size:.86rem;line-height:1.5">DFT·FFT 알고리즘 · 윈도우 함수 · 웨이블릿(시간–진동수 동시 분석) · 음악 정보 검색(MIR)</p>
@@ -1253,7 +1253,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
     <div class="inner center">
       <div class="viz-wrap" style="width:min(520px,86vw);margin-bottom:2rem;border-radius:18px;">
         <span class="viz-tag">live</span>
-        <canvas id="endCanvas" class="viz" height="160"></canvas>
+        <canvas id="endCanvas" class="viz" height="150"></canvas>
       </div>
       <div class="eyebrow" style="justify-content:center">THANK YOU</div>
       <h2 class="title-lg" style="text-align:center">그래서, 같은 음이란<br>무엇일까?</h2>
@@ -1497,7 +1497,7 @@ function fitSlide(sec){
   const ch=inner.scrollHeight, cw=inner.scrollWidth;
   if(ch<2||cw<2||availH<2) return;
   let k=Math.min(availH/ch, availW/cw, 1);
-  if(k<0.999){ k=Math.max(0.6, k*0.985); inner.style.transform='scale('+k.toFixed(4)+')'; }
+  if(k<0.97){ k=Math.max(0.7, k*0.99); inner.style.transform='scale('+k.toFixed(4)+')'; }
 }
 function fitCurrent(){ try{ fitSlide(slides[cur]); }catch(e){} }
 function show(i){
@@ -1517,7 +1517,7 @@ function show(i){
   // enter
   const ekey=slides[cur].getAttribute('data-enter');
   if(ekey && ENTERS[ekey]){ const stop=ENTERS[ekey](); if(stop) activeStops.push(stop); }
-  requestAnimationFrame(fitCurrent);
+  requestAnimationFrame(fitCurrent); setTimeout(fitCurrent,240);
 }
 function next(){ if(cur<total-1) show(cur+1); }
 function prev(){ if(cur>0) show(cur-1); }
@@ -2938,7 +2938,7 @@ function boot(){
 
 boot();
 // fonts/late layout may shift canvas metrics — re-fit once without re-rendering math
-window.addEventListener('load',()=>{ try{ if(window.top===window.self) window.resizeTo(1600,900); }catch(e){} fitAll(); runDrawInit(); if(cur===0) show(0); fitCurrent(); if(document.fonts&&document.fonts.ready){ document.fonts.ready.then(()=>{ try{ fitAll(); fitCurrent(); }catch(e){} }); } });
+window.addEventListener('load',()=>{ try{ if(window.top===window.self) window.resizeTo(1600,900); }catch(e){} fitAll(); runDrawInit(); if(cur===0) show(0); fitCurrent(); if(document.fonts&&document.fonts.ready){ document.fonts.ready.then(()=>{ try{ fitAll(); runDrawInit(); fitCurrent(); }catch(e){} }); } });
 
 })();
 
