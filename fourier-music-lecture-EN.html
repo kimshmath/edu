@@ -3,6 +3,23 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- 16:9 stage fit : computed before first paint (no FOUC). 1600x900 reference. -->
+<script>
+(function(){
+  var W=1600, H=900;
+  function fit(){
+    var s=Math.min(window.innerWidth/W, window.innerHeight/H);
+    if(!(s>0)) s=1;
+    window.__fitScale=s;
+    document.documentElement.style.setProperty('--fit', s.toFixed(5));
+  }
+  fit();
+  window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', fit);
+  document.addEventListener('fullscreenchange', fit);
+})();
+</script>
 <title>Fourier Analysis · Sound, Heard as Number</title>
 
 <!-- Fonts -->
@@ -58,7 +75,7 @@ body{
 .slide{
   position:absolute;inset:0;
   display:flex;align-items:center;justify-content:center;
-  padding:6vh 7vw 9vh;
+  padding:calc(6*var(--vh)) calc(7*var(--vw)) calc(9*var(--vh));
   opacity:0;visibility:hidden;
   transform:translateY(14px) scale(0.992);
   transition:opacity .5s ease, transform .5s ease, visibility .5s;
@@ -75,23 +92,23 @@ body{
   color:var(--accent);display:flex;align-items:center;gap:.7em;margin-bottom:1.5rem;font-weight:500;
 }
 .eyebrow::before{content:"";width:26px;height:2px;background:var(--accent);box-shadow:0 0 12px var(--accent);}
-.title-xl{font-family:var(--display);font-weight:700;font-size:clamp(2.6rem,6.4vw,5rem);line-height:1.02;letter-spacing:-.02em;margin:0;}
-.title-lg{font-family:var(--kr);font-weight:800;font-size:clamp(1.9rem,4.4vw,3.2rem);line-height:1.08;letter-spacing:-.02em;margin:0 0 1.1rem;}
-.h-sec{font-family:var(--kr);font-weight:800;font-size:clamp(1.5rem,3.2vw,2.3rem);line-height:1.12;letter-spacing:-.015em;margin:0 0 .9rem;}
-.lead{font-size:clamp(1.16rem,1.85vw,1.5rem);line-height:1.6;color:var(--ink);max-width:46ch;font-weight:400;}
+.title-xl{font-family:var(--display);font-weight:700;font-size:clamp(2.6rem,calc(6.4*var(--vw)),5rem);line-height:1.02;letter-spacing:-.02em;margin:0;}
+.title-lg{font-family:var(--kr);font-weight:800;font-size:clamp(1.9rem,calc(4.4*var(--vw)),3.2rem);line-height:1.08;letter-spacing:-.02em;margin:0 0 1.1rem;}
+.h-sec{font-family:var(--kr);font-weight:800;font-size:clamp(1.5rem,calc(3.2*var(--vw)),2.3rem);line-height:1.12;letter-spacing:-.015em;margin:0 0 .9rem;}
+.lead{font-size:clamp(1.16rem,calc(1.85*var(--vw)),1.5rem);line-height:1.6;color:var(--ink);max-width:46ch;font-weight:400;}
 .dim{color:var(--ink-dim);}
-.body{font-size:clamp(1.1rem,1.55vw,1.3rem);line-height:1.62;color:var(--ink-dim);max-width:52ch;}
+.body{font-size:clamp(1.1rem,calc(1.55*var(--vw)),1.3rem);line-height:1.62;color:var(--ink-dim);max-width:52ch;}
 .caption{font-family:var(--mono);font-size:1rem;color:var(--ink-faint);letter-spacing:.02em;}
 .hl{color:var(--accent);font-weight:600;}
 .hl-ink{color:var(--ink);font-weight:600;}
 
 ul.pts{list-style:none;padding:0;margin:1.4rem 0 0;display:flex;flex-direction:column;gap:.95rem;max-width:54ch;}
-ul.pts li{position:relative;padding-left:1.7em;font-size:clamp(1.1rem,1.55vw,1.26rem);line-height:1.5;color:var(--ink);}
+ul.pts li{position:relative;padding-left:1.7em;font-size:clamp(1.1rem,calc(1.55*var(--vw)),1.26rem);line-height:1.5;color:var(--ink);}
 ul.pts li::before{content:"";position:absolute;left:0;top:.62em;width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);}
 ul.pts li b{color:#fff;font-weight:700;}
 ul.pts li .sub{display:block;color:var(--ink-dim);font-size:.92em;margin-top:.15em;}
 
-.big-num{font-family:var(--display);font-weight:700;font-size:clamp(5rem,16vw,12rem);line-height:.8;
+.big-num{font-family:var(--display);font-weight:700;font-size:clamp(5rem,calc(16*var(--vw)),12rem);line-height:.8;
   background:linear-gradient(160deg,var(--accent),transparent 130%);
   -webkit-background-clip:text;background-clip:text;color:transparent;
   opacity:.95;letter-spacing:-.03em;}
@@ -109,7 +126,7 @@ ul.pts li .sub{display:block;color:var(--ink-dim);font-size:.92em;margin-top:.15
 .inlinek .katex{color:#dfe7fb;}
 
 /* ---------- layout helpers ---------- */
-.split{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(24px,4vw,56px);align-items:center;}
+.split{display:grid;grid-template-columns:1.05fr 1fr;gap:clamp(24px,calc(4*var(--vw)),56px);align-items:center;}
 .split.rev{grid-template-columns:1fr 1.05fr;}
 .stack{display:flex;flex-direction:column;}
 .center{text-align:center;align-items:center;justify-content:center;display:flex;flex-direction:column;}
@@ -186,7 +203,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
   padding:.85rem .4rem;border-bottom:1px solid var(--line-soft);}
 .ag-row .n{font-family:var(--mono);font-size:.86rem;color:var(--ink-faint);}
 .ag-row .d{width:11px;height:11px;border-radius:50%;box-shadow:0 0 12px currentColor;}
-.ag-row .t{font-weight:600;font-size:clamp(1.08rem,1.6vw,1.3rem);color:var(--ink);}
+.ag-row .t{font-weight:600;font-size:clamp(1.08rem,calc(1.6*var(--vw)),1.3rem);color:var(--ink);}
 .ag-row .m{font-family:var(--mono);font-size:.92rem;color:var(--ink-dim);}
 
 /* ---------- chrome ---------- */
@@ -209,7 +226,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 #notes{position:fixed;left:0;right:0;bottom:0;z-index:45;transform:translateY(100%);
   transition:transform .35s cubic-bezier(.4,0,.2,1);
   background:linear-gradient(180deg,rgba(8,11,20,.86),rgba(8,11,20,.98));
-  border-top:1px solid var(--line);backdrop-filter:blur(14px);padding:18px 26px 22px;max-height:46vh;overflow:auto;}
+  border-top:1px solid var(--line);backdrop-filter:blur(14px);padding:18px 26px 22px;max-height:calc(46*var(--vh));overflow:auto;}
 #notes.show{transform:none;}
 #notes .nt-head{display:flex;align-items:center;gap:14px;margin-bottom:.7rem;}
 #notes .nt-head .ch{font-family:var(--mono);font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);}
@@ -247,7 +264,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
     linear-gradient(180deg,#070B14,#04060C);
   border:1px solid var(--line);border-radius:16px;overflow:hidden;
   box-shadow:inset 0 0 80px rgba(0,0,0,.6);}
-#s3d-stage{position:relative;width:100%;height:clamp(296px,46vh,500px);touch-action:none;cursor:grab;}
+#s3d-stage{position:relative;width:100%;height:clamp(296px,calc(46*var(--vh)),500px);touch-action:none;cursor:grab;}
 #s3d-stage:active{cursor:grabbing;}
 #s3d-stage canvas{display:block;width:100%;height:100%;}
 .s3d-badge{position:absolute;top:14px;left:16px;font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;
@@ -382,9 +399,30 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 
 /* ---- fit slide content to the viewport (optimized for 1600x900) ---- */
 #deck .inner{transform-origin:center center;}
+
+/* ============================ 16:9 PRESENTATION STAGE ============================
+   The deck is laid out on a fixed 1600x900 canvas (#stage) and uniformly scaled
+   to fit the real viewport, centered + letterboxed when aspect ratios differ.
+   => identical, full-bleed rendering on 1920x1080 and 1600x900 projectors, and a
+   faithful 16:9 rehearsal preview on the MacBook panel. Below 861px the stage
+   dissolves (display:contents) and the original mobile flow layout takes over. */
+:root{ --fit:1; --vw:1vw; --vh:1vh; }
+@media (min-width:861px){
+  :root{ --vw:16px; --vh:9px; } /* 1vw / 1vh of the 1600x900 reference stage */
+  #stage{
+    position:fixed; left:50%; top:50%;
+    width:1600px; height:900px;
+    transform:translate(-50%,-50%) scale(var(--fit));
+    transform-origin:center center;
+  }
+}
+@media (max-width:860px){
+  #stage{ display:contents; }
+}
 </style>
 </head>
 <body>
+<div id="stage">
 
 <div id="progress"></div>
 
@@ -1324,8 +1362,8 @@ function specColor(u,al){const c=specRGB(u);return `rgba(${c[0]},${c[1]},${c[2]}
 const REDUCED = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
 function fit(cv,raw){
   if(!cv) return;
-  const dpr = raw?1:Math.min(window.devicePixelRatio||1,2);
-  const cssH = parseInt(cv.getAttribute('height'))||150;
+  const dpr = raw?1:Math.min((window.devicePixelRatio||1)*Math.max(1,window.__fitScale||1),2.5);
+  const cssH = cv._cssH || (cv._cssH = parseInt(cv.getAttribute('height'))||150);  /* cache design height: cv.height writes back to the attribute, so re-reading it inflates the canvas on every resize */
   cv.style.height = cssH+'px';
   const cssW = cv.clientWidth || (cv.parentElement?cv.parentElement.clientWidth:600) || 600;
   cv.width = Math.max(1,Math.round(cssW*dpr));
@@ -1490,7 +1528,7 @@ function fitSlide(sec){
   if(!sec) return;
   const inner=sec.querySelector('.inner'); if(!inner) return;
   inner.style.transform='';
-  if(window.innerWidth<=820) return;              /* small screens keep natural scroll */
+  if(window.innerWidth<=860) return;              /* small screens keep natural scroll */
   const cs=getComputedStyle(sec);
   const availH=sec.clientHeight - parseFloat(cs.paddingTop||0) - parseFloat(cs.paddingBottom||0);
   const availW=sec.clientWidth  - parseFloat(cs.paddingLeft||0) - parseFloat(cs.paddingRight||0);
@@ -2559,7 +2597,7 @@ ENTERS.spectrogram=()=>{ sgClear(); return ()=>{}; };
   /* =================== BUILD / RENDERER =================== */
   function build(){
     renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'high-performance'});
-    renderer.setClearColor(0x000000,0); renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+    renderer.setClearColor(0x000000,0); renderer.setPixelRatio(Math.min((window.devicePixelRatio||1)*Math.max(1,window.__fitScale||1),2.5));
     stage.appendChild(renderer.domElement);
     scene=new THREE.Scene();
     camera=new THREE.PerspectiveCamera(42,1,0.1,120);
@@ -2571,8 +2609,9 @@ ENTERS.spectrogram=()=>{ sgClear(); return ()=>{}; };
     built=true;
   }
 
-  function resize(){ if(!renderer) return; const w=stage.clientWidth||600, h=stage.clientHeight||420; if(w<2||h<2) return; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
+  function resize(){ if(!renderer) return; renderer.setPixelRatio(Math.min((window.devicePixelRatio||1)*Math.max(1,window.__fitScale||1),2.5)); const w=stage.clientWidth||600, h=stage.clientHeight||420; if(w<2||h<2) return; renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix(); }
   if(window.ResizeObserver){ new ResizeObserver(()=>resize()).observe(stage); }
+  window.addEventListener('resize',()=>{ setTimeout(resize,220); });
 
   /* =================== ORBIT CONTROLS (drag / wheel / pinch / pan) =================== */
   function bindControls(){
@@ -2943,5 +2982,6 @@ window.addEventListener('load',()=>{ try{ if(window.top===window.self) window.re
 })();
 
 </script>
+</div><!-- /stage -->
 </body>
 </html>
