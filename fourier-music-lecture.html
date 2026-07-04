@@ -474,6 +474,16 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 /* ---- additive-synth sliders: per-harmonic frequency read-out under each number ---- */
 .hsl .lab{display:flex;flex-direction:column;align-items:center;gap:2px;line-height:1;}
 .hsl .hfq{font-size:.62rem;color:var(--ink-dim);opacity:.7;letter-spacing:0;}
+
+/* ---- transport seek-bar ---- */
+.seekbar{display:flex;align-items:center;gap:10px;margin-top:8px;font:600 .82rem/1 "JetBrains Mono",monospace;color:var(--ink-dim);opacity:.9;}
+.seekbar .sk-time{min-width:34px;text-align:center;font-variant-numeric:tabular-nums;}
+.seekbar .sk-track{position:relative;flex:1;height:16px;display:flex;align-items:center;cursor:pointer;}
+.seekbar .sk-rail{position:absolute;left:0;right:0;height:4px;border-radius:3px;background:rgba(255,255,255,.14);}
+.seekbar .sk-fill{position:absolute;left:0;height:4px;border-radius:3px;background:var(--accent);width:0;}
+.seekbar .sk-knob{position:absolute;top:50%;width:12px;height:12px;border-radius:50%;background:var(--accent);
+  transform:translate(-50%,-50%);left:0;box-shadow:0 0 8px 1px var(--accent);transition:transform .1s;}
+.seekbar.drag .sk-knob,.seekbar .sk-track:hover .sk-knob{transform:translate(-50%,-50%) scale(1.25);}
 </style>
 </head>
 <body>
@@ -1030,6 +1040,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
       <h2 class="h-sec">스펙트로그램 — 진동수의 악보</h2>
       <div class="viz-wrap" style="margin-top:.4rem"><span class="viz-tag">spectrogram · ↑freq · →time</span><canvas id="sg-canvas" class="viz" height="266"></canvas></div>
       <div class="viz-wrap" style="margin-top:8px;padding:8px 10px"><span class="viz-tag">score · 지금 연주되는 음</span><canvas id="sg-score" class="viz" height="128"></canvas></div>
+      <div class="seekbar" id="sg-seek"><span class="sk-time sk-cur">0:00</span><div class="sk-track"><div class="sk-rail"></div><div class="sk-fill"></div><div class="sk-knob"></div></div><span class="sk-time sk-tot">0:00</span></div>
       <div class="btn-row" style="margin-top:14px">
         <button class="btn" data-sg="chirp">▶ 상승음(글리산도)</button>
         <button class="btn" data-sg="harm">▶ 배음 층 보기</button>
@@ -1087,6 +1098,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
           <button class="hchip" id="s3d-spin">자동 회전 · 켜기</button>
           <button class="hchip" id="s3d-reset">시점 초기화</button>
         </div>
+        <div class="seekbar" id="s3d-seek" style="display:none;padding:0 14px 6px"><span class="sk-time sk-cur">0:00</span><div class="sk-track"><div class="sk-rail"></div><div class="sk-fill"></div><div class="sk-knob"></div></div><span class="sk-time sk-tot">0:00</span></div>
       </div>
       <div class="caption" style="margin-top:8px">정면에서 보면 파형만, 위에서 보면 스펙트로그램만 — <span class="hl">관점을 바꾸는 것</span>이 곧 시간·주파수 사이의 변환입니다. <span class="hl">‘그림’ 소리</span>를 위에서 보면, 바닥에 그 윤곽이 흐릅니다.</div>
     </div>
@@ -1212,6 +1224,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
         </div>
       </div>
       <div class="viz-wrap" style="margin-top:10px;padding:8px 10px"><span class="viz-tag">score · 지금 연주되는 음</span><canvas id="pc-score" class="viz" height="128"></canvas></div>
+      <div class="seekbar" id="pc-seek"><span class="sk-time sk-cur">0:00</span><div class="sk-track"><div class="sk-rail"></div><div class="sk-fill"></div><div class="sk-knob"></div></div><span class="sk-time sk-tot">0:00</span></div>
     </div>
   </section>
 
@@ -2339,14 +2352,21 @@ const SCORE=(function(){
         g.restore();
       }
     }
+    let onTick=null, ended=null;
     function frame(){ if(!playing){ raf=0; return; }
       const now=ac().currentTime-t0;
-      if(now>dur+0.8){ playing=false; raf=0; base(0); return; }
+      if(onTick) onTick(now);
+      if(now>dur+0.8){ playing=false; raf=0; started=true; base(dur); if(ended) ended(); return; }
       base(now); raf=requestAnimationFrame(frame); }
     return {
       start:function(t){ t0=t; playing=true; started=true; if(!raf) frame(); },
       stop:function(){ playing=false; if(raf){ cancelAnimationFrame(raf); raf=0; } base(0); },
-      idle:function(){ playing=false; started=false; base(0); }
+      idle:function(){ playing=false; started=false; base(0); },
+      seek:function(t){ t0=t; if(playing && !raf) frame(); },      /* re-anchor timeline to new start */
+      showAt:function(sec){ started=true; base(sec); },            /* paint a static frame at sec (scrubbing while paused) */
+      dur:function(){ return dur; },
+      onTick:function(fn){ onTick=fn; },
+      onEnd:function(fn){ ended=fn; }
     };
   }
   return {make:make};
@@ -2356,6 +2376,57 @@ const TOCCATA_EVS=(function(){ const a=[]; let t=0;
 const TOCCATA_DUR=(function(){ let t=0; for(const nd of TOCCATA_SEQ) t+=nd[1]; return t; })();
 const SGSC=SCORE.make('sg-score', TOCCATA_EVS, TOCCATA_DUR, null);
 
+/* ---- spectrogram melody: seekable transport ---- */
+let SG_OS=[], SG_AN=null, SG_SEEKBAR=null, SG_PROG=0;
+function sgMelodyStop(){ SG_OS.forEach(o=>{try{o.stop();}catch(e){}}); SG_OS=[]; SGSC.stop(); if(SG_PROG){cancelAnimationFrame(SG_PROG);SG_PROG=0;} if(SG_SEEKBAR)SG_SEEKBAR.reset(); }
+function sgMelodyPlay(an, offset){
+  const ctx=ac(); SG_AN=an||SG_AN; SG_OS.forEach(o=>{try{o.stop();}catch(e){}}); SG_OS=[];
+  offset=Math.max(0,Math.min(TOCCATA_DUR-0.05, offset||0));
+  const t0=ctx.currentTime - offset;   /* virtual start so score/seek math stays absolute */
+  let acc=0;
+  for(const nd of TOCCATA_SEQ){ const f=nd[0], d=nd[1], s=acc; acc+=d;
+    if(f>0 && acc>offset){ const st=Math.max(ctx.currentTime, t0+s);
+      const o=ctx.createOscillator(),g=ctx.createGain(); o.setPeriodicWave(periodicWave([1,0.5,0.3,0.18,0.1])); o.frequency.value=f;
+      const on=t0+s, off=t0+s+d;
+      g.gain.setValueAtTime(0,Math.max(ctx.currentTime,on)); g.gain.linearRampToValueAtTime(0.24,Math.max(ctx.currentTime,on)+0.008);
+      g.gain.setTargetAtTime(0, off-Math.min(0.07,d*0.35), 0.03);
+      o.connect(g); g.connect(SG_AN); o.start(st); o.stop(off); SG_OS.push(o); } }
+  SGSC.seek(t0); SGSC.start(t0);
+  sgClear();   /* wipe heatmap so it redraws cleanly from the new position */
+  if(SG_SEEKBAR){ if(SG_PROG)cancelAnimationFrame(SG_PROG);
+    const tick=()=>{ const pos=ac().currentTime-t0; SG_SEEKBAR.setProgress(pos);
+      if(pos<TOCCATA_DUR+0.3 && SG_OS.length){ SG_PROG=requestAnimationFrame(tick); } else { SG_PROG=0; } };
+    SG_PROG=requestAnimationFrame(tick); }
+}
+(function(){ SG_SEEKBAR=makeSeek('sg-seek',{ dur:TOCCATA_DUR,
+  onScrub:(sec)=>{ SGSC.showAt(sec); },
+  onSeek:(sec)=>{ if(SG_OS.length || (SG_AN)){ sgMelodyPlay(SG_AN, sec); } else { SGSC.showAt(sec); } } }); })();
+
+
+
+/* ================= transport seek-bar : fast-forward / rewind for melody ================= */
+function makeSeek(barId, opts){
+  /* opts: { dur, onSeek(sec), isPlaying() }  — the bar reflects progress and lets you scrub. */
+  const wrap=document.getElementById(barId); if(!wrap) return null;
+  const fill=wrap.querySelector('.sk-fill'), knob=wrap.querySelector('.sk-knob'),
+        cur=wrap.querySelector('.sk-cur'), tot=wrap.querySelector('.sk-tot');
+  let dur=opts.dur, dragging=false, shownPos=0;
+  function fmt(s){ s=Math.max(0,s); const m=Math.floor(s/60), x=Math.floor(s%60); return m+':'+(x<10?'0':'')+x; }
+  if(tot) tot.textContent=fmt(dur);
+  function paint(sec){ shownPos=Math.max(0,Math.min(dur,sec)); const p=dur>0?shownPos/dur:0;
+    if(fill) fill.style.width=(p*100).toFixed(2)+'%';
+    if(knob) knob.style.left=(p*100).toFixed(2)+'%';
+    if(cur) cur.textContent=fmt(shownPos); }
+  function posFromEvent(e){ const r=wrap.querySelector('.sk-track').getBoundingClientRect();
+    const cx=(e.touches?e.touches[0].clientX:e.clientX); return Math.max(0,Math.min(1,(cx-r.left)/r.width))*dur; }
+  function down(e){ dragging=true; wrap.classList.add('drag'); const s=posFromEvent(e); paint(s); opts.onScrub&&opts.onScrub(s); e.preventDefault(); }
+  function move(e){ if(!dragging) return; const s=posFromEvent(e); paint(s); opts.onScrub&&opts.onScrub(s); }
+  function up(e){ if(!dragging) return; dragging=false; wrap.classList.remove('drag'); opts.onSeek(shownPos); }
+  const track=wrap.querySelector('.sk-track');
+  track.addEventListener('mousedown',down); window.addEventListener('mousemove',move); window.addEventListener('mouseup',up);
+  track.addEventListener('touchstart',down,{passive:false}); window.addEventListener('touchmove',move,{passive:false}); window.addEventListener('touchend',up);
+  return { setProgress:function(sec){ if(!dragging) paint(sec); }, reset:function(){ dragging=false; paint(0); }, isDragging:function(){ return dragging; }, dur:function(){ return dur; }, setDur:function(d){ dur=d; if(tot)tot.textContent=fmt(dur); paint(0); } };
+}
 /* --- 26 : spectrogram (scrolling) --- */
 const SG_MAXF=2500, SG_LM=52; let SG_GY=[];   /* fixed left axis: labels do not scroll away */
 function sgAxis(){
@@ -2379,15 +2450,10 @@ function sgRun(kind){
   const data=new Uint8Array(an.frequencyBinCount);
   let stop=()=>{};
   if(kind==='melody'){
-    /* Bach — Toccata BWV 565, ~3 min fast arrangement (opening · dim-7 roll · prestissimo · cascades); f=0 → rest */
+    /* Bach — Toccata BWV 565, ~3 min fast arrangement; seekable transport (fast-forward / rewind) */
     const seq=TOCCATA_SEQ;
-    const t0=ctx.currentTime, os=[]; let st=t0; SGSC.start(t0);
-    seq.forEach(nd=>{const f=nd[0], d=nd[1];
-      if(f>0){const o=ctx.createOscillator(),g=ctx.createGain();o.setPeriodicWave(periodicWave([1,0.5,0.3,0.18,0.1]));o.frequency.value=f;
-        g.gain.setValueAtTime(0,st);g.gain.linearRampToValueAtTime(0.24,st+0.008);g.gain.setTargetAtTime(0,st+Math.max(0.008,d-Math.min(0.07,d*0.35)),0.03);
-        o.connect(g);g.connect(an);o.start(st);o.stop(st+d);os.push(o);}
-      st+=d;});
-    stop=()=>{ os.forEach(o=>{try{o.stop();}catch(e){}}); SGSC.stop(); };
+    sgMelodyPlay(an, 0);   /* schedules audio + score + heatmap-clear from a given offset */
+    stop=()=>{ sgMelodyStop(); };
   } else if(kind==='chirp'){
     const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';g.gain.value=0.22;o.connect(g);g.connect(an);
     o.frequency.setValueAtTime(160,ctx.currentTime);o.frequency.exponentialRampToValueAtTime(1500,ctx.currentTime+3.6);
@@ -2641,6 +2707,16 @@ drawInit.push(()=>SGSC.idle());
   const DM = new Float32Array(T*K);            // remapped (scrolled) magnitudes, reused
   let desc=null, phase=0, uTime=0;
   let playing=false, audioNode=null, audioVoice=null, audioStart=0, playTok=0;
+  let S3D_SEEKBAR=null, S3D_PROG=0;
+  function s3dProgTick(){ if(S3D_PROG)cancelAnimationFrame(S3D_PROG);
+    const tk=()=>{ if(playing && desc && desc.dynamic && desc._buf && S3D_SEEKBAR){
+        const pos=((ac().currentTime-audioStart)%desc.winDur+desc.winDur)%desc.winDur; S3D_SEEKBAR.setProgress(pos);
+        S3D_PROG=requestAnimationFrame(tk); } else { S3D_PROG=0; } };
+    S3D_PROG=requestAnimationFrame(tk); }
+  function s3dSeekTo(sec){ if(!desc||!desc.dynamic){ return; } const wd=desc.winDur;
+    phase=((sec/wd)%1+1)%1;
+    if(playing){ if(desc._buf){ stopNodes(); play(); } }
+    else { S3D_SEEKBAR&&S3D_SEEKBAR.setProgress(sec%wd); refillDynamic&&refillDynamic(); } }
 
   const target = new THREE.Vector3(0, 0.30, 0);
   const cam  = { r:8.7, th:-0.62, ph:0.96 };
@@ -2864,6 +2940,12 @@ drawInit.push(()=>SGSC.idle());
     else { fillSurface(desc.IMG); }
     updateRibbon(); updateSide();
     document.querySelectorAll('[data-s3d-sig]').forEach(b=>b.classList.toggle('on',b.getAttribute('data-s3d-sig')===key));
+    var _sk=document.getElementById('s3d-seek');
+    if(_sk){ if(desc && desc.dynamic && key==='melody'){
+        stage.style.height=Math.max(230, stage.clientHeight-34)+'px';   /* make room for the seek-bar row */
+        _sk.style.display='flex'; if(S3D_SEEKBAR) S3D_SEEKBAR.setDur(desc.winDur); }
+      else { _sk.style.display='none'; stage.style.height=''; }
+      try{ resize(); }catch(e){} try{ fitCurrent(); }catch(e){} }
   }
   function setView(name){ const v=VIEWS[name]; if(!v) return; goal.r=v.r; goal.th=v.th; goal.ph=v.ph; }
 
@@ -2884,9 +2966,9 @@ drawInit.push(()=>SGSC.idle());
       if(audioNode.stop) audioNode.stop();
       else if(audioNode.src){ const t=ac().currentTime; audioNode.g.gain.setTargetAtTime(0.0001,t,0.03); audioNode.src.stop(t+0.12); }
     }catch(e){} }
-    audioNode=null; playing=false; setPlayLabel(false);
+    audioNode=null; playing=false; setPlayLabel(false); if(S3D_PROG){cancelAnimationFrame(S3D_PROG);S3D_PROG=0;}
   }
-  function stopAudio(){ if(audioVoice){ AU.voices.delete(audioVoice); } stopNodes(); }
+  function stopAudio(){ if(audioVoice){ AU.voices.delete(audioVoice); } stopNodes(); if(S3D_SEEKBAR)S3D_SEEKBAR.reset(); }
 
   function play(){
     stopAudio();
@@ -2903,6 +2985,7 @@ drawInit.push(()=>SGSC.idle());
         try{ src.start(ctx.currentTime, off); }catch(e){ try{ src.start(ctx.currentTime); }catch(e2){} }
         audioStart=ctx.currentTime - phase*desc.winDur;
         audioNode={src,g};
+        s3dProgTick();
       };
       if(desc._buf) startBuf(); else renderLoop(desc).then(()=>{ if(myTok===playTok && running) startBuf(); });
     } else {
@@ -2917,6 +3000,9 @@ drawInit.push(()=>SGSC.idle());
     const sp=$('#s3d-spin'); if(sp) sp.addEventListener('click',()=>{ autoRotate=!autoRotate; updateSpinLabel(); });
     const rs=$('#s3d-reset'); if(rs) rs.addEventListener('click',()=>{ setView('persp'); target.set(0,0.30,0); });
     updateSpinLabel();
+    S3D_SEEKBAR=makeSeek('s3d-seek',{ dur:(desc&&desc.winDur)||30,
+      onScrub:(sec)=>{ if(desc&&desc.winDur){ phase=((sec/desc.winDur)%1+1)%1; if(!playing){ refillDynamic&&refillDynamic(); updateRibbon&&updateRibbon(); updateSide&&updateSide(); } } },
+      onSeek:(sec)=>{ s3dSeekTo(sec); } });
   }
 
   /* =================== ANIMATION LOOP =================== */
@@ -3015,23 +3101,31 @@ drawInit.push(()=>SGSC.idle());
   const tg=regToggle(btn, btn.getAttribute('data-stop')||'\u25a0', btn.textContent);
   function updateRead(){ rd.textContent=sl.value+'% \u00b7 '+fmt(cutOf(sl.value)); }
   function applyCut(){ if(filts){ const c=cutOf(sl.value), t=ac().currentTime; filts.forEach(f=>f.frequency.setTargetAtTime(c,t,0.03)); } updateRead(); if(!raf) drawIdle(); }
-  function start(){
-    const ctx=ac(); const t0=ctx.currentTime+0.08;
+  let PC_SEEKBAR=null, PC_PROG=0;
+  function start(offset){
+    offset=Math.max(0,Math.min(TOTAL-0.05, offset||0));
+    if(typeof stopFn==="function"){ try{stopFn();}catch(e){} }
+    const ctx=ac(); const t0=ctx.currentTime+0.08-offset;
     anD=ctx.createAnalyser(); anD.fftSize=4096; anD.smoothingTimeConstant=0.55;
     anW=ctx.createAnalyser(); anW.fftSize=4096; anW.smoothingTimeConstant=0.55;
     const sum=ctx.createGain(); sum.gain.value=0.85;
     filts=[0,1,2].map(()=>{ const f=ctx.createBiquadFilter(); f.type='lowpass'; f.Q.value=0.8; f.frequency.value=cutOf(sl.value); return f; });
     sum.connect(anD); anD.connect(filts[0]); filts[0].connect(filts[1]); filts[1].connect(filts[2]); filts[2].connect(anW); anW.connect(AU.master);
-    os=[]; PCSC.start(t0);
-    function note(f0,st,du,amps,g0,atk,rel){ if(!(f0>0))return; const o=ctx.createOscillator(),g=ctx.createGain();
-      o.setPeriodicWave(periodicWave(amps)); o.frequency.value=f0;
-      g.gain.setValueAtTime(0.0001,t0+st); g.gain.linearRampToValueAtTime(g0,t0+st+atk);
-      g.gain.setTargetAtTime(0.0001,t0+st+Math.max(atk,du-rel),rel*0.55);
-      o.connect(g); g.connect(sum); o.start(t0+st); o.stop(t0+st+du+0.08); os.push(o); }
+    os=[]; PCSC.seek(t0); PCSC.start(t0);
+    if(PC_SEEKBAR){ if(PC_PROG)cancelAnimationFrame(PC_PROG);
+      const tk=()=>{ const pos=ac().currentTime-t0; PC_SEEKBAR.setProgress(pos);
+        if(pos<TOTAL+0.3 && os.length){ PC_PROG=requestAnimationFrame(tk); } else { PC_PROG=0; } };
+      PC_PROG=requestAnimationFrame(tk); }
+    function note(f0,st,du,amps,g0,atk,rel){ if(!(f0>0))return; const on=t0+st, off=t0+st+du+0.08; if(off<=ctx.currentTime+0.01) return;
+      const o=ctx.createOscillator(),g=ctx.createGain(); o.setPeriodicWave(periodicWave(amps)); o.frequency.value=f0;
+      const a0=Math.max(ctx.currentTime,on);
+      g.gain.setValueAtTime(0.0001,a0); g.gain.linearRampToValueAtTime(g0,a0+atk);
+      g.gain.setTargetAtTime(0.0001,Math.max(a0,t0+st+Math.max(atk,du-rel)),rel*0.55);
+      o.connect(g); g.connect(sum); o.start(a0); o.stop(off); os.push(o); }
     canonEvents().forEach(function(ev){ note(ev.f,ev.t,ev.d,ev.amps,ev.g,ev.atk,ev.rel); });
     stopFn=()=>{ (os||[]).forEach(o=>{try{o.stop();}catch(e){}}); os=null;
       try{sum.disconnect();}catch(e){} if(anD){try{anD.disconnect();}catch(e){}} if(anW){try{anW.disconnect();}catch(e){}}
-      anD=anW=null; filts=null; PCSC.stop(); };
+      anD=anW=null; filts=null; PCSC.stop(); if(PC_PROG){cancelAnimationFrame(PC_PROG);PC_PROG=0;} if(PC_SEEKBAR)PC_SEEKBAR.reset(); };
     AU.voices.add({stop:()=>{ stopFn&&stopFn(); setToggle(tg,false); if(raf){cancelAnimationFrame(raf);raf=0;} drawIdle(); }});
     const my=++tok;
     setTimeout(()=>{ if(my===tok&&tg.state){ setToggle(tg,false); stopFn&&stopFn(); if(raf){cancelAnimationFrame(raf);raf=0;} drawIdle(); } }, TOTAL*1000+500);
@@ -3065,12 +3159,15 @@ drawInit.push(()=>SGSC.idle());
   }
   btn.addEventListener('click',function(){
     if(tg.state){ tok++; setToggle(tg,false); stopFn&&stopFn(); if(raf){cancelAnimationFrame(raf);raf=0;} drawIdle(); }
-    else { stopAll(); setToggle(tg,true); start(); }
+    else { stopAll(); setToggle(tg,true); start(0); }
   });
   sl.addEventListener('input',function(){ chips.forEach(c=>c.classList.toggle('on', c.getAttribute('data-cut')===String(sl.value))); applyCut(); });
   chips.forEach(c=>c.addEventListener('click',function(){ sl.value=c.getAttribute('data-cut');
     chips.forEach(x=>x.classList.remove('on')); c.classList.add('on'); applyCut(); }));
   updateRead(); drawInit.push(drawIdle); drawInit.push(()=>PCSC.idle());
+  PC_SEEKBAR=makeSeek('pc-seek',{ dur:TOTAL,
+    onScrub:(sec)=>{ PCSC.showAt(sec); },
+    onSeek:(sec)=>{ if(tg.state){ start(sec); } else { PCSC.showAt(sec); } } });
 })();
 
 /* --- 34 : sandbox --- */
