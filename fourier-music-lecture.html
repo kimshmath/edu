@@ -1029,10 +1029,11 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
       <div class="eyebrow">시간 × 진동수 · 음악학의 현미경</div>
       <h2 class="h-sec">스펙트로그램 — 진동수의 악보</h2>
       <div class="viz-wrap" style="margin-top:.4rem"><span class="viz-tag">spectrogram · ↑freq · →time</span><canvas id="sg-canvas" class="viz" height="266"></canvas></div>
+      <div class="viz-wrap" style="margin-top:8px;padding:8px 10px"><span class="viz-tag">score · 지금 연주되는 음</span><canvas id="sg-score" class="viz" height="128"></canvas></div>
       <div class="btn-row" style="margin-top:14px">
-        <button class="btn play" data-sg="melody">▶ 멜로디 (바흐 토카타 · 3분)</button>
         <button class="btn" data-sg="chirp">▶ 상승음(글리산도)</button>
         <button class="btn" data-sg="harm">▶ 배음 층 보기</button>
+        <button class="btn play" data-sg="melody">▶ 멜로디 (바흐 토카타 · 3분)</button>
         <button class="btn" data-sg="clear">지우기</button>
       </div>
     </div>
@@ -1210,6 +1211,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
           </div>
         </div>
       </div>
+      <div class="viz-wrap" style="margin-top:10px;padding:8px 10px"><span class="viz-tag">score · 지금 연주되는 음</span><canvas id="pc-score" class="viz" height="128"></canvas></div>
     </div>
   </section>
 
@@ -2260,6 +2262,100 @@ const TOCCATA_SEQ=[[880,0.115],[783.99,0.115],[880,1.25],[0,0.24],[783.99,0.15],
 
 const TOCCATA_3D=[[880,0.115],[783.99,0.115],[880,1.15],[0,0.22],[783.99,0.15],[698.46,0.15],[659.26,0.15],[587.33,0.15],[277.18,0.3],[587.33,1.3],[0,0.38],[440,0.115],[392,0.115],[440,1.15],[0,0.22],[392,0.15],[349.23,0.15],[329.63,0.15],[293.66,0.15],[277.18,0.3],[293.66,1.3],[0,0.38],[220,0.115],[196,0.115],[220,1.25],[0,0.22],[196,0.15],[174.61,0.15],[164.81,0.15],[146.83,0.15],[138.59,0.3],[146.83,1.5],[0,0.38],[146.83,0.35],[0,0.1],[138.59,0.115],[164.81,0.115],[196,0.115],[233.08,0.115],[277.18,0.115],[329.63,0.115],[392,0.115],[466.16,0.115],[554.37,0.115],[659.26,0.115],[783.99,0.115],[932.33,0.8],[0,0.15],[440,0.13],[349.23,0.13],[293.66,0.13],[220,0.13],[174.61,0.13],[146.83,1.8],[0,0.4],[880,0.115],[783.99,0.115],[698.46,0.115],[659.26,0.115],[587.33,0.115],[523.25,0.115],[466.16,0.115],[440,0.115],[392,0.115],[349.23,0.115],[329.63,0.115],[293.66,0.115],[277.18,0.115],[293.66,0.4],[0,0.15],[698.46,0.115],[440,0.115],[698.46,0.115],[440,0.115],[659.26,0.115],[440,0.115],[659.26,0.115],[440,0.115],[587.33,0.115],[440,0.115],[587.33,0.115],[440,0.115],[554.37,0.115],[440,0.115],[554.37,0.115],[440,0.115],[293.66,0.115],[349.23,0.115],[440,0.115],[349.23,0.115],[329.63,0.115],[392,0.115],[466.16,0.115],[392,0.115],[349.23,0.115],[440,0.115],[523.25,0.115],[440,0.115],[392,0.115],[466.16,0.115],[587.33,0.115],[466.16,0.115],[440,0.115],[523.25,0.115],[659.26,0.115],[523.25,0.115],[880,0.115],[783.99,0.115],[880,0.115],[783.99,0.115],[880,0.115],[783.99,0.115],[880,0.115],[783.99,0.115],[880,0.115],[783.99,0.115],[880,0.115],[783.99,0.115],[880,0.6],[0,0.2],[293.66,0.115],[349.23,0.115],[440,0.115],[587.33,0.115],[440,0.115],[349.23,0.115],[293.66,0.115],[349.23,0.115],[196,0.115],[233.08,0.115],[293.66,0.115],[392,0.115],[293.66,0.115],[233.08,0.115],[196,0.115],[233.08,0.115],[261.63,0.115],[329.63,0.115],[392,0.115],[523.25,0.115],[392,0.115],[329.63,0.115],[261.63,0.115],[329.63,0.115],[174.61,0.115],[220,0.115],[261.63,0.115],[349.23,0.115],[261.63,0.115],[220,0.115],[174.61,0.115],[220,0.115],[233.08,0.115],[293.66,0.115],[349.23,0.115],[466.16,0.115],[349.23,0.115],[293.66,0.115],[233.08,0.115],[293.66,0.115],[329.63,0.115],[392,0.115],[466.16,0.115],[659.26,0.115],[466.16,0.115],[392,0.115],[329.63,0.115],[392,0.115],[220,0.115],[277.18,0.115],[329.63,0.115],[440,0.115],[329.63,0.115],[277.18,0.115],[220,0.115],[277.18,0.115],[659.26,0.13],[554.37,0.13],[466.16,0.13],[392,0.13],[329.63,0.13],[277.18,0.13],[233.08,0.13],[196,0.13],[196,0.5],[0,0.3],[146.83,0.18],[220,0.18],[293.66,0.18],[349.23,0.18],[440,0.18],[587.33,0.18],[146.83,2.6]];  /* ~39 s highlight for the 3D time-river (168-column display) */
 
+/* ================= scrolling score : YouTube-style now-playing sheet ================= */
+const SCORE=(function(){
+  const S=8, PXS=80, PAD=40, H=16*S;
+  const SPELL={0:['C',0],1:['C',1],2:['D',0],3:['E',-1],4:['E',0],5:['F',0],6:['F',1],7:['G',0],8:['G',1],9:['A',0],10:['B',-1],11:['B',0]};
+  const LI={C:0,D:1,E:2,F:3,G:4,A:5,B:6};
+  function pitch(f){ const m=Math.round(69+12*Math.log2(f/440));
+    const pc=((m%12)+12)%12, sp=SPELL[pc];
+    return {step:(Math.floor(m/12)-1)*7+LI[sp[0]], acc:sp[1]}; }
+  function yOf(st){ return (H-1.5*S)-(st-18)*(S/2); }
+  const LINES=[18,20,22,24,26,30,32,34,36,38];
+  function rgba(c,a){ return 'rgba('+c[0]+','+c[1]+','+c[2]+','+a+')'; }
+  function ledgers(st){ const L=[];
+    if(st>=40){ for(let s2=40;s2<=st;s2+=2) L.push(s2); }
+    if(st===28) L.push(28);
+    if(st<=16){ for(let s2=16;s2>=st;s2-=2) L.push(s2); }
+    return L; }
+  function buildStrip(evs,dur,colorOf){
+    const W=Math.ceil(dur*PXS)+PAD*2, D=2;
+    const c=document.createElement('canvas'); c.width=W*D; c.height=H*D;
+    const g=c.getContext('2d'); g.scale(D,D);
+    for(const e of evs){
+      const p=pitch(e.f), x=PAD+e.t*PXS, y=yOf(p.step);
+      const col=colorOf?colorOf(e):[230,238,255,0.92];
+      const bl=e.d*PXS-8;
+      if(bl>2){ g.fillStyle=rgba(col,col[3]*0.30); g.fillRect(x+5,y-1.2,bl,2.4); }
+      g.strokeStyle='rgba(255,255,255,0.30)'; g.lineWidth=1;
+      for(const s2 of ledgers(p.step)){ const ly=Math.round(yOf(s2))+0.5;
+        g.beginPath(); g.moveTo(x-6.5,ly); g.lineTo(x+6.5,ly); g.stroke(); }
+      g.fillStyle=rgba(col,col[3]); g.beginPath(); g.ellipse(x,y,4.8,3.6,-0.3,0,6.3); g.fill();
+      if(p.acc){ g.fillStyle=rgba(col,Math.min(1,col[3]));
+        g.font='10px "JetBrains Mono",monospace'; g.textAlign='center';
+        g.fillText(p.acc>0?'\u266F':'\u266D', x-8.5, y+3.5); g.textAlign='left'; }
+    }
+    return {c:c,W:W,D:D};
+  }
+  function make(cvId, evs, dur, colorOf){
+    let strip=null, raf=0, t0=0, playing=false, started=false, AC=null;
+    const LM=Math.round(4.3*S);
+    function cvEl(){ return document.getElementById(cvId); }
+    function accent(cv){ if(AC) return AC;
+      try{ const s=getComputedStyle(cv.closest('.slide')).getPropertyValue('--accent').trim();
+        const m=s.match(/#?([0-9a-fA-F]{6})/); if(m){ const n=parseInt(m[1],16); AC=[(n>>16)&255,(n>>8)&255,n&255]; } }catch(e){}
+      return AC||(AC=[124,108,240]); }
+    function base(now){
+      const cv=cvEl(); if(!cv||!cv._ctx) return;
+      const g=cv._ctx, w=cv._w, h=cv._h, A=accent(cv);
+      g.fillStyle='#070A12'; g.fillRect(0,0,w,h);
+      g.strokeStyle='rgba(255,255,255,0.16)'; g.lineWidth=1;
+      for(const st of LINES){ const y=Math.round(yOf(st))+0.5;
+        g.beginPath(); g.moveTo(LM-6,y); g.lineTo(w,y); g.stroke(); }
+      g.fillStyle='rgba(255,255,255,0.55)'; g.textAlign='left';
+      let clef=true; try{ g.font=(4.4*S)+'px serif'; if(g.measureText('\uD834\uDD1E').width<4) clef=false; }catch(e){ clef=false; }
+      if(clef){ g.fillText('\uD834\uDD1E', 3, yOf(32)+1.45*S);
+        g.font=(2.7*S)+'px serif'; g.fillText('\uD834\uDD22', 5, yOf(24)+1.0*S); }
+      else { g.font='bold '+(1.6*S)+'px "JetBrains Mono",monospace';
+        g.fillText('G', 8, yOf(32)+0.55*S); g.fillText('F', 8, yOf(24)+0.55*S); }
+      const PH=LM+Math.round((w-LM)*0.22);
+      if(playing || started){
+        if(!strip) strip=buildStrip(evs,dur,colorOf);
+        /* map canvas x -> strip x; only paint where strip-time >= 0 (nothing shows before you press play) */
+        let sx=(PAD+now*PXS)-(PH-LM), dx=LM, sw=w-LM;
+        if(sx<0){ dx=LM-sx; sw=w-dx; sx=0; }
+        const leftLim=PAD;                 /* strip x for time=0 */
+        if(sx<leftLim){ const cut=leftLim-sx; dx+=cut; sw-=cut; sx=leftLim; }
+        if(sw>strip.W-sx) sw=strip.W-sx;
+        if(sw>0) g.drawImage(strip.c, sx*strip.D, 0, sw*strip.D, H*strip.D, dx, 0, sw, H);
+      }
+      if(playing){
+        g.fillStyle=rgba(A,0.85); g.fillRect(PH,2,2,h-4);
+        g.save(); g.shadowColor=rgba(A,0.9); g.shadowBlur=9; g.fillStyle=rgba(A,0.96);
+        for(const e of evs){ if(e.t<=now&&now<e.t+e.d){
+          const p=pitch(e.f), x=PH+(e.t-now)*PXS;
+          if(x<LM-8||x>w+8) continue;
+          g.beginPath(); g.ellipse(x,yOf(p.step),5.2,3.9,-0.3,0,6.3); g.fill(); } }
+        g.restore();
+      }
+    }
+    function frame(){ if(!playing){ raf=0; return; }
+      const now=ac().currentTime-t0;
+      if(now>dur+0.8){ playing=false; raf=0; base(0); return; }
+      base(now); raf=requestAnimationFrame(frame); }
+    return {
+      start:function(t){ t0=t; playing=true; started=true; if(!raf) frame(); },
+      stop:function(){ playing=false; if(raf){ cancelAnimationFrame(raf); raf=0; } base(0); },
+      idle:function(){ playing=false; started=false; base(0); }
+    };
+  }
+  return {make:make};
+})();
+const TOCCATA_EVS=(function(){ const a=[]; let t=0;
+  for(const nd of TOCCATA_SEQ){ if(nd[0]>0) a.push({t:t,f:nd[0],d:nd[1]}); t+=nd[1]; } return a; })();
+const TOCCATA_DUR=(function(){ let t=0; for(const nd of TOCCATA_SEQ) t+=nd[1]; return t; })();
+const SGSC=SCORE.make('sg-score', TOCCATA_EVS, TOCCATA_DUR, null);
+
 /* --- 26 : spectrogram (scrolling) --- */
 const SG_MAXF=2500, SG_LM=52; let SG_GY=[];   /* fixed left axis: labels do not scroll away */
 function sgAxis(){
@@ -2285,13 +2381,13 @@ function sgRun(kind){
   if(kind==='melody'){
     /* Bach — Toccata BWV 565, ~3 min fast arrangement (opening · dim-7 roll · prestissimo · cascades); f=0 → rest */
     const seq=TOCCATA_SEQ;
-    const t0=ctx.currentTime, os=[]; let st=t0;
+    const t0=ctx.currentTime, os=[]; let st=t0; SGSC.start(t0);
     seq.forEach(nd=>{const f=nd[0], d=nd[1];
       if(f>0){const o=ctx.createOscillator(),g=ctx.createGain();o.setPeriodicWave(periodicWave([1,0.5,0.3,0.18,0.1]));o.frequency.value=f;
         g.gain.setValueAtTime(0,st);g.gain.linearRampToValueAtTime(0.24,st+0.008);g.gain.setTargetAtTime(0,st+Math.max(0.008,d-Math.min(0.07,d*0.35)),0.03);
         o.connect(g);g.connect(an);o.start(st);o.stop(st+d);os.push(o);}
       st+=d;});
-    stop=()=>os.forEach(o=>{try{o.stop();}catch(e){}});
+    stop=()=>{ os.forEach(o=>{try{o.stop();}catch(e){}}); SGSC.stop(); };
   } else if(kind==='chirp'){
     const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';g.gain.value=0.22;o.connect(g);g.connect(an);
     o.frequency.setValueAtTime(160,ctx.currentTime);o.frequency.exponentialRampToValueAtTime(1500,ctx.currentTime+3.6);
@@ -2321,6 +2417,7 @@ function sgRun(kind){
 (function(){ document.querySelectorAll('[data-sg]').forEach(b=>b.addEventListener('click',()=>{ const k=b.getAttribute('data-sg'); if(k==='clear'){sgStop();sgClear();return;} sgRun(k); })); })();
 ENTERS.spectrogram=()=>{ sgClear(); return ()=>{}; };
 drawInit.push(sgClear);   /* redraw axis after canvas refit */
+drawInit.push(()=>SGSC.idle());
 
 /* ==== INJECTED: 3D sound object (time × amplitude × frequency) ==== */
 
@@ -2888,6 +2985,29 @@ drawInit.push(sgClear);   /* redraw axis after canvas refit */
   const MEL=['Fs5','E5','D5','Cs5','B4','A4','B4','Cs5'];
   const MEL2=['Fs6','E6','D6','Cs6','B5','A5','B5','Cs6'];
   const AB={bass:[1,.6,.35,.2,.1],pad:[1,.4,.18],mel:[1,.7,.5,.35,.25,.18,.12,.08],spk:[1,.8,.62,.5,.4,.32,.26,.2,.15,.11]};
+  let CEVS=null;
+  function canonEvents(){ if(CEVS) return CEVS; const evs=[];
+    const push=(f,t,d,amps,g,atk,rel,v)=>{ if(f>0) evs.push({t:t,f:f,d:d,amps:amps,g:g,atk:atk,rel:rel,v:v}); };
+    for(let p=0;p<PASSES;p++){ const off=p*8*CH, R=RECIPE[p];
+      for(let i=0;i<8;i++){ const st=off+i*CH, tri=TRI[i];
+        push(NF[ROOT[i]],st,CH,AB.bass,0.34,0.02,0.20,'b');
+        for(const nm of tri) push(NF[nm],st,CH,AB.pad,0.10,0.10,0.30,'p');
+        if(R.mel)  push(NF[MEL[i]], st,CH,AB.mel,0.22,0.05,0.18,'m');
+        if(R.mel2) push(NF[MEL2[i]],st,CH,AB.mel,0.15,0.05,0.18,'m');
+        if(R.q){ push(NF[tri[1]]*2, st,      BEAT,AB.mel,0.12,0.02,0.14,'m');
+                 push(NF[tri[2]]*2, st+BEAT, BEAT,AB.mel,0.12,0.02,0.14,'m'); }
+        if(R.e){ const es=[0,1,2,1];
+          for(let k=0;k<4;k++) push(NF[tri[es[k]]]*2, st+k*BEAT/2, BEAT/2*1.02, AB.mel, 0.11, 0.010, 0.09,'m'); }
+        if(R.s){ const sq=[0,1,2,0,2,1,0,2];
+          for(let k=0;k<8;k++) push(NF[tri[sq[k]]]*2, st+k*BEAT/4, BEAT/4*1.05, AB.spk, 0.105, 0.006, 0.07,'s'); }
+      } }
+    { const st=PASSES*8*CH;
+      push(NF.D3,st,FINAL,AB.bass,0.30,0.03,0.9,'b');
+      for(const nm of ['D4','Fs4','A4']) push(NF[nm],st,FINAL,AB.pad,0.11,0.25,1.0,'p');
+      push(NF.D5,st,FINAL,AB.mel,0.16,0.06,1.0,'m'); }
+    CEVS=evs; return evs; }
+  const PC_COLORS={b:[125,211,252,0.9], p:[148,163,184,0.5], m:[248,250,252,0.95], s:[250,204,21,0.85]};
+  const PCSC=SCORE.make('pc-score', canonEvents(), TOTAL, function(e){ return PC_COLORS[e.v]||[230,238,255,0.9]; });
   const FMIN=80,FMAX=16000,LGR=Math.log(FMAX/FMIN);
   const cutOf=v=> (+v<=0)?20000:16000*Math.pow(400/16000,v/100);
   const fmt=c=> c>=15500?'16 kHz+':(c>=1000?(c/1000).toFixed(1)+' kHz':Math.round(c)+' Hz');
@@ -2902,33 +3022,16 @@ drawInit.push(sgClear);   /* redraw axis after canvas refit */
     const sum=ctx.createGain(); sum.gain.value=0.85;
     filts=[0,1,2].map(()=>{ const f=ctx.createBiquadFilter(); f.type='lowpass'; f.Q.value=0.8; f.frequency.value=cutOf(sl.value); return f; });
     sum.connect(anD); anD.connect(filts[0]); filts[0].connect(filts[1]); filts[1].connect(filts[2]); filts[2].connect(anW); anW.connect(AU.master);
-    os=[];
+    os=[]; PCSC.start(t0);
     function note(f0,st,du,amps,g0,atk,rel){ if(!(f0>0))return; const o=ctx.createOscillator(),g=ctx.createGain();
       o.setPeriodicWave(periodicWave(amps)); o.frequency.value=f0;
       g.gain.setValueAtTime(0.0001,t0+st); g.gain.linearRampToValueAtTime(g0,t0+st+atk);
       g.gain.setTargetAtTime(0.0001,t0+st+Math.max(atk,du-rel),rel*0.55);
       o.connect(g); g.connect(sum); o.start(t0+st); o.stop(t0+st+du+0.08); os.push(o); }
-    for(let p=0;p<PASSES;p++){ const off=p*8*CH, R=RECIPE[p];
-      for(let i=0;i<8;i++){ const st=off+i*CH, tri=TRI[i];
-        note(NF[ROOT[i]],st,CH,AB.bass,0.34,0.02,0.20);
-        for(const n of tri) note(NF[n],st,CH,AB.pad,0.10,0.10,0.30);
-        if(R.mel)  note(NF[MEL[i]], st,CH,AB.mel,0.22,0.05,0.18);
-        if(R.mel2) note(NF[MEL2[i]],st,CH,AB.mel,0.15,0.05,0.18);
-        if(R.q){ note(NF[tri[1]]*2, st,      BEAT,AB.mel,0.12,0.02,0.14);
-                 note(NF[tri[2]]*2, st+BEAT, BEAT,AB.mel,0.12,0.02,0.14); }
-        if(R.e){ const es=[0,1,2,1];
-          for(let k=0;k<4;k++) note(NF[tri[es[k]]]*2, st+k*BEAT/2, BEAT/2*1.02, AB.mel, 0.11, 0.010, 0.09); }
-        if(R.s){ const sq=[0,1,2,0,2,1,0,2];
-          for(let k=0;k<8;k++) note(NF[tri[sq[k]]]*2, st+k*BEAT/4, BEAT/4*1.05, AB.spk, 0.105, 0.006, 0.07); }
-      } }
-    /* final tonic */
-    { const st=PASSES*8*CH;
-      note(NF.D3,st,FINAL,AB.bass,0.30,0.03,0.9);
-      for(const nm of ['D4','Fs4','A4']) note(NF[nm],st,FINAL,AB.pad,0.11,0.25,1.0);
-      note(NF.D5,st,FINAL,AB.mel,0.16,0.06,1.0); }
+    canonEvents().forEach(function(ev){ note(ev.f,ev.t,ev.d,ev.amps,ev.g,ev.atk,ev.rel); });
     stopFn=()=>{ (os||[]).forEach(o=>{try{o.stop();}catch(e){}}); os=null;
       try{sum.disconnect();}catch(e){} if(anD){try{anD.disconnect();}catch(e){}} if(anW){try{anW.disconnect();}catch(e){}}
-      anD=anW=null; filts=null; };
+      anD=anW=null; filts=null; PCSC.stop(); };
     AU.voices.add({stop:()=>{ stopFn&&stopFn(); setToggle(tg,false); if(raf){cancelAnimationFrame(raf);raf=0;} drawIdle(); }});
     const my=++tok;
     setTimeout(()=>{ if(my===tok&&tg.state){ setToggle(tg,false); stopFn&&stopFn(); if(raf){cancelAnimationFrame(raf);raf=0;} drawIdle(); } }, TOTAL*1000+500);
@@ -2967,7 +3070,7 @@ drawInit.push(sgClear);   /* redraw axis after canvas refit */
   sl.addEventListener('input',function(){ chips.forEach(c=>c.classList.toggle('on', c.getAttribute('data-cut')===String(sl.value))); applyCut(); });
   chips.forEach(c=>c.addEventListener('click',function(){ sl.value=c.getAttribute('data-cut');
     chips.forEach(x=>x.classList.remove('on')); c.classList.add('on'); applyCut(); }));
-  updateRead(); drawInit.push(drawIdle);
+  updateRead(); drawInit.push(drawIdle); drawInit.push(()=>PCSC.idle());
 })();
 
 /* --- 34 : sandbox --- */
