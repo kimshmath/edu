@@ -459,45 +459,45 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
   .slide:has(#s3d-stage) #s3d-stage{height:calc(36.5*var(--vh));}
   .slide:has(#s3d-stage) .s3d-bar{padding:8px 12px 2px;gap:7px;}
   /* slide "FFT": compress formula chrome */
-  .slide:has(#dff-chart) .formula{padding:.7rem 1.1rem;margin:.65rem 0;}
-  .slide:has(#dff-chart) .statgrid{gap:6px;}
-  .slide:has(#dff-chart) .statline{padding:.24em .7em;}
-  .slide:has(#dff-chart) .eyebrow{margin-bottom:.9rem;}
   /* slide "cochlea": small trim */
   .slide:has(#coch-b) .formula{margin:.9rem 0;}
 }
 
 /* ---- EN-only per-slide reclaim: English prose runs longer than Korean ---- */
 @media (min-width:861px){
-  #deck section:nth-of-type(30) .body{font-size:1.05rem;}
-  #deck section:nth-of-type(30) .h-sec{font-size:1.95rem;}
-  #deck section:nth-of-type(30) .caption{font-size:1rem;}
-  #deck section:nth-of-type(30) #s3d-stage{height:calc(32*var(--vh));}
-  #deck section:nth-of-type(30) .s3d-bar .hchip{font-size:.84rem;padding:.3em .66em;}
-  #deck section:nth-of-type(31) .gloss{font-size:1.02rem;}
-  #deck section:nth-of-type(31) .formula{padding:.6rem 1rem;margin:.55rem 0;}
-  #deck section:nth-of-type(31) .title-lg{margin-bottom:.3rem!important;}
-  #deck section:nth-of-type(34) .gloss{font-size:1.02rem;}
-  #deck section:nth-of-type(34) .formula{padding:.6rem 1rem;margin:.55rem 0;}
-  #deck section:nth-of-type(38) .fade-grid{grid-template-columns:repeat(3,1fr);gap:12px;margin-top:1rem;}
-  #deck section:nth-of-type(38) .fcard p{font-size:1.02rem;}
-  #deck section:nth-of-type(38) .fcard{padding:14px 14px 15px;}
-  #deck section:nth-of-type(39) .title-lg{font-size:2.7rem;}
-  #deck section:nth-of-type(39) .body{font-size:.9rem!important;}
-  #deck section:nth-of-type(39) .caption{font-size:1rem;}
-  #deck section:nth-of-type(39) .split{grid-template-columns:.95fr 1.05fr!important;}
-  #deck section:nth-of-type(39) .heromenu{margin:.25rem 0 .3rem!important;}
-  #deck section:nth-of-type(40) .split{grid-template-columns:1fr 1fr!important;}
-  #deck section:nth-of-type(40) .gloss{font-size:1rem;}
-  #deck section:nth-of-type(40) .formula{margin:.55rem 0;}
-  #deck section:nth-of-type(40) .title-lg{font-size:2.6rem;margin-bottom:.35rem!important;}
-  #deck section:nth-of-type(40) .body{font-size:.92rem!important;}
-  #deck section:nth-of-type(40) .caption{font-size:1rem;}
+  /* stable id/:has()-based overrides (replaces fragile nth-of-type positions
+     that broke every time a slide was added/removed earlier in this project) */
+  #deck section:has(#s3d-stage) .body{font-size:1.05rem;}
+  #deck section:has(#s3d-stage) .h-sec{font-size:1.95rem;}
+  #deck section:has(#s3d-stage) .caption{font-size:1rem;}
+  #deck section:has(#s3d-stage) #s3d-stage{height:calc(32*var(--vh));}
+  #deck section:has(#s3d-stage) .s3d-bar .hchip{font-size:.84rem;padding:.3em .66em;}
+  #s-uncertainty .gloss{font-size:1.02rem;}
+  #s-uncertainty .formula{padding:.6rem 1rem;margin:.55rem 0;}
+  #s-uncertainty .title-lg{margin-bottom:.3rem!important;}
+  #deck section:has(#synthSpec) .gloss{font-size:1.02rem;}
+  #deck section:has(#synthSpec) .formula{padding:.6rem 1rem;margin:.55rem 0;}
+  #s-musicology .fade-grid{grid-template-columns:repeat(3,1fr);gap:10px;margin-top:.8rem;}
+  #s-musicology .fcard{padding:12px 12px 13px;}
+  #s-musicology .fcard p{font-size:.92rem;line-height:1.45;}
+  #s-musicology .fcard h4{font-size:1.02rem;margin:.15rem 0 .3rem;}
+  #s-musicology .h-sec{font-size:2rem;}
+  #deck section:has(#coch-a) .title-lg{font-size:2.5rem;}
+  #deck section:has(#coch-a) .body{font-size:.9rem!important;}
+  #deck section:has(#coch-a) .caption{font-size:.95rem;}
+  #deck section:has(#coch-a) .heromenu{margin:.2rem 0 .3rem!important;}
+  #deck section:has(#coch-a) .split{grid-template-columns:.95fr 1.05fr!important;}
+  #deck section:has(#coch-b) .split{grid-template-columns:1fr 1fr!important;}
+  #deck section:has(#coch-b) .gloss{font-size:1rem;}
+  #deck section:has(#coch-b) .formula{margin:.55rem 0;padding:.6rem 1rem;}
+  #deck section:has(#coch-b) .title-lg{font-size:2.4rem;margin-bottom:.35rem!important;}
+  #deck section:has(#coch-b) .body{font-size:.9rem!important;}
+  #deck section:has(#coch-b) .caption{font-size:.95rem;}
 
   /* 3D seek-bar present: reclaim a little vertical space so nothing clips */
-  #deck section:nth-of-type(30) .s3d-bar{padding:9px 14px 3px;gap:7px;}
-  #deck section:nth-of-type(30) #s3d-seek{padding-top:0!important;padding-bottom:3px!important;}
-  #deck section:nth-of-type(30) .s3d-hint{margin-bottom:2px;}
+  #deck section:has(#s3d-stage) .s3d-bar{padding:9px 14px 3px;gap:7px;}
+  #deck section:has(#s3d-stage) #s3d-seek{padding-top:0!important;padding-bottom:3px!important;}
+  #deck section:has(#s3d-stage) .s3d-hint{margin-bottom:2px;}
 }
 
 /* ---- P hotkey: visual pulse on the triggered play button ---- */
@@ -517,6 +517,8 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 .seekbar .sk-knob{position:absolute;top:50%;width:12px;height:12px;border-radius:50%;background:var(--accent);
   transform:translate(-50%,-50%);left:0;box-shadow:0 0 8px 1px var(--accent);transition:transform .1s;}
 .seekbar.drag .sk-knob,.seekbar .sk-track:hover .sk-knob{transform:translate(-50%,-50%) scale(1.25);}
+#sg-nowline{display:none;position:absolute;top:10px;bottom:10px;right:10px;width:2px;background:var(--accent,#FACC15);box-shadow:0 0 9px 1px var(--accent,#FACC15);opacity:.85;pointer-events:none;}
+.slide:has(#sg-canvas) .viz-wrap:has(#sg-canvas){width:83.333%;}   /* score below stays full width: its extra ~20% previews upcoming notes */
 </style>
 </head>
 <body>
@@ -1071,7 +1073,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
     <div class="inner stack">
       <div class="eyebrow">Time × frequency · the microscope of musicology</div>
       <h2 class="h-sec">Spectrogram — a score of frequencies</h2>
-      <div class="viz-wrap" style="margin-top:.4rem"><span class="viz-tag">spectrogram · ↑freq · →time</span><canvas id="sg-canvas" class="viz" height="266"></canvas></div>
+      <div class="viz-wrap" style="margin-top:.4rem"><span class="viz-tag">spectrogram · ↑freq · →time</span><canvas id="sg-canvas" class="viz" height="266"></canvas><div id="sg-nowline"></div></div>
       <div class="viz-wrap" style="margin-top:8px;padding:8px 10px"><span class="viz-tag">score · now playing</span><canvas id="sg-score" class="viz" height="128"></canvas></div>
       <div class="seekbar" id="sg-seek"><span class="sk-time sk-cur">0:00</span><div class="sk-track"><div class="sk-rail"></div><div class="sk-fill"></div><div class="sk-knob"></div></div><span class="sk-time sk-tot">0:00</span></div>
       <div class="btn-row" style="margin-top:14px">
@@ -1102,8 +1104,8 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
           <div class="lbar"></div>
           <div class="lscale"><span>low</span><span>high</span></div>
         </div>
-        <div id="s3d-stage"><div class="s3d-loading" id="s3d-loading">Preparing 3D scene…</div></div>
-        <div class="s3d-hint"><b>Drag</b> rotate · <b>scroll</b> zoom · <b>right edge = now</b></div>
+        <div id="s3d-stage"><div class="s3d-loading" id="s3d-loading">Preparing 3D scene…</div><div class="s3d-hint"><b>Drag</b> rotate · <b>scroll</b> zoom · <b>right edge = now</b></div></div>
+        
         <div class="s3d-bar">
           <span class="grp">Instrument</span>
           <button class="hchip on" data-s3d-sig="violin">Violin</button>
@@ -1137,33 +1139,9 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
     </div>
   </section>
 
-  <!-- 22b · DFT / FFT algorithm -->
-  <section class="slide" data-ch="05 Fourier Transform" data-min="2" style="--accent:#FACC15"
-    data-notes="The heart of the computation. The discrete Fourier transform (DFT) is “multiply and add” for every frequency — for a signal of length N that's N×N multiplications (naïve O(N²)). The FFT (Cooley–Tukey) splits into even/odd terms, halving repeatedly (divide and conquer), for O(N log N). Raise N with the slider and the naïve-vs-FFT operation counts and the speed-up (N/log N) update live: about 100× at N=1024, about 50,000× at N≈1,000,000. Connect: spectrum analyzers, spectrograms, and MP3 run in real time thanks entirely to the FFT.">
-    <div class="inner">
-      <div class="eyebrow">The heart of computation · DFT and FFT</div>
-      <div class="split" style="grid-template-columns:1.02fr 0.98fr;align-items:center">
-        <div class="stack">
-          <h2 class="title-lg" style="margin-bottom:.5rem">Turning N² into N·log N</h2>
-          <div class="formula inlinek">$$ X_k=\sum_{n=0}^{N-1} x_n\,e^{-2\pi i\,kn/N} $$<div class="gloss">For every frequency k, <b class="hl-ink">“multiply and add”</b> with the signal — done honestly that's <b class="hl">N×N</b> multiplications: far too many!</div></div>
-          <div class="formula inlinek" style="border-left-color:#2DD4A7">$$ X_k=E_k+e^{-2\pi i k/N}\,O_k $$<div class="gloss">Repeatedly <b class="hl-ink">split in half</b> into even terms <span class="inlinek">\(E_k\)</span> and odd terms <span class="inlinek">\(O_k\)</span> (divide and conquer) → <b class="hl">O(N log N)</b>. This is the <b>FFT</b> (fast Fourier transform).</div></div>
-          <div class="statgrid">
-            <div class="ctrl-row"><label>Length N</label><input id="dff-n" type="range" min="4" max="20" value="10" step="1"><span class="readout" id="dff-N">1,024</span></div>
-            <div class="statline"><span>Naïve O(N²)</span><b id="dff-sq" style="color:#FB7185">1,048,576</b></div>
-            <div class="statline"><span>FFT O(N·log₂N)</span><b id="dff-fft" style="color:#2DD4A7">10,240</b></div>
-            <div class="statline"><span>Speed-up</span><b id="dff-sp" style="color:#FACC15">≈ 102×</b></div>
-          </div>
-        </div>
-        <div class="stack" style="gap:12px">
-          <div class="viz-wrap"><span class="viz-tag">operations: naïve vs FFT (log vertical axis)</span><canvas id="dff-chart" class="viz" height="214"></canvas></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 23 · uncertainty -->
+    <!-- 23 · uncertainty -->
   <section class="slide" data-ch="05 Fourier Transform" data-min="1.5" style="--accent:#FACC15"
-    data-notes="A memorable punch. You cannot know time and frequency both with unlimited precision — narrow the “window” in the spectrogram and time sharpens while frequency blurs (and vice versa). This is the same math as the uncertainty principle in quantum mechanics. In music you feel it as “a short percussive hit has an ambiguous pitch.”">
+    data-notes="A memorable punch. You cannot know time and frequency both with unlimited precision — narrow the “window” in the spectrogram and time sharpens while frequency blurs (and vice versa). This is the same math as the uncertainty principle in quantum mechanics. In music you feel it as “a short percussive hit has an ambiguous pitch.”" id="s-uncertainty">
     <div class="inner split">
       <div class="stack">
         <div class="eyebrow">An unavoidable trade-off</div>
@@ -1193,28 +1171,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
     </div>
   </section>
 
-  <!-- 23b · wavelet -->
-  <section class="slide" data-ch="05 Fourier Transform" data-min="2" style="--accent:#FB7185"
-    data-notes="The answer to uncertainty · wavelets. Fourier tells you “which frequency” but loses “when.” The spectrogram (STFT) uses a fixed-size window → time and frequency resolution are both locked at once. The wavelet changes its window size with frequency: a short window for high notes (precise time), a long window for low notes (precise frequency) — multi-resolution. Stretch (scale a) and shift (position b) a mother wavelet ψ (e.g. Morlet = a sine wrapped in a Gaussian) and overlap it with the signal. Raise a with the slider and the wavelet stretches (low frequency, wide in time). The grid on the right: the STFT has uniform cells, while the wavelet has cells that are thin at high frequency (sharp time) and wide at low frequency (sharp frequency). In music this captures both a drum hit (instantaneous, broad frequency) and a sustained tone (long, narrow frequency).">
-    <div class="inner">
-      <div class="eyebrow">The answer to uncertainty · wavelets</div>
-      <div class="split" style="grid-template-columns:1fr 1fr;align-items:center">
-        <div class="stack">
-          <h2 class="title-lg" style="margin-bottom:.5rem">When did which note sound?</h2>
-          <p class="body" style="font-size:.96rem;margin:.1rem 0 .4rem">You know which frequency — but <b>when</b> did it sound? The spectrogram has a fixed window (narrow it and time↑, frequency↓). The wavelet changes its <b class="hl">window size with frequency</b>.</p>
-          <div class="formula inlinek">$$ W(a,b)=\frac{1}{\sqrt{a}}\int f(t)\,\psi^{*}\!\Big(\frac{t-b}{a}\Big)dt $$<div class="gloss"><b>Stretch</b> by a scale <span class="inlinek">\(a\)</span> (≈ 1/frequency) and <b>shift</b> by a position <span class="inlinek">\(b\)</span>, overlapping with the signal. The mother wavelet <span class="inlinek">\(\psi\)</span> is, for example, the Morlet — a sine wrapped in a Gaussian.</div></div>
-          <p class="caption">A short window for high notes (precise time), a long window for low notes (precise frequency) — multi-resolution.</p>
-          <div class="ctrl-row" style="margin-top:.3rem"><label>Scale a</label><input id="wv-a" type="range" min="40" max="200" value="90" step="1"><span class="readout" id="wv-aout">a = 0.90</span></div>
-        </div>
-        <div class="stack" style="gap:12px">
-          <div class="viz-wrap"><span class="viz-tag">Morlet wavelet · ψ((t−b)/a)</span><canvas id="wv-morlet" class="viz" height="134"></canvas></div>
-          <div class="viz-wrap"><span class="viz-tag">time–frequency tiling (↑frequency, time→)</span><canvas id="wv-tiling" class="viz" height="162"></canvas></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 24 · synth -->
+    <!-- 24 · synth -->
   <section class="slide" data-ch="06 Fourier in Music" data-min="1.5" style="--accent:#FB7185"
     data-notes="Synthesizers. Additive synthesis = adding harmonics directly (what we did). Subtractive synthesis = carving a harmonic-rich waveform with a filter. Both directions are “designing the spectrum.” Keep it quick.">
     <div class="inner split">
@@ -1263,7 +1220,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 
   <!-- 26 · tuner / autotune -->
   <section class="slide" data-ch="06 Fourier in Music" data-min="1.5" style="--accent:#FB7185"
-    data-notes="Pitch detection and correction. A tuner app uses an FFT to find the fundamental frequency and show the note name. Auto-Tune shifts the detected pitch toward a target note. Noise cancellation, too, works in the frequency domain. Wrap up with everyday technology.">
+    data-notes="Pitch detection and correction. A tuner app uses an FFT to find the fundamental frequency and show the note name. Auto-Tune shifts the detected pitch toward a target note. Noise cancellation, too, works in the frequency domain. Wrap up with everyday technology." id="s-tuner">
     <div class="inner stack center">
       <div class="eyebrow" style="justify-content:center">Read the frequency, fix it, erase it</div>
       <h2 class="h-sec" style="text-align:center">Tuner · Auto-Tune · noise cancellation</h2>
@@ -1277,7 +1234,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 
   <!-- 27 · musicology -->
   <section class="slide" data-ch="06 Fourier in Music" data-min="1.5" style="--accent:#FB7185"
-    data-notes="Tailored to the audience — a direct link to musicology research. The spectrum and spectrogram turn “sound into measurable data.” Comparing tuning systems (the frequency ratios of just intonation vs. equal temperament), quantitative analysis of timbre, acoustic analysis of ethnomusicological and oral-tradition recordings, restoration of historical instruments and recordings, even speech and birdsong studies. Motivate by stressing how these open into research topics.">
+    data-notes="Tailored to the audience — a direct link to musicology research. The spectrum and spectrogram turn “sound into measurable data.” Comparing tuning systems (the frequency ratios of just intonation vs. equal temperament), quantitative analysis of timbre, acoustic analysis of ethnomusicological and oral-tradition recordings, restoration of historical instruments and recordings, even speech and birdsong studies. Motivate by stressing how these open into research topics." id="s-musicology">
     <div class="inner stack">
       <div class="eyebrow">Turning sound into “measurable data”</div>
       <h2 class="h-sec">Fourier in musicology research</h2>
@@ -2116,16 +2073,20 @@ let HB=null, SB=null;
     nR.textContent=N; tag.textContent='N = '+N+' harmonic'+(N>1?'s':'');
     drawWave(cv,x=>partial(x,N)*0.82,{c0:'#4D7CFF',c1:'#22D3EE',glow:'#4D7CFF',ref:squareRef});
   }
-  function squareAmps(N){ const a=new Array(N+1).fill(0); for(let k=1;k<=N;k+=2)a[k]=1/k; return a; }
-  nEl.addEventListener('input',()=>{cancelAnimationFrame(animRaf);draw(+nEl.value);});
+  /* periodicWave() maps amps[i] -> harmonic i+1, so the k-th harmonic lives at index k-1.
+     (The old 1-based indexing shifted everything up: it played EVEN harmonics 2,4,6... an octave high,
+      which no longer matched the odd-harmonic square wave drawn on screen.) */
+  function squareAmps(N){ const a=new Array(N).fill(0); for(let k=1;k<=N;k+=2)a[k-1]=1/k; return a; }
+  function live(N){ if(voice){ try{ voice.o.setPeriodicWave(periodicWave(squareAmps(N))); }catch(e){} } }
+  nEl.addEventListener('input',()=>{cancelAnimationFrame(animRaf);const N=+nEl.value;draw(N);live(N);});
   playBtn.addEventListener('click',()=>{
     if(tg.state){ if(voice){voice.stop();voice=null;} setToggle(tg,false); }
     else { if(voice){try{voice.stop();}catch(e){}} voice=tone({wave:periodicWave(squareAmps(+nEl.value)),freq:160,vol:0.24}); setToggle(tg,true); voice.o.onended=()=>{voice=null;setToggle(tg,false);}; }
   });
   animBtn.addEventListener('click',()=>{
-    cancelAnimationFrame(animRaf); let N=1; nEl.value=1; draw(1);
+    cancelAnimationFrame(animRaf); let N=1; nEl.value=1; draw(1); live(1);
     let last=performance.now();
-    (function step(now){ if(now-last>260){ N=Math.min(49,N+2); nEl.value=N; draw(N); last=now; if(N>=49)return; } animRaf=requestAnimationFrame(step); })(last);
+    (function step(now){ if(now-last>260){ N=Math.min(49,N+2); nEl.value=N; draw(N); live(N); last=now; if(N>=49)return; } animRaf=requestAnimationFrame(step); })(last);
   });
   drawInit.push(()=>draw(1)); attachZoom(cv,()=>draw(+nEl.value));
 })();
@@ -2343,7 +2304,8 @@ const SCORE=(function(){
     }
     return {c:c,W:W,D:D};
   }
-  function make(cvId, evs, dur, colorOf){
+  function make(cvId, evs, dur, colorOf, opts){
+    const PHF=(opts&&opts.phf!=null)?opts.phf:0.22;
     let strip=null, raf=0, t0=0, playing=false, started=false, AC=null;
     const LM=Math.round(4.3*S);
     function cvEl(){ return document.getElementById(cvId); }
@@ -2364,7 +2326,7 @@ const SCORE=(function(){
         g.font=(2.7*S)+'px serif'; g.fillText('\uD834\uDD22', 5, yOf(24)+1.0*S); }
       else { g.font='bold '+(1.6*S)+'px "JetBrains Mono",monospace';
         g.fillText('G', 8, yOf(32)+0.55*S); g.fillText('F', 8, yOf(24)+0.55*S); }
-      const PH=LM+Math.round((w-LM)*0.22);
+      const PH=Math.min(w-2, Math.round((opts&&opts.phPx)?opts.phPx(w):(LM+(w-LM)*PHF)));
       if(playing || started){
         if(!strip) strip=buildStrip(evs,dur,colorOf);
         /* map canvas x -> strip x; only paint where strip-time >= 0 (nothing shows before you press play) */
@@ -2399,7 +2361,9 @@ const SCORE=(function(){
       showAt:function(sec){ started=true; base(sec); },            /* paint a static frame at sec (scrubbing while paused) */
       dur:function(){ return dur; },
       onTick:function(fn){ onTick=fn; },
-      onEnd:function(fn){ ended=fn; }
+      onEnd:function(fn){ ended=fn; },
+      phX:function(w){ return Math.min(w-2, Math.round((opts&&opts.phPx)?opts.phPx(w):(LM+(w-LM)*PHF))); },
+      accentRGB:function(){ const c=cvEl(); return c?accent(c).slice():[124,108,240]; }
     };
   }
   return {make:make};
@@ -2407,11 +2371,13 @@ const SCORE=(function(){
 const TOCCATA_EVS=(function(){ const a=[]; let t=0;
   for(const nd of TOCCATA_SEQ){ if(nd[0]>0) a.push({t:t,f:nd[0],d:nd[1]}); t+=nd[1]; } return a; })();
 const TOCCATA_DUR=(function(){ let t=0; for(const nd of TOCCATA_SEQ) t+=nd[1]; return t; })();
-const SGSC=SCORE.make('sg-score', TOCCATA_EVS, TOCCATA_DUR, null);
+const SGSC=SCORE.make('sg-score', TOCCATA_EVS, TOCCATA_DUR, null,
+  {phPx:function(w){ const c=document.getElementById('sg-canvas'); return (c&&c._w)?c._w:Math.round(w*0.8333); }});
+  /* playhead pinned to the spectrogram's right edge; the score's extra width previews upcoming notes */
 
 /* ---- spectrogram melody: seekable transport ---- */
 let SG_OS=[], SG_AN=null, SG_SEEKBAR=null, SG_PROG=0;
-function sgMelodyStop(){ SG_OS.forEach(o=>{try{o.stop();}catch(e){}}); SG_OS=[]; SGSC.stop(); if(SG_PROG){cancelAnimationFrame(SG_PROG);SG_PROG=0;} if(SG_SEEKBAR)SG_SEEKBAR.reset(); }
+function sgMelodyStop(){ SG_OS.forEach(o=>{try{o.stop();}catch(e){}}); SG_OS=[]; SGSC.stop(); if(SG_PROG){cancelAnimationFrame(SG_PROG);SG_PROG=0;} if(SG_SEEKBAR)SG_SEEKBAR.reset(); sgNowline(false); }
 function sgMelodyPlay(an, offset){
   const ctx=ac(); SG_AN=an||SG_AN; SG_OS.forEach(o=>{try{o.stop();}catch(e){}}); SG_OS=[];
   offset=Math.max(0,Math.min(TOCCATA_DUR-0.05, offset||0));
@@ -2424,8 +2390,34 @@ function sgMelodyPlay(an, offset){
       g.gain.setValueAtTime(0,Math.max(ctx.currentTime,on)); g.gain.linearRampToValueAtTime(0.24,Math.max(ctx.currentTime,on)+0.008);
       g.gain.setTargetAtTime(0, off-Math.min(0.07,d*0.35), 0.03);
       o.connect(g); g.connect(SG_AN); o.start(st); o.stop(off); SG_OS.push(o); } }
+  SG_MODE='melody';
   SGSC.seek(t0); SGSC.start(t0);
-  sgClear();   /* wipe heatmap so it redraws cleanly from the new position */
+  sgClear(); sgNowline(true);
+  /* live analyser painting - the original look: fresh FFT column at the right edge, history streaming
+     left. The score panel is ~20% wider than the spectrogram and pins its playhead (phPx) to the
+     spectrogram's right edge, so one yellow line marks "now" in both while upcoming notes preview
+     in the score's extra width - the live texture is untouched. */
+  if(sgRaf)cancelAnimationFrame(sgRaf);
+  const cv=document.getElementById('sg-canvas');
+  if(cv&&cv._ctx){
+    const ctxc=cv._ctx, w=cv._w, h=cv._h, sr=ctx.sampleRate,
+          ny=SG_AN.frequencyBinCount, data=new Uint8Array(ny), step=3, maxF=SG_MAXF;
+    (function sgLoop(){
+      const now=ac().currentTime - t0;
+      SG_AN.getByteFrequencyData(data);
+      const img=ctxc.getImageData(SG_LM+step,0,w-SG_LM-step,h); ctxc.putImageData(img,SG_LM,0);
+      ctxc.fillStyle='#05070E'; ctxc.fillRect(w-step,0,step,h);
+      for(let y=0;y<h;y++){
+        const f=(1-y/h)*maxF; const bin=Math.round(f/(sr/2)*ny); const v=(data[bin]||0)/255; if(v<0.045) continue;
+        const u=f/maxF; const c=specRGB(u);
+        ctxc.fillStyle='rgba('+c[0]+','+c[1]+','+c[2]+','+Math.pow(v,1.3)+')';
+        ctxc.fillRect(w-step,y,step,1);
+      }
+      for(const gy of SG_GY){ ctxc.fillStyle='rgba(255,255,255,0.055)'; ctxc.fillRect(w-step,gy,step,1); }
+      if(now>TOCCATA_DUR+1){ sgRaf=0; sgNowline(false); return; }
+      sgRaf=requestAnimationFrame(sgLoop);
+    })();
+  }
   if(SG_SEEKBAR){ if(SG_PROG)cancelAnimationFrame(SG_PROG);
     const tick=()=>{ const pos=ac().currentTime-t0; SG_SEEKBAR.setProgress(pos);
       if(pos<TOCCATA_DUR+0.3 && SG_OS.length){ SG_PROG=requestAnimationFrame(tick); } else { SG_PROG=0; } };
@@ -2434,6 +2426,11 @@ function sgMelodyPlay(an, offset){
 (function(){ SG_SEEKBAR=makeSeek('sg-seek',{ dur:TOCCATA_DUR,
   onScrub:(sec)=>{ SGSC.showAt(sec); },
   onSeek:(sec)=>{ if(SG_OS.length || (SG_AN)){ sgMelodyPlay(SG_AN, sec); } else { SGSC.showAt(sec); } } }); })();
+
+let SG_MODE=null;
+function sgNowline(v){ const el=document.getElementById('sg-nowline'); if(el) el.style.display=v?'block':'none'; }
+
+
 
 
 
@@ -2478,15 +2475,16 @@ let sgRaf=0, sgStopFn=null;
 function sgStop(){ if(sgRaf){cancelAnimationFrame(sgRaf);sgRaf=0;} if(sgStopFn){try{sgStopFn();}catch(e){}sgStopFn=null;} }
 function sgClear(){ const cv=document.getElementById('sg-canvas'); if(!cv||!cv._ctx)return; const ctx=cv._ctx; ctx.fillStyle='#05070E'; ctx.fillRect(0,0,cv._w,cv._h); sgAxis(); }
 function sgRun(kind){
-  sgStop(); const ctx=ac();
+  sgStop(); SG_MODE=kind; sgNowline(false); const ctx=ac();
   const an=ctx.createAnalyser(); an.fftSize=2048; an.smoothingTimeConstant=(kind==='melody'?0.08:0.4); an.connect(AU.master);
   const data=new Uint8Array(an.frequencyBinCount);
   let stop=()=>{};
   if(kind==='melody'){
-    /* Bach — Toccata BWV 565, ~3 min fast arrangement; seekable transport (fast-forward / rewind) */
-    const seq=TOCCATA_SEQ;
-    sgMelodyPlay(an, 0);   /* schedules audio + score + heatmap-clear from a given offset */
+    /* Bach — Toccata BWV 565: live analyser spectrogram; the wider score below pins its playhead to the spectrogram's right edge */
+    sgMelodyPlay(an, 0);
     stop=()=>{ sgMelodyStop(); };
+    sgStopFn=stop; AU.voices.add({stop});
+    return;
   } else if(kind==='chirp'){
     const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';g.gain.value=0.22;o.connect(g);g.connect(an);
     o.frequency.setValueAtTime(160,ctx.currentTime);o.frequency.exponentialRampToValueAtTime(1500,ctx.currentTime+3.6);
@@ -2513,8 +2511,8 @@ function sgRun(kind){
   }
   frame();
 }
-(function(){ document.querySelectorAll('[data-sg]').forEach(b=>b.addEventListener('click',()=>{ const k=b.getAttribute('data-sg'); if(k==='clear'){sgStop();sgClear();return;} sgRun(k); })); })();
-ENTERS.spectrogram=()=>{ sgClear(); return ()=>{}; };
+(function(){ document.querySelectorAll('[data-sg]').forEach(b=>b.addEventListener('click',()=>{ const k=b.getAttribute('data-sg'); if(k==='clear'){sgStop();sgClear();SG_MODE=null;sgNowline(false);return;} sgRun(k); })); })();
+ENTERS.spectrogram=()=>{ sgClear(); sgNowline(false); return ()=>{}; };
 drawInit.push(sgClear);   /* redraw axis after canvas refit */
 drawInit.push(()=>SGSC.idle());
 
@@ -3288,50 +3286,6 @@ window.addEventListener('resize',()=>{ clearTimeout(resizeT); resizeT=setTimeout
   drawInit.push(draw);
 })();
 
-/* --- DEMO: DFT / FFT complexity --- */
-(function(){
-  const chart=document.getElementById('dff-chart'), nEl=document.getElementById('dff-n');
-  const eN=document.getElementById('dff-N'), eSq=document.getElementById('dff-sq'), eFft=document.getElementById('dff-fft'), eSp=document.getElementById('dff-sp');
-  if(!chart) return;
-  function comma(x){ return Math.round(x).toLocaleString('en-US'); }
-  function drawChart(pmark){ if(!chart._ctx) return; const ctx=chart._ctx,w=chart._w,h=chart._h,padL=8,padB=22; ctx.clearRect(0,0,w,h);
-    const pMin=1,pMax=20, X=function(p){return padL+(p-pMin)/(pMax-pMin)*(w-padL-8);};
-    const yTop=Math.log10(Math.pow(2,pMax)*Math.pow(2,pMax)), Y=function(v){ return (h-padB)-(Math.log10(Math.max(1,v))/yTop)*(h-padB-10); };
-    ctx.strokeStyle='rgba(255,255,255,0.10)'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(padL,8); ctx.lineTo(padL,h-padB); ctx.lineTo(w-6,h-padB); ctx.stroke();
-    function curve(fn,color){ ctx.strokeStyle=color; ctx.lineWidth=2.4; ctx.lineJoin='round'; ctx.shadowColor=color; ctx.shadowBlur=8; ctx.beginPath(); let first=true; for(let p=pMin;p<=pMax;p+=0.2){ const N=Math.pow(2,p),x=X(p),y=Y(fn(N,p)); first?(ctx.moveTo(x,y),first=false):ctx.lineTo(x,y);} ctx.stroke(); ctx.shadowBlur=0; }
-    curve(function(N){return N*N;}, '#FB7185');
-    curve(function(N,p){return N*p;}, '#2DD4A7');
-    ctx.setLineDash([4,4]); ctx.strokeStyle='rgba(255,255,255,0.4)'; ctx.beginPath(); ctx.moveTo(X(pmark),8); ctx.lineTo(X(pmark),h-padB); ctx.stroke(); ctx.setLineDash([]);
-    ctx.font='12.5px "JetBrains Mono",monospace'; ctx.textAlign='left';
-    ctx.fillStyle='#FB7185'; ctx.fillText('O(N²)', X(14)+2, Y(Math.pow(2,14)*Math.pow(2,14)));
-    ctx.fillStyle='#2DD4A7'; ctx.fillText('O(N log N)', X(9)+2, Y(Math.pow(2,9)*9)+14);
-    ctx.fillStyle='rgba(255,255,255,0.42)'; ctx.textAlign='center'; ctx.fillText('N = 2^'+pmark, X(pmark), h-6);
-  }
-  function upd(){ const p=Math.max(1,+nEl.value||10); const N=Math.pow(2,p),sq=N*N,fft=N*p; if(eN)eN.textContent=comma(N); if(eSq)eSq.textContent=comma(sq); if(eFft)eFft.textContent=comma(fft); if(eSp)eSp.textContent='≈ '+comma(sq/fft)+'×'; drawChart(p); }
-  if(nEl) nEl.addEventListener('input',upd); drawInit.push(upd);
-})();
-
-/* --- DEMO: Wavelet (Morlet + time-frequency tiling) --- */
-(function(){
-  const mor=document.getElementById('wv-morlet'), til=document.getElementById('wv-tiling'), aEl=document.getElementById('wv-a'), aOut=document.getElementById('wv-aout');
-  if(!mor) return;
-  function drawMorlet(){ if(!mor._ctx) return; const ctx=mor._ctx,w=mor._w,h=mor._h,mid=h/2; const a=Math.max(0.4,(+aEl.value||90)/100); if(aOut) aOut.textContent='a = '+a.toFixed(2);
-    ctx.clearRect(0,0,w,h); grid(ctx,w,h); const cx=w/2, sigma=0.085*a*w, lam=sigma*0.72, A=h/2-16;
-    ctx.strokeStyle='rgba(251,113,133,0.35)'; ctx.lineWidth=1.2; ctx.setLineDash([4,4]);
-    ctx.beginPath(); for(let x=0;x<=w;x++){ const dt=x-cx,e=Math.exp(-dt*dt/(2*sigma*sigma)),y=mid-e*A; x?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.stroke();
-    ctx.beginPath(); for(let x=0;x<=w;x++){ const dt=x-cx,e=Math.exp(-dt*dt/(2*sigma*sigma)),y=mid+e*A; x?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.stroke(); ctx.setLineDash([]);
-    ctx.strokeStyle='#22D3EE'; ctx.lineWidth=2.6; ctx.lineJoin='round'; ctx.shadowColor='#22D3EE'; ctx.shadowBlur=9;
-    ctx.beginPath(); for(let x=0;x<=w;x++){ const dt=x-cx,e=Math.exp(-dt*dt/(2*sigma*sigma)),y=mid-e*Math.cos(2*Math.PI*dt/lam)*A; x?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.stroke(); ctx.shadowBlur=0;
-  }
-  function drawTiling(){ if(!til._ctx) return; const ctx=til._ctx,w=til._w,h=til._h; ctx.clearRect(0,0,w,h); const gap=22, pw=(w-gap)/2, ph=h-26, top=4;
-    function panel(x0,label){ ctx.strokeStyle='rgba(255,255,255,0.16)'; ctx.lineWidth=1; ctx.strokeRect(x0,top,pw,ph); ctx.font='12px "JetBrains Mono",monospace'; ctx.fillStyle='rgba(255,255,255,0.55)'; ctx.textAlign='center'; ctx.fillText(label, x0+pw/2, h-8); }
-    panel(0,'STFT · uniform grid'); const cols=8, rows=6; for(let c=0;c<cols;c++)for(let r=0;r<rows;r++){ ctx.strokeStyle='rgba(124,108,240,0.5)'; ctx.lineWidth=1; ctx.strokeRect(c*pw/cols, top+r*ph/rows, pw/cols, ph/rows); }
-    const x1=pw+gap; panel(x1,'Wavelet · multi-resolution'); const cc=[8,4,2,1], tot=15; let yy=top; for(let L=0;L<cc.length;L++){ const bh=cc[L]/tot*ph, u=1-L/(cc.length-1); ctx.strokeStyle=specColor(0.12+0.82*u,0.75); ctx.lineWidth=1; for(let c=0;c<cc[L];c++){ ctx.strokeRect(x1+c*pw/cc[L], yy, pw/cc[L], bh); } yy+=bh; }
-  }
-  function draw(){ drawMorlet(); drawTiling(); }
-  if(aEl) aEl.addEventListener('input',drawMorlet); drawInit.push(draw);
-})();
-
 /* --- DEMO: cochlea = biological Fourier analyzer --- */
 const COCH=(function(){
   const FMAX=20000, FMIN=20;
@@ -3359,8 +3313,8 @@ const COCH=(function(){
     // frequency / note ruler
     ctx.font='11px "JetBrains Mono",monospace'; ctx.textAlign='center';
     for(let i=0;i<NOTE.length;i++){ const f=NOTE[i][0],X=Xp(f2x(f)); ctx.strokeStyle='rgba(255,255,255,0.14)'; ctx.beginPath(); ctx.moveTo(X,midY+4); ctx.lineTo(X,midY+12); ctx.stroke(); ctx.fillStyle='rgba(255,255,255,0.42)'; ctx.fillText(NOTE[i][1],X,h-24); ctx.fillStyle='rgba(255,255,255,0.28)'; const lbl= f>=1000?(f/1000).toFixed(f>=10000?0:1)+'k':Math.round(f)+''; ctx.fillText(lbl+'Hz',X,h-13); }
-    ctx.textAlign='left'; ctx.fillStyle='rgba(255,255,255,0.5)'; ctx.font='12px "JetBrains Mono",monospace'; ctx.fillText('entrance (base) · high · stiff', x0+2, 14);
-    ctx.textAlign='right'; ctx.fillText('far end (apex) · low · soft', x1-2, 14);
+    ctx.textAlign='left'; ctx.fillStyle='rgba(255,255,255,0.5)'; ctx.font='12px "JetBrains Mono",monospace'; ctx.fillText('entrance (base) · high · stiff', x0+2, 34);
+    ctx.textAlign='right'; ctx.fillText('far end (apex) · low · soft', x1-2, 34);
   }
   return {draw:draw,f2x:f2x};
 })();
