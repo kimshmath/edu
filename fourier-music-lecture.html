@@ -499,6 +499,9 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 #kb3-keys{position:relative;height:118px;user-select:none;touch-action:none;}
 .kb3-key{position:absolute;top:0;cursor:pointer;border-radius:0 0 6px 6px;}
 #kb3-wrap.compact #kb3-keys{height:94px;}
+#s3dlive-host{display:flex;flex-direction:column;gap:8px;}
+#s3dlive-ctl{display:flex;gap:10px;justify-content:center;margin-top:8px;}
+#s3dlive-ctl .btn.play{min-width:112px;}
 </style>
 </head>
 <body>
@@ -1136,6 +1139,14 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
         <div class="seekbar" id="s3d-seek" style="display:none;padding:0 14px 6px"><span class="sk-time sk-cur">0:00</span><div class="sk-track"><div class="sk-rail"></div><div class="sk-fill"></div><div class="sk-knob"></div></div><span class="sk-time sk-tot">0:00</span></div>
       </div>
       <div class="caption" style="margin-top:8px">정면에서 보면 파형만, 위에서 보면 스펙트로그램만 — <span class="hl">관점을 바꾸는 것</span>이 곧 시간·주파수 사이의 변환입니다. <span class="hl">‘그림’ 소리</span>를 위에서 보면, 바닥에 그 윤곽이 흐릅니다.</div>
+    </div>
+  </section>
+  <!-- S3DLIVE · performance view -->
+  <section class="slide" data-enter="s3dlive" data-ch="05 푸리에 변환" data-min="2.5" style="--accent:#FACC15"
+    data-notes="공연 전용 화면입니다 — 설명 없이 3D 스펙트로그램과 건반만. 토카타/캐논을 고르고 ▶를 누르면 3분 전곡이 실시간으로 흐르며, 아래 건반에 지금 울리는 음이 계속 켜집니다(시크바로 되감기·빨리감기). 재생 중 건반을 직접 눌러 합주할 수도 있습니다. 시점·자동회전은 앞 슬라이드에서 잡아 둔 그대로 유지되니, 미리 ‘위=스펙트로그램’이나 원근을 골라 두세요. 여기서는 아무 말 없이 음악이 그림이 되는 걸 보여주면 됩니다.">
+    <div class="inner stack">
+      <div id="s3dlive-host"></div>
+      <div id="s3dlive-ctl"></div>
     </div>
   </section>
 
@@ -3265,8 +3276,8 @@ drawInit.push(sgClear);   /* redraw axis after canvas refit */
       var wantSeek = (key==='melody'||key==='canon'), wantKb = (key==='keys'||wantSeek);
       if(_sk) _sk.style.display=wantSeek?'flex':'none';
       if(_kb) _kb.style.display=wantKb?'':'none';
-      if(_kb) _kb.classList.toggle('compact', wantSeek);
-      stage.style.height=(wantSeek||wantKb)? Math.max(wantSeek?144:210,(S3D_BASEH||430)-(wantKb?150:0)-(wantSeek?34:0))+'px' : '';
+      if(_kb) _kb.classList.toggle('compact', wantSeek && !PERF);
+      stage.style.height= PERF? (PERF_H+'px') : ((wantSeek||wantKb)? Math.max(wantSeek?144:210,(S3D_BASEH||430)-(wantKb?150:0)-(wantSeek?34:0))+'px' : '');
       if(wantSeek && S3D_SEEKBAR) S3D_SEEKBAR.setDur(key==='canon'?CANON.TOTAL:TOCCATA_DUR);
       if(wantKb){ kb3Ensure(); kb3Build(); }
       try{ resize(); }catch(e){} try{ fitCurrent(); }catch(e){} }
@@ -3363,6 +3374,39 @@ drawInit.push(sgClear);   /* redraw axis after canvas refit */
   }
 
   /* =================== ENTER / LEAVE (slide controller) =================== */
+
+  /* ---- minimal performance view: the next slide adopts the whole live rig ---- */
+  let PERF=false, PERF_H=530; const ADOPTED=[];
+  function adoptInto(host, ctl){
+    ADOPTED.length=0;
+    const take=(el,tgt)=>{ if(!el) return; ADOPTED.push({el:el,parent:el.parentNode,next:el.nextSibling}); tgt.appendChild(el); };
+    take(stage, host);
+    take(document.getElementById('kb3-wrap'), host);
+    take(document.getElementById('s3d-seek'), host);
+    take(document.querySelector('[data-s3d-sig="melody"]'), ctl);
+    take(document.querySelector('[data-s3d-sig="canon"]'), ctl);
+    take(document.getElementById('s3d-play'), ctl);
+  }
+  function releaseAdopted(){
+    for(let i=ADOPTED.length-1;i>=0;i--){ const a=ADOPTED[i];
+      if(a.next&&a.next.parentNode===a.parent) a.parent.insertBefore(a.el,a.next); else a.parent.appendChild(a.el); }
+    ADOPTED.length=0;
+  }
+  ENTERS.s3dlive=function(){
+    const host=document.getElementById('s3dlive-host'), ctl=document.getElementById('s3dlive-ctl');
+    if(!host||!ctl) return function(){};
+    adoptInto(host, ctl);
+    PERF=true;
+    if(!built){ try{ build(); }catch(err){ console.warn('3D build failed',err); PERF=false; releaseAdopted(); return function(){}; } }
+    running=true; last=performance.now();
+    setSignal((desc&&desc.key==='canon')?'canon':'melody');
+    requestAnimationFrame(function(){ try{ resize(); }catch(e){} });
+    raf=requestAnimationFrame(loop);
+    return function(){ running=false; if(raf)cancelAnimationFrame(raf); raf=0;
+      stopAudio(); kb3Stop(); plStop();
+      PERF=false; releaseAdopted();
+      try{ if(desc) setSignal(desc.key); }catch(e){} };
+  };
   ENTERS.sound3d = function(){
     if(!built){ try{ build(); }catch(err){ console.warn('3D build failed',err); if(loadingEl){loadingEl.textContent='3D 장면을 초기화하지 못했습니다.';loadingEl.style.display='flex';} return ()=>{}; } }
     running=true; last=performance.now();
