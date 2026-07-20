@@ -519,6 +519,23 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 .seekbar.drag .sk-knob,.seekbar .sk-track:hover .sk-knob{transform:translate(-50%,-50%) scale(1.25);}
 #sg-nowline{display:none;position:absolute;top:10px;bottom:10px;right:10px;width:2px;background:var(--accent,#FACC15);box-shadow:0 0 9px 1px var(--accent,#FACC15);opacity:.85;pointer-events:none;}
 .slide:has(#sg-canvas) .viz-wrap:has(#sg-canvas){width:83.333%;}   /* score below stays full width: its extra ~20% previews upcoming notes */
+#kb-keys{position:relative;flex:1;height:100%;user-select:none;touch-action:none;}
+.kb-key{position:absolute;top:0;cursor:pointer;border-radius:0 0 6px 6px;}
+.kb-w{height:100%;background:linear-gradient(180deg,#F7F9FF,#D9DEEA);border:1px solid #9AA3B5;z-index:1;}
+.kb-w.on,.kb-w.lit{background:linear-gradient(180deg,#FFF3BC,var(--accent));}
+.kb-w span{position:absolute;bottom:5px;left:50%;transform:translateX(-50%);font:600 10px var(--mono);color:#6B7488;pointer-events:none;}
+.kb-b{height:62%;background:linear-gradient(180deg,#2A2F3C,#0D1017);border:1px solid #000;z-index:2;border-radius:0 0 4px 4px;}
+.kb-b.on,.kb-b.lit{background:linear-gradient(180deg,var(--accent),#7a6100);}
+#kb-row{display:flex;gap:8px;height:128px;}
+#kb-side{width:84px;display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:6px;}
+#kb-sus{padding:.5em .4em;font-size:.8rem;letter-spacing:.02em;}
+#kb-sus.on{background:var(--accent);color:#13151C;border-color:var(--accent);box-shadow:0 0 12px 1px var(--accent);}
+.kb-hint{font:600 10px var(--mono);color:var(--ink-faint);text-align:center;letter-spacing:.04em;}
+.kb-key.sus{box-shadow:inset 0 0 0 2px var(--accent);}
+#kb3-wrap{margin-top:8px;background:linear-gradient(180deg,#080C16,#05070E);border:1px solid var(--line);border-radius:14px;padding:8px 10px;}
+#kb3-keys{position:relative;height:118px;user-select:none;touch-action:none;}
+.kb3-key{position:absolute;top:0;cursor:pointer;border-radius:0 0 6px 6px;}
+#kb3-wrap.compact #kb3-keys{height:94px;}
 </style>
 </head>
 <body>
@@ -597,6 +614,25 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
   </section>
 
   <!-- ===== PART 1 DIVIDER ===== -->
+    <!-- SINCOS · gentle primer -->
+  <section class="slide" data-enter="sincos" data-ch="01 what is sound" data-min="2" style="--accent:#22D3EE"
+    data-notes="A warm-up for students who find trig intimidating. Pictures before formulas: one dot going around a circle is all there is. Write down its height over time and you get sine; its horizontal position gives cosine — two shadows of the same rotation, and cosine is just sine started a quarter-turn earlier (show it with the chips). The musical dictionary: spin faster = higher pitch (frequency f), bigger circle = louder (amplitude A), where you start = phase. Reassure them that y(t)=A sin(2πft+φ) merely writes those three things in one line — then every later formula reads as this one picture.">
+    <div class="inner stack">
+      <div class="eyebrow">warm-up · two shadows of a rotation</div>
+      <h2 class="h-sec">Sine &amp; cosine — one spinning dot is all you need</h2>
+      <div class="viz-wrap"><span class="viz-tag">live · unit circle → wave</span>
+        <canvas id="sc-canvas" class="viz" height="252"></canvas></div>
+      <div class="btn-row" style="margin-top:10px">
+        <button class="hchip on" data-sc="sin">sine</button>
+        <button class="hchip" data-sc="cos">cosine</button>
+        <button class="hchip" data-sc="both">both</button>
+      </div>
+      <p class="gloss" style="margin-top:.55rem">Track the dot's <b class="hl-ink">height</b> over time and you get <span style="color:#22D3EE">sine</span>; track its <b class="hl-ink">horizontal position</b> and you get <span style="color:#FACC15">cosine</span> — two shadows of one rotation. Cosine is just sine started a quarter-turn earlier.</p>
+      <p class="gloss">One lap = one vibration. <b class="hl-ink">Spin faster = higher pitch</b> (frequency f), <b class="hl-ink">bigger circle = louder</b> (amplitude A), the starting point is the phase.</p>
+      <div class="formula">\( y(t) = A\,\sin(2\pi f\,t + \varphi) \) <span class="caption" style="margin-left:.8em">— A size, f speed, φ start. That one line is all of it.</span></div>
+    </div>
+  </section>
+
   <section class="slide" data-ch="01 What Is Sound" data-min="0.5" style="--accent:#7C6CF0"
     data-notes="Start of Part 1. A breather slide. Foreshadow the shift in perspective: “sound is, in the end, a single number that varies over time.”">
     <div class="inner split">
@@ -1069,17 +1105,20 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 
   <!-- 22 · spectrogram -->
   <section class="slide" data-enter="spectrogram" data-ch="05 Fourier Transform" data-min="2" style="--accent:#FACC15"
-    data-notes="A core tool of musicology. Spectrogram = time across, frequency up, intensity as brightness. Play a melody and the notes are drawn as “dots and lines,” with harmonics stacked in layers. Connect it: this is the very picture used to analyze birdsong, speech, and field recordings of traditional music (leading into the applications).">
+    data-notes="A core tool of musicology. Spectrogram = time across, frequency up, intensity as brightness. Play a melody and the notes are drawn as “dots and lines,” with harmonics stacked in layers. Connect it: this is the very picture used to analyze birdsong, speech, and field recordings of traditional music (leading into the applications). New demos — [Chord]: notes pile up one by one and the third drops a semitone for minor. [Play the keys]: press the keys yourself (drag = glissando) for a live spectrum. Turn Sustain on to hold released notes and stack chords; press a sustained key again to release just that note. While the Toccata, Canon, Chord, harmonic layers or glissando play, the keys below light up with whatever is sounding (in place of the score). The Pachelbel Canon (3 min) is available as a second melody.">
     <div class="inner stack">
       <div class="eyebrow">Time × frequency · the microscope of musicology</div>
       <h2 class="h-sec">Spectrogram — a score of frequencies</h2>
       <div class="viz-wrap" style="margin-top:.4rem"><span class="viz-tag">spectrogram · ↑freq · →time</span><canvas id="sg-canvas" class="viz" height="266"></canvas><div id="sg-nowline"></div></div>
-      <div class="viz-wrap" style="margin-top:8px;padding:8px 10px"><span class="viz-tag">score · now playing</span><canvas id="sg-score" class="viz" height="128"></canvas></div>
-      <div class="seekbar" id="sg-seek"><span class="sk-time sk-cur">0:00</span><div class="sk-track"><div class="sk-rail"></div><div class="sk-fill"></div><div class="sk-knob"></div></div><span class="sk-time sk-tot">0:00</span></div>
+            <div class="viz-wrap" id="kb-wrap" style="margin-top:8px;padding:8px 10px"><div id="kb-row"><div id="kb-keys"></div><div id="kb-side"><button class="btn" id="kb-sus">Sustain</button><span class="kb-hint">hold notes</span></div></div></div>
+      <div class="seekbar" id="sg-seek" style="display:none"><span class="sk-time sk-cur">0:00</span><div class="sk-track"><div class="sk-rail"></div><div class="sk-fill"></div><div class="sk-knob"></div></div><span class="sk-time sk-tot">0:00</span></div>
       <div class="btn-row" style="margin-top:14px">
         <button class="btn" data-sg="chirp">▶ Rising tone (glissando)</button>
         <button class="btn" data-sg="harm">▶ Show harmonic layers</button>
-        <button class="btn play" data-sg="melody">▶ Melody (Bach Toccata · 3 min)</button>
+        <button class="btn play" data-sg="melody">▶ Bach Toccata</button>
+        <button class="btn play" data-sg="canon">▶ Pachelbel Canon</button>
+        <button class="btn" data-sg="chord">▶ Chord</button>
+        <button class="btn" data-sg="keys">🎹 Play the keys</button>
         <button class="btn" data-sg="clear">Clear</button>
       </div>
     </div>
@@ -1087,7 +1126,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 
   <!-- 22c · 3D SOUND OBJECT (waveform ⟂ spectrogram) -->
   <section class="slide" data-enter="sound3d" data-ch="05 Fourier Transform" data-min="3.5" style="--accent:#FACC15"
-    data-notes="The visual climax of the lecture. It shows in 3D that the waveform (Parts 1–4) and the spectrogram (Part 5) are really two shadows of one sound. This time the sound flows in real time from right to left (the right edge = now), and the scene comes alive over time. Three axes: x = time, y = amplitude (loudness), z = frequency. The cyan ribbon on the front wall (the xy plane) is the waveform; the heat-map on the floor (the xz plane) is the spectrogram. Drag with the mouse to rotate and scroll to zoom (touch: one finger to rotate, two to zoom). Under “Views,” looking head-on leaves only the waveform, looking from above leaves only the spectrogram, and looking from the side leaves only the spectrum at this instant (the gold line on the right wall) — a change of viewpoint is the transform itself. Contrast the samples: the flute, poor in harmonics, has a clean waveform and a single ridge; violin, cello, and organ, rich in harmonics, show several ridges; the clarinet emphasizes only the odd harmonics. A chord shows several parallel ridges; melody and glissando make ridges move over time, like a staircase or a slant. The showstopper is the “picture” sounds: turn on the cat, the Seoul or Tokyo skyline, or a heartbeat and look down from above, and the spectrogram literally draws that outline — because the pitch of the sound follows the height of the picture. The waveform (front wall) alone shows no picture, yet the spectrogram (floor) shows it clearly — that contrast is exactly why we look at the spectrum. This time↔frequency trade-off leads into the uncertainty principle on the next slide.">
+    data-notes="The visual climax of the lecture. It shows in 3D that the waveform (Parts 1–4) and the spectrogram (Part 5) are really two shadows of one sound. This time the sound flows in real time from right to left (the right edge = now), and the scene comes alive over time. Three axes: x = time, y = amplitude (loudness), z = frequency. The cyan ribbon on the front wall (the xy plane) is the waveform; the heat-map on the floor (the xz plane) is the spectrogram. Drag with the mouse to rotate and scroll to zoom (touch: one finger to rotate, two to zoom). Under “Views,” looking head-on leaves only the waveform, looking from above leaves only the spectrogram, and looking from the side leaves only the spectrum at this instant (the gold line on the right wall) — a change of viewpoint is the transform itself. Contrast the samples: the flute, poor in harmonics, has a clean waveform and a single ridge; violin, cello, and organ, rich in harmonics, show several ridges; the clarinet emphasizes only the odd harmonics. A chord shows several parallel ridges; melody and glissando make ridges move over time, like a staircase or a slant. The showstopper is playing it yourself: turn on [🎹 Keys] and press the keys (drag = glissando, several fingers = a chord) — your sound streams into the 3D scene in real time, raising loudness peaks on the front wall and harmonic stripes on the floor at once, so students verify with their own hands that the waveform and the spectrogram are two shadows of one sound. Turn on the Toccata or the Canon and the full three-minute piece streams through in real time, while the keys below stay lit with whatever is sounding (seek bar to scrub). This time↔frequency trade-off leads into the uncertainty principle on the next slide.">
     <div class="inner stack">
       <div class="eyebrow">3D · one sound, two shadows</div>
       <h2 class="h-sec">Waveform and spectrogram: two shadows of the same thing</h2>
@@ -1105,7 +1144,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
           <div class="lscale"><span>low</span><span>high</span></div>
         </div>
         <div id="s3d-stage"><div class="s3d-loading" id="s3d-loading">Preparing 3D scene…</div><div class="s3d-hint"><b>Drag</b> rotate · <b>scroll</b> zoom · <b>right edge = now</b></div></div>
-        
+        <div id="kb3-wrap" style="display:none"><div id="kb3-keys"></div></div>
         <div class="s3d-bar">
           <span class="grp">Instrument</span>
           <button class="hchip on" data-s3d-sig="violin">Violin</button>
@@ -1115,13 +1154,11 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
           <button class="hchip" data-s3d-sig="organ">Organ</button>
           <span class="grp">Chord · Evolving</span>
           <button class="hchip" data-s3d-sig="chord">Chord</button>
-          <button class="hchip" data-s3d-sig="melody">Melody</button>
+          <button class="hchip" data-s3d-sig="melody">Bach Toccata</button>
+          <button class="hchip" data-s3d-sig="canon">Pachelbel Canon</button>
           <button class="hchip" data-s3d-sig="chirp">Glissando</button>
-          <span class="grp">Picture · drawn as sound</span>
-          <button class="hchip" data-s3d-sig="cat">🐱 Cat</button>
-          <button class="hchip" data-s3d-sig="seoul">Seoul</button>
-          <button class="hchip" data-s3d-sig="tokyo">Tokyo</button>
-          <button class="hchip" data-s3d-sig="heartbeat">Heartbeat</button>
+          <span class="grp">play it yourself</span>
+          <button class="hchip" data-s3d-sig="keys">🎹 Keys</button>
           <span class="grp" style="flex-basis:100%;height:0;margin:0"></span>
           <span class="grp">View</span>
           <button class="hchip" data-s3d-view="persp">Perspective</button>
@@ -1829,7 +1866,7 @@ function makeEpicycle(cfg){
     ctx.strokeStyle='rgba(255,255,255,0.30)'; ctx.lineWidth=1; ctx.setLineDash([3,3]); ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(penX,My+waveBuf[0]); ctx.stroke(); ctx.setLineDash([]);
     ctx.fillStyle='#EAF6FF'; ctx.shadowColor='#22D3EE'; ctx.shadowBlur=12; ctx.beginPath(); ctx.arc(penX,My+waveBuf[0],3.1,0,Math.PI*2); ctx.fill(); ctx.shadowBlur=0;
     ctx.font='12px "JetBrains Mono",monospace'; ctx.fillStyle='rgba(255,255,255,0.32)'; ctx.textAlign='center'; ctx.fillText(morph?'a sound whose harmonics change':PRESET_MAP[cur].label, Mx, h-10);
-    ctx.fillStyle='rgba(45,212,167,0.6)'; ctx.textAlign='left'; ctx.fillText('f(t) · waveform of the sound', penX+8, 15);
+    ctx.fillStyle='rgba(45,212,167,0.6)'; ctx.textAlign='right'; ctx.fillText('f(t) · waveform', w-10, 15);   /* right-aligned so it clears the viz-tag overlay */
   }
   function drawShape(){
     const ctx=cv._ctx; if(!ctx) return; const w=cv._w,h=cv._h; const o=ensureShape(cur), C=o.C;
@@ -2371,37 +2408,52 @@ const SCORE=(function(){
 const TOCCATA_EVS=(function(){ const a=[]; let t=0;
   for(const nd of TOCCATA_SEQ){ if(nd[0]>0) a.push({t:t,f:nd[0],d:nd[1]}); t+=nd[1]; } return a; })();
 const TOCCATA_DUR=(function(){ let t=0; for(const nd of TOCCATA_SEQ) t+=nd[1]; return t; })();
-const SGSC=SCORE.make('sg-score', TOCCATA_EVS, TOCCATA_DUR, null,
-  {phPx:function(w){ const c=document.getElementById('sg-canvas'); return (c&&c._w)?c._w:Math.round(w*0.8333); }});
-  /* playhead pinned to the spectrogram's right edge; the score's extra width previews upcoming notes */
-
 /* ---- spectrogram melody: seekable transport ---- */
 let SG_OS=[], SG_AN=null, SG_SEEKBAR=null, SG_PROG=0;
-function sgMelodyStop(){ SG_OS.forEach(o=>{try{o.stop();}catch(e){}}); SG_OS=[]; SGSC.stop(); if(SG_PROG){cancelAnimationFrame(SG_PROG);SG_PROG=0;} if(SG_SEEKBAR)SG_SEEKBAR.reset(); sgNowline(false); }
-function sgMelodyPlay(an, offset){
+function sgMelodyStop(){ SG_OS.forEach(o=>{try{o.stop();}catch(e){}}); SG_OS=[]; if(SG_PROG){cancelAnimationFrame(SG_PROG);SG_PROG=0;} if(SG_SEEKBAR)SG_SEEKBAR.reset(); kbLightsClear(); sgNowline(false); }
+let SG_WHICH='melody', SG_EVS=null, SG_DUR=0, SG_LEVS={};
+function sgPiece(which){
+  if(which==='canon'){ if(!SG_LEVS.canon){ const e=CANON.events();
+      SG_LEVS.canon={evs:e, levs:e.slice().sort((a,b)=>a.t-b.t), dur:CANON.TOTAL}; } return SG_LEVS.canon; }
+  if(!SG_LEVS.toc){ SG_LEVS.toc={evs:TOCCATA_EVS, levs:TOCCATA_EVS.slice().sort((a,b)=>a.t-b.t), dur:TOCCATA_DUR}; }
+  return SG_LEVS.toc;
+}
+function sgActiveAt(levs, sec){
+  const L=[]; for(const ev of levs){ if(ev.t>sec) break;
+    if(sec<ev.t+ev.d){ const m=fMidi(ev.f); if(m!=null&&L.indexOf(m)<0) L.push(m); } }
+  return L;
+}
+function sgLightAt(sec){ const p=sgPiece(SG_WHICH); kbLightSet(sgActiveAt(p.levs, sec)); }
+function sgMelodyPlay(an, offset, which){
   const ctx=ac(); SG_AN=an||SG_AN; SG_OS.forEach(o=>{try{o.stop();}catch(e){}}); SG_OS=[];
-  offset=Math.max(0,Math.min(TOCCATA_DUR-0.05, offset||0));
-  const t0=ctx.currentTime - offset;   /* virtual start so score/seek math stays absolute */
-  let acc=0;
-  for(const nd of TOCCATA_SEQ){ const f=nd[0], d=nd[1], s=acc; acc+=d;
-    if(f>0 && acc>offset){ const st=Math.max(ctx.currentTime, t0+s);
-      const o=ctx.createOscillator(),g=ctx.createGain(); o.setPeriodicWave(periodicWave([1,0.5,0.3,0.18,0.1])); o.frequency.value=f;
-      const on=t0+s, off=t0+s+d;
-      g.gain.setValueAtTime(0,Math.max(ctx.currentTime,on)); g.gain.linearRampToValueAtTime(0.24,Math.max(ctx.currentTime,on)+0.008);
-      g.gain.setTargetAtTime(0, off-Math.min(0.07,d*0.35), 0.03);
-      o.connect(g); g.connect(SG_AN); o.start(st); o.stop(off); SG_OS.push(o); } }
-  SG_MODE='melody';
-  SGSC.seek(t0); SGSC.start(t0);
+  which=which||SG_WHICH; SG_WHICH=which;
+  const piece=sgPiece(which), evs=piece.evs, levs=piece.levs, dur=piece.dur;
+  SG_EVS=evs; SG_DUR=dur;
+  offset=Math.max(0,Math.min(dur-0.05, offset||0));
+  const t0=ctx.currentTime - offset;   /* virtual start so seek math stays absolute */
+  const DEF=[1,0.5,0.3,0.18,0.1];
+  for(const ev of evs){ const on=t0+ev.t, off=on+ev.d;
+    if(off<=ctx.currentTime+0.01) continue;
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.setPeriodicWave(periodicWave(ev.amps||DEF)); o.frequency.value=ev.f;
+    const a0=Math.max(ctx.currentTime,on), gv=(ev.g!=null? ev.g*0.55 : 0.24), atk=(ev.atk!=null?ev.atk:0.008);
+    g.gain.setValueAtTime(0,a0); g.gain.linearRampToValueAtTime(gv,a0+atk);
+    if(ev.rel!=null){ g.gain.setTargetAtTime(0.0001, Math.max(a0, on+Math.max(atk,ev.d-ev.rel)), ev.rel*0.55); }
+    else { g.gain.setTargetAtTime(0, off-Math.min(0.07,ev.d*0.35), 0.03); }
+    o.connect(g); g.connect(SG_AN); o.start(a0);
+    o.stop(ev.rel!=null ? off+0.5 : off);   /* stop must come after start */
+    SG_OS.push(o); }
+  SG_MODE=which;
   sgClear(); sgNowline(true);
-  /* live analyser painting - the original look: fresh FFT column at the right edge, history streaming
-     left. The score panel is ~20% wider than the spectrogram and pins its playhead (phPx) to the
-     spectrogram's right edge, so one yellow line marks "now" in both while upcoming notes preview
-     in the score's extra width - the live texture is untouched. */
+  /* live analyser painting - fresh FFT column at the right edge, history streaming left;
+     the keyboard below lights up with whatever is sounding right now. */
   if(sgRaf)cancelAnimationFrame(sgRaf);
   const cv=document.getElementById('sg-canvas');
   if(cv&&cv._ctx){
     const ctxc=cv._ctx, w=cv._w, h=cv._h, sr=ctx.sampleRate,
           ny=SG_AN.frequencyBinCount, data=new Uint8Array(ny), step=3, maxF=SG_MAXF;
+    let li=0; const ACT=[];
+    while(li<levs.length && levs[li].t<=offset){ if(offset<levs[li].t+levs[li].d) ACT.push(levs[li]); li++; }
     (function sgLoop(){
       const now=ac().currentTime - t0;
       SG_AN.getByteFrequencyData(data);
@@ -2414,18 +2466,22 @@ function sgMelodyPlay(an, offset){
         ctxc.fillRect(w-step,y,step,1);
       }
       for(const gy of SG_GY){ ctxc.fillStyle='rgba(255,255,255,0.055)'; ctxc.fillRect(w-step,gy,step,1); }
-      if(now>TOCCATA_DUR+1){ sgRaf=0; sgNowline(false); return; }
+      while(li<levs.length && levs[li].t<=now){ ACT.push(levs[li]); li++; }
+      for(let q=ACT.length-1;q>=0;q--){ if(now>=ACT[q].t+ACT[q].d) ACT.splice(q,1); }
+      const LS=[]; for(const ev of ACT){ const m=fMidi(ev.f); if(m!=null&&LS.indexOf(m)<0) LS.push(m); }
+      kbLightSet(LS);
+      if(now>dur+1){ sgRaf=0; sgNowline(false); kbLightsClear(); return; }
       sgRaf=requestAnimationFrame(sgLoop);
     })();
   }
-  if(SG_SEEKBAR){ if(SG_PROG)cancelAnimationFrame(SG_PROG);
+  if(SG_SEEKBAR){ SG_SEEKBAR.setDur(dur); if(SG_PROG)cancelAnimationFrame(SG_PROG);
     const tick=()=>{ const pos=ac().currentTime-t0; SG_SEEKBAR.setProgress(pos);
-      if(pos<TOCCATA_DUR+0.3 && SG_OS.length){ SG_PROG=requestAnimationFrame(tick); } else { SG_PROG=0; } };
+      if(pos<dur+0.3 && SG_OS.length){ SG_PROG=requestAnimationFrame(tick); } else { SG_PROG=0; } };
     SG_PROG=requestAnimationFrame(tick); }
 }
 (function(){ SG_SEEKBAR=makeSeek('sg-seek',{ dur:TOCCATA_DUR,
-  onScrub:(sec)=>{ SGSC.showAt(sec); },
-  onSeek:(sec)=>{ if(SG_OS.length || (SG_AN)){ sgMelodyPlay(SG_AN, sec); } else { SGSC.showAt(sec); } } }); })();
+  onScrub:(sec)=>{ if(SG_MODE==='melody'||SG_MODE==='canon') sgLightAt(sec); },
+  onSeek:(sec)=>{ if(SG_OS.length || (SG_AN)){ sgMelodyPlay(SG_AN, sec); } else { sgLightAt(sec); } } }); })();
 
 let SG_MODE=null;
 function sgNowline(v){ const el=document.getElementById('sg-nowline'); if(el) el.style.display=v?'block':'none'; }
@@ -2472,26 +2528,60 @@ function sgAxis(){
   ctx.fillStyle='rgba(255,255,255,0.32)'; ctx.fillText('Hz', SG_LM-9, 13);
 }
 let sgRaf=0, sgStopFn=null;
-function sgStop(){ if(sgRaf){cancelAnimationFrame(sgRaf);sgRaf=0;} if(sgStopFn){try{sgStopFn();}catch(e){}sgStopFn=null;} }
+function sgStop(){ if(sgRaf){cancelAnimationFrame(sgRaf);sgRaf=0;} if(sgStopFn){try{sgStopFn();}catch(e){}sgStopFn=null;} kbLightsClear(); }
 function sgClear(){ const cv=document.getElementById('sg-canvas'); if(!cv||!cv._ctx)return; const ctx=cv._ctx; ctx.fillStyle='#05070E'; ctx.fillRect(0,0,cv._w,cv._h); sgAxis(); }
 function sgRun(kind){
-  sgStop(); SG_MODE=kind; sgNowline(false); const ctx=ac();
-  const an=ctx.createAnalyser(); an.fftSize=2048; an.smoothingTimeConstant=(kind==='melody'?0.08:0.4); an.connect(AU.master);
+  sgStop(); SG_MODE=kind; sgNowline(false); sgPanels((kind==='melody'||kind==='canon')?'transport':(kind==='keys'?'keys':'plain')); const ctx=ac();
+  const an=ctx.createAnalyser(); an.fftSize=2048; an.smoothingTimeConstant=((kind==='melody'||kind==='canon')?0.08:(kind==='keys'?0.22:0.4)); an.connect(AU.master);
   const data=new Uint8Array(an.frequencyBinCount);
-  let stop=()=>{};
-  if(kind==='melody'){
-    /* Bach — Toccata BWV 565: live analyser spectrogram; the wider score below pins its playhead to the spectrogram's right edge */
-    sgMelodyPlay(an, 0);
+  let stop=()=>{}, lightFn=null;
+  if(kind==='melody'||kind==='canon'){
+    /* Bach Toccata / Pachelbel Canon: live analyser spectrogram; the keys below light with the notes */
+    sgMelodyPlay(an, 0, kind==='canon'?'canon':'melody');
     stop=()=>{ sgMelodyStop(); };
     sgStopFn=stop; AU.voices.add({stop});
     return;
   } else if(kind==='chirp'){
     const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';g.gain.value=0.22;o.connect(g);g.connect(an);
-    o.frequency.setValueAtTime(160,ctx.currentTime);o.frequency.exponentialRampToValueAtTime(1500,ctx.currentTime+3.6);
-    o.start();o.stop(ctx.currentTime+3.8);stop=()=>{try{o.stop();}catch(e){}};
+    const t0c=ctx.currentTime;
+    o.frequency.setValueAtTime(160,t0c);o.frequency.exponentialRampToValueAtTime(1500,t0c+3.6);
+    o.start();o.stop(t0c+3.8);stop=()=>{try{o.stop();}catch(e){} lightFn=null; kbLightsClear();};
+    lightFn=(tn)=>{ const u=(tn-t0c)/3.6; if(u<0||u>1.05) return [];
+      const f=160*Math.pow(1500/160,Math.min(1,u)); const m=fMidi(f); return m==null?[]:[m]; };
+  } else if(kind==='chord'){
+    /* chord anatomy: notes enter one by one and their harmonic stacks pile up;
+       then the third drops a semitone - major vs minor visible as one moving band */
+    const AMPS=[1,0.5,0.3,0.18,0.1], t0=ctx.currentTime+0.05, os=[];
+    function nn(f,at,rel){ const o=ctx.createOscillator(),g=ctx.createGain();
+      o.setPeriodicWave(periodicWave(AMPS)); o.frequency.value=f;
+      g.gain.setValueAtTime(0,at); g.gain.linearRampToValueAtTime(0.14,at+0.012);
+      g.gain.setTargetAtTime(0,rel,0.12);
+      o.connect(g); g.connect(an); o.start(at); o.stop(rel+0.8); os.push(o); }
+    const C4=261.63,E4=329.63,Eb4=311.13,G4=392.00,C5=523.25;
+    for(let it=0; it<8; it++){ const B=t0+it*14.5;
+      [[C4,0],[E4,0.5],[G4,1.0],[C5,1.5]].forEach(p=>nn(p[0],B+p[1],B+4.4));
+      [[C4,5.4],[Eb4,5.9],[G4,6.4],[C5,6.9]].forEach(p=>nn(p[0],B+p[1],B+9.8));
+      [C4,E4,G4,C5].forEach((f,i)=>nn(f,B+11.4+i*0.07,B+13.6)); }
+    stop=()=>{ os.forEach(o=>{try{o.stop();}catch(e){}}); lightFn=null; kbLightsClear(); };
+    lightFn=(tn)=>{ const T=tn-t0; if(T<0||T>=8*14.5) return [];
+      const p=T%14.5, L=[]; const add=f=>{const m=fMidi(f); if(m!=null&&L.indexOf(m)<0)L.push(m);};
+      [[C4,0],[E4,0.5],[G4,1.0],[C5,1.5]].forEach(q=>{ if(p>=q[1]&&p<4.4) add(q[0]); });
+      [[C4,5.4],[Eb4,5.9],[G4,6.4],[C5,6.9]].forEach(q=>{ if(p>=q[1]&&p<9.8) add(q[0]); });
+      if(p>=11.4&&p<13.6){ [C4,E4,G4,C5].forEach((f,i)=>{ if(p>=11.4+i*0.07) add(f); }); }
+      return L; };
+  } else if(kind==='keys'){
+    KB_AN=an;
+    const bus=ctx.createGain(); bus.gain.value=0.95;
+    const comp=ctx.createDynamicsCompressor(); comp.threshold.value=-14; comp.ratio.value=6;
+    bus.connect(comp); comp.connect(an); KB_BUS=bus;   /* big sustained chords stay clean */
+    kbBuild();
+    stop=()=>{ kbStop(); };
   } else {
-    const o=ctx.createOscillator(),g=ctx.createGain();o.setPeriodicWave(periodicWave([1,0.85,0.72,0.62,0.52,0.46,0.4,0.32,0.3,0.25,0.22,0.2]));o.frequency.value=180;g.gain.value=0.22;o.connect(g);g.connect(an);
-    o.start();o.stop(ctx.currentTime+3.8);stop=()=>{try{o.stop();}catch(e){}};
+    const o=ctx.createOscillator(),g=ctx.createGain();o.setPeriodicWave(periodicWave([1,0.85,0.72,0.62,0.52,0.46,0.4,0.32,0.3,0.25,0.22,0.2]));o.frequency.value=185;g.gain.value=0.22;o.connect(g);g.connect(an);   /* 185 Hz = F#3, so the harmonic keys light honestly */
+    const t0h=ctx.currentTime;
+    o.start();o.stop(t0h+3.8);stop=()=>{try{o.stop();}catch(e){} lightFn=null; kbLightsClear();};
+    const HS=[]; for(let k=1;k<=12;k++){ const m=fMidi(185*k); if(m!=null&&HS.indexOf(m)<0) HS.push(m); }
+    lightFn=(tn)=>(tn<t0h+3.75)?HS:[];
   }
   sgStopFn=stop; AU.voices.add({stop});
   const cv=document.getElementById('sg-canvas'); const ctxc=cv._ctx, w=cv._w, h=cv._h;
@@ -2507,14 +2597,138 @@ function sgRun(kind){
       ctxc.fillRect(w-step,y,step,1);
     }
     for(const gy of SG_GY){ ctxc.fillStyle='rgba(255,255,255,0.055)'; ctxc.fillRect(w-step,gy,step,1); }
+    if(lightFn) kbLightSet(lightFn(ctx.currentTime));
     sgRaf=requestAnimationFrame(frame);
   }
   frame();
 }
-(function(){ document.querySelectorAll('[data-sg]').forEach(b=>b.addEventListener('click',()=>{ const k=b.getAttribute('data-sg'); if(k==='clear'){sgStop();sgClear();SG_MODE=null;sgNowline(false);return;} sgRun(k); })); })();
-ENTERS.spectrogram=()=>{ sgClear(); sgNowline(false); return ()=>{}; };
+(function(){ document.querySelectorAll('[data-sg]').forEach(b=>b.addEventListener('click',()=>{ const k=b.getAttribute('data-sg'); if(k==='clear'){sgStop();sgClear();SG_MODE=null;sgNowline(false);sgPanels('plain');return;} sgRun(k); })); })();
+
+/* ---- panel switcher for the spectrogram slide (score+seek vs free-play keyboard) ---- */
+function sgPanels(mode){
+  const sk=document.getElementById('sg-seek'), kb=document.getElementById('kb-wrap');
+  if(kb) kb.style.display='';
+  if(sk) sk.style.display=(mode==='transport')?'':'none';
+  if(mode!=='keys' && KB_SUS){ KB_SUS=false; const sb=document.getElementById('kb-sus'); if(sb) sb.classList.remove('on'); }
+  try{ fitCurrent(); }catch(e){}
+}
+/* ---- free-play keyboard: press the keys, watch the harmonics stream in real time ---- */
+let KB_AN=null, KB_BUS=null, KB_SUS=false; const KB_V=new Map(), KB_P=new Map(); let KB_BUILT=false;
+function kbBuild(){ if(KB_BUILT) return; KB_BUILT=true;
+  const host=document.getElementById('kb-keys'); if(!host) return;
+  const whites=[], blacks=[]; let wi=0;
+  for(let m=48;m<=84;m++){ const pc=m%12;
+    if([1,3,6,8,10].indexOf(pc)>=0){ blacks.push({m:m,wi:wi}); }
+    else { whites.push({m:m,wi:wi}); wi++; } }
+  const total=whites.length; host.innerHTML='';
+  whites.forEach(k=>{ const d=document.createElement('div'); d.className='kb-key kb-w'; d.dataset.m=k.m;
+    d.style.left=(k.wi*100/total)+'%'; d.style.width=(100/total)+'%';
+    if(k.m%12===0){ const s=document.createElement('span'); s.textContent='C'+(Math.floor(k.m/12)-1); d.appendChild(s); }
+    host.appendChild(d); });
+  blacks.forEach(k=>{ const d=document.createElement('div'); d.className='kb-key kb-b'; d.dataset.m=k.m;
+    d.style.left=((k.wi-0.30)*100/total)+'%'; d.style.width=(0.60*100/total)+'%';
+    host.appendChild(d); });
+  function keyAt(e){ const el=document.elementFromPoint(e.clientX,e.clientY);
+    return (el&&el.classList&&el.classList.contains('kb-key'))?+el.dataset.m:null; }
+  function down(e){ const m=keyAt(e); if(m==null) return; e.preventDefault();
+    if(KB_SUS && KB_V.has(m) && !kbHeld(m)){ kbRelease(m); return; }   /* re-press a sustained note = let it go */
+    try{ host.setPointerCapture(e.pointerId); }catch(err){}
+    KB_P.set(e.pointerId,m); kbPress(m); }
+  function move(e){ if(!KB_P.has(e.pointerId)) return; const m=keyAt(e);
+    const old=KB_P.get(e.pointerId);
+    if(m!=null&&m!==old){ if(KB_SUS){ kbMarkSus(old); } else { kbRelease(old); } KB_P.set(e.pointerId,m); kbPress(m); } }
+  function up(e){ if(!KB_P.has(e.pointerId)) return; const m=KB_P.get(e.pointerId); KB_P.delete(e.pointerId);
+    if(KB_SUS){ kbMarkSus(m); } else { kbRelease(m); } }
+  host.addEventListener('pointerdown',down); host.addEventListener('pointermove',move);
+  host.addEventListener('pointerup',up); host.addEventListener('pointercancel',up); host.addEventListener('pointerleave',up);
+  const sb=document.getElementById('kb-sus');
+  if(sb) sb.addEventListener('click',()=>{ KB_SUS=!KB_SUS; sb.classList.toggle('on',KB_SUS);
+    if(!KB_SUS){ Array.from(KB_V.keys()).forEach(m=>{ if(!kbHeld(m)) kbRelease(m); }); } });
+}
+function kbHeld(m){ for(const v of KB_P.values()){ if(v===m) return true; } return false; }
+function kbMarkSus(m){ if(!KB_V.has(m)) return; const el=kbEl(m); if(el) el.classList.add('sus'); }
+function kbEl(m){ const h=document.getElementById('kb-keys'); return h?h.querySelector('.kb-key[data-m="'+m+'"]'):null; }
+function kbPress(m){ if(KB_V.has(m)) return; if(KB_V.size>=12) return;   /* polyphony cap */
+  if(SG_MODE!=='keys' || !sgRaf){ sgRun('keys'); }   /* auto-(re)arm the live view */
+  const ctx=ac(), f=440*Math.pow(2,(m-69)/12);
+  const o=ctx.createOscillator(), g=ctx.createGain();
+  o.setPeriodicWave(periodicWave([1,0.5,0.3,0.18,0.1])); o.frequency.value=f;
+  const n=ctx.currentTime; g.gain.setValueAtTime(0,n); g.gain.linearRampToValueAtTime(0.16,n+0.01);
+  o.connect(g); g.connect(KB_BUS||KB_AN||AU.master); o.start(n);
+  KB_V.set(m,{o:o,g:g}); const el=kbEl(m); if(el) el.classList.add('on'); }
+function kbRelease(m){ const v=KB_V.get(m); if(!v) return; KB_V.delete(m);
+  const n=ac().currentTime; try{ v.g.gain.setTargetAtTime(0,n,0.09); v.o.stop(n+0.7); }catch(e){}
+  const el=kbEl(m); if(el){ el.classList.remove('on'); el.classList.remove('sus'); } }
+function kbStop(){ Array.from(KB_V.keys()).forEach(kbRelease); }
+/* ---- keyboard note-lighting: playback modes mirror the sounding notes on the keys ---- */
+const KB_LIT=new Set();
+function fMidi(f){ const m=Math.round(69+12*Math.log2(f/440)); return (m>=48&&m<=84)?m:null; }
+function kbLightSet(arr){ const nx=new Set(arr);
+  KB_LIT.forEach(m=>{ if(!nx.has(m)){ const el=kbEl(m); if(el) el.classList.remove('lit'); } });
+  nx.forEach(m=>{ if(!KB_LIT.has(m)){ const el=kbEl(m); if(el) el.classList.add('lit'); } });
+  KB_LIT.clear(); nx.forEach(m=>KB_LIT.add(m)); }
+function kbLightsClear(){ kbLightSet([]); }
+
+ENTERS.spectrogram=()=>{ sgClear(); sgNowline(false); kbBuild(); sgPanels('plain'); return ()=>{}; };
 drawInit.push(sgClear);   /* redraw axis after canvas refit */
-drawInit.push(()=>SGSC.idle());
+
+
+/* ================= gentle primer: sine & cosine as two shadows of rotation ================= */
+(function(){
+  const cv=document.getElementById('sc-canvas'); if(!cv) return;
+  let mode='sin', th=0, raf=0;
+  const TS=[], TC=[];
+  function draw(){
+    const ctx=cv._ctx; if(!ctx) return; const w=cv._w,h=cv._h;
+    ctx.fillStyle='#05070E'; ctx.fillRect(0,0,w,h);
+    const cx=Math.min(150,w*0.17), r=Math.min(88,h*0.34), my=h*0.5;
+    const x0=cx+r+58, dx=2, cap=Math.max(10,Math.floor((w-16-x0)/dx));
+    while(TS.length>cap){TS.pop();TC.pop();}
+    /* axes */
+    ctx.strokeStyle='rgba(255,255,255,0.10)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(x0,my+0.5); ctx.lineTo(w-12,my+0.5); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx-r-14,my+0.5); ctx.lineTo(cx+r+14,my+0.5); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx+0.5,my-r-12); ctx.lineTo(cx+0.5,my+r+12); ctx.stroke();
+    /* circle */
+    ctx.strokeStyle='rgba(255,255,255,0.30)'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.arc(cx,my,r,0,Math.PI*2); ctx.stroke();
+    const px=cx+r*Math.cos(th), py=my-r*Math.sin(th);
+    /* radius + projections */
+    ctx.strokeStyle='rgba(255,255,255,0.55)'; ctx.beginPath(); ctx.moveTo(cx,my); ctx.lineTo(px,py); ctx.stroke();
+    ctx.setLineDash([3,3]);
+    if(mode!=='cos'){ ctx.strokeStyle='rgba(34,211,238,0.55)';
+      ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(x0,py); ctx.stroke(); }
+    if(mode!=='sin'){ ctx.strokeStyle='rgba(250,204,21,0.55)';
+      ctx.beginPath(); ctx.moveTo(px,py); ctx.lineTo(px,my); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(px,my); ctx.lineTo(x0,my-r*Math.cos(th)); ctx.stroke(); }
+    ctx.setLineDash([]);
+    /* traces (newest at left, flowing right) */
+    function trace(arr,col){ ctx.strokeStyle=col; ctx.lineWidth=2.2; ctx.beginPath();
+      for(let i=0;i<arr.length;i++){ const x=x0+i*dx, y=my-arr[i]*r; i?ctx.lineTo(x,y):ctx.moveTo(x,y); } ctx.stroke(); }
+    if(mode!=='cos') trace(TS,'#22D3EE');
+    if(mode!=='sin') trace(TC,'#FACC15');
+    /* dots */
+    ctx.fillStyle='#EAF6FF'; ctx.beginPath(); ctx.arc(px,py,4.2,0,Math.PI*2); ctx.fill();
+    if(mode!=='cos'){ ctx.fillStyle='#22D3EE'; ctx.beginPath(); ctx.arc(x0,my-(TS[0]||0)*r,3.4,0,Math.PI*2); ctx.fill(); }
+    if(mode!=='sin'){ ctx.fillStyle='#FACC15'; ctx.beginPath(); ctx.arc(x0,my-(TC[0]||0)*r,3.4,0,Math.PI*2); ctx.fill(); }
+    /* labels */
+    ctx.font='12px "JetBrains Mono",monospace'; ctx.textAlign='left';
+    ctx.fillStyle='rgba(34,211,238,0.85)'; if(mode!=='cos') ctx.fillText('sin', x0+6, 16);
+    ctx.fillStyle='rgba(250,204,21,0.85)'; if(mode!=='sin') ctx.fillText('cos', x0+40, 16);
+  }
+  let last=0;
+  function loop(ts){ if(!raf) return;
+    const dt=Math.min(0.05,(ts-last)/1000||0.016); last=ts;
+    th+=dt*1.7; TS.unshift(Math.sin(th)); TC.unshift(Math.cos(th));
+    draw(); raf=requestAnimationFrame(loop); }
+  document.querySelectorAll('[data-sc]').forEach(b=>b.addEventListener('click',()=>{
+    mode=b.getAttribute('data-sc');
+    document.querySelectorAll('[data-sc]').forEach(x=>x.classList.toggle('on',x===b));
+    draw(); }));
+  drawInit.push(draw);
+  ENTERS.sincos=function(){ last=performance.now(); raf=requestAnimationFrame(loop);
+    return function(){ if(raf)cancelAnimationFrame(raf); raf=0; }; };
+})();
 
 /* ==== INJECTED: 3D sound object (time × amplitude × frequency) ==== */
 
@@ -2721,12 +2935,10 @@ drawInit.push(()=>SGSC.idle());
     cello:   ()=>buildTone({key:'cello',   label:'Cello',     f0:130.81, amps:CELLO,          fmax:1500, ticks:tk(130.81,[1,2,3,5])}),
     organ:   ()=>buildTone({key:'organ',   label:'Organ',   f0:196.00, amps:RECIPES.organ,  fmax:1700, ticks:tk(196.00,[1,2,3,5])}),
     chord:   ()=>buildChord({key:'chord',  label:'Chord',     notes:[261.63,329.63,392.00], amps:[1,0.5,0.28,0.16], fmax:1700}),
-    melody:  ()=>buildMelody(),
+    melody:  ()=>buildLivePiece('melody'),
+    canon:   ()=>buildLivePiece('canon'),
     chirp:   ()=>buildChirp(),
-    cat:     ()=>buildImage({key:'cat',      label:'Cat',        profile:PROFILE.catears,   flo:230, fhi:1150, winDur:4.6, fill:true,  seam:0.05, ticks:tkHz([230,1150])}),
-    seoul:   ()=>buildImage({key:'seoul',    label:'Seoul skyline', profile:PROFILE.seoul_sky, flo:180, fhi:1220, winDur:5.0, fill:true,  seam:0.07, ticks:tkHz([180,1220])}),
-    tokyo:   ()=>buildImage({key:'tokyo',    label:'Tokyo skyline', profile:PROFILE.tokyo_sky, flo:180, fhi:1250, winDur:5.0, fill:true,  seam:0.07, ticks:tkHz([180,1250])}),
-    heartbeat:()=>buildImage({key:'heartbeat',label:'Heartbeat',      profile:PROFILE.heartbeat, flo:150, fhi:900,  winDur:4.2, fill:false, seam:0.05, ticks:tkHz([150,900])})
+    keys:    ()=>buildLive()
   };
   const cache={};
 
@@ -2744,7 +2956,13 @@ drawInit.push(()=>SGSC.idle());
         const pos=((ac().currentTime-audioStart)%desc.winDur+desc.winDur)%desc.winDur; S3D_SEEKBAR.setProgress(pos);
         S3D_PROG=requestAnimationFrame(tk); } else { S3D_PROG=0; } };
     S3D_PROG=requestAnimationFrame(tk); }
-  function s3dSeekTo(sec){ if(!desc||!desc.dynamic){ return; } const wd=desc.winDur;
+  function s3dSeekTo(sec){
+    if(desc&&desc.live&&desc.pieceKey){ const pk=desc.pieceKey;
+      playing=true; setPlayLabel(true);
+      audioVoice={stop:stopNodes}; AU.voices.add(audioVoice);
+      audioNode={stop:plStop};
+      plPlay(pk, sec); return; }
+    if(!desc||!desc.dynamic){ return; } const wd=desc.winDur;
     phase=((sec/wd)%1+1)%1;
     if(playing){ if(desc._buf){ stopNodes(); play(); } }
     else { S3D_SEEKBAR&&S3D_SEEKBAR.setProgress(sec%wd); refillDynamic&&refillDynamic(); } }
@@ -2877,9 +3095,10 @@ drawInit.push(()=>SGSC.idle());
   }
 
   function updateRibbon(){
-    const WT=desc.WT, WB=desc.WB;
+    const WT=desc.WT, WB=desc.WB, live=desc.live;
     const fp=ribbonGeo.attributes.position.array, tp=topLine.geometry.attributes.position.array, bp=botLine.geometry.attributes.position.array;
-    for(let i=0;i<T;i++){ const f=wrap(phase-(T-1-i)/(T-1)); const top=sampleArr(WT,f)*RB, bot=sampleArr(WB,f)*RB, x=xOf(i);
+    for(let i=0;i<T;i++){ const f=wrap(phase-(T-1-i)/(T-1));
+      const top=(live?desc.WTL[i]:sampleArr(WT,f))*RB, bot=(live?desc.WBL[i]:sampleArr(WB,f))*RB, x=xOf(i);
       const vt=2*i, vb=2*i+1;
       fp[vt*3]=x; fp[vt*3+1]=top; fp[vt*3+2]=ZFRONT;
       fp[vb*3]=x; fp[vb*3+1]=bot; fp[vb*3+2]=ZFRONT;
@@ -2887,11 +3106,11 @@ drawInit.push(()=>SGSC.idle());
       bp[i*3]=x; bp[i*3+1]=bot; bp[i*3+2]=ZFRONT;
     }
     ribbonGeo.attributes.position.needsUpdate=true; topLine.geometry.attributes.position.needsUpdate=true; botLine.geometry.attributes.position.needsUpdate=true;
-    nowDot.position.set(HX, sampleArr(WT,phase)*RB, ZFRONT);
+    nowDot.position.set(HX, (live?desc.WTL[T-1]:sampleArr(WT,phase))*RB, ZFRONT);
   }
 
   function updateSide(){
-    const dyn=desc.dynamic; const src=dyn?DM:desc.SPEC; const off=dyn?(T-1)*K:0;
+    const dyn=desc.dynamic, live=desc.live; const src=live?desc.IMG:(dyn?DM:desc.SPEC); const off=(dyn||live)?(T-1)*K:0;
     const sp=sideLine.geometry.attributes.position.array;
     for(let k=0;k<K;k++){ const m=src[off+k]; sp[k*3]=HX; sp[k*3+1]=m*HY+0.012; sp[k*3+2]=zOf(k); }
     sideLine.geometry.attributes.position.needsUpdate=true;
@@ -2961,6 +3180,112 @@ drawInit.push(()=>SGSC.idle());
   function updateSpinLabel(){ const b=$('#s3d-spin'); if(b){ b.classList.toggle('on',autoRotate); b.textContent=autoRotate?'Auto-rotate · off':'Auto-rotate · on'; } }
   function setPlayLabel(on){ const b=$('#s3d-play'); if(b){ b.textContent=on?'■ Stop':'▶ Play'; b.classList.toggle('on',on); } }
 
+
+  /* ---- live keyboard input: your own playing, streamed into the 3D scene ---- */
+  let kbAn=null,kbBus=null,liveAcc=0,S3D_BASEH=0;
+  const LIVE_FD=new Uint8Array(1024), LIVE_TD=new Uint8Array(2048);
+  function kb3Ensure(){ if(kbAn) return; const c=ac();
+    kbAn=c.createAnalyser(); kbAn.fftSize=2048; kbAn.smoothingTimeConstant=0.18;
+    kbBus=c.createGain(); kbBus.gain.value=0.95;
+    const comp=c.createDynamicsCompressor(); comp.threshold.value=-14; comp.ratio.value=6;
+    kbBus.connect(comp); comp.connect(kbAn); kbAn.connect(AU.master); }
+  function liveIngest(dt){
+    const IMG=desc.IMG, sr=ac().sampleRate, ny=kbAn?kbAn.frequencyBinCount:1024;
+    liveAcc += dt*(T-1)/desc.winDur; let n=Math.floor(liveAcc); liveAcc-=n; if(n>T-1)n=T-1;
+    if(n>0){ IMG.copyWithin(0, n*K); desc.WTL.copyWithin(0,n); desc.WBL.copyWithin(0,n);
+      for(let c2=T-n;c2<T;c2++){ IMG.fill(0,c2*K,(c2+1)*K); desc.WTL[c2]=0; desc.WBL[c2]=0; } }
+    let top=0,bot=0;
+    if(kbAn){ kbAn.getByteFrequencyData(LIVE_FD);
+      const b=(T-1)*K;
+      for(let k=0;k<K;k++){ const f=(k+0.5)/K*desc.fmax; const bin=Math.min(ny-1,Math.round(f/(sr/2)*ny));
+        const v=(LIVE_FD[bin]||0)/255; IMG[b+k]=Math.pow(v,1.15); }
+      kbAn.getByteTimeDomainData(LIVE_TD);
+      for(let i2=0;i2<LIVE_TD.length;i2++){ const s=(LIVE_TD[i2]-128)/128; if(s>top)top=s; if(s<bot)bot=s; } }
+    desc.WTL[T-1]=Math.min(1,top*1.15); desc.WBL[T-1]=Math.max(-1,bot*1.15);
+    fillSurface(IMG);
+  }
+  function buildLive(){
+    const d={key:'keys',label:'keys',fmax:2200,ticks:tkHz([220,440,880,1760]),dynamic:false,live:true,winDur:6};
+    d.IMG=new Float32Array(T*K); d.WTL=new Float32Array(T); d.WBL=new Float32Array(T);
+    d.SPEC=new Float32Array(K); d.WT=new Float32Array(NW); d.WB=new Float32Array(NW);
+    d.start=function(){ return {stop:function(){}}; };
+    return d;
+  }
+
+  function buildLivePiece(which){
+    const d=buildLive();
+    d.key=which; d.pieceKey=which; d.fmax=2500;
+    d.label=(which==='canon')?'Canon':'Toccata';
+    d.ticks=tkHz([220,440,880,1760]);
+    d.start=function(){ plPlay(which,0); return {stop:plStop}; };
+    return d;
+  }
+  /* ---- full-piece live transport (Toccata / Canon) with key lighting ---- */
+  let PL_OS=[], PL_T0=0, PL_DUR=0, PL_LEVS=null, PL_LI=0, PL_ON=false;
+  const PL_ACT=[]; const PL_REG={stop:plStop};
+  function plStop(){ PL_OS.forEach(o=>{try{o.stop();}catch(e){}}); PL_OS=[]; PL_ON=false; PL_ACT.length=0;
+    kb3LightsClear(); if(S3D_SEEKBAR) S3D_SEEKBAR.reset(); }
+  function plPlay(which, offset){
+    kb3Ensure(); plStop(); const c=ac();
+    const p=sgPiece(which==='canon'?'canon':'melody');
+    PL_DUR=p.dur; PL_LEVS=p.levs;
+    offset=Math.max(0,Math.min(PL_DUR-0.05,offset||0)); PL_T0=c.currentTime-offset;
+    const DEF=[1,0.5,0.3,0.18,0.1];
+    for(const ev of p.evs){ const on=PL_T0+ev.t, off=on+ev.d;
+      if(off<=c.currentTime+0.01) continue;
+      const o=c.createOscillator(), g=c.createGain();
+      o.setPeriodicWave(periodicWave(ev.amps||DEF)); o.frequency.value=ev.f;
+      const a0=Math.max(c.currentTime,on), gv=(ev.g!=null?ev.g*0.55:0.24), atk=(ev.atk!=null?ev.atk:0.008);
+      g.gain.setValueAtTime(0,a0); g.gain.linearRampToValueAtTime(gv,a0+atk);
+      if(ev.rel!=null){ g.gain.setTargetAtTime(0.0001, Math.max(a0,on+Math.max(atk,ev.d-ev.rel)), ev.rel*0.55); }
+      else { g.gain.setTargetAtTime(0, off-Math.min(0.07,ev.d*0.35), 0.03); }
+      o.connect(g); g.connect(kbBus); o.start(a0); o.stop(ev.rel!=null?off+0.5:off); PL_OS.push(o); }
+    PL_LI=0; PL_ACT.length=0;
+    while(PL_LI<PL_LEVS.length && PL_LEVS[PL_LI].t<=offset){ if(offset<PL_LEVS[PL_LI].t+PL_LEVS[PL_LI].d) PL_ACT.push(PL_LEVS[PL_LI]); PL_LI++; }
+    PL_ON=true; AU.voices.add(PL_REG);
+    if(S3D_SEEKBAR) S3D_SEEKBAR.setDur(PL_DUR);
+  }
+  const K3LIT=new Set();
+  function kb3LightSet(arr){ const nx=new Set(arr);
+    K3LIT.forEach(m=>{ if(!nx.has(m)){ const el=kb3El(m); if(el) el.classList.remove('lit'); } });
+    nx.forEach(m=>{ if(!K3LIT.has(m)){ const el=kb3El(m); if(el) el.classList.add('lit'); } });
+    K3LIT.clear(); nx.forEach(m=>K3LIT.add(m)); }
+  function kb3LightsClear(){ kb3LightSet([]); }
+  let KB3_BUILT=false; const K3V=new Map(), K3P=new Map(); const K3REG={stop:kb3Stop};
+  function kb3Stop(){ Array.from(K3V.keys()).forEach(kb3Rel); }
+  function kb3El(m){ const h=document.getElementById('kb3-keys'); return h?h.querySelector('.kb3-key[data-m="'+m+'"]'):null; }
+  function kb3Press(m){ if(K3V.has(m)||K3V.size>=10) return; kb3Ensure();
+    const c=ac(), f=440*Math.pow(2,(m-69)/12);
+    const o=c.createOscillator(), g=c.createGain();
+    o.setPeriodicWave(periodicWave([1,0.5,0.3,0.18,0.1])); o.frequency.value=f;
+    const n=c.currentTime; g.gain.setValueAtTime(0,n); g.gain.linearRampToValueAtTime(0.16,n+0.01);
+    o.connect(g); g.connect(kbBus); o.start(n);
+    K3V.set(m,{o:o,g:g}); const el=kb3El(m); if(el) el.classList.add('on');
+    AU.voices.add(K3REG); }
+  function kb3Rel(m){ const v=K3V.get(m); if(!v) return; K3V.delete(m);
+    const n=ac().currentTime; try{ v.g.gain.setTargetAtTime(0,n,0.09); v.o.stop(n+0.7); }catch(e){}
+    const el=kb3El(m); if(el) el.classList.remove('on'); }
+  function kb3Build(){ if(KB3_BUILT) return; KB3_BUILT=true;
+    const host=document.getElementById('kb3-keys'); if(!host) return;
+    const whites=[],blacks=[]; let wi=0;
+    for(let m=48;m<=84;m++){ const pc=m%12;
+      if([1,3,6,8,10].indexOf(pc)>=0) blacks.push({m:m,wi:wi}); else { whites.push({m:m,wi:wi}); wi++; } }
+    const total=whites.length;
+    whites.forEach(k=>{ const d=document.createElement('div'); d.className='kb3-key kb-w'; d.dataset.m=k.m;
+      d.style.left=(k.wi*100/total)+'%'; d.style.width=(100/total)+'%';
+      if(k.m%12===0){ const s=document.createElement('span'); s.textContent='C'+(Math.floor(k.m/12)-1); d.appendChild(s); }
+      host.appendChild(d); });
+    blacks.forEach(k=>{ const d=document.createElement('div'); d.className='kb3-key kb-b'; d.dataset.m=k.m;
+      d.style.left=((k.wi-0.30)*100/total)+'%'; d.style.width=(0.60*100/total)+'%'; host.appendChild(d); });
+    function keyAt(e){ const el=document.elementFromPoint(e.clientX,e.clientY);
+      return (el&&el.classList&&el.classList.contains('kb3-key'))?+el.dataset.m:null; }
+    host.addEventListener('pointerdown',e=>{ const m=keyAt(e); if(m==null)return; e.preventDefault();
+      try{host.setPointerCapture(e.pointerId);}catch(err){} K3P.set(e.pointerId,m); kb3Press(m); });
+    host.addEventListener('pointermove',e=>{ if(!K3P.has(e.pointerId))return; const m=keyAt(e);
+      const old=K3P.get(e.pointerId); if(m!=null&&m!==old){ kb3Rel(old); K3P.set(e.pointerId,m); kb3Press(m); } });
+    const up=e=>{ if(!K3P.has(e.pointerId))return; kb3Rel(K3P.get(e.pointerId)); K3P.delete(e.pointerId); };
+    host.addEventListener('pointerup',up); host.addEventListener('pointercancel',up); host.addEventListener('pointerleave',up);
+  }
   function setSignal(key){
     stopAudio();
     if(!cache[key]) cache[key]=BUILD[key]();
@@ -2971,11 +3296,16 @@ drawInit.push(()=>SGSC.idle());
     else { fillSurface(desc.IMG); }
     updateRibbon(); updateSide();
     document.querySelectorAll('[data-s3d-sig]').forEach(b=>b.classList.toggle('on',b.getAttribute('data-s3d-sig')===key));
-    var _sk=document.getElementById('s3d-seek');
-    if(_sk){ if(desc && desc.dynamic && key==='melody'){
-        stage.style.height=Math.max(230, stage.clientHeight-34)+'px';   /* make room for the seek-bar row */
-        _sk.style.display='flex'; if(S3D_SEEKBAR) S3D_SEEKBAR.setDur(desc.winDur); }
-      else { _sk.style.display='none'; stage.style.height=''; }
+    var _sk=document.getElementById('s3d-seek'), _kb=document.getElementById('kb3-wrap');
+    if(!S3D_BASEH && !stage.style.height) S3D_BASEH=stage.clientHeight||430;
+    if(_sk||_kb){
+      var wantSeek = (key==='melody'||key==='canon'), wantKb = (key==='keys'||wantSeek);
+      if(_sk) _sk.style.display=wantSeek?'flex':'none';
+      if(_kb) _kb.style.display=wantKb?'':'none';
+      if(_kb) _kb.classList.toggle('compact', wantSeek);
+      stage.style.height=(wantSeek||wantKb)? Math.max(wantSeek?144:210,(S3D_BASEH||430)-(wantKb?150:0)-(wantSeek?34:0))+'px' : '';
+      if(wantSeek && S3D_SEEKBAR) S3D_SEEKBAR.setDur(key==='canon'?CANON.TOTAL:TOCCATA_DUR);
+      if(wantKb){ kb3Ensure(); kb3Build(); }
       try{ resize(); }catch(e){} try{ fitCurrent(); }catch(e){} }
   }
   function setView(name){ const v=VIEWS[name]; if(!v) return; goal.r=v.r; goal.th=v.th; goal.ph=v.ph; }
@@ -3032,7 +3362,7 @@ drawInit.push(()=>SGSC.idle());
     const rs=$('#s3d-reset'); if(rs) rs.addEventListener('click',()=>{ setView('persp'); target.set(0,0.30,0); });
     updateSpinLabel();
     S3D_SEEKBAR=makeSeek('s3d-seek',{ dur:(desc&&desc.winDur)||30,
-      onScrub:(sec)=>{ if(desc&&desc.winDur){ phase=((sec/desc.winDur)%1+1)%1; if(!playing){ refillDynamic&&refillDynamic(); updateRibbon&&updateRibbon(); updateSide&&updateSide(); } } },
+      onScrub:(sec)=>{ if(desc&&desc.live&&desc.pieceKey){ kb3LightSet(sgActiveAt(sgPiece(desc.pieceKey==='canon'?'canon':'melody').levs, sec)); return; } if(desc&&desc.winDur){ phase=((sec/desc.winDur)%1+1)%1; if(!playing){ refillDynamic&&refillDynamic(); updateRibbon&&updateRibbon(); updateSide&&updateSide(); } } },
       onSeek:(sec)=>{ s3dSeekTo(sec); } });
   }
 
@@ -3045,9 +3375,17 @@ drawInit.push(()=>SGSC.idle());
 
     // advance the scroll phase
     if(playing && desc && desc.dynamic && desc._buf){ phase = wrap((ac().currentTime - audioStart)/desc.winDur); }
-    else if(!REDUCED || playing){ const per = (desc && desc.dynamic) ? desc.winDur : SCROLL_IDLE; phase = wrap(phase + dt/per); }
+    else if(!(desc&&desc.live) && (!REDUCED || playing)){ const per = (desc && desc.dynamic) ? desc.winDur : SCROLL_IDLE; phase = wrap(phase + dt/per); }
 
-    if(desc){ if(desc.dynamic) refillDynamic(); updateRibbon(); updateSide(); }
+    if(desc){ if(desc.live){ liveIngest(dt);
+      if(PL_ON){ const nowp=ac().currentTime-PL_T0;
+        while(PL_LI<PL_LEVS.length && PL_LEVS[PL_LI].t<=nowp){ PL_ACT.push(PL_LEVS[PL_LI]); PL_LI++; }
+        for(let q=PL_ACT.length-1;q>=0;q--){ if(nowp>=PL_ACT[q].t+PL_ACT[q].d) PL_ACT.splice(q,1); }
+        const LS=[]; for(const ev of PL_ACT){ const m=fMidi(ev.f); if(m!=null&&LS.indexOf(m)<0) LS.push(m); }
+        kb3LightSet(LS);
+        if(S3D_SEEKBAR) S3D_SEEKBAR.setProgress(nowp);
+        if(nowp>PL_DUR+0.5){ plStop(); playing=false; setPlayLabel(false); } }
+    } else if(desc.dynamic) refillDynamic(); updateRibbon(); updateSide(); }
     if(reliefMesh) reliefMesh.material.opacity = 0.50 + 0.06*Math.sin(uTime*1.3);
 
     // damped orbit
@@ -3067,7 +3405,7 @@ drawInit.push(()=>SGSC.idle());
     running=true; last=performance.now();
     requestAnimationFrame(()=>{ resize(); });
     raf=requestAnimationFrame(loop);
-    return function(){ running=false; if(raf) cancelAnimationFrame(raf); raf=0; stopAudio(); };
+    return function(){ running=false; if(raf) cancelAnimationFrame(raf); raf=0; stopAudio(); kb3Stop(); plStop(); };
   };
 })();
 /* ==== END INJECTED 3D sound object ==== */
@@ -3086,12 +3424,8 @@ drawInit.push(()=>SGSC.idle());
   });
 })();
 
-/* --- MP3/AAC : perceptual-compression lab (Pachelbel Canon synth, live high-cut) --- */
-(function(){
-  const cv=document.getElementById('pc-spec'), btn=document.getElementById('pc-play'),
-        sl=document.getElementById('pc-cut'), rd=document.getElementById('pc-read'),
-        chips=[].slice.call(document.querySelectorAll('#pc-presets .chip'));
-  if(!cv||!btn||!sl) return;
+/* ---- Pachelbel Canon data (shared by the compression lab and the spectrogram melody) ---- */
+const CANON=(function(){
   const NF={D2:73.42,G2:98,A2:110,B2:123.47,Fs2:92.5,D3:146.83,Fs3:185,G3:196,A3:220,B3:246.94,Cs4:277.18,D4:293.66,E4:329.63,Fs4:369.99,G4:392,A4:440,B4:493.88,Cs5:554.37,D5:587.33,E5:659.26,Fs5:739.99,G5:783.99,A5:880,B5:987.77,Cs6:1108.73,D6:1174.66,E6:1318.51,Fs6:1479.98};
   const BEAT=0.75, CH=2*BEAT;
   /* 15 evolving variations over the ground bass (chaconne-style), then a final chord → ~3 min */
@@ -3123,6 +3457,16 @@ drawInit.push(()=>SGSC.idle());
       for(const nm of ['D4','Fs4','A4']) push(NF[nm],st,FINAL,AB.pad,0.11,0.25,1.0,'p');
       push(NF.D5,st,FINAL,AB.mel,0.16,0.06,1.0,'m'); }
     CEVS=evs; return evs; }
+  return {events:canonEvents, TOTAL:TOTAL};
+})();
+
+/* --- MP3/AAC : perceptual-compression lab (Pachelbel Canon synth, live high-cut) --- */
+(function(){
+  const cv=document.getElementById('pc-spec'), btn=document.getElementById('pc-play'),
+        sl=document.getElementById('pc-cut'), rd=document.getElementById('pc-read'),
+        chips=[].slice.call(document.querySelectorAll('#pc-presets .chip'));
+  if(!cv||!btn||!sl) return;
+  const TOTAL=CANON.TOTAL, canonEvents=CANON.events;
   const PC_COLORS={b:[125,211,252,0.9], p:[148,163,184,0.5], m:[248,250,252,0.95], s:[250,204,21,0.85]};
   const PCSC=SCORE.make('pc-score', canonEvents(), TOTAL, function(e){ return PC_COLORS[e.v]||[230,238,255,0.9]; });
   const FMIN=80,FMAX=16000,LGR=Math.log(FMAX/FMIN);
