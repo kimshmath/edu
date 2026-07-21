@@ -2379,8 +2379,33 @@ const SCORE=(function(){
   }
   return {make:make};
 })();
-const TOCCATA_EVS=(function(){ const a=[]; let t=0;
-  for(const nd of TOCCATA_SEQ){ if(nd[0]>0) a.push({t:t,f:nd[0],d:nd[1]}); t+=nd[1]; } return a; })();
+const TOCCATA_EVS=(function(){
+  /* melodic skeleton from the sequential arrangement (timing untouched) */
+  const a=[]; let t=0;
+  for(const nd of TOCCATA_SEQ){ if(nd[0]>0) a.push({t:t,f:nd[0],d:nd[1]}); t+=nd[1]; }
+  /* ---- harmony restored (BWV 565): octaves, the diminished-7th, fermata chords, Picardy ending ---- */
+  const DK=[1,0.45,0.22,0.1], CH=[1,0.62,0.4,0.24,0.14,0.08];
+  const add=(t0,f,d,g,roll)=>{ a.push({t:t0+(roll||0), f:f, d:Math.max(0.1,d-(roll||0)), g:g, amps:CH, atk:0.03, rel:0.22}); };
+  /* 1) opening statements in octaves, as written (three descents, t < 14.3s) */
+  for(const ev of a.slice()){ if(ev.t<14.3 && ev.f/2>=65){
+      a.push({t:ev.t, f:ev.f/2, d:ev.d, g:0.15, amps:DK, atk:0.01}); } }
+  /* 2) diminished-seventh held under the A#5 peak (t=15.70, d=0.9) */
+  [277.18,329.63,392.00,466.16].forEach((f,i)=>add(15.70,f,0.9,0.115,i*0.04));
+  /* 3) the great fermata: D minor resolution over a D2 pedal (t=17.45, d=2.2) */
+  add(17.45,73.42,2.2,0.17,0);
+  [220.00,293.66,349.23].forEach((f,i)=>add(17.45,f,2.2,0.12,0.06+i*0.05));
+  /* 4) half-cadence chords under the four bridge holds (A major on the held A4) */
+  [53.25,87.45,121.65,155.85].forEach(t0=>{
+    [220.00,277.18,329.63].forEach((f,i)=>add(t0,f,0.75,0.11,i*0.04)); });
+  /* 5) ending recitativo: diminished harmony under the two held descents */
+  [138.59,196.00,233.08].forEach((f,i)=>add(168.69,f,0.55,0.11,i*0.03));
+  [164.81,233.08,277.18].forEach((f,i)=>add(170.58,f,0.55,0.11,i*0.03));
+  /* 6) dominant under the last A4 hold (t=172.89, d=0.8) */
+  [220.00,277.18,329.63].forEach((f,i)=>add(172.89,f,0.8,0.11,i*0.04));
+  /* 7) final chord: full D major (Picardy), rolled, over the 3.6s hold */
+  add(176.02,73.42,3.6,0.18,0);
+  [110.00,185.00,220.00,293.66,369.99].forEach((f,i)=>add(176.02,f,3.6,0.105,0.05+i*0.05));
+  return a; })();
 const TOCCATA_DUR=(function(){ let t=0; for(const nd of TOCCATA_SEQ) t+=nd[1]; return t; })();
 /* ---- spectrogram melody: seekable transport ---- */
 let SG_OS=[], SG_AN=null, SG_SEEKBAR=null, SG_PROG=0;
@@ -2406,7 +2431,7 @@ function sgMelodyPlay(an, offset, which){
   offset=Math.max(0,Math.min(dur-0.05, offset||0));
   const t0=ctx.currentTime - offset;   /* virtual start so seek math stays absolute */
   const DEF=[1,0.5,0.3,0.18,0.1];
-  for(const ev of evs){ const on=t0+ev.t, off=on+ev.d;
+  for(const ev of levs){ const on=t0+ev.t, off=on+ev.d;   /* time-sorted: late-scheduled early notes are not lost */
     if(off<=ctx.currentTime+0.01) continue;
     const o=ctx.createOscillator(),g=ctx.createGain();
     o.setPeriodicWave(periodicWave(ev.amps||DEF)); o.frequency.value=ev.f;
@@ -3205,7 +3230,7 @@ drawInit.push(sgClear);   /* redraw axis after canvas refit */
     PL_DUR=p.dur; PL_LEVS=p.levs;
     offset=Math.max(0,Math.min(PL_DUR-0.05,offset||0)); PL_T0=c.currentTime-offset;
     const DEF=[1,0.5,0.3,0.18,0.1];
-    for(const ev of p.evs){ const on=PL_T0+ev.t, off=on+ev.d;
+    for(const ev of p.levs){ const on=PL_T0+ev.t, off=on+ev.d;   /* time-sorted */
       if(off<=c.currentTime+0.01) continue;
       const o=c.createOscillator(), g=c.createGain();
       o.setPeriodicWave(periodicWave(ev.amps||DEF)); o.frequency.value=ev.f;
