@@ -536,6 +536,10 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 #kb3-keys{position:relative;height:118px;user-select:none;touch-action:none;}
 .kb3-key{position:absolute;top:0;cursor:pointer;border-radius:0 0 6px 6px;}
 #kb3-wrap.compact #kb3-keys{height:94px;}
+#vol-ctl{display:flex;align-items:center;gap:6px;margin-left:6px;opacity:.45;transition:opacity .18s;}
+#vol-ctl:hover,#vol-ctl.flash{opacity:1;}
+#vol-mute{background:none;border:0;cursor:pointer;font-size:15px;line-height:1;padding:0 2px;}
+#vol-slider{width:92px;height:3px;cursor:pointer;accent-color:var(--accent);}
 #s3dlive-host{display:flex;flex-direction:column;gap:8px;}
 #s3dlive-ctl{display:flex;gap:10px;justify-content:center;margin-top:8px;}
 #s3dlive-ctl .btn.play{min-width:112px;}
@@ -1411,8 +1415,8 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
 </div>
 
 <!-- chrome -->
-<div id="hud"><span class="ch" id="hud-ch">Opening</span><span id="counter">01 / 30</span></div>
-<div class="kbd-hint"><kbd>←</kbd> <kbd>→</kbd> navigate · <kbd>P</kbd> play · <kbd>S</kbd> stop · <kbd>N</kbd> notes · <kbd>F</kbd> fullscreen · <kbd>?</kbd> help</div>
+<div id="hud"><span class="ch" id="hud-ch">Opening</span><span id="counter">01 / 30</span><span id="vol-ctl" title="Volume  ·  keys −/= , M mute"><button id="vol-mute" aria-label="Mute">🔊</button><input id="vol-slider" type="range" min="0" max="100" step="1" value="100" aria-label="volume"></span></div>
+<div class="kbd-hint"><kbd>←</kbd> <kbd>→</kbd> navigate · <kbd>P</kbd> play · <kbd>S</kbd> stop · <kbd>−</kbd><kbd>=</kbd> volume · <kbd>N</kbd> notes · <kbd>F</kbd> fullscreen · <kbd>?</kbd> help</div>
 <div class="navbtns"><button id="prev">‹</button><button id="next">›</button></div>
 <div id="runfoot">Sang-hyun Kim (KIAS)<span class="sep">·</span><a href="https://edu.kimsh.kr" target="_blank" rel="noopener">edu.kimsh.kr</a></div>
 
@@ -1430,6 +1434,7 @@ canvas.viz{display:block;width:100%;border-radius:9px;}
     <div class="kk"><span>Fullscreen</span><span><kbd>F</kbd></span></div>
     <div class="kk"><span>Play this slide’s sound (press again = next)</span><span><kbd>P</kbd></span></div>
     <div class="kk"><span>Stop all sound</span><span><kbd>S</kbd></span></div>
+    <div class="kk"><span>Volume down / up · mute</span><span><kbd>−</kbd> <kbd>=</kbd> <kbd>M</kbd></span></div>
     <div class="kk"><span>Jump to start / end</span><span><kbd>Home</kbd> <kbd>End</kbd></span></div>
     <div class="kk" style="border:none"><span>Close this panel</span><span><kbd>?</kbd> <kbd>Esc</kbd></span></div>
   </div>
@@ -1566,10 +1571,13 @@ function attachZoom(cv,redraw){
 
 /* ============================ AUDIO ENGINE ============================ */
 const AU={ctx:null,master:null,voices:new Set()};
+let VOL_GAIN=1;   /* set by the volume module; read once at context creation */
 function ac(){
   if(!AU.ctx){
     const C=window.AudioContext||window.webkitAudioContext;
-    AU.ctx=new C(); AU.master=AU.ctx.createGain(); AU.master.gain.value=0.85; AU.master.connect(AU.ctx.destination);
+    AU.ctx=new C(); AU.master=AU.ctx.createGain(); AU.master.gain.value=0.85;
+    AU.vol=AU.ctx.createGain(); AU.vol.gain.value=VOL_GAIN;
+    AU.master.connect(AU.vol); AU.vol.connect(AU.ctx.destination);
   }
   if(AU.ctx.state==='suspended') AU.ctx.resume();
   return AU.ctx;
@@ -1710,9 +1718,38 @@ document.addEventListener('keydown',e=>{
   else if(e.key==='f'||e.key==='F'||e.code==='KeyF'){toggleFS();}
   else if(e.key==='s'||e.key==='S'||e.code==='KeyS'){stopAll();}
   else if(e.key==='p'||e.key==='P'||e.code==='KeyP'){ if(!e.repeat){ e.preventDefault(); playHotkey(); } }
+  else if(e.key==='-'||e.key==='_'){ volNudge(-5); }
+  else if(e.key==='='||e.key==='+'){ volNudge(5); }
+  else if(e.key==='m'||e.key==='M'||e.code==='KeyM'){ volMuteToggle(); }
   else if(e.key==='?'){helpEl.classList.toggle('show');}
   else if(e.key==='Escape'){helpEl.classList.remove('show'); if(notesOpen)toggleNotes();}
 });
+
+/* ================= master volume (HDMI-friendly): slider + −/=/M keys, remembered ================= */
+let volNudge=function(){}, volMuteToggle=function(){};
+(function(){
+  const sl=document.getElementById('vol-slider'), mb=document.getElementById('vol-mute'), wrap=document.getElementById('vol-ctl');
+  if(!sl||!mb) return;
+  let v=1, muted=false, tFlash=0;
+  try{ const s=JSON.parse(localStorage.getItem('fml_vol')||'null');
+       if(s){ v=Math.min(1,Math.max(0,+s.v||0)); muted=!!s.m; } }catch(e){}
+  function gain(){ return muted?0:v*v; }        /* perceptual curve */
+  function icon(){ mb.textContent = (muted||v===0) ? '\uD83D\uDD07' : (v<0.5 ? '\uD83D\uDD09' : '\uD83D\uDD0A'); }
+  function save(){ try{ localStorage.setItem('fml_vol', JSON.stringify({v:v,m:muted})); }catch(e){} }
+  function flash(){ wrap.classList.add('flash'); clearTimeout(tFlash);
+    tFlash=setTimeout(function(){ wrap.classList.remove('flash'); }, 1100); }
+  function apply(){ VOL_GAIN=gain();
+    if(AU.vol&&AU.ctx){ AU.vol.gain.setTargetAtTime(VOL_GAIN, AU.ctx.currentTime, 0.03); }
+    icon(); save(); }
+  sl.value=Math.round(v*100);
+  icon(); VOL_GAIN=gain();
+  sl.addEventListener('input', function(){ v=(+sl.value)/100; if(v>0) muted=false; apply(); flash(); });
+  mb.addEventListener('click', function(){ muted=!muted; apply(); flash(); });
+  volNudge=function(d){ v=Math.min(1,Math.max(0, v+d/100)); if(v>0) muted=false;
+    sl.value=Math.round(v*100); apply(); flash(); };
+  volMuteToggle=function(){ muted=!muted; apply(); flash(); };
+})();
+
 
 /* P : play hotkey — clicks the current slide's \u25B6 button; repeated presses cycle through several */
 let phSlide=-1, phIdx=0;
